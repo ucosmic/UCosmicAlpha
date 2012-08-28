@@ -14,3 +14,55 @@ html {
     font-family: Arial, Helvetica, sans-serif;
     color: #333; }
 
+body > header {
+  background: #ccc; }
+  body > header > *:first-child {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    font-size: 50px;
+    line-height: 2;
+    text-align: center;
+    background: #666;
+    color: #ccc; }
+
+body #main {
+  /* look out for footer height */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  min-height: 100%;
+  background: #999; }
+  body #main > *:first-child {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 960px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    min-height: 100%;
+    background: #ddd; }
+
+body > footer {
+  position: absolute;
+  bottom: 0;
+  height: 40px;
+  padding: 0;
+  width: 100%;
+  background: #333;
+  /* z-index: -1; */ }
+  body > footer > *:first-child {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 960px;
+    margin: 0 auto;
+    background: #111;
+    height: 100%;
+    color: #ddd;
+    /* @include font-height(11px, 20px);
+    @include font-ms; */ }
+

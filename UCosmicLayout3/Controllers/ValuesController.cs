@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace UCosmicLayout3.Controllers
 {
-    public class ValuesController : ApiController
+    public partial class ValuesController : ApiController
     {
         // GET api/values
         public IEnumerable<string> Get()

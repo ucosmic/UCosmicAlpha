@@ -8,7 +8,22 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    @RenderBody()
+    <header>
+        <div>
+            This is where the header stuff will go.
+        </div>
+    </header>
+    <div id="main" class="group">
+        <div>
+            This is where the main stuff will go.
+            @RenderBody()
+        </div>
+    </div>
+    <footer>
+        <div>
+            This is where the footer stuff will go.
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)

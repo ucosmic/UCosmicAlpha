@@ -6,9 +6,34 @@ using System.Web.Mvc;
 
 namespace UCosmicLayout3.Controllers
 {
-    public class HomeController : Controller
+    public partial class HomeController : Controller
     {
-        public ActionResult Index()
+        public virtual ActionResult Index()
+        {
+            return View();
+        }
+
+        public virtual ActionResult Index2()
+        {
+            return View();
+        }
+
+        public virtual ActionResult Index3()
+        {
+            return View();
+        }
+
+        public virtual ActionResult Index4()
+        {
+            return View();
+        }
+
+        public virtual ActionResult Index5()
+        {
+            return View();
+        }
+
+        public virtual ActionResult Index6()
         {
             return View();
         }

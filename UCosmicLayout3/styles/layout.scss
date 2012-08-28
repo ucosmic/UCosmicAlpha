@@ -13,3 +13,49 @@ html {
         color: #333;
     }
 }
+
+body > header {
+    background: #ccc;
+    > *:first-child {
+        @include border-box;
+        @include center-margin;
+        padding: 20px;
+        @include font-height(50px, 2);
+        text-align: center;
+        background: #666;
+        color: #ccc;
+    }
+}
+
+body #main {
+    /* look out for footer height */
+    @include border-box;
+    min-height: 100%;
+    background: #999;
+    > *:first-child {
+        @include border-box;
+        @include center-margin;
+        padding-bottom: $height-of-border;
+        min-height: 100%;
+        background: #ddd;
+    }
+}
+
+body > footer {
+    position: absolute;
+    bottom: 0;
+    height: $height-of-border;
+    padding: 0;
+    width: 100%;
+    background: #333;
+    /* z-index: -1; */
+    > *:first-child {
+        @include border-box;
+        @include center-margin;
+        background: #111;
+        height: 100%;
+        color: #ddd;
+        /* @include font-height(11px, 20px);
+        @include font-ms; */
+    }
+}
