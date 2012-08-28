@@ -1,0 +1,15 @@
+@import 'bootstrap';
+
+html {
+    @include border-box;
+    /* needed to do full height footer*/
+    height: 100%;
+    > body {
+        @include border-box;
+        /* position & min-height needed to do full height footer*/
+        position: relative;
+        min-height: 100%;
+        @include font-arial;
+        color: #333;
+    }
+}

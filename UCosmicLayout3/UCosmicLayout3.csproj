@@ -209,6 +209,15 @@
     <Content Include="scripts\knockout-2.1.0.debug.js" />
     <Content Include="scripts\knockout-2.1.0.js" />
     <Content Include="scripts\modernizr-2.5.3.js" />
+    <Content Include="styles\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\reset.css">
+      <DependentUpon>reset.scss</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -216,7 +225,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="content\Site.css" />
     <Content Include="images\accent.png" />
     <Content Include="images\bullet.png" />
     <Content Include="images\heroAccent.png" />
@@ -236,6 +244,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="styles\reset.scss" />
+    <Content Include="styles\layout.scss" />
+    <Content Include="styles\forms.scss" />
+    <Content Include="styles\_bootstrap.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

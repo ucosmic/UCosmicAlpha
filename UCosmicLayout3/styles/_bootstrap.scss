@@ -1,0 +1,77 @@
+$tenant-color-1: #007acc;
+
+@mixin border-box {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@mixin center-margin($width: 960px) {
+    width: $width;
+    margin: 0 auto;
+}
+
+@mixin transition($property: all, $duration: 250ms) {
+    -webkit-transition: $property $duration;
+    -moz-transition: $property $duration;
+    -o-transition: $property $duration;
+    transition: $property $duration;
+}
+
+@mixin transition-none() {
+    -webkit-transition-property: none;
+    -moz-transition-property: none;
+    -o-transition-property: none;
+    transition-property: none;
+}
+
+@mixin opacity($value: 1) {
+    -moz-opacity: $value;
+    opacity: $value;
+}
+
+@mixin border-radius($value: 0) {
+    -moz-border-radius: $value;
+    -webkit-border-radius: $value;
+    border-radius: $value;
+}
+
+@mixin border-radii($topLeft: 0, $topRight: 0, $bottom: 0, $right: 0) {
+    -moz-border-radius: $topLeft $topRight $bottom $right;
+    -webkit-border-radius: $topLeft $topRight $bottom $right;
+    border-radius: $topLeft $topRight $bottom $right;
+}
+
+@mixin outline-none {
+    -moz-outline: none;
+    outline: none;
+}
+
+@mixin linear-bg-gradient($color1: #000000, $color2: #ffffff) {
+    background-image: -webkit-linear-gradient($color1, $color2);
+    background-image: -moz-linear-gradient($color1, $color2);
+    background-image: linear-gradient($color1, $color2);
+    filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#{$color1}', EndColorStr='#{$color2}');
+}
+
+@mixin font-height($font-size: 16px, $line-height: 1.2) {
+    font-size: $font-size;
+    line-height: $line-height;
+}
+
+@mixin box-shadow($x: 1px, $y: 1px, $blur: 1px, $spread: 1px, $color: #000000) {
+    -moz-box-shadow: $x $y $blur $spread $color;
+    -webkit-box-shadow: $x $y $blur $spread $color;
+    box-shadow: $x $y $blur $spread $color;
+}
+@mixin text-shadow($x: 1px, $y: 1px, $blur: 0, $color: #000000) {
+    -webkit-text-shadow: $x $y $blur $color;
+    text-shadow: $x $y $blur $color;
+}
+
+@mixin font-ms {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+@mixin font-arial {
+    font-family: Arial, Helvetica, sans-serif;
+}
