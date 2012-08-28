@@ -131,11 +131,26 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="ApiControllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HomeController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scripts\T4MvcJs\T4Proxy.cs" />
+    <Compile Include="SharedController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4MVC.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4MVC.ModelUnbinder.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -209,6 +224,11 @@
     <Content Include="scripts\knockout-2.1.0.debug.js" />
     <Content Include="scripts\knockout-2.1.0.js" />
     <Content Include="scripts\modernizr-2.5.3.js" />
+    <Content Include="scripts\T4MvcJs\T4MvcJs.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>T4MvcJs.tt</DependentUpon>
+    </Content>
     <Content Include="styles\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
@@ -253,6 +273,17 @@
     <Content Include="Views\Home\Index4.cshtml" />
     <Content Include="Views\Home\Index3.cshtml" />
     <Content Include="Views\Home\Index2.cshtml" />
+    <None Include="scripts\T4MvcJs\T4MVC.source.t4" />
+    <None Include="scripts\T4MvcJs\T4MVC.tt.settings.t4" />
+    <None Include="scripts\T4MvcJs\T4MvcJs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4MvcJs.js</LastGenOutput>
+    </None>
+    <Content Include="T4MVC.tt.settings.t4" />
+    <Content Include="T4MVC.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4MVC.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -65,4 +65,6 @@ body > footer {
     color: #ddd;
     /* @include font-height(11px, 20px);
     @include font-ms; */ }
+    body > footer > *:first-child a {
+      color: #ba0; }
 

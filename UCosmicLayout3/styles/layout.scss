@@ -57,5 +57,8 @@ body > footer {
         color: #ddd;
         /* @include font-height(11px, 20px);
         @include font-ms; */
+        a {
+            color: #ba0;
+        }
     }
 }
