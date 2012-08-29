@@ -14,57 +14,61 @@
     <nav class="modules">
         <ul class="group">
             <li class="home">
-                <a href="@Url.Action(MVC.Home.Index())">
-                    Home
+                <a href="@Url.Action(MVC.Home.Index())">Home
                 </a>
             </li>
             <li class="agreements">
-                <a href="@Url.Action(MVC.Home.Agreements())">
-                    Agreements
+                <a href="@Url.Action(MVC.Home.Agreements())">Agreements
                 </a>
             </li>
             <li class="employees">
-                <a href="@Url.Action(MVC.Home.Employees())">
-                    Faculty & Staff
+                <a href="@Url.Action(MVC.Home.Employees())">Faculty & Staff
                 </a>
             </li>
             <li class="alumni">
-                <a href="@Url.Action(MVC.Home.Alumni())">
-                    Alumni
+                <a href="@Url.Action(MVC.Home.Alumni())">Alumni
                 </a>
             </li>
             <li class="students">
-                <a href="@Url.Action(MVC.Home.Students())">
-                    Students
+                <a href="@Url.Action(MVC.Home.Students())">Students
                 </a>
             </li>
             <li class="reps">
-                <a href="@Url.Action(MVC.Home.Representatives())">
-                    Representatives
+                <a href="@Url.Action(MVC.Home.Representatives())">Representatives
                 </a>
             </li>
             <li class="travel">
-                <a href="@Url.Action(MVC.Home.Travel())">
-                    Travel
+                <a href="@Url.Action(MVC.Home.Travel())">Travel
                 </a>
             </li>
             <li class="corporate">
-                <a href="@Url.Action(MVC.Home.CorporateEngagement())">
-                    Corporate Engagement
+                <a href="@Url.Action(MVC.Home.CorporateEngagement())">Corporate Engagement
                 </a>
             </li>
             <li class="press">
-                <a href="@Url.Action(MVC.Home.GlobalPress())">
-                    Global Press
+                <a href="@Url.Action(MVC.Home.GlobalPress())">Global Press
                 </a>
             </li>
         </ul>
     </nav>
     <header>
-        <div class="content">
-            
+        <div class="flasher">
+            <a>
+                <div class="group">
+                    <p class="float-left">
+                        <span class="content">Here is your feedback message.
+                            What happens when this gets longer, much l on g e r, so long t h a t it wraps?
+                        </span>
+                        <span class="dismissal">Click to dismiss</span>
+                    </p>
+                    <i class="float-right small closer"></i>
+                </div>
+            </a>
         </div>
     </header>
+    <nav style="position: relative; background: blue; z-index: -1;">
+        Here is another nav
+    </nav>
     <div id="main" class="group">
         @RenderBody()
     </div>
@@ -75,6 +79,7 @@
     </footer>
 
     @Scripts.Render("~/bundles/jquery")
+
     <script type="text/javascript">
         $(function () {
             $('nav.modules a').each(function () {
@@ -92,6 +97,7 @@
             });
         });
     </script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

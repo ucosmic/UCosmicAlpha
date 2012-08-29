@@ -29,14 +29,14 @@ body > nav.modules {
       border-radius: 4px 4px 0 0;
       padding: 6px 8px;
       height: 28px;
-      background: #01589c;
+      background: #000099;
       -moz-opacity: 0.75;
       opacity: 0.75;
       -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
-      background-image: -webkit-linear-gradient(-90deg, #0175d3 0%, #01589c 25%);
-      background-image: -moz-linear-gradient(-90deg, #0175d3 0%, #01589c 25%);
-      background-image: linear-gradient(-90deg, #0175d3 0%, #01589c 25%);
-      filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#0175d3', EndColorStr='#01589c');
+      background-image: -webkit-linear-gradient(-90deg, #01589c 0%, #000099 25%);
+      background-image: -moz-linear-gradient(-90deg, #01589c 0%, #000099 25%);
+      background-image: linear-gradient(-90deg, #01589c 0%, #000099 25%);
+      filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#01589c', EndColorStr='#000099');
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: #eeeeee;
       text-decoration: none;
@@ -75,19 +75,42 @@ body > header {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  min-width: 980px; }
-  body > header > *:first-child {
+  min-width: 980px;
+  height: 100px;
+  background: url(suny.edu/banner-logo.png) #000099 no-repeat bottom left;
+  -moz-box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8);
+  -webkit-box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8);
+  box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8); }
+  body > header > .flasher {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 20px;
-    font-size: 16px;
-    line-height: 2;
-    text-align: center;
-    background: #01589c;
-    color: #ccc; }
-    body > header > *:first-child a {
-      color: #ba0; }
+    display: inline-block;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    margin-top: 15px;
+    margin-left: 350px;
+    background: rgba(255, 255, 255, 0.75);
+    min-width: 400px;
+    max-width: 600px;
+    max-height: 70px;
+    font-size: 15px;
+    line-height: 23px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    body > header > .flasher > a {
+      display: block;
+      padding: 12px 16px;
+      color: #333; }
+      body > header > .flasher > a p {
+        max-width: 530px; }
+        body > header > .flasher > a p .dismissal {
+          font-weight: bold; }
+      body > header > .flasher > a i {
+        margin-left: 8px;
+        background: url(icons/closer-24-charcoal-transparent.png);
+        width: 24px;
+        height: 24px; }
 
 body #main {
   /* look out for footer height */

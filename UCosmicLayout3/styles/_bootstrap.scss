@@ -3,8 +3,10 @@ $outer-width: 980px;
 $inner-width: 960px;
 $height-of-border: 40px;
 
-$suny-blue: #01589c;
-$suny-blue-lighter: #0175D3;
+$suny-blue-o: #01589c;
+$suny-blue-lighter-o: #0175D3;
+$suny-blue: #000099;
+$suny-blue-lighter: #01589c;
 $suny-blue-contrast: #eeeeee;
 
 @mixin border-box {
