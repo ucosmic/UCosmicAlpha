@@ -79,6 +79,7 @@ body {
             max-height: 70px;
             @include font-height(15px, 23px);
             @include font-ms;
+            font-weight: bold;
             background: $flasher-bg-color;
             &.hide {
                 visibility: hidden;
@@ -86,16 +87,16 @@ body {
             > a {
                 display: block;
                 padding: 12px 16px;
-                color: #333;
+                color: $flasher-text-color;
                 p {
                     max-width: 630px;
                     .dismissal {
-                        font-weight: bold;
+                        font-weight: normal;
                     }
                 }
                 i {
                     margin-left: 8px;
-                    background: url(../icons/closer-24-charcoal-transparent.png);
+                    background: $flasher-close-icon;
                     width: 24px;
                     height: 24px;
                 }

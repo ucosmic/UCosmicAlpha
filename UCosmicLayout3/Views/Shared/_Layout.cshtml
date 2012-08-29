@@ -60,7 +60,7 @@
                         <span class="content" data-bind="text: text">@*Here is your feedback message.
                             What happens when this gets longer, much l on g e r, so long t h a t it wraps?*@
                         </span>
-                        <span class="dismissal">Click to dismiss</span>
+                        <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
                     </p>
                     <i class="float-right small closer"></i>
                 </div>
@@ -70,7 +70,8 @@
     <nav style="position: relative; background: blue; z-index: -1;">
         Here is another nav 
     </nav>
-    <a href="#/doflash">Add text to flasher</a>
+    <a href="#/flashlong">Add long text to flasher</a>
+    <a href="#/flashshort">Add short text to flasher</a>
     <div id="main" class="group">
         @RenderBody()
     </div>
@@ -105,8 +106,12 @@
             $('nav.modules').removeClass('hide');
         });
 
-        $('a[href="#/doflash"]').on('click', function () {
-            app.flasher.text('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');
+        $('a[href="#/flashlong"]').on('click', function () {
+            app.flasher.flash('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');
+        });
+
+        $('a[href="#/flashshort"]').on('click', function () {
+            app.flasher.flash('Here is a short feedback message.');
         });
     </script>
 
