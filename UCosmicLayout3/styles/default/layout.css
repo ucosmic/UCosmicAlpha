@@ -110,7 +110,7 @@ body > header {
     line-height: 23px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    background: rgba(0, 0, 0, 0.85); }
+    background: rgba(11, 11, 11, 0.8); }
     body > header > .flasher.hide {
       visibility: hidden; }
     body > header > .flasher > a {
@@ -118,7 +118,9 @@ body > header {
       padding: 12px 16px;
       color: #eeeeee; }
       body > header > .flasher > a p {
-        max-width: 630px; }
+        max-width: 630px;
+        -webkit-text-shadow: 1px 1px 3px rgba(33, 33, 33, 0.5);
+        text-shadow: 1px 1px 3px rgba(33, 33, 33, 0.5); }
         body > header > .flasher > a p .dismissal {
           font-weight: normal; }
       body > header > .flasher > a i {

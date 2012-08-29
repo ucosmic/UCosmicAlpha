@@ -90,6 +90,7 @@ body {
                 color: $flasher-text-color;
                 p {
                     max-width: 630px;
+                    @include text-shadow(1px, 1px, 3px, rgba(33, 33, 33, .5));
                     .dismissal {
                         font-weight: normal;
                     }
