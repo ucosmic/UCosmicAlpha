@@ -1,26 +1,30 @@
-body > nav.modules > ul > li > a {
-    font-family: Arial !important;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100})" !important;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100});
-}
-
-body > nav.modules > ul > li.current a {
-    padding: 9px 8px 7px;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100})" !important;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100});
-}
-
-body > nav.modules > ul > li:hover a {
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100})" !important;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100});
-}
-
-body > nav.modules * {
-    visibility: visible;
-}
-
-body > header {
-    > .flasher {
-        background-color: $flasher-bg-color-ie;
+body {
+    > nav.modules {
+        > ul {
+            > li {
+                > a {
+                    font-family: Arial !important;
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100})" !important;
+                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100});
+                }
+                &:hover a {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100})" !important;
+                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100});
+                }
+                &.current a {
+                    padding: 9px 8px 7px;
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100})" !important;
+                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100});
+                }
+            }
+        }
+        * {
+            visibility: visible;
+        }
+    }
+    > header {
+        > .flasher {
+            background-color: $flasher-bg-color-ie;
+        }
     }
 }
