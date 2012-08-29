@@ -25,6 +25,7 @@ namespace UCosmicLayout3.Controllers
 
         public virtual ActionResult Alumni()
         {
+            TempData.Add("Flasher", "This is the alumni page.");
             return View();
         }
 

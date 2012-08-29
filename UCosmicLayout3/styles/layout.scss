@@ -17,6 +17,10 @@ html {
 body {
     > nav.modules {
         padding: 10px 0 0 0;
+        background: #ccc;
+        &.hide {
+            visibility: hidden;
+        }
         > ul {
             > li {
                 float: left;
@@ -68,12 +72,14 @@ body {
             @include border-radius(12px);
             margin-top: 15px;
             margin-left: 350px;
-            background: rgba(255, 255, 255, .75);
-            min-width: 400px;
             max-width: 600px;
             max-height: 70px;
             @include font-height(15px, 23px);
             @include font-ms;
+            background: rgba(255, 255, 255, .75);
+            &.hide {
+                visibility: hidden;
+            }
             > a {
                 display: block;
                 padding: 12px 16px;

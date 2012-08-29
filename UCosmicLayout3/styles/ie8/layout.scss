@@ -11,6 +11,10 @@ body > nav.modules > ul > li.current a {
     padding: 10px 8px 6px;
 }
 
+body > nav.modules * {
+    visibility: visible;
+}
+
 body > header {
     > .flasher {
         background-color: #bfbfe5;

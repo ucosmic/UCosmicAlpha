@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="modules">
+    <nav class="modules hide">
         <ul class="group">
             <li class="home">
                 <a href="@Url.Action(MVC.Home.Index())">Home
@@ -52,12 +52,12 @@
         </ul>
     </nav>
     <header>
-        <div class="flasher">
-            <a>
+        <div class="flasher hide" data-bind="element: 'element'">
+            <a data-bind="click: dismiss">
                 <div class="group">
                     <p class="float-left">
-                        <span class="content">Here is your feedback message.
-                            What happens when this gets longer, much l on g e r, so long t h a t it wraps?
+                        <span class="content" data-bind="text: text">@*Here is your feedback message.
+                            What happens when this gets longer, much l on g e r, so long t h a t it wraps?*@
                         </span>
                         <span class="dismissal">Click to dismiss</span>
                     </p>
@@ -67,8 +67,9 @@
         </div>
     </header>
     <nav style="position: relative; background: blue; z-index: -1;">
-        Here is another nav
+        Here is another nav 
     </nav>
+    <a href="#/doflash">Add text to flasher</a>
     <div id="main" class="group">
         @RenderBody()
     </div>
@@ -79,8 +80,13 @@
     </footer>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+
+    <script type="text/javascript" src="@Url.Content(Links.scripts.app.app_js)"></script>
+    <script type="text/javascript" src="@Url.Content(Links.Models.FlasherViewModel_js)"></script>
 
     <script type="text/javascript">
+        app.flasher.text('@TempData["Flasher"]');
         $(function () {
             $('nav.modules a').each(function () {
                 var $a = $(this);
@@ -95,6 +101,11 @@
                 var module = $(this).data('current-module');
                 $('nav.modules li.' + module).addClass('current');
             });
+            $('nav.modules').removeClass('hide');
+        });
+
+        $('a[href="#/doflash"]').on('click', function () {
+            app.flasher.text('here is some feedback message.');
         });
     </script>
 

@@ -26,6 +26,9 @@ namespace UCosmicLayout3
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/scripts/modernizr-*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
+                        "~/scripts/knockout-*"));
+
             // bootstrap css bundle
             bundles.Add(new StyleBundle("~/bundles/css").Include(
                         "~/styles/reset.css",

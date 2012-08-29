@@ -15,7 +15,10 @@ html {
     color: #333; }
 
 body > nav.modules {
-  padding: 10px 0 0 0; }
+  padding: 10px 0 0 0;
+  background: #ccc; }
+  body > nav.modules.hide {
+    visibility: hidden; }
   body > nav.modules > ul > li {
     float: left; }
     body > nav.modules > ul > li > a {
@@ -91,13 +94,14 @@ body > header {
     border-radius: 12px;
     margin-top: 15px;
     margin-left: 350px;
-    background: rgba(255, 255, 255, 0.75);
-    min-width: 400px;
     max-width: 600px;
     max-height: 70px;
     font-size: 15px;
     line-height: 23px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: rgba(255, 255, 255, 0.75); }
+    body > header > .flasher.hide {
+      visibility: hidden; }
     body > header > .flasher > a {
       display: block;
       padding: 12px 16px;
