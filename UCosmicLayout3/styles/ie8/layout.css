@@ -5,3 +5,6 @@ body > nav.modules > ul > li > a {
 body > nav.modules > ul > li:hover a {
   -ms-filter: 'none'; }
 
+body > nav.modules > ul > li.current a {
+  padding: 10px 8px 6px; }
+

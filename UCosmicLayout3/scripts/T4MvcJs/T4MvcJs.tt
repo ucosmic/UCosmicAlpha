@@ -1,4 +1,4 @@
-<#@ template language="C#v3.5" debug="true" hostspecific="true" #>
+<#@ template language="C#" debug="true" hostspecific="true" #>
 <#@ output extension=".js" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>

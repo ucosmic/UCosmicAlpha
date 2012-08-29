@@ -41,6 +41,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LowercaseRoutesMVC4">
+      <HintPath>..\packages\LowercaseRoutesMVC4.0.4.1\lib\LowercaseRoutesMVC4.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -274,11 +277,11 @@
     <Content Include="styles\layout.scss" />
     <Content Include="styles\forms.scss" />
     <Content Include="styles\_bootstrap.scss" />
-    <Content Include="Views\Home\Index6.cshtml" />
-    <Content Include="Views\Home\Index5.cshtml" />
-    <Content Include="Views\Home\Index4.cshtml" />
-    <Content Include="Views\Home\Index3.cshtml" />
-    <Content Include="Views\Home\Index2.cshtml" />
+    <Content Include="Views\Home\Travel.cshtml" />
+    <Content Include="Views\Home\Representatives.cshtml" />
+    <Content Include="Views\Home\Students.cshtml" />
+    <Content Include="Views\Home\Employees.cshtml" />
+    <Content Include="Views\Home\Agreements.cshtml" />
     <None Include="scripts\T4MvcJs\T4MVC.source.t4" />
     <None Include="scripts\T4MvcJs\T4MVC.tt.settings.t4" />
     <None Include="scripts\T4MvcJs\T4MvcJs.tt">
@@ -292,6 +295,9 @@
     </Content>
     <Content Include="styles\layout0.scss" />
     <Content Include="styles\ie8\layout.scss" />
+    <Content Include="Views\Home\Alumni.cshtml" />
+    <Content Include="Views\Home\GlobalPress.cshtml" />
+    <Content Include="Views\Home\CorporateEngagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

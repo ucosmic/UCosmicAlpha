@@ -13,27 +13,42 @@ namespace UCosmicLayout3.Controllers
             return View();
         }
 
-        public virtual ActionResult Index2()
+        public virtual ActionResult Agreements()
         {
             return View();
         }
 
-        public virtual ActionResult Index3()
+        public virtual ActionResult Employees()
         {
             return View();
         }
 
-        public virtual ActionResult Index4()
+        public virtual ActionResult Alumni()
         {
             return View();
         }
 
-        public virtual ActionResult Index5()
+        public virtual ActionResult Students()
         {
             return View();
         }
 
-        public virtual ActionResult Index6()
+        public virtual ActionResult Representatives()
+        {
+            return View();
+        }
+
+        public virtual ActionResult Travel()
+        {
+            return View();
+        }
+
+        public virtual ActionResult CorporateEngagement()
+        {
+            return View();
+        }
+
+        public virtual ActionResult GlobalPress()
         {
             return View();
         }

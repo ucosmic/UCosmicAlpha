@@ -30,9 +30,10 @@ body {
                     background: $suny-blue;
                     @include opacity(.75);
                     @include linear-bg-gradient(-90deg, $suny-blue-lighter, 0%, $suny-blue, 25%);
-                    color: $suny-blue-contrast;
-                    @include text-shadow(0, 2px, 3px, #000);
                     @include font-ms;
+                    color: $suny-blue-contrast;
+                    text-decoration: none;
+                    @include text-shadow(0, 2px, 3px, #000);
                     @include inset-box-shadow(0, -1px, 2px, 0, rgba(33, 33, 33, 0.5));
                     @include transition(opacity, 500ms);
                 }
