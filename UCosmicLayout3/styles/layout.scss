@@ -14,30 +14,85 @@ html {
     }
 }
 
-body > header {
-    background: #ccc;
-    > *:first-child {
+body {
+    > nav.modules {
+        padding: 10px 0 0 0;
+        > ul {
+            > li {
+                float: left;
+                > a {
+                    display: inline-block;
+                    @include border-box;
+                    margin: 4px 4px 0 0;
+                    @include border-radii(4px, 4px, 0, 0);
+                    padding: 6px 8px;
+                    height: 28px;
+                    background: $suny-blue;
+                    @include opacity(.75);
+                    @include linear-bg-gradient(-90deg, $suny-blue-lighter, 0%, $suny-blue, 25%);
+                    color: $suny-blue-contrast;
+                    @include text-shadow(0, 2px, 3px, #000);
+                    @include font-ms;
+                    @include inset-box-shadow(0, -1px, 2px, 0, rgba(33, 33, 33, 0.5));
+                    @include transition(opacity, 500ms);
+                }
+                &:first-child a {
+                    margin-left: 4px;
+                }
+                &:hover a {
+                    @include opacity(.9);
+                }
+                &.current a {
+                    @include transition-none;
+                    @include no-box-shadow;
+                    @include opacity(1);
+                    padding: 8px;
+                    margin-top: 0;
+                    height: 32px;
+                    font-weight: bold;
+                    cursor: default;
+                }
+            }
+        }
+    }
+    > header {
         @include border-box;
-        @include center-margin;
-        padding: 20px;
-        @include font-height(50px, 2);
-        text-align: center;
-        background: #666;
-        color: #ccc;
+        min-width: $outer-width;
+
+        > *:first-child {
+            @include border-box;
+            padding: $outer-width - $inner-width;
+            @include font-height(16px, 2);
+            text-align: center;
+            background: $suny-blue;
+            color: #ccc;
+            a {
+                color: #ba0;
+            }
+        }
     }
 }
 
 body #main {
     /* look out for footer height */
     @include border-box;
-    min-height: 100%;
-    background: #999;
-    > *:first-child {
+    min-width: $outer-width;
+
+    > .content {
         @include border-box;
-        @include center-margin;
-        padding-bottom: $height-of-border;
-        min-height: 100%;
-        background: #ddd;
+        padding-bottom: $height-of-border + 20px;
+
+        &.fixed {
+            @include border-box;
+            width: $inner-width;
+            padding-left: $outer-width - $inner-width;
+        }
+
+        &.fluid {
+            @include border-box;
+            width: 100%;
+            padding: 0;
+        }
     }
 }
 
@@ -51,14 +106,10 @@ body > footer {
     /* z-index: -1; */
     > *:first-child {
         @include border-box;
-        @include center-margin;
         background: #111;
         height: 100%;
         color: #ddd;
         /* @include font-height(11px, 20px);
         @include font-ms; */
-        a {
-            color: #ba0;
-        }
     }
 }

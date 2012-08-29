@@ -14,37 +14,103 @@ html {
     font-family: Arial, Helvetica, sans-serif;
     color: #333; }
 
+body > nav.modules {
+  padding: 10px 0 0 0; }
+  body > nav.modules > ul > li {
+    float: left; }
+    body > nav.modules > ul > li > a {
+      display: inline-block;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 4px 4px 0 0;
+      -moz-border-radius: 4px 4px 0 0;
+      -webkit-border-radius: 4px 4px 0 0;
+      border-radius: 4px 4px 0 0;
+      padding: 6px 8px;
+      height: 28px;
+      background: #01589c;
+      -moz-opacity: 0.75;
+      opacity: 0.75;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+      background-image: -webkit-linear-gradient(-90deg, #0175d3 0%, #01589c 25%);
+      background-image: -moz-linear-gradient(-90deg, #0175d3 0%, #01589c 25%);
+      background-image: linear-gradient(-90deg, #0175d3 0%, #01589c 25%);
+      filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#0175d3', EndColorStr='#01589c');
+      color: #eeeeee;
+      -webkit-text-shadow: 0 2px 3px black;
+      text-shadow: 0 2px 3px black;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      -moz-box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
+      -webkit-box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
+      box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
+      -webkit-transition: opacity 500ms;
+      -moz-transition: opacity 500ms;
+      -o-transition: opacity 500ms;
+      transition: opacity 500ms; }
+    body > nav.modules > ul > li:first-child a {
+      margin-left: 4px; }
+    body > nav.modules > ul > li:hover a {
+      -moz-opacity: 0.9;
+      opacity: 0.9;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"; }
+    body > nav.modules > ul > li.current a {
+      -webkit-transition-property: none;
+      -moz-transition-property: none;
+      -o-transition-property: none;
+      transition-property: none;
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      -moz-opacity: 1;
+      opacity: 1;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+      padding: 8px;
+      margin-top: 0;
+      height: 32px;
+      font-weight: bold;
+      cursor: default; }
 body > header {
-  background: #ccc; }
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  min-width: 980px; }
   body > header > *:first-child {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 960px;
-    margin: 0 auto;
     padding: 20px;
-    font-size: 50px;
+    font-size: 16px;
     line-height: 2;
     text-align: center;
-    background: #666;
+    background: #01589c;
     color: #ccc; }
+    body > header > *:first-child a {
+      color: #ba0; }
 
 body #main {
   /* look out for footer height */
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  min-height: 100%;
-  background: #999; }
-  body #main > *:first-child {
+  min-width: 980px; }
+  body #main > .content {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 960px;
-    margin: 0 auto;
-    padding-bottom: 40px;
-    min-height: 100%;
-    background: #ddd; }
+    padding-bottom: 60px; }
+    body #main > .content.fixed {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 960px;
+      padding-left: 20px; }
+    body #main > .content.fluid {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0; }
 
 body > footer {
   position: absolute;
@@ -58,13 +124,9 @@ body > footer {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 960px;
-    margin: 0 auto;
     background: #111;
     height: 100%;
     color: #ddd;
     /* @include font-height(11px, 20px);
     @include font-ms; */ }
-    body > footer > *:first-child a {
-      color: #ba0; }
 

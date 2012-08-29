@@ -1,0 +1,7 @@
+body > nav.modules > ul > li > a {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+  font-family: Arial; }
+
+body > nav.modules > ul > li:hover a {
+  -ms-filter: 'none'; }
+

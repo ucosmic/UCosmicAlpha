@@ -5,22 +5,63 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/bundles/css")
+    <!--[if lt IE 9]>
+    @Styles.Render("~/bundles/legacy/ie8")
+    <![endif]-->
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <nav class="modules">
+        <ul class="group">
+            <li>
+                <a>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a>
+                    Agreements
+                </a>
+            </li>
+            <li>
+                <a>
+                    Faculty & Staff
+                </a>
+            </li>
+            <li>
+                <a>
+                    Alumni
+                </a>
+            </li>
+            <li>
+                <a>
+                    Students
+                </a>
+            </li>
+            <li>
+                <a>
+                    Representatives
+                </a>
+            </li>
+            <li>
+                <a>
+                    Travel
+                </a>
+            </li>
+            <li>
+                <a>
+                    Corporate Engagement
+                </a>
+            </li>
+            <li>
+                <a>
+                    Global Press
+                </a>
+            </li>
+        </ul>
+    </nav>
     <header>
-        <div>
-            This is where the header stuff will go.
-        </div>
-    </header>
-    <div id="main" class="group">
-        <div>
-            @RenderBody()
-        </div>
-    </div>
-    <footer>
-        <div>
-            This is where the footer stuff will go.
+        <div class="content min-width">
             <a href="@Url.Action(MVC.Home.Index())">Index</a>
             <a href="@Url.Action(MVC.Home.Index2())">Index 2</a>
             <a href="@Url.Action(MVC.Home.Index3())">Index 3</a>
@@ -28,9 +69,30 @@
             <a href="@Url.Action(MVC.Home.Index5())">Index 5</a>
             <a href="@Url.Action(MVC.Home.Index6())">Index 6</a>
         </div>
+    </header>
+    <div id="main" class="group">
+        @RenderBody()
+    </div>
+    <footer>
+        <div>
+            This is where the footer stuff will go.
+        </div>
     </footer>
 
     @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        $(function () {
+            $('nav.modules a').each(function () {
+                var $a = $(this);
+                $a.on('click', function () {
+                    $a.parents('nav.modules').find('li').each(function () {
+                        $(this).removeClass('current');
+                    });
+                    $a.parents('li').addClass('current');
+                });
+            });
+        });
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

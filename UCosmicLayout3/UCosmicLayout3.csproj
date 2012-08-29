@@ -229,8 +229,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
+    <Content Include="styles\Copy of layout.css">
+      <DependentUpon>layout0.scss</DependentUpon>
+    </Content>
     <Content Include="styles\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\ie8\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="styles\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
@@ -284,6 +290,8 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
+    <Content Include="styles\layout0.scss" />
+    <Content Include="styles\ie8\layout.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

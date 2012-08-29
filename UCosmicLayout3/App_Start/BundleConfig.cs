@@ -32,6 +32,11 @@ namespace UCosmicLayout3
                         "~/styles/layout.css",
                         "~/styles/forms.css"));
 
+            // internet explorer 8 sucks
+            bundles.Add(new StyleBundle("~/bundles/legacy/ie8").Include(
+                "~/styles/ie8/layout.css"
+            ));
+
             // jQuery UI theme
             bundles.Add(new StyleBundle("~/content/themes/base/css").Include(
                         "~/content/themes/base/jquery.ui.core.css",
