@@ -1,13 +1,11 @@
-$tenant-color-1: #007acc;
 $outer-width: 980px;
 $inner-width: 960px;
 $height-of-border: 40px;
 
-$suny-blue-o: #01589c;
-$suny-blue-lighter-o: #0175D3;
-$suny-blue: #000099;
-$suny-blue-lighter: #01589c;
-$suny-blue-contrast: #eeeeee;
+$suny-brand-blue: rgba(0, 76, 147, 1);
+$suny-brand-turq: rgba(0, 158, 224, 1);
+$suny-brand-gray: rgba(132, 134, 135, 1);
+$banner-logo: 'banner-logo.png';
 
 @mixin border-box {
     -webkit-box-sizing: border-box;
@@ -39,6 +37,7 @@ $suny-blue-contrast: #eeeeee;
     opacity: $value;
     $ms-value: $value * 100;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$ms-value})";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$ms-value});
 }
 
 @mixin border-radius($value: 0) {

@@ -32,7 +32,7 @@ namespace UCosmicLayout3
             // bootstrap css bundle
             bundles.Add(new StyleBundle("~/bundles/css").Include(
                         "~/styles/reset.css",
-                        "~/styles/layout.css",
+                        "~/styles/default/layout.css",
                         "~/styles/forms.css"));
 
             // internet explorer 8 sucks

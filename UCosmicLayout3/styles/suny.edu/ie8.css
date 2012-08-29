@@ -1,8 +1,10 @@
+/* suny.edu */
 /* default */
+/* suny.edu */
 body > nav.modules > ul > li > a {
   font-family: Arial !important;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); }
 
 body > nav.modules > ul > li.current a {
   padding: 9px 8px 7px;
@@ -10,8 +12,8 @@ body > nav.modules > ul > li.current a {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
 
 body > nav.modules > ul > li:hover a {
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=95)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=95); }
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); }
 
 body > nav.modules * {
   visibility: visible; }

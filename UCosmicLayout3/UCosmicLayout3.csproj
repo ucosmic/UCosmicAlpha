@@ -234,8 +234,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
-    <Content Include="styles\Copy of layout.css">
-      <DependentUpon>layout0.scss</DependentUpon>
+    <Content Include="styles\default\banner-logo.png" />
+    <Content Include="styles\default\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="styles\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
@@ -245,13 +246,19 @@
     <Content Include="styles\ie8\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <Content Include="styles\layout.css">
-      <DependentUpon>layout.scss</DependentUpon>
-    </Content>
     <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
     <Content Include="styles\suny.edu\banner-logo.png" />
+    <Content Include="styles\suny.edu\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\suny.edu\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\uc.edu\uc.edu.css">
+      <DependentUpon>uc.edu.scss</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -279,7 +286,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="styles\reset.scss" />
-    <Content Include="styles\layout.scss" />
     <Content Include="styles\forms.scss" />
     <Content Include="styles\_bootstrap.scss" />
     <Content Include="Views\Home\Travel.cshtml" />
@@ -298,11 +304,18 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
-    <Content Include="styles\layout0.scss" />
     <Content Include="styles\ie8\layout.scss" />
     <Content Include="Views\Home\Alumni.cshtml" />
     <Content Include="Views\Home\GlobalPress.cshtml" />
     <Content Include="Views\Home\CorporateEngagement.cshtml" />
+    <Content Include="styles\uc.edu\uc.edu.scss" />
+    <Content Include="styles\default\layout.scss" />
+    <Content Include="styles\default\_layout.scss" />
+    <Content Include="styles\_layout.scss" />
+    <Content Include="styles\suny.edu\_layout.scss" />
+    <Content Include="styles\suny.edu\layout.scss" />
+    <Content Include="styles\suny.edu\ie8.scss" />
+    <Content Include="styles\ie8\_layout.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,3 +1,6 @@
+/* suny.edu */
+/* default */
+/* suny.edu */
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -16,12 +19,13 @@ html {
 
 body > nav.modules {
   padding: 10px 0 0 0;
-  background: #ccc; }
+  background: #eeeeff; }
   body > nav.modules.hide {
     visibility: hidden; }
   body > nav.modules > ul > li {
     float: left; }
     body > nav.modules > ul > li > a {
+      position: relative;
       display: inline-block;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
@@ -33,9 +37,10 @@ body > nav.modules {
       padding: 6px 8px;
       height: 28px;
       background: #000099;
-      -moz-opacity: 0.75;
-      opacity: 0.75;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+      -moz-opacity: 0.6;
+      opacity: 0.6;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
       background-image: -webkit-linear-gradient(-90deg, #01589c 0%, #000099 25%);
       background-image: -moz-linear-gradient(-90deg, #01589c 0%, #000099 25%);
       background-image: linear-gradient(-90deg, #01589c 0%, #000099 25%);
@@ -45,6 +50,7 @@ body > nav.modules {
       text-decoration: none;
       -webkit-text-shadow: 0 2px 3px black;
       text-shadow: 0 2px 3px black;
+      /* @include inset-box-shadow(0, -1px, 2px, 0, rgba(33, 33, 33, 0.5)); */
       -moz-box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
       -webkit-box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
       box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
@@ -55,9 +61,10 @@ body > nav.modules {
     body > nav.modules > ul > li:first-child a {
       margin-left: 4px; }
     body > nav.modules > ul > li:hover a {
-      -moz-opacity: 0.9;
-      opacity: 0.9;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"; }
+      -moz-opacity: 0.8;
+      opacity: 0.8;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); }
     body > nav.modules > ul > li.current a {
       -webkit-transition-property: none;
       -moz-transition-property: none;
@@ -69,10 +76,12 @@ body > nav.modules {
       -moz-opacity: 1;
       opacity: 1;
       -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
       padding: 8px;
       margin-top: 0;
       height: 32px;
       font-weight: bold;
+      color: #eeeeff;
       cursor: default; }
 body > header {
   -webkit-box-sizing: border-box;
@@ -80,11 +89,12 @@ body > header {
   box-sizing: border-box;
   min-width: 980px;
   height: 100px;
-  background: url(suny.edu/banner-logo.png) #000099 no-repeat bottom left;
+  background: url("banner-logo.png") #000099 no-repeat bottom left;
   -moz-box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8);
   -webkit-box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8);
   box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8); }
   body > header > .flasher {
+    float: right;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -93,13 +103,14 @@ body > header {
     -webkit-border-radius: 12px;
     border-radius: 12px;
     margin-top: 15px;
-    margin-left: 350px;
-    max-width: 600px;
+    /* margin-left: 250px; */
+    margin-right: 40px;
+    max-width: 700px;
     max-height: 70px;
     font-size: 15px;
     line-height: 23px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: rgba(255, 255, 255, 0.75); }
+    background: rgba(255, 255, 255, 0.9); }
     body > header > .flasher.hide {
       visibility: hidden; }
     body > header > .flasher > a {
@@ -107,12 +118,12 @@ body > header {
       padding: 12px 16px;
       color: #333; }
       body > header > .flasher > a p {
-        max-width: 530px; }
+        max-width: 630px; }
         body > header > .flasher > a p .dismissal {
           font-weight: bold; }
       body > header > .flasher > a i {
         margin-left: 8px;
-        background: url(icons/closer-24-charcoal-transparent.png);
+        background: url(../icons/closer-24-charcoal-transparent.png);
         width: 24px;
         height: 24px; }
 

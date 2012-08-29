@@ -1,0 +1,170 @@
+/* default */
+/* default */
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  /* needed to do full height footer*/
+  height: 100%; }
+  html > body {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    /* position & min-height needed to do full height footer*/
+    position: relative;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333; }
+
+body > nav.modules {
+  padding: 10px 0 0 0;
+  background: #004c93; }
+  body > nav.modules.hide {
+    visibility: hidden; }
+  body > nav.modules > ul > li {
+    float: left; }
+    body > nav.modules > ul > li > a {
+      position: relative;
+      display: inline-block;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 4px 4px 0 0;
+      -moz-border-radius: 4px 4px 0 0;
+      -webkit-border-radius: 4px 4px 0 0;
+      border-radius: 4px 4px 0 0;
+      padding: 6px 8px;
+      height: 28px;
+      background: white;
+      -moz-opacity: 0.9;
+      opacity: 0.9;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+      background-image: -webkit-linear-gradient(-90deg, #eeeeee 0%, white 25%);
+      background-image: -moz-linear-gradient(-90deg, #eeeeee 0%, white 25%);
+      background-image: linear-gradient(-90deg, #eeeeee 0%, white 25%);
+      filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#eeeeee', EndColorStr='white');
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #333333;
+      text-decoration: none;
+      -webkit-text-shadow: 1px 1px 3px rgba(99, 99, 99, 0.5);
+      text-shadow: 1px 1px 3px rgba(99, 99, 99, 0.5);
+      /* @include inset-box-shadow(0, -1px, 2px, 0, rgba(33, 33, 33, 0.5)); */
+      -moz-box-shadow: inset 0 -1px 5px 0 rgba(33, 33, 33, 0.2);
+      -webkit-box-shadow: inset 0 -1px 5px 0 rgba(33, 33, 33, 0.2);
+      box-shadow: inset 0 -1px 5px 0 rgba(33, 33, 33, 0.2);
+      -webkit-transition: opacity 500ms;
+      -moz-transition: opacity 500ms;
+      -o-transition: opacity 500ms;
+      transition: opacity 500ms; }
+    body > nav.modules > ul > li:first-child a {
+      margin-left: 4px; }
+    body > nav.modules > ul > li:hover a {
+      -moz-opacity: 0.95;
+      opacity: 0.95;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=95)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=95); }
+    body > nav.modules > ul > li.current a {
+      -webkit-transition-property: none;
+      -moz-transition-property: none;
+      -o-transition-property: none;
+      transition-property: none;
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      -moz-opacity: 1;
+      opacity: 1;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+      padding: 8px;
+      margin-top: 0;
+      height: 32px;
+      font-weight: bold;
+      color: #333333;
+      cursor: default; }
+body > header {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  min-width: 980px;
+  height: 100px;
+  background: url("banner-logo.png") white no-repeat bottom left;
+  -moz-box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8);
+  -webkit-box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8);
+  box-shadow: 0 3px 3px 0 rgba(33, 33, 33, 0.8); }
+  body > header > .flasher {
+    float: right;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    margin-top: 15px;
+    /* margin-left: 250px; */
+    margin-right: 40px;
+    max-width: 700px;
+    max-height: 70px;
+    font-size: 15px;
+    line-height: 23px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: rgba(255, 255, 255, 0.9); }
+    body > header > .flasher.hide {
+      visibility: hidden; }
+    body > header > .flasher > a {
+      display: block;
+      padding: 12px 16px;
+      color: #333; }
+      body > header > .flasher > a p {
+        max-width: 630px; }
+        body > header > .flasher > a p .dismissal {
+          font-weight: bold; }
+      body > header > .flasher > a i {
+        margin-left: 8px;
+        background: url(../icons/closer-24-charcoal-transparent.png);
+        width: 24px;
+        height: 24px; }
+
+body #main {
+  /* look out for footer height */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  min-width: 980px; }
+  body #main > .content {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding-bottom: 60px; }
+    body #main > .content.fixed {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 960px;
+      padding-left: 20px; }
+    body #main > .content.fluid {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0; }
+
+body > footer {
+  position: absolute;
+  bottom: 0;
+  height: 40px;
+  padding: 0;
+  width: 100%;
+  background: #333;
+  /* z-index: -1; */ }
+  body > footer > *:first-child {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #111;
+    height: 100%;
+    color: #ddd;
+    /* @include font-height(11px, 20px);
+    @include font-ms; */ }
+

@@ -8,6 +8,7 @@
     <!--[if lt IE 9]>
     @Styles.Render("~/bundles/legacy/ie8")
     <![endif]-->
+    @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -105,7 +106,7 @@
         });
 
         $('a[href="#/doflash"]').on('click', function () {
-            app.flasher.text('here is some feedback message.');
+            app.flasher.text('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');
         });
     </script>
 

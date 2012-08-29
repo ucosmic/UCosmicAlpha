@@ -466,6 +466,78 @@ namespace Links {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+    public static class styles {
+        private const string URLPATH = "~/styles";
+        public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+        public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+        public static readonly string _bootstrap_scss = Url("_bootstrap.scss");
+        public static readonly string _layout_scss = Url("_layout.scss");
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class @default {
+            private const string URLPATH = "~/styles/default";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string _layout_scss = Url("_layout.scss");
+            public static readonly string banner_logo_png = Url("banner-logo.png");
+            public static readonly string layout_scss = Url("layout.scss");
+            public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
+                 
+        }
+    
+        public static readonly string forms_scss = Url("forms.scss");
+        public static readonly string forms_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/forms.min.css") ? Url("forms.min.css") : Url("forms.css");
+             
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class icons {
+            private const string URLPATH = "~/styles/icons";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string closer_24_charcoal_transparent_png = Url("closer-24-charcoal-transparent.png");
+            public static readonly string closer_24_white_transparent_png = Url("closer-24-white-transparent.png");
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class ie8 {
+            private const string URLPATH = "~/styles/ie8";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string _layout_scss = Url("_layout.scss");
+            public static readonly string layout_scss = Url("layout.scss");
+            public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
+                 
+        }
+    
+        public static readonly string reset_scss = Url("reset.scss");
+        public static readonly string reset_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/reset.min.css") ? Url("reset.min.css") : Url("reset.css");
+             
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class suny_edu {
+            private const string URLPATH = "~/styles/suny.edu";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string _layout_scss = Url("_layout.scss");
+            public static readonly string banner_logo_png = Url("banner-logo.png");
+            public static readonly string ie8_scss = Url("ie8.scss");
+            public static readonly string ie8_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ie8.min.css") ? Url("ie8.min.css") : Url("ie8.css");
+                 
+            public static readonly string layout_scss = Url("layout.scss");
+            public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
+                 
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class uc_edu {
+            private const string URLPATH = "~/styles/uc.edu";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string uc_edu_scss = Url("uc.edu.scss");
+            public static readonly string uc_edu_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/uc.edu.min.css") ? Url("uc.edu.min.css") : Url("uc.edu.css");
+                 
+        }
+    
+    }
+
+    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
     public static class Models {
         private const string URLPATH = "~/Models";
         public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

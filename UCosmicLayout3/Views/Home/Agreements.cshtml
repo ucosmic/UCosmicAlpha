@@ -1,6 +1,14 @@
 ﻿@{
     ViewBag.Title = "Agreements";
 }
+@section styles
+{
+    <link href="@Url.Content(Links.styles.suny_edu.layout_css)" type="text/css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <link href="@Url.Content(Links.styles.suny_edu.ie8_css)" type="text/css" rel="stylesheet" />
+    <![endif]-->
+}
+
 <div class="fluid content" data-current-module="agreements">
     <h2>@ViewBag.Title</h2>
 
