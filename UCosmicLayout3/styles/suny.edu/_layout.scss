@@ -17,12 +17,14 @@ $nav-modules-default-opacity: .6;
 $nav-modules-hover-opacity: .8;
 $nav-modules-current-opacity: 1;
 
+$banner-height: 100px;
 $banner-bg-color: #000099;
 $nav-modules-bg-color: #eef;
 $nav-module-bg-color: $banner-bg-color;
 $nav-modules-bg-lighter: #01589c;
 
-$flasher-bg-color: rgba(255, 255, 255, .9);
-$flasher-bg-color-ie: #e6e6f4;
-$flasher-text-color: #333;
-$flasher-close-icon: $closer-charcoal-24;
+$flasher-border: 0px none;
+$flasher-bg-color: rgba(13, 13, 13, .9);
+$flasher-bg-color-ie: #111;
+$flasher-text-color: #eee;
+$flasher-close-icon: $closer-white-24;
