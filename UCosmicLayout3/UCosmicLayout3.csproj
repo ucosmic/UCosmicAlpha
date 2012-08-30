@@ -241,6 +241,8 @@
     </Content>
     <Content Include="styles\icons\closer-24-dark.png" />
     <Content Include="styles\icons\closer-24-light.png" />
+    <Content Include="styles\icons\user-voice-24-filled.png" />
+    <Content Include="styles\icons\user-voice-24-light.png" />
     <Content Include="styles\ie8\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>

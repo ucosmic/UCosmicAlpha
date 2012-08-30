@@ -1,4 +1,9 @@
 body {
+    > nav.my {
+        > .content {
+            width: $inner-width;
+        }
+    }
     > nav.modules {
         > ul {
             > li {
@@ -23,7 +28,7 @@ body {
         }
     }
     > header {
-        > .flasher {
+        .flasher {
             background-color: $flasher-bg-color-ie;
         }
     }

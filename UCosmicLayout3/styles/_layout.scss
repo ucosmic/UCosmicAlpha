@@ -19,34 +19,53 @@ body {
         min-width: $inner-width;
         padding: 6px 0 1px 12px;
         background-color: $nav-my-bg-color;
-        input {
-            width: 200px;
-            padding: 4px 8px;
-            @include font-height(12px, 1.25);
-        }
-        a {
-            display: inline-block;
+        > .content {
             @include border-box;
-            border-right: solid 1px $nav-my-link-border-color;
-            padding: 4px 12px;
-            @include font-height(14px, 1);
-            font-weight: bold;
-            color: $nav-my-link-color;
-            &:hover {
-                background-color: $nav-my-link-hover-bg-color;
-                color: $nav-my-link-hover-text-color;
-                text-decoration: none;
+            width: $outer-width;
+            input {
+                width: 200px;
+                padding: 4px 8px;
+                @include font-height(12px, 1.25);
             }
-            &.email {
-                padding-left: 0;
-                color: $nav-my-email-link-color;
-                text-decoration: none;
-                cursor: default;
+            a {
+                display: inline-block;
+                @include border-box;
+                border-right: solid 1px $nav-my-link-border-color;
+                padding: 4px 12px;
+                @include font-height(14px, 1);
+                font-weight: bold;
+                color: $nav-my-link-color;
                 &:hover {
-                    background-color: transparent;
+                    background-color: $nav-my-link-hover-bg-color;
+                    color: $nav-my-link-hover-text-color;
+                    text-decoration: none;
+                }
+                &.email {
+                    padding-left: 0;
+                    color: $nav-my-email-link-color;
+                    text-decoration: none;
+                    cursor: default;
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
+                &.user-voice {
+                    background-image: $user-voice-24-filled;
+                    background-position: 8px -1px;
+                    background-repeat: no-repeat;
+                    padding-left: 40px;
+                }
+
+            }
+            > .left {
+                float: left;
+            }
+            > .right {
+                float: right;
+                a:first-child {
+                    border-left: solid 1px $nav-my-link-border-color;
                 }
             }
-
         }
     }
     > nav.modules {
