@@ -13,9 +13,45 @@ html {
 }
 
 body {
+    > nav.my {
+        @include border-box;
+        width: 100%;
+        min-width: $inner-width;
+        padding: 6px 0 1px 12px;
+        background-color: $nav-my-bg-color;
+        input {
+            width: 200px;
+            padding: 4px 8px;
+            @include font-height(12px, 1.25);
+        }
+        a {
+            display: inline-block;
+            @include border-box;
+            border-right: solid 1px $nav-my-link-border-color;
+            padding: 4px 12px;
+            @include font-height(14px, 1);
+            font-weight: bold;
+            color: $nav-my-link-color;
+            &:hover {
+                text-decoration: none;
+                background-color: #999;
+            }
+            &.email {
+                padding-left: 0;
+                color: $nav-my-email-link-color;
+                text-decoration: none;
+                cursor: default;
+                &:hover {
+                    background-color: transparent;
+                }
+            }
+
+        }
+    }
     > nav.modules {
-        padding: 10px 0 0 0;
+        padding: 2px 0 0 0;
         background: $nav-modules-bg-color;
+        @include inset-box-shadow(0, $nav-modules-inset-shadow-y, 0, 0, $nav-modules-inset-shadow-color);
         &.hide {
             visibility: hidden;
         }

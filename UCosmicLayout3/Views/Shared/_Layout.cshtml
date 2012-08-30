@@ -12,6 +12,15 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <nav class="my">
+        @*<input type="email" placeholder="Email address" />
+        <a href="/#sign-on">Sign On</a>*@
+        <div class="group">
+            <a href="#/account" class="email float-left">Daniel.Ludwig@uc.edu</a>
+            <a href="#/account" class="my float-left">My International</a>
+            <a href="#/account" class="out float-left">Sign out</a>
+        </div>
+    </nav>
     <nav class="modules hide">
         <ul class="group">
             <li class="home">
@@ -68,28 +77,23 @@
     <nav class="bib">
         <ul class="group">
             <li>
-                <a href="#1">
-                    First link
+                <a href="#1">First link
                 </a>
             </li>
             <li>
-                <a href="#2">
-                    Second link
+                <a href="#2">Second link
                 </a>
             </li>
             <li class="current">
-                <a href="#3">
-                    Third link
+                <a href="#3">Third link
                 </a>
             </li>
             <li>
-                <a href="#/flashlong">
-                    Fourth link
+                <a href="#/flashlong">Fourth link
                 </a>
             </li>
             <li>
-                <a href="#/flashshort">
-                    Fifth link
+                <a href="#/flashshort">Fifth link
                 </a>
             </li>
         </ul>
@@ -103,12 +107,7 @@
         </div>
     </footer>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/knockout")
-
-    <script type="text/javascript" src="@Url.Content(Links.scripts.app.app_js)"></script>
-
-    <script type="text/javascript" src="@Url.Content(Links.Models.FlasherViewModel_js)"></script>
+    @Scripts.Render("~/bundles/layout")
 
     <script type="text/javascript">
         app.flasher.text('@TempData["Flasher"]');

@@ -229,12 +229,15 @@
     <Content Include="scripts\knockout-2.1.0.debug.js" />
     <Content Include="scripts\knockout-2.1.0.js" />
     <Content Include="scripts\modernizr-2.5.3.js" />
+    <Content Include="scripts\oss\jquery.placeholder.js" />
+    <Content Include="scripts\oss\jquery.placeholder.min.js" />
     <Content Include="scripts\T4MvcJs\T4MvcJs.js">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
     <Content Include="styles\default\banner-logo.png" />
+    <Content Include="styles\default\box-shadow-2-2.png" />
     <Content Include="styles\default\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
@@ -256,11 +259,7 @@
     <Content Include="styles\suny.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <Content Include="styles\uc.edu\banner-logo0.png" />
-    <Content Include="styles\uc.edu\banner-logo_01.png" />
     <Content Include="styles\uc.edu\banner-logo.png" />
-    <Content Include="styles\uc.edu\banner-logo_03.png" />
-    <Content Include="styles\uc.edu\banner-logo_04.png" />
     <Content Include="styles\uc.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>

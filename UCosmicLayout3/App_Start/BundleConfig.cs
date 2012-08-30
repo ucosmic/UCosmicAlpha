@@ -29,6 +29,13 @@ namespace UCosmicLayout3
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                         "~/scripts/knockout-*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/layout").Include(
+                        "~/scripts/jquery-{version}.js",
+                        "~/scripts/knockout-*",
+                        "~/scripts/app/app.js",
+                        "~/models/FlasherViewModel.js",
+                        "~/scripts/oss/jquery.palceholder*"));
+
             // bootstrap css bundle
             bundles.Add(new StyleBundle("~/bundles/css").Include(
                         "~/styles/reset.css",

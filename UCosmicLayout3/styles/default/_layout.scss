@@ -1,5 +1,10 @@
 /* default */
 
+$nav-my-bg-color: $suny-brand-blue;
+$nav-my-link-border-color: #eee;
+$nav-my-link-color: #eee;
+$nav-my-email-link-color: #eee;
+
 $nav-modules-current-text-color: #333;
 $nav-modules-text-color: #333;
 $nav-modules-text-shadow-x: 1px;
@@ -16,12 +21,6 @@ $nav-modules-inset-shadow-color: rgba(33, 33, 33, 0.2);
 $nav-modules-default-opacity: .9;
 $nav-modules-hover-opacity: .95;
 $nav-modules-current-opacity: 1;
-
-@mixin ie-box-shadow {
-    background-image: url(../default/box-shadow-2-2.png);
-    background-position: top left;
-    background-repeat: repeat-x;
-}
 
 $banner-height: 100px;
 $banner-bg-color: #fff;
@@ -40,3 +39,9 @@ $nav-bib-link-default-color: #eee;
 $nav-bib-link-hover-color: $suny-brand-turq;
 $nav-bib-current-bg-color: #fff;
 $nav-bib-current-text-color: #333;
+
+@mixin ie-box-shadow {
+    background-image: url(../default/box-shadow-2-2.png);
+    background-position: top left;
+    background-repeat: repeat-x;
+}
