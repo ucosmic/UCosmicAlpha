@@ -170,7 +170,6 @@ body {
     > nav.bib {
         position: relative;
         background-color: $nav-bib-bg-color;
-        @include box-shadow(0, 2px, 2px, 0, rgba(33, 33, 33, .8));
         @include ie-box-shadow;
         padding: 0 0 2px 0;
         > ul {
@@ -208,7 +207,7 @@ body #main {
     /* look out for footer height */
     @include border-box;
     min-width: $outer-width;
-
+    @include ie-box-shadow;
     > .content {
         @include border-box;
         padding-bottom: $height-of-border + 20px;
