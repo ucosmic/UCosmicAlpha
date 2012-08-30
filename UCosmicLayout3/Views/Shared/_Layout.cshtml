@@ -62,16 +62,18 @@
         </ul>
     </nav>
     <header>
-        <div class="flasher hide" data-bind="element: 'element'">
-            <a data-bind="click: dismiss">
-                <div class="group">
-                    <p class="float-left">
-                        <span class="content" data-bind="text: text"></span>
-                        <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
-                    </p>
-                    <i class="float-right small closer"></i>
-                </div>
-            </a>
+        <div class="content">
+            <div class="flasher hide" data-bind="element: 'element'">
+                <a data-bind="click: dismiss">
+                    <div class="group">
+                        <p class="float-left">
+                            <span class="content" data-bind="text: text"></span>
+                            <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
+                        </p>
+                        <i class="float-right small closer"></i>
+                    </div>
+                </a>
+            </div>
         </div>
     </header>
     <nav class="bib">

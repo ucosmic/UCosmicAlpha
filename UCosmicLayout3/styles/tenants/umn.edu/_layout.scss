@@ -1,8 +1,8 @@
-/* usf.edu */
+/* umn.edu */
 
-$nav-my-bg-color: $usf-brand-gold-2;
-$nav-my-link-border-color: $usf-brand-green;
-$nav-my-link-color: $usf-brand-green;
+$nav-my-bg-color: $umn-brand-gold;
+$nav-my-link-border-color: $umn-brand-maroon;
+$nav-my-link-color: $umn-brand-maroon;
 $nav-my-email-link-color: #000;
 
 $nav-modules-current-text-color: #eee;
@@ -23,11 +23,11 @@ $nav-modules-hover-opacity: .9;
 $nav-modules-current-opacity: 1;
 
 $banner-height: 100px;
-$banner-outer-bg: transparent;
-$banner-bg-color: $usf-brand-green;
-$nav-modules-bg-color: $usf-brand-gold-2;
-$nav-module-bg-color: $banner-bg-color;
-$nav-modules-bg-lighter: #00553c;
+$banner-outer-bg: url(banner-bg.png);
+$banner-bg-color: transparent;
+$nav-modules-bg-color: $umn-brand-gold;
+$nav-module-bg-color: $umn-brand-maroon;
+$nav-modules-bg-lighter: $umn-brand-maroon-darker;
 
 $flasher-border: 0px none;
 $flasher-bg-color: rgba(11, 11, 11, .8);
@@ -35,9 +35,9 @@ $flasher-bg-color-ie: #111;
 $flasher-text-color: #eee;
 $flasher-close-icon: $closer-white-24;
 
-$nav-bib-bg-color: $usf-brand-gold-2;
-$nav-bib-link-text-color: $usf-brand-green;
-$nav-bib-link-hover-text-color: $usf-brand-green;
-$nav-bib-link-hover-bg-color: #CFB976;
-$nav-bib-current-bg-color: $usf-brand-green;
-$nav-bib-current-text-color: $usf-brand-gold;
+$nav-bib-bg-color: $umn-brand-gold;
+$nav-bib-link-text-color: $umn-brand-maroon;
+$nav-bib-link-hover-text-color: $umn-brand-gold;
+$nav-bib-link-hover-bg-color: $umn-brand-maroon;
+$nav-bib-current-bg-color: $umn-brand-maroon-darker;
+$nav-bib-current-text-color: $umn-brand-gold;

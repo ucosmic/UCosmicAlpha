@@ -247,6 +247,15 @@
     <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\umn.edu\banner-bg.png" />
+    <Content Include="styles\tenants\umn.edu\banner-logo.png" />
+    <Content Include="styles\tenants\umn.edu\banner-logo.png" />
+    <Content Include="styles\tenants\umn.edu\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\umn.edu\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\_default\banner-logo.png" />
     <Content Include="styles\tenants\_default\box-shadow-2-2.png" />
     <Content Include="styles\tenants\_default\layout.css">
@@ -338,6 +347,10 @@
     <Content Include="styles\tenants\usf.edu\_brand.scss" />
     <Content Include="styles\tenants\_default\layout.scss" />
     <Content Include="styles\tenants\_default\_layout.scss" />
+    <Content Include="styles\tenants\umn.edu\_brand.scss" />
+    <Content Include="styles\tenants\umn.edu\_layout.scss" />
+    <Content Include="styles\tenants\umn.edu\ie8.scss" />
+    <Content Include="styles\tenants\umn.edu\layout.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
