@@ -252,18 +252,18 @@
     <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
-    <Content Include="styles\suny.edu\banner-logo.png" />
-    <Content Include="styles\suny.edu\ie8.css">
+    <Content Include="styles\tenants\suny.edu\banner-logo.png" />
+    <Content Include="styles\tenants\suny.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
-    <Content Include="styles\suny.edu\layout.css">
+    <Content Include="styles\tenants\suny.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <Content Include="styles\uc.edu\banner-logo.png" />
-    <Content Include="styles\uc.edu\ie8.css">
+    <Content Include="styles\tenants\uc.edu\banner-logo.png" />
+    <Content Include="styles\tenants\uc.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
-    <Content Include="styles\uc.edu\layout.css">
+    <Content Include="styles\tenants\uc.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="Web.config" />
@@ -318,13 +318,13 @@
     <Content Include="styles\default\layout.scss" />
     <Content Include="styles\default\_layout.scss" />
     <Content Include="styles\_layout.scss" />
-    <Content Include="styles\suny.edu\_layout.scss" />
-    <Content Include="styles\suny.edu\layout.scss" />
-    <Content Include="styles\suny.edu\ie8.scss" />
     <Content Include="styles\ie8\_layout.scss" />
-    <Content Include="styles\uc.edu\_layout.scss" />
-    <Content Include="styles\uc.edu\ie8.scss" />
-    <Content Include="styles\uc.edu\layout.scss" />
+    <Content Include="styles\tenants\suny.edu\ie8.scss" />
+    <Content Include="styles\tenants\suny.edu\layout.scss" />
+    <Content Include="styles\tenants\suny.edu\_layout.scss" />
+    <Content Include="styles\tenants\uc.edu\ie8.scss" />
+    <Content Include="styles\tenants\uc.edu\layout.scss" />
+    <Content Include="styles\tenants\uc.edu\_layout.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -41,8 +41,7 @@ body > nav.my {
     font-weight: bold;
     color: #eeeeee; }
     body > nav.my a:hover {
-      text-decoration: none;
-      background-color: #999; }
+      text-decoration: none; }
     body > nav.my a.email {
       padding-left: 0;
       color: #eeeeee;
