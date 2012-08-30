@@ -1,15 +1,15 @@
 /* default */
 body > nav.modules > ul > li > a {
-  font-family: Arial !important;
+  /* font-family: Arial !important;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); */ }
 body > nav.modules > ul > li:hover a {
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=95)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=95); }
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=95)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=95); */ }
 body > nav.modules > ul > li.current a {
   padding: 9px 8px 7px;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); */ }
 body > nav.modules * {
   visibility: visible; }
 body > header > .flasher {

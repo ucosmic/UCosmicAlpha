@@ -19,7 +19,7 @@ html {
 
 body > nav.modules {
   padding: 10px 0 0 0;
-  background: white; }
+  background: #e00122; }
   body > nav.modules.hide {
     visibility: hidden; }
   body > nav.modules > ul > li {
@@ -29,41 +29,32 @@ body > nav.modules {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      margin: 4px 4px 0 0;
-      -moz-border-radius: 4px 4px 0 0;
-      -webkit-border-radius: 4px 4px 0 0;
-      border-radius: 4px 4px 0 0;
+      margin: 4px 2px 0 0;
+      -moz-border-radius: 8px 8px 0 0;
+      -webkit-border-radius: 8px 8px 0 0;
+      border-radius: 8px 8px 0 0;
       padding: 6px 8px;
       height: 28px;
-      background: black;
-      -moz-opacity: 0.8;
-      opacity: 0.8;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
-      background-image: -webkit-linear-gradient(-90deg, #333333 0%, black 25%);
-      background-image: -moz-linear-gradient(-90deg, #333333 0%, black 25%);
-      background-image: linear-gradient(-90deg, #333333 0%, black 25%);
-      filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#333333', EndColorStr='black');
+      background-color: #333333;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: white;
       text-decoration: none;
       -webkit-text-shadow: 0 2px 3px black;
       text-shadow: 0 2px 3px black;
-      /* @include inset-box-shadow(0, -1px, 2px, 0, rgba(33, 33, 33, 0.5)); */
       -moz-box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
       -webkit-box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
       box-shadow: inset 0 -1px 2px 0 rgba(33, 33, 33, 0.5);
-      -webkit-transition: opacity 500ms;
-      -moz-transition: opacity 500ms;
-      -o-transition: opacity 500ms;
-      transition: opacity 500ms; }
+      -webkit-transition: all 500ms;
+      -moz-transition: all 500ms;
+      -o-transition: all 500ms;
+      transition: all 500ms; }
     body > nav.modules > ul > li:first-child a {
       margin-left: 4px; }
     body > nav.modules > ul > li:hover a {
-      -moz-opacity: 0.9;
-      opacity: 0.9;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
+      background-color: black;
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none; }
     body > nav.modules > ul > li.current a {
       -webkit-transition-property: none;
       -moz-transition-property: none;
@@ -72,15 +63,12 @@ body > nav.modules {
       -moz-box-shadow: none;
       -webkit-box-shadow: none;
       box-shadow: none;
-      -moz-opacity: 1;
-      opacity: 1;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
       padding: 8px;
       margin-top: 0;
       height: 32px;
-      font-weight: bold;
+      background-color: black;
       color: #eeeeee;
+      font-weight: bold;
       cursor: default; }
 body > header {
   position: relative;
@@ -90,8 +78,7 @@ body > header {
   box-sizing: border-box;
   min-width: 980px;
   height: 100px;
-  background: url("banner-logo.png") black no-repeat bottom left;
-  /* @include box-shadow(0, 2px, 2px, 0, rgba(33, 33, 33, .8)); */ }
+  background: url("banner-logo.png") black no-repeat bottom left; }
   body > header > .flasher {
     /* float: right; */
     -webkit-box-sizing: border-box;
@@ -146,15 +133,17 @@ body > nav.bib {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      /* margin: 0 8px 0 0; */
-      /* @include border-radii(0, 0, 8px, 8px); */
+      margin: 0 2px 0 0;
+      -moz-border-radius: 0 0 8px 8px;
+      -webkit-border-radius: 0 0 8px 8px;
+      border-radius: 0 0 8px 8px;
       font-size: 16px;
       line-height: 1;
       padding: 10px 16px 8px;
       color: #eeeeee;
       text-decoration: none; }
     body > nav.bib > ul > li:hover a {
-      background-color: #cb0120;
+      background-color: #b8011d;
       background-image: url(../default/box-shadow-2-2.png);
       background-position: top left;
       background-repeat: repeat-x; }

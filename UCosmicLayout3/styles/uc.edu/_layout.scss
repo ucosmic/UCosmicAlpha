@@ -19,18 +19,18 @@ $nav-modules-current-opacity: 1;
 
 $banner-height: 100px;
 $banner-bg-color: #000;
-$nav-modules-bg-color: #fff;
+$nav-modules-bg-color: $uc-brand-red;
 $nav-module-bg-color: $banner-bg-color;
 $nav-modules-bg-lighter: #333;
 
-$flasher-border: solid 2px #e00122;
+$flasher-border: solid 2px $uc-brand-red;
 $flasher-bg-color: rgba(255, 255, 255, .9);
 $flasher-bg-color-ie: #eee;
 $flasher-text-color: #333;
 $flasher-close-icon: $closer-dark-24;
 
-$nav-bib-bg-color: #e00122;
+$nav-bib-bg-color: $uc-brand-red;
 $nav-bib-link-default-color: #eee;
-$nav-bib-link-hover-color: #cb0120;
+$nav-bib-link-hover-color: #b8011d;
 $nav-bib-current-bg-color: #000;
 $nav-bib-current-text-color: #eee;

@@ -3,18 +3,18 @@ body {
         > ul {
             > li {
                 > a {
-                    font-family: Arial !important;
+                    /* font-family: Arial !important;
                     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100})" !important;
-                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100});
+                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-default-opacity * 100}); */
                 }
                 &:hover a {
-                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100})" !important;
-                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100});
+                    /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100})" !important;
+                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-hover-opacity * 100}); */
                 }
                 &.current a {
                     padding: 9px 8px 7px;
-                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100})" !important;
-                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100});
+                    /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100})" !important;
+                    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$nav-modules-current-opacity * 100}); */
                 }
             }
         }
