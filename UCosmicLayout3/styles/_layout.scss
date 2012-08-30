@@ -33,6 +33,8 @@ body {
             font-weight: bold;
             color: $nav-my-link-color;
             &:hover {
+                background-color: $nav-my-link-hover-bg-color;
+                color: $nav-my-link-hover-text-color;
                 text-decoration: none;
             }
             &.email {
@@ -106,7 +108,7 @@ body {
             background-image: url($banner-logo);
             background-color: $banner-bg-color;
             background-repeat: no-repeat;
-            background-position: bottom-left;
+            background-position: bottom left;
             > .flasher {
                 /* float: right; */
                 @include border-box;

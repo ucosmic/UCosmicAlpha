@@ -35,13 +35,15 @@ body > nav.my {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    border-right: solid 1px #dddddd;
+    border-right: solid 1px #eeeeee;
     padding: 4px 12px;
     font-size: 14px;
     line-height: 1;
     font-weight: bold;
     color: #eeeeee; }
     body > nav.my a:hover {
+      background-color: #eeeeee;
+      color: #502d0e;
       text-decoration: none; }
     body > nav.my a.email {
       padding-left: 0;
@@ -123,7 +125,7 @@ body > header {
     background-image: url("banner-logo.png");
     background-color: white;
     background-repeat: no-repeat;
-    background-position: bottom-left; }
+    background-position: bottom left; }
     body > header > .content > .flasher {
       /* float: right; */
       -webkit-box-sizing: border-box;

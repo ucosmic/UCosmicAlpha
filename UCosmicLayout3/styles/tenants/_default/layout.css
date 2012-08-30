@@ -41,6 +41,8 @@ body > nav.my {
     font-weight: bold;
     color: #eeeeee; }
     body > nav.my a:hover {
+      background-color: #eeeeee;
+      color: #004c93;
       text-decoration: none; }
     body > nav.my a.email {
       padding-left: 0;
@@ -122,7 +124,7 @@ body > header {
     background-image: url("banner-logo.png");
     background-color: white;
     background-repeat: no-repeat;
-    background-position: bottom-left; }
+    background-position: bottom left; }
     body > header > .content > .flasher {
       /* float: right; */
       -webkit-box-sizing: border-box;
