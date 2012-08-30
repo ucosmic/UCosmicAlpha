@@ -57,9 +57,7 @@
             <a data-bind="click: dismiss">
                 <div class="group">
                     <p class="float-left">
-                        <span class="content" data-bind="text: text">@*Here is your feedback message.
-                            What happens when this gets longer, much l on g e r, so long t h a t it wraps?*@
-                        </span>
+                        <span class="content" data-bind="text: text"></span>
                         <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
                     </p>
                     <i class="float-right small closer"></i>
@@ -67,11 +65,35 @@
             </a>
         </div>
     </header>
-    <nav style="position: relative; background: #e00122; z-index: -1;">
-        Here is another nav 
+    <nav class="bib">
+        <ul class="group">
+            <li>
+                <a href="#1">
+                    First link
+                </a>
+            </li>
+            <li>
+                <a href="#2">
+                    Second link
+                </a>
+            </li>
+            <li class="current">
+                <a href="#3">
+                    Third link
+                </a>
+            </li>
+            <li>
+                <a href="#/flashlong">
+                    Fourth link
+                </a>
+            </li>
+            <li>
+                <a href="#/flashshort">
+                    Fifth link
+                </a>
+            </li>
+        </ul>
     </nav>
-    <a href="#/flashlong">Add long text to flasher</a>
-    <a href="#/flashshort">Add short text to flasher</a>
     <div id="main" class="group">
         @RenderBody()
     </div>
@@ -85,6 +107,7 @@
     @Scripts.Render("~/bundles/knockout")
 
     <script type="text/javascript" src="@Url.Content(Links.scripts.app.app_js)"></script>
+
     <script type="text/javascript" src="@Url.Content(Links.Models.FlasherViewModel_js)"></script>
 
     <script type="text/javascript">

@@ -14,4 +14,8 @@ body > nav.modules * {
   visibility: visible; }
 body > header > .flasher {
   background-color: #353535; }
+body #main {
+  background-image: url(../default/box-shadow-2-2.png);
+  background-position: top left;
+  background-repeat: repeat-x; }
 

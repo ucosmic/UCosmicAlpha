@@ -27,4 +27,8 @@ body {
             background-color: $flasher-bg-color-ie;
         }
     }
+
+    #main {
+        @include ie-box-shadow;
+    }
 }

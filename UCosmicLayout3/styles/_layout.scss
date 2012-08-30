@@ -23,7 +23,6 @@ body {
             > li {
                 float: left;
                 > a {
-                    position: relative;
                     display: inline-block;
                     @include border-box;
                     margin: 4px 4px 0 0;
@@ -62,11 +61,13 @@ body {
         }
     }
     > header {
+        position: relative;
+        z-index: 1;
         @include border-box;
         min-width: $outer-width;
         height: $banner-height;
         background: url($banner-logo) $banner-bg-color no-repeat bottom left;
-        @include box-shadow(0, 3px, 3px, 0, rgba(33, 33, 33, .8));
+        /* @include box-shadow(0, 2px, 2px, 0, rgba(33, 33, 33, .8)); */
         > .flasher {
             /* float: right; */
             @include border-box;
@@ -101,6 +102,38 @@ body {
                     background: $flasher-close-icon;
                     width: 24px;
                     height: 24px;
+                }
+            }
+        }
+    }
+    > nav.bib {
+        position: relative;
+        background-color: $nav-bib-bg-color;
+        @include box-shadow(0, 2px, 2px, 0, rgba(33, 33, 33, .8));
+        @include ie-box-shadow;
+        > ul {
+            > li {
+                float: left;
+                > a {
+                    display: inline-block;
+                    @include border-box;
+                    /* margin: 0 8px 0 0; */
+                    /* @include border-radii(0, 0, 8px, 8px); */
+                    @include font-height(16px, 1);
+                    padding: 10px 16px 8px;
+                    color: $nav-bib-link-default-color;
+                    text-decoration: none;
+                }
+                &:hover a {
+                    background-color: $nav-bib-link-hover-color;
+                    @include ie-box-shadow;
+                }
+                &.current a {
+                    background-color: $nav-bib-current-bg-color;
+                    background-image: none;
+                    color: $nav-bib-current-text-color;
+                    font-weight: bold;
+                    cursor: default;
                 }
             }
         }
