@@ -158,7 +158,7 @@ body > nav.bib {
   -moz-box-shadow: 0 2px 2px 0 rgba(33, 33, 33, 0.8);
   -webkit-box-shadow: 0 2px 2px 0 rgba(33, 33, 33, 0.8);
   box-shadow: 0 2px 2px 0 rgba(33, 33, 33, 0.8);
-  background-image: url(../default/box-shadow-2-2.png);
+  background-image: url(../_default/box-shadow-2-2.png);
   background-position: top left;
   background-repeat: repeat-x; }
   body > nav.bib > ul {
@@ -186,7 +186,7 @@ body > nav.bib {
       body > nav.bib > ul > li:hover a {
         color: #eeeeee;
         background-color: #009ee0;
-        background-image: url(../default/box-shadow-2-2.png);
+        background-image: url(../_default/box-shadow-2-2.png);
         background-position: top left;
         background-repeat: repeat-x; }
       body > nav.bib > ul > li.current a {

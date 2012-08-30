@@ -482,19 +482,6 @@ namespace Links {
         public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
         public static readonly string _bootstrap_scss = Url("_bootstrap.scss");
         public static readonly string _layout_scss = Url("_layout.scss");
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class @default {
-            private const string URLPATH = "~/styles/default";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string _layout_scss = Url("_layout.scss");
-            public static readonly string banner_logo_png = Url("banner-logo.png");
-            public static readonly string box_shadow_2_2_png = Url("box-shadow-2-2.png");
-            public static readonly string layout_scss = Url("layout.scss");
-            public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
-                 
-        }
-    
         public static readonly string forms_scss = Url("forms.scss");
         public static readonly string forms_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/forms.min.css") ? Url("forms.min.css") : Url("forms.css");
              
@@ -527,10 +514,24 @@ namespace Links {
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class _default {
+                private const string URLPATH = "~/styles/tenants/_default";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _layout_scss = Url("_layout.scss");
+                public static readonly string banner_logo_png = Url("banner-logo.png");
+                public static readonly string box_shadow_2_2_png = Url("box-shadow-2-2.png");
+                public static readonly string layout_scss = Url("layout.scss");
+                public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
+                     
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class suny_edu {
                 private const string URLPATH = "~/styles/tenants/suny.edu";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _brand_scss = Url("_brand.scss");
                 public static readonly string _layout_scss = Url("_layout.scss");
                 public static readonly string banner_logo_png = Url("banner-logo.png");
                 public static readonly string ie8_scss = Url("ie8.scss");
@@ -546,6 +547,7 @@ namespace Links {
                 private const string URLPATH = "~/styles/tenants/uc.edu";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _brand_scss = Url("_brand.scss");
                 public static readonly string _layout_scss = Url("_layout.scss");
                 public static readonly string banner_logo_png = Url("banner-logo.png");
                 public static readonly string ie8_scss = Url("ie8.scss");
@@ -561,6 +563,7 @@ namespace Links {
                 private const string URLPATH = "~/styles/tenants/usf.edu";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _brand_scss = Url("_brand.scss");
                 public static readonly string _layout_scss = Url("_layout.scss");
                 public static readonly string banner_logo_png = Url("banner-logo.png");
                 public static readonly string ie8_scss = Url("ie8.scss");

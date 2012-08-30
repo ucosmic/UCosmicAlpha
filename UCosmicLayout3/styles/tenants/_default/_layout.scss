@@ -42,7 +42,7 @@ $nav-bib-current-bg-color: #fff;
 $nav-bib-current-text-color: #333;
 
 @mixin ie-box-shadow {
-    background-image: url(../default/box-shadow-2-2.png);
+    background-image: url(../_default/box-shadow-2-2.png);
     background-position: top left;
     background-repeat: repeat-x;
 }

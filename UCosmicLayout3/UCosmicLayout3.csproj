@@ -236,11 +236,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
-    <Content Include="styles\default\banner-logo.png" />
-    <Content Include="styles\default\box-shadow-2-2.png" />
-    <Content Include="styles\default\layout.css">
-      <DependentUpon>layout.scss</DependentUpon>
-    </Content>
     <Content Include="styles\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
@@ -251,6 +246,11 @@
     </Content>
     <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\_default\banner-logo.png" />
+    <Content Include="styles\tenants\_default\box-shadow-2-2.png" />
+    <Content Include="styles\tenants\_default\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\usf.edu\banner-logo.png" />
     <Content Include="styles\tenants\usf.edu\ie8.css">
@@ -322,8 +322,6 @@
     <Content Include="Views\Home\Alumni.cshtml" />
     <Content Include="Views\Home\GlobalPress.cshtml" />
     <Content Include="Views\Home\CorporateEngagement.cshtml" />
-    <Content Include="styles\default\layout.scss" />
-    <Content Include="styles\default\_layout.scss" />
     <Content Include="styles\_layout.scss" />
     <Content Include="styles\ie8\_layout.scss" />
     <Content Include="styles\tenants\suny.edu\ie8.scss" />
@@ -338,6 +336,8 @@
     <Content Include="styles\tenants\suny.edu\_brand.scss" />
     <Content Include="styles\tenants\uc.edu\_brand.scss" />
     <Content Include="styles\tenants\usf.edu\_brand.scss" />
+    <Content Include="styles\tenants\_default\layout.scss" />
+    <Content Include="styles\tenants\_default\_layout.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

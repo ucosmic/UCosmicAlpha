@@ -33,7 +33,7 @@ body > nav.modules * {
 body > header > .flasher {
   background-color: #111111; }
 body #main {
-  background-image: url(../default/box-shadow-2-2.png);
+  background-image: url(../_default/box-shadow-2-2.png);
   background-position: top left;
   background-repeat: repeat-x; }
 

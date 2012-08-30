@@ -25,7 +25,6 @@ namespace UCosmicLayout3.Controllers
 
         public virtual ActionResult Alumni()
         {
-            TempData.Add("Flasher", "This is the alumni page.");
             return View();
         }
 
@@ -51,6 +50,7 @@ namespace UCosmicLayout3.Controllers
 
         public virtual ActionResult GlobalPress()
         {
+            TempData.Add("Flasher", "This is the global press page.");
             return View();
         }
     }

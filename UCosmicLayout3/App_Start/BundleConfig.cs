@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace UCosmicLayout3
 {
@@ -39,7 +38,7 @@ namespace UCosmicLayout3
             // bootstrap css bundle
             bundles.Add(new StyleBundle("~/bundles/css").Include(
                         "~/styles/reset.css",
-                        "~/styles/default/layout.css",
+                        "~/styles/tenants/_default/layout.css",
                         "~/styles/forms.css"));
 
             // internet explorer 8 sucks
