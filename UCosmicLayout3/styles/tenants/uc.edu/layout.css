@@ -162,33 +162,40 @@ body > nav.bib {
   background-image: url(../default/box-shadow-2-2.png);
   background-position: top left;
   background-repeat: repeat-x; }
-  body > nav.bib > ul > li {
-    float: left; }
-    body > nav.bib > ul > li > a {
-      display: inline-block;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      margin: 0 2px 0 0;
-      -moz-border-radius: 0 0 8px 8px;
-      -webkit-border-radius: 0 0 8px 8px;
-      border-radius: 0 0 8px 8px;
-      font-size: 16px;
-      line-height: 1;
-      padding: 10px 16px 8px;
-      color: #eeeeee;
-      text-decoration: none; }
-    body > nav.bib > ul > li:hover a {
-      background-color: #b8011d;
-      background-image: url(../default/box-shadow-2-2.png);
-      background-position: top left;
-      background-repeat: repeat-x; }
-    body > nav.bib > ul > li.current a {
-      background-color: black;
-      background-image: none;
-      color: #eeeeee;
-      font-weight: bold;
-      cursor: default; }
+  body > nav.bib > ul {
+    margin: 0 0 0 4px; }
+    body > nav.bib > ul > li {
+      float: left; }
+      body > nav.bib > ul > li > a {
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0 2px 0 0;
+        -moz-border-radius: 0 0 8px 8px;
+        -webkit-border-radius: 0 0 8px 8px;
+        border-radius: 0 0 8px 8px;
+        font-size: 16px;
+        line-height: 1;
+        padding: 10px 16px 8px;
+        color: #eeeeee;
+        text-decoration: none;
+        -webkit-transition: all 500ms;
+        -moz-transition: all 500ms;
+        -o-transition: all 500ms;
+        transition: all 500ms; }
+      body > nav.bib > ul > li:hover a {
+        color: #eeeeee;
+        background-color: #b8011d;
+        background-image: url(../default/box-shadow-2-2.png);
+        background-position: top left;
+        background-repeat: repeat-x; }
+      body > nav.bib > ul > li.current a {
+        background-color: black;
+        background-image: none;
+        color: #eeeeee;
+        font-weight: bold;
+        cursor: default; }
 
 body #main {
   /* look out for footer height */

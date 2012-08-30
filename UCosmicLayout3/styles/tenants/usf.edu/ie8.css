@@ -1,0 +1,39 @@
+/* usf.edu */
+.usf-color {
+  color: #006747;
+  color: #cfc493;
+  color: #dbe442;
+  color: #9ccb3b;
+  color: #009374;
+  color: #29afce;
+  color: #80b0a6;
+  color: #7e96a0;
+  color: #006484;
+  color: #466069;
+  color: #6f2687;
+  color: #d60080;
+  color: #bb1847;
+  color: #743b19; }
+
+/* default */
+/* usf.edu */
+body > nav.modules > ul > li > a {
+  /* font-family: Arial !important;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); */ }
+body > nav.modules > ul > li:hover a {
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); */ }
+body > nav.modules > ul > li.current a {
+  padding: 9px 8px 7px;
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)" !important;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); */ }
+body > nav.modules * {
+  visibility: visible; }
+body > header > .flasher {
+  background-color: #111111; }
+body #main {
+  background-image: url(../default/box-shadow-2-2.png);
+  background-position: top left;
+  background-repeat: repeat-x; }
+

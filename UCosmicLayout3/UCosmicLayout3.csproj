@@ -252,6 +252,13 @@
     <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\usf.edu\banner-logo.png" />
+    <Content Include="styles\tenants\usf.edu\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\usf.edu\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\suny.edu\banner-logo.png" />
     <Content Include="styles\tenants\suny.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
@@ -325,6 +332,12 @@
     <Content Include="styles\tenants\uc.edu\ie8.scss" />
     <Content Include="styles\tenants\uc.edu\layout.scss" />
     <Content Include="styles\tenants\uc.edu\_layout.scss" />
+    <Content Include="styles\tenants\usf.edu\_layout.scss" />
+    <Content Include="styles\tenants\usf.edu\ie8.scss" />
+    <Content Include="styles\tenants\usf.edu\layout.scss" />
+    <Content Include="styles\tenants\suny.edu\_brand.scss" />
+    <Content Include="styles\tenants\uc.edu\_brand.scss" />
+    <Content Include="styles\tenants\usf.edu\_brand.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

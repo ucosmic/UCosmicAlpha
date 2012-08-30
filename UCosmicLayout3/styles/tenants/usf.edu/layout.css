@@ -1,6 +1,22 @@
-/* suny.edu */
+/* usf.edu */
 /* default */
-/* suny.edu */
+.usf-color {
+  color: #006747;
+  color: #cfc493;
+  color: #dbe442;
+  color: #9ccb3b;
+  color: #009374;
+  color: #29afce;
+  color: #80b0a6;
+  color: #7e96a0;
+  color: #006484;
+  color: #466069;
+  color: #6f2687;
+  color: #d60080;
+  color: #bb1847;
+  color: #743b19; }
+
+/* usf.edu */
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -24,7 +40,7 @@ body > nav.my {
   width: 100%;
   min-width: 960px;
   padding: 6px 0 1px 12px;
-  background-color: #009ee0; }
+  background-color: #cfc493; }
   body > nav.my input {
     width: 200px;
     padding: 4px 8px;
@@ -35,24 +51,24 @@ body > nav.my {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    border-right: solid 1px #cccccc;
+    border-right: solid 1px #006747;
     padding: 4px 12px;
     font-size: 14px;
     line-height: 1;
     font-weight: bold;
-    color: #eeeeee; }
+    color: #006747; }
     body > nav.my a:hover {
       text-decoration: none; }
     body > nav.my a.email {
       padding-left: 0;
-      color: #eeeeee;
+      color: black;
       text-decoration: none;
       cursor: default; }
       body > nav.my a.email:hover {
         background-color: transparent; }
 body > nav.modules {
   padding: 2px 0 0 0;
-  background: #009ee0;
+  background: #cfc493;
   -moz-box-shadow: inset 0 -1px 0 0 rgba(33, 33, 33, 0.5);
   -webkit-box-shadow: inset 0 -1px 0 0 rgba(33, 33, 33, 0.5);
   box-shadow: inset 0 -1px 0 0 rgba(33, 33, 33, 0.5); }
@@ -71,9 +87,9 @@ body > nav.modules {
       border-radius: 8px 8px 0 0;
       padding: 6px 8px;
       height: 28px;
-      background-color: #01589c;
+      background-color: #00553c;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      color: #eeeeee;
+      color: white;
       text-decoration: none;
       -webkit-text-shadow: 0 2px 3px black;
       text-shadow: 0 2px 3px black;
@@ -87,7 +103,7 @@ body > nav.modules {
     body > nav.modules > ul > li:first-child a {
       margin-left: 4px; }
     body > nav.modules > ul > li:hover a {
-      background-color: #000099;
+      background-color: #006747;
       -moz-box-shadow: none;
       -webkit-box-shadow: none;
       box-shadow: none; }
@@ -102,8 +118,8 @@ body > nav.modules {
       padding: 8px;
       margin-top: 0;
       height: 32px;
-      background-color: #000099;
-      color: #eeeeff;
+      background-color: #006747;
+      color: #eeeeee;
       font-weight: bold;
       cursor: default; }
 body > header {
@@ -114,7 +130,7 @@ body > header {
   box-sizing: border-box;
   min-width: 980px;
   height: 100px;
-  background: url("banner-logo.png") #000099 no-repeat bottom left; }
+  background: url("banner-logo.png") #006747 no-repeat bottom left; }
   body > header > .flasher {
     /* float: right; */
     -webkit-box-sizing: border-box;
@@ -135,7 +151,7 @@ body > header {
     line-height: 23px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    background: rgba(13, 13, 13, 0.9); }
+    background: rgba(11, 11, 11, 0.8); }
     body > header > .flasher.hide {
       visibility: hidden; }
     body > header > .flasher > a {
@@ -155,7 +171,7 @@ body > header {
         height: 24px; }
 body > nav.bib {
   position: relative;
-  background-color: #009ee0;
+  background-color: #cfc493;
   -moz-box-shadow: 0 2px 2px 0 rgba(33, 33, 33, 0.8);
   -webkit-box-shadow: 0 2px 2px 0 rgba(33, 33, 33, 0.8);
   box-shadow: 0 2px 2px 0 rgba(33, 33, 33, 0.8);
@@ -178,22 +194,22 @@ body > nav.bib {
         font-size: 16px;
         line-height: 1;
         padding: 10px 16px 8px;
-        color: #eeeeee;
+        color: #006747;
         text-decoration: none;
         -webkit-transition: all 500ms;
         -moz-transition: all 500ms;
         -o-transition: all 500ms;
         transition: all 500ms; }
       body > nav.bib > ul > li:hover a {
-        color: #eeeeee;
-        background-color: #004c93;
+        color: #006747;
+        background-color: #beb06d;
         background-image: url(../default/box-shadow-2-2.png);
         background-position: top left;
         background-repeat: repeat-x; }
       body > nav.bib > ul > li.current a {
-        background-color: #000099;
+        background-color: #006747;
         background-image: none;
-        color: #eeeeee;
+        color: #cfc493;
         font-weight: bold;
         cursor: default; }
 
