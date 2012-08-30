@@ -143,6 +143,7 @@ body {
         background-color: $nav-bib-bg-color;
         @include box-shadow(0, 2px, 2px, 0, rgba(33, 33, 33, .8));
         @include ie-box-shadow;
+        padding: 0 0 2px 0;
         > ul {
             margin: 0 0 0 4px;
             > li {
@@ -156,7 +157,6 @@ body {
                     padding: 10px 16px 8px;
                     color: $nav-bib-link-text-color;
                     text-decoration: none;
-                    @include transition(all, 500ms);
                 }
                 &:hover a {
                     color: $nav-bib-link-hover-text-color;
