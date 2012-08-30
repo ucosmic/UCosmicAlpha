@@ -210,7 +210,7 @@ body #main {
     @include ie-box-shadow;
     > .content {
         @include border-box;
-        padding-bottom: $height-of-border + 20px;
+        padding-bottom: $footer-height + 20px;
 
         &.fixed {
             @include border-box;
@@ -229,17 +229,35 @@ body #main {
 body > footer {
     position: absolute;
     bottom: 0;
-    height: $height-of-border;
+    height: $footer-height;
     padding: 0;
     width: 100%;
-    background: #333;
-    /* z-index: -1; */
+    background-color: $footer-bg-color;
+    @include ie-box-shadow;
     > *:first-child {
         @include border-box;
-        background: #111;
         height: 100%;
-        color: #ddd;
-        /* @include font-height(11px, 20px);
-        @include font-ms; */
+        color: $footer-text-color;
+    }
+    nav.modules {
+        > ul {
+            > li {
+                float: left;
+                > a {
+                    @include border-box;
+                    display: inline-block;
+                    margin: 10px 0 0;
+                    border-right: solid 1px $footer-link-border-color;
+                    padding: 0 8px;
+                    @include font-height(16px, 20px);
+                    @include font-ms;
+                    color: $footer-link-text-color;
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
     }
 }

@@ -115,7 +115,46 @@
     </div>
     <footer>
         <div>
-            This is where the footer stuff will go.
+            <nav class="modules">
+                <ul class="group">
+                    <li class="home">
+                        <a href="@Url.Action(MVC.Home.Index())">Home
+                        </a>
+                    </li>
+                    <li class="agreements">
+                        <a href="@Url.Action(MVC.Home.Agreements())">Agreements
+                        </a>
+                    </li>
+                    <li class="employees">
+                        <a href="@Url.Action(MVC.Home.Employees())">Faculty & Staff
+                        </a>
+                    </li>
+                    <li class="alumni">
+                        <a href="@Url.Action(MVC.Home.Alumni())">Alumni
+                        </a>
+                    </li>
+                    <li class="students">
+                        <a href="@Url.Action(MVC.Home.Students())">Students
+                        </a>
+                    </li>
+                    <li class="reps">
+                        <a href="@Url.Action(MVC.Home.Representatives())">Representatives
+                        </a>
+                    </li>
+                    <li class="travel">
+                        <a href="@Url.Action(MVC.Home.Travel())">Travel
+                        </a>
+                    </li>
+                    <li class="corporate">
+                        <a href="@Url.Action(MVC.Home.CorporateEngagement())">Corporate Engagement
+                        </a>
+                    </li>
+                    <li class="press">
+                        <a href="@Url.Action(MVC.Home.GlobalPress())">Global Press
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </footer>
 
@@ -124,7 +163,7 @@
     <script type="text/javascript">
         app.flasher.text('@TempData["Flasher"]');
         $(function () {
-            $('nav.modules a').each(function () {
+            $('header nav.modules a').each(function () {
                 var $a = $(this);
                 $a.on('click', function () {
                     $a.parents('nav.modules').find('li').each(function () {
