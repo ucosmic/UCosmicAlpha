@@ -1,7 +1,7 @@
 /* usf.edu */
 
 @import '../../bootstrap';
+@import '../_default/values';
 @import 'brand';
-@import '../_default/layout';
-@import 'layout';
-@import '../../ie8/layout';
+@import 'values';
+@import '../../ie8';

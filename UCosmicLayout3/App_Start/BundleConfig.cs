@@ -35,11 +35,25 @@ namespace UCosmicLayout3
                         "~/models/FlasherViewModel.js",
                         "~/scripts/oss/jquery.palceholder*"));
 
-            // bootstrap css bundle
-            bundles.Add(new StyleBundle("~/styles/tenants/_default/css").Include(
-                        "~/styles/reset.css",
-                        "~/styles/tenants/_default/layout.css",
-                        "~/styles/forms.css"));
+            // bootstrap css bundles
+            var tenants = new[]
+            {
+                "_default",
+                "suny.edu",
+                "uc.edu",
+                "umn.edu",
+                "lehigh.edu",
+                "usf.edu",
+            };
+            foreach (var tenant in tenants)
+            {
+                bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/css", tenant)).Include(
+                    string.Format("~/styles/tenants/{0}/reset.css", tenant),
+                    string.Format("~/styles/tenants/{0}/layout.css", tenant),
+                    string.Format("~/styles/tenants/{0}/forms.css", tenant)));
+                bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/ie8", tenant)).Include(
+                    string.Format("~/styles/tenants/{0}/ie8.css", tenant)));
+            }
 
             // internet explorer 8 sucks
             bundles.Add(new StyleBundle("~/bundles/legacy/ie8").Include(

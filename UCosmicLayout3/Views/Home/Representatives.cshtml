@@ -3,9 +3,9 @@
 }
 @section styles
 {
-    <link href="@Url.Content(Links.styles.tenants.lehigh_edu.layout_css)" type="text/css" rel="stylesheet" />
+    @Styles.Render("~/styles/tenants/lehigh.edu/css")
     <!--[if lt IE 9]>
-    <link href="@Url.Content(Links.styles.tenants.lehigh_edu.ie8_css)" type="text/css" rel="stylesheet" />
+    @Styles.Render("~/styles/tenants/lehigh.edu/ie8")
     <![endif]-->
 }
 <div class="fixed content" data-current-module="reps">

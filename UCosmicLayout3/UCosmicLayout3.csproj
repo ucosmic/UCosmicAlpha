@@ -236,17 +236,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
-    <Content Include="styles\forms.css">
+    <Content Include="styles\tenants\_default\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
     <Content Include="styles\icons\closer-24-dark.png" />
     <Content Include="styles\icons\closer-24-light.png" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
     <Content Include="styles\icons\user-voice-24-light.png" />
-    <Content Include="styles\ie8\layout.css">
-      <DependentUpon>layout.scss</DependentUpon>
+    <Content Include="styles\tenants\_default\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
     </Content>
-    <Content Include="styles\reset.css">
+    <Content Include="styles\tenants\_default\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
     <Content Include="styles\ruler-50-50.png" />
@@ -316,8 +316,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="styles\reset.scss" />
-    <Content Include="styles\forms.scss" />
+    <Content Include="styles\tenants\_default\reset.scss" />
+    <Content Include="styles\tenants\_default\forms.scss" />
     <Content Include="styles\_bootstrap.scss" />
     <Content Include="Views\Home\Travel.cshtml" />
     <Content Include="Views\Home\Representatives.cshtml" />
@@ -335,34 +335,34 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
-    <Content Include="styles\ie8\layout.scss" />
     <Content Include="Views\Home\Alumni.cshtml" />
     <Content Include="Views\Home\GlobalPress.cshtml" />
     <Content Include="Views\Home\CorporateEngagement.cshtml" />
     <Content Include="styles\_layout.scss" />
-    <Content Include="styles\ie8\_layout.scss" />
+    <Content Include="styles\_ie8.scss" />
     <Content Include="styles\tenants\suny.edu\ie8.scss" />
     <Content Include="styles\tenants\suny.edu\layout.scss" />
-    <Content Include="styles\tenants\suny.edu\_layout.scss" />
+    <Content Include="styles\tenants\suny.edu\_values.scss" />
     <Content Include="styles\tenants\uc.edu\ie8.scss" />
     <Content Include="styles\tenants\uc.edu\layout.scss" />
-    <Content Include="styles\tenants\uc.edu\_layout.scss" />
-    <Content Include="styles\tenants\usf.edu\_layout.scss" />
+    <Content Include="styles\tenants\uc.edu\_values.scss" />
+    <Content Include="styles\tenants\usf.edu\_values.scss" />
     <Content Include="styles\tenants\usf.edu\ie8.scss" />
     <Content Include="styles\tenants\usf.edu\layout.scss" />
     <Content Include="styles\tenants\suny.edu\_brand.scss" />
     <Content Include="styles\tenants\uc.edu\_brand.scss" />
     <Content Include="styles\tenants\usf.edu\_brand.scss" />
     <Content Include="styles\tenants\_default\layout.scss" />
-    <Content Include="styles\tenants\_default\_layout.scss" />
+    <Content Include="styles\tenants\_default\_values.scss" />
     <Content Include="styles\tenants\umn.edu\_brand.scss" />
-    <Content Include="styles\tenants\umn.edu\_layout.scss" />
+    <Content Include="styles\tenants\umn.edu\_values.scss" />
     <Content Include="styles\tenants\umn.edu\ie8.scss" />
     <Content Include="styles\tenants\umn.edu\layout.scss" />
     <Content Include="styles\tenants\lehigh.edu\_brand.scss" />
-    <Content Include="styles\tenants\lehigh.edu\_layout.scss" />
+    <Content Include="styles\tenants\lehigh.edu\_values.scss" />
     <Content Include="styles\tenants\lehigh.edu\ie8.scss" />
     <Content Include="styles\tenants\lehigh.edu\layout.scss" />
+    <Content Include="styles\tenants\_default\ie8.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -3,9 +3,9 @@
 }
 @section styles
 {
-    <link href="@Url.Content(Links.styles.tenants.usf_edu.layout_css)" type="text/css" rel="stylesheet" />
+    @Styles.Render("~/styles/tenants/usf.edu/css")
     <!--[if lt IE 9]>
-    <link href="@Url.Content(Links.styles.tenants.usf_edu.ie8_css)" type="text/css" rel="stylesheet" />
+    @Styles.Render("~/styles/tenants/usf.edu/ie8")
     <![endif]-->
 }
 <div class="fixed content" data-current-module="employees">

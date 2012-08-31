@@ -1,4 +1,45 @@
 /* umn.edu */
+/*@mixin media($media) {
+    http://css-tricks.com/snippets/css/media-queries-for-standard-devices/
+    http://thesassway.com/intermediate/responsive-web-design-in-sass-using-media-queries-in-sass-32
+    http://thesassway.com/intermediate/responsive-web-design-part-2
+    https://gist.github.com/1215856#file_6_media_queries.scss
+    @if $media == phone {
+        @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+            @content;
+        }
+    }
+    @else if $media == phone-landscape {
+        @media only screen and (min-width : 321px) {
+            @content;
+        }
+    }
+    @else if $media == phone-portrait {
+        @media only screen and (max-width : 320px) {
+            @content;
+        }
+    }
+    @else if $media == tablet {
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+            @content;
+        }
+    }
+    @else if $media == tablet-landscape {
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+            @content;
+        }
+    }
+    @else if $media == tablet-portrait {
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+            @content;
+        }
+    }
+    @else if $media == tube {
+        @media only screen and (min-device-width : 1024px) {
+            @content;
+        }
+    }
+}*/
 /* default */
 /* umn.edu */
 body > nav.my > .content {
