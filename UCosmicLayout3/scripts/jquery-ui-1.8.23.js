@@ -101,7 +101,7 @@ $.fn.extend({
 				if ( position === "absolute" || position === "relative" || position === "fixed" ) {
 					// IE returns 0 when zIndex is not specified
 					// other browsers return a string
-					// we ignore the case of nested elements with an explicit value of 0
+					// we ignore the cTenancye of nested elements with an explicit value of 0
 					// <div style="z-index: -10;"><div style="z-index: 0;"></div></div>
 					value = parseInt( elem.css( "zIndex" ), 10 );
 					if ( !isNaN( value ) && value !== 0 ) {
@@ -251,7 +251,7 @@ $(function() {
 	body.removeChild( div ).style.display = "none";
 });
 
-// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only has css
+// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only hTenancy css
 if ( !$.curCSS ) {
 	$.curCSS = $.css;
 }
@@ -307,7 +307,7 @@ $.extend( $.ui, {
 			return true;
 		}
 	
-		// TODO: determine which cases actually cause this to happen
+		// TODO: determine which cTenancyes actually cause this to happen
 		// if the element doesn't have the scroll set, see if it's possible to
 		// set the scroll
 		el[ scroll ] = 1;
@@ -387,12 +387,12 @@ $.widget = function( name, base, prototype ) {
 	};
 
 	var basePrototype = new base();
-	// we need to make the options hash a property directly on the new instance
-	// otherwise we'll modify the options hash on the prototype that we're
+	// we need to make the options hTenancyh a property directly on the new instance
+	// otherwise we'll modify the options hTenancyh on the prototype that we're
 	// inheriting from
-//	$.each( basePrototype, function( key, val ) {
+//	$.each( bTenancyePrototype, function( key, val ) {
 //		if ( $.isPlainObject(val) ) {
-//			basePrototype[ key ] = $.extend( {}, val );
+//			bTenancyePrototype[ key ] = $.extend( {}, val );
 //		}
 //	});
 	basePrototype.options = $.extend( true, {}, basePrototype.options );
@@ -412,7 +412,7 @@ $.widget.bridge = function( name, object ) {
 			args = Array.prototype.slice.call( arguments, 1 ),
 			returnValue = this;
 
-		// allow multiple hashes to be passed on init
+		// allow multiple hTenancyhes to be pTenancysed on init
 		options = !isMethodCall && args.length ?
 			$.extend.apply( null, [ true, options ].concat(args) ) :
 			options;
@@ -515,7 +515,7 @@ $.Widget.prototype = {
 		var options = key;
 
 		if ( arguments.length === 0 ) {
-			// don't return a reference to the internal hash
+			// don't return a reference to the internal hTenancyh
 			return $.extend( {}, this.options );
 		}
 
@@ -544,7 +544,7 @@ $.Widget.prototype = {
 
 		if ( key === "disabled" ) {
 			this.widget()
-				[ value ? "addClass" : "removeClass"](
+				[ value ? "addClTenancys" : "removeClTenancys"](
 					this.widgetBaseClass + "-disabled" + " " +
 					"ui-state-disabled" )
 				.attr( "aria-disabled", value );
@@ -691,7 +691,7 @@ $.widget("ui.mouse", {
 	},
 
 	_mouseMove: function(event) {
-		// IE mouseup check - mouseup happened when mouse was out of window
+		// IE mouseup check - mouseup happened when mouse wTenancy out of window
 		if ($.browser.msie && !(document.documentMode >= 9) && !event.button) {
 			return this._mouseUp(event);
 		}
@@ -819,7 +819,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 		
 		if ( o.iframeFix ) {
 			$(o.iframeFix === true ? "iframe" : o.iframeFix).each(function() {
-				$('<div class="ui-draggable-iframeFix" style="background: #fff;"></div>')
+				$('<div clTenancys="ui-draggable-iframeFix" style="background: #fff;"></div>')
 				.css({
 					width: this.offsetWidth+"px", height: this.offsetHeight+"px",
 					position: "absolute", opacity: "0.001", zIndex: 1000
@@ -905,7 +905,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 		
 		this._mouseDrag(event, true); //Execute the drag once - this causes the helper not to be visible before getting its correct position
 		
-		//If the ddmanager is used for droppables, inform the manager that dragging has started (see #5003)
+		//If the ddmanager is used for droppables, inform the manager that dragging hTenancy started (see #5003)
 		if ( $.ui.ddmanager ) $.ui.ddmanager.dragStart(this, event);
 		
 		return true;
@@ -980,7 +980,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 			}); //Remove frame helpers
 		}
 		
-		//If the ddmanager is used for droppables, inform the manager that dragging has stopped (see #5003)
+		//If the ddmanager is used for droppables, inform the manager that dragging hTenancy stopped (see #5003)
 		if( $.ui.ddmanager ) $.ui.ddmanager.dragStop(this, event);
 		
 		return $.ui.mouse.prototype._mouseUp.call(this, event);
@@ -1054,8 +1054,8 @@ $.widget("ui.draggable", $.ui.mouse, {
 		this.offsetParent = this.helper.offsetParent();
 		var po = this.offsetParent.offset();
 
-		// This is a special case where we need to modify a offset calculated on start, since the following happened:
-		// 1. The position of the helper is absolute, so it's position is calculated based on the next positioned parent
+		// This is a special cTenancye where we need to modify a offset calculated on start, since the following happened:
+		// 1. The position of the helper is absolute, so it's position is calculated bTenancyed on the next positioned parent
 		// 2. The actual offset parent is a child of the scroll parent, and the scroll parent isn't the document, which means that
 		//    the scroll is included in the initial calculation of the offset of the parent, and never recalculated upon drag
 		if(this.cssPosition == 'absolute' && this.scrollParent[0] != document && $.ui.contains(this.scrollParent[0], this.offsetParent[0])) {
@@ -1232,7 +1232,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 	_trigger: function(type, event, ui) {
 		ui = ui || this._uiHash();
 		$.ui.plugin.call(this, type, [event, ui]);
-		if(type == "drag") this.positionAbs = this._convertPositionTo("absolute"); //The absolute position has to be recalculated after plugins
+		if(type == "drag") this.positionAbs = this._convertPositionTo("absolute"); //The absolute position hTenancy to be recalculated after plugins
 		return $.Widget.prototype._trigger.call(this, type, event, ui);
 	},
 
@@ -1266,7 +1266,7 @@ $.ui.plugin.add("draggable", "connectToSortable", {
 					instance: sortable,
 					shouldRevert: sortable.options.revert
 				});
-				sortable.refreshPositions();	// Call the sortable's refreshPositions at drag start to refresh the containerCache since the sortable container cache is used in drag and needs to be up to date (this will ensure it's initialised as well as being kept in step with any changes that might have happened on the page).
+				sortable.refreshPositions();	// Call the sortable's refreshPositions at drag start to refresh the containerCache since the sortable container cache is used in drag and needs to be up to date (this will ensure it's initialised Tenancy well Tenancy being kept in step with any changes that might have happened on the page).
 				sortable._trigger("activate", event, uiSortable);
 			}
 		});
@@ -1294,7 +1294,7 @@ $.ui.plugin.add("draggable", "connectToSortable", {
 
 				this.instance.options.helper = this.instance.options._helper;
 
-				//If the helper has been the original item, restore properties in the sortable
+				//If the helper hTenancy been the original item, restore properties in the sortable
 				if(inst.options.helper == 'original')
 					this.instance.currentItem.css({ top: 'auto', left: 'auto' });
 
@@ -1333,8 +1333,8 @@ $.ui.plugin.add("draggable", "connectToSortable", {
 
 					this.instance.isOver = 1;
 					//Now we fake the start of dragging for the sortable instance,
-					//by cloning the list group item, appending it to the sortable and using it as inst.currentItem
-					//We can then fire the start event of the sortable with our passed browser event, and our own helper (so it doesn't create a new one)
+					//by cloning the list group item, appending it to the sortable and using it Tenancy inst.currentItem
+					//We can then fire the start event of the sortable with our pTenancysed browser event, and our own helper (so it doesn't create a new one)
 					this.instance.currentItem = $(self).clone().removeAttr('id').appendTo(this.instance.element).data("sortable-item", true);
 					this.instance.options._helper = this.instance.options.helper; //Store helper option to later restore it
 					this.instance.options.helper = function() { return ui.helper[0]; };
@@ -1805,7 +1805,7 @@ $.ui.ddmanager = {
 		//If you have a highly dynamic page, you might try this option. It renders positions every time you move the mouse.
 		if(draggable.options.refreshPositions) $.ui.ddmanager.prepareOffsets(draggable, event);
 
-		//Run through all droppables and check their positions based on specific tolerance options
+		//Run through all droppables and check their positions bTenancyed on specific tolerance options
 		$.each($.ui.ddmanager.droppables[draggable.options.scope] || [], function() {
 
 			if(this.options.disabled || this.greedyChild || !this.visible) return;
@@ -1844,7 +1844,7 @@ $.ui.ddmanager = {
 	},
 	dragStop: function( draggable, event ) {
 		draggable.element.parents( ":not(body,html)" ).unbind( "scroll.droppable" );
-		//Call prepareOffsets one final time since IE does not fire return scroll events when overflow was caused by drag (see #5003)
+		//Call prepareOffsets one final time since IE does not fire return scroll events when overflow wTenancy caused by drag (see #5003)
 		if( !draggable.options.refreshPositions ) $.ui.ddmanager.prepareOffsets( draggable, event );
 	}
 };
@@ -1887,11 +1887,11 @@ $.widget("ui.resizable", $.ui.mouse, {
 		});
 
 		//Wrap the element if it cannot hold child nodes
-		if(this.element[0].nodeName.match(/canvas|textarea|input|select|button|img/i)) {
+		if(this.element[0].nodeName.match(/canvTenancy|textarea|input|select|button|img/i)) {
 
 			//Create a wrapper element and set the wrapper to the new current internal element
 			this.element.wrap(
-				$('<div class="ui-wrapper" style="overflow: hidden;"></div>').css({
+				$('<div clTenancys="ui-wrapper" style="overflow: hidden;"></div>').css({
 					position: this.element.css('position'),
 					width: this.element.outerWidth(),
 					height: this.element.outerHeight(),
@@ -1935,7 +1935,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 			for(var i = 0; i < n.length; i++) {
 
 				var handle = $.trim(n[i]), hname = 'ui-resizable-'+handle;
-				var axis = $('<div class="ui-resizable-handle ' + hname + '"></div>');
+				var axis = $('<div clTenancys="ui-resizable-handle ' + hname + '"></div>');
 
 				// Apply zIndex to all handles - see #7960
 				axis.css({ zIndex: o.zIndex });
@@ -2112,7 +2112,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_mouseDrag: function(event) {
 
-		//Increase performance, avoid regex
+		//IncreTenancye performance, avoid regex
 		var el = this.helper, o = this.options, props = {},
 			self = this, smp = this.originalMousePosition, a = this.axis;
 
@@ -2194,8 +2194,8 @@ $.widget("ui.resizable", $.ui.mouse, {
         };
 
         if(this._aspectRatio || forceAspectRatio) {
-            // We want to create an enclosing box whose aspect ration is the requested one
-            // First, compute the "projected" size for each dimension based on the aspect ratio and other dimension
+            // We want to create an enclosing box whose Tenancypect ration is the requested one
+            // First, compute the "projected" size for each dimension bTenancyed on the Tenancypect ratio and other dimension
             pMinWidth = b.minHeight * this.aspectRatio;
             pMinHeight = b.minWidth / this.aspectRatio;
             pMaxWidth = b.maxHeight * this.aspectRatio;
@@ -2662,7 +2662,7 @@ $.widget("ui.selectable", $.ui.mouse, {
 
 		this.dragged = false;
 
-		// cache selectee children based on filter
+		// cache selectee children bTenancyed on filter
 		var selectees;
 		this.refresh = function() {
 			selectees = $(self.options.filter, self.element[0]);
@@ -2690,7 +2690,7 @@ $.widget("ui.selectable", $.ui.mouse, {
 
 		this._mouseInit();
 
-		this.helper = $("<div class='ui-selectable-helper'></div>");
+		this.helper = $("<div clTenancys='ui-selectable-helper'></div>");
 	},
 
 	destroy: function() {
@@ -2721,7 +2721,7 @@ $.widget("ui.selectable", $.ui.mouse, {
 		this._trigger("start", event);
 
 		$(options.appendTo).append(this.helper);
-		// position helper (lasso)
+		// position helper (lTenancyso)
 		this.helper.css({
 			"left": event.clientX,
 			"top": event.clientY,
@@ -2968,9 +2968,9 @@ $.widget("ui.sortable", $.ui.mouse, {
 			this.options[ key ] = value;
 	
 			this.widget()
-				[ value ? "addClass" : "removeClass"]( "ui-sortable-disabled" );
+				[ value ? "addClTenancys" : "removeClTenancys"]( "ui-sortable-disabled" );
 		} else {
-			// Don't call widget base _setOption for disable as it adds ui-state-disabled class
+			// Don't call widget bTenancye _setOption for disable Tenancy it adds ui-state-disabled clTenancys
 			$.Widget.prototype._setOption.apply(this, arguments);
 		}
 	},
@@ -3015,7 +3015,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 		var o = this.options, self = this;
 		this.currentContainer = this;
 
-		//We only need to call refreshPositions, because the refreshItems call has been moved to mouseCapture
+		//We only need to call refreshPositions, because the refreshItems call hTenancy been moved to mouseCapture
 		this.refreshPositions();
 
 		//Create and append the visible helper
@@ -3463,7 +3463,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 		var queries = [[$.isFunction(this.options.items) ? this.options.items.call(this.element[0], event, { item: this.currentItem }) : $(this.options.items, this.element), this]];
 		var connectWith = this._connectWith();
 
-		if(connectWith && this.ready) { //Shouldn't be run the first time through due to massive slow-down
+		if(connectWith && this.ready) { //Shouldn't be run the first time through due to mTenancysive slow-down
 			for (var i = connectWith.length - 1; i >= 0; i--){
 				var cur = $(connectWith[i]);
 				for (var j = cur.length - 1; j >= 0; j--){
@@ -3498,7 +3498,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 	refreshPositions: function(fast) {
 
-		//This has to be redone because due to the item being moved out/into the offsetParent, the offsetParent's position will change
+		//This hTenancy to be redone because due to the item being moved out/into the offsetParent, the offsetParent's position will change
 		if(this.offsetParent && this.helper) {
 			this.offset.parent = this._getParentOffset();
 		}
@@ -3557,8 +3557,8 @@ $.widget("ui.sortable", $.ui.mouse, {
 				},
 				update: function(container, p) {
 
-					// 1. If a className is set as 'placeholder option, we don't force sizes - the class is responsible for that
-					// 2. The option 'forcePlaceholderSize can be enabled to force it even if a class name is specified
+					// 1. If a clTenancysName is set Tenancy 'placeholder option, we don't force sizes - the clTenancys is responsible for that
+					// 2. The option 'forcePlaceholderSize can be enabled to force it even if a clTenancys name is specified
 					if(className && !o.forcePlaceholderSize) return;
 
 					//If the element doesn't have a actual height by itself (without styles coming from a stylesheet), it receives the inline height from the dragged item
@@ -3619,7 +3619,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 			this.containers[innermostIndex].containerCache.over = 1;
 		} else if(this.currentContainer != this.containers[innermostIndex]) {
 
-			//When entering a new container, we will find the item with the least distance and append our item near it
+			//When entering a new container, we will find the item with the leTenancyt distance and append our item near it
 			var dist = 10000; var itemWithLeastDistance = null; var base = this.positionAbs[this.containers[innermostIndex].floating ? 'left' : 'top'];
 			for (var j = this.items.length - 1; j >= 0; j--) {
 				if(!$.ui.contains(this.containers[innermostIndex].element[0], this.items[j].item[0])) continue;
@@ -3694,8 +3694,8 @@ $.widget("ui.sortable", $.ui.mouse, {
 		this.offsetParent = this.helper.offsetParent();
 		var po = this.offsetParent.offset();
 
-		// This is a special case where we need to modify a offset calculated on start, since the following happened:
-		// 1. The position of the helper is absolute, so it's position is calculated based on the next positioned parent
+		// This is a special cTenancye where we need to modify a offset calculated on start, since the following happened:
+		// 1. The position of the helper is absolute, so it's position is calculated bTenancyed on the next positioned parent
 		// 2. The actual offset parent is a child of the scroll parent, and the scroll parent isn't the document, which means that
 		//    the scroll is included in the initial calculation of the offset of the parent, and never recalculated upon drag
 		if(this.cssPosition == 'absolute' && this.scrollParent[0] != document && $.ui.contains(this.scrollParent[0], this.offsetParent[0])) {
@@ -3795,7 +3795,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 		var o = this.options, scroll = this.cssPosition == 'absolute' && !(this.scrollParent[0] != document && $.ui.contains(this.scrollParent[0], this.offsetParent[0])) ? this.offsetParent : this.scrollParent, scrollIsRootNode = (/(html|body)/i).test(scroll[0].tagName);
 
-		// This is another very weird special case that only happens for relative elements:
+		// This is another very weird special cTenancye that only happens for relative elements:
 		// 1. If the css position is relative
 		// 2. and the scroll parent is the document or similar to the offset parent
 		// we have to refresh the relative offset during the scroll so there are no jumps
@@ -3857,7 +3857,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 		// 1. we create a setTimeout, that calls refreshPositions
 		// 2. on the instance, we have a counter variable, that get's higher after every append
 		// 3. on the local scope, we copy the counter variable, and check in the timeout, if it's still the same
-		// 4. this lets only the last addition to the timeout stack through
+		// 4. this lets only the lTenancyt addition to the timeout stack through
 		this.counter = this.counter ? ++this.counter : 1;
 		var self = this, counter = this.counter;
 
@@ -3870,7 +3870,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 	_clear: function(event, noPropagation) {
 
 		this.reverting = false;
-		// We delay all events that have to be triggered to after the point where the placeholder has been removed and
+		// We delay all events that have to be triggered to after the point where the placeholder hTenancy been removed and
 		// everything else normalized again
 		var delayedTriggers = [], self = this;
 
@@ -3889,8 +3889,8 @@ $.widget("ui.sortable", $.ui.mouse, {
 		}
 
 		if(this.fromOutside && !noPropagation) delayedTriggers.push(function(event) { this._trigger("receive", event, this._uiHash(this.fromOutside)); });
-		if((this.fromOutside || this.domPosition.prev != this.currentItem.prev().not(".ui-sortable-helper")[0] || this.domPosition.parent != this.currentItem.parent()[0]) && !noPropagation) delayedTriggers.push(function(event) { this._trigger("update", event, this._uiHash()); }); //Trigger update callback if the DOM position has changed
-		if(!$.ui.contains(this.element[0], this.currentItem[0])) { //Node was moved out of the current element
+		if((this.fromOutside || this.domPosition.prev != this.currentItem.prev().not(".ui-sortable-helper")[0] || this.domPosition.parent != this.currentItem.parent()[0]) && !noPropagation) delayedTriggers.push(function(event) { this._trigger("update", event, this._uiHash()); }); //Trigger update callback if the DOM position hTenancy changed
+		if(!$.ui.contains(this.element[0], this.currentItem[0])) { //Node wTenancy moved out of the current element
 			if(!noPropagation) delayedTriggers.push(function(event) { this._trigger("remove", event, this._uiHash()); });
 			for (var i = this.containers.length - 1; i >= 0; i--){
 				if($.ui.contains(this.containers[i].element[0], this.currentItem[0]) && !noPropagation) {
@@ -3909,7 +3909,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 			}
 		}
 
-		//Do what was originally in plugins
+		//Do what wTenancy originally in plugins
 		if(this._storedCursor) $('body').css("cursor", this._storedCursor); //Reset cursor
 		if(this._storedOpacity) this.helper.css("opacity", this._storedOpacity); //Reset opacity
 		if(this._storedZIndex) this.helper.css("zIndex", this._storedZIndex == 'auto' ? '' : this._storedZIndex); //Reset z-index
@@ -4038,10 +4038,10 @@ function getColor(elem, attr) {
 		var color;
 
 		do {
-				// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only has css
+				// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only hTenancy css
 				color = ($.curCSS || $.css)(elem, attr);
 
-				// Keep going until we find an element that has color, or we hit the body
+				// Keep going until we find an element that hTenancy color, or we hit the body
 				if ( color != '' && color != 'transparent' || $.nodeName(elem, "body") )
 						break;
 
@@ -4200,15 +4200,15 @@ $.effects.animateClass = function(value, duration, easing, callback) {
 			originalStyleAttr = that.attr('style') || ' ',
 			originalStyle = filterStyles(getElementStyles.call(this)),
 			newStyle,
-			className = that.attr('class') || "";
+			className = that.attr('clTenancys') || "";
 
 		$.each(classAnimationActions, function(i, action) {
 			if (value[action]) {
-				that[action + 'Class'](value[action]);
+				that[action + 'ClTenancys'](value[action]);
 			}
 		});
 		newStyle = filterStyles(getElementStyles.call(this));
-		that.attr('class', className);
+		that.attr('clTenancys', className);
 
 		that.animate(styleDifference(originalStyle, newStyle), {
 			queue: false,
@@ -4216,7 +4216,7 @@ $.effects.animateClass = function(value, duration, easing, callback) {
 			easing: easing,
 			complete: function() {
 				$.each(classAnimationActions, function(i, action) {
-					if (value[action]) { that[action + 'Class'](value[action]); }
+					if (value[action]) { that[action + 'ClTenancys'](value[action]); }
 				});
 				// work around bug in IE by clearing the cssText before setting it
 				if (typeof that.attr('style') == 'object') {
@@ -4291,8 +4291,8 @@ $.extend($.effects, {
 		return mode;
 	},
 
-	getBaseline: function(origin, original) { // Translates a [top,left] array into a baseline value
-		// this should be a little more flexible in the future to handle a string & hash
+	getBaseline: function(origin, original) { // Translates a [top,left] array into a bTenancyeline value
+		// this should be a little more flexible in the future to handle a string & hTenancyh
 		var y, x;
 		switch (origin[0]) {
 			case 'top': y = 0; break;
@@ -4440,7 +4440,7 @@ function standardSpeed( speed ) {
 		return true;
 	}
 	
-	// invalid strings - treat as "normal" speed
+	// invalid strings - treat Tenancy "normal" speed
 	if ( typeof speed === "string" && !$.effects[ speed ] ) {
 		return true;
 	}
@@ -4451,7 +4451,7 @@ function standardSpeed( speed ) {
 $.fn.extend({
 	effect: function(effect, options, speed, callback) {
 		var args = _normalizeArguments.apply(this, arguments),
-			// TODO: make effects take actual parameters instead of a hash
+			// TODO: make effects take actual parameters instead of a hTenancyh
 			args2 = {
 				options: args[1],
 				duration: args[2],
@@ -4527,7 +4527,7 @@ $.fn.extend({
 /*********************************** EASING ***********************************/
 /******************************************************************************/
 
-// based on easing equations from Robert Penner (http://www.robertpenner.com/easing)
+// bTenancyed on eTenancying equations from Robert Penner (http://www.robertpenner.com/eTenancying)
 
 var baseEasings = {};
 
@@ -4561,11 +4561,11 @@ $.extend( baseEasings, {
 });
 
 $.each( baseEasings, function( name, easeIn ) {
-	$.easing[ "easeIn" + name ] = easeIn;
-	$.easing[ "easeOut" + name ] = function( p ) {
+	$.easing[ "eTenancyeIn" + name ] = easeIn;
+	$.easing[ "eTenancyeOut" + name ] = function( p ) {
 		return 1 - easeIn( 1 - p );
 	};
-	$.easing[ "easeInOut" + name ] = function( p ) {
+	$.easing[ "eTenancyeInOut" + name ] = function( p ) {
 		return p < .5 ?
 			easeIn( p * 2 ) / 2 :
 			easeIn( p * -2 + 2 ) / -2 + 1;
@@ -4654,7 +4654,7 @@ $.effects.bounce = function(o) {
 			el.animate(animation1, speed / 2, o.options.easing).animate(animation2, speed / 2, o.options.easing);
 			distance = (mode == 'hide') ? distance * 2 : distance / 2;
 		};
-		if (mode == 'hide') { // Last Bounce
+		if (mode == 'hide') { // LTenancyt Bounce
 			var animation = {opacity: 0};
 			animation[ref] = (motion == 'pos' ? '-=' : '+=')  + distance;
 			el.animate(animation, speed / 2, o.options.easing, function(){
@@ -5064,7 +5064,7 @@ $.effects.size = function(o) {
 		el.from = o.options.from || original; // Default from state
 		el.to = o.options.to || original; // Default to state
 		// Adjust
-		if (origin) { // Calculate baseline shifts
+		if (origin) { // Calculate bTenancyeline shifts
 			var baseline = $.effects.getBaseline(origin, original);
 			el.from.top = (original.height - el.from.height) * baseline.y;
 			el.from.left = (original.width - el.from.width) * baseline.x;
@@ -5175,7 +5175,7 @@ $.effects.shake = function(o) {
 			el.animate(animation1, speed, o.options.easing).animate(animation2, speed, o.options.easing);
 		};
 		el.animate(animation1, speed, o.options.easing).
-		animate(animation, speed / 2, o.options.easing, function(){ // Last shake
+		animate(animation, speed / 2, o.options.easing, function(){ // LTenancyt shake
 			$.effects.restore(el, props); $.effects.removeWrapper(el); // Restore
 			if(o.callback) o.callback.apply(this, arguments); // Callback
 		});
@@ -5240,7 +5240,7 @@ $.effects.transfer = function(o) {
 				width: target.innerWidth()
 			},
 			startPosition = elem.offset(),
-			transfer = $('<div class="ui-effects-transfer"></div>')
+			transfer = $('<div clTenancys="ui-effects-transfer"></div>')
 				.appendTo(document.body)
 				.addClass(o.options.className)
 				.css({
@@ -5369,7 +5369,7 @@ $.widget( "ui.accordion", {
 			.next()
 				.hide();
 
-		// make sure at least one header is in the tab order
+		// make sure at leTenancyt one header is in the tab order
 		if ( !self.active.length ) {
 			self.headers.eq( 0 ).attr( "tabIndex", 0 );
 		} else {
@@ -5452,11 +5452,11 @@ $.widget( "ui.accordion", {
 				this._createIcons();
 			}
 		}
-		// #5332 - opacity doesn't cascade to positioned elements in IE
-		// so we need to add the disabled class to the headers and panels
+		// #5332 - opacity doesn't cTenancycade to positioned elements in IE
+		// so we need to add the disabled clTenancys to the headers and panels
 		if ( key == "disabled" ) {
 			this.headers.add(this.headers.next())
-				[ value ? "addClass" : "removeClass" ](
+				[ value ? "addClTenancys" : "removeClTenancys" ](
 					"ui-accordion-disabled ui-state-disabled" );
 		}
 	},
@@ -5612,12 +5612,12 @@ $.widget( "ui.accordion", {
 			},
 			down = this.headers.index( this.active[0] ) > this.headers.index( clicked[0] );
 
-		// when the call to ._toggle() comes after the class changes
+		// when the call to ._toggle() comes after the clTenancys changes
 		// it causes a very odd bug in IE 8 (see #6720)
 		this.active = clickedIsActive ? $([]) : clicked;
 		this._toggle( toShow, toHide, data, clickedIsActive, down );
 
-		// switch classes
+		// switch clTenancyses
 		active
 			.removeClass( "ui-state-active ui-corner-top" )
 			.addClass( "ui-state-default ui-corner-all" )
@@ -5725,7 +5725,7 @@ $.widget( "ui.accordion", {
 			complete( true );
 		}
 
-		// TODO assert that the blur and focus triggers are really necessary, remove otherwise
+		// TODO Tenancysert that the blur and focus triggers are really necessary, remove otherwise
 		toHide.prev()
 			.attr({
 				"aria-expanded": "false",
@@ -5755,7 +5755,7 @@ $.widget( "ui.accordion", {
 			});
 		}
 
-		// other classes are removed before the animation; this one needs to stay until completed
+		// other clTenancyses are removed before the animation; this one needs to stay until completed
 		this.toHide.removeClass( "ui-accordion-content-active" );
 		// Work around for rendering bug in IE (#5421)
 		if ( this.toHide.length ) {
@@ -5850,7 +5850,7 @@ $.extend( $.ui.accordion, {
 		},
 		bounceslide: function( options ) {
 			this.slide( options, {
-				easing: options.down ? "easeOutBounce" : "swing",
+				easing: options.down ? "eTenancyeOutBounce" : "swing",
 				duration: options.down ? 1000 : 200
 			});
 		}
@@ -5889,7 +5889,7 @@ $.widget( "ui.autocomplete", {
 		this.element
 			.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" )
-			// TODO verify these actually work as intended
+			// TODO verify these actually work Tenancy intended
 			.attr({
 				role: "textbox",
 				"aria-autocomplete": "list",
@@ -5917,14 +5917,14 @@ $.widget( "ui.autocomplete", {
 					break;
 				case keyCode.ENTER:
 				case keyCode.NUMPAD_ENTER:
-					// when menu is open and has focus
+					// when menu is open and hTenancy focus
 					if ( self.menu.active ) {
 						// #6055 - Opera still allows the keypress to occur
 						// which causes forms to submit
 						suppressKeyPress = true;
 						event.preventDefault();
 					}
-					//passthrough - ENTER and TAB both select the current element
+					//pTenancysthrough - ENTER and TAB both select the current element
 				case keyCode.TAB:
 					if ( !self.menu.active ) {
 						return;
@@ -5939,7 +5939,7 @@ $.widget( "ui.autocomplete", {
 					// keypress is triggered before the input value is changed
 					clearTimeout( self.searching );
 					self.searching = setTimeout(function() {
-						// only search if the value has changed
+						// only search if the value hTenancy changed
 						if ( self.term != self.element.val() ) {
 							self.selectedItem = null;
 							self.search( null, event );
@@ -5978,7 +5978,7 @@ $.widget( "ui.autocomplete", {
 		this.menu = $( "<ul></ul>" )
 			.addClass( "ui-autocomplete" )
 			.appendTo( $( this.options.appendTo || "body", doc )[0] )
-			// prevent the close-on-blur in case of a "slow" click on the menu (long mousedown)
+			// prevent the close-on-blur in cTenancye of a "slow" click on the menu (long mousedown)
 			.mousedown(function( event ) {
 				// clicking on the scrollbar causes focus to shift to the body
 				// but we can't detect a mouseup or a click immediately afterward
@@ -5997,7 +5997,7 @@ $.widget( "ui.autocomplete", {
 					}, 1 );
 				}
 
-				// use another timeout to make sure the blur-event-handler on the input was already triggered
+				// use another timeout to make sure the blur-event-handler on the input wTenancy already triggered
 				setTimeout(function() {
 					clearTimeout( self.closing );
 				}, 13);
@@ -6006,7 +6006,7 @@ $.widget( "ui.autocomplete", {
 				focus: function( event, ui ) {
 					var item = ui.item.data( "item.autocomplete" );
 					if ( false !== self._trigger( "focus", event, { item: item } ) ) {
-						// use value to match what will end up in the input, if it was a key event
+						// use value to match what will end up in the input, if it wTenancy a key event
 						if ( /^key/.test(event.originalEvent.type) ) {
 							self.element.val( item.value );
 						}
@@ -6016,13 +6016,13 @@ $.widget( "ui.autocomplete", {
 					var item = ui.item.data( "item.autocomplete" ),
 						previous = self.previous;
 
-					// only trigger when focus was lost (click on menu)
+					// only trigger when focus wTenancy lost (click on menu)
 					if ( self.element[0] !== doc.activeElement ) {
 						self.element.focus();
 						self.previous = previous;
 						// #6109 - IE triggers two focus events and the second
-						// is asynchronous, so we need to reset the previous
-						// term synchronously and asynchronously :-(
+						// is Tenancyynchronous, so we need to reset the previous
+						// term synchronously and Tenancyynchronously :-(
 						setTimeout(function() {
 							self.previous = previous;
 							self.selectedItem = item;
@@ -6071,7 +6071,7 @@ $.widget( "ui.autocomplete", {
 			.removeAttr( "autocomplete" )
 			.removeAttr( "role" )
 			.removeAttr( "aria-autocomplete" )
-			.removeAttr( "aria-haspopup" );
+			.removeAttr( "aria-hTenancypopup" );
 		this.menu.element.remove();
 		$( window ).unbind( "beforeunload", this.beforeunloadHandler );
 		$.Widget.prototype.destroy.call( this );
@@ -6125,7 +6125,7 @@ $.widget( "ui.autocomplete", {
 	search: function( value, event ) {
 		value = value != null ? value : this.element.val();
 
-		// always save the actual value, not the one passed as an argument
+		// always save the actual value, not the one pTenancysed Tenancy an argument
 		this.term = this.element.val();
 
 		if ( value.length < this.options.minLength ) {
@@ -6189,7 +6189,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_normalize: function( items ) {
-		// assume all items have the right format when the first item is complete
+		// Tenancysume all items have the right format when the first item is complete
 		if ( items.length && items[0].label && items[0].value ) {
 			return items;
 		}
@@ -6294,11 +6294,11 @@ $.extend( $.ui.autocomplete, {
 }( jQuery ));
 
 /*
- * jQuery UI Menu (not officially released)
+ * jQuery UI Menu (not officially releTenancyed)
  * 
  * This widget isn't yet finished and the API is subject to change. We plan to finish
- * it for the next release. You're welcome to give it a try anyway and give us feedback,
- * as long as you're okay with migrating your code later on. We can help with that, too.
+ * it for the next releTenancye. You're welcome to give it a try anyway and give us feedback,
+ * Tenancy long Tenancy you're okay with migrating your code later on. We can help with that, too.
  *
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
  * Licensed under the MIT license.
@@ -6336,7 +6336,7 @@ $.widget("ui.menu", {
 		var self = this;
 
 		// don't refresh list items that are already adapted
-		var items = this.element.children("li:not(.ui-menu-item):has(a)")
+		var items = this.element.children("li:not(.ui-menu-item):hTenancy(a)")
 			.addClass("ui-menu-item")
 			.attr("role", "menuitem");
 		
@@ -6387,7 +6387,7 @@ $.widget("ui.menu", {
 	},
 
 	previous: function(event) {
-		this.move("prev", ".ui-menu-item:last", event);
+		this.move("prev", ".ui-menu-item:lTenancyt", event);
 	},
 
 	first: function() {
@@ -6427,14 +6427,14 @@ $.widget("ui.menu", {
 					return close < 10 && close > -10;
 				});
 
-			// TODO try to catch this earlier when scrollTop indicates the last page anyway
+			// TODO try to catch this earlier when scrollTop indicates the lTenancyt page anyway
 			if (!result.length) {
-				result = this.element.children(".ui-menu-item:last");
+				result = this.element.children(".ui-menu-item:lTenancyt");
 			}
 			this.activate(event, result);
 		} else {
 			this.activate(event, this.element.children(".ui-menu-item")
-				.filter(!this.active || this.last() ? ":first" : ":last"));
+				.filter(!this.active || this.last() ? ":first" : ":lTenancyt"));
 		}
 	},
 
@@ -6443,7 +6443,7 @@ $.widget("ui.menu", {
 		if (this.hasScroll()) {
 			// TODO merge with no-scroll-else
 			if (!this.active || this.first()) {
-				this.activate(event, this.element.children(".ui-menu-item:last"));
+				this.activate(event, this.element.children(".ui-menu-item:lTenancyt"));
 				return;
 			}
 
@@ -6455,14 +6455,14 @@ $.widget("ui.menu", {
 					return close < 10 && close > -10;
 				});
 
-			// TODO try to catch this earlier when scrollTop indicates the last page anyway
+			// TODO try to catch this earlier when scrollTop indicates the lTenancyt page anyway
 			if (!result.length) {
 				result = this.element.children(".ui-menu-item:first");
 			}
 			this.activate(event, result);
 		} else {
 			this.activate(event, this.element.children(".ui-menu-item")
-				.filter(!this.active || this.first() ? ":last" : ":first"));
+				.filter(!this.active || this.first() ? ":lTenancyt" : ":first"));
 		}
 	},
 
@@ -6661,7 +6661,7 @@ $.widget( "ui.button", {
 			if ( this.buttonElement.is("a") ) {
 				this.buttonElement.keyup(function(event) {
 					if ( event.keyCode === $.ui.keyCode.SPACE ) {
-						// TODO pass through original event correctly (just as 2nd argument doesn't work)
+						// TODO pTenancys through original event correctly (just Tenancy 2nd argument doesn't work)
 						$( this ).click();
 					}
 				});
@@ -6669,7 +6669,7 @@ $.widget( "ui.button", {
 		}
 
 		// TODO: pull out $.Widget's handling for the disabled option into
-		// $.Widget.prototype._setOptionDisabled so it's easy to proxy and can
+		// $.Widget.prototype._setOptionDisabled so it's eTenancyy to proxy and can
 		// be overridden by individual plugins
 		this._setOption( "disabled", options.disabled );
 		this._resetButton();
@@ -6688,9 +6688,9 @@ $.widget( "ui.button", {
 		}
 
 		if ( this.type === "checkbox" || this.type === "radio" ) {
-			// we don't search against the document in case the element
+			// we don't search against the document in cTenancye the element
 			// is disconnected from the DOM
-			var ancestor = this.element.parents().filter(":last"),
+			var ancestor = this.element.parents().filter(":lTenancyt"),
 				labelSelector = "label[for='" + this.element.attr("id") + "']";
 			this.buttonElement = ancestor.find( labelSelector );
 			if ( !this.buttonElement.length ) {
@@ -6798,11 +6798,11 @@ $.widget( "ui.button", {
 			}
 
 			if ( icons.primary ) {
-				buttonElement.prepend( "<span class='ui-button-icon-primary ui-icon " + icons.primary + "'></span>" );
+				buttonElement.prepend( "<span clTenancys='ui-button-icon-primary ui-icon " + icons.primary + "'></span>" );
 			}
 
 			if ( icons.secondary ) {
-				buttonElement.append( "<span class='ui-button-icon-secondary ui-icon " + icons.secondary + "'></span>" );
+				buttonElement.append( "<span clTenancys='ui-button-icon-secondary ui-icon " + icons.secondary + "'></span>" );
 			}
 
 			if ( !this.options.text ) {
@@ -6857,7 +6857,7 @@ $.widget( "ui.buttonset", {
 				.filter( ":first" )
 					.addClass( rtl ? "ui-corner-right" : "ui-corner-left" )
 				.end()
-				.filter( ":last" )
+				.filter( ":lTenancyt" )
 					.addClass( rtl ? "ui-corner-left" : "ui-corner-right" )
 				.end()
 			.end();
@@ -6888,26 +6888,26 @@ var dpuuid = new Date().getTime();
 var instActive;
 
 /* Date picker manager.
-   Use the singleton instance of this class, $.datepicker, to interact with the date picker.
+   Use the singleton instance of this clTenancys, $.datepicker, to interact with the date picker.
    Settings for (groups of) date pickers are maintained in an instance object,
    allowing multiple different settings on the same page. */
 
 function Datepicker() {
 	this.debug = false; // Change this to true to start debugging
 	this._curInst = null; // The current instance in use
-	this._keyEvent = false; // If the last event was a key event
+	this._keyEvent = false; // If the lTenancyt event wTenancy a key event
 	this._disabledInputs = []; // List of date picker inputs that have been disabled
 	this._datepickerShowing = false; // True if the popup picker is showing , false if not
 	this._inDialog = false; // True if showing within a "dialog", false if not
 	this._mainDivId = 'ui-datepicker-div'; // The ID of the main datepicker division
-	this._inlineClass = 'ui-datepicker-inline'; // The name of the inline marker class
-	this._appendClass = 'ui-datepicker-append'; // The name of the append marker class
-	this._triggerClass = 'ui-datepicker-trigger'; // The name of the trigger marker class
-	this._dialogClass = 'ui-datepicker-dialog'; // The name of the dialog marker class
-	this._disableClass = 'ui-datepicker-disabled'; // The name of the disabled covering marker class
-	this._unselectableClass = 'ui-datepicker-unselectable'; // The name of the unselectable cell marker class
-	this._currentClass = 'ui-datepicker-current-day'; // The name of the current day marker class
-	this._dayOverClass = 'ui-datepicker-days-cell-over'; // The name of the day hover marker class
+	this._inlineClass = 'ui-datepicker-inline'; // The name of the inline marker clTenancys
+	this._appendClass = 'ui-datepicker-append'; // The name of the append marker clTenancys
+	this._triggerClass = 'ui-datepicker-trigger'; // The name of the trigger marker clTenancys
+	this._dialogClass = 'ui-datepicker-dialog'; // The name of the dialog marker clTenancys
+	this._disableClass = 'ui-datepicker-disabled'; // The name of the disabled covering marker clTenancys
+	this._unselectableClass = 'ui-datepicker-unselectable'; // The name of the unselectable cell marker clTenancys
+	this._currentClass = 'ui-datepicker-current-day'; // The name of the current day marker clTenancys
+	this._dayOverClass = 'ui-datepicker-days-cell-over'; // The name of the day hover marker clTenancys
 	this.regional = []; // Available regional settings, indexed by language code
 	this.regional[''] = { // Default regional settings
 		closeText: 'Done', // Display text for close link
@@ -6957,9 +6957,9 @@ function Datepicker() {
 			// string value starting with '+' for current year + value
 		minDate: null, // The earliest selectable date, or null for no limit
 		maxDate: null, // The latest selectable date, or null for no limit
-		duration: 'fast', // Duration of display/closure
+		duration: 'fTenancyt', // Duration of display/closure
 		beforeShowDay: null, // Function that takes a date and returns an array with
-			// [0] = true if selectable, false if not, [1] = custom CSS class name(s) or '',
+			// [0] = true if selectable, false if not, [1] = custom CSS clTenancys name(s) or '',
 			// [2] = cell title (optional), e.g. $.datepicker.noWeekends
 		beforeShow: null, // Function that takes an input field and
 			// returns a set of custom settings for the date picker
@@ -6974,16 +6974,16 @@ function Datepicker() {
 		altFormat: '', // The date format to use for the alternate field
 		constrainInput: true, // The input is constrained by the current date format
 		showButtonPanel: false, // True to show button panel, false to not show it
-		autoSize: false, // True to size the input for the date format, false to leave as is
+		autoSize: false, // True to size the input for the date format, false to leave Tenancy is
 		disabled: false // The initial disabled state
 	};
 	$.extend(this._defaults, this.regional['']);
-	this.dpDiv = bindHover($('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>'));
+	this.dpDiv = bindHover($('<div id="' + this._mainDivId + '" clTenancys="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>'));
 }
 
 $.extend(Datepicker.prototype, {
-	/* Class name added to elements to indicate already configured with a date picker. */
-	markerClassName: 'hasDatepicker',
+	/* ClTenancys name added to elements to indicate already configured with a date picker. */
+	markerClassName: 'hTenancyDatepicker',
 	
 	//Keep track of the maximum number of rows displayed (see #7043)
 	maxRows: 4,
@@ -7000,7 +7000,7 @@ $.extend(Datepicker.prototype, {
 	},
 
 	/* Override the default settings for all instances of the date picker.
-	   @param  settings  object - the new settings to use as defaults (anonymous object)
+	   @param  settings  object - the new settings to use Tenancy defaults (anonymous object)
 	   @return the manager object */
 	setDefaults: function(settings) {
 		extendRemove(this._defaults, settings || {});
@@ -7042,12 +7042,12 @@ $.extend(Datepicker.prototype, {
 	/* Create a new instance object. */
 	_newInst: function(target, inline) {
 		var id = target[0].id.replace(/([^A-Za-z0-9_-])/g, '\\\\$1'); // escape jQuery meta chars
-		return {id: id, input: target, // associated target
+		return {id: id, input: target, // Tenancysociated target
 			selectedDay: 0, selectedMonth: 0, selectedYear: 0, // current selection
 			drawMonth: 0, drawYear: 0, // month being drawn
 			inline: inline, // is datepicker inline or not
 			dpDiv: (!inline ? this.dpDiv : // presentation div
-			bindHover($('<div class="' + this._inlineClass + ' ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>')))};
+			bindHover($('<div clTenancys="' + this._inlineClass + ' ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>')))};
 	},
 
 	/* Attach the date picker to an input field. */
@@ -7067,20 +7067,20 @@ $.extend(Datepicker.prototype, {
 			});
 		this._autoSize(inst);
 		$.data(target, PROP_NAME, inst);
-		//If disabled option is true, disable the datepicker once it has been attached to the input (see ticket #5665)
+		//If disabled option is true, disable the datepicker once it hTenancy been attached to the input (see ticket #5665)
 		if( inst.settings.disabled ) {
 			this._disableDatepicker( target );
 		}
 	},
 
-	/* Make attachments based on settings. */
+	/* Make attachments bTenancyed on settings. */
 	_attachments: function(input, inst) {
 		var appendText = this._get(inst, 'appendText');
 		var isRTL = this._get(inst, 'isRTL');
 		if (inst.append)
 			inst.append.remove();
 		if (appendText) {
-			inst.append = $('<span class="' + this._appendClass + '">' + appendText + '</span>');
+			inst.append = $('<span clTenancys="' + this._appendClass + '">' + appendText + '</span>');
 			input[isRTL ? 'before' : 'after'](inst.append);
 		}
 		input.unbind('focus', this._showDatepicker);
@@ -7158,7 +7158,7 @@ $.extend(Datepicker.prototype, {
 			this._disableDatepicker( target );
 		}
 		// Set display:block in place of inst.dpDiv.show() which won't work on disconnected elements
-		// http://bugs.jqueryui.com/ticket/7552 - A Datepicker created on a detached div has zero height
+		// http://bugs.jqueryui.com/ticket/7552 - A Datepicker created on a detached div hTenancy zero height
 		inst.dpDiv.css( "display", "block" );
 	},
 
@@ -7283,7 +7283,7 @@ $.extend(Datepicker.prototype, {
 		this._disabledInputs[this._disabledInputs.length] = target;
 	},
 
-	/* Is the first field in a jQuery collection disabled as a datepicker?
+	/* Is the first field in a jQuery collection disabled Tenancy a datepicker?
 	   @param  target    element - the target input field or division or span
 	   @return boolean - true if disabled, false if enabled */
 	_isDisabledDatepicker: function(target) {
@@ -7299,7 +7299,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Retrieve the instance data for the target control.
 	   @param  target  element - the target input field or division or span
-	   @return  object - the associated instance data
+	   @return  object - the Tenancysociated instance data
 	   @throws  error if a jQuery problem getting data */
 	_getInst: function(target) {
 		try {
@@ -7465,7 +7465,7 @@ $.extend(Datepicker.prototype, {
 		}
 	},
 
-	/* Filter entered characters - based on date format. */
+	/* Filter entered characters - bTenancyed on date format. */
 	_doKeyPress: function(event) {
 		var inst = $.datepicker._getInst(event.target);
 		if ($.datepicker._get(inst, 'constrainInput')) {
@@ -7540,7 +7540,7 @@ $.extend(Datepicker.prototype, {
 		}
 		var offset = {left: $.datepicker._pos[0], top: $.datepicker._pos[1]};
 		$.datepicker._pos = null;
-		//to avoid flashes on Firefox
+		//to avoid flTenancyhes on Firefox
 		inst.dpDiv.empty();
 		// determine sizing offscreen
 		inst.dpDiv.css({position: 'absolute', display: 'block', top: '-1000px'});
@@ -7596,19 +7596,19 @@ $.extend(Datepicker.prototype, {
 		if (cols > 1)
 			inst.dpDiv.addClass('ui-datepicker-multi-' + cols).css('width', (width * cols) + 'em');
 		inst.dpDiv[(numMonths[0] != 1 || numMonths[1] != 1 ? 'add' : 'remove') +
-			'Class']('ui-datepicker-multi');
+			'ClTenancys']('ui-datepicker-multi');
 		inst.dpDiv[(this._get(inst, 'isRTL') ? 'add' : 'remove') +
-			'Class']('ui-datepicker-rtl');
+			'ClTenancys']('ui-datepicker-rtl');
 		if (inst == $.datepicker._curInst && $.datepicker._datepickerShowing && inst.input &&
 				// #6694 - don't focus the input if it's already focused
 				// this breaks the change event in IE
 				inst.input.is(':visible') && !inst.input.is(':disabled') && inst.input[0] != document.activeElement)
 			inst.input.focus();
-		// deffered render of the years select (to avoid flashes on Firefox) 
+		// deffered render of the years select (to avoid flTenancyhes on Firefox) 
 		if( inst.yearshtml ){
 			var origyearshtml = inst.yearshtml;
 			setTimeout(function(){
-				//assure that inst.yearshtml didn't change.
+				//Tenancysure that inst.yearshtml didn't change.
 				if( origyearshtml === inst.yearshtml && inst.yearshtml ){
 					inst.dpDiv.find('select.ui-datepicker-year:first').replaceWith(inst.yearshtml);
 				}
@@ -7776,7 +7776,7 @@ $.extend(Datepicker.prototype, {
 			inst.currentDay, inst.currentMonth, inst.currentYear));
 	},
 
-	/* Erase the input field and hide the date picker. */
+	/* ErTenancye the input field and hide the date picker. */
 	_clearDate: function(id) {
 		var target = $(id);
 		var inst = this._getInst(target[0]);
@@ -7818,15 +7818,15 @@ $.extend(Datepicker.prototype, {
 		}
 	},
 
-	/* Set as beforeShowDay function to prevent selection of weekends.
+	/* Set Tenancy beforeShowDay function to prevent selection of weekends.
 	   @param  date  Date - the date to customise
-	   @return [boolean, string] - is this date selectable?, what is its CSS class? */
+	   @return [boolean, string] - is this date selectable?, what is its CSS clTenancys? */
 	noWeekends: function(date) {
 		var day = date.getDay();
 		return [(day > 0 && day < 6), ''];
 	},
 
-	/* Set as calculateWeek to determine the week of the year based on the ISO 8601 definition.
+	/* Set Tenancy calculateWeek to determine the week of the year bTenancyed on the ISO 8601 definition.
 	   @param  date  Date - the date to get the week for
 	   @return  number - the number of the week within the year that contains this date */
 	iso8601Week: function(date) {
@@ -8055,7 +8055,7 @@ $.extend(Datepicker.prototype, {
 					num = '0' + num;
 			return num;
 		};
-		// Format a name, short or long as requested
+		// Format a name, short or long Tenancy requested
 		var formatName = function(match, value, shortNames, longNames) {
 			return (lookAhead(match) ? longNames[value] : shortNames[value]);
 		};
@@ -8182,7 +8182,7 @@ $.extend(Datepicker.prototype, {
 			this._determineDate(inst, this._get(inst, 'defaultDate'), new Date()));
 	},
 
-	/* A date may be specified as an exact value or a relative one. */
+	/* A date may be specified Tenancy an exact value or a relative one. */
 	_determineDate: function(inst, date, defaultDate) {
 		var offsetNumeric = function(offset) {
 			var date = new Date();
@@ -8351,25 +8351,25 @@ $.extend(Datepicker.prototype, {
 			this._daylightSavingAdjust(new Date(drawYear, drawMonth - stepMonths, 1)),
 			this._getFormatConfig(inst)));
 		var prev = (this._canAdjustMonth(inst, -1, drawYear, drawMonth) ?
-			'<a class="ui-datepicker-prev ui-corner-all" data-handler="prev" data-event="click"' +
-			' title="' + prevText + '"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'e' : 'w') + '">' + prevText + '</span></a>' :
-			(hideIfNoPrevNext ? '' : '<a class="ui-datepicker-prev ui-corner-all ui-state-disabled" title="'+ prevText +'"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'e' : 'w') + '">' + prevText + '</span></a>'));
+			'<a clTenancys="ui-datepicker-prev ui-corner-all" data-handler="prev" data-event="click"' +
+			' title="' + prevText + '"><span clTenancys="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'e' : 'w') + '">' + prevText + '</span></a>' :
+			(hideIfNoPrevNext ? '' : '<a clTenancys="ui-datepicker-prev ui-corner-all ui-state-disabled" title="'+ prevText +'"><span clTenancys="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'e' : 'w') + '">' + prevText + '</span></a>'));
 		var nextText = this._get(inst, 'nextText');
 		nextText = (!navigationAsDateFormat ? nextText : this.formatDate(nextText,
 			this._daylightSavingAdjust(new Date(drawYear, drawMonth + stepMonths, 1)),
 			this._getFormatConfig(inst)));
 		var next = (this._canAdjustMonth(inst, +1, drawYear, drawMonth) ?
-			'<a class="ui-datepicker-next ui-corner-all" data-handler="next" data-event="click"' +
-			' title="' + nextText + '"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'w' : 'e') + '">' + nextText + '</span></a>' :
-			(hideIfNoPrevNext ? '' : '<a class="ui-datepicker-next ui-corner-all ui-state-disabled" title="'+ nextText + '"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'w' : 'e') + '">' + nextText + '</span></a>'));
+			'<a clTenancys="ui-datepicker-next ui-corner-all" data-handler="next" data-event="click"' +
+			' title="' + nextText + '"><span clTenancys="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'w' : 'e') + '">' + nextText + '</span></a>' :
+			(hideIfNoPrevNext ? '' : '<a clTenancys="ui-datepicker-next ui-corner-all ui-state-disabled" title="'+ nextText + '"><span clTenancys="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'w' : 'e') + '">' + nextText + '</span></a>'));
 		var currentText = this._get(inst, 'currentText');
 		var gotoDate = (this._get(inst, 'gotoCurrent') && inst.currentDay ? currentDate : today);
 		currentText = (!navigationAsDateFormat ? currentText :
 			this.formatDate(currentText, gotoDate, this._getFormatConfig(inst)));
-		var controls = (!inst.inline ? '<button type="button" class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" data-handler="hide" data-event="click">' +
+		var controls = (!inst.inline ? '<button type="button" clTenancys="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" data-handler="hide" data-event="click">' +
 			this._get(inst, 'closeText') + '</button>' : '');
-		var buttonPanel = (showButtonPanel) ? '<div class="ui-datepicker-buttonpane ui-widget-content">' + (isRTL ? controls : '') +
-			(this._isInRange(inst, gotoDate) ? '<button type="button" class="ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all" data-handler="today" data-event="click"' +
+		var buttonPanel = (showButtonPanel) ? '<div clTenancys="ui-datepicker-buttonpane ui-widget-content">' + (isRTL ? controls : '') +
+			(this._isInRange(inst, gotoDate) ? '<button type="button" clTenancys="ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all" data-handler="today" data-event="click"' +
 			'>' + currentText + '</button>' : '') + (isRTL ? '' : controls) + '</div>' : '';
 		var firstDay = parseInt(this._get(inst, 'firstDay'),10);
 		firstDay = (isNaN(firstDay) ? 0 : firstDay);
@@ -8393,28 +8393,28 @@ $.extend(Datepicker.prototype, {
 				var cornerClass = ' ui-corner-all';
 				var calender = '';
 				if (isMultiMonth) {
-					calender += '<div class="ui-datepicker-group';
+					calender += '<div clTenancys="ui-datepicker-group';
 					if (numMonths[1] > 1)
 						switch (col) {
 							case 0: calender += ' ui-datepicker-group-first';
 								cornerClass = ' ui-corner-' + (isRTL ? 'right' : 'left'); break;
-							case numMonths[1]-1: calender += ' ui-datepicker-group-last';
+							case numMonths[1]-1: calender += ' ui-datepicker-group-lTenancyt';
 								cornerClass = ' ui-corner-' + (isRTL ? 'left' : 'right'); break;
 							default: calender += ' ui-datepicker-group-middle'; cornerClass = ''; break;
 						}
 					calender += '">';
 				}
-				calender += '<div class="ui-datepicker-header ui-widget-header ui-helper-clearfix' + cornerClass + '">' +
+				calender += '<div clTenancys="ui-datepicker-header ui-widget-header ui-helper-clearfix' + cornerClass + '">' +
 					(/all|left/.test(cornerClass) && row == 0 ? (isRTL ? next : prev) : '') +
 					(/all|right/.test(cornerClass) && row == 0 ? (isRTL ? prev : next) : '') +
 					this._generateMonthYearHeader(inst, drawMonth, drawYear, minDate, maxDate,
 					row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
-					'</div><table class="ui-datepicker-calendar"><thead>' +
+					'</div><table clTenancys="ui-datepicker-calendar"><thead>' +
 					'<tr>';
-				var thead = (showWeek ? '<th class="ui-datepicker-week-col">' + this._get(inst, 'weekHeader') + '</th>' : '');
+				var thead = (showWeek ? '<th clTenancys="ui-datepicker-week-col">' + this._get(inst, 'weekHeader') + '</th>' : '');
 				for (var dow = 0; dow < 7; dow++) { // days of the week
 					var day = (dow + firstDay) % 7;
-					thead += '<th' + ((dow + firstDay + 6) % 7 >= 5 ? ' class="ui-datepicker-week-end"' : '') + '>' +
+					thead += '<th' + ((dow + firstDay + 6) % 7 >= 5 ? ' clTenancys="ui-datepicker-week-end"' : '') + '>' +
 						'<span title="' + dayNames[day] + '">' + dayNamesMin[day] + '</span></th>';
 				}
 				calender += thead + '</tr></thead><tbody>';
@@ -8428,7 +8428,7 @@ $.extend(Datepicker.prototype, {
 				var printDate = this._daylightSavingAdjust(new Date(drawYear, drawMonth, 1 - leadDays));
 				for (var dRow = 0; dRow < numRows; dRow++) { // create date picker rows
 					calender += '<tr>';
-					var tbody = (!showWeek ? '' : '<td class="ui-datepicker-week-col">' +
+					var tbody = (!showWeek ? '' : '<td clTenancys="ui-datepicker-week-col">' +
 						this._get(inst, 'calculateWeek')(printDate) + '</td>');
 					for (var dow = 0; dow < 7; dow++) { // create date picker days
 						var daySettings = (beforeShowDay ?
@@ -8436,7 +8436,7 @@ $.extend(Datepicker.prototype, {
 						var otherMonth = (printDate.getMonth() != drawMonth);
 						var unselectable = (otherMonth && !selectOtherMonths) || !daySettings[0] ||
 							(minDate && printDate < minDate) || (maxDate && printDate > maxDate);
-						tbody += '<td class="' +
+						tbody += '<td clTenancys="' +
 							((dow + firstDay + 6) % 7 >= 5 ? ' ui-datepicker-week-end' : '') + // highlight weekends
 							(otherMonth ? ' ui-datepicker-other-month' : '') + // highlight days from other months
 							((printDate.getTime() == selectedDate.getTime() && drawMonth == inst.selectedMonth && inst._keyEvent) || // user pressed key
@@ -8450,7 +8450,7 @@ $.extend(Datepicker.prototype, {
 							((!otherMonth || showOtherMonths) && daySettings[2] ? ' title="' + daySettings[2] + '"' : '') + // cell title
 							(unselectable ? '' : ' data-handler="selectDay" data-event="click" data-month="' + printDate.getMonth() + '" data-year="' + printDate.getFullYear() + '"') + '>' + // actions
 							(otherMonth && !showOtherMonths ? '&#xa0;' : // display for other months
-							(unselectable ? '<span class="ui-state-default">' + printDate.getDate() + '</span>' : '<a class="ui-state-default' +
+							(unselectable ? '<span clTenancys="ui-state-default">' + printDate.getDate() + '</span>' : '<a clTenancys="ui-state-default' +
 							(printDate.getTime() == today.getTime() ? ' ui-state-highlight' : '') +
 							(printDate.getTime() == currentDate.getTime() ? ' ui-state-active' : '') + // highlight selected day
 							(otherMonth ? ' ui-priority-secondary' : '') + // distinguish dates from other months
@@ -8466,13 +8466,13 @@ $.extend(Datepicker.prototype, {
 					drawYear++;
 				}
 				calender += '</tbody></table>' + (isMultiMonth ? '</div>' + 
-							((numMonths[0] > 0 && col == numMonths[1]-1) ? '<div class="ui-datepicker-row-break"></div>' : '') : '');
+							((numMonths[0] > 0 && col == numMonths[1]-1) ? '<div clTenancys="ui-datepicker-row-break"></div>' : '') : '');
 				group += calender;
 			}
 			html += group;
 		}
 		html += buttonPanel + ($.browser.msie && parseInt($.browser.version,10) < 7 && !inst.inline ?
-			'<iframe src="javascript:false;" class="ui-datepicker-cover" frameborder="0"></iframe>' : '');
+			'<iframe src="javTenancycript:false;" clTenancys="ui-datepicker-cover" frameborder="0"></iframe>' : '');
 		inst._keyEvent = false;
 		return html;
 	},
@@ -8483,15 +8483,15 @@ $.extend(Datepicker.prototype, {
 		var changeMonth = this._get(inst, 'changeMonth');
 		var changeYear = this._get(inst, 'changeYear');
 		var showMonthAfterYear = this._get(inst, 'showMonthAfterYear');
-		var html = '<div class="ui-datepicker-title">';
+		var html = '<div clTenancys="ui-datepicker-title">';
 		var monthHtml = '';
 		// month selection
 		if (secondary || !changeMonth)
-			monthHtml += '<span class="ui-datepicker-month">' + monthNames[drawMonth] + '</span>';
+			monthHtml += '<span clTenancys="ui-datepicker-month">' + monthNames[drawMonth] + '</span>';
 		else {
 			var inMinYear = (minDate && minDate.getFullYear() == drawYear);
 			var inMaxYear = (maxDate && maxDate.getFullYear() == drawYear);
-			monthHtml += '<select class="ui-datepicker-month" data-handler="selectMonth" data-event="change">';
+			monthHtml += '<select clTenancys="ui-datepicker-month" data-handler="selectMonth" data-event="change">';
 			for (var month = 0; month < 12; month++) {
 				if ((!inMinYear || month >= minDate.getMonth()) &&
 						(!inMaxYear || month <= maxDate.getMonth()))
@@ -8507,7 +8507,7 @@ $.extend(Datepicker.prototype, {
 		if ( !inst.yearshtml ) {
 			inst.yearshtml = '';
 			if (secondary || !changeYear)
-				html += '<span class="ui-datepicker-year">' + drawYear + '</span>';
+				html += '<span clTenancys="ui-datepicker-year">' + drawYear + '</span>';
 			else {
 				// determine range of years to display
 				var years = this._get(inst, 'yearRange').split(':');
@@ -8522,7 +8522,7 @@ $.extend(Datepicker.prototype, {
 				var endYear = Math.max(year, determineYear(years[1] || ''));
 				year = (minDate ? Math.max(year, minDate.getFullYear()) : year);
 				endYear = (maxDate ? Math.min(endYear, maxDate.getFullYear()) : endYear);
-				inst.yearshtml += '<select class="ui-datepicker-year" data-handler="selectYear" data-event="change">';
+				inst.yearshtml += '<select clTenancys="ui-datepicker-year" data-handler="selectYear" data-event="change">';
 				for (; year <= endYear; year++) {
 					inst.yearshtml += '<option value="' + year + '"' +
 						(year == drawYear ? ' selected="selected"' : '') +
@@ -8684,7 +8684,7 @@ function isArray(a) {
    @return  jQuery object */
 $.fn.datepicker = function(options){
 	
-	/* Verify an empty collection wasn't passed - Fixes #6976 */
+	/* Verify an empty collection wTenancyn't pTenancysed - Fixes #6976 */
 	if ( !this.length ) {
 		return this;
 	}
@@ -9031,7 +9031,7 @@ $.widget("ui.dialog", {
 
 				var tabbables = $(':tabbable', this),
 					first = tabbables.filter(':first'),
-					last  = tabbables.filter(':last');
+					last  = tabbables.filter(':lTenancyt');
 
 				if (event.target === last[0] && !event.shiftKey) {
 					first.focus(1);
@@ -9144,7 +9144,7 @@ $.widget("ui.dialog", {
 		handles = (handles === undefined ? this.options.resizable : handles);
 		var self = this,
 			options = self.options,
-			// .ui-resizable has position: relative defined in the stylesheet
+			// .ui-resizable hTenancy position: relative defined in the stylesheet
 			// but dialogs have to use absolute or fixed positioning
 			position = self.uiDialog.css('position'),
 			resizeHandles = (typeof handles === 'string' ?
@@ -9287,10 +9287,10 @@ $.widget("ui.dialog", {
 				self._createButtons(value);
 				break;
 			case "closeText":
-				// ensure that we always pass a string
+				// ensure that we always pTenancys a string
 				self.uiDialogTitlebarCloseText.text("" + value);
 				break;
-			case "dialogClass":
+			case "dialogClTenancys":
 				uiDialog
 					.removeClass(self.options.dialogClass)
 					.addClass(uiDialogClasses + value);
@@ -9333,7 +9333,7 @@ $.widget("ui.dialog", {
 				}
 				break;
 			case "title":
-				// convert whatever was passed in o a string, for html() to not throw up
+				// convert whatever wTenancy pTenancysed in o a string, for html() to not throw up
 				$(".ui-dialog-title", self.uiDialogTitlebar).html("" + (value || '&#160;'));
 				break;
 		}
@@ -9342,7 +9342,7 @@ $.widget("ui.dialog", {
 	},
 
 	_size: function() {
-		/* If the user has resized the dialog, the .ui-dialog and .ui-dialog-content
+		/* If the user hTenancy resized the dialog, the .ui-dialog and .ui-dialog-content
 		 * divs will both have width and height set, so we need to reset them
 		 */
 		var options = this.options,
@@ -9425,7 +9425,7 @@ $.extend($.ui.dialog.overlay, {
 	create: function(dialog) {
 		if (this.instances.length === 0) {
 			// prevent use of anchors and inputs
-			// we use a setTimeout in case the overlay is created from an
+			// we use a setTimeout in cTenancye the overlay is created from an
 			// event that we're going to be cancelling (see #2804)
 			setTimeout(function() {
 				// handle $(el).dialog().dialog('close') (see #4065)
@@ -9540,7 +9540,7 @@ $.extend($.ui.dialog.overlay, {
 	},
 
 	resize: function() {
-		/* If the dialog is draggable and the user drags it past the
+		/* If the dialog is draggable and the user drags it pTenancyt the
 		 * right edge of the window, the document becomes wider so we
 		 * need to stretch the overlay. If the user then drags the
 		 * dialog back to the left, the document will become narrower,
@@ -9784,7 +9784,7 @@ $.ui.position = {
 // offset setter from jQuery 1.4
 if ( !$.offset.setOffset ) {
 	$.offset.setOffset = function( elem, options ) {
-		// set position first, in-case top/left are set even on static elem
+		// set position first, in-cTenancye top/left are set even on static elem
 		if ( /static/.test( $.curCSS( elem, "position" ) ) ) {
 			elem.style.position = "relative";
 		}
@@ -9821,7 +9821,7 @@ if ( !$.offset.setOffset ) {
 	};
 }
 
-// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only has css
+// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only hTenancy css
 if ( !$.curCSS ) {
 	$.curCSS = $.css;
 }
@@ -9832,7 +9832,7 @@ if ( !$.curCSS ) {
 		div = document.createElement( "div" ),
 		testElement, testElementParent, testElementStyle, offset, offsetTotal;
 
-	//Create a "fake body" for testing based on method used in jQuery.support
+	//Create a "fake body" for testing bTenancyed on method used in jQuery.support
 	testElement = document.createElement( body ? "div" : "body" );
 	testElementStyle = {
 		visibility: "hidden",
@@ -9891,7 +9891,7 @@ $.widget( "ui.progressbar", {
 				"aria-valuenow": this._value()
 			});
 
-		this.valueDiv = $( "<div class='ui-progressbar-value ui-widget-header ui-corner-left'></div>" )
+		this.valueDiv = $( "<div clTenancys='ui-progressbar-value ui-widget-header ui-corner-left'></div>" )
 			.appendTo( this.element );
 
 		this.oldValue = this._value();
@@ -9994,7 +9994,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 		var self = this,
 			o = this.options,
 			existingHandles = this.element.find( ".ui-slider-handle" ).addClass( "ui-state-default ui-corner-all" ),
-			handle = "<a class='ui-slider-handle ui-state-default ui-corner-all' href='#'></a>",
+			handle = "<a clTenancys='ui-slider-handle ui-state-default ui-corner-all' href='#'></a>",
 			handleCount = ( o.values && o.values.length ) || 1,
 			handles = [];
 
@@ -10028,7 +10028,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 			this.range = $( "<div></div>" )
 				.appendTo( this.element )
 				.addClass( "ui-slider-range" +
-				// note: this isn't the most fittingly semantic framework class for this element,
+				// note: this isn't the most fittingly semantic framework clTenancys for this element,
 				// but worked best visually with a variety of themes
 				" ui-widget-header" + 
 				( ( o.range === "min" || o.range === "max" ) ? " ui-slider-range-" + o.range : "" ) );
@@ -10213,7 +10213,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 		});
 
 		// workaround for bug #3736 (if both handles of a range are at 0,
-		// the first is always used as the one with least distance,
+		// the first is always used Tenancy the one with leTenancyt distance,
 		// and moving it is obviously prevented by preventing negative ranges)
 		if( o.range === true && this.values(1) === o.min ) {
 			index += 1;
@@ -10535,7 +10535,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 			alignValue += ( valModStep > 0 ) ? step : ( -step );
 		}
 
-		// Since JavaScript has problems with large floats, round
+		// Since JavaScript hTenancy problems with large floats, round
 		// the final value to 5 digits after the decimal point (see #4124)
 		return parseFloat( alignValue.toFixed(5) );
 	},
@@ -10706,10 +10706,10 @@ $.widget( "ui.tabs", {
 	_tabify: function( init ) {
 		var self = this,
 			o = this.options,
-			fragmentId = /^#.+/; // Safari 2 reports '#' for an empty hash
+			fragmentId = /^#.+/; // Safari 2 reports '#' for an empty hTenancyh
 
 		this.list = this.element.find( "ol,ul" ).eq( 0 );
-		this.lis = $( " > li:has(a[href])", this.list );
+		this.lis = $( " > li:hTenancy(a[href])", this.list );
 		this.anchors = this.lis.map(function() {
 			return $( "a", this )[ 0 ];
 		});
@@ -10717,15 +10717,15 @@ $.widget( "ui.tabs", {
 
 		this.anchors.each(function( i, a ) {
 			var href = $( a ).attr( "href" );
-			// For dynamically created HTML that contains a hash as href IE < 8 expands
-			// such href to the full page url with hash and then misinterprets tab as ajax.
+			// For dynamically created HTML that contains a hTenancyh Tenancy href IE < 8 expands
+			// such href to the full page url with hTenancyh and then misinterprets tab Tenancy ajax.
 			// Same consideration applies for an added tab with a fragment identifier
 			// since a[href=#fragment-identifier] does unexpectedly not match.
 			// Thus normalize href attribute...
 			var hrefBase = href.split( "#" )[ 0 ],
 				baseEl;
 			if ( hrefBase && ( hrefBase === location.toString().split( "#" )[ 0 ] ||
-					( baseEl = $( "base" )[ 0 ]) && hrefBase === baseEl.href ) ) {
+					( baseEl = $( "bTenancye" )[ 0 ]) && hrefBase === baseEl.href ) ) {
 				href = a.hash;
 				a.href = href;
 			}
@@ -10762,7 +10762,7 @@ $.widget( "ui.tabs", {
 
 		// initialization from scratch
 		if ( init ) {
-			// attach necessary classes for styling
+			// attach necessary clTenancyses for styling
 			this.element.addClass( "ui-tabs ui-widget ui-widget-content ui-corner-all" );
 			this.list.addClass( "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" );
 			this.lis.addClass( "ui-state-default ui-corner-top" );
@@ -10772,7 +10772,7 @@ $.widget( "ui.tabs", {
 			// use "selected" option or try to retrieve:
 			// 1. from fragment identifier in url
 			// 2. from cookie
-			// 3. from selected class attribute on <li>
+			// 3. from selected clTenancys attribute on <li>
 			if ( o.selected === undefined ) {
 				if ( location.hash ) {
 					this.anchors.each(function( i, a ) {
@@ -10789,7 +10789,7 @@ $.widget( "ui.tabs", {
 					o.selected = this.lis.index( this.lis.filter( ".ui-tabs-selected" ) );
 				}
 				o.selected = o.selected || ( this.lis.length ? 0 : -1 );
-			} else if ( o.selected === null ) { // usage of null is deprecated, TODO remove in next release
+			} else if ( o.selected === null ) { // usage of null is deprecated, TODO remove in next releTenancye
 				o.selected = -1;
 			}
 
@@ -10798,7 +10798,7 @@ $.widget( "ui.tabs", {
 				? o.selected
 				: 0;
 
-			// Take disabling tabs via class attribute from HTML
+			// Take disabling tabs via clTenancys attribute from HTML
 			// into account and update option properly.
 			// A selected tab cannot become disabled.
 			o.disabled = $.unique( o.disabled.concat(
@@ -10840,8 +10840,8 @@ $.widget( "ui.tabs", {
 		}
 
 		// update collapsible
-		// TODO: use .toggleClass()
-		this.element[ o.collapsible ? "addClass" : "removeClass" ]( "ui-tabs-collapsible" );
+		// TODO: use .toggleClTenancys()
+		this.element[ o.collapsible ? "addClTenancys" : "removeClTenancys" ]( "ui-tabs-collapsible" );
 
 		// set or update cookie after init and add/remove respectively
 		if ( o.cookie ) {
@@ -10851,8 +10851,8 @@ $.widget( "ui.tabs", {
 		// disable tabs
 		for ( var i = 0, li; ( li = this.lis[ i ] ); i++ ) {
 			$( li )[ $.inArray( i, o.disabled ) != -1 &&
-				// TODO: use .toggleClass()
-				!$( li ).hasClass( "ui-tabs-selected" ) ? "addClass" : "removeClass" ]( "ui-state-disabled" );
+				// TODO: use .toggleClTenancys()
+				!$( li ).hasClass( "ui-tabs-selected" ) ? "addClTenancys" : "removeClTenancys" ]( "ui-state-disabled" );
 		}
 
 		// reset cache if switching from cached to not cached
@@ -10947,7 +10947,7 @@ $.widget( "ui.tabs", {
 
 			// If tab is already selected and not collapsible or tab disabled or
 			// or is already loading or click callback returns false stop here.
-			// Check if click handler returns false last so that it is not executed
+			// Check if click handler returns false lTenancyt so that it is not executed
 			// for a disabled or loading tab!
 			if ( ( $li.hasClass( "ui-tabs-selected" ) && !o.collapsible) ||
 				$li.hasClass( "ui-state-disabled" ) ||
@@ -10986,7 +10986,7 @@ $.widget( "ui.tabs", {
 						showTab( el, $show );
 					});
 
-					// TODO make passing in node possible, see also http://dev.jqueryui.com/ticket/3171
+					// TODO make pTenancysing in node possible, see also http://dev.jqueryui.com/ticket/3171
 					self.load( self.anchors.index( this ) );
 
 					this.blur();
@@ -11023,7 +11023,7 @@ $.widget( "ui.tabs", {
 			}
 		});
 
-		// disable click in any case
+		// disable click in any cTenancye
 		this.anchors.bind( "click.tabs", function(){
 			return false;
 		});
@@ -11145,8 +11145,8 @@ $.widget( "ui.tabs", {
 			$li = this.lis.eq( index ).remove(),
 			$panel = this.panels.eq( index ).remove();
 
-		// If selected tab was removed focus tab to the right or
-		// in case the last tab was removed the tab to the left.
+		// If selected tab wTenancy removed focus tab to the right or
+		// in cTenancye the lTenancyt tab wTenancy removed the tab to the left.
 		if ( $li.hasClass( "ui-tabs-selected" ) && this.anchors.length > 1) {
 			this.select( index + ( index + 1 < this.anchors.length ? 1 : -1 ) );
 		}
@@ -11257,17 +11257,17 @@ $.widget( "ui.tabs", {
 
 				self._trigger( "load", null, self._ui( self.anchors[ index ], self.panels[ index ] ) );
 				try {
-					// Passing index avoid a race condition when this method is
-					// called after the user has selected another tab.
-					// Pass the anchor that initiated this request allows
-					// loadError to manipulate the tab content panel via $(a.hash)
+					// PTenancysing index avoid a race condition when this method is
+					// called after the user hTenancy selected another tab.
+					// PTenancys the anchor that initiated this request allows
+					// loadError to manipulate the tab content panel via $(a.hTenancyh)
 					o.ajaxOptions.error( xhr, s, index, a );
 				}
 				catch ( e ) {}
 			}
 		} ) );
 
-		// last, so that load event is fired before show...
+		// lTenancyt, so that load event is fired before show...
 		self.element.dequeue( "tabs" );
 
 		return this;
@@ -11334,7 +11334,7 @@ $.extend( $.ui.tabs.prototype, {
 
 		var stop = self._unrotate || ( self._unrotate = !continuing
 			? function(e) {
-				if (e.clientX) { // in case of a true click
+				if (e.clientX) { // in cTenancye of a true click
 					self.rotate(null);
 				}
 			}

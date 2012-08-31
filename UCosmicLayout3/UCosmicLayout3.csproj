@@ -135,12 +135,15 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="ApiControllers\ValuesController.cs" />
+    <Compile Include="Controllers\TenancyController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="scripts\T4MvcJs\T4Proxy.cs" />
     <Compile Include="SharedController.generated.cs">
@@ -152,6 +155,9 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="T4MVC.ModelUnbinder.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -367,6 +373,7 @@
     <Content Include="styles\sass\sheets\_layout-footer.scss" />
     <Content Include="styles\sass\sheets\_layout-banner.scss" />
     <Content Include="styles\sass\sheets\_layout-content.scss" />
+    <Content Include="Views\Shared\_LayoutCss.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

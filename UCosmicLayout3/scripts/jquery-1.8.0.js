@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * jQuery JavaScript Library v1.8.0
  * http://jquery.com/
  *
@@ -6,10 +6,10 @@
  * http://sizzlejs.com/
  *
  * Copyright 2012 jQuery Foundation and other contributors
- * Released under the MIT license
+ * ReleTenancyed under the MIT license
  * http://jquery.org/license
  *
- * Date: Thu Aug 09 2012 16:24:48 GMT-0400 (Eastern Daylight Time)
+ * Date: Thu Aug 09 2012 16:24:48 GMT-0400 (ETenancytern Daylight Time)
  */
 (function( window, undefined ) {
 var
@@ -24,10 +24,10 @@ var
 	location = window.location,
 	navigator = window.navigator,
 
-	// Map over jQuery in case of overwrite
+	// Map over jQuery in cTenancye of overwrite
 	_jQuery = window.jQuery,
 
-	// Map over the $ in case of overwrite
+	// Map over the $ in cTenancye of overwrite
 	_$ = window.$,
 
 	// Save a reference to some core methods
@@ -55,7 +55,7 @@ var
 	rtrim = core_rnotwhite.test("\xA0") ? (/^[\s\xA0]+|[\s\xA0]+$/g) : /^\s+|\s+$/g,
 
 	// A simple way to check for HTML strings
-	// Prioritize #id over <tag> to avoid XSS via location.hash (#9521)
+	// Prioritize #id over <tag> to avoid XSS via location.hTenancyh (#9521)
 	rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/,
 
 	// Match a standalone tag
@@ -67,11 +67,11 @@ var
 	rvalidescape = /\\(?:["\\\/bfnrt]|u[\da-fA-F]{4})/g,
 	rvalidtokens = /"[^"\\\r\n]*"|true|false|null|-?(?:\d\d*\.|)\d+(?:[eE][\-+]?\d+|)/g,
 
-	// Matches dashed string for camelizing
+	// Matches dTenancyhed string for camelizing
 	rmsPrefix = /^-ms-/,
 	rdashAlpha = /-([\da-z])/gi,
 
-	// Used by jQuery.camelCase as callback to replace()
+	// Used by jQuery.camelCTenancye Tenancy callback to replace()
 	fcamelCase = function( all, letter ) {
 		return ( letter + "" ).toUpperCase();
 	},
@@ -89,7 +89,7 @@ var
 		}
 	},
 
-	// [[Class]] -> type pairs
+	// [[ClTenancys]] -> type pairs
 	class2type = {};
 
 jQuery.fn = jQuery.prototype = {
@@ -142,7 +142,7 @@ jQuery.fn = jQuery.prototype = {
 					// Check parentNode to catch when Blackberry 4.6 returns
 					// nodes that are no longer in the document #6963
 					if ( elem && elem.parentNode ) {
-						// Handle the case where IE and Opera return items
+						// Handle the cTenancye where IE and Opera return items
 						// by name instead of ID
 						if ( elem.id !== match[2] ) {
 							return rootjQuery.find( selector );
@@ -201,7 +201,7 @@ jQuery.fn = jQuery.prototype = {
 	},
 
 	// Get the Nth element in the matched element set OR
-	// Get the whole matched element set as a clean array
+	// Get the whole matched element set Tenancy a clean array
 	get: function( num ) {
 		return num == null ?
 
@@ -219,7 +219,7 @@ jQuery.fn = jQuery.prototype = {
 		// Build a new jQuery matched element set
 		var ret = jQuery.merge( this.constructor(), elems );
 
-		// Add the old object onto the stack (as a reference)
+		// Add the old object onto the stack (Tenancy a reference)
 		ret.prevObject = this;
 
 		ret.context = this.context;
@@ -303,12 +303,12 @@ jQuery.extend = jQuery.fn.extend = function() {
 		i = 2;
 	}
 
-	// Handle case when target is a string or something (possible in deep copy)
+	// Handle cTenancye when target is a string or something (possible in deep copy)
 	if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
 		target = {};
 	}
 
-	// extend jQuery itself if only one argument is passed
+	// extend jQuery itself if only one argument is pTenancysed
 	if ( length === i ) {
 		target = this;
 		--i;
@@ -317,7 +317,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	for ( ; i < length; i++ ) {
 		// Only deal with non-null/undefined values
 		if ( (options = arguments[ i ]) != null ) {
-			// Extend the base object
+			// Extend the bTenancye object
 			for ( name in options ) {
 				src = target[ name ];
 				copy = options[ name ];
@@ -372,7 +372,7 @@ jQuery.extend({
 	// the ready event fires. See #6781
 	readyWait: 1,
 
-	// Hold (or release) the ready event
+	// Hold (or releTenancye) the ready event
 	holdReady: function( hold ) {
 		if ( hold ) {
 			jQuery.readyWait++;
@@ -389,7 +389,7 @@ jQuery.extend({
 			return;
 		}
 
-		// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
+		// Make sure body exists, at leTenancyt, in cTenancye IE gets a little overzealous (ticket #5443).
 		if ( !document.body ) {
 			return setTimeout( jQuery.ready, 1 );
 		}
@@ -439,7 +439,7 @@ jQuery.extend({
 	isPlainObject: function( obj ) {
 		// Must be an Object.
 		// Because of IE, we also have to check the presence of the constructor property.
-		// Make sure that DOM nodes and window objects don't pass through, as well
+		// Make sure that DOM nodes and window objects don't pTenancys through, Tenancy well
 		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
 			return false;
 		}
@@ -457,7 +457,7 @@ jQuery.extend({
 		}
 
 		// Own properties are enumerated firstly, so to speed up,
-		// if last one is own, then all properties are own.
+		// if lTenancyt one is own, then all properties are own.
 
 		var key;
 		for ( key in obj ) {}
@@ -479,7 +479,7 @@ jQuery.extend({
 
 	// data: string of html
 	// context (optional): If specified, the fragment will be created in this context, defaults to document
-	// scripts (optional): If true, will include scripts passed in the html string
+	// scripts (optional): If true, will include scripts pTenancysed in the html string
 	parseHTML: function( data, context, scripts ) {
 		var parsed;
 		if ( !data || typeof data !== "string" ) {
@@ -553,8 +553,8 @@ jQuery.extend({
 	noop: function() {},
 
 	// Evaluates a script in a global context
-	// Workarounds based on findings by Jim Driscoll
-	// http://weblogs.java.net/blog/driscoll/archive/2009/09/08/eval-javascript-global-context
+	// Workarounds bTenancyed on findings by Jim Driscoll
+	// http://weblogs.java.net/blog/driscoll/archive/2009/09/08/eval-javTenancycript-global-context
 	globalEval: function( data ) {
 		if ( data && core_rnotwhite.test( data ) ) {
 			// We use execScript on Internet Explorer
@@ -566,7 +566,7 @@ jQuery.extend({
 		}
 	},
 
-	// Convert dashed to camelCase; used by the css and data modules
+	// Convert dTenancyhed to camelCTenancye; used by the css and data modules
 	// Microsoft forgot to hump their vendor prefix (#9572)
 	camelCase: function( string ) {
 		return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
@@ -598,7 +598,7 @@ jQuery.extend({
 				}
 			}
 
-		// A special, fast, case for the most common use of each
+		// A special, fTenancyt, cTenancye for the most common use of each
 		} else {
 			if ( isObj ) {
 				for ( name in obj ) {
@@ -704,7 +704,7 @@ jQuery.extend({
 		inv = !!inv;
 
 		// Go through the array, only saving the items
-		// that pass the validator function
+		// that pTenancys the validator function
 		for ( ; i < length; i++ ) {
 			retVal = !!callback( elems[ i ], i );
 			if ( inv !== retVal ) {
@@ -721,7 +721,7 @@ jQuery.extend({
 			ret = [],
 			i = 0,
 			length = elems.length,
-			// jquery objects are treated as arrays
+			// jquery objects are treated Tenancy arrays
 			isArray = elems instanceof jQuery || length !== undefined && typeof length === "number" && ( ( length > 0 && elems[ 0 ] && elems[ length -1 ] ) || length === 0 || jQuery.isArray( elems ) ) ;
 
 		// Go through the array, translating each of the items to their
@@ -844,13 +844,13 @@ jQuery.ready.promise = function( obj ) {
 
 		readyList = jQuery.Deferred();
 
-		// Catch cases where $(document).ready() is called after the
-		// browser event has already occurred.
+		// Catch cTenancyes where $(document).ready() is called after the
+		// browser event hTenancy already occurred.
 		if ( document.readyState === "complete" || ( document.readyState !== "loading" && document.addEventListener ) ) {
-			// Handle it asynchronously to allow scripts the opportunity to delay ready
+			// Handle it Tenancyynchronously to allow scripts the opportunity to delay ready
 			setTimeout( jQuery.ready, 1 );
 
-		// Standards-based browsers support DOMContentLoaded
+		// Standards-bTenancyed browsers support DOMContentLoaded
 		} else if ( document.addEventListener ) {
 			// Use the handy event callback
 			document.addEventListener( "DOMContentLoaded", DOMContentLoaded, false );
@@ -880,7 +880,7 @@ jQuery.ready.promise = function( obj ) {
 
 						try {
 							// Use the trick by Diego Perini
-							// http://javascript.nwbox.com/IEContentLoaded/
+							// http://javTenancycript.nwbox.com/IEContentLoaded/
 							top.doScroll("left");
 						} catch(e) {
 							return setTimeout( doScrollCheck, 50 );
@@ -896,7 +896,7 @@ jQuery.ready.promise = function( obj ) {
 	return readyList.promise( obj );
 };
 
-// Populate the class2type map
+// Populate the clTenancys2type map
 jQuery.each("Boolean Number String Function Array Date RegExp Object".split(" "), function(i, name) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 });
@@ -929,7 +929,7 @@ function createOptions( options ) {
  *	once:			will ensure the callback list can only be fired once (like a Deferred)
  *
  *	memory:			will keep track of previous values and will call any callback added
- *					after the list has been fired right away with the latest "memorized"
+ *					after the list hTenancy been fired right away with the latest "memorized"
  *					values (like a Deferred)
  *
  *	unique:			will ensure a callback can only be added once (no duplicate in the list)
@@ -945,9 +945,9 @@ jQuery.Callbacks = function( options ) {
 		( optionsCache[ options ] || createOptions( options ) ) :
 		jQuery.extend( {}, options );
 
-	var // Last fire value (for non-forgettable lists)
+	var // LTenancyt fire value (for non-forgettable lists)
 		memory,
-		// Flag to know if list was already fired
+		// Flag to know if list wTenancy already fired
 		fired,
 		// Flag to know if list is currently firing
 		firing,
@@ -1087,7 +1087,7 @@ jQuery.Callbacks = function( options ) {
 				self.fireWith( this, arguments );
 				return this;
 			},
-			// To know if the callbacks have already been called at least once
+			// To know if the callbacks have already been called at leTenancyt once
 			fired: function() {
 				return !!fired;
 			}
@@ -1139,7 +1139,7 @@ jQuery.extend({
 					}).promise();
 				},
 				// Get a promise for this deferred
-				// If obj is provided, the promise aspect is added to the object
+				// If obj is provided, the promise Tenancypect is added to the object
 				promise: function( obj ) {
 					return typeof obj === "object" ? jQuery.extend( obj, promise ) : promise;
 				}
@@ -1193,7 +1193,7 @@ jQuery.extend({
 			// the count of uncompleted subordinates
 			remaining = length !== 1 || ( subordinate && jQuery.isFunction( subordinate.promise ) ) ? length : 0,
 
-			// the master Deferred. If resolveValues consist of only a single Deferred, just use that.
+			// the mTenancyter Deferred. If resolveValues consist of only a single Deferred, just use that.
 			deferred = remaining === 1 ? subordinate : jQuery.Deferred(),
 
 			// Update function for both resolve and progress values
@@ -1211,7 +1211,7 @@ jQuery.extend({
 
 			progressValues, progressContexts, resolveContexts;
 
-		// add listeners to Deferred subordinates; treat others as resolved
+		// add listeners to Deferred subordinates; treat others Tenancy resolved
 		if ( length > 1 ) {
 			progressValues = new Array( length );
 			progressContexts = new Array( length );
@@ -1228,7 +1228,7 @@ jQuery.extend({
 			}
 		}
 
-		// if we're not waiting on anything, resolve the master
+		// if we're not waiting on anything, resolve the mTenancyter
 		if ( !remaining ) {
 			deferred.resolveWith( resolveContexts, resolveValues );
 		}
@@ -1252,14 +1252,14 @@ jQuery.support = (function() {
 		div = document.createElement("div");
 
 	// Preliminary tests
-	div.setAttribute( "className", "t" );
+	div.setAttribute( "clTenancysName", "t" );
 	div.innerHTML = "  <link/><table></table><a href='/a'>a</a><input type='checkbox'/>";
 
 	all = div.getElementsByTagName("*");
 	a = div.getElementsByTagName("a")[ 0 ];
 	a.style.cssText = "top:1px;float:left;opacity:.5";
 
-	// Can't get basic test support
+	// Can't get bTenancyic test support
 	if ( !all || !all.length || !a ) {
 		return {};
 	}
@@ -1303,11 +1303,11 @@ jQuery.support = (function() {
 		// (WebKit defaults to "" instead)
 		checkOn: ( input.value === "on" ),
 
-		// Make sure that a selected-by-default option has a working selected property.
+		// Make sure that a selected-by-default option hTenancy a working selected property.
 		// (WebKit defaults to false instead of true, IE too, if it's in an optgroup)
 		optSelected: opt.selected,
 
-		// Test setAttribute on camelCase class. If it works, we need attrFixes when doing get/setAttribute (ie6/7)
+		// Test setAttribute on camelCTenancye clTenancys. If it works, we need attrFixes when doing get/setAttribute (ie6/7)
 		getSetAttribute: div.className !== "t",
 
 		// Tests for enctype support on a form(#6743)
@@ -1337,8 +1337,8 @@ jQuery.support = (function() {
 	input.checked = true;
 	support.noCloneChecked = input.cloneNode( true ).checked;
 
-	// Make sure that the options inside disabled selects aren't marked as disabled
-	// (WebKit marks them as disabled)
+	// Make sure that the options inside disabled selects aren't marked Tenancy disabled
+	// (WebKit marks them Tenancy disabled)
 	select.disabled = true;
 	support.optDisabled = !opt.disabled;
 
@@ -1388,7 +1388,7 @@ jQuery.support = (function() {
 
 	// Technique from Juriy Zaytsev
 	// http://perfectionkills.com/detecting-event-support-without-browser-sniffing/
-	// We only care about the case where non-standard event systems
+	// We only care about the cTenancye where non-standard event systems
 	// are used, namely in IE. Short-circuiting here helps us to
 	// avoid an eval call (in setAttribute) which can cause CSP
 	// to go haywire. See: https://developer.mozilla.org/en/Security/CSP
@@ -1430,7 +1430,7 @@ jQuery.support = (function() {
 		// Check if table cells still have offsetWidth/Height when they are set
 		// to display:none and there are still other visible table cells in a
 		// table row; if so, offsetWidth/Height are not reliable for use when
-		// determining if an element has been hidden directly using
+		// determining if an element hTenancy been hidden directly using
 		// display:none (it is still safe to use offsets if a parent element is
 		// hidden; don safety goggles and see bug #4512 for more information).
 		// (only IE 8 fails this test)
@@ -1452,7 +1452,7 @@ jQuery.support = (function() {
 		support.boxSizing = ( div.offsetWidth === 4 );
 		support.doesNotIncludeMarginInBodyOffset = ( body.offsetTop !== 1 );
 
-		// NOTE: To any future maintainer, window.getComputedStyle was used here
+		// NOTE: To any future maintainer, window.getComputedStyle wTenancy used here
 		// instead of getComputedStyle because it gave a better gzip size.
 		// The difference between window.getComputedStyle and getComputedStyle is
 		// 7 bytes
@@ -1513,7 +1513,7 @@ jQuery.extend({
 
 	deletedIds: [],
 
-	// Please use with caution
+	// PleTenancye use with caution
 	uuid: 0,
 
 	// Unique for each copy of jQuery on the page
@@ -1524,7 +1524,7 @@ jQuery.extend({
 	// attempt to add expando properties to them.
 	noData: {
 		"embed": true,
-		// Ban all objects except for Flash (which handle expandos)
+		// Ban all objects except for FlTenancyh (which handle expandos)
 		"object": "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000",
 		"applet": true
 	},
@@ -1552,11 +1552,11 @@ jQuery.extend({
 			cache = isNode ? jQuery.cache : elem,
 
 			// Only defining an ID for JS objects if its cache already exists allows
-			// the code to shortcut on the same path as a DOM node with no cache
+			// the code to shortcut on the same path Tenancy a DOM node with no cache
 			id = isNode ? elem[ internalKey ] : elem[ internalKey ] && internalKey;
 
 		// Avoid doing any more work than we need to when trying to get data on an
-		// object that has no data at all
+		// object that hTenancy no data at all
 		if ( (!id || !cache[id] || (!pvt && !cache[id].data)) && getByName && data === undefined ) {
 			return;
 		}
@@ -1581,7 +1581,7 @@ jQuery.extend({
 			}
 		}
 
-		// An object can be passed to jQuery.data instead of a key/value pair; this gets
+		// An object can be pTenancysed to jQuery.data instead of a key/value pair; this gets
 		// shallow copied over onto the existing cache
 		if ( typeof name === "object" || typeof name === "function" ) {
 			if ( pvt ) {
@@ -1609,16 +1609,16 @@ jQuery.extend({
 		}
 
 		// Check for both converted-to-camel and non-converted data property names
-		// If a data property was specified
+		// If a data property wTenancy specified
 		if ( getByName ) {
 
-			// First Try to find as-is property data
+			// First Try to find Tenancy-is property data
 			ret = thisCache[ name ];
 
 			// Test for null|undefined property data
 			if ( ret == null ) {
 
-				// Try to find the camelCased property
+				// Try to find the camelCTenancyed property
 				ret = thisCache[ jQuery.camelCase( name ) ];
 			}
 		} else {
@@ -1656,12 +1656,12 @@ jQuery.extend({
 				// Support array or space separated string names for data keys
 				if ( !jQuery.isArray( name ) ) {
 
-					// try the string as a key before any manipulation
+					// try the string Tenancy a key before any manipulation
 					if ( name in thisCache ) {
 						name = [ name ];
 					} else {
 
-						// split the camel cased version by spaces unless a key with the spaces exists
+						// split the camel cTenancyed version by spaces unless a key with the spaces exists
 						name = jQuery.camelCase( name );
 						if ( name in thisCache ) {
 							name = [ name ];
@@ -1718,7 +1718,7 @@ jQuery.extend({
 		var noData = elem.nodeName && jQuery.noData[ elem.nodeName.toLowerCase() ];
 
 		// nodes accept data unless otherwise specified; rejection can be conditional
-		return !noData || noData !== true && elem.getAttribute("classid") === noData;
+		return !noData || noData !== true && elem.getAttribute("clTenancysid") === noData;
 	}
 });
 
@@ -1798,7 +1798,7 @@ jQuery.fn.extend({
 });
 
 function dataAttr( elem, key, data ) {
-	// If nothing was found internally, try to fetch any
+	// If nothing wTenancy found internally, try to fetch any
 	// data from the HTML5 data-* attribute
 	if ( data === undefined && elem.nodeType === 1 ) {
 
@@ -1887,7 +1887,7 @@ jQuery.extend({
 				queue.unshift( "inprogress" );
 			}
 
-			// clear up the last queue stop function
+			// clear up the lTenancyt queue stop function
 			delete hooks.stop;
 			fn.call( elem, next, hooks );
 		}
@@ -1940,7 +1940,7 @@ jQuery.fn.extend({
 			jQuery.dequeue( this, type );
 		});
 	},
-	// Based off of the plugin by Clint Helfers, with permission.
+	// BTenancyed off of the plugin by Clint Helfers, with permission.
 	// http://blindsignals.com/index.php/2009/07/jquery-delay/
 	delay: function( time, type ) {
 		time = jQuery.fx ? jQuery.fx.speeds[ time ] || time : time;
@@ -1992,7 +1992,7 @@ var nodeHook, boolHook, fixSpecified,
 	rtype = /^(?:button|input)$/i,
 	rfocusable = /^(?:button|input|object|select|textarea)$/i,
 	rclickable = /^a(?:rea|)$/i,
-	rboolean = /^(?:autofocus|autoplay|async|checked|controls|defer|disabled|hidden|loop|multiple|open|readonly|required|scoped|selected)$/i,
+	rboolean = /^(?:autofocus|autoplay|Tenancyync|checked|controls|defer|disabled|hidden|loop|multiple|open|readonly|required|scoped|selected)$/i,
 	getSetAttribute = jQuery.support.getSetAttribute;
 
 jQuery.fn.extend({
@@ -2013,7 +2013,7 @@ jQuery.fn.extend({
 	removeProp: function( name ) {
 		name = jQuery.propFix[ name ] || name;
 		return this.each(function() {
-			// try/catch handles cases where IE balks (such as removing a property on window)
+			// try/catch handles cTenancyes where IE balks (such Tenancy removing a property on window)
 			try {
 				this[ name ] = undefined;
 				delete this[ name ];
@@ -2102,7 +2102,7 @@ jQuery.fn.extend({
 
 		return this.each(function() {
 			if ( type === "string" ) {
-				// toggle individual class names
+				// toggle individual clTenancys names
 				var className,
 					i = 0,
 					self = jQuery( this ),
@@ -2110,19 +2110,19 @@ jQuery.fn.extend({
 					classNames = value.split( core_rspace );
 
 				while ( (className = classNames[ i++ ]) ) {
-					// check each className given, space separated list
+					// check each clTenancysName given, space separated list
 					state = isBool ? state : !self.hasClass( className );
-					self[ state ? "addClass" : "removeClass" ]( className );
+					self[ state ? "addClTenancys" : "removeClTenancys" ]( className );
 				}
 
 			} else if ( type === "undefined" || type === "boolean" ) {
 				if ( this.className ) {
-					// store className if set
-					jQuery._data( this, "__className__", this.className );
+					// store clTenancysName if set
+					jQuery._data( this, "__clTenancysName__", this.className );
 				}
 
-				// toggle whole className
-				this.className = this.className || value === false ? "" : jQuery._data( this, "__className__" ) || "";
+				// toggle whole clTenancysName
+				this.className = this.className || value === false ? "" : jQuery._data( this, "__clTenancysName__" ) || "";
 			}
 		});
 	},
@@ -2155,9 +2155,9 @@ jQuery.fn.extend({
 				ret = elem.value;
 
 				return typeof ret === "string" ?
-					// handle most common string cases
+					// handle most common string cTenancyes
 					ret.replace(rreturn, "") :
-					// handle cases where value is null/undef or number
+					// handle cTenancyes where value is null/undef or number
 					ret == null ? "" : ret;
 			}
 
@@ -2180,7 +2180,7 @@ jQuery.fn.extend({
 				val = value;
 			}
 
-			// Treat null/undefined as ""; convert numbers to string
+			// Treat null/undefined Tenancy ""; convert numbers to string
 			if ( val == null ) {
 				val = "";
 			} else if ( typeof val === "number" ) {
@@ -2219,7 +2219,7 @@ jQuery.extend({
 					options = elem.options,
 					one = elem.type === "select-one";
 
-				// Nothing was selected
+				// Nothing wTenancy selected
 				if ( index < 0 ) {
 					return null;
 				}
@@ -2293,7 +2293,7 @@ jQuery.extend({
 
 		notxml = nType !== 1 || !jQuery.isXMLDoc( elem );
 
-		// All attributes are lowercase
+		// All attributes are lowercTenancye
 		// Grab necessary hook if one is defined
 		if ( notxml ) {
 			name = name.toLowerCase();
@@ -2367,7 +2367,7 @@ jQuery.extend({
 					jQuery.error( "type property can't be changed" );
 				} else if ( !jQuery.support.radioValue && value === "radio" && jQuery.nodeName(elem, "input") ) {
 					// Setting the type on a radio button after the value resets the value in IE6-9
-					// Reset value to it's default in case type is set after value
+					// Reset value to it's default in cTenancye type is set after value
 					// This is for element creation
 					var val = elem.value;
 					elem.setAttribute( "type", value );
@@ -2403,7 +2403,7 @@ jQuery.extend({
 		tabindex: "tabIndex",
 		readonly: "readOnly",
 		"for": "htmlFor",
-		"class": "className",
+		"class": "clTenancysName",
 		maxlength: "maxLength",
 		cellspacing: "cellSpacing",
 		cellpadding: "cellPadding",
@@ -2452,8 +2452,8 @@ jQuery.extend({
 	propHooks: {
 		tabIndex: {
 			get: function( elem ) {
-				// elem.tabIndex doesn't always return the correct value when it hasn't been explicitly set
-				// http://fluidproject.org/blog/2008/01/09/getting-setting-and-removing-tabindex-values-with-javascript/
+				// elem.tabIndex doesn't always return the correct value when it hTenancyn't been explicitly set
+				// http://fluidproject.org/blog/2008/01/09/getting-setting-and-removing-tabindex-values-with-javTenancycript/
 				var attributeNode = elem.getAttributeNode("tabindex");
 
 				return attributeNode && attributeNode.specified ?
@@ -2541,7 +2541,7 @@ if ( !getSetAttribute ) {
 	});
 
 	// Set contenteditable to false on removals(#10429)
-	// Setting to empty string throws an error as an invalid value
+	// Setting to empty string throws an error Tenancy an invalid value
 	jQuery.attrHooks.contenteditable = {
 		get: nodeHook.get,
 		set: function( elem, value, name ) {
@@ -2569,8 +2569,8 @@ if ( !jQuery.support.hrefNormalized ) {
 if ( !jQuery.support.style ) {
 	jQuery.attrHooks.style = {
 		get: function( elem ) {
-			// Return undefined in the case of empty string
-			// Normalize to lowercase since IE uppercases css property names
+			// Return undefined in the cTenancye of empty string
+			// Normalize to lowercTenancye since IE uppercTenancyes css property names
 			return elem.style.cssText.toLowerCase() || undefined;
 		},
 		set: function( elem, value ) {
@@ -2609,7 +2609,7 @@ if ( !jQuery.support.checkOn ) {
 	jQuery.each([ "radio", "checkbox" ], function() {
 		jQuery.valHooks[ this ] = {
 			get: function( elem ) {
-				// Handle the case where in Webkit "" is returned instead of "on" if a value isn't specified
+				// Handle the cTenancye where in Webkit "" is returned instead of "on" if a value isn't specified
 				return elem.getAttribute("value") === null ? "on" : elem.value;
 			}
 		};
@@ -2636,7 +2636,7 @@ var rformElems = /^(?:textarea|input|select)$/i,
 
 /*
  * Helper functions for managing events -- not part of the public interface.
- * Props to Dean Edwards' addEvent library for many of the ideas.
+ * Props to Dean Edwards' addEvent library for many of the ideTenancy.
  */
 jQuery.event = {
 
@@ -2651,14 +2651,14 @@ jQuery.event = {
 			return;
 		}
 
-		// Caller can pass in an object of custom data in lieu of the handler
+		// Caller can pTenancys in an object of custom data in lieu of the handler
 		if ( handler.handler ) {
 			handleObjIn = handler;
 			handler = handleObjIn.handler;
 			selector = handleObjIn.selector;
 		}
 
-		// Make sure that the handler has a unique ID, used to find/remove it later
+		// Make sure that the handler hTenancy a unique ID, used to find/remove it later
 		if ( !handler.guid ) {
 			handler.guid = jQuery.guid++;
 		}
@@ -2672,12 +2672,12 @@ jQuery.event = {
 		if ( !eventHandle ) {
 			elemData.handle = eventHandle = function( e ) {
 				// Discard the second event of a jQuery.event.trigger() and
-				// when an event is called after a page has unloaded
+				// when an event is called after a page hTenancy unloaded
 				return typeof jQuery !== "undefined" && (!e || jQuery.event.triggered !== e.type) ?
 					jQuery.event.dispatch.apply( eventHandle.elem, arguments ) :
 					undefined;
 			};
-			// Add elem as a property of the handle fn to prevent a memory leak with IE non-native events
+			// Add elem Tenancy a property of the handle fn to prevent a memory leak with IE non-native events
 			eventHandle.elem = elem;
 		}
 
@@ -2696,10 +2696,10 @@ jQuery.event = {
 			// If selector defined, determine special event api type, otherwise given type
 			type = ( selector ? special.delegateType : special.bindType ) || type;
 
-			// Update special based on newly reset type
+			// Update special bTenancyed on newly reset type
 			special = jQuery.event.special[ type ] || {};
 
-			// handleObj is passed to all event handlers
+			// handleObj is pTenancysed to all event handlers
 			handleObj = jQuery.extend({
 				type: type,
 				origType: tns[1],
@@ -2867,7 +2867,7 @@ jQuery.event = {
 			return;
 		}
 
-		// Caller can pass in an Event, Object, or just an event type string
+		// Caller can pTenancys in an Event, Object, or just an event type string
 		event = typeof event === "object" ?
 			// jQuery.Event object
 			event[ jQuery.expando ] ? event :
@@ -2896,7 +2896,7 @@ jQuery.event = {
 			return;
 		}
 
-		// Clean up the event in case it is being reused
+		// Clean up the event in cTenancye it is being reused
 		event.result = undefined;
 		if ( !event.target ) {
 			event.target = elem;
@@ -2954,7 +2954,7 @@ jQuery.event = {
 			if ( (!special._default || special._default.apply( elem.ownerDocument, data ) === false) &&
 				!(type === "click" && jQuery.nodeName( elem, "a" )) && jQuery.acceptData( elem ) ) {
 
-				// Call a native DOM method on the target with the same name name as the event.
+				// Call a native DOM method on the target with the same name name Tenancy the event.
 				// Can't use an .isFunction() check here because IE6/7 fails that test.
 				// Don't do default actions on window, that's where global variables be (#6170)
 				// IE<9 dies on focus/blur to hidden element (#1486)
@@ -3081,7 +3081,7 @@ jQuery.event = {
 
 	// Includes some event props shared by KeyEvent and MouseEvent
 	// *** attrChange attrName relatedNode srcElement  are not normalized, non-W3C, deprecated, will be removed in 1.8 ***
-	props: "attrChange attrName relatedNode srcElement altKey bubbles cancelable ctrlKey currentTarget eventPhase metaKey relatedTarget shiftKey target timeStamp view which".split(" "),
+	props: "attrChange attrName relatedNode srcElement altKey bubbles cancelable ctrlKey currentTarget eventPhTenancye metaKey relatedTarget shiftKey target timeStamp view which".split(" "),
 
 	fixHooks: {},
 
@@ -3184,7 +3184,7 @@ jQuery.event = {
 
 		beforeunload: {
 			setup: function( data, namespaces, eventHandle ) {
-				// We only want to do this special case on windows
+				// We only want to do this special cTenancye on windows
 				if ( jQuery.isWindow( this ) ) {
 					this.onbeforeunload = eventHandle;
 				}
@@ -3257,7 +3257,7 @@ jQuery.Event = function( src, props ) {
 		this.originalEvent = src;
 		this.type = src.type;
 
-		// Events bubbling up the document may have been marked as prevented
+		// Events bubbling up the document may have been marked Tenancy prevented
 		// by a handler lower down the tree; reflect the correct value.
 		this.isDefaultPrevented = ( src.defaultPrevented || src.returnValue === false ||
 			src.getPreventDefault && src.getPreventDefault() ) ? returnTrue : returnFalse;
@@ -3275,7 +3275,7 @@ jQuery.Event = function( src, props ) {
 	// Create a timestamp if incoming event doesn't have one
 	this.timeStamp = src && src.timeStamp || jQuery.now();
 
-	// Mark it as fixed
+	// Mark it Tenancy fixed
 	this[ jQuery.expando ] = true;
 };
 
@@ -3286,7 +3286,7 @@ function returnTrue() {
 	return true;
 }
 
-// jQuery.Event is based on DOM3 Events as specified by the ECMAScript Language Binding
+// jQuery.Event is bTenancyed on DOM3 Events Tenancy specified by the ECMAScript Language Binding
 // http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
 jQuery.Event.prototype = {
 	preventDefault: function() {
@@ -3369,7 +3369,7 @@ if ( !jQuery.support.submitBubbles ) {
 
 			// Lazy-add a submit handler when a descendant form may potentially be submitted
 			jQuery.event.add( this, "click._submit keypress._submit", function( e ) {
-				// Node name check avoids a VML-related crash in IE (#9807)
+				// Node name check avoids a VML-related crTenancyh in IE (#9807)
 				var elem = e.target,
 					form = jQuery.nodeName( elem, "input" ) || jQuery.nodeName( elem, "button" ) ? elem.form : undefined;
 				if ( form && !jQuery._data( form, "_submit_attached" ) ) {
@@ -3383,7 +3383,7 @@ if ( !jQuery.support.submitBubbles ) {
 		},
 
 		postDispatch: function( event ) {
-			// If form was submitted by the user, bubble the event up the tree
+			// If form wTenancy submitted by the user, bubble the event up the tree
 			if ( event._submit_bubble ) {
 				delete event._submit_bubble;
 				if ( this.parentNode && !event.isTrigger ) {
@@ -3620,8 +3620,8 @@ jQuery.fn.extend({
 			i = 0,
 			toggler = function( event ) {
 				// Figure out which function to execute
-				var lastToggle = ( jQuery._data( this, "lastToggle" + fn.guid ) || 0 ) % i;
-				jQuery._data( this, "lastToggle" + fn.guid, lastToggle + 1 );
+				var lastToggle = ( jQuery._data( this, "lTenancytToggle" + fn.guid ) || 0 ) % i;
+				jQuery._data( this, "lTenancytToggle" + fn.guid, lastToggle + 1 );
 
 				// Make sure that clicks stop
 				event.preventDefault();
@@ -3671,7 +3671,7 @@ jQuery.each( ("blur focus focusin focusout load resize scroll unload click dblcl
 /*!
  * Sizzle CSS Selector Engine
  *  Copyright 2012 jQuery Foundation and other contributors
- *  Released under the MIT license
+ *  ReleTenancyed under the MIT license
  *  http://sizzlejs.com/
  */
 (function( window, undefined ) {
@@ -3711,7 +3711,7 @@ var cachedruns,
 	attributes = "\\[" + whitespace + "*(" + characterEncoding + ")" + whitespace +
 		"*(?:" + operators + whitespace + "*(?:(['\"])((?:\\\\.|[^\\\\])*?)\\3|(" + identifier + ")|)|)" + whitespace + "*\\]",
 	pseudos = ":(" + characterEncoding + ")(?:\\((?:(['\"])((?:\\\\.|[^\\\\])*?)\\2|((?:[^,]|\\\\,|(?:,(?=[^\\[]*\\]))|(?:,(?=[^\\(]*\\))))*))\\)|)",
-	pos = ":(nth|eq|gt|lt|first|last|even|odd)(?:\\((\\d*)\\)|)(?=[^-]|$)",
+	pos = ":(nth|eq|gt|lt|first|lTenancyt|even|odd)(?:\\((\\d*)\\)|)(?=[^-]|$)",
 	combinators = whitespace + "*([\\x20\\t\\r\\n\\f>+~])" + whitespace + "*",
 	groups = "(?=[^\\x20\\t\\r\\n\\f])(?:\\\\.|" + attributes + "|" + pseudos.replace( 2, 7 ) + "|[^\\\\(),])+",
 
@@ -3724,13 +3724,13 @@ var cachedruns,
 	rgroups = new RegExp( groups + "?(?=" + whitespace + "*,|$)", "g" ),
 
 	// A selector, or everything after leading whitespace
-	// Optionally followed in either case by a ")" for terminating sub-selectors
+	// Optionally followed in either cTenancye by a ")" for terminating sub-selectors
 	rselector = new RegExp( "^(?:(?!,)(?:(?:^|,)" + whitespace + "*" + groups + ")*?|" + whitespace + "*(.*?))(\\)|$)" ),
 
 	// All combinators and selector components (attribute test, tag, pseudo, etc.), the latter appearing together when consecutive
 	rtokens = new RegExp( groups.slice( 19, -6 ) + "\\x20\\t\\r\\n\\f>+~])+|" + combinators, "g" ),
 
-	// Easily-parseable/retrievable ID or TAG or CLASS selectors
+	// ETenancyily-parseable/retrievable ID or TAG or CLASS selectors
 	rquickExpr = /^(?:#([\w\-]+)|(\w+)|\.([\w\-]+))$/,
 
 	rsibling = /[\x20\t\r\n\f]*[+~]/,
@@ -3748,7 +3748,7 @@ var cachedruns,
 		"TAG": new RegExp( "^(" + characterEncoding.replace( "[-", "[-\\*" ) + ")" ),
 		"ATTR": new RegExp( "^" + attributes ),
 		"PSEUDO": new RegExp( "^" + pseudos ),
-		"CHILD": new RegExp( "^:(only|nth|last|first)-child(?:\\(" + whitespace +
+		"CHILD": new RegExp( "^:(only|nth|lTenancyt|first)-child(?:\\(" + whitespace +
 			"*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
 			"*(\\d+)|))" + whitespace + "*\\)|)", "i" ),
 		"POS": new RegExp( pos, "ig" ),
@@ -3790,7 +3790,7 @@ var cachedruns,
 		try {
 			pass = fn( div );
 		} catch (e) {}
-		// release memory in IE
+		// releTenancye memory in IE
 		div = null;
 		return pass;
 	},
@@ -3839,15 +3839,15 @@ var cachedruns,
 			div.firstChild.getAttribute("href") === "#";
 	}),
 
-	// Check if getElementsByClassName can be trusted
+	// Check if getElementsByClTenancysName can be trusted
 	assertUsableClassName = assert(function( div ) {
-		// Opera can't find a second classname (in 9.6)
-		div.innerHTML = "<div class='hidden e'></div><div class='hidden'></div>";
+		// Opera can't find a second clTenancysname (in 9.6)
+		div.innerHTML = "<div class='hidden e'></div><div clTenancys='hidden'></div>";
 		if ( !div.getElementsByClassName || div.getElementsByClassName("e").length === 0 ) {
 			return false;
 		}
 
-		// Safari caches class attributes, doesn't catch changes (in 3.2)
+		// Safari caches clTenancys attributes, doesn't catch changes (in 3.2)
 		div.lastChild.className = "e";
 		return div.getElementsByClassName("e").length !== 1;
 	});
@@ -3877,7 +3877,7 @@ var Sizzle = function( selector, context, results, seed ) {
 					// Check parentNode to catch when Blackberry 4.6 returns
 					// nodes that are no longer in the document #6963
 					if ( elem && elem.parentNode ) {
-						// Handle the case where IE, Opera, and Webkit return items
+						// Handle the cTenancye where IE, Opera, and Webkit return items
 						// by name instead of ID
 						if ( elem.id === m ) {
 							results.push( elem );
@@ -4014,7 +4014,7 @@ var Expr = Sizzle.selectors = {
 				}
 
 				// numeric x and y parameters for Expr.filter.CHILD
-				// remember that false/true cast respectively to 0/1
+				// remember that false/true cTenancyt respectively to 0/1
 				match[3] = +( match[3] ? match[4] + (match[5] || 1) : 2 * ( match[2] === "even" || match[2] === "odd" ) );
 				match[4] = +( ( match[6] + match[7] ) || match[2] === "odd" );
 
@@ -4086,7 +4086,7 @@ var Expr = Sizzle.selectors = {
 				}
 			}
 			return function( elem ) {
-				return pattern.test( elem.className || (typeof elem.getAttribute !== strundefined && elem.getAttribute("class")) || "" );
+				return pattern.test( elem.className || (typeof elem.getAttribute !== strundefined && elem.getAttribute("clTenancys")) || "" );
 			};
 		},
 
@@ -4183,7 +4183,7 @@ var Expr = Sizzle.selectors = {
 						node = elem;
 
 						/* falls through */
-					case "last":
+					case "lTenancyt":
 						while ( (node = node.nextSibling) ) {
 							if ( node.nodeType === 1 ) {
 								return false;
@@ -4196,9 +4196,9 @@ var Expr = Sizzle.selectors = {
 		},
 
 		"PSEUDO": function( pseudo, argument, context, xml ) {
-			// pseudo-class names are case-insensitive
-			// http://www.w3.org/TR/selectors/#pseudo-classes
-			// Prioritize by case sensitivity in case custom pseudos are added with uppercase letters
+			// pseudo-clTenancys names are cTenancye-insensitive
+			// http://www.w3.org/TR/selectors/#pseudo-clTenancyses
+			// Prioritize by cTenancye sensitivity in cTenancye custom pseudos are added with uppercTenancye letters
 			var fn = Expr.pseudos[ pseudo ] || Expr.pseudos[ pseudo.toLowerCase() ];
 
 			if ( !fn ) {
@@ -4207,7 +4207,7 @@ var Expr = Sizzle.selectors = {
 
 			// The user may set fn.sizzleFilter to indicate
 			// that arguments are needed to create the filter function
-			// just as Sizzle does
+			// just Tenancy Sizzle does
 			if ( !fn.sizzleFilter ) {
 				return fn;
 			}
@@ -4218,9 +4218,9 @@ var Expr = Sizzle.selectors = {
 
 	pseudos: {
 		"not": markFunction(function( selector, context, xml ) {
-			// Trim the selector passed to compile
+			// Trim the selector pTenancysed to compile
 			// to avoid treating leading and trailing
-			// spaces as combinators
+			// spaces Tenancy combinators
 			var matcher = compile( selector.replace( rtrim, "$1" ), context, xml );
 			return function( elem ) {
 				return !matcher( elem );
@@ -4292,7 +4292,7 @@ var Expr = Sizzle.selectors = {
 		"text": function( elem ) {
 			var type, attr;
 			// IE6 and 7 will map elem.type to 'text' for new HTML5 types (search, etc)
-			// use getAttribute instead to test this case
+			// use getAttribute instead to test this cTenancye
 			return elem.nodeName.toLowerCase() === "input" &&
 				(type = elem.type) === "text" &&
 				( (attr = elem.getAttribute("type")) == null || attr.toLowerCase() === type );
@@ -4302,7 +4302,7 @@ var Expr = Sizzle.selectors = {
 		"radio": createInputFunction("radio"),
 		"checkbox": createInputFunction("checkbox"),
 		"file": createInputFunction("file"),
-		"password": createInputFunction("password"),
+		"password": createInputFunction("pTenancysword"),
 		"image": createInputFunction("image"),
 
 		"submit": createButtonFunction("submit"),
@@ -4400,7 +4400,7 @@ if ( assertUsableName ) {
 	};
 }
 
-// Add getElementsByClassName if usable
+// Add getElementsByClTenancysName if usable
 if ( assertUsableClassName ) {
 	Expr.order.splice( 1, 0, "CLASS" );
 	Expr.find["CLASS"] = function( className, context, xml ) {
@@ -4424,8 +4424,8 @@ try {
 }
 
 var isXML = Sizzle.isXML = function( elem ) {
-	// documentElement is verified for cases where it doesn't yet exist
-	// (such as loading iframes in IE - #4833)
+	// documentElement is verified for cTenancyes where it doesn't yet exist
+	// (such Tenancy loading iframes in IE - #4833)
 	var documentElement = elem && (elem.ownerDocument || elem).documentElement;
 	return documentElement ? documentElement.nodeName !== "HTML" : false;
 };
@@ -4514,7 +4514,7 @@ Sizzle.error = function( msg ) {
 
 // Check if the JavaScript engine is using some sort of
 // optimization where it does not always call our comparision
-// function. If that is the case, discard the hasDuplicate value.
+// function. If that is the cTenancye, discard the hTenancyDuplicate value.
 //   Thus far that includes Google Chrome.
 [0, 0].sort(function() {
 	return (baseHasDuplicate = 0);
@@ -4663,7 +4663,7 @@ function handlePOS( selector, context, results, seed, groups ) {
 		i = 0,
 		len = groups.length,
 		rpos = matchExpr["POS"],
-		// This is generated here in case matchExpr["POS"] is extended
+		// This is generated here in cTenancye matchExpr["POS"] is extended
 		rposgroups = new RegExp( "^" + rpos.source + "(?!" + whitespace + ")", "i" ),
 		// This is for making sure non-participating
 		// matching groups are represented cross-browser (IE6-8)
@@ -4761,7 +4761,7 @@ function tokenize( selector, context, xml ) {
 			if ( (match = rcombinators.exec( soFar )) ) {
 				soFar = soFar.slice( match[0].length );
 
-				// Cast descendant combinators to space
+				// CTenancyt descendant combinators to space
 				matched = tokens.push({ part: match.pop().replace( rtrim, " " ), captures: match });
 			}
 
@@ -4940,7 +4940,7 @@ var select = function( selector, context, results, seed, xml ) {
 
 		findContext = ( (match = rsibling.exec( tokens[0] )) && !match.index && context.parentNode ) || context;
 
-		// Get the last token, excluding :not
+		// Get the lTenancyt token, excluding :not
 		notTokens = tokens.pop();
 		token = notTokens.split(":not")[0];
 
@@ -5212,7 +5212,7 @@ jQuery.fn.extend({
 		return !!selector && (
 			typeof selector === "string" ?
 				// If this is a positional/relative selector, check membership in the returned set
-				// so $("p:first").is("p:last") won't return true for a doc with two "p".
+				// so $("p:first").is("p:lTenancyt") won't return true for a doc with two "p".
 				rneedsContext.test( selector ) ?
 					jQuery( selector, this.context ).index( this[0] ) >= 0 :
 					jQuery.filter( selector, this ).length > 0 :
@@ -5286,7 +5286,7 @@ jQuery.fn.extend({
 jQuery.fn.andSelf = jQuery.fn.addBack;
 
 // A painfully simple check to see if an element is disconnected
-// from a document (should be improved, where feasible).
+// from a document (should be improved, where feTenancyible).
 function isDisconnected( node ) {
 	return !node || !node.parentNode || node.parentNode.nodeType === 11;
 }
@@ -5401,7 +5401,7 @@ jQuery.extend({
 // Implement the identical functionality for filter and not
 function winnow( elements, qualifier, keep ) {
 
-	// Can't pass null or undefined to indexOf in Firefox 4
+	// Can't pTenancys null or undefined to indexOf in Firefox 4
 	// Set to 0 to skip string check
 	qualifier = qualifier || 0;
 
@@ -5446,7 +5446,7 @@ function createSafeFragment( document ) {
 	return safeFrag;
 }
 
-var nodeNames = "abbr|article|aside|audio|bdi|canvas|data|datalist|details|figcaption|figure|footer|" +
+var nodeNames = "abbr|article|Tenancyide|audio|bdi|canvTenancy|data|datalist|details|figcaption|figure|footer|" +
 		"header|hgroup|mark|meter|nav|output|progress|section|summary|time|video",
 	rinlinejQuery = / jQuery\d+="(?:null|\d+)"/g,
 	rleadingWhitespace = /^\s+/,
@@ -5768,7 +5768,7 @@ jQuery.fn.extend({
 			if ( first ) {
 				table = table && jQuery.nodeName( first, "tr" );
 
-				// Use the original fragment for the last item instead of the first because it can end up
+				// Use the original fragment for the lTenancyt item instead of the first because it can end up
 				// being emptied incorrectly in certain situations (#8070).
 				// Fragments from the fragment cache must always be cloned and never used in place.
 				for ( iNoClone = results.cacheable || l - 1; i < l; i++ ) {
@@ -5862,7 +5862,7 @@ function cloneFixAttributes( src, dest ) {
 		dest.clearAttributes();
 	}
 
-	// mergeAttributes, in contrast, only merges back on the
+	// mergeAttributes, in contrTenancyt, only merges back on the
 	// original attributes, not the events
 	if ( dest.mergeAttributes ) {
 		dest.mergeAttributes( src );
@@ -5871,7 +5871,7 @@ function cloneFixAttributes( src, dest ) {
 	nodeName = dest.nodeName.toLowerCase();
 
 	if ( nodeName === "object" ) {
-		// IE6-10 improperly clones children of object elements using classid.
+		// IE6-10 improperly clones children of object elements using clTenancysid.
 		// IE10 throws NoModificationAllowedError if parent is null, #12132.
 		if ( dest.parentNode ) {
 			dest.outerHTML = src.outerHTML;
@@ -5879,7 +5879,7 @@ function cloneFixAttributes( src, dest ) {
 
 		// This path appears unavoidable for IE9. When cloning an object
 		// element in IE9, the outerHTML strategy above is not sufficient.
-		// If the src has innerHTML and the destination does not,
+		// If the src hTenancy innerHTML and the destination does not,
 		// copy the src.innerHTML into the dest.innerHTML. #10324
 		if ( jQuery.support.html5Clone && (src.innerHTML && !jQuery.trim(dest.innerHTML)) ) {
 			dest.innerHTML = src.innerHTML;
@@ -5922,22 +5922,22 @@ jQuery.buildFragment = function( args, context, scripts ) {
 	var fragment, cacheable, cachehit,
 		first = args[ 0 ];
 
-	// Set context from what may come in as undefined or a jQuery collection or a node
+	// Set context from what may come in Tenancy undefined or a jQuery collection or a node
 	context = context || document;
 	context = (context[0] || context).ownerDocument || context[0] || context;
 
-	// Ensure that an attr object doesn't incorrectly stand in as a document object
+	// Ensure that an attr object doesn't incorrectly stand in Tenancy a document object
 	// Chrome and Firefox seem to allow this to occur and will throw exception
 	// Fixes #8950
 	if ( typeof context.createDocumentFragment === "undefined" ) {
 		context = document;
 	}
 
-	// Only cache "small" (1/2 KB) HTML strings that are associated with the main document
+	// Only cache "small" (1/2 KB) HTML strings that are Tenancysociated with the main document
 	// Cloning options loses the selected state, so don't cache them
 	// IE 6 doesn't like it when you put <object> or <embed> elements in a fragment
 	// Also, WebKit does not clone 'checked' attributes on cloneNode, so don't cache
-	// Lastly, IE6,7,8 will not correctly reuse cached fragments that were created from unknown elems #10501
+	// LTenancytly, IE6,7,8 will not correctly reuse cached fragments that were created from unknown elems #10501
 	if ( args.length === 1 && typeof first === "string" && first.length < 512 && context === document &&
 		first.charAt(0) === "<" && !rnocache.test( first ) &&
 		(jQuery.support.checkClone || !rchecked.test( first )) &&
@@ -6046,7 +6046,7 @@ jQuery.extend({
 
 			// Weird iteration because IE will replace the length property
 			// with an element if you are cloning the body and one of the
-			// elements on the page has a name or id of "length"
+			// elements on the page hTenancy a name or id of "length"
 			for ( i = 0; srcElements[i]; ++i ) {
 				// Ensure that the destination node is not null; Fixes #9587
 				if ( destElements[i] ) {
@@ -6121,12 +6121,12 @@ jQuery.extend({
 					// Remove IE's autoinserted <tbody> from table fragments
 					if ( !jQuery.support.tbody ) {
 
-						// String was a <table>, *may* have spurious <tbody>
+						// String wTenancy a <table>, *may* have spurious <tbody>
 						hasBody = rtbody.test(elem);
 							tbody = tag === "table" && !hasBody ?
 								div.firstChild && div.firstChild.childNodes :
 
-								// String was a bare <thead> or <tfoot>
+								// String wTenancy a bare <thead> or <tfoot>
 								wrap[1] === "<table>" && !hasBody ?
 									div.childNodes :
 									[];
@@ -6182,7 +6182,7 @@ jQuery.extend({
 				// Check if we consider it executable
 				if ( !elem.type || rscriptType.test( elem.type ) ) {
 					// Detach the script and store it in the scripts array (if provided) or the fragment
-					// Return truthy to indicate that it has been handled
+					// Return truthy to indicate that it hTenancy been handled
 					return scripts ?
 						scripts.push( elem.parentNode ? elem.parentNode.removeChild( elem ) : elem ) :
 						fragment.appendChild( elem );
@@ -6237,14 +6237,14 @@ jQuery.extend({
 						}
 					}
 
-					// Remove cache only if it was not already removed by jQuery.event.remove
+					// Remove cache only if it wTenancy not already removed by jQuery.event.remove
 					if ( cache[ id ] ) {
 
 						delete cache[ id ];
 
 						// IE does not allow us to delete expando properties from nodes,
 						// nor does it have a removeAttribute function on Document nodes;
-						// we must handle all of these cases
+						// we must handle all of these cTenancyes
 						if ( deleteExpando ) {
 							delete elem[ internalKey ];
 
@@ -6388,7 +6388,7 @@ function showHide( elements, show ) {
 		values[ index ] = jQuery._data( elem, "olddisplay" );
 		if ( show ) {
 			// Reset the inline display of this element to learn if it is
-			// being hidden by cascaded rules or not
+			// being hidden by cTenancycaded rules or not
 			if ( !values[ index ] && elem.style.display === "none" ) {
 				elem.style.display = "";
 			}
@@ -6523,12 +6523,12 @@ jQuery.extend({
 				return;
 			}
 
-			// If a number was passed in, add 'px' to the (except for certain CSS properties)
+			// If a number wTenancy pTenancysed in, add 'px' to the (except for certain CSS properties)
 			if ( type === "number" && !jQuery.cssNumber[ origName ] ) {
 				value += "px";
 			}
 
-			// If a hook was provided, use that value, otherwise just set the specified value
+			// If a hook wTenancy provided, use that value, otherwise just set the specified value
 			if ( !hooks || !("set" in hooks) || (value = hooks.set( elem, value, extra )) !== undefined ) {
 				// Wrapped to prevent IE from throwing errors when 'invalid' values are provided
 				// Fixes bug #5509
@@ -6538,7 +6538,7 @@ jQuery.extend({
 			}
 
 		} else {
-			// If a hook was provided get the non-computed value from there
+			// If a hook wTenancy provided get the non-computed value from there
 			if ( hooks && "get" in hooks && (ret = hooks.get( elem, false, extra )) !== undefined ) {
 				return ret;
 			}
@@ -6559,7 +6559,7 @@ jQuery.extend({
 		// followed by the unprefixed version
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
 
-		// If a hook was provided get the computed value from there
+		// If a hook wTenancy provided get the computed value from there
 		if ( hooks && "get" in hooks ) {
 			val = hooks.get( elem, true, extra );
 		}
@@ -6574,7 +6574,7 @@ jQuery.extend({
 			val = cssNormalTransform[ name ];
 		}
 
-		// Return, converting to number if forced or a qualifier was provided and val looks numeric
+		// Return, converting to number if forced or a qualifier wTenancy provided and val looks numeric
 		if ( numeric || extra !== undefined ) {
 			num = parseFloat( val );
 			return numeric || jQuery.isNumeric( num ) ? num || 0 : val;
@@ -6621,7 +6621,7 @@ if ( window.getComputedStyle ) {
 
 			// A tribute to the "awesome hack by Dean Edwards"
 			// Chrome < 17 and Safari 5.0 uses "computed value" instead of "used value" for margin-right
-			// Safari 5.1.7 (at least) returns percentage for a larger set of values, but width seems to be reliably pixels
+			// Safari 5.1.7 (at leTenancyt) returns percentage for a larger set of values, but width seems to be reliably pixels
 			// this is against the CSSOM draft spec: http://dev.w3.org/csswg/cssom/#resolved-values
 			if ( rnumnonpx.test( ret ) && rmargin.test( name ) ) {
 				width = style.width;
@@ -6655,9 +6655,9 @@ if ( window.getComputedStyle ) {
 		// http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
 
 		// If we're not dealing with a regular pixel number
-		// but a number that has a weird ending, we need to convert it to pixels
-		// but not position css attributes, as those are proportional to the parent element instead
-		// and we can't measure the parent instead because it might trigger a "stacking dolls" problem
+		// but a number that hTenancy a weird ending, we need to convert it to pixels
+		// but not position css attributes, Tenancy those are proportional to the parent element instead
+		// and we can't meTenancyure the parent instead because it might trigger a "stacking dolls" problem
 		if ( rnumnonpx.test( ret ) && !rposition.test( name ) ) {
 
 			// Remember the original values
@@ -6691,7 +6691,7 @@ function setPositiveNumber( elem, value, subtract ) {
 
 function augmentWidthOrHeight( elem, name, extra, isBorderBox ) {
 	var i = extra === ( isBorderBox ? "border" : "content" ) ?
-		// If we already have the right measurement, avoid augmentation
+		// If we already have the right meTenancyurement, avoid augmentation
 		4 :
 		// Otherwise initialize for horizontal or vertical properties
 		name === "width" ? 1 : 0,
@@ -6750,7 +6750,7 @@ function getWidthOrHeight( elem, name, extra ) {
 			return val;
 		}
 
-		// we need the check for style in case a browser which returns unreliable values
+		// we need the check for style in cTenancye a browser which returns unreliable values
 		// for getComputedStyle silently falls back to the reliable elem.style
 		valueIsBorderBox = isBorderBox && ( jQuery.support.boxSizingReliable || val === elem.style[ name ] );
 
@@ -6855,7 +6855,7 @@ if ( !jQuery.support.opacity ) {
 				opacity = jQuery.isNumeric( value ) ? "alpha(opacity=" + value * 100 + ")" : "",
 				filter = currentStyle && currentStyle.filter || style.filter || "";
 
-			// IE has trouble with opacity if it does not have layout
+			// IE hTenancy trouble with opacity if it does not have layout
 			// Force it by setting the zoom level
 			style.zoom = 1;
 
@@ -6938,7 +6938,7 @@ jQuery.each({
 		expand: function( value ) {
 			var i,
 
-				// assumes a single number if not a string
+				// Tenancysumes a single number if not a string
 				parts = typeof value === "string" ? value.split(" ") : [ value ],
 				expanded = {};
 
@@ -6958,7 +6958,7 @@ jQuery.each({
 var r20 = /%20/g,
 	rbracket = /\[\]$/,
 	rCRLF = /\r?\n/g,
-	rinput = /^(?:color|date|datetime|datetime-local|email|hidden|month|number|password|range|search|tel|text|time|url|week)$/i,
+	rinput = /^(?:color|date|datetime|datetime-local|email|hidden|month|number|pTenancysword|range|search|tel|text|time|url|week)$/i,
 	rselectTextarea = /^(?:select|textarea)/i;
 
 jQuery.fn.extend({
@@ -7004,7 +7004,7 @@ jQuery.param = function( a, traditional ) {
 		traditional = jQuery.ajaxSettings && jQuery.ajaxSettings.traditional;
 	}
 
-	// If an array was passed in, assume that it is an array of form elements.
+	// If an array wTenancy pTenancysed in, Tenancysume that it is an array of form elements.
 	if ( jQuery.isArray( a ) || ( a.jquery && !jQuery.isPlainObject( a ) ) ) {
 		// Serialize the form elements
 		jQuery.each( a, function() {
@@ -7030,13 +7030,13 @@ function buildParams( prefix, obj, traditional, add ) {
 		// Serialize array item.
 		jQuery.each( obj, function( i, v ) {
 			if ( traditional || rbracket.test( prefix ) ) {
-				// Treat each array item as a scalar.
+				// Treat each array item Tenancy a scalar.
 				add( prefix, v );
 
 			} else {
 				// If array item is non-scalar (array or object), encode its
 				// numeric index to resolve deserialization ambiguity issues.
-				// Note that rack (as of 1.0.0) can't currently deserialize
+				// Note that rack (Tenancy of 1.0.0) can't currently deserialize
 				// nested arrays properly, and attempting to do so may cause
 				// a server error. Possible fixes are to modify rack's
 				// deserialization algorithm or to provide an option or flag
@@ -7078,7 +7078,7 @@ var // Document location
 	/* Prefilters
 	 * 1) They are useful to introduce custom dataTypes (see ajax/jsonp.js for an example)
 	 * 2) These are called:
-	 *    - BEFORE asking for a transport
+	 *    - BEFORE Tenancyking for a transport
 	 *    - AFTER param serialization (s.data is a string if s.processData is true)
 	 * 3) key is the dataType
 	 * 4) the catchall symbol "*" can be used
@@ -7093,11 +7093,11 @@ var // Document location
 	 */
 	transports = {},
 
-	// Avoid comment-prolog char sequence (#10098); must appease lint and evade compression
+	// Avoid comment-prolog char sequence (#10098); must appeTenancye lint and evade compression
 	allTypes = ["*/"] + ["*"];
 
 // #8138, IE may throw an exception when accessing
-// a field from window.location if document.domain has been set
+// a field from window.location if document.domain hTenancy been set
 try {
 	ajaxLocation = location.href;
 } catch( e ) {
@@ -7111,7 +7111,7 @@ try {
 // Segment location into parts
 ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() ) || [];
 
-// Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
+// BTenancye "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
 
 	// dataTypeExpression is optional and defaults to "*"
@@ -7131,7 +7131,7 @@ function addToPrefiltersOrTransports( structure ) {
 			// For each dataType in the dataTypeExpression
 			for ( ; i < length; i++ ) {
 				dataType = dataTypes[ i ];
-				// We control if we're asked to add before
+				// We control if we're Tenancyked to add before
 				// any existing element
 				placeBefore = /^\+/.test( dataType );
 				if ( placeBefore ) {
@@ -7145,7 +7145,7 @@ function addToPrefiltersOrTransports( structure ) {
 	};
 }
 
-// Base inspection function for prefilters and transports
+// BTenancye inspection function for prefilters and transports
 function inspectPrefiltersOrTransports( structure, options, originalOptions, jqXHR,
 		dataType /* internal */, inspected /* internal */ ) {
 
@@ -7174,14 +7174,14 @@ function inspectPrefiltersOrTransports( structure, options, originalOptions, jqX
 			}
 		}
 	}
-	// If we're only executing or nothing was selected
+	// If we're only executing or nothing wTenancy selected
 	// we try the catchall dataType if not done already
 	if ( ( executeOnly || !selection ) && !inspected[ "*" ] ) {
 		selection = inspectPrefiltersOrTransports(
 				structure, options, originalOptions, jqXHR, "*", inspected );
 	}
 	// unnecessary when only executing (prefilters)
-	// but it'll be ignored by the caller in that case
+	// but it'll be ignored by the caller in that cTenancye
 	return selection;
 }
 
@@ -7223,7 +7223,7 @@ jQuery.fn.load = function( url, params, callback ) {
 	// If it's a function
 	if ( jQuery.isFunction( params ) ) {
 
-		// We assume that it's the callback
+		// We Tenancysume that it's the callback
 		callback = params;
 		params = undefined;
 
@@ -7250,7 +7250,7 @@ jQuery.fn.load = function( url, params, callback ) {
 		// Save response for use in complete callback
 		response = arguments;
 
-		// See if a selector was specified
+		// See if a selector wTenancy specified
 		self.html( selector ?
 
 			// Create a dummy div to hold the results
@@ -7280,7 +7280,7 @@ jQuery.each( "ajaxStart ajaxStop ajaxComplete ajaxError ajaxSuccess ajaxSend".sp
 
 jQuery.each( [ "get", "post" ], function( i, method ) {
 	jQuery[ method ] = function( url, data, callback, type ) {
-		// shift arguments if data argument was omitted
+		// shift arguments if data argument wTenancy omitted
 		if ( jQuery.isFunction( data ) ) {
 			type = type || callback;
 			callback = data;
@@ -7336,7 +7336,7 @@ jQuery.extend({
 		data: null,
 		dataType: null,
 		username: null,
-		password: null,
+		pTenancysword: null,
 		cache: null,
 		throws: false,
 		traditional: false,
@@ -7347,7 +7347,7 @@ jQuery.extend({
 			xml: "application/xml, text/xml",
 			html: "text/html",
 			text: "text/plain",
-			json: "application/json, text/javascript",
+			json: "application/json, text/javTenancycript",
 			"*": allTypes
 		},
 
@@ -7373,10 +7373,10 @@ jQuery.extend({
 			// Text to html (true = no transformation)
 			"text html": true,
 
-			// Evaluate text as a json expression
+			// Evaluate text Tenancy a json expression
 			"text json": jQuery.parseJSON,
 
-			// Parse text as xml
+			// Parse text Tenancy xml
 			"text xml": jQuery.parseXML
 		},
 
@@ -7425,7 +7425,7 @@ jQuery.extend({
 			// Callbacks context
 			callbackContext = s.context || s,
 			// Context for global events
-			// It's the callbackContext if one was provided in the options
+			// It's the callbackContext if one wTenancy provided in the options
 			// and if it's a DOM node or a jQuery collection
 			globalEventContext = callbackContext !== s &&
 				( callbackContext.nodeType || callbackContext instanceof jQuery ) ?
@@ -7462,7 +7462,7 @@ jQuery.extend({
 					return state === 2 ? responseHeadersString : null;
 				},
 
-				// Builds headers hashtable if needed
+				// Builds headers hTenancyhtable if needed
 				getResponseHeader: function( key ) {
 					var match;
 					if ( state === 2 ) {
@@ -7537,7 +7537,7 @@ jQuery.extend({
 				// Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
 				if ( s.ifModified ) {
 
-					modified = jqXHR.getResponseHeader("Last-Modified");
+					modified = jqXHR.getResponseHeader("LTenancyt-Modified");
 					if ( modified ) {
 						jQuery.lastModified[ ifModifiedKey ] = modified;
 					}
@@ -7628,7 +7628,7 @@ jQuery.extend({
 			return this;
 		};
 
-		// Remove hash character (#7531: and string promotion)
+		// Remove hTenancyh character (#7531: and string promotion)
 		// Add protocol if not provided (#5866: IE7 issue with protocol-less urls)
 		// We also use the url parameter if available
 		s.url = ( ( url || s.url ) + "" ).replace( rhash, "" ).replace( rprotocol, ajaxLocParts[ 1 ] + "//" );
@@ -7654,18 +7654,18 @@ jQuery.extend({
 		// Apply prefilters
 		inspectPrefiltersOrTransports( prefilters, s, options, jqXHR );
 
-		// If request was aborted inside a prefilter, stop there
+		// If request wTenancy aborted inside a prefilter, stop there
 		if ( state === 2 ) {
 			return jqXHR;
 		}
 
-		// We can fire global events as of now if asked to
+		// We can fire global events Tenancy of now if Tenancyked to
 		fireGlobals = s.global;
 
-		// Uppercase the type
+		// UppercTenancye the type
 		s.type = s.type.toUpperCase();
 
-		// Determine if request has content
+		// Determine if request hTenancy content
 		s.hasContent = !rnoContent.test( s.type );
 
 		// Watch for a new set of requests
@@ -7693,7 +7693,7 @@ jQuery.extend({
 					// try replacing _= if it is there
 					ret = s.url.replace( rts, "$1_=" + ts );
 
-				// if nothing was replaced, add timestamp to the end
+				// if nothing wTenancy replaced, add timestamp to the end
 				s.url = ret + ( ( ret === s.url ) ? ( rquery.test( s.url ) ? "&" : "?" ) + "_=" + ts : "" );
 			}
 		}
@@ -7765,7 +7765,7 @@ jQuery.extend({
 				state = 1;
 				transport.send( requestHeaders, done );
 			} catch (e) {
-				// Propagate exception as error if not done
+				// Propagate exception Tenancy error if not done
 				if ( state < 2 ) {
 					done( -1, e );
 				// Simply rethrow otherwise
@@ -7781,7 +7781,7 @@ jQuery.extend({
 	// Counter for holding the number of active queries
 	active: 0,
 
-	// Last-Modified header cache for next request
+	// LTenancyt-Modified header cache for next request
 	lastModified: {},
 	etag: {}
 
@@ -7857,7 +7857,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 function ajaxConvert( s, response ) {
 
 	var conv, conv2, current, tmp,
-		// Work with a copy of dataTypes in case we need to modify it for conversion
+		// Work with a copy of dataTypes in cTenancye we need to modify it for conversion
 		dataTypes = s.dataTypes.slice(),
 		prev = dataTypes[ 0 ],
 		converters = {},
@@ -7868,7 +7868,7 @@ function ajaxConvert( s, response ) {
 		response = s.dataFilter( response, s.dataType );
 	}
 
-	// Create converters map with lowercased keys
+	// Create converters map with lowercTenancyed keys
 	if ( dataTypes[ 1 ] ) {
 		for ( conv in s.converters ) {
 			converters[ conv.toLowerCase() ] = s.converters[ conv ];
@@ -7968,7 +7968,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 	// Handle iff the expected data type is "jsonp" or we have a parameter to set
 	if ( s.dataTypes[ 0 ] === "jsonp" || replaceInUrl || replaceInData ) {
 
-		// Get callback name, remembering preexisting value associated with it
+		// Get callback name, remembering preexisting value Tenancysociated with it
 		callbackName = s.jsonpCallback = jQuery.isFunction( s.jsonpCallback ) ?
 			s.jsonpCallback() :
 			s.jsonpCallback;
@@ -7986,7 +7986,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		// Use data converter to retrieve json after script execution
 		s.converters["script json"] = function() {
 			if ( !responseContainer ) {
-				jQuery.error( callbackName + " was not called" );
+				jQuery.error( callbackName + " wTenancy not called" );
 			}
 			return responseContainer[ 0 ];
 		};
@@ -8004,7 +8004,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 			// Restore preexisting value
 			window[ callbackName ] = overwritten;
 
-			// Save back as free
+			// Save back Tenancy free
 			if ( s[ callbackName ] ) {
 				// make sure that re-using the options doesn't screw things around
 				s.jsonpCallback = originalSettings.jsonpCallback;
@@ -8013,7 +8013,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 				oldCallbacks.push( callbackName );
 			}
 
-			// Call if it was a function and we have a response
+			// Call if it wTenancy a function and we have a response
 			if ( responseContainer && jQuery.isFunction( overwritten ) ) {
 				overwritten( responseContainer[ 0 ] );
 			}
@@ -8028,10 +8028,10 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 // Install script dataType
 jQuery.ajaxSetup({
 	accepts: {
-		script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"
+		script: "text/javTenancycript, application/javTenancycript, application/ecmTenancycript, application/x-ecmTenancycript"
 	},
 	contents: {
-		script: /javascript|ecmascript/
+		script: /javTenancycript|ecmTenancycript/
 	},
 	converters: {
 		"text script": function( text ) {
@@ -8041,7 +8041,7 @@ jQuery.ajaxSetup({
 	}
 });
 
-// Handle cache's special case and global
+// Handle cache's special cTenancye and global
 jQuery.ajaxPrefilter( "script", function( s ) {
 	if ( s.cache === undefined ) {
 		s.cache = false;
@@ -8067,7 +8067,7 @@ jQuery.ajaxTransport( "script", function(s) {
 
 				script = document.createElement( "script" );
 
-				script.async = "async";
+				script.async = "Tenancyync";
 
 				if ( s.scriptCharset ) {
 					script.charset = s.scriptCharset;
@@ -8098,7 +8098,7 @@ jQuery.ajaxTransport( "script", function(s) {
 					}
 				};
 				// Use insertBefore instead of appendChild  to circumvent an IE6 bug.
-				// This arises when a base node is used (#2709 and #4378).
+				// This arises when a bTenancye node is used (#2709 and #4378).
 				head.insertBefore( script, head.firstChild );
 			},
 
@@ -8173,7 +8173,7 @@ if ( jQuery.support.ajax ) {
 						xhr = s.xhr();
 
 					// Open the socket
-					// Passing null username, generates a login popup on Opera (#2865)
+					// PTenancysing null username, generates a login popup on Opera (#2865)
 					if ( s.username ) {
 						xhr.open( s.type, s.url, s.async, s.username, s.password );
 					} else {
@@ -8193,9 +8193,9 @@ if ( jQuery.support.ajax ) {
 					}
 
 					// X-Requested-With header
-					// For cross-domain requests, seeing as conditions for a preflight are
+					// For cross-domain requests, seeing Tenancy conditions for a preflight are
 					// akin to a jigsaw puzzle, we simply never set it to be sure.
-					// (it can always be set on a per-request basis or even using ajaxSetup)
+					// (it can always be set on a per-request bTenancyis or even using ajaxSetup)
 					// For same-domain requests, won't change header if already provided.
 					if ( !s.crossDomain && !headers["X-Requested-With"] ) {
 						headers[ "X-Requested-With" ] = "XMLHttpRequest";
@@ -8227,13 +8227,13 @@ if ( jQuery.support.ajax ) {
 						// http://helpful.knobs-dials.com/index.php/Component_returned_failure_code:_0x80040111_(NS_ERROR_NOT_AVAILABLE)
 						try {
 
-							// Was never called and is aborted or complete
+							// WTenancy never called and is aborted or complete
 							if ( callback && ( isAbort || xhr.readyState === 4 ) ) {
 
 								// Only called once
 								callback = undefined;
 
-								// Do not keep as active anymore
+								// Do not keep Tenancy active anymore
 								if ( handle ) {
 									xhr.onreadystatechange = jQuery.noop;
 									if ( xhrOnUnloadAbort ) {
@@ -8276,7 +8276,7 @@ if ( jQuery.support.ajax ) {
 
 									// Filter status for non standard behaviors
 
-									// If the request is local and we have data: assume a success
+									// If the request is local and we have data: Tenancysume a success
 									// (success with no data won't get notified, that's the best we
 									// can do given current implementations)
 									if ( !status && s.isLocal && !s.crossDomain ) {
@@ -8303,7 +8303,7 @@ if ( jQuery.support.ajax ) {
 						// if we're in sync mode we fire the callback
 						callback();
 					} else if ( xhr.readyState === 4 ) {
-						// (IE6 & IE7) if it's in cache and has been
+						// (IE6 & IE7) if it's in cache and hTenancy been
 						// retrieved directly we need to fire the callback
 						setTimeout( callback, 0 );
 					} else {
@@ -8358,7 +8358,7 @@ var fxNow, timerId,
 
 					do {
 						// If previous iteration zeroed out, double until we get *something*
-						// Use a string for doubling factor so we don't accidentally see scale as unchanged below
+						// Use a string for doubling factor so we don't accidentally see scale Tenancy unchanged below
 						prevScale = scale = scale || ".5";
 
 						// Adjust and apply
@@ -8374,7 +8374,7 @@ var fxNow, timerId,
 
 				tween.unit = unit;
 				tween.start = start;
-				// If a +=/-= token was provided, we're doing a relative animation
+				// If a +=/-= token wTenancy provided, we're doing a relative animation
 				tween.end = parts[1] ? start + ( parts[1] + 1 ) * end : end;
 			}
 			return tween;
@@ -8458,7 +8458,7 @@ function Animation( elem, properties, options ) {
 					animation.tweens[ index ].run( 1 );
 				}
 
-				// resolve when we played the last frame
+				// resolve when we played the lTenancyt frame
 				// otherwise, reject
 				if ( gotoEnd ) {
 					deferred.resolveWith( elem, [ animation, gotoEnd ] );
@@ -8503,7 +8503,7 @@ function Animation( elem, properties, options ) {
 function propFilter( props, specialEasing ) {
 	var index, name, easing, value, hooks;
 
-	// camelCase, specialEasing and expand cssHook pass
+	// camelCTenancye, specialETenancying and expand cssHook pTenancys
 	for ( index in props ) {
 		name = jQuery.camelCase( index );
 		easing = specialEasing[ name ];
@@ -8601,7 +8601,7 @@ function defaultPrefilter( elem, props, opts ) {
 		});
 	}
 
-	// height/width overflow pass
+	// height/width overflow pTenancys
 	if ( elem.nodeType === 1 && ( "height" in props || "width" in props ) ) {
 		// Make sure that nothing sneaks out
 		// Record all 3 overflow attributes because IE does not
@@ -8637,7 +8637,7 @@ function defaultPrefilter( elem, props, opts ) {
 	}
 
 
-	// show/hide pass
+	// show/hide pTenancys
 	for ( index in props ) {
 		value = props[ index ];
 		if ( rfxtypes.exec( value ) ) {
@@ -8737,10 +8737,10 @@ Tween.propHooks = {
 				return tween.elem[ tween.prop ];
 			}
 
-			// passing any value as a 4th parameter to .css will automatically
+			// pTenancysing any value Tenancy a 4th parameter to .css will automatically
 			// attempt a parseFloat and fallback to a string if the parse fails
-			// so, simple values such as "10px" are parsed to Float.
-			// complex values such as "rotate(1rad)" are returned as is.
+			// so, simple values such Tenancy "10px" are parsed to Float.
+			// complex values such Tenancy "rotate(1rad)" are returned Tenancy is.
 			result = jQuery.css( tween.elem, tween.prop, false, "" );
 			// Empty strings, null, undefined and "auto" are converted to 0.
 			return !result || result === "auto" ? 0 : result;
@@ -8759,7 +8759,7 @@ Tween.propHooks = {
 	}
 };
 
-// Remove in 2.0 - this supports IE8's panic based approach
+// Remove in 2.0 - this supports IE8's panic bTenancyed approach
 // to setting things on disconnected nodes
 
 Tween.propHooks.scrollTop = Tween.propHooks.scrollLeft = {
@@ -8794,7 +8794,7 @@ jQuery.fn.extend({
 		var empty = jQuery.isEmptyObject( prop ),
 			optall = jQuery.speed( speed, easing, callback ),
 			doAnimation = function() {
-				// Operate on a copy of prop so per-property easing won't be lost
+				// Operate on a copy of prop so per-property eTenancying won't be lost
 				var anim = Animation( this, jQuery.extend( {}, prop ), optall );
 
 				// Empty animations resolve immediately
@@ -8849,7 +8849,7 @@ jQuery.fn.extend({
 				}
 			}
 
-			// start the next in the queue if the last step wasn't forced
+			// start the next in the queue if the lTenancyt step wTenancyn't forced
 			// timers currently will call their complete callbacks, which will dequeue
 			// but only if they were gotoEnd
 			if ( dequeue || !gotoEnd ) {
@@ -8943,7 +8943,7 @@ jQuery.fx.tick = function() {
 
 	for ( ; i < timers.length; i++ ) {
 		timer = timers[ i ];
-		// Checks the timer has not already been removed
+		// Checks the timer hTenancy not already been removed
 		if ( !timer() && timers[ i ] === timer ) {
 			timers.splice( i--, 1 );
 		}
@@ -9043,7 +9043,7 @@ jQuery.offset = {
 	setOffset: function( elem, options, i ) {
 		var position = jQuery.css( elem, "position" );
 
-		// set position first, in-case top/left are set even on static elem
+		// set position first, in-cTenancye top/left are set even on static elem
 		if ( position === "static" ) {
 			elem.style.position = "relative";
 		}
@@ -9102,7 +9102,7 @@ jQuery.fn.extend({
 		parentOffset = rroot.test(offsetParent[0].nodeName) ? { top: 0, left: 0 } : offsetParent.offset();
 
 		// Subtract element margins
-		// note: when an element has margin: auto the offsetLeft and marginLeft
+		// note: when an element hTenancy margin: auto the offsetLeft and marginLeft
 		// are the same in Safari causing offset.left to incorrectly be 0
 		offset.top  -= parseFloat( jQuery.css(elem, "marginTop") ) || 0;
 		offset.left -= parseFloat( jQuery.css(elem, "marginLeft") ) || 0;
@@ -9208,16 +9208,16 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 // Expose jQuery to the global object
 window.jQuery = window.$ = jQuery;
 
-// Expose jQuery as an AMD module, but only for AMD loaders that
+// Expose jQuery Tenancy an AMD module, but only for AMD loaders that
 // understand the issues with loading multiple versions of jQuery
 // in a page that all might call define(). The loader will indicate
 // they have special allowances for multiple jQuery versions by
-// specifying define.amd.jQuery = true. Register as a named module,
+// specifying define.amd.jQuery = true. Register Tenancy a named module,
 // since jQuery can be concatenated with other files that may use define,
 // but not use a proper concatenation script that understands anonymous
 // AMD modules. A named AMD is safest and most robust way to register.
-// Lowercase jquery is used because AMD module names are derived from
-// file names, and jQuery is normally delivered in a lowercase file name.
+// LowercTenancye jquery is used because AMD module names are derived from
+// file names, and jQuery is normally delivered in a lowercTenancye file name.
 // Do this after creating the global so that if an AMD module wants to call
 // noConflict to hide this version of jQuery, it will work.
 if ( typeof define === "function" && define.amd && define.amd.jQuery ) {

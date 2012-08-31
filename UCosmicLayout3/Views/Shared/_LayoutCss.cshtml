@@ -1,0 +1,16 @@
+﻿@model UCosmicLayout3.Models.Tenancy
+@{
+    // make sure the style bundle actually exists
+    var root = Server.MapPath("~/styles");
+    var target = Path.Combine(root, string.Format(@"tenants\{0}", Model.Domain));
+    var info = Directory.GetDirectories(Path.Combine(root, "tenants"));
+    var tenant = "_default";
+    if (info.Contains(target))
+    {
+        tenant = Model.Domain;
+    }
+}
+@Styles.Render(string.Format("~/styles/tenants/{0}/main", tenant))
+<!--[if lt IE 9]>
+@Styles.Render(string.Format("~/styles/tenants/{0}/ie8", tenant))
+<![endif]-->

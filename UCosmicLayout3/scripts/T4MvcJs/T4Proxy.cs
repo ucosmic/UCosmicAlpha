@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
+using UCosmicLayout3;
 
 namespace T4MvcJs
 {
@@ -11,7 +12,7 @@ namespace T4MvcJs
         public static RouteCollection GetRoutes()
         {
             var routes = new RouteCollection();
-            //(routes);
+            RouteConfig.RegisterRoutes(routes);
 
             RegisterAreaRoutes(routes);
 

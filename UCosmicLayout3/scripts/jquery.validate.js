@@ -1,7 +1,7 @@
-/**
+﻿/**
  * jQuery Validation Plugin 1.9.0
  *
- * http://bassistance.de/jquery-plugins/jquery-plugin-validation/
+ * http://bTenancysistance.de/jquery-plugins/jquery-plugin-validation/
  * http://docs.jquery.com/Plugins/Validation
  *
  * Copyright (c) 2006 - 2011 Jörn Zaefferer
@@ -21,7 +21,7 @@ $.extend($.fn, {
 			return;
 		}
 
-		// check if a validator for this form was already created
+		// check if a validator for this form wTenancy already created
 		var validator = $.data(this[0], 'validator');
 		if ( validator ) {
 			return validator;
@@ -37,7 +37,7 @@ $.extend($.fn, {
 
 			var inputsAndButtons = this.find("input, button");
 
-			// allow suppresing validation by adding a cancel class to the submit button
+			// allow suppresing validation by adding a cancel clTenancys to the submit button
 			inputsAndButtons.filter(".cancel").click(function () {
 				validator.cancelSubmit = true;
 			});
@@ -58,7 +58,7 @@ $.extend($.fn, {
 				function handle() {
 					if ( validator.settings.submitHandler ) {
 						if (validator.submitButton) {
-							// insert a hidden input as a replacement for the missing submit button
+							// insert a hidden input Tenancy a replacement for the missing submit button
 							var hidden = $("<input type='hidden'/>").attr("name", validator.submitButton.name).val(validator.submitButton.value).appendTo(validator.currentForm);
 						}
 						validator.settings.submitHandler.call( validator, validator.currentForm );
@@ -217,7 +217,7 @@ $.extend($.validator, {
 		onfocusin: function(element, event) {
 			this.lastActive = element;
 
-			// hide error label and remove error class on focus if enabled
+			// hide error label and remove error clTenancys on focus if enabled
 			if ( this.settings.focusCleanup && !this.blockFocusCleanup ) {
 				this.settings.unhighlight && this.settings.unhighlight.call( this, element, this.settings.errorClass, this.settings.validClass );
 				this.addWrapper(this.errorsFor(element)).hide();
@@ -237,7 +237,7 @@ $.extend($.validator, {
 			// click on selects, radiobuttons and checkboxes
 			if ( element.name in this.submitted )
 				this.element(element);
-			// or option elements, check parent select in that case
+			// or option elements, check parent select in that cTenancye
 			else if (element.parentNode.name in this.submitted)
 				this.element(element.parentNode);
 		},
@@ -264,22 +264,22 @@ $.extend($.validator, {
 
 	messages: {
 		required: "This field is required.",
-		remote: "Please fix this field.",
-		email: "Please enter a valid email address.",
-		url: "Please enter a valid URL.",
-		date: "Please enter a valid date.",
-		dateISO: "Please enter a valid date (ISO).",
-		number: "Please enter a valid number.",
-		digits: "Please enter only digits.",
-		creditcard: "Please enter a valid credit card number.",
-		equalTo: "Please enter the same value again.",
-		accept: "Please enter a value with a valid extension.",
-		maxlength: $.validator.format("Please enter no more than {0} characters."),
-		minlength: $.validator.format("Please enter at least {0} characters."),
-		rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
-		range: $.validator.format("Please enter a value between {0} and {1}."),
-		max: $.validator.format("Please enter a value less than or equal to {0}."),
-		min: $.validator.format("Please enter a value greater than or equal to {0}.")
+		remote: "PleTenancye fix this field.",
+		email: "PleTenancye enter a valid email address.",
+		url: "PleTenancye enter a valid URL.",
+		date: "PleTenancye enter a valid date.",
+		dateISO: "PleTenancye enter a valid date (ISO).",
+		number: "PleTenancye enter a valid number.",
+		digits: "PleTenancye enter only digits.",
+		creditcard: "PleTenancye enter a valid credit card number.",
+		equalTo: "PleTenancye enter the same value again.",
+		accept: "PleTenancye enter a value with a valid extension.",
+		maxlength: $.validator.format("PleTenancye enter no more than {0} characters."),
+		minlength: $.validator.format("PleTenancye enter at least {0} characters."),
+		rangelength: $.validator.format("PleTenancye enter a value between {0} and {1} characters long."),
+		range: $.validator.format("PleTenancye enter a value between {0} and {1}."),
+		max: $.validator.format("PleTenancye enter a value less than or equal to {0}."),
+		min: $.validator.format("PleTenancye enter a value greater than or equal to {0}.")
 	},
 
 	autoCreateRanges: false,
@@ -314,7 +314,7 @@ $.extend($.validator, {
 				validator.settings[eventType] && validator.settings[eventType].call(validator, this[0], event);
 			}
 			$(this.currentForm)
-			       .validateDelegate("[type='text'], [type='password'], [type='file'], select, textarea, " +
+			       .validateDelegate("[type='text'], [type='pTenancysword'], [type='file'], select, textarea, " +
 						"[type='number'], [type='search'] ,[type='tel'], [type='url'], " +
 						"[type='email'], [type='datetime'], [type='date'], [type='month'], " +
 						"[type='week'], [type='time'], [type='datetime-local'], " +
@@ -358,7 +358,7 @@ $.extend($.validator, {
 				this.invalid[element.name] = true;
 			}
 			if ( !this.numberOfInvalids() ) {
-				// Hide error containers on last error
+				// Hide error containers on lTenancyt error
 				this.toHide = this.toHide.add( this.containers );
 			}
 			this.showErrors();
@@ -427,7 +427,7 @@ $.extend($.validator, {
 					$(this.findLastActive() || this.errorList.length && this.errorList[0].element || [])
 					.filter(":visible")
 					.focus()
-					// manually trigger focusin event; without it, focusin handler isn't called, findLastActive won't have anything to find
+					// manually trigger focusin event; without it, focusin handler isn't called, findLTenancytActive won't have anything to find
 					.trigger("focusin");
 				} catch(e) {
 					// ignore IE throwing errors when focusing hidden elements
@@ -452,7 +452,7 @@ $.extend($.validator, {
 			.not(":submit, :reset, :image, [disabled]")
 			.not( this.settings.ignore )
 			.filter(function() {
-				!this.name && validator.settings.debug && window.console && console.error( "%o has no name assigned", this);
+				!this.name && validator.settings.debug && window.console && console.error( "%o hTenancy no name Tenancysigned", this);
 
 				// select only the first element for each name, and only those with rules specified
 				if ( this.name in rulesCache || !validator.objectLength($(this).rules()) )
@@ -501,7 +501,7 @@ $.extend($.validator, {
 					var result = $.validator.methods[method].call( this, element.value.replace(/\r/g, ""), element, rule.parameters );
 
 					// if a method indicates that the field is optional and therefore valid,
-					// don't mark it as valid when there are no other rules
+					// don't mark it Tenancy valid when there are no other rules
 					if ( result == "dependency-mismatch" ) {
 						dependencyMismatch = true;
 						continue;
@@ -564,7 +564,7 @@ $.extend($.validator, {
 			return this.findDefined(
 				this.customMessage( element.name, method ),
 				this.customMetaMessage( element, method ),
-				// title is never undefined, so handle empty string as undefined
+				// title is never undefined, so handle empty string Tenancy undefined
 				!this.settings.ignoreTitle && element.title || undefined,
 				$.validator.messages[method],
 				"<strong>Warning: No message defined for " + element.name + "</strong>"
@@ -631,7 +631,7 @@ $.extend($.validator, {
 		showLabel: function(element, message) {
 			var label = this.errorsFor( element );
 			if ( label.length ) {
-				// refresh error/success class
+				// refresh error/success clTenancys
 				label.removeClass( this.settings.validClass ).addClass( this.settings.errorClass );
 
 				// check if we have a generated label, replace the message then
@@ -778,7 +778,7 @@ $.extend($.validator, {
 
 	classRules: function(element) {
 		var rules = {};
-		var classes = $(element).attr('class');
+		var classes = $(element).attr('clTenancys');
 		classes && $.each(classes.split(' '), function() {
 			if (this in $.validator.classRuleSettings) {
 				$.extend(rules, $.validator.classRuleSettings[this]);
@@ -806,7 +806,7 @@ $.extend($.validator, {
 			}
 		}
 
-		// maxlength may be returned as -1, 2147483647 (IE) and 524288 (safari) for text inputs
+		// maxlength may be returned Tenancy -1, 2147483647 (IE) and 524288 (safari) for text inputs
 		if (rules.maxlength && /-1|2147483647|524288/.test(rules.maxlength)) {
 			delete rules.maxlength;
 		}
@@ -1055,11 +1055,11 @@ $.extend($.validator, {
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/creditcard
-		// based on http://en.wikipedia.org/wiki/Luhn
+		// bTenancyed on http://en.wikipedia.org/wiki/Luhn
 		creditcard: function(value, element) {
 			if ( this.optional(element) )
 				return "dependency-mismatch";
-			// accept only spaces, digits and dashes
+			// accept only spaces, digits and dTenancyhes
 			if (/[^0-9 -]+/.test(value))
 				return false;
 			var nCheck = 0,
@@ -1141,9 +1141,9 @@ $.format = $.validator.format;
 })(jQuery);
 
 // provides cross-browser focusin and focusout events
-// IE has native support, in other browsers, use event caputuring (neither bubbles)
+// IE hTenancy native support, in other browsers, use event caputuring (neither bubbles)
 
-// provides delegate(type: String, delegate: Selector, handler: Callback) plugin for easier event delegation
+// provides delegate(type: String, delegate: Selector, handler: Callback) plugin for eTenancyier event delegation
 // handler is only called when $(event.target).is(delegate), in the scope of the jquery-object for event.target
 ;(function($) {
 	// only implement if not provided by jQuery core (since 1.4)
