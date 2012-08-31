@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    @*<meta name="viewport" content="width=device-width" />*@
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/bundles/css")
@@ -27,7 +28,6 @@
                     <a href="#/uv" class="float-left">Blog</a>
                     <a href="#/uv" class="float-left">Consortium</a>
                 </div>
-
             </div>
         </div>
     </nav>
@@ -163,15 +163,15 @@
     <script type="text/javascript">
         app.flasher.text('@TempData["Flasher"]');
         $(function () {
-            $('header nav.modules a').each(function () {
-                var $a = $(this);
-                $a.on('click', function () {
-                    $a.parents('nav.modules').find('li').each(function () {
-                        $(this).removeClass('current');
-                    });
-                    $a.parents('li').addClass('current');
-                });
-            });
+            //$('header nav.modules a').each(function () {
+            //    var $a = $(this);
+            //    $a.on('click', function () {
+            //        $a.parents('nav.modules').find('li').each(function () {
+            //            $(this).removeClass('current');
+            //        });
+            //        $a.parents('li').addClass('current');
+            //    });
+            //});
             $('[data-current-module]').each(function () {
                 var module = $(this).data('current-module');
                 $('nav.modules li.' + module).addClass('current');

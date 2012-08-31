@@ -7,6 +7,7 @@ html {
         /* position & min-height needed to do full height footer*/
         position: relative;
         min-height: 100%;
+        min-width: $tube-outer-width;
         @include font-arial;
         color: #333;
     }
@@ -16,12 +17,29 @@ body {
     > nav.my {
         @include border-box;
         width: 100%;
-        min-width: $inner-width;
+        min-width: $tube-outer-width - 12px;
         padding: 6px 0 1px 12px;
         background-color: $nav-my-bg-color;
         > .content {
             @include border-box;
-            width: $outer-width;
+            width: $tube-inner-width;
+            > .left {
+                float: left;
+            }
+            > .right {
+                float: right;
+                a:first-child {
+                    border-left: solid 1px $nav-my-link-border-color;
+                }
+                a:last-child {
+                    @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+                        border-right: 0px none !important;
+                    }
+                    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+                        border-right: 0px none !important;
+                    }
+                }
+            }
             input {
                 width: 200px;
                 padding: 4px 8px;
@@ -57,15 +75,6 @@ body {
                 }
 
             }
-            > .left {
-                float: left;
-            }
-            > .right {
-                float: right;
-                a:first-child {
-                    border-left: solid 1px $nav-my-link-border-color;
-                }
-            }
         }
     }
     > nav.modules {
@@ -85,6 +94,9 @@ body {
                     @include border-radii(8px, 8px, 0, 0);
                     padding: 6px 8px;
                     height: 28px;
+                    @media only screen and(max-width: 1024px) {
+                        @include font-height(14px, 16px);
+                    }
                     background-color: $nav-modules-bg-lighter;
                     @include font-ms;
                     color: $nav-modules-text-color;
@@ -121,8 +133,9 @@ body {
         width: 100%;
         background: $banner-outer-bg;
         > .content {
-        @include border-box;
-            min-width: $outer-width;
+            @include border-box;
+            @include xwire;
+            min-width: $tube-outer-width;
             height: $banner-height;
             background-image: url($banner-logo);
             background-color: $banner-bg-color;
@@ -206,7 +219,7 @@ body {
 body #main {
     /* look out for footer height */
     @include border-box;
-    min-width: $outer-width;
+    min-width: $tube-outer-width;
     @include ie-box-shadow;
     > .content {
         @include border-box;
@@ -214,8 +227,8 @@ body #main {
 
         &.fixed {
             @include border-box;
-            width: $inner-width;
-            padding-left: $outer-width - $inner-width;
+            width: $tube-inner-width;
+            padding-left: $tube-outer-width - $tube-inner-width;
         }
 
         &.fluid {
@@ -230,8 +243,8 @@ body > footer {
     position: absolute;
     bottom: 0;
     height: $footer-height;
-    padding: 0;
     width: 100%;
+    min-width: $tube-outer-width;
     background-color: $footer-bg-color;
     @include ie-box-shadow;
     > *:first-child {
@@ -240,6 +253,7 @@ body > footer {
         color: $footer-text-color;
     }
     nav.modules {
+        width: $tube-inner-width;
         > ul {
             > li {
                 float: left;
@@ -255,6 +269,9 @@ body > footer {
                     text-decoration: none;
                     &:hover {
                         text-decoration: underline;
+                    }
+                    @media only screen and (max-device-width : 1024px) {
+                        @include font-height(14px, 20px);
                     }
                 }
             }

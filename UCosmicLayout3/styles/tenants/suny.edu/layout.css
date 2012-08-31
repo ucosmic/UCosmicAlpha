@@ -1,4 +1,45 @@
 /* suny.edu */
+/*@mixin media($media) {
+    http://css-tricks.com/snippets/css/media-queries-for-standard-devices/
+    http://thesassway.com/intermediate/responsive-web-design-in-sass-using-media-queries-in-sass-32
+    http://thesassway.com/intermediate/responsive-web-design-part-2
+    https://gist.github.com/1215856#file_6_media_queries.scss
+    @if $media == phone {
+        @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+            @content;
+        }
+    }
+    @else if $media == phone-landscape {
+        @media only screen and (min-width : 321px) {
+            @content;
+        }
+    }
+    @else if $media == phone-portrait {
+        @media only screen and (max-width : 320px) {
+            @content;
+        }
+    }
+    @else if $media == tablet {
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+            @content;
+        }
+    }
+    @else if $media == tablet-landscape {
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+            @content;
+        }
+    }
+    @else if $media == tablet-portrait {
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+            @content;
+        }
+    }
+    @else if $media == tube {
+        @media only screen and (min-device-width : 1024px) {
+            @content;
+        }
+    }
+}*/
 /* default */
 /* suny.edu */
 html {
@@ -14,6 +55,7 @@ html {
     /* position & min-height needed to do full height footer*/
     position: relative;
     min-height: 100%;
+    min-width: 980px;
     font-family: Arial, Helvetica, sans-serif;
     color: #333; }
 
@@ -22,14 +64,26 @@ body > nav.my {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
-  min-width: 960px;
+  min-width: 968px;
   padding: 6px 0 1px 12px;
   background-color: #009ee0; }
   body > nav.my > .content {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 980px; }
+    width: 960px; }
+    body > nav.my > .content > .left {
+      float: left; }
+    body > nav.my > .content > .right {
+      float: right; }
+      body > nav.my > .content > .right a:first-child {
+        border-left: solid 1px #cccccc; }
+      @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+        body > nav.my > .content > .right a:last-child {
+          border-right: 0px none !important; } }
+      @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+        body > nav.my > .content > .right a:last-child {
+          border-right: 0px none !important; } }
     body > nav.my > .content input {
       width: 200px;
       padding: 4px 8px;
@@ -62,12 +116,6 @@ body > nav.my {
         background-position: 8px -1px;
         background-repeat: no-repeat;
         padding-left: 40px; }
-    body > nav.my > .content > .left {
-      float: left; }
-    body > nav.my > .content > .right {
-      float: right; }
-      body > nav.my > .content > .right a:first-child {
-        border-left: solid 1px #cccccc; }
 body > nav.modules {
   padding: 2px 0 0 0;
   background: #009ee0;
@@ -102,6 +150,10 @@ body > nav.modules {
       -moz-transition: all 500ms;
       -o-transition: all 500ms;
       transition: all 500ms; }
+      @media only screen and (max-width: 1024px) {
+        body > nav.modules > ul > li > a {
+          font-size: 14px;
+          line-height: 16px; } }
     body > nav.modules > ul > li:first-child a {
       margin-left: 4px; }
     body > nav.modules > ul > li:hover a {
@@ -133,6 +185,9 @@ body > header {
   width: 100%;
   background: transparent; }
   body > header > .content {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -249,8 +304,8 @@ body > footer {
   position: absolute;
   bottom: 0;
   height: 40px;
-  padding: 0;
   width: 100%;
+  min-width: 980px;
   background-color: #004c93;
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAADCAYAAACEeL/nAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MkFDNTEyQ0YyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MkFDNTEyQkYyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1MjY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgxVvS8AAAAfSURBVHjaYmRgYGhhGADAAsT3B8JiRiBWHAiLAQIMAJ6pAYtOzUtHAAAAAElFTkSuQmCC");
   background-position: top left;
@@ -261,21 +316,27 @@ body > footer {
     box-sizing: border-box;
     height: 100%;
     color: #eeeeee; }
-  body > footer nav.modules > ul > li {
-    float: left; }
-    body > footer nav.modules > ul > li > a {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      display: inline-block;
-      margin: 10px 0 0;
-      border-right: solid 1px #eeeeee;
-      padding: 0 8px;
-      font-size: 16px;
-      line-height: 20px;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      color: #eeeeee;
-      text-decoration: none; }
-      body > footer nav.modules > ul > li > a:hover {
-        text-decoration: underline; }
+  body > footer nav.modules {
+    width: 960px; }
+    body > footer nav.modules > ul > li {
+      float: left; }
+      body > footer nav.modules > ul > li > a {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: inline-block;
+        margin: 10px 0 0;
+        border-right: solid 1px #eeeeee;
+        padding: 0 8px;
+        font-size: 16px;
+        line-height: 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #eeeeee;
+        text-decoration: none; }
+        body > footer nav.modules > ul > li > a:hover {
+          text-decoration: underline; }
+        @media only screen and (max-device-width: 1024px) {
+          body > footer nav.modules > ul > li > a {
+            font-size: 14px;
+            line-height: 20px; } }
 
