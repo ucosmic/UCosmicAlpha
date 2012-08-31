@@ -236,26 +236,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
-    <Content Include="styles\tenants\_default\forms.css">
-      <DependentUpon>forms.scss</DependentUpon>
-    </Content>
     <Content Include="styles\icons\closer-24-dark.png" />
     <Content Include="styles\icons\closer-24-light.png" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
     <Content Include="styles\icons\user-voice-24-light.png" />
-    <Content Include="styles\tenants\_default\ie8.css">
-      <DependentUpon>ie8.scss</DependentUpon>
-    </Content>
-    <Content Include="styles\tenants\_default\reset.css">
-      <DependentUpon>reset.scss</DependentUpon>
-    </Content>
-    <Content Include="styles\ruler-50-50.png" />
     <Content Include="styles\tenants\lehigh.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\lehigh.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\usf.edu\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\usf.edu\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\_default\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\_default\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\_default\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\_default\reset.css">
+      <DependentUpon>reset.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\ruler-50-50.png" />
     <Content Include="styles\tenants\umn.edu\banner-bg.png" />
     <Content Include="styles\tenants\umn.edu\banner-logo.png" />
     <Content Include="styles\tenants\umn.edu\ie8.css">
@@ -266,16 +275,7 @@
     </Content>
     <Content Include="styles\tenants\_default\banner-logo.png" />
     <Content Include="styles\tenants\_default\box-shadow-2-2.png" />
-    <Content Include="styles\tenants\_default\layout.css">
-      <DependentUpon>layout.scss</DependentUpon>
-    </Content>
     <Content Include="styles\tenants\usf.edu\banner-logo.png" />
-    <Content Include="styles\tenants\usf.edu\ie8.css">
-      <DependentUpon>ie8.scss</DependentUpon>
-    </Content>
-    <Content Include="styles\tenants\usf.edu\layout.css">
-      <DependentUpon>layout.scss</DependentUpon>
-    </Content>
     <Content Include="styles\tenants\suny.edu\banner-logo.png" />
     <Content Include="styles\tenants\suny.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
@@ -363,6 +363,8 @@
     <Content Include="styles\tenants\lehigh.edu\ie8.scss" />
     <Content Include="styles\tenants\lehigh.edu\layout.scss" />
     <Content Include="styles\tenants\_default\ie8.scss" />
+    <Content Include="styles\_forms.scss" />
+    <Content Include="styles\_future.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

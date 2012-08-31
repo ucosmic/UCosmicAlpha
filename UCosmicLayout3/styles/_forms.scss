@@ -1,0 +1,26 @@
+/* main forms stylesheet */
+
+input[type="email"], input[type="number"],   input[type="password"], input[type="search"],
+input[type="tel"],   input[type="text"],     input[type="url"],      input[type="color"],
+input[type="date"],  input[type="datetime"], input[type="datetime-local"],
+input[type="month"], input[type="time"],     input[type="week"], textarea {
+    @include border-box;
+    width: 100%;
+    max-width: 100%;
+    @include font-height(16px, 1.25);
+    border: solid 1px #aaa;
+    border-right-color: #ddd;
+    border-bottom-color: #ddd;
+    /* @include border-radius(3px); */
+    padding: 8px;
+    @include outline-none;
+    /* background-color: #eee; */
+    @include transition(all, 500ms);
+    cursor: text;
+    &:focus {
+        /* background: #ffe; */
+    }
+    &.placeholder {
+        color: #999;
+    }
+}
