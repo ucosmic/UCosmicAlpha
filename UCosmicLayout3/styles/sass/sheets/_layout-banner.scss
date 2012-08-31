@@ -186,10 +186,13 @@ body {
     }
     > nav.bib {
         position: relative;
-        background-color: $nav-bib-bg-color;
-        @include ie-box-shadow;
         padding: 0 0 2px 0;
+        @include border-box;
+        @include ie-box-shadow;
+        background-color: $nav-bib-bg-color;
         > ul {
+            @include border-box;
+            width: $tube-outer-width - 4px;
             margin: 0 0 0 4px;
             > li {
                 float: left;
@@ -199,6 +202,9 @@ body {
                     margin: 0 2px 0 0;
                     @include border-radii(0, 0, 8px, 8px);
                     @include font-height(16px, 1);
+                    @media only screen and(max-width: 1024px) {
+                        @include font-height(14px, 16px);
+                    }
                     padding: 10px 16px 8px;
                     color: $nav-bib-link-text-color;
                     text-decoration: none;
