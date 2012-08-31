@@ -36,7 +36,7 @@ namespace UCosmicLayout3
                         "~/scripts/oss/jquery.palceholder*"));
 
             // bootstrap css bundle
-            bundles.Add(new StyleBundle("~/bundles/css").Include(
+            bundles.Add(new StyleBundle("~/styles/tenants/_default/css").Include(
                         "~/styles/reset.css",
                         "~/styles/tenants/_default/layout.css",
                         "~/styles/forms.css"));

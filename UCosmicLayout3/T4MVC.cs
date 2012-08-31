@@ -492,6 +492,8 @@ namespace Links {
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             public static readonly string closer_24_dark_png = Url("closer-24-dark.png");
             public static readonly string closer_24_light_png = Url("closer-24-light.png");
+            public static readonly string user_voice_24_filled_png = Url("user-voice-24-filled.png");
+            public static readonly string user_voice_24_light_png = Url("user-voice-24-light.png");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -508,6 +510,7 @@ namespace Links {
         public static readonly string reset_scss = Url("reset.scss");
         public static readonly string reset_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/reset.min.css") ? Url("reset.min.css") : Url("reset.css");
              
+        public static readonly string ruler_50_50_png = Url("ruler-50-50.png");
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class tenants {
             private const string URLPATH = "~/styles/tenants";
@@ -533,7 +536,6 @@ namespace Links {
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string _brand_scss = Url("_brand.scss");
                 public static readonly string _layout_scss = Url("_layout.scss");
-                public static readonly string banner_logo_png = Url("banner-logo.png");
                 public static readonly string ie8_scss = Url("ie8.scss");
                 public static readonly string ie8_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ie8.min.css") ? Url("ie8.min.css") : Url("ie8.css");
                      

@@ -249,6 +249,7 @@
     <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
+    <Content Include="styles\ruler-50-50.png" />
     <Content Include="styles\tenants\lehigh.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
@@ -256,7 +257,6 @@
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\umn.edu\banner-bg.png" />
-    <Content Include="styles\tenants\umn.edu\banner-logo.png" />
     <Content Include="styles\tenants\umn.edu\banner-logo.png" />
     <Content Include="styles\tenants\umn.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>

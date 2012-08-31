@@ -134,7 +134,6 @@ body {
         background: $banner-outer-bg;
         > .content {
             @include border-box;
-            @include xwire;
             min-width: $tube-outer-width;
             height: $banner-height;
             background-image: url($banner-logo);
@@ -142,16 +141,21 @@ body {
             background-repeat: no-repeat;
             background-position: bottom left;
             > .flasher {
-                /* float: right; */
                 @include border-box;
                 display: inline-block;
                 border: $flasher-border;
                 @include border-radius(12px);
                 margin-top: 15px;
-                margin-left: 260px;/*  */
-                margin-right: 40px;
-                max-width: 700px;
-                max-height: 70px;
+                margin-left: 15px;
+                @media only screen and (max-width : 320px) {
+                    max-width: 310px;
+                }
+                @media only screen and (min-width : 321px) {
+                    max-width: 480px;
+                }
+                @media only screen and (min-device-width : 768px) {
+                    max-width: 700px;
+                }
                 @include font-height(15px, 23px);
                 @include font-ms;
                 font-weight: bold;
@@ -160,18 +164,28 @@ body {
                     visibility: hidden;
                 }
                 > a {
+                    @include border-box;
                     display: block;
                     padding: 12px 16px;
                     color: $flasher-text-color;
                     p {
-                        max-width: 600px;
+                        @include border-box;
+                        /* paragraph width is flasher width minus 70 px to allow for closer image and padding */
+                        @media only screen and (max-width : 320px) {
+                            max-width: 240px;
+                        }
+                        @media only screen and (min-width : 321px) {
+                            max-width: 410px;
+                        }
+                        @media only screen and (min-device-width : 768px) {
+                            max-width: 630px;
+                        }
                         @include text-shadow(1px, 1px, 1px, rgba(33, 33, 33, .2));
                         .dismissal {
                             font-weight: normal;
                         }
                     }
                     i {
-                        margin-left: 8px;
                         background: $flasher-close-icon;
                         width: 24px;
                         height: 24px;
@@ -205,6 +219,7 @@ body {
                     @include ie-box-shadow;
                 }
                 &.current a {
+                    padding: 9px 16px 9px;
                     background-color: $nav-bib-current-bg-color;
                     background-image: none;
                     color: $nav-bib-current-text-color;
