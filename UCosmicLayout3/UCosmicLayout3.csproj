@@ -240,6 +240,7 @@
     <Content Include="styles\icons\closer-24-light.png" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
     <Content Include="styles\icons\user-voice-24-light.png" />
+    <Content Include="styles\reset.css" />
     <Content Include="styles\tenants\lehigh.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
@@ -260,9 +261,6 @@
     </Content>
     <Content Include="styles\tenants\_default\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
-    </Content>
-    <Content Include="styles\reset.css">
-      <DependentUpon>reset.scss</DependentUpon>
     </Content>
     <Content Include="styles\ruler-50-50.png" />
     <Content Include="styles\tenants\umn.edu\banner-bg.png" />
@@ -290,7 +288,9 @@
     <Content Include="styles\tenants\uc.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -316,9 +316,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="styles\reset.scss" />
     <Content Include="styles\tenants\_default\forms.scss" />
-    <Content Include="styles\_bootstrap.scss" />
+    <Content Include="styles\sass\_bootstrap.scss" />
     <Content Include="Views\Home\Travel.cshtml" />
     <Content Include="Views\Home\Representatives.cshtml" />
     <Content Include="Views\Home\Students.cshtml" />
@@ -338,8 +337,8 @@
     <Content Include="Views\Home\Alumni.cshtml" />
     <Content Include="Views\Home\GlobalPress.cshtml" />
     <Content Include="Views\Home\CorporateEngagement.cshtml" />
-    <Content Include="styles\_layout.scss" />
-    <Content Include="styles\_ie8.scss" />
+    <Content Include="styles\sass\sheets\_layout.scss" />
+    <Content Include="styles\sass\sheets\_ie8.scss" />
     <Content Include="styles\tenants\suny.edu\ie8.scss" />
     <Content Include="styles\tenants\suny.edu\layout.scss" />
     <Content Include="styles\tenants\suny.edu\_values.scss" />
@@ -363,8 +362,11 @@
     <Content Include="styles\tenants\lehigh.edu\ie8.scss" />
     <Content Include="styles\tenants\lehigh.edu\layout.scss" />
     <Content Include="styles\tenants\_default\ie8.scss" />
-    <Content Include="styles\_forms.scss" />
-    <Content Include="styles\_future.scss" />
+    <Content Include="styles\sass\sheets\_forms.scss" />
+    <Content Include="styles\sass\_future.scss" />
+    <Content Include="styles\sass\sheets\_layout-footer.scss" />
+    <Content Include="styles\sass\sheets\_layout-banner.scss" />
+    <Content Include="styles\sass\sheets\_layout-content.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,26 @@
+/* layout content stylesheet */
+
+body {
+    #main {
+        /* look out for footer height */
+        @include border-box;
+        min-width: $tube-outer-width;
+        @include ie-box-shadow;
+        > .content {
+            @include border-box;
+            padding-bottom: $footer-height + 20px;
+
+            &.fixed {
+                @include border-box;
+                width: $tube-inner-width;
+                padding-left: $tube-outer-width - $tube-inner-width;
+            }
+
+            &.fluid {
+                @include border-box;
+                width: 100%;
+                padding: 0;
+            }
+        }
+    }
+}

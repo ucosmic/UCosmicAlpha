@@ -22,6 +22,7 @@ html {
     font-family: Arial, Helvetica, sans-serif;
     color: #333; }
 
+/* layout banner stylesheet */
 body > nav.my {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -255,6 +256,7 @@ body > nav.bib {
         font-weight: bold;
         cursor: default; }
 
+/* layout content stylesheet */
 body #main {
   /* look out for footer height */
   -webkit-box-sizing: border-box;
@@ -282,6 +284,7 @@ body #main {
       width: 100%;
       padding: 0; }
 
+/* layout footer stylesheet */
 body > footer {
   position: absolute;
   bottom: 0;

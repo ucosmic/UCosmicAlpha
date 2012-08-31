@@ -1,0 +1,43 @@
+/* layout footer stylesheet */
+
+body {
+    > footer {
+        position: absolute;
+        bottom: 0;
+        height: $footer-height;
+        width: 100%;
+        min-width: $tube-outer-width;
+        background-color: $footer-bg-color;
+        @include ie-box-shadow;
+        > *:first-child {
+            @include border-box;
+            height: 100%;
+            color: $footer-text-color;
+        }
+        nav.modules {
+            width: $tube-inner-width;
+            > ul {
+                > li {
+                    float: left;
+                    > a {
+                        @include border-box;
+                        display: inline-block;
+                        margin: 10px 0 0;
+                        border-right: solid 1px $footer-link-border-color;
+                        padding: 0 8px;
+                        @include font-height(16px, 20px);
+                        @include font-ms;
+                        color: $footer-link-text-color;
+                        text-decoration: none;
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                        @media only screen and (max-device-width : 1024px) {
+                            @include font-height(14px, 20px);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

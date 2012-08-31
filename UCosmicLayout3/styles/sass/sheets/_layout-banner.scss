@@ -1,19 +1,4 @@
-/* main layout stylesheet */
-
-html {
-    @include border-box;
-    /* needed to do full height footer*/
-    height: 100%;
-    > body {
-        @include border-box;
-        /* position & min-height needed to do full height footer*/
-        position: relative;
-        min-height: 100%;
-        min-width: $tube-outer-width;
-        @include font-arial;
-        color: #333;
-    }
-}
+/* layout banner stylesheet */
 
 body {
     > nav.my {
@@ -230,69 +215,6 @@ body {
                     color: $nav-bib-current-text-color;
                     font-weight: bold;
                     cursor: default;
-                }
-            }
-        }
-    }
-}
-
-body #main {
-    /* look out for footer height */
-    @include border-box;
-    min-width: $tube-outer-width;
-    @include ie-box-shadow;
-    > .content {
-        @include border-box;
-        padding-bottom: $footer-height + 20px;
-
-        &.fixed {
-            @include border-box;
-            width: $tube-inner-width;
-            padding-left: $tube-outer-width - $tube-inner-width;
-        }
-
-        &.fluid {
-            @include border-box;
-            width: 100%;
-            padding: 0;
-        }
-    }
-}
-
-body > footer {
-    position: absolute;
-    bottom: 0;
-    height: $footer-height;
-    width: 100%;
-    min-width: $tube-outer-width;
-    background-color: $footer-bg-color;
-    @include ie-box-shadow;
-    > *:first-child {
-        @include border-box;
-        height: 100%;
-        color: $footer-text-color;
-    }
-    nav.modules {
-        width: $tube-inner-width;
-        > ul {
-            > li {
-                float: left;
-                > a {
-                    @include border-box;
-                    display: inline-block;
-                    margin: 10px 0 0;
-                    border-right: solid 1px $footer-link-border-color;
-                    padding: 0 8px;
-                    @include font-height(16px, 20px);
-                    @include font-ms;
-                    color: $footer-link-text-color;
-                    text-decoration: none;
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                    @media only screen and (max-device-width : 1024px) {
-                        @include font-height(14px, 20px);
-                    }
                 }
             }
         }
