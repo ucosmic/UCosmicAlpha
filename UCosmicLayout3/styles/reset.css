@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/
+﻿/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -16,57 +16,63 @@ figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video,
 input, textarea {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-  cursor: default; }
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    cursor: default;
+}
 
 textarea {
-  overflow: auto; }
+    overflow: auto;
+}
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-  display: block; }
+    display: block;
+}
 
 body {
-  line-height: 1; }
+    line-height: 1;
+}
 
 a, a * {
-  cursor: pointer; }
+    cursor: pointer;
+}
 
 ol, ul {
-  list-style: none; }
+    list-style: none;
+}
 
 blockquote, q {
-  quotes: none; }
+    quotes: none;
+}
 
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none; }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
 
 table {
-  border-collapse: collapse;
-  border-spacing: 0; }
+    border-collapse: collapse;
+    border-spacing: 0;
+}
 
 /* generic positioning styles */
 .group:after {
-  /* Update August 2012: http://css-tricks.com/snippets/css/clear-fix */
-  /* content: "."; */
-  content: "";
-  clear: both;
-  /* display: block; */
-  display: table;
-  /* height: 0; */
-  /* visibility: hidden; */ }
+    content: "";
+    clear: both;
+    display: table;
+}
 
 .float-left {
-  float: left; }
+    float: left;
+}
 
 .float-right {
-  float: right; }
-
+    float: right;
+}

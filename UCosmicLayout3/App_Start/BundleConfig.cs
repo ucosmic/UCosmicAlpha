@@ -2,7 +2,7 @@
 
 namespace UCosmicLayout3
 {
-    public class BundleConfig
+    public static class BundleConfig
     {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
@@ -47,10 +47,11 @@ namespace UCosmicLayout3
             };
             foreach (var tenant in tenants)
             {
-                bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/css", tenant)).Include(
-                    string.Format("~/styles/tenants/{0}/reset.css", tenant),
+                bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/main", tenant)).Include(
+                    "~/styles/reset.css",
                     string.Format("~/styles/tenants/{0}/layout.css", tenant),
                     string.Format("~/styles/tenants/{0}/forms.css", tenant)));
+
                 bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/ie8", tenant)).Include(
                     string.Format("~/styles/tenants/{0}/ie8.css", tenant)));
             }

@@ -261,7 +261,7 @@
     <Content Include="styles\tenants\_default\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <Content Include="styles\tenants\_default\reset.css">
+    <Content Include="styles\reset.css">
       <DependentUpon>reset.scss</DependentUpon>
     </Content>
     <Content Include="styles\ruler-50-50.png" />
@@ -316,7 +316,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="styles\tenants\_default\reset.scss" />
+    <Content Include="styles\reset.scss" />
     <Content Include="styles\tenants\_default\forms.scss" />
     <Content Include="styles\_bootstrap.scss" />
     <Content Include="Views\Home\Travel.cshtml" />
