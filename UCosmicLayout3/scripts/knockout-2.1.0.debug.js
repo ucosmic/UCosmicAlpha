@@ -42,7 +42,7 @@ ko.exportSymbol('version', ko.version);
 ko.utils = new (function () {
     var stringTrimRegex = /^(\s|\u00A0)+|(\s|\u00A0)+$/g;
 
-    // Represent the known event types in a compact way, then at runtime transform it into a hTenancyh with event name Tenancy key (for fast lookup)
+    // Represent the known event types in a compact way, then at runtime transform it into a hash with event name as key (for fast lookup)
     var knownEvents = {}, knownEventTypesByEventName = {};
     var keyEventTypeName = /Firefox\/2/i.test(navigator.userAgent) ? 'KeyboardEvent' : 'UIEvents';
     knownEvents[keyEventTypeName] = ['keyup', 'keydown', 'keypress'];
@@ -161,7 +161,7 @@ ko.utils = new (function () {
         },
 
         moveCleanedNodesToContainerElement: function(nodes) {
-            // Ensure it's a real array, Tenancy we're about to reparent the nodes and
+            // Ensure it's a real array, as we're about to reparent the nodes and
             // we don't want the underlying collection to change while we're doing that.
             var nodesArray = ko.utils.makeArray(nodes);
 
@@ -195,7 +195,7 @@ ko.utils = new (function () {
         },
 
         setOptionNodeSelectionState: function (optionNode, isSelected) {
-            // IE6 sometimes throws "unknown error" if you try to write to .selected directly, whereTenancy Firefox struggles with setAttribute. Pick one bTenancyed on browser.
+            // IE6 sometimes throws "unknown error" if you try to write to .selected directly, whereas Firefox struggles with setAttribute. Pick one based on browser.
             if (navigator.userAgent.indexOf("MSIE 6") >= 0)
                 optionNode.setAttribute("selected", isSelected);
             else
@@ -251,9 +251,9 @@ ko.utils = new (function () {
         },
 
         tagNameLower: function(element) {
-            // For HTML elements, tagName will always be upper cTenancye; for XHTML elements, it'll be lower cTenancye.
+            // For HTML elements, tagName will always be upper case; for XHTML elements, it'll be lower case.
             // Possible future optimization: If we know it's an element from an XHTML document (not HTML),
-            // we don't need to do the .toLowerCTenancye() Tenancy it will always be lower cTenancye anyway.
+            // we don't need to do the .toLowerCase() as it will always be lower case anyway.
             return element && element.tagName && element.tagName.toLowerCase();
         },
 
@@ -262,7 +262,7 @@ ko.utils = new (function () {
             if (!mustUseAttachEvent && typeof jQuery != "undefined") {
                 if (isClickOnCheckableElement(element, eventType)) {
                     // For click events on checkboxes, jQuery interferes with the event handling in an awkward way:
-                    // it toggles the element checked state *after* the click event handlers run, whereTenancy native
+                    // it toggles the element checked state *after* the click event handlers run, whereas native
                     // click events toggle the checked state *before* the event handler.
                     // Fix this by intecepting the handler and applying the correct checkedness before it runs.
                     var originalHandler = handler;
@@ -385,7 +385,7 @@ ko.utils = new (function () {
             var fields = ko.utils.makeArray(form.getElementsByTagName("input")).concat(ko.utils.makeArray(form.getElementsByTagName("textarea")));
             var isMatchingField = (typeof fieldName == 'string')
                 ? function(field) { return field.name === fieldName }
-                : function(field) { return fieldName.test(field.name) }; // Treat fieldName Tenancy regex or object containing predicate
+                : function(field) { return fieldName.test(field.name) }; // Treat fieldName as regex or object containing predicate
             var matches = [];
             for (var i = fields.length - 1; i >= 0; i--) {
                 if (isMatchingField(fields[i]))
@@ -470,13 +470,13 @@ ko.exportSymbol('utils.parseJson', ko.utils.parseJson);
 ko.exportSymbol('utils.registerEventHandler', ko.utils.registerEventHandler);
 ko.exportSymbol('utils.stringifyJson', ko.utils.stringifyJson);
 ko.exportSymbol('utils.range', ko.utils.range);
-ko.exportSymbol('utils.toggleDomNodeCssClTenancys', ko.utils.toggleDomNodeCssClass);
+ko.exportSymbol('utils.toggleDomNodeCssClass', ko.utils.toggleDomNodeCssClass);
 ko.exportSymbol('utils.triggerEvent', ko.utils.triggerEvent);
 ko.exportSymbol('utils.unwrapObservable', ko.utils.unwrapObservable);
 
 if (!Function.prototype['bind']) {
     // Function.prototype.bind is a standard part of ECMAScript 5th Edition (December 2009, http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf)
-    // In cTenancye the browser doesn't implement it natively, provide a JavaScript implementation. This implementation is bTenancyed on the one in prototype.js
+    // In case the browser doesn't implement it natively, provide a JavaScript implementation. This implementation is based on the one in prototype.js
     Function.prototype['bind'] = function (object) {
         var originalFunction = this, args = Array.prototype.slice.call(arguments), object = args.shift();
         return function () {
@@ -548,21 +548,21 @@ ko.utils.domNodeDisposal = new (function () {
         // Run all the dispose callbacks
         var callbacks = getDisposeCallbacksCollection(node, false);
         if (callbacks) {
-            callbacks = callbacks.slice(0); // Clone, Tenancy the array may be modified during iteration (typically, callbacks will remove themselves)
+            callbacks = callbacks.slice(0); // Clone, as the array may be modified during iteration (typically, callbacks will remove themselves)
             for (var i = 0; i < callbacks.length; i++)
                 callbacks[i](node);
         }
 
-        // Also erTenancye the DOM data
+        // Also erase the DOM data
         ko.utils.domData.clear(node);
 
         // Special support for jQuery here because it's so commonly used.
         // Many jQuery plugins (including jquery.tmpl) store data using jQuery's equivalent of domData
-        // so notify it to tear down any resources Tenancysociated with the node & descendants here.
+        // so notify it to tear down any resources associated with the node & descendants here.
         if ((typeof jQuery == "function") && (typeof jQuery['cleanData'] == "function"))
             jQuery['cleanData']([node]);
 
-        // Also clear any immediate-child comment nodes, Tenancy these wouldn't have been found by
+        // Also clear any immediate-child comment nodes, as these wouldn't have been found by
         // node.getElementsByTagName("*") in cleanNode() (comment nodes aren't elements)
         if (cleanableNodeTypesWithDescendants[node.nodeType])
             cleanImmediateCommentTypeChildren(node);
@@ -600,7 +600,7 @@ ko.utils.domNodeDisposal = new (function () {
 
                 // ... then its descendants, where applicable
                 if (cleanableNodeTypesWithDescendants[node.nodeType]) {
-                    // Clone the descendants list in cTenancye it changes during iteration
+                    // Clone the descendants list in case it changes during iteration
                     var descendants = [];
                     ko.utils.arrayPushAll(descendants, node.getElementsByTagName("*"));
                     for (var i = 0, j = descendants.length; i < j; i++)
@@ -627,15 +627,15 @@ ko.exportSymbol('utils.domNodeDisposal.removeDisposeCallback', ko.utils.domNodeD
     var leadingCommentRegex = /^(\s*)<!--(.*?)-->/;
 
     function simpleHtmlParse(html) {
-        // BTenancyed on jQuery's "clean" function, but only accounting for table-related elements.
+        // Based on jQuery's "clean" function, but only accounting for table-related elements.
         // If you have referenced jQuery, this won't be used anyway - KO will use jQuery's "clean" function directly
 
         // Note that there's still an issue in IE < 9 whereby it will discard comment nodes that are the first child of
-        // a descendant node. For example: "<div><!-- mycomment -->abc</div>" will get parsed Tenancy "<div>abc</div>"
-        // This won't affect anyone who hTenancy referenced jQuery, and there's always the workaround of inserting a dummy node
+        // a descendant node. For example: "<div><!-- mycomment -->abc</div>" will get parsed as "<div>abc</div>"
+        // This won't affect anyone who has referenced jQuery, and there's always the workaround of inserting a dummy node
         // (possibly a text node) in front of the comment. So, KO does not attempt to workaround this IE issue automatically at present.
 
-        // Trim whitespace, otherwise indexOf won't work Tenancy expected
+        // Trim whitespace, otherwise indexOf won't work as expected
         var tags = ko.utils.stringTrim(html).toLowerCase(), div = document.createElement("div");
 
         // Finds the first match from the left column, and returns the corresponding "wrap" data from the right column
@@ -681,7 +681,7 @@ ko.exportSymbol('utils.domNodeDisposal.removeDisposeCallback', ko.utils.domNodeD
 
     ko.utils.parseHtmlFragment = function(html) {
         return typeof jQuery != 'undefined' ? jQueryHtmlParse(html)   // As below, benefit from jQuery's optimisations where possible
-                                            : simpleHtmlParse(html);  // ... otherwise, this simple logic will do in most common cTenancyes.
+                                            : simpleHtmlParse(html);  // ... otherwise, this simple logic will do in most common cases.
     };
 
     ko.utils.setHtml = function(node, html) {
@@ -734,7 +734,7 @@ ko.memoization = (function () {
     return {
         memoize: function (callback) {
             if (typeof callback != "function")
-                throw new Error("You can only pTenancys a function to ko.memoization.memoize()");
+                throw new Error("You can only pass a function to ko.memoization.memoize()");
             var memoId = generateRandomId();
             memos[memoId] = callback;
             return "<!--[ko_memo:" + memoId + "]-->";
@@ -762,7 +762,7 @@ ko.memoization = (function () {
                 ko.memoization.unmemoize(memos[i].memoId, combinedParams);
                 node.nodeValue = ""; // Neuter this node so we don't try to unmemoize it again
                 if (node.parentNode)
-                    node.parentNode.removeChild(node); // If possible, erTenancye it totally (not always possible - someone else might just hold a reference to it then call unmemoizeDomNodeAndDescendants again)
+                    node.parentNode.removeChild(node); // If possible, erase it totally (not always possible - someone else might just hold a reference to it then call unmemoizeDomNodeAndDescendants again)
             }
         },
 
@@ -782,12 +782,12 @@ ko.extenders = {
     'throttle': function(target, timeout) {
         // Throttling means two things:
 
-        // (1) For dependent observables, we throttle *evaluations* so that, no matter how fTenancyt its dependencies
-        //     notify updates, the target doesn't re-evaluate (and hence doesn't notify) fTenancyter than a certain rate
+        // (1) For dependent observables, we throttle *evaluations* so that, no matter how fast its dependencies
+        //     notify updates, the target doesn't re-evaluate (and hence doesn't notify) faster than a certain rate
         target['throttleEvaluation'] = timeout;
 
         // (2) For writable targets (observables, or writable dependent observables), we throttle *writes*
-        //     so the target cannot change value synchronously or fTenancyter than a certain rate
+        //     so the target cannot change value synchronously or faster than a certain rate
         var writeTimeoutInstance = null;
         return ko.dependentObservable({
             'read': target,
@@ -802,7 +802,7 @@ ko.extenders = {
 
     'notify': function(target, notifyWhen) {
         target["equalityComparer"] = notifyWhen == "always"
-            ? function() { return false } // Treat all values Tenancy not equal
+            ? function() { return false } // Treat all values as not equal
             : ko.observable["fn"]["equalityComparer"];
         return target;
     }
@@ -864,7 +864,7 @@ ko.subscribable['fn'] = {
         event = event || defaultEvent;
         if (this._subscriptions[event]) {
             ko.utils.arrayForEach(this._subscriptions[event].slice(0), function (subscription) {
-                // In cTenancye a subscription wTenancy disposed during the arrayForEach cycle, check
+                // In case a subscription was disposed during the arrayForEach cycle, check
                 // for isDisposed on each subscription before invoking its callback
                 if (subscription && (subscription.isDisposed !== true))
                     subscription.callback(valueToNotify);
@@ -906,7 +906,7 @@ ko.dependencyDetection = (function () {
 
         registerDependency: function (subscribable) {
             if (!ko.isSubscribable(subscribable))
-                throw new Error("Only subscribable things can act Tenancy dependencies");
+                throw new Error("Only subscribable things can act as dependencies");
             if (_frames.length > 0) {
                 var topFrame = _frames[_frames.length - 1];
                 if (ko.utils.arrayIndexOf(topFrame.distinctDependencies, subscribable) >= 0)
@@ -926,14 +926,14 @@ ko.observable = function (initialValue) {
         if (arguments.length > 0) {
             // Write
 
-            // Ignore writes if the value hTenancyn't changed
+            // Ignore writes if the value hasn't changed
             if ((!observable['equalityComparer']) || !observable['equalityComparer'](_latestValue, arguments[0])) {
                 observable.valueWillMutate();
                 _latestValue = arguments[0];
                 if (DEBUG) observable._latestValue = _latestValue;
                 observable.valueHasMutated();
             }
-            return this; // Permits chained Tenancysignments
+            return this; // Permits chained assignments
         }
         else {
             // Read
@@ -947,7 +947,7 @@ ko.observable = function (initialValue) {
     observable.valueWillMutate = function () { observable["notifySubscribers"](_latestValue, "beforeChange"); }
     ko.utils.extend(observable, ko.observable['fn']);
 
-    ko.exportProperty(observable, "valueHTenancyMutated", observable.valueHasMutated);
+    ko.exportProperty(observable, "valueHasMutated", observable.valueHasMutated);
     ko.exportProperty(observable, "valueWillMutate", observable.valueWillMutate);
 
     return observable;
@@ -993,7 +993,7 @@ ko.observableArray = function (initialValues) {
         initialValues = [];
     }
     if ((initialValues !== null) && (initialValues !== undefined) && !('length' in initialValues))
-        throw new Error("The argument pTenancysed when initializing an observable array must be an array, or null, or undefined.");
+        throw new Error("The argument passed when initializing an observable array must be an array, or null, or undefined.");
 
     var result = ko.observable(initialValues);
     ko.utils.extend(result, ko.observableArray['fn']);
@@ -1023,7 +1023,7 @@ ko.observableArray['fn'] = {
     },
 
     'removeAll': function (arrayOfValues) {
-        // If you pTenancysed zero args, we remove everything
+        // If you passed zero args, we remove everything
         if (arrayOfValues === undefined) {
             var underlyingArray = this();
             var allValues = underlyingArray.slice(0);
@@ -1032,7 +1032,7 @@ ko.observableArray['fn'] = {
             this.valueHasMutated();
             return allValues;
         }
-        // If you pTenancysed an arg, we interpret it as an array of entries to remove
+        // If you passed an arg, we interpret it as an array of entries to remove
         if (!arrayOfValues)
             return [];
         return this['remove'](function (value) {
@@ -1053,11 +1053,11 @@ ko.observableArray['fn'] = {
     },
 
     'destroyAll': function (arrayOfValues) {
-        // If you pTenancysed zero args, we destroy everything
+        // If you passed zero args, we destroy everything
         if (arrayOfValues === undefined)
             return this['destroy'](function() { return true });
 
-        // If you pTenancysed an arg, we interpret it Tenancy an array of entries to destroy
+        // If you passed an arg, we interpret it as an array of entries to destroy
         if (!arrayOfValues)
             return [];
         return this['destroy'](function (value) {
@@ -1111,14 +1111,14 @@ ko.dependentObservable = function (evaluatorFunctionOrOptions, evaluatorFunction
         options = readFunction;
         readFunction = options["read"];
     } else {
-        // Multi-parameter syntax - construct the options according to the params pTenancysed
+        // Multi-parameter syntax - construct the options according to the params passed
         options = options || {};
         if (!readFunction)
             readFunction = options["read"];
     }
     // By here, "options" is always non-null
     if (typeof readFunction != "function")
-        throw new Error("PTenancys a function that returns the value of the ko.computed");
+        throw new Error("Pass a function that returns the value of the ko.computed");
 
     var writeFunction = options["write"];
     if (!evaluatorFunctionTarget)
@@ -1134,8 +1134,8 @@ ko.dependentObservable = function (evaluatorFunctionOrOptions, evaluatorFunction
     var dispose = disposeAllSubscriptionsToDependencies;
 
     // Build "disposeWhenNodeIsRemoved" and "disposeWhenNodeIsRemovedCallback" option values
-    // (Note: "disposeWhenNodeIsRemoved" option both proactively disposes Tenancy soon Tenancy the node is removed using ko.removeNode(),
-    // plus adds a "disposeWhen" callback that, on each evaluation, disposes if the node wTenancy removed by some other means.)
+    // (Note: "disposeWhenNodeIsRemoved" option both proactively disposes as soon as the node is removed using ko.removeNode(),
+    // plus adds a "disposeWhen" callback that, on each evaluation, disposes if the node was removed by some other means.)
     var disposeWhenNodeIsRemoved = (typeof options["disposeWhenNodeIsRemoved"] == "object") ? options["disposeWhenNodeIsRemoved"] : null;
     var disposeWhen = options["disposeWhen"] || function() { return false; };
     if (disposeWhenNodeIsRemoved) {
@@ -1170,7 +1170,7 @@ ko.dependentObservable = function (evaluatorFunctionOrOptions, evaluatorFunction
         }
 
         // Don't dispose on first evaluation, because the "disposeWhen" callback might
-        // e.g., dispose when the Tenancysociated DOM element isn't in the doc, and it's not
+        // e.g., dispose when the associated DOM element isn't in the doc, and it's not
         // going to be in the doc until *after* the first evaluation
         if (_hasBeenEvaluated && disposeWhen()) {
             dispose();
@@ -1179,14 +1179,14 @@ ko.dependentObservable = function (evaluatorFunctionOrOptions, evaluatorFunction
 
         _isBeingEvaluated = true;
         try {
-            // Initially, we Tenancysume that none of the subscriptions are still being used (i.e., all are candidates for disposal).
+            // Initially, we assume that none of the subscriptions are still being used (i.e., all are candidates for disposal).
             // Then, during evaluation, we cross off any that are in fact still being used.
             var disposalCandidates = ko.utils.arrayMap(_subscriptionsToDependencies, function(item) {return item.target;});
 
             ko.dependencyDetection.begin(function(subscribable) {
                 var inOld;
                 if ((inOld = ko.utils.arrayIndexOf(disposalCandidates, subscribable)) >= 0)
-                    disposalCandidates[inOld] = undefined; // Don't want to dispose this subscription, Tenancy it's still being used
+                    disposalCandidates[inOld] = undefined; // Don't want to dispose this subscription, as it's still being used
                 else
                     _subscriptionsToDependencies.push(subscribable.subscribe(evaluatePossiblyAsync)); // Brand new subscription - add it
             });
@@ -1225,7 +1225,7 @@ ko.dependentObservable = function (evaluatorFunctionOrOptions, evaluatorFunction
             // Writing a value
             writeFunction.apply(evaluatorFunctionTarget, arguments);
         } else {
-            throw new Error("Cannot write a value to a ko.computed unless you specify a 'write' option. If you wish to read the current value, don't pTenancys any parameters.");
+            throw new Error("Cannot write a value to a ko.computed unless you specify a 'write' option. If you wish to read the current value, don't pass any parameters.");
         }
     }
 
@@ -1264,15 +1264,15 @@ ko.dependentObservable['fn'] = {};
 ko.dependentObservable['fn'][protoProp] = ko.dependentObservable;
 
 ko.exportSymbol('dependentObservable', ko.dependentObservable);
-ko.exportSymbol('computed', ko.dependentObservable); // Make "ko.computed" an aliTenancy for "ko.dependentObservable"
+ko.exportSymbol('computed', ko.dependentObservable); // Make "ko.computed" an alias for "ko.dependentObservable"
 ko.exportSymbol('isComputed', ko.isComputed);
 
 (function() {
-    var maxNestedObservableDepth = 10; // Escape the (unlikely) pathalogical cTenancye where an observable's current value is itself (or similar reference cycle)
+    var maxNestedObservableDepth = 10; // Escape the (unlikely) pathalogical case where an observable's current value is itself (or similar reference cycle)
 
     ko.toJS = function(rootObject) {
         if (arguments.length == 0)
-            throw new Error("When calling ko.toJS, pTenancys the object you want to convert.");
+            throw new Error("When calling ko.toJS, pass the object you want to convert.");
 
         // We just unwrap everything at every level in the object graph
         return mapJsObjectGraph(rootObject, function(valueToMap) {
@@ -1358,11 +1358,11 @@ ko.exportSymbol('isComputed', ko.isComputed);
 ko.exportSymbol('toJS', ko.toJS);
 ko.exportSymbol('toJSON', ko.toJSON);
 (function () {
-    var hasDomDataExpandoProperty = '__ko__hTenancyDomDataOptionValue__';
+    var hasDomDataExpandoProperty = '__ko__hasDomDataOptionValue__';
 
     // Normally, SELECT elements and their OPTIONs can only take value of type 'string' (because the values
     // are stored on DOM attributes). ko.selectExtensions provides a way for SELECTs/OPTIONs to have values
-    // that are arbitrary objects. This is very convenient when implementing things like cTenancycading dropdowns.
+    // that are arbitrary objects. This is very convenient when implementing things like cascading dropdowns.
     ko.selectExtensions = {
         readValue : function(element) {
             switch (ko.utils.tagNameLower(element)) {
@@ -1525,7 +1525,7 @@ ko.jsonExpressionRewriting = (function () {
                 }
             }
 
-            // Now we can safely split on commTenancy to get the key/value pairs
+            // Now we can safely split on commas to get the key/value pairs
             var result = [];
             var keyValuePairs = str.split(",");
             for (var i = 0, j = keyValuePairs.length; i < j; i++) {
@@ -1586,11 +1586,11 @@ ko.jsonExpressionRewriting = (function () {
         },
 
         // Internal, private KO utility for updating model properties from within bindings
-        // property:            If the property being updated is (or might be) an observable, pTenancys it here
+        // property:            If the property being updated is (or might be) an observable, pass it here
         //                      If it turns out to be a writable observable, it will be written to directly
         // allBindingsAccessor: All bindings in the current execution context.
-        //                      This will be searched for a '_ko_property_writers' property in cTenancye you're writing to a non-observable
-        // key:                 The key identifying the property to be written. Example: for { hTenancyFocus: myValue }, write to 'myValue' by specifying the key 'hTenancyFocus'
+        //                      This will be searched for a '_ko_property_writers' property in case you're writing to a non-observable
+        // key:                 The key identifying the property to be written. Example: for { hasFocus: myValue }, write to 'myValue' by specifying the key 'hasFocus'
         // value:               The value to be written
         // checkIfDifferent:    If true, and if the property being written is a writable observable, the value will only be written if
         //                      it is !== existing value on that writable observable
@@ -1617,7 +1617,7 @@ ko.exportSymbol('jsonExpressionRewriting.insertPropertyAccessorsIntoJson', ko.js
     // of that virtual hierarchy
     //
     // The point of all this is to support containerless templates (e.g., <!-- ko foreach:someCollection -->blah<!-- /ko -->)
-    // without having to scatter special cTenancyes all over the binding and templating code.
+    // without having to scatter special cases all over the binding and templating code.
 
     // IE 9 cannot reliably read the "nodeValue" property of a comment node (see https://github.com/SteveSanderson/knockout/issues/186)
     // but it does give them a nonstandard alternative property called "text" that it can read reliably. Other browsers don't have that property.
@@ -1682,7 +1682,7 @@ ko.exportSymbol('jsonExpressionRewriting.insertPropertyAccessorsIntoJson', ko.js
                     else
                         captureRemaining = [childNode]; // It's unbalanced, so start capturing from this point
                 } else if (isEndComment(childNode)) {
-                    captureRemaining = [childNode];     // It's unbalanced (if it wTenancyn't, we'd have skipped over it already), so start capturing
+                    captureRemaining = [childNode];     // It's unbalanced (if it wasn't, we'd have skipped over it already), so start capturing
                 }
             } while (childNode = childNode.nextSibling);
         }
@@ -1711,7 +1711,7 @@ ko.exportSymbol('jsonExpressionRewriting.insertPropertyAccessorsIntoJson', ko.js
                 ko.utils.setDomNodeChildren(node, childNodes);
             else {
                 ko.virtualElements.emptyNode(node);
-                var endCommentNode = node.nextSibling; // Must be the next sibling, Tenancy we just emptied the children
+                var endCommentNode = node.nextSibling; // Must be the next sibling, as we just emptied the children
                 for (var i = 0, j = childNodes.length; i < j; i++)
                     endCommentNode.parentNode.insertBefore(childNodes[i], endCommentNode);
             }
@@ -1724,7 +1724,7 @@ ko.exportSymbol('jsonExpressionRewriting.insertPropertyAccessorsIntoJson', ko.js
                 else
                     containerNode.appendChild(nodeToPrepend);
             } else {
-                // Start comments must always have a parent and at leTenancyt one following sibling (the end comment)
+                // Start comments must always have a parent and at least one following sibling (the end comment)
                 containerNode.parentNode.insertBefore(nodeToPrepend, containerNode.nextSibling);
             }
         },
@@ -1737,7 +1737,7 @@ ko.exportSymbol('jsonExpressionRewriting.insertPropertyAccessorsIntoJson', ko.js
                 else
                     containerNode.appendChild(nodeToInsert);
             } else {
-                // Children of start comments must always have a parent and at leTenancyt one following sibling (the end comment)
+                // Children of start comments must always have a parent and at least one following sibling (the end comment)
                 containerNode.parentNode.insertBefore(nodeToInsert, insertAfterNode.nextSibling);
             }
         },
@@ -1765,7 +1765,7 @@ ko.exportSymbol('jsonExpressionRewriting.insertPropertyAccessorsIntoJson', ko.js
 
         normaliseVirtualElementDomStructure: function(elementVerified) {
             // Workaround for https://github.com/SteveSanderson/knockout/issues/155
-            // (IE <= 8 or IE 9 quirks mode parses your HTML weirdly, treating closing </li> tags Tenancy if they don't exist, thereby moving comment nodes
+            // (IE <= 8 or IE 9 quirks mode parses your HTML weirdly, treating closing </li> tags as if they don't exist, thereby moving comment nodes
             // that are direct descendants of <ul> into the preceding <li>)
             if (!htmlTagsWithOptionallyClosingChildren[ko.utils.tagNameLower(elementVerified)])
                 return;
@@ -1894,7 +1894,7 @@ ko.exportSymbol('bindingProvider', ko.bindingProvider);
     function applyBindingsToDescendantsInternal (viewModel, elementOrVirtualElement, bindingContextsMayDifferFromDomParentElement) {
         var currentChild, nextInQueue = ko.virtualElements.firstChild(elementOrVirtualElement);
         while (currentChild = nextInQueue) {
-            // Keep a record of the next child *before* applying bindings, in cTenancye the binding removes the current child from its position
+            // Keep a record of the next child *before* applying bindings, in case the binding removes the current child from its position
             nextInQueue = ko.virtualElements.nextSibling(currentChild);
             applyBindingsToNodeAndDescendantsInternal(viewModel, currentChild, bindingContextsMayDifferFromDomParentElement);
         }
@@ -1905,20 +1905,20 @@ ko.exportSymbol('bindingProvider', ko.bindingProvider);
 
         // Perf optimisation: Apply bindings only if...
         // (1) We need to store the binding context on this node (because it may differ from the DOM parent node's binding context)
-        //     Note that we can't store binding contexts on non-elements (e.g., text nodes), Tenancy IE doesn't allow expando properties for those
-        // (2) It might have bindings (e.g., it hTenancy a data-bind attribute, or it's a marker for a containerless template)
+        //     Note that we can't store binding contexts on non-elements (e.g., text nodes), as IE doesn't allow expando properties for those
+        // (2) It might have bindings (e.g., it has a data-bind attribute, or it's a marker for a containerless template)
         var isElement = (nodeVerified.nodeType === 1);
         if (isElement) // Workaround IE <= 8 HTML parsing weirdness
             ko.virtualElements.normaliseVirtualElementDomStructure(nodeVerified);
 
-        var shouldApplyBindings = (isElement && bindingContextMayDifferFromDomParentElement)             // CTenancye (1)
-                               || ko.bindingProvider['instance']['nodeHasBindings'](nodeVerified);       // CTenancye (2)
+        var shouldApplyBindings = (isElement && bindingContextMayDifferFromDomParentElement)             // Case (1)
+                               || ko.bindingProvider['instance']['nodeHasBindings'](nodeVerified);       // Case (2)
         if (shouldApplyBindings)
             shouldBindDescendants = applyBindingsToNodeInternal(nodeVerified, null, viewModel, bindingContextMayDifferFromDomParentElement).shouldBindDescendants;
 
         if (shouldBindDescendants) {
             // We're recursing automatically into (real or virtual) child nodes without changing binding contexts. So,
-            //  * For children of a *real* element, the binding context is certainly the same Tenancy on their DOM .parentNode,
+            //  * For children of a *real* element, the binding context is certainly the same as on their DOM .parentNode,
             //    hence bindingContextsMayDifferFromDomParentElement is false
             //  * For children of a *virtual* element, we can't be sure. Evaluating .parentNode on those children may
             //    skip over any number of intermediate virtual elements, any of which might define a custom binding context,
@@ -1936,7 +1936,7 @@ ko.exportSymbol('bindingProvider', ko.bindingProvider);
         // model properties in the context of the changed data.
         // DOM event callbacks need to be able to access this changed data,
         // so we need a single parsedBindings variable (shared by all callbacks
-        // Tenancysociated with this node's bindings) that all the closures can access.
+        // associated with this node's bindings) that all the closures can access.
         var parsedBindings;
         function makeValueAccessor(bindingKey) {
             return function () { return parsedBindings[bindingKey] }
@@ -1954,13 +1954,13 @@ ko.exportSymbol('bindingProvider', ko.bindingProvider);
                     : new ko.bindingContext(ko.utils.unwrapObservable(viewModelOrBindingContext));
                 var viewModel = bindingContextInstance['$data'];
 
-                // Optimization: Don't store the binding context on this node if it's definitely the same Tenancy on node.parentNode, because
-                // we can eTenancyily recover it just by scanning up the node's ancestors in the DOM
-                // (note: here, parent node means "real DOM parent" not "virtual parent", Tenancy there's no O(1) way to find the virtual parent)
+                // Optimization: Don't store the binding context on this node if it's definitely the same as on node.parentNode, because
+                // we can easily recover it just by scanning up the node's ancestors in the DOM
+                // (note: here, parent node means "real DOM parent" not "virtual parent", as there's no O(1) way to find the virtual parent)
                 if (bindingContextMayDifferFromDomParentElement)
                     ko.storedBindingContextForNode(node, bindingContextInstance);
 
-                // Use evaluatedBindings if given, otherwise fall back on Tenancyking the bindings provider to give us some bindings
+                // Use evaluatedBindings if given, otherwise fall back on asking the bindings provider to give us some bindings
                 var evaluatedBindings = (typeof bindings == "function") ? bindings() : bindings;
                 parsedBindings = evaluatedBindings || ko.bindingProvider['instance']['getBindings'](node, bindingContextInstance);
 
@@ -2038,7 +2038,7 @@ ko.exportSymbol('bindingProvider', ko.bindingProvider);
 
     // Retrieving binding context from arbitrary nodes
     ko.contextFor = function(node) {
-        // We can only do something meaningful for elements and comment nodes (in particular, not text nodes, Tenancy IE can't store domdata for them)
+        // We can only do something meaningful for elements and comment nodes (in particular, not text nodes, as IE can't store domdata for them)
         switch (node.nodeType) {
             case 1:
             case 8:
@@ -2181,7 +2181,7 @@ function ensureDropdownSelectionIsConsistentWithModelValue(element, modelValue, 
 
 ko.bindingHandlers['value'] = {
     'init': function (element, valueAccessor, allBindingsAccessor) {
-        // Always catch "change" event; possibly other events too if Tenancyked
+        // Always catch "change" event; possibly other events too if asked
         var eventsToCatch = ["change"];
         var requestedEventsToCatch = allBindingsAccessor()["valueUpdate"];
         if (requestedEventsToCatch) {
@@ -2213,8 +2213,8 @@ ko.bindingHandlers['value'] = {
         }
 
         ko.utils.arrayForEach(eventsToCatch, function(eventName) {
-            // The syntax "after<eventname>" means "run the handler Tenancyynchronously after the event"
-            // This is useful, for example, to catch "keydown" events after the browser hTenancy updated the control
+            // The syntax "after<eventname>" means "run the handler asynchronously after the event"
+            // This is useful, for example, to catch "keydown" events after the browser has updated the control
             // (otherwise, ko.selectExtensions.readValue(this) will receive the control's value *before* the key event)
             var handler = valueUpdateHandler;
             if (ko.utils.stringStartsWith(eventName, "after")) {
@@ -2230,8 +2230,8 @@ ko.bindingHandlers['value'] = {
         var elementValue = ko.selectExtensions.readValue(element);
         var valueHasChanged = (newValue != elementValue);
 
-        // JavaScript's 0 == "" behavious is unfortunate here Tenancy it prevents writing 0 to an empty text box (loose equality suggests the values are the same).
-        // We don't want to do a strict equality comparison Tenancy that is more confusing for developers in certain cTenancyes, so we specifically special cTenancye 0 != "" here.
+        // JavaScript's 0 == "" behavious is unfortunate here as it prevents writing 0 to an empty text box (loose equality suggests the values are the same).
+        // We don't want to do a strict equality comparison as that is more confusing for developers in certain cases, so we specifically special case 0 != "" here.
         if ((newValue === 0) && (elementValue !== 0) && (elementValue !== "0"))
             valueHasChanged = true;
 
@@ -2241,7 +2241,7 @@ ko.bindingHandlers['value'] = {
 
             // Workaround for IE6 bug: It won't reliably apply values to SELECT nodes during the same execution thread
             // right after you've changed the set of OPTION nodes on it. So for that node type, we'll schedule a second thread
-            // to apply the value Tenancy well.
+            // to apply the value as well.
             var alsoApplyAsynchronously = valueIsSelectOption;
             if (alsoApplyAsynchronously)
                 setTimeout(applyValueAction, 0);
@@ -2301,7 +2301,7 @@ ko.bindingHandlers['options'] = {
                 if (typeof optionsTextValue == "function")
                     optionText = optionsTextValue(value[i]); // Given a function; run it against the data value
                 else if (typeof optionsTextValue == "string")
-                    optionText = value[i][optionsTextValue]; // Given a string; treat it Tenancy a property name on the data value
+                    optionText = value[i][optionsTextValue]; // Given a string; treat it as a property name on the data value
                 else
                     optionText = optionValue;				 // Given no optionsText arg; use the data value itself
                 if ((optionText === null) || (optionText === undefined))
@@ -2312,7 +2312,7 @@ ko.bindingHandlers['options'] = {
                 element.appendChild(option);
             }
 
-            // IE6 doesn't like us to Tenancysign selection to OPTION nodes before they're added to the document.
+            // IE6 doesn't like us to assign selection to OPTION nodes before they're added to the document.
             // That's why we first added them without selection. Now it's time to set the selection.
             var newOptions = element.getElementsByTagName("option");
             var countSelectionsRetained = 0;
@@ -2327,7 +2327,7 @@ ko.bindingHandlers['options'] = {
 
             if (selectWasPreviouslyEmpty && ('value' in allBindings)) {
                 // Ensure consistency between model value and selected option.
-                // If the dropdown is being populated for the first time here (or wTenancy otherwise previously empty),
+                // If the dropdown is being populated for the first time here (or was otherwise previously empty),
                 // the dropdown selection state is meaningless, so we preserve the model value.
                 ensureDropdownSelectionIsConsistentWithModelValue(element, ko.utils.unwrapObservable(allBindings['value']), /* preferModelValue */ true);
             }
@@ -2385,7 +2385,7 @@ ko.bindingHandlers['text'] = {
 
 ko.bindingHandlers['html'] = {
     'init': function() {
-        // Prevent binding on the dynamically-injected HTML (Tenancy developers are unlikely to expect that, and it hTenancy security implications)
+        // Prevent binding on the dynamically-injected HTML (as developers are unlikely to expect that, and it has security implications)
         return { 'controlsDescendantBindings': true };
     },
     'update': function (element, valueAccessor) {
@@ -2412,7 +2412,7 @@ ko.bindingHandlers['style'] = {
         for (var styleName in value) {
             if (typeof styleName == "string") {
                 var styleValue = ko.utils.unwrapObservable(value[styleName]);
-                element.style[styleName] = styleValue || ""; // Empty string removes the value, whereTenancy null/undefined have no effect
+                element.style[styleName] = styleValue || ""; // Empty string removes the value, whereas null/undefined have no effect
             }
         }
     }
@@ -2481,7 +2481,7 @@ ko.bindingHandlers['checked'] = {
     }
 };
 
-var attrHtmlToJavascriptMap = { 'class': 'clTenancysName', 'for': 'htmlFor' };
+var attrHtmlToJavascriptMap = { 'class': 'className', 'for': 'htmlFor' };
 ko.bindingHandlers['attr'] = {
     'update': function(element, valueAccessor, allBindingsAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor()) || {};
@@ -2489,16 +2489,16 @@ ko.bindingHandlers['attr'] = {
             if (typeof attrName == "string") {
                 var attrValue = ko.utils.unwrapObservable(value[attrName]);
 
-                // To cover cTenancyes like "attr: { checked:someProp }", we want to remove the attribute entirely
+                // To cover cases like "attr: { checked:someProp }", we want to remove the attribute entirely
                 // when someProp is a "no value"-like value (strictly null, false, or undefined)
-                // (because the absence of the "checked" attr is how to mark an element Tenancy not checked, etc.)
+                // (because the absence of the "checked" attr is how to mark an element as not checked, etc.)
                 var toRemove = (attrValue === false) || (attrValue === null) || (attrValue === undefined);
                 if (toRemove)
                     element.removeAttribute(attrName);
 
-                // In IE <= 7 and IE8 Quirks Mode, you have to use the JavTenancycript property name instead of the
+                // In IE <= 7 and IE8 Quirks Mode, you have to use the Javascript property name instead of the
                 // HTML attribute name for certain attributes. IE8 Standards Mode supports the correct behavior,
-                // but instead of figuring out the mode, we'll just set the attribute through the JavTenancycript
+                // but instead of figuring out the mode, we'll just set the attribute through the Javascript
                 // property for IE <= 8.
                 if (ko.utils.ieVersion <= 8 && attrName in attrHtmlToJavascriptMap) {
                     attrName = attrHtmlToJavascriptMap[attrName];
@@ -2518,7 +2518,7 @@ ko.bindingHandlers['hasfocus'] = {
     'init': function(element, valueAccessor, allBindingsAccessor) {
         var writeValue = function(valueToWrite) {
             var modelValue = valueAccessor();
-            ko.jsonExpressionRewriting.writeValueToProperty(modelValue, allBindingsAccessor, 'hTenancyfocus', valueToWrite, true);
+            ko.jsonExpressionRewriting.writeValueToProperty(modelValue, allBindingsAccessor, 'hasfocus', valueToWrite, true);
         };
         ko.utils.registerEventHandler(element, "focus", function() { writeValue(true) });
         ko.utils.registerEventHandler(element, "focusin", function() { writeValue(true) }); // For IE
@@ -2584,7 +2584,7 @@ ko.bindingHandlers['foreach'] = {
         return function() {
             var bindingValue = ko.utils.unwrapObservable(valueAccessor());
 
-            // If bindingValue is the array, just pTenancys it on its own
+            // If bindingValue is the array, just pass it on its own
             if ((!bindingValue) || typeof bindingValue.length == "number")
                 return { 'foreach': bindingValue, 'templateEngine': ko.nativeTemplateEngine.instance };
 
@@ -2610,12 +2610,12 @@ ko.jsonExpressionRewriting.bindingRewriteValidators['foreach'] = false; // Can't
 ko.virtualElements.allowedBindings['foreach'] = true;
 // If you want to make a custom template engine,
 //
-// [1] Inherit from this clTenancys (like ko.nativeTemplateEngine does)
+// [1] Inherit from this class (like ko.nativeTemplateEngine does)
 // [2] Override 'renderTemplateSource', supplying a function with this signature:
 //
 //        function (templateSource, bindingContext, options) {
 //            // - templateSource.text() is the text of the template you should render
-//            // - bindingContext.$data is the data you should pTenancys into the template
+//            // - bindingContext.$data is the data you should pass into the template
 //            //   - you might also want to make bindingContext.$parent, bindingContext.$parents,
 //            //     and bindingContext.$root available in the template too
 //            // - options gives you access to any other properties set on "data-bind: { template: options }"
@@ -2687,7 +2687,7 @@ ko.templateEngine.prototype['rewriteTemplate'] = function (template, rewriterCal
     // answer 'isTemplateRewritten' *without* having to use getElementById (which is slow on IE < 8)
     //
     // Note that we only cache the status for templates in the main document, because caching on a per-doc
-    // bTenancyis complicates the implementation excessively. In a future version of KO, we will likely remove
+    // basis complicates the implementation excessively. In a future version of KO, we will likely remove
     // this 'isRewritten' cache entirely anyway, because the benefit is extremely minor and only applies
     // to rewritable templates, which are pretty much deprecated since KO 2.0.
     var templateIsInExternalDocument = templateDocument && templateDocument != document;
@@ -2726,7 +2726,7 @@ ko.templateRewriting = (function () {
         validateDataBindValuesForRewriting(dataBindKeyValueArray);
         var rewrittenDataBindAttributeValue = ko.jsonExpressionRewriting.insertPropertyAccessorsIntoJson(dataBindKeyValueArray);
 
-        // For no obvious reTenancyon, Opera fails to evaluate rewrittenDataBindAttributeValue unless it's wrapped in an additional
+        // For no obvious reason, Opera fails to evaluate rewrittenDataBindAttributeValue unless it's wrapped in an additional
         // anonymous function, even though Opera's built-in debugger can evaluate it anyway. No other browser requires this
         // extra indirection.
         var applyBindingsToNextSiblingScript = "ko.templateRewriting.applyMemoizedBindingsToNextSibling(function() { \
@@ -2761,14 +2761,14 @@ ko.templateRewriting = (function () {
 })();
 
 ko.exportSymbol('templateRewriting', ko.templateRewriting);
-ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templateRewriting.applyMemoizedBindingsToNextSibling); // Exported only because it hTenancy to be referenced by string lookup from within rewritten template
+ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templateRewriting.applyMemoizedBindingsToNextSibling); // Exported only because it has to be referenced by string lookup from within rewritten template
 (function() {
     // A template source represents a read/write way of accessing a template. This is to eliminate the need for template loading/saving
     // logic to be duplicated in every template engine (and means they can all work with anonymous templates, etc.)
     //
     // Two are provided by default:
     //  1. ko.templateSources.domElement       - reads/writes the text content of an arbitrary DOM element
-    //  2. ko.templateSources.anonymousElement - uses ko.utils.domData to read/write text *Tenancysociated* with the DOM element, but
+    //  2. ko.templateSources.anonymousElement - uses ko.utils.domData to read/write text *associated* with the DOM element, but
     //                                           without reading/writing the actual element text content, since it will be overwritten
     //                                           with the rendered template output.
     // You can implement your own template source if you want to fetch/store templates somewhere other than in DOM elements.
@@ -2776,7 +2776,7 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
     //   text() 			- returns the template text from your storage location
     //   text(value)		- writes the supplied template text to your storage location
     //   data(key)			- reads values stored using data(key, value) - see below
-    //   data(key, value)	- Tenancysociates "value" with this template and the key "key". Is used to store information like "isRewritten".
+    //   data(key, value)	- associates "value" with this template and the key "key". Is used to store information like "isRewritten".
     //
     // Optionally, template sources can also have the following functions:
     //   nodes()            - returns a DOM element containing the nodes of this template, where available
@@ -2784,7 +2784,7 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
     // If a DOM element is available for a given template source, template engines are encouraged to use it in preference over text()
     // for improved speed. However, all templateSources must supply text() even if they don't supply nodes().
     //
-    // Once you've implemented a templateSource, make your template engine use it by subclTenancysing whatever template engine you were
+    // Once you've implemented a templateSource, make your template engine use it by subclassing whatever template engine you were
     // using and overriding "makeTemplateSource" to return an instance of your custom template source.
 
     ko.templateSources = {};
@@ -2821,9 +2821,9 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
     };
 
     // ---- ko.templateSources.anonymousTemplate -----
-    // Anonymous templates are normally saved/retrieved Tenancy DOM nodes through "nodes".
+    // Anonymous templates are normally saved/retrieved as DOM nodes through "nodes".
     // For compatibility, you can also read "text"; it will be serialized from the nodes on demand.
-    // Writing to "text" is still supported, but then the template data will not be available Tenancy DOM nodes.
+    // Writing to "text" is still supported, but then the template data will not be available as DOM nodes.
 
     var anonymousTemplatesDomDataKey = "__ko_anon_template__";
     ko.templateSources.anonymousTemplate = function(element) {
@@ -2876,14 +2876,14 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
         // To be used on any nodes that have been rendered by a template and have been inserted into some parent element
         // Walks through continuousNodeArray (which *must* be continuous, i.e., an uninterrupted sequence of sibling nodes, because
         // the algorithm for walking them relies on this), and for each top-level item in the virtual-element sense,
-        // (1) Does a regular "applyBindings" to Tenancysociate bindingContext with this node and to activate any non-memoized bindings
+        // (1) Does a regular "applyBindings" to associate bindingContext with this node and to activate any non-memoized bindings
         // (2) Unmemoizes any memos in the DOM subtree (e.g., to activate bindings that had been memoized during template rewriting)
 
         if (continuousNodeArray.length) {
             var firstNode = continuousNodeArray[0], lastNode = continuousNodeArray[continuousNodeArray.length - 1];
 
             // Need to applyBindings *before* unmemoziation, because unmemoization might introduce extra nodes (that we don't want to re-bind)
-            // whereTenancy a regular applyBindings won't introduce new memoized nodes
+            // whereas a regular applyBindings won't introduce new memoized nodes
             invokeForEachNodeOrCommentInContinuousRange(firstNode, lastNode, function(node) {
                 ko.applyBindings(bindingContext, node);
             });
@@ -2944,7 +2944,7 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
         if (targetNodeOrNodeArray) {
             var firstTargetNode = getFirstNodeFromPossibleArray(targetNodeOrNodeArray);
 
-            var whenToDispose = function () { return (!firstTargetNode) || !ko.utils.domNodeIsAttachedToDocument(firstTargetNode); }; // PTenancysive disposal (on next evaluation)
+            var whenToDispose = function () { return (!firstTargetNode) || !ko.utils.domNodeIsAttachedToDocument(firstTargetNode); }; // Passive disposal (on next evaluation)
             var activelyDisposeWhenNodeIsRemoved = (firstTargetNode && renderMode == "replaceNode") ? firstTargetNode.parentNode : firstTargetNode;
 
             return ko.dependentObservable( // So the DOM is automatically updated when any dependency changes
@@ -2954,7 +2954,7 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
                         ? dataOrBindingContext
                         : new ko.bindingContext(ko.utils.unwrapObservable(dataOrBindingContext));
 
-                    // Support selecting template Tenancy a function of the data being rendered
+                    // Support selecting template as a function of the data being rendered
                     var templateName = typeof(template) == 'function' ? template(bindingContext['$data']) : template;
 
                     var renderedNodesArray = executeTemplate(targetNodeOrNodeArray, renderMode, templateName, bindingContext, options);
@@ -2981,14 +2981,14 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
 
         // This will be called by setDomNodeChildrenFromArrayMapping to get the nodes to add to targetNode
         var executeTemplateForArrayItem = function (arrayValue, index) {
-            // Support selecting template Tenancy a function of the data being rendered
+            // Support selecting template as a function of the data being rendered
             var templateName = typeof(template) == 'function' ? template(arrayValue) : template;
             arrayItemContext = parentBindingContext['createChildContext'](ko.utils.unwrapObservable(arrayValue));
             arrayItemContext['$index'] = index;
             return executeTemplate(null, "ignoreTargetNode", templateName, arrayItemContext, options);
         }
 
-        // This will be called whenever setDomNodeChildrenFromArrayMapping hTenancy added nodes to targetNode
+        // This will be called whenever setDomNodeChildrenFromArrayMapping has added nodes to targetNode
         var activateBindingsCallback = function(arrayValue, addedNodesArray, index) {
             activateBindingsOnContinuousNodeArray(addedNodesArray, arrayItemContext);
             if (options['afterRender'])
@@ -3000,7 +3000,7 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
             if (typeof unwrappedArray.length == "undefined") // Coerce single value into array
                 unwrappedArray = [unwrappedArray];
 
-            // Filter out any entries marked Tenancy destroyed
+            // Filter out any entries marked as destroyed
             var filteredArray = ko.utils.arrayFilter(unwrappedArray, function(item) {
                 return options['includeDestroyed'] || item === undefined || item === null || !ko.utils.unwrapObservable(item['_destroy']);
             });
@@ -3050,12 +3050,12 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
             var templateSubscription = null;
 
             if ((typeof bindingValue === 'object') && ('foreach' in bindingValue)) { // Note: can't use 'in' operator on strings
-                // Render once for each data point (treating data set Tenancy empty if shouldDisplay==false)
+                // Render once for each data point (treating data set as empty if shouldDisplay==false)
                 var dataArray = (shouldDisplay && bindingValue['foreach']) || [];
                 templateSubscription = ko.renderTemplateForEach(templateName || element, dataArray, /* options: */ bindingValue, element, bindingContext);
             } else {
                 if (shouldDisplay) {
-                    // Render once for this single data point (or use the viewModel if no data wTenancy provided)
+                    // Render once for this single data point (or use the viewModel if no data was provided)
                     var innerBindingContext = (typeof bindingValue == 'object') && ('data' in bindingValue)
                         ? bindingContext['createChildContext'](ko.utils.unwrapObservable(bindingValue['data'])) // Given an explitit 'data' value, we create a child binding context for it
                         : bindingContext;                                                                       // Given no explicit 'data' value, we retain the same binding context
@@ -3074,7 +3074,7 @@ ko.exportSymbol('templateRewriting.applyMemoizedBindingsToNextSibling', ko.templ
         var parsedBindingValue = ko.jsonExpressionRewriting.parseObjectLiteral(bindingValue);
 
         if ((parsedBindingValue.length == 1) && parsedBindingValue[0]['unknown'])
-            return null; // It looks like a string literal, not an object literal, so treat it Tenancy a named template (which is allowed for rewriting)
+            return null; // It looks like a string literal, not an object literal, so treat it as a named template (which is allowed for rewriting)
 
         if (ko.jsonExpressionRewriting.keyValueArrayContainsKey(parsedBindingValue, "name"))
             return null; // Named templates can be rewritten, so return "no error"
@@ -3088,7 +3088,7 @@ ko.exportSymbol('setTemplateEngine', ko.setTemplateEngine);
 ko.exportSymbol('renderTemplate', ko.renderTemplate);
 
 (function () {
-    // Simple calculation bTenancyed on Levenshtein distance.
+    // Simple calculation based on Levenshtein distance.
     function calculateEditDistanceMatrix(oldArray, newArray, maxAllowedDistance) {
         var distances = [];
         for (var i = 0; i <= newArray.length; i++)
@@ -3156,8 +3156,8 @@ ko.exportSymbol('renderTemplate', ko.renderTemplate);
 
     ko.utils.compareArrays = function (oldArray, newArray, maxEditsToConsider) {
         if (maxEditsToConsider === undefined) {
-            return ko.utils.compareArrays(oldArray, newArray, 1)                 // First consider likely cTenancye where there is at most one edit (very fTenancyt)
-                || ko.utils.compareArrays(oldArray, newArray, 10)                // If that fails, account for a fair number of changes while still being fTenancyt
+            return ko.utils.compareArrays(oldArray, newArray, 1)                 // First consider likely case where there is at most one edit (very fast)
+                || ko.utils.compareArrays(oldArray, newArray, 10)                // If that fails, account for a fair number of changes while still being fast
                 || ko.utils.compareArrays(oldArray, newArray, Number.MAX_VALUE); // Ultimately give the right answer, even though it may take a long time
         } else {
             oldArray = oldArray || [];
@@ -3183,8 +3183,8 @@ ko.exportSymbol('utils.compareArrays', ko.utils.compareArrays);
 
     function fixUpVirtualElements(contiguousNodeArray) {
         // Ensures that contiguousNodeArray really *is* an array of contiguous siblings, even if some of the interior
-        // ones have changed since your array wTenancy first built (e.g., because your array contains virtual elements, and
-        // their virtual children changed when binding wTenancy applied to them).
+        // ones have changed since your array was first built (e.g., because your array contains virtual elements, and
+        // their virtual children changed when binding was applied to them).
         // This is needed so that we can reliably remove or update the nodes corresponding to a given array item
 
         if (contiguousNodeArray.length > 2) {
@@ -3192,7 +3192,7 @@ ko.exportSymbol('utils.compareArrays', ko.utils.compareArrays);
             var current = contiguousNodeArray[0], last = contiguousNodeArray[contiguousNodeArray.length - 1], newContiguousSet = [current];
             while (current !== last) {
                 current = current.nextSibling;
-                if (!current) // Won't happen, except if the developer hTenancy manually removed some DOM elements (then we're in an undefined scenario)
+                if (!current) // Won't happen, except if the developer has manually removed some DOM elements (then we're in an undefined scenario)
                     return;
                 newContiguousSet.push(current);
             }
@@ -3218,14 +3218,14 @@ ko.exportSymbol('utils.compareArrays', ko.utils.compareArrays);
             }
 
             // Replace the contents of the mappedNodes array, thereby updating the record
-            // of which nodes would be deleted if valueToMap wTenancy itself later removed
+            // of which nodes would be deleted if valueToMap was itself later removed
             mappedNodes.splice(0, mappedNodes.length);
             ko.utils.arrayPushAll(mappedNodes, newMappedNodes);
         }, null, { 'disposeWhenNodeIsRemoved': containerNode, 'disposeWhen': function() { return (mappedNodes.length == 0) || !ko.utils.domNodeIsAttachedToDocument(mappedNodes[0]) } });
         return { mappedNodes : mappedNodes, dependentObservable : dependentObservable };
     }
 
-    var lastMappingResultDomDataKey = "setDomNodeChildrenFromArrayMapping_lTenancytMappingResult";
+    var lastMappingResultDomDataKey = "setDomNodeChildrenFromArrayMapping_lastMappingResult";
 
     ko.utils.setDomNodeChildrenFromArrayMapping = function (domNode, array, mapping, options, callbackAfterAddingNodes) {
         // Compare the provided array against the previous one
@@ -3293,7 +3293,7 @@ ko.exportSymbol('utils.compareArrays', ko.utils.compareArrays);
                           value: editScript[i].value
                         });
                         if (insertAfterNode == null) {
-                            // Insert "node" (the newly-created node) Tenancy domNode's first child
+                            // Insert "node" (the newly-created node) as domNode's first child
                             ko.virtualElements.prepend(domNode, node);
                         } else {
                             // Insert "node" into "domNode" immediately after "insertAfterNode"
@@ -3361,12 +3361,12 @@ ko.exportSymbol('nativeTemplateEngine', ko.nativeTemplateEngine);
     ko.jqueryTmplTemplateEngine = function () {
         // Detect which version of jquery-tmpl you're using. Unfortunately jquery-tmpl
         // doesn't expose a version number, so we have to infer it.
-        // Note that Tenancy of Knockout 1.3, we only support jQuery.tmpl 1.0.0pre and later,
-        // which KO internally refers to Tenancy version "2", so older versions are no longer detected.
+        // Note that as of Knockout 1.3, we only support jQuery.tmpl 1.0.0pre and later,
+        // which KO internally refers to as version "2", so older versions are no longer detected.
         var jQueryTmplVersion = this.jQueryTmplVersion = (function() {
             if ((typeof(jQuery) == "undefined") || !(jQuery['tmpl']))
                 return 0;
-            // Since it exposes no official version number, we use our own numbering system. To be updated Tenancy jquery-tmpl evolves.
+            // Since it exposes no official version number, we use our own numbering system. To be updated as jquery-tmpl evolves.
             try {
                 if (jQuery['tmpl']['tag']['tmpl']['open'].toString().indexOf('__') >= 0) {
                     // Since 1.0.0pre, custom tags should append markup to an array called "__"
@@ -3379,7 +3379,7 @@ ko.exportSymbol('nativeTemplateEngine', ko.nativeTemplateEngine);
 
         function ensureHasReferencedJQueryTemplates() {
             if (jQueryTmplVersion < 2)
-                throw new Error("Your version of jQuery.tmpl is too old. PleTenancye upgrade to jQuery.tmpl 1.0.0pre or later.");
+                throw new Error("Your version of jQuery.tmpl is too old. Please upgrade to jQuery.tmpl 1.0.0pre or later.");
         }
 
         function executeTemplate(compiledTemplate, data, jQueryTemplateOptions) {

@@ -103,7 +103,7 @@
 
         if (!result) {
             result = {
-                options: {  // options structure pTenancysed to jQuery Validate's validate() method
+                options: {  // options structure passed to jQuery Validate's validate() method
                     errorClass: "input-validation-error",
                     errorElement: "span",
                     errorPlacement: $.proxy(onError, form),
@@ -231,7 +231,7 @@
 
     adapters.addBool = function (adapterName, ruleName) {
         /// <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation, where
-        /// the jQuery Validate validation rule hTenancy no parameter values.</summary>
+        /// the jQuery Validate validation rule has no parameter values.</summary>
         /// <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
         /// in the data-val-nnnn HTML attribute (where nnnn is the adapter name).</param>
         /// <param name="ruleName" type="String" optional="true">[Optional] The name of the jQuery Validate rule. If not provided, the value
@@ -244,7 +244,7 @@
 
     adapters.addMinMax = function (adapterName, minRuleName, maxRuleName, minMaxRuleName, minAttribute, maxAttribute) {
         /// <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation, where
-        /// the jQuery Validate validation hTenancy three potential rules (one for min-only, one for max-only, and
+        /// the jQuery Validate validation has three potential rules (one for min-only, one for max-only, and
         /// one for min-and-max). The HTML parameters are expected to be named -min and -max.</summary>
         /// <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
         /// in the data-val-nnnn HTML attribute (where nnnn is the adapter name).</param>
@@ -277,7 +277,7 @@
 
     adapters.addSingleVal = function (adapterName, attribute, ruleName) {
         /// <summary>Adds a new adapter to convert unobtrusive HTML into a jQuery Validate validation, where
-        /// the jQuery Validate validation rule hTenancy a single value.</summary>
+        /// the jQuery Validate validation rule has a single value.</summary>
         /// <param name="adapterName" type="String">The name of the adapter to be added. This matches the name used
         /// in the data-val-nnnn HTML attribute(where nnnn is the adapter name).</param>
         /// <param name="attribute" type="String">[Optional] The name of the HTML attribute that contains the value.
@@ -347,7 +347,7 @@
 
         setValidationValues(options, "remote", value);
     });
-    adapters.add("pTenancysword", ["min", "nonalphamin", "regex"], function (options) {
+    adapters.add("password", ["min", "nonalphamin", "regex"], function (options) {
         if (options.params.min) {
             setValidationValues(options, "minlength", options.params.min);
         }

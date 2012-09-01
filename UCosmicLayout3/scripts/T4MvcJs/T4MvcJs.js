@@ -2,14 +2,16 @@
 
 var MvcJs = {
 	
+	Agreements: {
+		Index: function() {
+			var url = "/agreements";
+
+			return url.replace(/([?&]+$)/g, "");
+		}
+	},
 	Home: {
 		Index: function() {
 			var url = "/";
-
-			return url.replace(/([?&]+$)/g, "");
-		},
-		Agreements: function() {
-			var url = "/home/agreements";
 
 			return url.replace(/([?&]+$)/g, "");
 		},

@@ -9,17 +9,136 @@ body {
         > .content {
             @include border-box;
             padding-bottom: $footer-height + 20px;
-
+            @include font-ms;
+            &.to-top {
+                padding-top: 0 !important;
+            }
             &.fixed {
                 @include border-box;
-                width: $tube-inner-width;
+                width: $tube-outer-width;
                 padding-left: $tube-outer-width - $tube-inner-width;
+                padding-top: $tube-outer-width - $tube-inner-width;
+                .from-top {
+                    padding-top: $tube-outer-width - $tube-inner-width;
+                }
+                > .group {
+                    > .float-left {
+                        @include border-box;
+                        width: 690px;
+                    }
+                    > .float-right {
+                        @include border-box;
+                        width: 260px;
+                        display: block;
+                    }
+                }
+                [data-fixed-scroll=container] {
+                    [data-fixed-scroll=content] {
+                        margin-top: $tube-outer-width - $tube-inner-width;
+                        background-color: transparent;
+                    }
+                }
+                nav.side {
+                    > ul {
+                        > li {
+                            margin-bottom: 1px;
+                            &:first-child > a > .text {
+                                @include border-radii(0, 8px, 0, 0);
+                            }
+                            &:last-child > a > .text {
+                                @include border-radii(0, 0, 8px, 0);
+                            }
+                            &:last-child.current > .content {
+                                @include border-radii(0, 0, 8px, 8px);
+                            }
+                            > a {
+                                display: block;
+                                text-decoration: none;
+                                > .arrow {
+                                    display: inline-block;
+                                    border: solid 20px transparent;
+                                    border-left: none;
+                                    border-right-color: $sidebar-default-bg-color;
+                                }
+                                > .text {
+                                    display: inline-block;
+                                    @include border-box;
+                                    width: 240px;
+                                    padding: 10px 5px 10px 8px;
+                                    @include font-height(16px, 20px);
+                                    font-weight: bold;
+                                    color: $sidebar-default-text-color;
+                                    background-color: $sidebar-default-bg-color;
+                                }
+                            }
+                            &:hover > a > .arrow {
+                                @include transition(all, 250ms);
+                                border-left: none;
+                                border-right: solid 20px $sidebar-hover-bg-color;
+                            }
+                            &:hover > a > .text {
+                                @include transition(all, 250ms);
+                                background-color: $sidebar-hover-bg-color;
+                                color: $sidebar-hover-text-color;
+                            }
+                            &.current > a > .arrow {
+                                border-right-color: $sidebar-current-bg-color;
+                                cursor: default;
+                            }
+                            &.current > a > .text {
+                                background-color: $sidebar-current-bg-color;
+                                color: $sidebar-current-text-color;
+                                cursor: default;
+                            }
+                            > .content {
+                                line-height: 20px;
+                                display: none;
+                                a {
+                                    color: $sidebar-content-text-color;
+                                    text-decoration: underline;
+                                    &:hover {
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+                            &.current > .content {
+                                @include border-box;
+                                display: block;
+                                margin-left: 20px;
+                                margin-top: -8px;
+                                padding: 8px 5px 12px 12px;
+                                background-color: $sidebar-current-bg-color;
+                                color: $sidebar-content-text-color;
+                            }
+                        }
+                    }
+                }
             }
-
             &.fluid {
                 @include border-box;
                 width: 100%;
                 padding: 0;
+            }
+            h1, h2, h3, h4, h5, h6, h7 {
+                margin: 16px 0;
+                font-family: Arial;
+                &:first-child {
+                    margin-top: 0 !important;
+                }
+            }
+            h1 {
+                @include font-height(24px, 1.25);
+                text-transform: uppercase;
+                color: $heading-text-color;
+            }
+            h2 {
+                @include font-height(22px, 1.25);
+                color: $heading-text-color;
+                font-weight: bold;
+            }
+            p {
+                @include font-height(16px, 1.5);
+                margin: 1em 0;
             }
         }
     }

@@ -6,13 +6,6 @@
 /* main ie8 stylesheet */
 body > nav.my > .content {
   width: 960px; }
-body > nav.modules > ul > li > a {
-  /* font-family: Arial !important;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); */ }
-body > nav.modules > ul > li:hover a {
-  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)" !important;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); */ }
 body > nav.modules > ul > li.current a {
   padding: 9px 8px 7px;
   /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)" !important;

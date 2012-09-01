@@ -9,11 +9,6 @@ namespace UCosmicLayout3.Controllers
             return View();
         }
 
-        public virtual ActionResult Agreements()
-        {
-            return View();
-        }
-
         public virtual ActionResult Employees()
         {
             return View();

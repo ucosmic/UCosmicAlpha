@@ -32,6 +32,7 @@ namespace UCosmicLayout3
                         "~/scripts/jquery-{version}.js",
                         "~/scripts/knockout-*",
                         "~/scripts/app/app.js",
+                        "~/scripts/app/fixed-scroll.js",
                         "~/models/FlasherViewModel.js",
                         "~/scripts/oss/jquery.palceholder*"));
 

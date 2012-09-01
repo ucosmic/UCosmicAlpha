@@ -5,3 +5,16 @@
 @import 'brand';
 @import 'values';
 @import '../../sass/sheets/layout';
+
+body {
+    #main {
+        > .content {
+            h1 {
+                background-image: url(ingot-32-9.gif);
+                background-position: bottom left;
+                background-repeat: no-repeat;
+                padding-bottom: 8px;
+            }
+        }
+    }
+}

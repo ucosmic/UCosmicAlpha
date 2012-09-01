@@ -129,10 +129,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgreementsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AgreementsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="ApiControllers\ValuesController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
@@ -221,6 +225,7 @@
     <None Include="scripts\jquery-1.8.0.intellisense.js" />
     <Content Include="Models\FlasherViewModel.js" />
     <Content Include="scripts\app\app.js" />
+    <Content Include="scripts\app\fixed-scroll.js" />
     <Content Include="scripts\jquery-1.8.0.js" />
     <Content Include="scripts\jquery-1.8.0.min.js" />
     <Content Include="scripts\jquery-ui-1.8.23.js" />
@@ -253,6 +258,7 @@
     <Content Include="styles\tenants\lehigh.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\uc.edu\ingot-32-9.gif" />
     <Content Include="styles\tenants\usf.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
@@ -322,13 +328,17 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="styles\tenants\_default\forms.scss" />
+    <Content Include="styles\tenants\_default\forms.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\sass\_bootstrap.scss" />
     <Content Include="Views\Home\Travel.cshtml" />
     <Content Include="Views\Home\Representatives.cshtml" />
     <Content Include="Views\Home\Students.cshtml" />
     <Content Include="Views\Home\Employees.cshtml" />
-    <Content Include="Views\Home\Agreements.cshtml" />
     <None Include="scripts\T4MvcJs\T4MVC.source.t4" />
     <None Include="scripts\T4MvcJs\T4MVC.tt.settings.t4" />
     <None Include="scripts\T4MvcJs\T4MvcJs.tt">
@@ -345,35 +355,96 @@
     <Content Include="Views\Home\CorporateEngagement.cshtml" />
     <Content Include="styles\sass\sheets\_layout.scss" />
     <Content Include="styles\sass\sheets\_ie8.scss" />
-    <Content Include="styles\tenants\suny.edu\ie8.scss" />
-    <Content Include="styles\tenants\suny.edu\layout.scss" />
+    <Content Include="styles\tenants\suny.edu\ie8.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="styles\tenants\suny.edu\layout.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\tenants\suny.edu\_values.scss" />
-    <Content Include="styles\tenants\uc.edu\ie8.scss" />
-    <Content Include="styles\tenants\uc.edu\layout.scss" />
+    <Content Include="styles\tenants\uc.edu\ie8.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="styles\tenants\uc.edu\layout.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\tenants\uc.edu\_values.scss" />
     <Content Include="styles\tenants\usf.edu\_values.scss" />
-    <Content Include="styles\tenants\usf.edu\ie8.scss" />
-    <Content Include="styles\tenants\usf.edu\layout.scss" />
+    <Content Include="styles\tenants\usf.edu\ie8.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="styles\tenants\usf.edu\layout.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\tenants\suny.edu\_brand.scss" />
     <Content Include="styles\tenants\uc.edu\_brand.scss" />
     <Content Include="styles\tenants\usf.edu\_brand.scss" />
-    <Content Include="styles\tenants\_default\layout.scss" />
+    <Content Include="styles\tenants\_default\layout.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\tenants\_default\_values.scss" />
     <Content Include="styles\tenants\umn.edu\_brand.scss" />
     <Content Include="styles\tenants\umn.edu\_values.scss" />
-    <Content Include="styles\tenants\umn.edu\ie8.scss" />
-    <Content Include="styles\tenants\umn.edu\layout.scss" />
+    <Content Include="styles\tenants\umn.edu\ie8.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="styles\tenants\umn.edu\layout.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\tenants\lehigh.edu\_brand.scss" />
     <Content Include="styles\tenants\lehigh.edu\_values.scss" />
-    <Content Include="styles\tenants\lehigh.edu\ie8.scss" />
-    <Content Include="styles\tenants\lehigh.edu\layout.scss" />
-    <Content Include="styles\tenants\_default\ie8.scss" />
+    <Content Include="styles\tenants\lehigh.edu\ie8.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="styles\tenants\lehigh.edu\layout.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="styles\tenants\_default\ie8.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <Content Include="styles\sass\sheets\_forms.scss" />
     <Content Include="styles\sass\_future.scss" />
     <Content Include="styles\sass\sheets\_layout-footer.scss" />
     <Content Include="styles\sass\sheets\_layout-banner.scss" />
     <Content Include="styles\sass\sheets\_layout-content.scss" />
     <Content Include="Views\Shared\_LayoutCss.cshtml" />
+    <Content Include="Views\Agreements\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,13 +9,13 @@
 /*
  * Modernizr tests which native CSS3 and HTML5 features are available in
  * the current UA and makes the results available to you in two ways:
- * Tenancy properties on a global Modernizr object, and Tenancy clTenancyses on the
+ * as properties on a global Modernizr object, and as classes on the
  * <html> element. This information allows you to progressively enhance
  * your pages with a granular level of control over the experience.
  *
- * Modernizr hTenancy an optional (not included) conditional resource loader
- * called Modernizr.load(), bTenancyed on Yepnope.js (yepnopejs.com).
- * To get a build that includes Modernizr.load(), Tenancy well Tenancy choosing
+ * Modernizr has an optional (not included) conditional resource loader
+ * called Modernizr.load(), based on Yepnope.js (yepnopejs.com).
+ * To get a build that includes Modernizr.load(), as well as choosing
  * which tests to include, go to www.modernizr.com/download/
  *
  * Authors        Faruk Ates, Paul Irish, Alex Sexton
@@ -28,7 +28,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     Modernizr = {},
     
-    // option for enabling the HTML clTenancyses to be added
+    // option for enabling the HTML classes to be added
     enableClasses = true,
 
     docElement = document.documentElement,
@@ -52,13 +52,13 @@ window.Modernizr = (function( window, document, undefined ) {
     // List of property values to set for css tests. See ticket #21
     prefixes = ' -webkit- -moz- -o- -ms- '.split(' '),
 
-    // Following spec is to expose vendor-specific style properties Tenancy:
+    // Following spec is to expose vendor-specific style properties as:
     //   elem.style.WebkitBorderRadius
     // and the following would be incorrect:
     //   elem.style.webkitBorderRadius
 
-    // Webkit ghosts their properties in lowercTenancye but Opera & Moz do not.
-    // Microsoft uses a lowercTenancye `ms` instead of the correct `Ms` in IE8+
+    // Webkit ghosts their properties in lowercase but Opera & Moz do not.
+    // Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
     //   erik.eae.net/archives/2008/03/10/21.48.10/
 
     // More here: github.com/Modernizr/Modernizr/issues/issue/21
@@ -103,17 +103,17 @@ window.Modernizr = (function( window, document, undefined ) {
 
       // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
       // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
-      // with a 'scoped' element, in our cTenancye the soft-hyphen entity Tenancy it won't mess with our meTenancyurements.
-      // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.Tenancypx
-      // Documents served Tenancy xml will throw if using &shy; so use xml friendly encoded version. See issue #277
+      // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
+      // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
+      // Documents served as xml will throw if using &shy; so use xml friendly encoded version. See issue #277
       style = ['&#173;','<style>', rule, '</style>'].join('');
       div.id = mod;
       // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
-      // Opera will act all quirky when injecting elements in documentElement when page is served Tenancy xml, needs fakebody too. #270
+      // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
       fakeBody.innerHTML += style;
       fakeBody.appendChild(div);
       if(!body){
-          //avoid crTenancyhing IE8, if background image is used
+          //avoid crashing IE8, if background image is used
           fakeBody.style.background = "";
           docElement.appendChild(fakeBody);
       }
@@ -167,11 +167,11 @@ window.Modernizr = (function( window, document, undefined ) {
         element = element || document.createElement(TAGNAMES[eventName] || 'div');
         eventName = 'on' + eventName;
 
-        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereTenancy `in` "catches" those
+        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
         var isSupported = eventName in element;
 
         if ( !isSupported ) {
-          // If it hTenancy no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
           if ( !element.setAttribute ) {
             element = document.createElement('div');
           }
@@ -179,7 +179,7 @@ window.Modernizr = (function( window, document, undefined ) {
             element.setAttribute(eventName, '');
             isSupported = is(element[eventName], 'function');
 
-            // If property wTenancy created, "remove it" (by setting value to `undefined`)
+            // If property was created, "remove it" (by setting value to `undefined`)
             if ( !is(element[eventName], 'undefined') ) {
               element[eventName] = undefined;
             }
@@ -193,7 +193,7 @@ window.Modernizr = (function( window, document, undefined ) {
       return isEventSupported;
     })();
 
-    // hTenancyOwnProperty shim by kangax needed for Safari 2.0 support
+    // hasOwnProperty shim by kangax needed for Safari 2.0 support
     var _hasOwnProperty = ({}).hasOwnProperty, hasOwnProperty;
     if ( !is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined') ) {
       hasOwnProperty = function (object, property) {
@@ -206,7 +206,7 @@ window.Modernizr = (function( window, document, undefined ) {
       };
     }
 
-    // Taken from ES5-shim https://github.com/kriskowal/es5-shim/blob/mTenancyter/es5-shim.js
+    // Taken from ES5-shim https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js
     // ES-5 15.3.4.5
     // http://es5.github.com/#x15.3.4.5
 
@@ -304,7 +304,7 @@ window.Modernizr = (function( window, document, undefined ) {
             var item = obj[props[i]];
             if ( item !== undefined) {
 
-                // return the property name Tenancy a string
+                // return the property name as a string
                 if (elem === false) return props[i];
 
                 // let's bind a function
@@ -371,7 +371,7 @@ window.Modernizr = (function( window, document, undefined ) {
         }, len, tests);
 
     })([
-        // PTenancys in styles to be injected into document
+        // Pass in styles to be injected into document
         /*>>fontface*/        '@font-face {font-family:"font";src:url("https://")}'         /*>>fontface*/
         
         /*>>touch*/           ,['@media (',prefixes.join('touch-enabled),('),mod,')',
@@ -415,12 +415,12 @@ window.Modernizr = (function( window, document, undefined ) {
     // github.com/Modernizr/Modernizr/issues/issue/97/
 
     tests['canvas'] = function() {
-        var elem = document.createElement('canvTenancy');
+        var elem = document.createElement('canvas');
         return !!(elem.getContext && elem.getContext('2d'));
     };
 
     tests['canvastext'] = function() {
-        return !!(Modernizr['canvas'] && is(document.createElement('canvTenancy').getContext('2d').fillText, 'function'));
+        return !!(Modernizr['canvas'] && is(document.createElement('canvas').getContext('2d').fillText, 'function'));
     };
 
     // this test initiates a new webgl context. 
@@ -428,7 +428,7 @@ window.Modernizr = (function( window, document, undefined ) {
     
     tests['webgl'] = function() {
         try {
-            var canvas = document.createElement('canvTenancy'),
+            var canvas = document.createElement('canvas'),
                 ret;
             ret = !!(window.WebGLRenderingContext && (canvas.getContext('experimental-webgl') || canvas.getContext('webgl')));
             canvas = undefined;
@@ -441,11 +441,11 @@ window.Modernizr = (function( window, document, undefined ) {
     /*
      * The Modernizr.touch test only indicates if the browser supports
      *    touch events, which does not necessarily reflect a touchscreen
-     *    device, Tenancy evidenced by tablets running Windows 7 or, alTenancy,
+     *    device, as evidenced by tablets running Windows 7 or, alas,
      *    the Palm Pre / WebOS (touch) phones.
      *
      * Additionally, Chrome (desktop) used to lie about its support on this,
-     *    but that hTenancy since been rectified: crbug.com/36415
+     *    but that has since been rectified: crbug.com/36415
      *
      * We also test for Firefox 4 Multitouch Support.
      *
@@ -459,8 +459,8 @@ window.Modernizr = (function( window, document, undefined ) {
     /**
      * geolocation tests for the new Geolocation API specification.
      *   This test is a standards compliant-only test; for more complete
-     *   testing, including a Google Gears fallback, pleTenancye see:
-     *   code.google.com/p/geo-location-javTenancycript/
+     *   testing, including a Google Gears fallback, please see:
+     *   code.google.com/p/geo-location-javascript/
      * or view a fallback solution using google's geo API:
      *   gist.github.com/366184
      */
@@ -470,15 +470,15 @@ window.Modernizr = (function( window, document, undefined ) {
 
     // Per 1.6:
     // This used to be Modernizr.crosswindowmessaging but the longer
-    // name hTenancy been deprecated in favor of a shorter and property-matching one.
-    // The old API is still available in 1.6, but Tenancy of 2.0 will throw a warning,
-    // and in the first releTenancye thereafter disappear entirely.
+    // name has been deprecated in favor of a shorter and property-matching one.
+    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
+    // and in the first release thereafter disappear entirely.
     tests['postmessage'] = function() {
       return !!window.postMessage;
     };
 
 
-    // Chrome incognito mode used to throw an exception when using openDatabTenancye 
+    // Chrome incognito mode used to throw an exception when using openDatabase 
     // It doesn't anymore.
     tests['websqldatabase'] = function() {
       return !!window.openDatabase;
@@ -486,7 +486,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     // Vendors had inconsistent prefixing with the experimental Indexed DB:
     // - Webkit's implementation is accessible through webkitIndexedDB
-    // - Firefox shipped moz_indexedDB before FF4b9, but since then hTenancy been mozIndexedDB
+    // - Firefox shipped moz_indexedDB before FF4b9, but since then has been mozIndexedDB
     // For speed, we don't test the legacy (and beta-only) indexedDB
     tests['indexedDB'] = function() {
       return !!testPropsAll("indexedDB",window);
@@ -495,14 +495,14 @@ window.Modernizr = (function( window, document, undefined ) {
     // documentMode logic from YUI to filter out IE8 Compat Mode
     //   which false positives.
     tests['hashchange'] = function() {
-      return isEventSupported('hTenancyhchange', window) && (document.documentMode === undefined || document.documentMode > 7);
+      return isEventSupported('hashchange', window) && (document.documentMode === undefined || document.documentMode > 7);
     };
 
     // Per 1.6:
     // This used to be Modernizr.historymanagement but the longer
-    // name hTenancy been deprecated in favor of a shorter and property-matching one.
-    // The old API is still available in 1.6, but Tenancy of 2.0 will throw a warning,
-    // and in the first releTenancye thereafter disappear entirely.
+    // name has been deprecated in favor of a shorter and property-matching one.
+    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
+    // and in the first release thereafter disappear entirely.
     tests['history'] = function() {
       return !!(window.history && history.pushState);
     };
@@ -534,8 +534,8 @@ window.Modernizr = (function( window, document, undefined ) {
     };
 
     tests['hsla'] = function() {
-        // Same Tenancy rgba(), in fact, browsers re-map hsla() to rgba() internally,
-        //   except IE9 who retains it Tenancy hsla
+        // Same as rgba(), in fact, browsers re-map hsla() to rgba() internally,
+        //   except IE9 who retains it as hsla
 
         setCss('background-color:hsla(120,40%,100%,.5)');
 
@@ -601,13 +601,13 @@ window.Modernizr = (function( window, document, undefined ) {
         setCssAll('opacity:.55');
 
         // The non-literal . in this regex is intentional:
-        //   German Chrome returns this value Tenancy 0,55
+        //   German Chrome returns this value as 0,55
         // github.com/Modernizr/Modernizr/issues/#issue/59/comment/516632
         return /^0.55$/.test(mStyle.opacity);
     };
 
 
-    // Note, Android < 4 will pTenancys this test, but can only animate 
+    // Note, Android < 4 will pass this test, but can only animate 
     //   a single property at a time
     //   daneden.me/2011/12/putting-up-with-androids-bullshit/
     tests['cssanimations'] = function() {
@@ -622,7 +622,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     tests['cssgradients'] = function() {
         /**
-         * For CSS Gradients syntax, pleTenancye see:
+         * For CSS Gradients syntax, please see:
          * webkit.org/blog/175/introducing-css-gradients/
          * developer.mozilla.org/en/CSS/-moz-linear-gradient
          * developer.mozilla.org/en/CSS/-moz-radial-gradient
@@ -658,7 +658,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
         var ret = !!testPropsAll('perspective');
 
-        // Webkit's 3D transforms are pTenancysed off to the browser's own graphics renderer.
+        // Webkit's 3D transforms are passed off to the browser's own graphics renderer.
         //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
         //   some conditions. As a result, Webkit typically recognizes the syntax but
         //   will sometimes throw a false positive, thus we must do a more thorough check:
@@ -679,7 +679,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     /*>>fontface*/
     // @font-face detection routine by Diego Perini
-    // javTenancycript.nwbox.com/CSSSupport/
+    // javascript.nwbox.com/CSSSupport/
 
     // false positives in WebOS: github.com/Modernizr/Modernizr/issues/342
     tests['fontface'] = function() {
@@ -694,7 +694,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
 
 
-    // These tests evaluate support of the video/audio elements, Tenancy well Tenancy
+    // These tests evaluate support of the video/audio elements, as well as
     // testing what types of content they support.
     //
     // We're using the Boolean constructor here, so that we can extend the value
@@ -704,9 +704,9 @@ window.Modernizr = (function( window, document, undefined ) {
     // Codec values from : github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
     //                     thx to NielsLeenheer and zcorpan
 
-    // Note: in some older browsers, "no" wTenancy a return value instead of empty string.
-    //   It wTenancy live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
-    //   It wTenancy also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
+    // Note: in some older browsers, "no" was a return value instead of empty string.
+    //   It was live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
+    //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
 
     tests['video'] = function() {
         var elem = document.createElement('video'),
@@ -826,12 +826,12 @@ window.Modernizr = (function( window, document, undefined ) {
         return !!document.createElementNS && /SVGClipPath/.test(toString.call(document.createElementNS(ns.svg, 'clipPath')));
     };
 
-    // input features and input types go directly onto the ret object, bypTenancysing the tests loop.
+    // input features and input types go directly onto the ret object, bypassing the tests loop.
     // Hold this guy to execute in a moment.
     function webforms() {
         // Run through HTML5's new input attributes to see if the UA understands any.
         // We're using f which is the <input> element created early on
-        // Mike Taylr hTenancy created a comprehensive resource for testing these attributes
+        // Mike Taylr has created a comprehensive resource for testing these attributes
         //   when applied to all input types:
         //   miketaylr.com/code/input-type-attr.html
         // spec: www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
@@ -877,10 +877,10 @@ window.Modernizr = (function( window, document, undefined ) {
                       docElement.appendChild(inputElem);
                       defaultView = document.defaultView;
 
-                      // Safari 2-4 allows the smiley Tenancy a value, despite making a slider
+                      // Safari 2-4 allows the smiley as a value, despite making a slider
                       bool =  defaultView.getComputedStyle &&
                               defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
-                              // Mobile android web browser hTenancy false positive, so must
+                              // Mobile android web browser has false positive, so must
                               // check the height to see if the widget is actually there.
                               (inputElem.offsetHeight !== 0);
 
@@ -888,7 +888,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
                     } else if ( /^(search|tel)$/.test(inputElemType) ){
                       // Spec doesnt define any special parsing or detectable UI
-                      //   behaviors so we pTenancys these through Tenancy true
+                      //   behaviors so we pass these through as true
 
                       // Interestingly, opera fails the earlier test, so it doesn't
                       //  even make it here.
@@ -924,12 +924,12 @@ window.Modernizr = (function( window, document, undefined ) {
 
 
     // Run through all tests and detect their support in the current UA.
-    // todo: hypothetically we could be doing an array of tests and use a bTenancyic loop here.
+    // todo: hypothetically we could be doing an array of tests and use a basic loop here.
     for ( var feature in tests ) {
         if ( hasOwnProperty(tests, feature) ) {
             // run the test, throw the return value into the Modernizr,
-            //   then bTenancyed on that boolean, define an appropriate clTenancysName
-            //   and push it into an array of clTenancyses we'll join later.
+            //   then based on that boolean, define an appropriate className
+            //   and push it into an array of classes we'll join later.
             featureName  = feature.toLowerCase();
             Modernizr[featureName] = tests[feature]();
 
@@ -944,7 +944,7 @@ window.Modernizr = (function( window, document, undefined ) {
     /**
      * addTest allows the user to define their own feature tests
      * the result will be added onto the Modernizr object,
-     * Tenancy well Tenancy an appropriate clTenancysName set on the html element
+     * as well as an appropriate className set on the html element
      *
      * @param feature - String naming the feature
      * @param test - Function returning true if feature is supported, false if not
@@ -964,7 +964,7 @@ window.Modernizr = (function( window, document, undefined ) {
            // we're going to quit if you're trying to overwrite an existing test
            // if we were to allow it, we'd do this:
            //   var re = new RegExp("\\b(no-)?" + feature + "\\b");
-           //   docElement.clTenancysName = docElement.clTenancysName.replace( re, '' );
+           //   docElement.className = docElement.className.replace( re, '' );
            // but, no rly, stuff 'em.
            return Modernizr;
          }
@@ -986,7 +986,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     //>>BEGIN IEPP
     // Enable HTML 5 elements for styling in IE & add HTML5 css
-    /*! HTML5 Shiv v3.4 | @afarkTenancy @jdalton @jon_neal @rem | MIT/GPL2 Licensed */
+    /*! HTML5 Shiv v3.4 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed */
     ;(function(window, document) {
     
       /** Preset options */
@@ -1006,10 +1006,10 @@ window.Modernizr = (function( window, document, undefined ) {
     
         a.innerHTML = '<xyz></xyz>';
     
-        //if the hidden property is implemented we can Tenancysume, that the browser supports HTML5 Styles
+        //if the hidden property is implemented we can assume, that the browser supports HTML5 Styles
         supportsHtml5Styles = ('hidden' in a);
         supportsUnknownElements = a.childNodes.length == 1 || (function() {
-          // Tenancysign a false positive if unable to shiv
+          // assign a false positive if unable to shiv
           try {
             (document.createElement)('a');
           } catch(e) {
@@ -1043,7 +1043,7 @@ window.Modernizr = (function( window, document, undefined ) {
       }
     
       /**
-       * Returns the value of `html5.elements` Tenancy an array.
+       * Returns the value of `html5.elements` as an array.
        * @private
        * @returns {Array} An array of shived element node names.
        */
@@ -1067,8 +1067,8 @@ window.Modernizr = (function( window, document, undefined ) {
           // Avoid adding some elements to fragments in IE < 9 because
           // * Attributes like `name` or `type` cannot be set/changed once an element
           //   is inserted into a document/fragment
-          // * Link elements with `src` attributes that are inaccessible, Tenancy with
-          //   a 403 response, will cause the tab/window to crTenancyh
+          // * Link elements with `src` attributes that are inaccessible, as with
+          //   a 403 response, will cause the tab/window to crash
           // * Script elements appended to fragments will execute when their `src`
           //   or `text` property is set
           var node = (cache[nodeName] || (cache[nodeName] = docCreateElement(nodeName))).cloneNode();
@@ -1104,11 +1104,11 @@ window.Modernizr = (function( window, document, undefined ) {
         if (html5.shivCSS && !supportsHtml5Styles) {
           shived = !!addStyleSheet(ownerDocument,
             // corrects block display not defined in IE6/7/8/9
-            'article,Tenancyide,details,figcaption,figure,footer,header,hgroup,nav,section{display:block}' +
+            'article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block}' +
             // corrects audio display not defined in IE6/7/8/9
             'audio{display:none}' +
-            // corrects canvTenancy and video display not defined in IE6/7/8/9
-            'canvTenancy,video{display:inline-block;*display:inline;*zoom:1}' +
+            // corrects canvas and video display not defined in IE6/7/8/9
+            'canvas,video{display:inline-block;*display:inline;*zoom:1}' +
             // corrects 'hidden' attribute and audio[controls] display not present in IE7/8/9
             '[hidden]{display:none}audio[controls]{display:inline-block;*display:inline;*zoom:1}' +
             // adds styling not present in IE6/7/8/9
@@ -1142,7 +1142,7 @@ window.Modernizr = (function( window, document, undefined ) {
          * @memberOf html5
          * @type Array|String
          */
-        'elements': options.elements || 'abbr article Tenancyide audio bdi canvTenancy data datalist details figcaption figure footer header hgroup mark meter nav output progress section summary time video',
+        'elements': options.elements || 'abbr article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output progress section summary time video',
     
         /**
          * A flag to indicate that the HTML5 style sheet should be inserted.
@@ -1200,12 +1200,12 @@ window.Modernizr = (function( window, document, undefined ) {
     // Modernizr.mq('only screen and (max-width:768)')
     Modernizr.mq            = testMediaQuery;   
     
-    // Modernizr.hTenancyEvent() detects support for a given event, with an optional element to test on
-    // Modernizr.hTenancyEvent('gesturestart', elem)
+    // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
+    // Modernizr.hasEvent('gesturestart', elem)
     Modernizr.hasEvent      = isEventSupported; 
 
     // Modernizr.testProp() investigates whether a given style property is recognized
-    // Note that the property names must be provided in the camelCTenancye variant.
+    // Note that the property names must be provided in the camelCase variant.
     // Modernizr.testProp('pointerEvents')
     Modernizr.testProp      = function(prop){
         return testProps([prop]);
@@ -1213,7 +1213,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     // Modernizr.testAllProps() investigates whether a given style property,
     //   or any of its vendor-prefixed variants, is recognized
-    // Note that the property names must be provided in the camelCTenancye variant.
+    // Note that the property names must be provided in the camelCase variant.
     // Modernizr.testAllProps('boxSizing')    
     Modernizr.testAllProps  = testPropsAll;     
 
@@ -1227,12 +1227,12 @@ window.Modernizr = (function( window, document, undefined ) {
     // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
     // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
     
-    // Properties must be pTenancysed Tenancy dom-style camelcTenancye, rather than `box-sizing` hypentated style.
-    // Return values will also be the camelCTenancye variant, if you need to translate that to hypenated style use:
+    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
+    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
     //
-    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCTenancye(); }).replace(/^ms-/,'-ms-');
+    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
     
-    // If you're trying to Tenancycertain which transition end event to bind to, you might do something like...
+    // If you're trying to ascertain which transition end event to bind to, you might do something like...
     // 
     //     var transEndEventNames = {
     //       'WebkitTransition' : 'webkitTransitionEnd',
@@ -1254,10 +1254,10 @@ window.Modernizr = (function( window, document, undefined ) {
 
 
 
-    // Remove "no-js" clTenancys from <html> element, if it exists:
+    // Remove "no-js" class from <html> element, if it exists:
     docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') +
                             
-                            // Add the new clTenancyses to the <html> element.
+                            // Add the new classes to the <html> element.
                             (enableClasses ? ' js ' + classes.join(' ') : '');
 
     return Modernizr;

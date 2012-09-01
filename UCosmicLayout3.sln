@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmicLayout3", "UCosmicLayout3\UCosmicLayout3.csproj", "{57DDDCAD-3A84-4501-994C-B0326C625183}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1D0944A8-022D-413B-85FB-08EFF9022E2B}"

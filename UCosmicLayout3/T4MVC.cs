@@ -23,6 +23,7 @@ using T4MVC;
 
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC {
+    public static UCosmicLayout3.Controllers.AgreementsController Agreements = new UCosmicLayout3.Controllers.T4MVC_AgreementsController();
     public static UCosmicLayout3.Controllers.HomeController Home = new UCosmicLayout3.Controllers.T4MVC_HomeController();
     public static UCosmicLayout3.Controllers.TenancyController Tenancy = new UCosmicLayout3.Controllers.T4MVC_TenancyController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();

@@ -56,7 +56,6 @@ namespace UCosmicLayout3.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string Index = "Index";
-            public readonly string Agreements = "Agreements";
             public readonly string Employees = "Employees";
             public readonly string Alumni = "Alumni";
             public readonly string Students = "Students";
@@ -69,7 +68,6 @@ namespace UCosmicLayout3.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string Index = "Index";
-            public const string Agreements = "Agreements";
             public const string Employees = "Employees";
             public const string Alumni = "Alumni";
             public const string Students = "Students";
@@ -85,7 +83,6 @@ namespace UCosmicLayout3.Controllers {
         public ViewNames Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ViewNames {
-            public readonly string Agreements = "~/Views/Home/Agreements.cshtml";
             public readonly string Alumni = "~/Views/Home/Alumni.cshtml";
             public readonly string CorporateEngagement = "~/Views/Home/CorporateEngagement.cshtml";
             public readonly string Employees = "~/Views/Home/Employees.cshtml";
@@ -103,11 +100,6 @@ namespace UCosmicLayout3.Controllers {
 
         public override System.Web.Mvc.ActionResult Index() {
             var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Index);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult Agreements() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Agreements);
             return callInfo;
         }
 

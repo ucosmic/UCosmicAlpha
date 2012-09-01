@@ -40,7 +40,7 @@ $flasher-close-icon: $closer-white-24;
 $nav-bib-bg-color: $lehigh-brand-brown;
 $nav-bib-link-text-color: #eee;
 $nav-bib-link-hover-text-color: #eee;
-$nav-bib-link-hover-bg-color: #7E4816;
+$nav-bib-link-hover-bg-color: $lehigh-accent-coffee;
 $nav-bib-current-bg-color: #fff;
 $nav-bib-current-text-color: #333;
 
@@ -48,3 +48,13 @@ $footer-bg-color: $lehigh-brand-brown;
 $footer-text-color: #fff;
 $footer-link-text-color: #fff;
 $footer-link-border-color: #fff;
+
+$heading-text-color: $lehigh-brand-brown;
+
+$sidebar-default-bg-color: #ddd;
+$sidebar-default-text-color: $lehigh-brand-brown;
+$sidebar-hover-bg-color: $lehigh-accent-yellow;
+$sidebar-hover-text-color: $lehigh-brand-brown;
+$sidebar-current-bg-color: $lehigh-brand-brown;
+$sidebar-current-text-color: #fff;
+$sidebar-content-text-color: $lehigh-accent-yellow;
