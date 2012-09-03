@@ -5,193 +5,57 @@
 <div class="content fixed to-top" data-current-module="agreements">
     <div class="group">
         <div class="float-left from-top">
-            <h1>
-                @ViewBag.Title
-            </h1>
-            <p>
-                Implement touchy scrollbars
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
-            <p>
-                Fluid versus fixed layout
-            </p>
+            <form>
+                <header>
+                    <h1>
+                        @ViewBag.Title
+                    </h1>
+                </header>
+                <section id="partners">
+                    <header>
+                        <h2>
+                            Partners
+                        </h2>
+                    </header>
+                    <div>
+                        <div style="background-color: #ccc; padding: 12px;">
+                            <ul>
+                                <li>
+                                    <div>
+                                        Here is the first partner wrapper
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        Here is the second partner wrapper
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
+            </form>
         </div>
-        <div class="float-right" data-fixed-scroll="container">
+        <aside class="float-right" data-fixed-scroll="container">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
                 <nav class="side">
                     <ul>
-                        <li class="xcurrent">
+                        <li class="current">
                             <a href="#" class="group">
                                 <div class="arrow float-left"></div>
                                 <span class="text float-left">Partners</span>
                             </a>
-                            <div class="content">
+                            @*<div class="content">
                                 <ul>
                                     <li>Sub 1</li>
                                     <li>Sub 2</li>
                                     <li><a href="#sgfd">Sub 3</a></li>
                                     <li>Sub 4</li>
                                 </ul>
-                            </div>
+                            </div>*@
                         </li>
                         <li>
                             <a href="#" class="group">
@@ -225,7 +89,7 @@
                                 <span class="text float-left">File Attachments but this one is long and wraps</span>
                             </a>
                         </li>
-                        <li class="current">
+                        <li class="xcurrent">
                             <a href="#" class="group">
                                 <div class="arrow float-left"></div>
                                 <span class="text float-left">Visibility</span>
@@ -242,6 +106,6 @@
                     </ul>
                 </nav>
             </div>
-        </div>
+        </aside>
     </div>
 </div>

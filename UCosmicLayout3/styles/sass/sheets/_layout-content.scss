@@ -62,15 +62,14 @@ body {
                                 text-decoration: none;
                                 > .arrow {
                                     display: inline-block;
-                                    border: solid 20px transparent;
+                                    border: solid 15px transparent;
                                     border-left: none;
-                                    xborder-right-color: $sidebar-default-bg-color;
                                 }
                                 > .text {
                                     display: inline-block;
                                     @include border-box;
-                                    width: 240px;
-                                    padding: 10px 12px 10px 12px;
+                                    width: 245px;
+                                    padding: 5px 8px 5px 8px;
                                     @include font-height(16px, 20px);
                                     font-weight: bold;
                                     color: $sidebar-default-text-color;
@@ -80,7 +79,6 @@ body {
                             &:hover > a > .arrow {
                                 @include transition(all, 250ms);
                                 border-left: none;
-                                xborder-right: solid 20px $sidebar-hover-bg-color;
                             }
                             &:hover > a > .text {
                                 @include transition(all, 250ms);
@@ -110,7 +108,7 @@ body {
                             &.current > .content {
                                 @include border-box;
                                 display: block;
-                                margin-left: 20px;
+                                margin-left: 15px;
                                 margin-top: -8px;
                                 padding: 8px 12px 12px 12px;
                                 background-color: $sidebar-current-bg-color;

@@ -445,6 +445,7 @@
     <Content Include="styles\sass\sheets\_layout-content.scss" />
     <Content Include="Views\Shared\_LayoutCss.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
+    <Content Include="Views\Shared\_SampleVerticalContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

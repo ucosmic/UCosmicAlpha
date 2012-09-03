@@ -7,7 +7,8 @@ var MvcJs = {
 			var url = "/agreements";
 
 			return url.replace(/([?&]+$)/g, "");
-		}
+		},
+		NameConst: "Agreements"
 	},
 	Home: {
 		Index: function() {
