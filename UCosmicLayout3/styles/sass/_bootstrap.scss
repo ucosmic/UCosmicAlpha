@@ -15,6 +15,12 @@ $banner-logo: 'banner-logo.png';
     box-sizing: border-box;
 }
 
+@mixin group {
+    content: "";
+    clear: both;
+    display: table;
+}
+
 @mixin wire($color: #000, $width: 1px) {
     @include border-box;
     border: solid $width $color;
@@ -67,7 +73,7 @@ $banner-logo: 'banner-logo.png';
     outline: none;
 }
 
-@mixin linear-bg-gradient($start: top, $color1: #000000, $stop1: 0%, $color2: #ffffff, $stop2: 100%) {
+@mixin linear-bg-gradient($start: 270deg, $color1: #000000, $stop1: 0%, $color2: #ffffff, $stop2: 100%) {
     background-image: -webkit-linear-gradient($start, $color1 $stop1, $color2 $stop2);
     background-image: -moz-linear-gradient($start, $color1 $stop1, $color2 $stop2);
     background-image: linear-gradient($start, $color1 $stop1, $color2 $stop2);

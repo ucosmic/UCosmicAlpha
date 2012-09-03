@@ -18,3 +18,11 @@ body #main {
   background-position: top left;
   background-repeat: repeat-x; }
 
+.typed-item {
+  position: relative; }
+  .typed-item > .type {
+    position: absolute;
+    left: 6px;
+    height: 14px;
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); }
+

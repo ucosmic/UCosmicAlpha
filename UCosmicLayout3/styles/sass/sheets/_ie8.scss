@@ -30,3 +30,13 @@ body {
         @include ie-box-shadow;
     }
 }
+
+.typed-item {
+    position: relative;
+    > .type {
+        position: absolute;
+        left: 6px;
+        height: 14px;
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    }
+}

@@ -249,16 +249,35 @@
     </Content>
     <Content Include="styles\icons\closer-24-dark.png" />
     <Content Include="styles\icons\closer-24-light.png" />
+    <Content Include="styles\icons\closer-24-red-disc.png" />
+    <Content Include="styles\icons\closer-24-red.png" />
+    <Content Include="styles\icons\minus-24-red.png" />
+    <Content Include="styles\icons\plus-24-green-disc.png" />
+    <Content Include="styles\icons\plus-24-green.png" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
-    <Content Include="styles\icons\user-voice-24-light.png" />
     <Content Include="styles\reset.css" />
+    <Content Include="styles\tenants\lehigh.edu\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\lehigh.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\lehigh.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\suny.edu\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uc.edu\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\uc.edu\ingot-32-9.gif" />
+    <Content Include="styles\tenants\umn.edu\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\usf.edu\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\usf.edu\ie8.css">
       <DependentUpon>ie8.scss</DependentUpon>
     </Content>
@@ -446,6 +465,11 @@
     <Content Include="Views\Shared\_LayoutCss.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Shared\_SampleVerticalContent.cshtml" />
+    <Content Include="styles\tenants\suny.edu\forms.scss" />
+    <Content Include="styles\tenants\lehigh.edu\forms.scss" />
+    <Content Include="styles\tenants\uc.edu\forms.scss" />
+    <Content Include="styles\tenants\umn.edu\forms.scss" />
+    <Content Include="styles\tenants\usf.edu\forms.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

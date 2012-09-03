@@ -400,12 +400,19 @@ body #main {
     body #main > .content h2 {
       font-size: 22px;
       line-height: 1.25;
-      color: #004c93;
+      color: #333;
       font-weight: bold; }
     body #main > .content p {
       font-size: 16px;
       line-height: 1.5;
       margin: 1em 0; }
+    body #main > .content a, body #main > .content a:visited {
+      color: #0000cc;
+      text-decoration: underline; }
+    body #main > .content a:hover {
+      text-decoration: none; }
+    body #main > .content a[target=_blank], body #main > .content a[target=_blank]:visited {
+      color: #0000cc; }
 
 /* layout footer stylesheet */
 body > footer {

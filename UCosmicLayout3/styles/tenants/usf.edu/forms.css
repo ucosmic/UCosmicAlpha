@@ -1,7 +1,9 @@
-/* default forms importer */
+/* usf.edu forms importer */
 /* main sass bootstrap */
 /* suny.edu brand values */
 /* default variable values */
+/* usf.edu brand values */
+/* usf.edu variable values */
 /* main forms stylesheet */
 input[type="email"], input[type="number"], input[type="password"], input[type="search"],
 input[type="tel"], input[type="text"], input[type="url"], input[type="color"],
@@ -100,7 +102,7 @@ form {
   margin-bottom: 16px;
   width: 100%;
   padding: 1px;
-  background-color: #009ee0; }
+  background-color: #006747; }
   .typed-item > .type {
     position: relative;
     width: 80px;
@@ -113,7 +115,7 @@ form {
     -webkit-transform-origin: top right;
     -moz-transform: rotate(270deg);
     -moz-transform-origin: top right;
-    color: white;
+    color: #e0d1a5;
     text-transform: uppercase;
     font-family: Arial, Helvetica, sans-serif; }
   .typed-item > .item {

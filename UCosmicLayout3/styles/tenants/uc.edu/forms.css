@@ -1,7 +1,9 @@
-/* default forms importer */
+/* uc.edu forms importer */
 /* main sass bootstrap */
 /* suny.edu brand values */
 /* default variable values */
+/* uc.edu brand values */
+/* uc.edu variable values */
 /* main forms stylesheet */
 input[type="email"], input[type="number"], input[type="password"], input[type="search"],
 input[type="tel"], input[type="text"], input[type="url"], input[type="color"],
@@ -100,7 +102,7 @@ form {
   margin-bottom: 16px;
   width: 100%;
   padding: 1px;
-  background-color: #009ee0; }
+  background-color: #e00122; }
   .typed-item > .type {
     position: relative;
     width: 80px;

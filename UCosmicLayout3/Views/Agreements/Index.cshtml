@@ -11,29 +11,51 @@
                         @ViewBag.Title
                     </h1>
                 </header>
-                <section id="partners">
+                <section id="participants">
                     <header>
                         <h2>
-                            Partners
+                            Participants
                         </h2>
                     </header>
                     <div>
-                        <div style="background-color: #ccc; padding: 12px;">
-                            <ul>
-                                <li>
-                                    <div>
-                                        Here is the first partner wrapper
+                        <ul>
+                            <li>
+                                <div class="typed-item">
+                                    <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
+                                    <div class="type">
+                                        Home
                                     </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        Here is the second partner wrapper
+                                    <div class="item">
+                                        <div>
+                                            <strong>University of South Florida</strong>
+                                        </div>
                                     </div>
-
-                                </li>
-                            </ul>
-                        </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="typed-item">
+                                    <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
+                                    <div class="type">
+                                        Partner
+                                    </div>
+                                    <div class="item">
+                                        <div>
+                                            <strong>University of Cologne</strong> (Universität zu Köln)
+                                        </div>
+                                        <div>
+                                            <a href="http://www.uni-koeln.de" target="_blank">www.uni-koeln.de</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
+                    <footer>
+                        <a href="#/partners/add" class="button">
+                            <i class="green plus"></i>
+                            <span class="text">Add a participant</span>
+                        </a>
+                    </footer>
                 </section>
                 @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
             </form>

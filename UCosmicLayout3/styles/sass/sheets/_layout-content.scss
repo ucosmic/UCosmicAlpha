@@ -137,12 +137,22 @@ body {
             }
             h2 {
                 @include font-height(22px, 1.25);
-                color: $heading-text-color;
+                color: #333;
                 font-weight: bold;
             }
             p {
                 @include font-height(16px, 1.5);
                 margin: 1em 0;
+            }
+            a, a:visited {
+                color: $main-link-color;
+                text-decoration: underline;
+            }
+            a:hover {
+                text-decoration: none;
+            }
+            a[target=_blank], a[target=_blank]:visited {
+                color: $external-link-color;
             }
         }
     }
