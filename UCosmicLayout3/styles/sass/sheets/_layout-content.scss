@@ -43,9 +43,15 @@ body {
                         > li {
                             margin-bottom: 1px;
                             &:first-child > a > .text {
+                                @include border-radii(8px, 8px, 0, 0);
+                            }
+                            &:first-child.current > a > .text {
                                 @include border-radii(0, 8px, 0, 0);
                             }
                             &:last-child > a > .text {
+                                @include border-radii(0, 0, 8px, 8px);
+                            }
+                            &:last-child.current > a > .text {
                                 @include border-radii(0, 0, 8px, 0);
                             }
                             &:last-child.current > .content {
@@ -58,13 +64,13 @@ body {
                                     display: inline-block;
                                     border: solid 20px transparent;
                                     border-left: none;
-                                    border-right-color: $sidebar-default-bg-color;
+                                    xborder-right-color: $sidebar-default-bg-color;
                                 }
                                 > .text {
                                     display: inline-block;
                                     @include border-box;
                                     width: 240px;
-                                    padding: 10px 5px 10px 8px;
+                                    padding: 10px 12px 10px 12px;
                                     @include font-height(16px, 20px);
                                     font-weight: bold;
                                     color: $sidebar-default-text-color;
@@ -74,7 +80,7 @@ body {
                             &:hover > a > .arrow {
                                 @include transition(all, 250ms);
                                 border-left: none;
-                                border-right: solid 20px $sidebar-hover-bg-color;
+                                xborder-right: solid 20px $sidebar-hover-bg-color;
                             }
                             &:hover > a > .text {
                                 @include transition(all, 250ms);
@@ -106,7 +112,7 @@ body {
                                 display: block;
                                 margin-left: 20px;
                                 margin-top: -8px;
-                                padding: 8px 5px 12px 12px;
+                                padding: 8px 12px 12px 12px;
                                 background-color: $sidebar-current-bg-color;
                                 color: $sidebar-content-text-color;
                             }

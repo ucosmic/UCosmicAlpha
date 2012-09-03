@@ -310,10 +310,18 @@ body #main {
       body #main > .content.fixed nav.side > ul > li {
         margin-bottom: 1px; }
         body #main > .content.fixed nav.side > ul > li:first-child > a > .text {
+          -moz-border-radius: 8px 8px 0 0;
+          -webkit-border-radius: 8px 8px 0 0;
+          border-radius: 8px 8px 0 0; }
+        body #main > .content.fixed nav.side > ul > li:first-child.current > a > .text {
           -moz-border-radius: 0 8px 0 0;
           -webkit-border-radius: 0 8px 0 0;
           border-radius: 0 8px 0 0; }
         body #main > .content.fixed nav.side > ul > li:last-child > a > .text {
+          -moz-border-radius: 0 0 8px 8px;
+          -webkit-border-radius: 0 0 8px 8px;
+          border-radius: 0 0 8px 8px; }
+        body #main > .content.fixed nav.side > ul > li:last-child.current > a > .text {
           -moz-border-radius: 0 0 8px 0;
           -webkit-border-radius: 0 0 8px 0;
           border-radius: 0 0 8px 0; }
@@ -328,14 +336,14 @@ body #main {
             display: inline-block;
             border: solid 20px transparent;
             border-left: none;
-            border-right-color: #dddddd; }
+            xborder-right-color: #dddddd; }
           body #main > .content.fixed nav.side > ul > li > a > .text {
             display: inline-block;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
             width: 240px;
-            padding: 10px 5px 10px 8px;
+            padding: 10px 12px 10px 12px;
             font-size: 16px;
             line-height: 20px;
             font-weight: bold;
@@ -347,7 +355,7 @@ body #main {
           -o-transition: all 250ms;
           transition: all 250ms;
           border-left: none;
-          border-right: solid 20px #009ee0; }
+          xborder-right: solid 20px #009ee0; }
         body #main > .content.fixed nav.side > ul > li:hover > a > .text {
           -webkit-transition: all 250ms;
           -moz-transition: all 250ms;
@@ -377,7 +385,7 @@ body #main {
           display: block;
           margin-left: 20px;
           margin-top: -8px;
-          padding: 8px 5px 12px 12px;
+          padding: 8px 12px 12px 12px;
           background-color: #004c93;
           color: white; }
     body #main > .content.fluid {
