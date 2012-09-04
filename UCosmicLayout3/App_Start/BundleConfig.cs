@@ -33,6 +33,7 @@ namespace UCosmicLayout3
                         "~/scripts/knockout-*",
                         "~/scripts/app/app.js",
                         "~/scripts/app/fixed-scroll.js",
+                        "~/scripts/app/side-swiper.js",
                         "~/models/FlasherViewModel.js",
                         "~/scripts/oss/jquery.palceholder*"));
 

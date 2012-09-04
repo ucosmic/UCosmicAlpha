@@ -32,7 +32,19 @@ body {
                         display: block;
                     }
                 }
-                [data-fixed-scroll=container] {
+                [data-side-swiper=root] {
+                    position: relative;
+                    overflow: hidden;
+                    > [data-side-swiper=deck] {
+                        width: 10000px;
+                        > [data-side-swiper=off], [data-side-swiper=on] {
+                            float: left;
+                            width: 690px;
+                            margin-right: 20px
+                        }
+                    }
+                }
+                [data-fixed-scroll=root] {
                     [data-fixed-scroll=content] {
                         margin-top: $tube-outer-width - $tube-inner-width;
                         background-color: transparent;

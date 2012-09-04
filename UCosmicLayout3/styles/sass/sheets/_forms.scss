@@ -55,6 +55,13 @@ a.button {
         height: 24px;
         background-image: url(../../icons/plus-24-green-disc.png);
     }
+    > i.red.closer {
+        display: inline-block;
+        vertical-align: middle;
+        width: 24px;
+        height: 24px;
+        background-image: url(../../icons/closer-24-red-disc.png);
+    }
 }
 
 i.red.minus {

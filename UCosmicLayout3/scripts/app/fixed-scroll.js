@@ -1,5 +1,5 @@
 ﻿(function ($) {
-    $('[data-fixed-scroll=container]').each(function () {
+    $('[data-fixed-scroll=root]').each(function () {
         var $window = $(window),
             $container = $(this),
             $content = $container.find('[data-fixed-scroll=content]'),
