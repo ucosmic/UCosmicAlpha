@@ -112,9 +112,15 @@ form {
     left: -75px;
     text-align: center;
     -webkit-transform: rotate(270deg);
-    -webkit-transform-origin: top right;
     -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+    -webkit-transform-origin: top right;
     -moz-transform-origin: top right;
+    -ms-transform-origin: top right;
+    -o-transform-origin: top right;
+    transform-origin: top right;
     color: white;
     text-transform: uppercase;
     font-family: Arial, Helvetica, sans-serif; }
