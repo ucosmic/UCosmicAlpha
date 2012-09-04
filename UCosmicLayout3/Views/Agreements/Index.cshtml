@@ -7,7 +7,7 @@
         <div class="float-left from-top">
             <div data-side-swiper="root">
                 <div data-side-swiper="deck">
-                    <section data-side-swiper="on">
+                    <section id="/institutional_agreement" data-side-swiper="on">
                         <form>
                             <header>
                                 <h1>
@@ -60,12 +60,12 @@
                                     </a>
                                 </footer>
                             </section>
-                            @Html.Partial(MVC.Shared.Views._SampleVerticalContent)
+                            @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
                         </form>
                     </section>
-                    <section data-side-swiper="off">
+                    <section id="/find_participant" data-side-swiper="off">
                         Here is the next frame / slide
-                        <a href="#/participants/add/cancel" class="button">
+                        <a class="button" data-bind="click: back">
                             <i class="red closer"></i>
                             <span class="text">Cancel</span>
                         </a>
@@ -84,13 +84,13 @@
                                 <span class="text float-left">Partners</span>
                             </a>
                             @*<div class="content">
-<ul>
-<li>Sub 1</li>
-<li>Sub 2</li>
-<li><a href="#sgfd">Sub 3</a></li>
-<li>Sub 4</li>
-</ul>
-</div>*@
+                                <ul>
+                                <li>Sub 1</li>
+                                <li>Sub 2</li>
+                                <li><a href="#sgfd">Sub 3</a></li>
+                                <li>Sub 4</li>
+                                </ul>
+                                </div>*@
                         </li>
                         <li>
                             <a href="#" class="group">
@@ -149,13 +149,36 @@
 {
 
     <script type="text/javascript">
-        var sideSwiper = new SideSwiper({});
-        $('a[href="#/participants/add"]').on('click', function () {
-            sideSwiper.next();
-        });
-        $('a[href="#/participants/add/cancel"]').on('click', function () {
-            sideSwiper.prev();
-        });
+
+        function InstitutionalAgreementEditModel() {
+            var self = this;
+            BaseViewModel.call(self);
+
+            self.sideSwiper = new SideSwiper({
+                frameWidth: 710
+            });
+
+            Sammy(function () {
+                this.get('#/institutional_agreement', function () {
+                    if ($('#\\/find_participant').attr('data-side-swiper') === 'on') {
+                        self.sideSwiper.prev();
+                    }
+                });
+
+                this.get('#/participants/add', function () {
+                    if ($('#\\/institutional_agreement').attr('data-side-swiper') === 'on') {
+                        self.sideSwiper.next();
+                    }
+                });
+
+                this.get('', function () {
+                    this.app.runRoute('get', '#/institutional_agreement');
+                });
+            }).run();
+        }
+
+        ko.applyBindings(new InstitutionalAgreementEditModel(), $('#main')[0]);
+
     </script>
 
 }

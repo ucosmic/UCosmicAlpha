@@ -10,7 +10,7 @@
     var currentFrameSelector = '[data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=on]';
     var otherFrameSelector = '[data-side-swiper=off]';
 
-    self.next = function (distance) {
+    self.next = function (distance, callback) {
         var $currentFrame = $(currentFrameSelector),
             $nextFrame = $currentFrame.next(otherFrameSelector);
         distance = distance || 1;
@@ -32,14 +32,19 @@
                 .css({ marginLeft: 0 })
 
                 // remove the css class since this is no longer the current frame
-                .attr('data-side-swiper', 'off');
+                .attr('data-side-swiper', 'off')
+                .data('side-swiper', 'off');
 
             // the left frame is now current
-            $nextFrame.attr('data-side-swiper', 'on');
+            $nextFrame.attr('data-side-swiper', 'on')
+                .data('side-swiper', 'on');
+
+            // invoke callback if one was passed
+            if (typeof callback === 'function') callback();
         });
     };
 
-    self.prev = function (distance) {
+    self.prev = function (distance, callback) {
         var $currentFrame = $(currentFrameSelector),
             $prevFrame = $currentFrame.prev(otherFrameSelector);
         distance = distance || 1;
@@ -61,10 +66,15 @@
                     $currentFrame.hide()
 
                         // remove the css class since this is no longer the current frame
-                        .attr('data-side-swiper', 'off');
+                        .attr('data-side-swiper', 'off')
+                        .data('side-swiper', 'off');
 
                     // the right frame is now current
-                    $prevFrame.attr('data-side-swiper', 'on');
+                    $prevFrame.attr('data-side-swiper', 'on')
+                        .data('side-swiper', 'on');
+
+                    // invoke callback if one was passed
+                    if (typeof callback === 'function') callback();
                 });
     };
 }

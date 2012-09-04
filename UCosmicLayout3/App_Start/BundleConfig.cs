@@ -31,9 +31,11 @@ namespace UCosmicLayout3
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
                         "~/scripts/jquery-{version}.js",
                         "~/scripts/knockout-*",
+                        "~/scripts/sammy/sammy.js",
                         "~/scripts/app/app.js",
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
+                        "~/models/BaseViewModel.js",
                         "~/models/FlasherViewModel.js",
                         "~/scripts/oss/jquery.palceholder*"));
 
