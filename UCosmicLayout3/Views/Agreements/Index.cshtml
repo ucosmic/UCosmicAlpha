@@ -5,15 +5,15 @@
 <div class="content fixed to-top" data-current-module="agreements">
     <div class="group">
         <div class="float-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
             <div data-side-swiper="root">
                 <div data-side-swiper="deck">
-                    <section id="/institutional_agreement" data-side-swiper="on">
+                    <section id="all" data-side-swiper="on">
                         <form>
-                            <header>
-                                <h1>
-                                    @ViewBag.Title
-                                </h1>
-                            </header>
                             <section id="participants">
                                 <header>
                                     <h2>
@@ -63,12 +63,28 @@
                             @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
                         </form>
                     </section>
-                    <section id="/find_participant" data-side-swiper="off">
-                        Here is the next frame / slide
-                        <a class="button" data-bind="click: back">
-                            <i class="red closer"></i>
-                            <span class="text">Cancel</span>
-                        </a>
+                    <section id="participants_add" data-side-swiper="off">
+                        <form>
+                            <header>
+                                <h2>
+                                    Add a participant
+                                </h2>
+                            </header>
+                            <div class="field">
+                                <input type="search" placeholder="Enter the participant's name or website URL"/>
+                            </div>
+                            <div class="field">
+                                <select>
+                                    <option>[Narrow by country]</option>
+                                </select>
+                            </div>
+                            <footer>
+                                <a class="button" data-bind="click: back">
+                                    <i class="red closer"></i>
+                                    <span class="text">Cancel</span>
+                                </a>
+                            </footer>
+                        </form>
                     </section>
                 </div>
             </div>
@@ -76,70 +92,7 @@
         <aside class="float-right" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
-                <nav class="side">
-                    <ul>
-                        <li class="current">
-                            <a href="#" class="group">
-                                <div class="arrow float-left"></div>
-                                <span class="text float-left">Partners</span>
-                            </a>
-                            @*<div class="content">
-                                <ul>
-                                <li>Sub 1</li>
-                                <li>Sub 2</li>
-                                <li><a href="#sgfd">Sub 3</a></li>
-                                <li>Sub 4</li>
-                                </ul>
-                                </div>*@
-                        </li>
-                        <li>
-                            <a href="#" class="group">
-                                <div class="arrow float-left"></div>
-                                <span class="text float-left">Basic Info</span>
-                            </a>
-                        </li>
-                        <li class="">
-                            <a href="#" class="group">
-                                <div class="arrow float-left"></div>
-                                <span class="text float-left">Dates &amp; Status</span>
-                            </a>
-                            <div class="content">
-                                <ul>
-                                    <li>Sub 1</li>
-                                    <li>Sub 2</li>
-                                    <li><a href="#sgfd">Sub 3</a></li>
-                                    <li>Sub 4</li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="#" class="group">
-                                <div class="arrow float-left"></div>
-                                <span class="text float-left">Contacts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="group">
-                                <div class="arrow float-left"></div>
-                                <span class="text float-left">File Attachments but this one is long and wraps</span>
-                            </a>
-                        </li>
-                        <li class="">
-                            <a href="#" class="group">
-                                <div class="arrow float-left"></div>
-                                <span class="text float-left">Visibility</span>
-                            </a>
-                            <div class="content">
-                                <ul>
-                                    <li>Sub 1</li>
-                                    <li>Sub 2</li>
-                                    <li><a href="#sgfd">Sub 3</a></li>
-                                    <li>Sub 4</li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
+                @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
             </div>
         </aside>
     </div>
@@ -148,34 +101,9 @@
 @section scripts
 {
 
+    <script type="text/javascript" src="@Url.Content(Links.Models.InstitutionalAgreementEditModel_js)"></script>
+
     <script type="text/javascript">
-
-        function InstitutionalAgreementEditModel() {
-            var self = this;
-            BaseViewModel.call(self);
-
-            self.sideSwiper = new SideSwiper({
-                frameWidth: 710
-            });
-
-            Sammy(function () {
-                this.get('#/institutional_agreement', function () {
-                    if ($('#\\/find_participant').attr('data-side-swiper') === 'on') {
-                        self.sideSwiper.prev();
-                    }
-                });
-
-                this.get('#/participants/add', function () {
-                    if ($('#\\/institutional_agreement').attr('data-side-swiper') === 'on') {
-                        self.sideSwiper.next();
-                    }
-                });
-
-                this.get('', function () {
-                    this.app.runRoute('get', '#/institutional_agreement');
-                });
-            }).run();
-        }
 
         ko.applyBindings(new InstitutionalAgreementEditModel(), $('#main')[0]);
 

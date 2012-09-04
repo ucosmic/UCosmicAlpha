@@ -32,6 +32,7 @@ namespace UCosmicLayout3
                         "~/scripts/jquery-{version}.js",
                         "~/scripts/knockout-*",
                         "~/scripts/sammy/sammy.js",
+                        "~/scripts/oss/jquery.placeholder*",
                         "~/scripts/app/app.js",
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",

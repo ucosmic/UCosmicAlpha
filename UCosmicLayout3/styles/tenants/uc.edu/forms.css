@@ -15,7 +15,8 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   width: 100%;
   max-width: 100%;
   font-size: 16px;
-  line-height: 1.25;
+  line-height: 20px;
+  height: 38px;
   border: solid 1px #aaa;
   border-right-color: #ddd;
   border-bottom-color: #ddd;
@@ -23,12 +24,14 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   padding: 8px;
   -moz-outline: none;
   outline: none;
+  vertical-align: baseline;
   /* background-color: #eee; */
   -webkit-transition: all 500ms;
   -moz-transition: all 500ms;
   -o-transition: all 500ms;
   transition: all 500ms;
-  cursor: text; }
+  cursor: text;
+  font-family: Arial, Helvetica, sans-serif; }
   input[type="email"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="search"]:focus,
   input[type="tel"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="color"]:focus,
   input[type="date"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus,
@@ -40,18 +43,31 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   input[type="month"].placeholder, input[type="time"].placeholder, input[type="week"].placeholder, textarea.placeholder {
     color: #999; }
 
+select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 38px;
+  border: solid 1px #aaa;
+  border-right-color: #ddd;
+  border-bottom-color: #ddd;
+  padding: 8px;
+  font-size: 16px;
+  line-height: 20px; }
+
 a.button {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  height: 38px;
   display: inline-block;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
   border: solid 1px #ccc;
-  padding: 8px 12px 8px 8px;
+  padding: 8px 10px 8px 8px;
   font-size: 16px;
-  line-height: 1;
+  line-height: 20px;
   background-image: -webkit-linear-gradient(270deg, #dddddd 0%, #bbbbbb 100%);
   background-image: -moz-linear-gradient(270deg, #dddddd 0%, #bbbbbb 100%);
   background-image: linear-gradient(270deg, #dddddd 0%, #bbbbbb 100%);
@@ -72,19 +88,21 @@ a.button {
     filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#aaaaaa', EndColorStr='#cccccc'); }
   a.button > .text {
     display: inline-block;
-    padding: 4px 0;
+    line-height: 20px;
     vertical-align: middle; }
   a.button > i.green.plus {
     display: inline-block;
     vertical-align: middle;
     width: 24px;
     height: 24px;
+    margin: -2px 0 0 -2px;
     background-image: url(../../icons/plus-24-green-disc.png); }
   a.button > i.red.closer {
     display: inline-block;
     vertical-align: middle;
     width: 24px;
     height: 24px;
+    margin: -2px 0 0 -2px;
     background-image: url(../../icons/closer-24-red-disc.png); }
 
 i.red.minus {
@@ -98,7 +116,9 @@ i.red.minus {
 
 form {
   line-height: 1.25; }
-  form section footer {
+  form .field {
+    margin: 16px 0; }
+  form footer {
     margin: 16px 0; }
 
 .typed-item {

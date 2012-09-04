@@ -7,16 +7,19 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
     @include border-box;
     width: 100%;
     max-width: 100%;
-    @include font-height(16px, 1.25);
+    @include font-height(16px, 20px);
+    height: 38px;
     border: solid 1px #aaa;
     border-right-color: #ddd;
     border-bottom-color: #ddd;
     /* @include border-radius(3px); */
     padding: 8px;
     @include outline-none;
+    vertical-align: baseline;
     /* background-color: #eee; */
     @include transition(all, 500ms);
     cursor: text;
+    @include font-arial;
     &:focus {
         /* background: #ffe; */
     }
@@ -25,13 +28,24 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
     }
 }
 
+select {
+    @include border-box;
+    height: 38px;
+    border: solid 1px #aaa;
+    border-right-color: #ddd;
+    border-bottom-color: #ddd;
+    padding: 8px;
+    @include font-height(16px, 20px);
+}
+
 a.button {
     @include border-box;
+    height: 38px;
     display: inline-block;
-    @include border-radius(4px);
+    @include border-radius(8px);
     border: solid 1px #ccc;
-    padding: 8px 12px 8px 8px;
-    @include font-height(16px, 1);
+    padding: 8px 10px 8px 8px;
+    @include font-height(16px, 20px);
     @include linear-bg-gradient(270deg, #dddddd, 0%, #bbbbbb, 100%);
     color: #333 !important;
     @include font-arial;
@@ -45,7 +59,7 @@ a.button {
     }
     > .text {
         display: inline-block;
-        padding: 4px 0;
+        line-height: 20px;
         vertical-align: middle;
     }
     > i.green.plus {
@@ -53,6 +67,7 @@ a.button {
         vertical-align: middle;
         width: 24px;
         height: 24px;
+        margin: -2px 0 0 -2px;
         background-image: url(../../icons/plus-24-green-disc.png);
     }
     > i.red.closer {
@@ -60,6 +75,7 @@ a.button {
         vertical-align: middle;
         width: 24px;
         height: 24px;
+        margin: -2px 0 0 -2px;
         background-image: url(../../icons/closer-24-red-disc.png);
     }
 }
@@ -77,10 +93,11 @@ i.red.minus {
 
 form {
     line-height: 1.25;
-    section {
-        footer {
-            margin: 16px 0;
-        }
+    .field {
+        margin: 16px 0;
+    }
+    footer {
+        margin: 16px 0;
     }
 }
 
