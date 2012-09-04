@@ -256,6 +256,7 @@
     <Content Include="styles\icons\plus-24-green.png" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
     <Content Include="styles\reset.css" />
+    <Content Include="styles\tenants\lehigh.edu\banner-logo.png" />
     <Content Include="styles\tenants\lehigh.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
