@@ -4,7 +4,7 @@ using LowercaseRoutesMVC4;
 
 namespace UCosmicLayout3
 {
-    public class RouteConfig
+    public static class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
@@ -19,10 +19,12 @@ namespace UCosmicLayout3
                     id = UrlParameter.Optional,
                 });
 
-            routes.MapRouteLowercase(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            routes.MapRouteLowercase(null,
+                "{controller}/{action}/{id}",
+                new
+                {
+                    controller = "Home", action = "Index", id = UrlParameter.Optional
+                }
             );
         }
     }

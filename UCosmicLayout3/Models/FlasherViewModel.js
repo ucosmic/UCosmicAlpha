@@ -1,6 +1,8 @@
 ﻿(function (window, $, undefined) {
-    
+
+    // ReSharper disable InconsistentNaming
     function FlasherViewModel() {
+        // ReSharper restore InconsistentNaming
         var self = this;
 
         self.text = ko.observable();
@@ -16,7 +18,7 @@
             });
         };
 
-        self.flash = function(text) {
+        self.flash = function (text) {
             self.text(undefined);
             if (text) self.text(text);
         };
@@ -68,6 +70,6 @@
 
     window.app.flasher = new FlasherViewModel();
     window.ko.applyBindings(app.flasher, $('.flasher')[0]);
-    
+
 }(window, jQuery));
 

@@ -138,7 +138,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="ApiControllers\ValuesController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -320,6 +319,7 @@
     <Content Include="styles\tenants\uc.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\_resharper-unused.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -473,6 +473,7 @@
     <Content Include="styles\tenants\usf.edu\forms.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ApiControllers\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>

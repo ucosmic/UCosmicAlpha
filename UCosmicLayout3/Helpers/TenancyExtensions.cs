@@ -15,7 +15,7 @@ namespace UCosmicLayout3
             var tenancy = new Tenancy
            {
                Domain = domain,
-               TenantId = null,
+               TenantId = tenantId,
                PersonId = personId,
                UserId = userId,
                UserName = userName,
