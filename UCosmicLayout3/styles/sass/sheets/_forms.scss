@@ -91,16 +91,8 @@ form {
         font-size: 13px;
         left: -75px;
         text-align: center;
-        -webkit-transform: rotate(270deg);
-        -moz-transform: rotate(270deg);
-        -ms-transform: rotate(270deg);
-        -o-transform: rotate(270deg);
-        transform: rotate(270deg);
-        -webkit-transform-origin: top right;
-        -moz-transform-origin: top right;
-        -ms-transform-origin: top right;
-        -o-transform-origin: top right;
-        transform-origin: top right;
+        @include transform-rotate(270deg);
+        @include transform-origin(top right);
         color: $typed-item-text-color;
         text-transform: uppercase;
         @include font-arial;
