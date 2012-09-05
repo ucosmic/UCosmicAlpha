@@ -307,6 +307,7 @@ body #main {
         body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] {
           width: 10000px; }
           body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=off], body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] [data-side-swiper=on] {
+            position: relative;
             float: left;
             width: 960px;
             margin-right: 20px; }

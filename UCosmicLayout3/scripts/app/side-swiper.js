@@ -2,7 +2,7 @@
     var self = this;
     options = options || {};
     var defaults = {
-        speed: 'fast',
+        speed: '',
         frameWidth: 710
     };
     var settings = $.extend(defaults, options);
@@ -20,16 +20,20 @@
         }
 
         // display the next/right frame since its parent's overflow will obscure it
+        $nextFrame.css({ left: 0 });
         $nextFrame.show();
+        $nextFrame.animate({ left: (settings.frameWidth * -1) }, settings.speed, function () {
+            $nextFrame.css({ left: 0 });
+        });
 
         // reduce the left margin of the left frame to slide the right frame into view
-        $currentFrame.animate({ marginLeft: (settings.frameWidth * -1) }, settings.speed, function () {
+        $currentFrame.animate({ left: (settings.frameWidth * -1) }, settings.speed, function () {
 
             // after the left frame has slid out of view, hide it
             $currentFrame.hide()
 
                 // now that it's hidden, go ahead and put its margin back to zero
-                .css({ marginLeft: 0 })
+                .css({ left: 0 })
 
                 // remove the css class since this is no longer the current frame
                 .attr('data-side-swiper', 'off')
@@ -53,14 +57,19 @@
             $prevFrame = $prevFrame.prev(otherFrameSelector);
         }
 
+        $currentFrame.css({ position: 'absolute', left: 0 });
+        $currentFrame.animate({ left: settings.frameWidth }, settings.speed, function () {
+            $currentFrame.css({ position: 'relative' });
+        });
+
         // reset the left frame to a negative left margin
-        $prevFrame.css({ marginLeft: (settings.frameWidth * -1) })
+        $prevFrame.css({ left: (settings.frameWidth * -1) })
 
             // show the left frame, since its parent's overflow will obscure it
             .show()
 
                 // increase the left margin of the left frame to slide it into view (pushing right)
-                .animate({ marginLeft: 0 }, settings.speed, function () {
+                .animate({ left: 0 }, settings.speed, function () {
 
                     // after the right frame  is slid out of view, hide it
                     $currentFrame.hide()

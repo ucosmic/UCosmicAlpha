@@ -407,6 +407,7 @@
     <Content Include="Views\Home\Representatives.cshtml" />
     <Content Include="Views\Home\Students.cshtml" />
     <Content Include="Views\Home\Employees.cshtml" />
+    <Content Include="scripts\oss\jquery.animate-enhanced.js" />
     <None Include="scripts\T4MvcJs\T4MVC.source.t4" />
     <None Include="scripts\T4MvcJs\T4MVC.tt.settings.t4" />
     <None Include="scripts\T4MvcJs\T4MvcJs.tt">
