@@ -520,6 +520,7 @@
     <Content Include="styles\tenants\umn.edu\forms.scss" />
     <Content Include="styles\tenants\usf.edu\forms.scss" />
     <Content Include="Views\Shared\_SampleSidebarNav.cshtml" />
+    <Content Include="Views\Agreements\Index0.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ApiControllers\" />

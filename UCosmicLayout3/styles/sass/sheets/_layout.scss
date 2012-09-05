@@ -35,15 +35,13 @@ body {
                 width: $tube-outer-width;
                 padding-left: $tube-outer-width - $tube-inner-width;
                 padding-top: $tube-outer-width - $tube-inner-width;
-                .from-top {
-                    padding-top: $tube-outer-width - $tube-inner-width;
-                }
-                > .group {
-                    > .float-left {
+                .group {
+                    .float-left.from-top {
+                        padding-top: $tube-outer-width - $tube-inner-width;
                         @include border-box;
                         width: 690px;
                     }
-                    > .float-right {
+                    .float-right.from-top {
                         @include border-box;
                         width: 260px;
                         display: block;
@@ -56,7 +54,7 @@ body {
                         width: 10000px;
                         > [data-side-swiper=off], [data-side-swiper=on] {
                             float: left;
-                            width: 690px;
+                            width: 960px;
                             margin-right: 20px
                         }
                     }
@@ -156,6 +154,10 @@ body {
                                 margin-left: 15px;
                                 padding: 0 7px 8px 8px;
                                 background-color: $sidebar-default-bg-color;
+                                color: $sidebar-default-text-color;
+                                a {
+                                    color: $sidebar-default-text-color;
+                                }
                             }
                         }
                     }
@@ -166,22 +168,51 @@ body {
                 width: 100%;
                 padding: 0;
             }
-            h1, h2, h3, h4, h5, h6 {
+            header {
+                $temp-vertical-align: text-top;
                 margin: 16px 0;
-                font-family: Arial;
+                vertical-align: $temp-vertical-align;
                 &:first-child {
                     margin-top: 0 !important;
                 }
-            }
-            h1 {
-                @include font-height(24px, 1.25);
-                text-transform: uppercase;
-                color: $heading-text-color;
-            }
-            h2 {
-                @include font-height(22px, 1.25);
-                color: #333;
-                font-weight: bold;
+                .breadcrumb-arrows {
+                    vertical-align: $temp-vertical-align;
+                    display: inline-block;
+                    line-height: 30px;
+                    font-size: 12px;
+                    @include font-ms;
+                }
+                a {
+                    text-decoration: underline;
+                    .breadcrumb-arrows {
+                        text-decoration: none;
+                    }
+                    &:hover .breadcrumb-arrows {
+                        text-decoration: none;                    
+                    }
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    display: inline-block;
+                    font-family: Arial;
+                    vertical-align: $temp-vertical-align;
+                    line-height: 30px;
+                }
+                h1 {
+                    font-size: 24px;
+                    text-transform: uppercase;
+                    color: $heading-text-color;
+                    a {
+                        color: $heading-text-color;
+                    }
+                }
+                h2 {
+                    font-size: 22px;
+                    color: #333;
+                    font-weight: bold;
+                    a {
+                        color: #333;
+                    }
+                }
             }
             p {
                 @include font-height(16px, 1.5);

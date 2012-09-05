@@ -3,168 +3,169 @@
 }
 
 <div class="content fixed to-top" data-current-module="agreements">
-    <div class="group">
-        <div class="float-left from-top">
-            <header>
-                <h1>
-                    @ViewBag.Title
-                </h1>
-            </header>
-            <div data-side-swiper="root">
-                <div data-side-swiper="deck">
-                    <section id="all" data-side-swiper="on">
-                        <form>
-                            <section id="participants">
-                                <header>
-                                    <h2>
-                                        Participants
-                                    </h2>
-                                </header>
-                                <div>
-                                    <ul>
-                                        <li>
-                                            <div class="typed-item">
-                                                <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
-                                                <div class="type">
-                                                    Home
-                                                </div>
-                                                <div class="item">
-                                                    <div>
-                                                        <strong>University of South Florida</strong>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="typed-item">
-                                                <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
-                                                <div class="type">
-                                                    Partner
-                                                </div>
-                                                <div class="item">
-                                                    <div>
-                                                        <strong>University of Cologne</strong> (Universität zu Köln)
-                                                    </div>
-                                                    <div>
-                                                        <a href="http://www.uni-koeln.de" target="_blank">www.uni-koeln.de</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <footer>
-                                    <a href="#/participants/add" class="button">
-                                        <i class="green plus"></i>
-                                        <span class="text">Add a participant</span>
-                                    </a>
-                                </footer>
-                            </section>
-                            @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
-                        </form>
-                    </section>
-                    <section id="participants_add" data-side-swiper="off">
-                        <form>
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div id="all" data-side-swiper="on">
+                <form class="group">
+                    <div class="float-left from-top">
+                        <header>
+                            <h1>
+                                @ViewBag.Title
+                            </h1>
+                        </header>
+                        <section id="participants">
                             <header>
                                 <h2>
-                                    Add a participant
+                                    Participants
                                 </h2>
                             </header>
-                            <div class="field">
-                                <input type="search" placeholder="Enter the participant's name or website URL" />
-                            </div>
-                            @*<div class="field">
-                                <select>
-                                    <option>[Narrow by country]</option>
-                                </select>
-                            </div>*@
-                            <footer>
-                                <a class="button" data-bind="click: back">
-                                    <i class="red closer"></i>
-                                    <span class="text">Cancel</span>
-                                </a>
-                            </footer>
-                        </form>
-                    </section>
-                </div>
-            </div>
-        </div>
-        <aside class="float-right" data-fixed-scroll="root">
-            <div data-fixed-scroll="anchor"></div>
-            <div data-fixed-scroll="content">
-                <div data-side-swiper="root">
-                    <div data-side-swiper="deck">
-                        <section id="all_nav" data-side-swiper="on">
-                            @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
-                        </section>
-                        <section id="participants_add_nav" data-side-swiper="off">
-                            <form class="side">
-                                <nav class="side">
-                                    <ul>
-                                        <li class="static">
-                                            <span class="text">Advanced search</span>
-                                            <div class="content">
-                                                <div class="field">
-                                                    <select class="side">
-                                                        <option>[Narrow by country]</option>
-                                                        <option value="xx">This first option will actually be a lot, lotta lotta big longer</option>
-                                                    </select>
-                                                </div>
-                                                <div class="field">
-                                                    <select class="side">
-                                                        <option>Sort by country</option>
-                                                        <option>Sort by name</option>
-                                                    </select>
-                                                </div>
-                                                <div class="field">
-                                                    <select class="side">
-                                                        <option>Show 10 results per page</option>
-                                                        <option>Show 20 results per page</option>
-                                                        <option>Show 50 results per page</option>
-                                                        <option>Show 100 results per page</option>
-                                                        <option>Show all results</option>
-                                                    </select>
-                                                </div>
-                                                <div class="field">
-                                                    <a href="#prev">&lt;&lt; Previous</a> |
-                                                    <a href="#next">Next &gt;&gt;</a>
+                            <div>
+                                <ul>
+                                    <li>
+                                        <div class="typed-item">
+                                            <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
+                                            <div class="type">
+                                                Home
+                                            </div>
+                                            <div class="item">
+                                                <div>
+                                                    <strong>University of South Florida</strong>
                                                 </div>
                                             </div>
-                                        </li>
-                                        <li class="current">
-                                            <a href="#" class="group">
-                                                <div class="arrow float-left"></div>
-                                                <span class="text float-left">Table</span>
-                                            </a>
-                                            @*<div class="content">
-                                            </div>*@
-                                        </li>
-                                        <li>
-                                            <a href="#" class="group">
-                                                <div class="arrow float-left"></div>
-                                                <span class="text float-left">List</span>
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="#" class="group">
-                                                <div class="arrow float-left"></div>
-                                                <span class="text float-left">Grid</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="group">
-                                                <div class="arrow float-left"></div>
-                                                <span class="text float-left">Map</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </form>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="typed-item">
+                                            <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
+                                            <div class="type">
+                                                Partner
+                                            </div>
+                                            <div class="item">
+                                                <div>
+                                                    <strong>University of Cologne</strong> (Universität zu Köln)
+                                                </div>
+                                                <div>
+                                                    <a href="http://www.uni-koeln.de" target="_blank">www.uni-koeln.de</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <footer>
+                                <a href="#/participants/add" class="button">
+                                    <i class="green plus"></i>
+                                    <span class="text">Add a participant</span>
+                                </a>
+                            </footer>
                         </section>
+                        @Html.Partial(MVC.Shared.Views._SampleVerticalContent)
                     </div>
-                </div>
+                    <aside class="float-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content">
+                            @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+                        </div>
+                    </aside>
+                </form>
             </div>
-        </aside>
+            <div id="participants_add" data-side-swiper="off">
+                <form class="group">
+                    <div class="float-left from-top">
+                        <header>
+                            <h1>
+                                <a data-bind="click: back"><span class="breadcrumb-arrows">&lt;&lt;&nbsp;</span>Institutional Agreement</a>
+                            </h1>
+                            <span class="breadcrumb-arrows">&gt;&gt;</span>
+                            <h2>
+                                Add a participant
+                            </h2>
+                        </header>
+                        <div class="field">
+                            <input type="search" placeholder="Enter the participant's name or website URL" />
+                        </div>
+                        <footer>
+                            @*<a class="button" data-bind="click: back">
+                                <i class="red closer"></i>
+                                <span class="text">Cancel</span>
+                            </a>*@
+                        </footer>
+                    </div>
+                    <aside class="float-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content">
+                            <div data-side-swiper="root">
+                                <div data-side-swiper="deck">
+                                    <section id="all_nav" data-side-swiper="on">
+                                        @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+                                    </section>
+                                    <section id="participants_add_nav" data-side-swiper="off">
+                                        <nav class="side">
+                                            <ul>
+                                                <li class="static">
+                                                    <span class="text">Advanced search options</span>
+                                                    <div class="content">
+                                                        <div class="field">
+                                                            <select class="side">
+                                                                <option>[Narrow by country]</option>
+                                                                <option value="xx">This first option will actually be a lot, lotta lotta big longer</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="field">
+                                                            <select class="side">
+                                                                <option>Sort by country</option>
+                                                                <option>Sort by name</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="field">
+                                                            <select class="side">
+                                                                <option>Show 10 results per page</option>
+                                                                <option>Show 20 results per page</option>
+                                                                <option>Show 50 results per page</option>
+                                                                <option>Show 100 results per page</option>
+                                                                <option>Show all results</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="field">
+                                                            <a href="#prev">&lt;&lt; Previous</a> |
+                                                    <a href="#next">Next &gt;&gt;</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="current">
+                                                    <a href="#" class="group">
+                                                        <div class="arrow float-left"></div>
+                                                        <span class="text float-left">Table</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="group">
+                                                        <div class="arrow float-left"></div>
+                                                        <span class="text float-left">List</span>
+                                                    </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#" class="group">
+                                                        <div class="arrow float-left"></div>
+                                                        <span class="text float-left">Grid</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="group">
+                                                        <div class="arrow float-left"></div>
+                                                        <span class="text float-left">Map</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 

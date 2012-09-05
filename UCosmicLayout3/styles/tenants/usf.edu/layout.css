@@ -291,14 +291,13 @@ body #main {
       width: 980px;
       padding-left: 20px;
       padding-top: 20px; }
-      body #main > .content.fixed .from-top {
-        padding-top: 20px; }
-      body #main > .content.fixed > .group > .float-left {
+      body #main > .content.fixed .group .float-left.from-top {
+        padding-top: 20px;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         width: 690px; }
-      body #main > .content.fixed > .group > .float-right {
+      body #main > .content.fixed .group .float-right.from-top {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
@@ -311,7 +310,7 @@ body #main {
           width: 10000px; }
           body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=off], body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] [data-side-swiper=on] {
             float: left;
-            width: 690px;
+            width: 960px;
             margin-right: 20px; }
       body #main > .content.fixed [data-fixed-scroll=root] [data-fixed-scroll=content] {
         margin-top: 20px;
@@ -403,28 +402,50 @@ body #main {
           display: block;
           margin-left: 15px;
           padding: 0 7px 8px 8px;
-          background-color: #dddddd; }
+          background-color: #dddddd;
+          color: #006747; }
+          body #main > .content.fixed nav.side > ul > li.static > .content a {
+            color: #006747; }
     body #main > .content.fluid {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       width: 100%;
       padding: 0; }
-    body #main > .content h1, body #main > .content h2, body #main > .content h3, body #main > .content h4, body #main > .content h5, body #main > .content h6 {
+    body #main > .content header {
       margin: 16px 0;
-      font-family: Arial; }
-      body #main > .content h1:first-child, body #main > .content h2:first-child, body #main > .content h3:first-child, body #main > .content h4:first-child, body #main > .content h5:first-child, body #main > .content h6:first-child {
+      vertical-align: text-top; }
+      body #main > .content header:first-child {
         margin-top: 0 !important; }
-    body #main > .content h1 {
-      font-size: 24px;
-      line-height: 1.25;
-      text-transform: uppercase;
-      color: #006747; }
-    body #main > .content h2 {
-      font-size: 22px;
-      line-height: 1.25;
-      color: #333;
-      font-weight: bold; }
+      body #main > .content header .breadcrumb-arrows {
+        vertical-align: text-top;
+        display: inline-block;
+        line-height: 30px;
+        font-size: 12px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+      body #main > .content header a {
+        text-decoration: underline; }
+        body #main > .content header a .breadcrumb-arrows {
+          text-decoration: none; }
+        body #main > .content header a:hover .breadcrumb-arrows {
+          text-decoration: none; }
+      body #main > .content header h1, body #main > .content header h2, body #main > .content header h3, body #main > .content header h4, body #main > .content header h5, body #main > .content header h6 {
+        display: inline-block;
+        font-family: Arial;
+        vertical-align: text-top;
+        line-height: 30px; }
+      body #main > .content header h1 {
+        font-size: 24px;
+        text-transform: uppercase;
+        color: #006747; }
+        body #main > .content header h1 a {
+          color: #006747; }
+      body #main > .content header h2 {
+        font-size: 22px;
+        color: #333;
+        font-weight: bold; }
+        body #main > .content header h2 a {
+          color: #333; }
     body #main > .content p {
       font-size: 16px;
       line-height: 1.5;

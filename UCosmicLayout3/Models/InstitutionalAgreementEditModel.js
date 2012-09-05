@@ -3,7 +3,7 @@
     BaseViewModel.call(self);
 
     self.sideSwiper = new SideSwiper({
-        frameWidth: 710
+        frameWidth: 970
     });
 
     var dataSideSwiper = 'data-side-swiper';
