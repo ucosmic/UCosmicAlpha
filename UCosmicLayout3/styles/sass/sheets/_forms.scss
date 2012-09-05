@@ -99,6 +99,16 @@ form {
     footer {
         margin: 16px 0;
     }
+    &.side .field {
+        margin: 0;
+    }
+    select.side {
+        @include border-box;
+        padding: 0;
+        width: 230px;
+        @include font-height(14px, 14px);
+        height: auto;
+    }
 }
 
 .typed-item {

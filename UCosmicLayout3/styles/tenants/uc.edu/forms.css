@@ -120,6 +120,17 @@ form {
     margin: 16px 0; }
   form footer {
     margin: 16px 0; }
+  form.side .field {
+    margin: 0; }
+  form select.side {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+    width: 230px;
+    font-size: 14px;
+    line-height: 14px;
+    height: auto; }
 
 .typed-item {
   -webkit-box-sizing: border-box;

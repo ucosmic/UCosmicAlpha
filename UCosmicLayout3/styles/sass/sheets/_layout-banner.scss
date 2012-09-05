@@ -82,6 +82,9 @@ body {
                     padding: 6px 8px;
                     height: 28px;
                     @include font-height(14px, 16px);
+                    @media only screen and (max-device-width: 1024px) {
+                        font-size: 13px;
+                    }
                     background-color: $nav-modules-bg-lighter;
                     @include font-ms;
                     color: $nav-modules-text-color;

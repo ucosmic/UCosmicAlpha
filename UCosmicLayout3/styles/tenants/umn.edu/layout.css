@@ -116,6 +116,9 @@ body > nav.modules {
       -moz-transition: all 500ms;
       -o-transition: all 500ms;
       transition: all 500ms; }
+      @media only screen and (max-device-width: 1024px) {
+        body > nav.modules > ul > li > a {
+          font-size: 13px; } }
     body > nav.modules > ul > li:first-child a {
       margin-left: 4px; }
     body > nav.modules > ul > li:hover a {
@@ -313,6 +316,8 @@ body #main {
       body #main > .content.fixed [data-fixed-scroll=root] [data-fixed-scroll=content] {
         margin-top: 20px;
         background-color: transparent; }
+        body #main > .content.fixed [data-fixed-scroll=root] [data-fixed-scroll=content] > [data-side-swiper=off], body #main > .content.fixed [data-fixed-scroll=root] [data-fixed-scroll=content] [data-side-swiper=on] {
+          width: 260px; }
       body #main > .content.fixed nav.side > ul > li {
         margin-bottom: 1px; }
         body #main > .content.fixed nav.side > ul > li:first-child > a > .text {
@@ -342,18 +347,20 @@ body #main {
             display: inline-block;
             border: solid 15px transparent;
             border-left: none; }
-          body #main > .content.fixed nav.side > ul > li > a > .text {
-            display: inline-block;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            width: 245px;
-            padding: 5px 8px 5px 8px;
-            font-size: 16px;
-            line-height: 20px;
-            font-weight: bold;
-            color: #7a0019;
-            background-color: #dddddd; }
+        body #main > .content.fixed nav.side > ul > li > a > .text, body #main > .content.fixed nav.side > ul > li > .text {
+          display: inline-block;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          width: 245px;
+          padding: 5px 8px 5px 8px;
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: bold;
+          color: #7a0019;
+          background-color: #dddddd; }
+        body #main > .content.fixed nav.side > ul > li > .text {
+          margin-left: 15px; }
         body #main > .content.fixed nav.side > ul > li:hover > a > .arrow {
           -webkit-transition: all 250ms;
           -moz-transition: all 250ms;
@@ -392,6 +399,11 @@ body #main {
           padding: 8px 12px 12px 12px;
           background-color: #7a0019;
           color: white; }
+        body #main > .content.fixed nav.side > ul > li.static > .content {
+          display: block;
+          margin-left: 15px;
+          padding: 0 7px 8px 8px;
+          background-color: #dddddd; }
     body #main > .content.fluid {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
