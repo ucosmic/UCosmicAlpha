@@ -427,7 +427,11 @@ body #main {
         text-decoration: underline; }
         body #main > .content header a .breadcrumb-arrows {
           text-decoration: none; }
+        body #main > .content header a h1, body #main > .content header a h2, body #main > .content header a h3, body #main > .content header a h4, body #main > .content header a h5, body #main > .content header a h6 {
+          text-decoration: underline; }
         body #main > .content header a:hover .breadcrumb-arrows {
+          text-decoration: none; }
+        body #main > .content header a:hover h1, body #main > .content header a:hover h2, body #main > .content header a:hover h3, body #main > .content header a:hover h4, body #main > .content header a:hover h5, body #main > .content header a:hover h6 {
           text-decoration: none; }
       body #main > .content header h1, body #main > .content header h2, body #main > .content header h3, body #main > .content header h4, body #main > .content header h5, body #main > .content header h6 {
         display: inline-block;
