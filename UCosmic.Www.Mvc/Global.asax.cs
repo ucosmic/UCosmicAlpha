@@ -12,11 +12,11 @@ namespace UCosmicLayout3
     {
         protected void Application_Start()
         {
-            IocConfig.Initialize();
+            IocConfig.RegisterDependencies();
 
             AreaRegistration.RegisterAllAreas();
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            WebApiConfig.RegisterApi(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

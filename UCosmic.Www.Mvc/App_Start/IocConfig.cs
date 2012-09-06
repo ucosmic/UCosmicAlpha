@@ -1,41 +1,58 @@
-using System.Reflection;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Web;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
+using UCosmic;
+using UCosmic.EntityFramework;
 
 namespace UCosmicLayout3
 {
     public static class IocConfig
     {
         /// <summary>Initialize the container and register it as MVC3 Dependency Resolver.</summary>
-        public static void Initialize()
+        public static void RegisterDependencies()
         {
             var container = new Container();
-            
+
             InitializeContainer(container);
 
-            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-            
+            //container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+
             container.RegisterMvcAttributeFilterProvider();
 
             // Using Entity Framework? Please read this: http://simpleinjector.codeplex.com/discussions/363935
             container.Verify();
-            
+
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
         }
-     
+
         private static void InitializeContainer(Container container)
         {
-            // Please note that if you updated the SimpleInjector.MVC3 package from a previous version, this
-            // SimpleInjectorInitializer class replaces the previous SimpleInjectorMVC3 class. You should
-            // move the registrations from the old SimpleInjectorMVC3.InitializeContainer to this method,
-            // and remove the SimpleInjectorMVC3 and SimpleInjectorMVC3Extensions class from the App_Start
-            // folder.
-            
-            //#error Register your services here (remove this line).
+            RegisterEntityFramework(container);
+        }
 
-            // For instance:
-            // container.Register<IUserRepository, SqlUserRepository>();
+        private static void RegisterEntityFramework(Container container)
+        {
+            // DbContext lifetime
+            container.RegisterPerWebRequest<DbContext, UCosmicContext>();
+            container.RegisterLifetimeScope<IObjectContextAdapter, UCosmicContext>();
+            container.Register(() =>
+            {
+                if (HttpContext.Current != null)
+                    return (UCosmicContext)container.GetInstance<DbContext>();
+                return (UCosmicContext)container.GetInstance<IObjectContextAdapter>();
+            });
+
+            // DbContext interfaces
+            container.Register<IUnitOfWork>(container.GetInstance<UCosmicContext>);
+            container.Register<IQueryEntities>(container.GetInstance<UCosmicContext>);
+            container.Register<ICommandEntities>(container.GetInstance<UCosmicContext>);
+
+            // DbInitializer
+            container.Register<IDatabaseInitializer<UCosmicContext>, BrownfieldDatabaseInitializer<UCosmicContext>>();
+            container.RegisterInitializer<UCosmicContext>(container.InjectProperties);
         }
     }
 }

@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityFramework\BrownfieldDatabaseInitializer.cs" />
     <Compile Include="EntityFramework\DbSchemaName.cs" />
     <Compile Include="EntityFramework\Fluent\Establishments.cs" />
     <Compile Include="EntityFramework\Fluent\GeoNames.cs" />
@@ -59,14 +60,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\UCosmic.Domain\UCosmic.Domain.csproj">
       <Project>{66444f14-2971-43de-b0bb-75a926b6f191}</Project>
       <Name>UCosmic.Domain</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

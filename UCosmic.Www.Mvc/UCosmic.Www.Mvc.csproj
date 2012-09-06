@@ -55,6 +55,9 @@
     <Reference Include="SimpleInjector.Extensions">
       <HintPath>..\packages\SimpleInjector.Extensions.1.5.0.12238\lib\net35\SimpleInjector.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector.Extensions.LifetimeScoping">
+      <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.1.5.0.12199\lib\net40\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector.Integration.Web">
       <HintPath>..\packages\SimpleInjector.Integration.Web.1.5.0.12199\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
     </Reference>

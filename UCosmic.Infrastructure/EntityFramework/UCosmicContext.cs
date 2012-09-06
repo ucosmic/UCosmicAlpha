@@ -12,11 +12,6 @@ namespace UCosmic.EntityFramework
 {
     public class UCosmicContext : DbContext, IUnitOfWork, ICommandEntities
     {
-        public UCosmicContext()
-        {
-            Initializer = null;
-        }
-
         private IDatabaseInitializer<UCosmicContext> _initializer;
 
         public IDatabaseInitializer<UCosmicContext> Initializer

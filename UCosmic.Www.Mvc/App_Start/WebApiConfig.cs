@@ -4,7 +4,7 @@ namespace UCosmicLayout3
 {
     public static class WebApiConfig
     {
-        public static void Register(HttpConfiguration config)
+        public static void RegisterApi(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(null,
                 "api/{controller}/{id}",

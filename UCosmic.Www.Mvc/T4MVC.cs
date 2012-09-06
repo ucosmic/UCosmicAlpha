@@ -373,6 +373,8 @@ namespace Links {
             private const string URLPATH = "~/scripts/oss";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string jquery_animate_enhanced_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.animate-enhanced.min.js") ? Url("jquery.animate-enhanced.min.js") : Url("jquery.animate-enhanced.js");
+                          
             public static readonly string jquery_placeholder_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.placeholder.min.js") ? Url("jquery.placeholder.min.js") : Url("jquery.placeholder.js");
                           
             public static readonly string jquery_placeholder_min_js = Url("jquery.placeholder.min.js");
@@ -588,6 +590,8 @@ namespace Links {
             private const string URLPATH = "~/styles/icons";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string closer_16_red_disc_png = Url("closer-16-red-disc.png");
+            public static readonly string closer_20_red_disc_png = Url("closer-20-red-disc.png");
             public static readonly string closer_24_dark_png = Url("closer-24-dark.png");
             public static readonly string closer_24_light_png = Url("closer-24-light.png");
             public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
