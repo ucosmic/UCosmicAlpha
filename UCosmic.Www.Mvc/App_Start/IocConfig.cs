@@ -1,6 +1,8 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Reflection;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
@@ -18,7 +20,7 @@ namespace UCosmicLayout3
 
             InitializeContainer(container);
 
-            //container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
             container.RegisterMvcAttributeFilterProvider();
 
@@ -26,6 +28,7 @@ namespace UCosmicLayout3
             container.Verify();
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+            GlobalConfiguration.Configuration.DependencyResolver = new HttpDependencyResolver(container);
         }
 
         private static void InitializeContainer(Container container)

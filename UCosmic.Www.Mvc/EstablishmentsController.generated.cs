@@ -23,9 +23,6 @@ using T4MVC;
 namespace UCosmicLayout3.Controllers {
     public partial class EstablishmentsController {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public EstablishmentsController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected EstablishmentsController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

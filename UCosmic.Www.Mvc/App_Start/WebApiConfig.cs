@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace UCosmicLayout3
 {
@@ -6,6 +7,8 @@ namespace UCosmicLayout3
     {
         public static void RegisterApi(HttpConfiguration config)
         {
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
             config.Routes.MapHttpRoute(null,
                 "api/{controller}/{id}",
                 new

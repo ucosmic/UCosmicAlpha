@@ -153,6 +153,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HttpDependencyResolver.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -555,7 +557,6 @@
     <Content Include="Views\Establishments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ApiControllers\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
