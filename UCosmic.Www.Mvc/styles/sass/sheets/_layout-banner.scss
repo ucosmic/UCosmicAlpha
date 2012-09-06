@@ -191,6 +191,9 @@ body {
         @include border-box;
         @include ie-box-shadow;
         background-color: $nav-bib-bg-color;
+        &.hide {
+            display: none;
+        }
         > ul {
             @include border-box;
             width: $tube-outer-width - 4px;

@@ -2,6 +2,14 @@
 
 var MvcJs = {
 	
+	Admin: {
+		Index: function() {
+			var url = "/admin";
+
+			return url.replace(/([?&]+$)/g, "");
+		},
+		NameConst: "Admin"
+	},
 	Agreements: {
 		Index: function() {
 			var url = "/agreements";
@@ -9,6 +17,14 @@ var MvcJs = {
 			return url.replace(/([?&]+$)/g, "");
 		},
 		NameConst: "Agreements"
+	},
+	Establishments: {
+		Index: function() {
+			var url = "/establishments";
+
+			return url.replace(/([?&]+$)/g, "");
+		},
+		NameConst: "Establishments"
 	},
 	Home: {
 		Index: function() {

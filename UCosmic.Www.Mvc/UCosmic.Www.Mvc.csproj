@@ -147,6 +147,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -155,9 +158,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
+    <Compile Include="Controllers\EstablishmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
+    <Compile Include="EstablishmentsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -541,6 +549,10 @@
     <Content Include="styles\tenants\usf.edu\forms.scss" />
     <Content Include="Views\Shared\_SampleSidebarNav.cshtml" />
     <Content Include="Views\Agreements\Index0.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Shared\_SampleStylingBib.cshtml" />
+    <Content Include="Views\Admin\_Bib.cshtml" />
+    <Content Include="Views\Establishments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ApiControllers\" />

@@ -228,6 +228,8 @@ body > nav.bib {
   background-position: top left;
   background-repeat: repeat-x;
   background-color: #502d0e; }
+  body > nav.bib.hide {
+    display: none; }
   body > nav.bib > ul {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

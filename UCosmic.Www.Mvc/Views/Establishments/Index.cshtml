@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="fixed content" data-current-module="admin">
+    <header>
+        <h1>Establishments</h1>
+    </header>
+</div>
+@section bib
+{
+    <nav class="bib hide" data-current-bib="establishments">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}

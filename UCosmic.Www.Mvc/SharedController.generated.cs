@@ -31,6 +31,7 @@ namespace T4MVC {
             public readonly string _Layout = "~/Views/Shared/_Layout.cshtml";
             public readonly string _LayoutCss = "~/Views/Shared/_LayoutCss.cshtml";
             public readonly string _SampleSidebarNav = "~/Views/Shared/_SampleSidebarNav.cshtml";
+            public readonly string _SampleStylingBib = "~/Views/Shared/_SampleStylingBib.cshtml";
             public readonly string _SampleVerticalContent = "~/Views/Shared/_SampleVerticalContent.cshtml";
             public readonly string Error = "~/Views/Shared/Error.cshtml";
         }
