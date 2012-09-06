@@ -75,23 +75,19 @@ namespace UCosmic.EntityFramework
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
+            var complexType = typeof(ComplexTypeConfiguration<>);
+            var entityType = typeof(EntityTypeConfiguration<>);
+
             var typesToRegister = Assembly.GetAssembly(GetType()).GetTypes()
-                .Where(t => typeof(ComplexTypeConfiguration<>).IsGenericallyAssignableFrom(t))
-                .Where(t => !t.IsAbstract)
+                .Where(t => !t.IsAbstract &&
+                (
+                       complexType.IsGenericallyAssignableFrom(t)
+                    || entityType.IsGenericallyAssignableFrom(t)
+                ))
                 .ToArray();
             foreach (var typeToRegister in typesToRegister)
             {
                 dynamic configurationInstance = Activator.CreateInstance(typeToRegister);
-                modelBuilder.Configurations.Add(configurationInstance);
-            }
-
-            var entitiesToRegister = Assembly.GetAssembly(GetType()).GetTypes()
-                .Where(t => typeof(EntityTypeConfiguration<>).IsGenericallyAssignableFrom(t))
-                .Where(t => !t.IsAbstract)
-                .ToArray();
-            foreach (var entityToRegister in entitiesToRegister)
-            {
-                dynamic configurationInstance = Activator.CreateInstance(entityToRegister);
                 modelBuilder.Configurations.Add(configurationInstance);
             }
         }
