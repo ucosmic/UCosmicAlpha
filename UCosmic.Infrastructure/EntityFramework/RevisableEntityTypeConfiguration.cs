@@ -6,7 +6,7 @@ namespace UCosmic.EntityFramework
     public abstract class RevisableEntityTypeConfiguration<TRevisableEntity>
         : EntityTypeConfiguration<TRevisableEntity> where TRevisableEntity : RevisableEntity
     {
-        public RevisableEntityTypeConfiguration()
+        protected RevisableEntityTypeConfiguration()
         {
             HasKey(k => k.RevisionId);
             Property(p => p.EntityId).IsRequired();

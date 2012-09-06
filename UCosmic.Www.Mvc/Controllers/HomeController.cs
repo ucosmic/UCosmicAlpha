@@ -1,22 +1,18 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using UCosmic;
-using UCosmic.Domain.Places;
+﻿using System.Web.Mvc;
 
 namespace UCosmicLayout3.Controllers
 {
     public partial class HomeController : Controller
     {
-        private readonly IQueryEntities _queryEntities = null;
+        //private readonly IQueryEntities _queryEntities;
 
-        public HomeController(IQueryEntities queryEntities)
-        {
-            _queryEntities = queryEntities;
-        }
+        //public HomeController(IQueryEntities queryEntities)
+        //{
+        //    _queryEntities = queryEntities;
+        //}
 
         public virtual ActionResult Index()
         {
-            var test = _queryEntities.Query<Place>().ToArray();
             return View();
         }
 

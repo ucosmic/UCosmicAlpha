@@ -1,2 +1,3 @@
 - DbContext SaveChanges override to notify by email when it fails.
 - Restore email template to Establishments EF ORM.
+- Shared AssemblyInfo.
