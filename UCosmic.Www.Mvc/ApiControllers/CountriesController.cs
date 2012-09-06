@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.UI;
 using UCosmic.Domain.Places;
+using UCosmic.Www.Mvc.Models;
 
 namespace UCosmic.Www.Mvc.ApiControllers
 {
@@ -17,13 +18,20 @@ namespace UCosmic.Www.Mvc.ApiControllers
         }
 
         [OutputCache(Duration = 3600, Location = OutputCacheLocation.Server)]
-        public IEnumerable<SelectListItem> GetCountriesDropDown()
+        public IEnumerable<CountryApiModel> GetCountries()
         {
-            var countries = _queryEntities.Query<GeoNamesCountry>().Where(c => c.Code != null && c.Code != "").OrderBy(c => c.Name);
-            var items = countries.Select(c => new SelectListItem
+            var countries = _queryEntities
+                //.Query<GeoNamesCountry>()
+                //.Where(c => c.Code != null && c.Code != "")
+                //.OrderBy(c => c.Name)
+                .Query<Place>()
+                .Where(p => p.IsCountry)
+                .OrderBy(p => p.OfficialName)
+            ;
+            var items = countries.Select(c => new CountryApiModel
             {
-                Text = c.Name,
-                Value = c.Code,
+                Name = c.OfficialName,
+                Code = c.GeoPlanetPlace.Country.Code,
             });
             return items.ToArray();
         } 

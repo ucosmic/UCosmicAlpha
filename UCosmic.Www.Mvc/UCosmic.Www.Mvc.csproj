@@ -175,6 +175,7 @@
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CountryApiModel.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="scripts\T4MvcJs\T4Proxy.cs" />
@@ -321,6 +322,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4MvcJs.tt</DependentUpon>
     </Content>
+    <Content Include="scripts\T4MvcJs\WebApiRoutes.js" />
     <Content Include="styles\icons\closer-16-red-disc.png" />
     <Content Include="styles\icons\closer-20-red-disc.png" />
     <Content Include="styles\icons\closer-24-dark.png" />

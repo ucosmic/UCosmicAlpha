@@ -18,7 +18,8 @@
             self.country = ko.observable();
 
             ko.computed(function() {
-                $.get('/api/countries').success(function (data) {
+                $.get(app.webApiRoutes.Countries.GetCountries())
+                .success(function (data) {
                     self.countries(data);
                 });
             });
@@ -51,7 +52,7 @@
                                         <span class="text">Advanced search options</span>
                                         <div class="content">
                                             <div class="field">
-                                                <select class="side" data-bind="options: countries, optionsCaption: '[Narrow by country]', optionsText: 'text', optionsValue: 'value', value: country">
+                                                <select class="side" data-bind="options: countries, optionsCaption: '[Narrow by country]', optionsText: 'name', optionsValue: 'code', value: country">
                                                     <option>[Loading...]</option>
                                                 </select>
                                             </div>
