@@ -2,7 +2,7 @@
 using System.Web.Routing;
 using LowercaseRoutesMVC4;
 
-namespace UCosmicLayout3
+namespace UCosmic.Www.Mvc
 {
     public static class RouteConfig
     {

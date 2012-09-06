@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 
-namespace UCosmicLayout3
+namespace UCosmic.Www.Mvc
 {
     public static class WebApiConfig
     {

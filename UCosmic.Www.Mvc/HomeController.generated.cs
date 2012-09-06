@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmicLayout3.Controllers {
+namespace UCosmic.Www.Mvc.Controllers {
     public partial class HomeController {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public HomeController() { }
@@ -95,7 +95,7 @@ namespace UCosmicLayout3.Controllers {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_HomeController: UCosmicLayout3.Controllers.HomeController {
+    public class T4MVC_HomeController: UCosmic.Www.Mvc.Controllers.HomeController {
         public T4MVC_HomeController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.ActionResult Index() {

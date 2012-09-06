@@ -1,4 +1,4 @@
-﻿namespace UCosmicLayout3.Models
+﻿namespace UCosmic.Www.Mvc.Models
 {
     public class Tenancy
     {

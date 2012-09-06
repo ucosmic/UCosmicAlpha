@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace UCosmicLayout3.Controllers
+namespace UCosmic.Www.Mvc.Controllers
 {
     public partial class TenancyController : Controller
     {

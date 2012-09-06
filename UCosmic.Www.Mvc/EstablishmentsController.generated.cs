@@ -20,8 +20,11 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmicLayout3.Controllers {
+namespace UCosmic.Www.Mvc.Controllers {
     public partial class EstablishmentsController {
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public EstablishmentsController() { }
+
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected EstablishmentsController(Dummy d) { }
 
@@ -71,7 +74,7 @@ namespace UCosmicLayout3.Controllers {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_EstablishmentsController: UCosmicLayout3.Controllers.EstablishmentsController {
+    public class T4MVC_EstablishmentsController: UCosmic.Www.Mvc.Controllers.EstablishmentsController {
         public T4MVC_EstablishmentsController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.ActionResult Index() {

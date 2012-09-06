@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace UCosmicLayout3
+namespace UCosmic.Www.Mvc
 {
     public static class FilterConfig
     {

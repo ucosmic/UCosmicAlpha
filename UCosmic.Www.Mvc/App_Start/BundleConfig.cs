@@ -1,6 +1,6 @@
 ﻿using System.Web.Optimization;
 
-namespace UCosmicLayout3
+namespace UCosmic.Www.Mvc
 {
     public static class BundleConfig
     {

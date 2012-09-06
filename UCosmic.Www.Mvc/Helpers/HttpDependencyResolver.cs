@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 using SimpleInjector;
 
-namespace UCosmicLayout3
+namespace UCosmic.Www.Mvc
 {
     public class HttpDependencyResolver : IDependencyResolver
     {

@@ -23,11 +23,11 @@ using T4MVC;
 
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC {
-    public static UCosmicLayout3.Controllers.AdminController Admin = new UCosmicLayout3.Controllers.T4MVC_AdminController();
-    public static UCosmicLayout3.Controllers.AgreementsController Agreements = new UCosmicLayout3.Controllers.T4MVC_AgreementsController();
-    public static UCosmicLayout3.Controllers.EstablishmentsController Establishments = new UCosmicLayout3.Controllers.T4MVC_EstablishmentsController();
-    public static UCosmicLayout3.Controllers.HomeController Home = new UCosmicLayout3.Controllers.T4MVC_HomeController();
-    public static UCosmicLayout3.Controllers.TenancyController Tenancy = new UCosmicLayout3.Controllers.T4MVC_TenancyController();
+    public static UCosmic.Www.Mvc.Controllers.AdminController Admin = new UCosmic.Www.Mvc.Controllers.T4MVC_AdminController();
+    public static UCosmic.Www.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Www.Mvc.Controllers.T4MVC_AgreementsController();
+    public static UCosmic.Www.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Www.Mvc.Controllers.T4MVC_EstablishmentsController();
+    public static UCosmic.Www.Mvc.Controllers.HomeController Home = new UCosmic.Www.Mvc.Controllers.T4MVC_HomeController();
+    public static UCosmic.Www.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Www.Mvc.Controllers.T4MVC_TenancyController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 

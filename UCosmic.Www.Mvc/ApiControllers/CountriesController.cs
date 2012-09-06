@@ -3,10 +3,9 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.UI;
-using UCosmic;
 using UCosmic.Domain.Places;
 
-namespace UCosmicLayout3.ApiControllers
+namespace UCosmic.Www.Mvc.ApiControllers
 {
     public class CountriesController : ApiController
     {

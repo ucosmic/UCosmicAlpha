@@ -6,10 +6,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
-using UCosmic;
 using UCosmic.EntityFramework;
 
-namespace UCosmicLayout3
+namespace UCosmic.Www.Mvc
 {
     public static class IocConfig
     {
