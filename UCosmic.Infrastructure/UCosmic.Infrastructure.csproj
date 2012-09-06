@@ -55,6 +55,7 @@
     <Compile Include="EntityFramework\Fluent\GeoPlanet.cs" />
     <Compile Include="EntityFramework\Fluent\Languages.cs" />
     <Compile Include="EntityFramework\Fluent\Places.cs" />
+    <Compile Include="Etc\ReflectionExtensions.cs" />
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
