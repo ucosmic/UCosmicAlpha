@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{66444F14-2971-43DE-B0BB-75A926B6F191}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UCosmic</RootNamespace>
+    <AssemblyName>UCosmic.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\IAmNumbered.cs" />
+    <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\Establishments\Entities\Establishment.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentAddress.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentCategory.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentCategoryCode.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentContactInfo.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentEmailDomain.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentLocation.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentName.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentNode.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentSamlSignOn.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentType.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
+    <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
+    <Compile Include="Domain\Languages\Entities\Language.cs" />
+    <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
+    <Compile Include="Domain\Places\Entities\BoundingBox.cs" />
+    <Compile Include="Domain\Places\Entities\Coordinates.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesAlternateName.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesCountry.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesFeature.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesFeatureClass.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesFeatureClassEnum.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesFeatureClassEnumExtensions.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesFeatureEnum.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesFeatureEnumExtensions.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesTimeZone.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesToponym.cs" />
+    <Compile Include="Domain\Places\Entities\GeoNamesToponymNode.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetAdmin.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetLocality.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetPlace.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetPlaceBelongTo.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetPlaceNode.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetPlaceType.cs" />
+    <Compile Include="Domain\Places\Entities\GeoPlanetPlaceTypeEnum.cs" />
+    <Compile Include="Domain\Places\Entities\Place.cs" />
+    <Compile Include="Domain\Places\Entities\PlaceName.cs" />
+    <Compile Include="Domain\Places\Entities\PlaceNode.cs" />
+    <Compile Include="Domain\RevisableEntity.cs" />
+    <Compile Include="Domain\UnicodeToAsciiConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
