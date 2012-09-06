@@ -12,6 +12,8 @@ namespace UCosmicLayout3
     {
         protected void Application_Start()
         {
+            IocConfig.Initialize();
+
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
