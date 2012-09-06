@@ -533,6 +533,16 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UCosmic.Domain\UCosmic.Domain.csproj">
+      <Project>{66444f14-2971-43de-b0bb-75a926b6f191}</Project>
+      <Name>UCosmic.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UCosmic.Infrastructure\UCosmic.Infrastructure.csproj">
+      <Project>{d2f07b41-3aa3-46b0-a23d-2fce1f402b09}</Project>
+      <Name>UCosmic.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

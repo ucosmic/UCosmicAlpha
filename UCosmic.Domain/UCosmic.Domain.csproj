@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UCosmic</RootNamespace>
     <AssemblyName>UCosmic.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\IAmNumbered.cs" />
+    <Compile Include="Api\ICommandEntities.cs" />
+    <Compile Include="Api\IQueryEntities.cs" />
+    <Compile Include="Api\IUnitOfWork.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\Establishments\Entities\Establishment.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentAddress.cs" />

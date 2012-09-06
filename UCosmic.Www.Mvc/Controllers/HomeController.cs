@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
+using UCosmic.Domain.Places;
+using UCosmic.EntityFramework;
 
 namespace UCosmicLayout3.Controllers
 {
