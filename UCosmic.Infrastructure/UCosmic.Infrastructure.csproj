@@ -37,10 +37,50 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.DistributedCache, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector">
+      <HintPath>..\packages\SimpleInjector.1.5.0.12199\lib\net35\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Extensions">
+      <HintPath>..\packages\SimpleInjector.Extensions.1.5.0.12238\lib\net35\SimpleInjector.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Extensions.LifetimeScoping">
+      <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.1.5.0.12199\lib\net40\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.1.5.0.12199\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,17 +88,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityFramework\BrownfieldDatabaseInitializer.cs" />
+    <Compile Include="Cache\AzureCacheProvider.cs" />
+    <Compile Include="Cache\IProvideCache.cs" />
+    <Compile Include="Cache\SimpleInjectorCacheProviderRegistration.cs" />
+    <Compile Include="Cache\CacheHttpGetAttribute.cs" />
+    <Compile Include="EntityFramework\DoNotDropCreateUpdateOrMigrateDatabase.cs" />
     <Compile Include="EntityFramework\DbSchemaName.cs" />
     <Compile Include="EntityFramework\Fluent\Establishments.cs" />
     <Compile Include="EntityFramework\Fluent\GeoNames.cs" />
     <Compile Include="EntityFramework\Fluent\GeoPlanet.cs" />
     <Compile Include="EntityFramework\Fluent\Languages.cs" />
     <Compile Include="EntityFramework\Fluent\Places.cs" />
+    <Compile Include="EntityFramework\SimpleInjectorEntityFrameworkRegistration.cs" />
     <Compile Include="Etc\ReflectionExtensions.cs" />
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />
+    <Compile Include="Ioc\SimpleInjectorHttpDependencyResolver.cs" />
+    <Compile Include="Ioc\SimpleInjectorHttpFilterProvider.cs" />
+    <Compile Include="Ioc\SimpleInjectorHttpFilterRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Cache\MemoryCacheProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

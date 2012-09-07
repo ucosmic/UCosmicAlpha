@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 using SimpleInjector;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Ioc
 {
-    public class HttpDependencyResolver : IDependencyResolver
+    public class SimpleInjectorHttpDependencyResolver : IDependencyResolver
     {
         private readonly Container _container;
 
-        public HttpDependencyResolver(Container container)
+        public SimpleInjectorHttpDependencyResolver(Container container)
         {
             if (container == null) throw new ArgumentNullException("container");
             _container = container;

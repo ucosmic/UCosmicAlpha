@@ -1,12 +1,11 @@
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Reflection;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
+using UCosmic.Cache;
 using UCosmic.EntityFramework;
+using UCosmic.Ioc;
 
 namespace UCosmic.Www.Mvc
 {
@@ -22,39 +21,19 @@ namespace UCosmic.Www.Mvc
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
             container.RegisterMvcAttributeFilterProvider();
+            container.RegisterHttpFilterProvider();
 
             // Using Entity Framework? Please read this: http://simpleinjector.codeplex.com/discussions/363935
             container.Verify();
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
-            GlobalConfiguration.Configuration.DependencyResolver = new HttpDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorHttpDependencyResolver(container);
         }
 
         private static void InitializeContainer(Container container)
         {
-            RegisterEntityFramework(container);
-        }
-
-        private static void RegisterEntityFramework(Container container)
-        {
-            // DbContext lifetime
-            container.RegisterPerWebRequest<DbContext, UCosmicContext>();
-            container.RegisterLifetimeScope<IObjectContextAdapter, UCosmicContext>();
-            container.Register(() =>
-            {
-                if (HttpContext.Current != null)
-                    return (UCosmicContext)container.GetInstance<DbContext>();
-                return (UCosmicContext)container.GetInstance<IObjectContextAdapter>();
-            });
-
-            // DbContext interfaces
-            container.Register<IUnitOfWork>(container.GetInstance<UCosmicContext>);
-            container.Register<IQueryEntities>(container.GetInstance<UCosmicContext>);
-            container.Register<ICommandEntities>(container.GetInstance<UCosmicContext>);
-
-            // DbInitializer
-            container.Register<IDatabaseInitializer<UCosmicContext>, BrownfieldDatabaseInitializer<UCosmicContext>>();
-            container.RegisterInitializer<UCosmicContext>(container.InjectProperties);
+            container.RegisterEntityFramework();
+            container.TryRegisterAzureCacheProvider();
         }
     }
 }
