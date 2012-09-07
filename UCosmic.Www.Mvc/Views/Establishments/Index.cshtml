@@ -9,25 +9,74 @@
 }
 @section scripts
 {
+
     <script type="text/javascript">
+
+        function EstablishmentResultViewModel(js) {
+            var self = this;
+            ko.mapping.fromJS(js, {}, self);
+        }
 
         function EstablishmentSearchViewModel() {
             var self = this;
 
-            self.countries = ko.observableArray([]);
+            self.countries = ko.observableArray();
             self.countryCode = ko.observable();
             self.keyword = ko.observable();
 
-            ko.computed(function() {
+            self.pageSize = ko.observable();
+            self.pageNumber = ko.observable(1);
+            self.nextPage = function () {
+                self.pageNumber(self.pageNumber() + 1);
+            };
+            self.prevPage = function () {
+                if (self.pageNumber() >= 1) {
+                    self.pageNumber(self.pageNumber() - 1);
+                }
+            };
+
+            self.items = ko.observableArray();
+            self.itemsMapping = {
+                key: function (data) {
+                    return ko.utils.unwrapObservable(data.revisionId);
+                },
+                create: function (options) {
+                    return new EstablishmentResultViewModel(options.data);
+                }
+            };
+            self.updateItems = function (js) {
+                if (!js) {
+                    self.items([]);
+                }
+                else {
+                    ko.mapping.fromJS(js, self.itemsMapping, self.items);
+                }
+            };
+
+            ko.computed(function () {
                 $.get(app.webApiRoutes.Countries.Get())
-                .success(function (data) {
-                    self.countries(data);
+                .success(function (response) {
+                    self.countries(response);
                 });
-            });
+            })
+            .extend({ throttle: 1 });
+
+            ko.computed(function () {
+                if (self.pageSize() === undefined) return;
+                $.get('/api/establishments', {
+                    pageSize: self.pageSize(),
+                    pageNumber: self.pageNumber()
+                })
+                .success(function (response) {
+                    self.updateItems(response);
+                });
+            })
+            .extend({ throttle: 1 });
         }
 
         ko.applyBindings(new EstablishmentSearchViewModel(), $('#main')[0]);
     </script>
+
 }
 <div class="content fixed to-top" data-current-module="admin">
     <div data-side-swiper="root">
@@ -42,6 +91,40 @@
                         </header>
                         <div class="field">
                             <input type="search" placeholder="Enter the participant's name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
+                        </div>
+                        <div>
+                            <span>Page #<span data-bind="text: pageNumber"></span></span>
+                            <span>Max Results:<span data-bind="text: pageSize"></span></span>
+                        </div>
+                        <div class="results">
+                            <div class="table">
+                                <table>
+                                    <colgroup>
+                                        <col style="width: 75%;" />
+                                        <col style="width: 25%;" />
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Url
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: items">
+                                        <tr data-bind="">
+                                            <td>
+                                                <a data-bind="text: officialName"></a>
+                                            </td>
+                                            <td>
+                                                <span data-bind="text: websiteUrl"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <aside class="float-right from-top" data-fixed-scroll="root">
@@ -64,17 +147,19 @@
                                                 </select>
                                             </div>
                                             <div class="field">
-                                                <select class="side">
-                                                    <option>Show 10 results per page</option>
-                                                    <option>Show 20 results per page</option>
-                                                    <option>Show 50 results per page</option>
-                                                    <option>Show 100 results per page</option>
-                                                    <option>Show all results</option>
+                                                <select class="side" data-bind="value: pageSize">
+                                                    <option value="10">Show 10 results per page</option>
+                                                    <option value="20">Show 20 results per page</option>
+                                                    <option value="50">Show 50 results per page</option>
+                                                    <option value="100">Show 100 results per page</option>
+                                                    <option value="@int.MaxValue">Show all results</option>
                                                 </select>
                                             </div>
                                             <div class="field">
-                                                <a href="#prev">&lt;&lt; Previous</a> |
-                                                    <a href="#next">Next &gt;&gt;</a>
+                                                <button class="link" data-bind="click: prevPage">&lt;&lt; Previous</button>
+                                                |
+                                                <button class="link" data-bind="click: nextPage">Next &gt;&gt;</button>
+                                                <input type="hidden" value="1" data-bind="value: pageNumber" />
                                             </div>
                                         </div>
                                     </li>

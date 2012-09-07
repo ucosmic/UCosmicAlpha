@@ -368,6 +368,10 @@ namespace Links {
                       
         public static readonly string knockout_2_1_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout-2.1.0.min.js") ? Url("knockout-2.1.0.min.js") : Url("knockout-2.1.0.js");
                       
+        public static readonly string knockout_mapping_latest_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.debug.min.js") ? Url("knockout.mapping-latest.debug.min.js") : Url("knockout.mapping-latest.debug.js");
+                      
+        public static readonly string knockout_mapping_latest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.min.js") ? Url("knockout.mapping-latest.min.js") : Url("knockout.mapping-latest.js");
+                      
         public static readonly string modernizr_2_5_3_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modernizr-2.5.3.min.js") ? Url("modernizr-2.5.3.min.js") : Url("modernizr-2.5.3.js");
                       
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

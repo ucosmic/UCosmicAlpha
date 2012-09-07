@@ -104,6 +104,19 @@ a.button {
     margin: -2px 0 0 -2px;
     background-image: url(../../icons/closer-24-red-disc.png); }
 
+button.link, input[type=submit].link, [type=reset].link, [type=button].link {
+  display: inline-block;
+  margin: 0;
+  border: 0px none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 16px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+  button.link:hover, input[type=submit].link:hover, [type=reset].link:hover, [type=button].link:hover {
+    text-decoration: none; }
+
 i.red.minus {
   width: 24px;
   height: 24px;

@@ -80,6 +80,21 @@ a.button {
     }
 }
 
+button.link, input[type=submit].link, [type=reset].link, [type=button].link {
+    display: inline-block;
+    margin:0;
+    border: 0px none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 16px;
+    @include font-ms;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
 i.red.minus {
     width: 24px;
     height: 24px;

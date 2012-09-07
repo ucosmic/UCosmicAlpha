@@ -286,6 +286,8 @@
     <Content Include="scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="scripts\knockout-2.1.0.debug.js" />
     <Content Include="scripts\knockout-2.1.0.js" />
+    <Content Include="scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="scripts\knockout.mapping-latest.js" />
     <Content Include="scripts\modernizr-2.5.3.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />

@@ -139,7 +139,7 @@ body {
                                 padding: 0 7px 8px 8px;
                                 background-color: $sidebar-default-bg-color;
                                 color: $sidebar-default-text-color;
-                                a {
+                                a, button.link, input[type=submit].link, input[type=reset].link, input[type=button].link {
                                     color: $sidebar-default-text-color;
                                 }
                             }
