@@ -17,8 +17,8 @@ namespace UCosmic.Www.Mvc.ApiControllers
             _queryEntities = queryEntities;
         }
 
-        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Server)]
-        public IEnumerable<CountryApiModel> GetCountries()
+        [HttpOutputCacheAttribute(Duration = 60)]
+        public IEnumerable<CountryApiModel> Get()
         {
             var countries = _queryEntities
                 //.Query<GeoNamesCountry>()

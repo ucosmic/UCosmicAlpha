@@ -465,6 +465,8 @@ namespace Links {
             public static readonly string T4MvcJs_tt = Url("T4MvcJs.tt");
             public static readonly string T4MvcJs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/T4MvcJs.min.js") ? Url("T4MvcJs.min.js") : Url("T4MvcJs.js");
                           
+            public static readonly string WebApiRoutes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/WebApiRoutes.min.js") ? Url("WebApiRoutes.min.js") : Url("WebApiRoutes.js");
+                          
         }
     
     }

@@ -15,10 +15,11 @@
             var self = this;
 
             self.countries = ko.observableArray([]);
-            self.country = ko.observable();
+            self.countryCode = ko.observable();
+            self.keyword = ko.observable();
 
             ko.computed(function() {
-                $.get(app.webApiRoutes.Countries.GetCountries())
+                $.get(app.webApiRoutes.Countries.Get())
                 .success(function (data) {
                     self.countries(data);
                 });
@@ -40,7 +41,7 @@
                             </h1>
                         </header>
                         <div class="field">
-                            <input type="search" placeholder="Enter the participant's name or website URL" />
+                            <input type="search" placeholder="Enter the participant's name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
                         </div>
                     </div>
                     <aside class="float-right from-top" data-fixed-scroll="root">
@@ -52,7 +53,7 @@
                                         <span class="text">Advanced search options</span>
                                         <div class="content">
                                             <div class="field">
-                                                <select class="side" data-bind="options: countries, optionsCaption: '[Narrow by country]', optionsText: 'name', optionsValue: 'code', value: country">
+                                                <select class="side" data-bind="options: countries, optionsCaption: '[Narrow by country]', optionsText: 'name', optionsValue: 'code', value: countryCode">
                                                     <option>[Loading...]</option>
                                                 </select>
                                             </div>
