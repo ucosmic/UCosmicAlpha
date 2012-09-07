@@ -7,6 +7,7 @@ using UCosmic.Cache;
 using UCosmic.Configuration;
 using UCosmic.EntityFramework;
 using UCosmic.Ioc;
+using UCosmic.Logging;
 
 namespace UCosmic.Www.Mvc
 {
@@ -34,6 +35,7 @@ namespace UCosmic.Www.Mvc
         private static void InitializeContainer(Container container)
         {
             container.RegisterConfigurationManager();
+            container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
             container.TryRegisterAzureCacheProvider();
         }

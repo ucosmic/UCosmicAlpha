@@ -1,7 +1,9 @@
-﻿namespace UCosmic
+﻿using System;
+
+namespace UCosmic
 {
     public interface ILogExceptions
     {
-        void Log(ILogExceptions exception);
+        void Log(Exception exception);
     }
 }
