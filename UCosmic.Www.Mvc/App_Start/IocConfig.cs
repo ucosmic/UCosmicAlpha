@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using UCosmic.Cache;
+using UCosmic.Configuration;
 using UCosmic.EntityFramework;
 using UCosmic.Ioc;
 
@@ -32,6 +33,7 @@ namespace UCosmic.Www.Mvc
 
         private static void InitializeContainer(Container container)
         {
+            container.RegisterConfigurationManager();
             container.RegisterEntityFramework();
             container.TryRegisterAzureCacheProvider();
         }

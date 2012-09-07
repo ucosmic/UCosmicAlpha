@@ -61,6 +61,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -92,6 +93,8 @@
     <Compile Include="Cache\IProvideCache.cs" />
     <Compile Include="Cache\SimpleInjectorCacheProviderRegistration.cs" />
     <Compile Include="Cache\CacheHttpGetAttribute.cs" />
+    <Compile Include="Configuration\AppSettingsKey.cs" />
+    <Compile Include="Configuration\SimpleInjectorConfigurationManagerRegistration.cs" />
     <Compile Include="EntityFramework\DoNotDropCreateUpdateOrMigrateDatabase.cs" />
     <Compile Include="EntityFramework\DbSchemaName.cs" />
     <Compile Include="EntityFramework\Fluent\Establishments.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="EntityFramework\Fluent\Languages.cs" />
     <Compile Include="EntityFramework\Fluent\Places.cs" />
     <Compile Include="EntityFramework\SimpleInjectorEntityFrameworkRegistration.cs" />
+    <Compile Include="Configuration\DotNetConfigurationManager.cs" />
     <Compile Include="Etc\ReflectionExtensions.cs" />
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />

@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="Api\IAmNumbered.cs" />
     <Compile Include="Api\ICommandEntities.cs" />
+    <Compile Include="Api\ILogExceptions.cs" />
+    <Compile Include="Api\IManageConfigurations.cs" />
     <Compile Include="Api\IQueryEntities.cs" />
     <Compile Include="Api\IUnitOfWork.cs" />
     <Compile Include="Domain\Entity.cs" />
