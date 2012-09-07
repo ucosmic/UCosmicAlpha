@@ -15,13 +15,12 @@ namespace UCosmic.Cache
     {
         public int Duration { get; set; }
 
+        public ILogExceptions ExceptionLogger { get; set; }
         public IProvideCache CacheProvider { get; set; }
 
         private IProvideCache GetCache()
         {
-            if (_cache == null)
-                _cache = CacheProvider ?? new ObjectCacheProvider(MemoryCache.Default);
-            return _cache;
+            return _cache ?? (_cache = CacheProvider ?? new ObjectCacheProvider(MemoryCache.Default));
         }
 
         private IProvideCache _cache;
@@ -85,9 +84,9 @@ namespace UCosmic.Cache
                     actionContext.Response.Headers.CacheControl = SetClientCache();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: add exception logging
+                ExceptionLogger.Log(ex);
             }
         }
 
@@ -114,9 +113,9 @@ namespace UCosmic.Cache
                 if (IsCacheable(actionExecutedContext.ActionContext))
                     actionExecutedContext.ActionContext.Response.Headers.CacheControl = SetClientCache();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: add exception logging
+                ExceptionLogger.Log(ex);
             }
         }
     }
