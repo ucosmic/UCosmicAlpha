@@ -6,8 +6,9 @@ using System.Runtime.Caching;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Newtonsoft.Json;
+using UCosmic.Cache;
 
-namespace UCosmic.Cache
+namespace UCosmic
 {
     // based on strathweb implementation
     // http://www.strathweb.com/2012/05/output-caching-in-asp-net-web-api/
@@ -54,11 +55,13 @@ namespace UCosmic.Cache
 
             try
             {
+                var acceptHeaders = actionContext.Request.Headers.Accept;
+                var acceptHeader = acceptHeaders.Any() ? acceptHeaders.First().ToString() : "*/*";
                 _serverCacheKey = string.Join(":",
                     new[]
                 {
-                    actionContext.Request.RequestUri.AbsoluteUri, 
-                    actionContext.Request.Headers.Accept.First().ToString(),
+                    actionContext.Request.RequestUri.AbsoluteUri,
+                    acceptHeader,
                 });
                 _clientCacheKey = string.Join(":",
                     new[]

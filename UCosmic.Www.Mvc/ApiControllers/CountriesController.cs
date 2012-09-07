@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using UCosmic.Cache;
 using UCosmic.Domain.Places;
 using UCosmic.Www.Mvc.Models;
 
@@ -16,7 +15,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             _queryEntities = queryEntities;
         }
 
-        [CacheHttpGet(Duration = 60)]
+        [CacheHttpGet(Duration = 3600)]
         public IEnumerable<CountryApiModel> Get()
         {
             var countries = _queryEntities
