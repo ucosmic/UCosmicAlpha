@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.ApplicationServer.Caching;
 using SimpleInjector;
+using UCosmic.Configuration;
+using UCosmic.Logging;
 
 namespace UCosmic.Cache
 {
@@ -21,9 +23,11 @@ namespace UCosmic.Cache
                 factory.GetDefaultCache();
                 container.RegisterAzureCacheProvider();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log this
+                var config = new DotNetConfigurationManager();
+                var logger = new ElmahExceptionLogger(config.DefaultMailFromAddress, config.EmergencyMailAddresses);
+                logger.Log(ex);
             }
         }
     }

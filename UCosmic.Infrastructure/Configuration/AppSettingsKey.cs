@@ -8,7 +8,7 @@
         DefaultMailReplyToAddress,
         DefaultMailReplyToDisplayName,
 
-        EmergencyMailAddress,
+        EmergencyMailAddresses,
         MailInterceptAddress,
     }
 }

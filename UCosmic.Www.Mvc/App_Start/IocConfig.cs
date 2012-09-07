@@ -37,7 +37,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterConfigurationManager();
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
-            container.TryRegisterAzureCacheProvider();
+            //container.TryRegisterAzureCacheProvider();
         }
     }
 }

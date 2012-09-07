@@ -9,7 +9,7 @@ namespace UCosmic.Logging
             container.Register<ILogExceptions>(() =>
             {
                 var config = container.GetInstance<IManageConfigurations>();
-                return new ElmahExceptionLogger(config.DefaultMailFromAddress, config.EmergencyMailAddress);
+                return new ElmahExceptionLogger(config.DefaultMailFromAddress, config.EmergencyMailAddresses);
             });
         }
     }

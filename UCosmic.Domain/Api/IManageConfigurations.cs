@@ -8,7 +8,7 @@
         string DefaultMailReplyToAddress { get; }
         string DefaultMailReplyToDisplayName { get; }
 
-        string EmergencyMailAddress { get; }
+        string[] EmergencyMailAddresses { get; }
         string MailInterceptAddress { get; }
     }
 }
