@@ -47,19 +47,16 @@ namespace UCosmic.Domain.Languages
             }
         }
 
-        public LanguageName TranslatedName
+        public LanguageName GetTranslatedName()
         {
-            get
-            {
-                var currentUiName = TranslateNameTo(
-                    CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
-                return currentUiName ?? TranslateNameTo("en") ?? NativeName;
-            }
+            var currentUiName = TranslateNameTo(
+                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+            return currentUiName ?? TranslateNameTo("en") ?? NativeName;
         }
 
         public override string ToString()
         {
-            return TranslatedName.Text;
+            return GetTranslatedName().Text;
         }
     }
 }

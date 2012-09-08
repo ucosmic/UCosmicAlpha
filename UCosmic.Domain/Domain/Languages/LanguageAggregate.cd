@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UCosmic.Domain.Languages.Language">
+    <Position X="3.5" Y="2.75" Width="2.5" />
+    <Members>
+      <Method Name="Language" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AgAChAAAAAAAAQQEAEAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Domain\Languages\Entities\Language.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Names" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Languages.LanguageName">
+    <Position X="8" Y="2.75" Width="2" />
+    <Members>
+      <Method Name="LanguageName" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAACAAAAAAAAEAEAAAAABAgAAAAAIAAAACEAAAAA=</HashCode>
+      <FileName>Domain\Languages\Entities\LanguageName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Owner" />
+      <Property Name="TranslationToLanguage" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

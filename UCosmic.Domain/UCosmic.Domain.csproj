@@ -89,7 +89,14 @@
     <Compile Include="Domain\UnicodeToAsciiConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Domain\Establishments\EstablishmentAggregate.cd" />
+    <None Include="Domain\Languages\LanguageAggregate.cd" />
+    <None Include="Domain\Places\Entities\PlaceAggregate.cd" />
+    <None Include="Domain\Places\GeoNamesAggregate.cd" />
+    <None Include="Domain\Places\GeoPlanetAggregate.cd" />
+    <None Include="Domain\Places\PlaceAggregates.cd" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

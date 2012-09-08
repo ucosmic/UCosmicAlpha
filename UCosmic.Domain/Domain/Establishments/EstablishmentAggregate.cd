@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Language Root">
+    <Position X="12.314" Y="4.878" Height="0.291" Width="1.7" />
+  </Comment>
+  <Comment CommentText="Place Root">
+    <Position X="11.768" Y="10.026" Height="0.302" Width="1.835" />
+  </Comment>
+  <Class Name="UCosmic.Domain.Establishments.Establishment">
+    <Position X="4.5" Y="4.75" Width="2.5" />
+    <Members>
+      <Method Name="Establishment" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Children" Type="UCosmic.Domain.Establishments.Establishment" ManuallyRouted="true">
+      <Path>
+        <Point X="5.387" Y="8.165" />
+        <Point X="5.387" Y="8.491" />
+        <Point X="6.131" Y="8.491" />
+        <Point X="6.131" Y="8.165" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAAAgAAAAQAAYEAEJEIEQYQQAAAAAACAAYAAAAEAgAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\Establishment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+      <Property Name="Type" />
+      <Property Name="Location" />
+      <Property Name="SamlSignOn" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Names" />
+      <Property Name="Ancestors" />
+      <Property Name="Children" />
+      <Property Name="Offspring" />
+      <Property Name="EmailDomains" />
+      <Property Name="Urls" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentName">
+    <Position X="8.5" Y="4" Width="1.75" />
+    <Members>
+      <Method Name="EstablishmentName" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAQAEAAAAAAABBAAAAAAIAAAACAQAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ForEstablishment" />
+      <Property Name="TranslationToLanguage" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentNode">
+    <Position X="0.5" Y="4.75" Width="1.75" />
+    <Members>
+      <Method Name="EstablishmentNode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAQAAAAAAAAAAAAAAQAAAAAACAAAAAAAEAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ancestor" />
+      <Property Name="Offspring" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentEmailDomain">
+    <Position X="0.5" Y="7.25" Width="2.25" />
+    <Members>
+      <Method Name="EstablishmentEmailDomain" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAgAAAAAAE=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentEmailDomain.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Establishment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentUrl">
+    <Position X="8.5" Y="7" Width="1.5" />
+    <Members>
+      <Method Name="EstablishmentUrl" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAQAEAAAAAAAAAAAAAAAAIAAgAAAAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentUrl.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ForEstablishment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Languages.Language" Collapsed="true">
+    <Position X="12.25" Y="5.25" Width="2.5" />
+    <Members>
+      <Method Name="Language" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AgAChAAAAAAAAQQEAEAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Domain\Languages\Entities\Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentType">
+    <Position X="4.25" Y="1.25" Width="1.75" />
+    <Members>
+      <Method Name="EstablishmentType" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAEAAABAAAAAACAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentCategory">
+    <Position X="0.75" Y="1.25" Width="2" />
+    <Members>
+      <Method Name="EstablishmentCategory" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.Place" Collapsed="true">
+    <Position X="11.75" Y="10.5" Width="1.75" />
+    <Members>
+      <Method Name="Place" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAgAAEAAAIEAAAEQQAAFCAAgACCAAAAAAEIAAA=</HashCode>
+      <FileName>Domain\Places\Entities\Place.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentLocation">
+    <Position X="6.25" Y="9.75" Width="2" />
+    <Members>
+      <Method Name="EstablishmentLocation" Hidden="true" />
+    </Members>
+    <AssociationLine Name="ForEstablishment" Type="UCosmic.Domain.Establishments.Establishment">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.386" Y="0.164" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AEBAAAAAAAAAAQAAAAAAAAACACAAABAAAEAAAAAIAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentLocation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ForEstablishment" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Places" />
+      <Property Name="Addresses" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentAddress">
+    <Position X="6.5" Y="12.75" Width="1.75" />
+    <Members>
+      <Method Name="EstablishmentAddress" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentAddress.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TranslationToLanguage" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentCategoryCode">
+    <Position X="9.25" Y="1.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentCategoryCode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentContactInfo">
+    <Position X="6.75" Y="1.25" Width="2" />
+    <Members>
+      <Method Name="EstablishmentContactInfo" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentContactInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Establishments.EstablishmentSamlSignOn">
+    <Position X="3.25" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACMAAAAAIAAABAAEAAAAAAAAAAAAAIAAAAAAgAAAA=</HashCode>
+      <FileName>Domain\Establishments\Entities\EstablishmentSamlSignOn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="UCosmic.Domain.Establishments.KnownEstablishmentType">
+    <Position X="12.25" Y="1.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgAQAAAAAAAAgAAAAAAAAJAYAAAAAAACAAQA=</HashCode>
+      <FileName>Domain\Establishments\Entities\KnownEstablishmentType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

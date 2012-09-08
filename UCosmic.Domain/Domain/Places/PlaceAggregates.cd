@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UCosmic.Domain.Places.GeoNamesAlternateName">
+    <Position X="0.5" Y="6" Width="2" />
+    <Members>
+      <Method Name="GeoNamesAlternateName" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAEAAAAAAQAAAAAAAAAgIAAAABAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesAlternateName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Toponym" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesCountry">
+    <Position X="8.25" Y="3.25" Width="1.75" />
+    <Members>
+      <Method Name="GeoNamesCountry" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="AsToponym" Type="UCosmic.Domain.Places.GeoNamesToponym" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.732" />
+        <Point X="6.5" Y="3.732" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQAAAAAACAQAAAAMgQAgBAQAACAgAAADAIAAAAAgAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesCountry.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AsToponym" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesFeature">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <Members>
+      <Method Name="GeoNamesFeature" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAIgAAQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesFeature.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Class" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesFeatureClass">
+    <Position X="8.25" Y="0.75" Width="2" />
+    <Members>
+      <Method Name="GeoNamesFeatureClass" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesFeatureClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesFeatureClassEnumExtensions">
+    <Position X="0.5" Y="11.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAACAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesFeatureClassEnumExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesFeatureEnumExtensions">
+    <Position X="0.5" Y="13" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAACAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesFeatureEnumExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesTimeZone">
+    <Position X="8.25" Y="7.5" Width="1.75" />
+    <Members>
+      <Method Name="GeoNamesTimeZone" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAABAAAAEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesTimeZone.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesToponym">
+    <Position X="4.75" Y="3.25" Width="1.75" />
+    <Members>
+      <Method Name="GeoNamesToponym" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="AsCountry" Type="UCosmic.Domain.Places.GeoNamesCountry" FixedFromPoint="true">
+      <Path>
+        <Point X="6.5" Y="4.093" />
+        <Point X="8.25" Y="4.093" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Parent" Type="UCosmic.Domain.Places.GeoNamesToponym" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="4.395" />
+        <Point X="6.75" Y="4.395" />
+        <Point X="6.75" Y="4.877" />
+        <Point X="6.5" Y="4.877" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Children" Type="UCosmic.Domain.Places.GeoNamesToponym" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="5.298" />
+        <Point X="6.75" Y="5.298" />
+        <Point X="6.75" Y="5.961" />
+        <Point X="6.5" Y="5.961" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ICAAAAAAAAIAAAAMAAAkQAQYAEAoEICAEMgACAEIAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesToponym.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AsCountry" />
+      <Property Name="Feature" />
+      <Property Name="TimeZone" />
+      <Property Name="Parent" />
+      <Property Name="Place" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Ancestors" />
+      <Property Name="Offspring" />
+      <Property Name="AlternateNames" />
+      <Property Name="Children" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesToponymNode">
+    <Position X="0.5" Y="3.5" Width="2" />
+    <Members>
+      <Method Name="GeoNamesToponymNode" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAQAAAAAAEAAAAAAAQAAAAAACAAAAAAAEAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesToponymNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ancestor" />
+      <Property Name="Offspring" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.BoundingBox">
+    <Position X="13.5" Y="11.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\BoundingBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.Coordinates">
+    <Position X="10.75" Y="11.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAIAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\Coordinates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetPlace">
+    <Position X="16.25" Y="0.75" Width="1.5" />
+    <Members>
+      <Method Name="GeoPlanetPlace" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Parent" Type="UCosmic.Domain.Places.GeoPlanetPlace" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.312" Y="0.75" />
+        <Point X="17.312" Y="0.5" />
+        <Point X="16.625" Y="0.5" />
+        <Point X="16.625" Y="0.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.634" Y="0.047" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Children" Type="UCosmic.Domain.Places.GeoPlanetPlace" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.25" Y="3.125" />
+        <Point X="16" Y="3.125" />
+        <Point X="16" Y="2.312" />
+        <Point X="16.25" Y="2.312" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.002" Y="-0.498" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Locality1" Type="UCosmic.Domain.Places.GeoPlanetLocality" FixedToPoint="true">
+      <Path>
+        <Point X="17.75" Y="3.46" />
+        <Point X="19.75" Y="3.46" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Locality2" Type="UCosmic.Domain.Places.GeoPlanetLocality" FixedToPoint="true">
+      <Path>
+        <Point X="17.75" Y="3.167" />
+        <Point X="19.75" Y="3.167" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Place" Type="UCosmic.Domain.Places.Place" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.281" Y="4.742" />
+        <Point X="17.281" Y="14.75" />
+        <Point X="12.5" Y="14.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ABAAgAAgAAEAAAAEAgAEQQAAlGIAAEKACUAAAAEJAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetPlace.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+      <Property Name="Parent" />
+      <Property Name="Country" />
+      <Property Name="Admin3" />
+      <Property Name="Admin2" />
+      <Property Name="Admin1" />
+      <Property Name="Locality1" />
+      <Property Name="Locality2" />
+      <Property Name="Place" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="BelongTos" />
+      <Property Name="Ancestors" />
+      <Property Name="Offspring" />
+      <Property Name="Children" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetPlaceBelongTo">
+    <Position X="19.5" Y="1" Width="2" />
+    <Members>
+      <Method Name="GeoPlanetPlaceBelongTo" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAEAAAAAAAAAAAAgAAgAAAAAAAIQAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetPlaceBelongTo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BelongsTo" />
+      <Property Name="GeoPlanetPlace" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetPlaceNode">
+    <Position X="11.75" Y="0.75" Width="1.75" />
+    <Members>
+      <Method Name="GeoPlanetPlaceNode" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAQAAAAAAEAAAAAAAQAAAAAACAAAAAAAEAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetPlaceNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ancestor" />
+      <Property Name="Offspring" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetPlaceType">
+    <Position X="19.5" Y="4.25" Width="1.75" />
+    <Members>
+      <Method Name="GeoPlanetPlaceType" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAgAAAAAACAAEAACAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetPlaceType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetAdmin">
+    <Position X="11.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAgAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetAdmin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetLocality">
+    <Position X="19.75" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="GeoPlanetLocality" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetLocality.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.Place">
+    <Position X="10.75" Y="14" Width="1.75" />
+    <Members>
+      <Method Name="Place" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="GeoNamesToponym" Type="UCosmic.Domain.Places.GeoNamesToponym" FixedToPoint="true">
+      <Path>
+        <Point X="10.75" Y="15.842" />
+        <Point X="6" Y="15.842" />
+        <Point X="6" Y="8.396" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.562" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="GeoPlanetPlace" Type="UCosmic.Domain.Places.GeoPlanetPlace" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.5" Y="14.313" />
+        <Point X="16.75" Y="14.313" />
+        <Point X="16.75" Y="4.742" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Parent" Type="UCosmic.Domain.Places.Place" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.375" Y="14" />
+        <Point X="12.375" Y="13.75" />
+        <Point X="11.5" Y="13.75" />
+        <Point X="11.5" Y="14" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.647" Y="0.186" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Children" Type="UCosmic.Domain.Places.Place" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.188" Y="16.771" />
+        <Point X="11.188" Y="17.021" />
+        <Point X="12.061" Y="17.021" />
+        <Point X="12.061" Y="16.771" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAgAAEAAAIEAAAEQQAAFCAAgACCAAAAAAEIAAA=</HashCode>
+      <FileName>Domain\Places\Entities\Place.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GeoNamesToponym" />
+      <Property Name="GeoPlanetPlace" />
+      <Property Name="Parent" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Ancestors" />
+      <Property Name="Offspring" />
+      <Property Name="Names" />
+      <Property Name="Children" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.PlaceName">
+    <Position X="13.75" Y="15.75" Width="2" />
+    <Members>
+      <Method Name="PlaceName" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAAAAAAEQAAAAAABAAQAAAAIAAAACAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\PlaceName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TranslationToLanguage" />
+      <Property Name="NameFor" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.PlaceNode">
+    <Position X="8" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAQAAAAAAEAAAAAAAQAAAAAACAAAAAAAEAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\PlaceNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ancestor" />
+      <Property Name="Offspring" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Languages.Language" Collapsed="true">
+    <Position X="18.5" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAChAAAAAAAAQQEAEAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Domain\Languages\Entities\Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="UCosmic.Domain.Places.GeoNamesFeatureClassEnum">
+    <Position X="0.5" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAIAACAAAAAACIAAAAAAgAAQAAMAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesFeatureClassEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UCosmic.Domain.Places.GeoNamesFeatureEnum">
+    <Position X="0.5" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>cAgAAAAAAAAAAAAAAACAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesFeatureEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UCosmic.Domain.Places.GeoPlanetPlaceTypeEnum">
+    <Position X="18" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAQAAAAIAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetPlaceTypeEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

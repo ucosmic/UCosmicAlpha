@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UCosmic.Domain.Places.Coordinates">
+    <Position X="1" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAIAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\Coordinates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.Place">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <Members>
+      <Method Name="Place" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Parent" Type="UCosmic.Domain.Places.Place" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.643" Y="4" />
+        <Point X="5.643" Y="3.75" />
+        <Point X="4.893" Y="3.75" />
+        <Point X="4.893" Y="4" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.647" Y="0.186" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="GeoNamesToponym" Type="UCosmic.Domain.Places.GeoNamesToponym">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.037" Y="-0.256" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAgAAEAAAIEAAAEQQAAFCAAgACCAAAAAAEIAAA=</HashCode>
+      <FileName>Domain\Places\Entities\Place.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+      <Property Name="GeoNamesToponym" />
+      <Property Name="GeoPlanetPlace" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Names" />
+      <Property Name="Children" />
+      <Property Name="Ancestors" />
+      <Property Name="Offspring" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.PlaceName">
+    <Position X="7.25" Y="5.75" Width="1.75" />
+    <Members>
+      <Method Name="PlaceName" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAAAAAAEQAAAAAABAAQAAAAIAAAACAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\PlaceName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="NameFor" />
+      <Property Name="TranslationToLanguage" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.PlaceNode">
+    <Position X="1" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAQAAAAAAEAAAAAAAQAAAAAACAAAAAAAEAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\PlaceNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ancestor" />
+      <Property Name="Offspring" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Languages.Language" Collapsed="true">
+    <Position X="12" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAChAAAAAAAAQQEAEAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Domain\Languages\Entities\Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.BoundingBox">
+    <Position X="4.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Places\Entities\BoundingBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoPlanetPlace" Collapsed="true">
+    <Position X="12" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAgAAgAAEAAAAEAgAEQQAAlGIAAEKACUAAAAEJAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoPlanetPlace.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Place" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UCosmic.Domain.Places.GeoNamesToponym" Collapsed="true">
+    <Position X="12" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ICAAAAAAAAIAAAAMAAAkQAQYAEAoEICAEMgACAEIAAA=</HashCode>
+      <FileName>Domain\Places\Entities\GeoNamesToponym.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Place" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

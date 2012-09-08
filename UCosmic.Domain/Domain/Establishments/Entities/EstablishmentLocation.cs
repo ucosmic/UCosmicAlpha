@@ -34,18 +34,15 @@ namespace UCosmic.Domain.Establishments
                 a.TranslationToLanguage.ThreeLetterIsoBibliographicCode.Equals(languageIsoCode, StringComparison.OrdinalIgnoreCase));
         }
 
-        public EstablishmentAddress DefaultAddress
+        public EstablishmentAddress GetDefaultAddress()
         {
-            get
-            {
-                if (Addresses.Count == 1)
-                    return Addresses.Single();
+            if (Addresses.Count == 1)
+                return Addresses.Single();
 
-                var currentUiAddress = TranslateAddressTo(
-                    CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+            var currentUiAddress = TranslateAddressTo(
+                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
 
-                return currentUiAddress ?? TranslateAddressTo("en");
-            }
+            return currentUiAddress ?? TranslateAddressTo("en");
         }
 
         public Coordinates Center { get; protected internal set; }
