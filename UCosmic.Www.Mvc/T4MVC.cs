@@ -767,6 +767,8 @@ namespace Links {
         public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
         public static readonly string BaseViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/BaseViewModel.min.js") ? Url("BaseViewModel.min.js") : Url("BaseViewModel.js");
                       
+        public static readonly string EstablishmentSearchViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentSearchViewModel.min.js") ? Url("EstablishmentSearchViewModel.min.js") : Url("EstablishmentSearchViewModel.js");
+                      
         public static readonly string FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FlasherViewModel.min.js") ? Url("FlasherViewModel.min.js") : Url("FlasherViewModel.js");
                       
         public static readonly string InstitutionalAgreementEditModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InstitutionalAgreementEditModel.min.js") ? Url("InstitutionalAgreementEditModel.min.js") : Url("InstitutionalAgreementEditModel.js");
