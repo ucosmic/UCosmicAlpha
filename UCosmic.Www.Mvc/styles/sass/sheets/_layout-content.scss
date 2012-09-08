@@ -223,6 +223,33 @@ body {
             a[target=_blank], a[target=_blank]:visited {
                 color: $external-link-color;
             }
+            table.data {
+                width: 100%;
+                margin: 16px 0;
+                th {
+                    border: solid 1px #fff;
+                    padding: 4px 8px;
+                    vertical-align: text-top;
+                    text-align: left;
+                    background-color: $table-header-bg-color;
+                    color: $table-header-text-color;
+                    font-weight: bold;
+                }
+                td {
+                    border: solid 1px #fff;
+                    padding: 4px;
+                    vertical-align: text-top;
+                }
+                tbody {
+                    tr {
+                        &:nth-child(even) {
+                            td {
+                                background-color: $table-row-even-bg-color;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

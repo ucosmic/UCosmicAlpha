@@ -460,12 +460,29 @@ body #main {
       line-height: 1.5;
       margin: 1em 0; }
     body #main > .content a, body #main > .content a:visited {
-      color: #0000cc;
+      color: #006747;
       text-decoration: underline; }
     body #main > .content a:hover {
       text-decoration: none; }
     body #main > .content a[target=_blank], body #main > .content a[target=_blank]:visited {
       color: #0000cc; }
+    body #main > .content table.data {
+      width: 100%;
+      margin: 16px 0; }
+      body #main > .content table.data th {
+        border: solid 1px #fff;
+        padding: 4px 8px;
+        vertical-align: text-top;
+        text-align: left;
+        background-color: #006747;
+        color: #e0d1a5;
+        font-weight: bold; }
+      body #main > .content table.data td {
+        border: solid 1px #fff;
+        padding: 4px;
+        vertical-align: text-top; }
+      body #main > .content table.data tbody tr:nth-child(even) td {
+        background-color: #dddddd; }
 
 /* layout footer stylesheet */
 body > footer {
