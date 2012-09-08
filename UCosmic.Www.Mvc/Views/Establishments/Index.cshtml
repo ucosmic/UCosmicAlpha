@@ -25,21 +25,28 @@
             self.keyword = ko.observable();
 
             self.pageSize = ko.observable();
-            self.pageNumber = ko.observable(1);
+            self.pageNumber = ko.observable();
             self.itemTotal = ko.observable();
             self.pageCount = ko.observable();
             self.firstIndex = ko.observable();
             self.firstNumber = ko.observable();
             self.lastIndex = ko.observable();
             self.lastNumber = ko.observable();
+            self.pageNumbers = ko.computed(function () {
+                var numbers = [];
+                for (var i = 1; i <= self.pageCount() ; i++) {
+                    numbers.push(i);
+                }
+                return numbers;
+            });
             self.nextPage = function () {
                 if (self.nextEnabled()) {
-                    self.pageNumber(self.pageNumber() + 1);
+                    self.pageNumber(parseInt(self.pageNumber()) + 1);
                 }
             };
             self.prevPage = function () {
                 if (self.prevEnabled()) {
-                    self.pageNumber(self.pageNumber() - 1);
+                    self.pageNumber(parseInt(self.pageNumber()) - 1);
                 }
             };
             self.nextEnabled = ko.computed(function () {
@@ -108,8 +115,11 @@
                             <input type="search" placeholder="Enter the participant's name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
                         </div>
                         <div>
-                            Showing <span data-bind="text: firstNumber"></span>- <span data-bind="text: lastNumber"></span>&nbsp;of <span data-bind="text: itemTotal"></span>
-                            (page <span data-bind="text: pageNumber"></span> of <span data-bind="text: pageCount"></span>)
+                            <strong>Showing <span data-bind="text: firstNumber"></span>&nbsp;- <span data-bind="text: lastNumber"></span>&nbsp;of <span data-bind="text: itemTotal"></span></strong>
+                            (page 
+                            <select class="inline" data-bind="options: pageNumbers, value: pageNumber">
+                            </select>
+                            of <span data-bind="text: pageCount"></span>)
                         </div>
                         <div class="results">
                             <div class="table">
