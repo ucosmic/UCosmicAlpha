@@ -190,6 +190,7 @@
     </Compile>
     <Compile Include="Models\CountryApiModel.cs" />
     <Compile Include="Models\EstablishmentApiModel.cs" />
+    <Compile Include="Models\EstablishmentSearchInputModel.cs" />
     <Compile Include="Models\PageOf.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

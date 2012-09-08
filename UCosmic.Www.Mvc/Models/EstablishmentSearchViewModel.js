@@ -6,24 +6,27 @@
 function EstablishmentSearchViewModel() {
     var self = this;
 
+    // query parameters
     self.countries = ko.observableArray();
     self.countryCode = ko.observable();
     self.keyword = ko.observable();
 
+    // paging
     self.pageSize = ko.observable();
-    self.pageNumber = ko.observable();
+    self.pageNumber = ko.observable(1);
     self.itemTotal = ko.observable();
     self.pageCount = ko.observable();
     self.firstIndex = ko.observable();
     self.firstNumber = ko.observable();
     self.lastIndex = ko.observable();
     self.lastNumber = ko.observable();
-    self.pageNumbers = ko.computed(function () {
+    self.pageNumbers = ko.observableArray([1]);
+    self.pageCount.subscribe(function (newValue) {
         var numbers = [];
-        for (var i = 1; i <= self.pageCount() ; i++) {
+        for (var i = 1; i <= newValue; i++) {
             numbers.push(i);
         }
-        return numbers;
+        self.pageNumbers(numbers);
     });
     self.nextPage = function () {
         if (self.nextEnabled()) {
@@ -42,25 +45,32 @@ function EstablishmentSearchViewModel() {
         return self.pageNumber() > 1;
     });
 
+    // results
     self.items = ko.observableArray();
     self.itemsMapping = {
-        key: function (data) {
-            return ko.utils.unwrapObservable(data.revisionId);
-        },
-        create: function (options) {
-            return new EstablishmentResultViewModel(options.data);
+        'items': {
+            key: function (data) {
+                return ko.utils.unwrapObservable(data.revisionId);
+            },
+            create: function (options) {
+                return new EstablishmentResultViewModel(options.data);
+            }
         },
         ignore: ['pageSize', 'pageNumber', 'pageIndex']
     };
     self.updateItems = function (js) {
         if (!js) {
-            self.items([]);
+            ko.mapping.fromJS({
+                items: [],
+                itemTotal: 0
+            }, self.itemsMapping, self);
         }
         else {
             ko.mapping.fromJS(js, self.itemsMapping, self);
         }
     };
 
+    // countries dropdown
     ko.computed(function () {
         $.get(app.webApiRoutes.Countries.Get())
         .success(function (response) {
@@ -69,8 +79,10 @@ function EstablishmentSearchViewModel() {
     })
     .extend({ throttle: 1 });
 
+    // results server hit
     ko.computed(function () {
-        if (self.pageSize() === undefined) return;
+        if (self.pageSize() === undefined)
+            return;
         $.get('/api/establishments', {
             pageSize: self.pageSize(),
             pageNumber: self.pageNumber()
