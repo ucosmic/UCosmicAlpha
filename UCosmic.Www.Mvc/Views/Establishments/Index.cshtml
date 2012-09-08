@@ -33,13 +33,21 @@
             self.lastIndex = ko.observable();
             self.lastNumber = ko.observable();
             self.nextPage = function () {
-                self.pageNumber(self.pageNumber() + 1);
+                if (self.nextEnabled()) {
+                    self.pageNumber(self.pageNumber() + 1);
+                }
             };
             self.prevPage = function () {
-                if (self.pageNumber() >= 1) {
+                if (self.prevEnabled()) {
                     self.pageNumber(self.pageNumber() - 1);
                 }
             };
+            self.nextEnabled = ko.computed(function () {
+                return self.pageNumber() < self.pageCount();
+            });
+            self.prevEnabled = ko.computed(function () {
+                return self.pageNumber() > 1;
+            });
 
             self.items = ko.observableArray();
             self.itemsMapping = {
@@ -163,9 +171,9 @@
                                                 </select>
                                             </div>
                                             <div class="field">
-                                                <button class="link" data-bind="click: prevPage">&lt;&lt; Previous</button>
+                                                <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
                                                 |
-                                                <button class="link" data-bind="click: nextPage">Next &gt;&gt;</button>
+                                                <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
                                                 <input type="hidden" value="1" data-bind="value: pageNumber" />
                                             </div>
                                         </div>

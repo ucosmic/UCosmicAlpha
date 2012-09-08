@@ -117,6 +117,10 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
   button.link:hover, input[type=submit].link:hover, [type=reset].link:hover, [type=button].link:hover {
     text-decoration: none; }
+  button.link[disabled], input[type=submit].link[disabled], [type=reset].link[disabled], [type=button].link[disabled] {
+    color: #555;
+    text-decoration: none;
+    cursor: default; }
 
 i.red.minus {
   width: 24px;

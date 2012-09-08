@@ -141,6 +141,9 @@ body {
                                 color: $sidebar-default-text-color;
                                 a, button.link, input[type=submit].link, input[type=reset].link, input[type=button].link {
                                     color: $sidebar-default-text-color;
+                                    &[disabled] {
+                                        color: #999;
+                                    }
                                 }
                             }
                         }

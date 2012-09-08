@@ -93,6 +93,11 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link {
     &:hover {
         text-decoration: none;
     }
+    &[disabled] {
+        color: #555;
+        text-decoration: none;
+        cursor: default;
+    }
 }
 
 i.red.minus {

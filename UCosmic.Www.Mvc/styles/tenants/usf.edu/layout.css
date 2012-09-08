@@ -409,6 +409,8 @@ body #main {
           color: #006747; }
           body #main > .content.fixed nav.side > ul > li.static > .content a, body #main > .content.fixed nav.side > ul > li.static > .content button.link, body #main > .content.fixed nav.side > ul > li.static > .content input[type=submit].link, body #main > .content.fixed nav.side > ul > li.static > .content input[type=reset].link, body #main > .content.fixed nav.side > ul > li.static > .content input[type=button].link {
             color: #006747; }
+            body #main > .content.fixed nav.side > ul > li.static > .content a[disabled], body #main > .content.fixed nav.side > ul > li.static > .content button.link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=submit].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=reset].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=button].link[disabled] {
+              color: #999; }
     body #main > .content.fluid {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
