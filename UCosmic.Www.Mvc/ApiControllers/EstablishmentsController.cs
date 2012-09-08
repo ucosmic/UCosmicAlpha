@@ -17,8 +17,8 @@ namespace UCosmic.Www.Mvc.ApiControllers
             _queryEntities = queryEntities;
         }
 
-        //[CacheHttpGet(Duration = 3600)]
-        public IEnumerable<EstablishmentApiModel> Get(string keyword = null, string country = null, string orderBy = null, int pageSize = 10, int pageNumber = 1)
+        //[CacheHttpGet(Duration = 60)]
+        public PageOf<EstablishmentApiModel> Get(string keyword = null, string country = null, string orderBy = null, int pageSize = 10, int pageNumber = 1)
         {
             if (pageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -26,10 +26,12 @@ namespace UCosmic.Www.Mvc.ApiControllers
             var entities = _queryEntities
                 .Query<Establishment>()
             ;
-            var entitiesCount = entities.Count();
-            var pageCount = (int)Math.Ceiling((double)entitiesCount / pageSize);
-            if (pageCount < 1) return Enumerable.Empty<EstablishmentApiModel>();
-            if (pageNumber > pageCount) return Get(keyword, country, orderBy, pageSize, pageCount);
+
+            var model = new PageOf<EstablishmentApiModel>(pageSize, pageNumber, entities.Count());
+
+            if (model.PageCount < 1) return model;
+            if (model.IsOutOfBounds)
+                return Get(keyword, country, orderBy, pageSize, model.PageCount);
 
             entities = entities
                 .OrderBy(e => e.RevisionId)
@@ -37,14 +39,14 @@ namespace UCosmic.Www.Mvc.ApiControllers
                 .Take(pageSize)
             ;
 
-            var items = entities.Select(e => new EstablishmentApiModel
+            model.Items = entities.Select(e => new EstablishmentApiModel
             {
                 RevisionId = e.RevisionId,
                 OfficialName = e.OfficialName,
                 WebsiteUrl = e.WebsiteUrl,
             });
 
-            return items;
+            return model;
         }
     }
 }

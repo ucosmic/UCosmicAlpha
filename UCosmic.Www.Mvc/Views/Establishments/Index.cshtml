@@ -26,6 +26,12 @@
 
             self.pageSize = ko.observable();
             self.pageNumber = ko.observable(1);
+            self.itemTotal = ko.observable();
+            self.pageCount = ko.observable();
+            self.firstIndex = ko.observable();
+            self.firstNumber = ko.observable();
+            self.lastIndex = ko.observable();
+            self.lastNumber = ko.observable();
             self.nextPage = function () {
                 self.pageNumber(self.pageNumber() + 1);
             };
@@ -42,14 +48,15 @@
                 },
                 create: function (options) {
                     return new EstablishmentResultViewModel(options.data);
-                }
+                },
+                ignore: ['pageSize', 'pageNumber', 'pageIndex']
             };
             self.updateItems = function (js) {
                 if (!js) {
                     self.items([]);
                 }
                 else {
-                    ko.mapping.fromJS(js, self.itemsMapping, self.items);
+                    ko.mapping.fromJS(js, self.itemsMapping, self);
                 }
             };
 
@@ -93,8 +100,8 @@
                             <input type="search" placeholder="Enter the participant's name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
                         </div>
                         <div>
-                            <span>Page #<span data-bind="text: pageNumber"></span></span>
-                            <span>Max Results:<span data-bind="text: pageSize"></span></span>
+                            Showing <span data-bind="text: firstNumber"></span>- <span data-bind="text: lastNumber"></span>&nbsp;of <span data-bind="text: itemTotal"></span>
+                            (page <span data-bind="text: pageNumber"></span> of <span data-bind="text: pageCount"></span>)
                         </div>
                         <div class="results">
                             <div class="table">
