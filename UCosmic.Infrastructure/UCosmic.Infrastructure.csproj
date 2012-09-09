@@ -95,6 +95,7 @@
     <Compile Include="Cache\AzureCacheProvider.cs" />
     <Compile Include="Cache\IProvideCache.cs" />
     <Compile Include="Cache\SimpleInjectorCacheProviderRegistration.cs" />
+    <Compile Include="Cqrs\SimpleQueryProcessor.cs" />
     <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
     <Compile Include="Configuration\AppSettingsKey.cs" />
     <Compile Include="Configuration\SimpleInjectorConfigurationManagerRegistration.cs" />

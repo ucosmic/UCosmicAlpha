@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using UCosmic.Configuration;
+using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
 using UCosmic.Ioc;
 using UCosmic.Logging;
@@ -36,6 +37,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterConfigurationManager();
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
+            container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
             //container.TryRegisterAzureCacheProvider();
         }
     }
