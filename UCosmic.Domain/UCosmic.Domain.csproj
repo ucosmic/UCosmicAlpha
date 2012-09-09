@@ -41,17 +41,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\IAmNumbered.cs" />
-    <Compile Include="Api\ICommandEntities.cs" />
-    <Compile Include="Api\IDefineQuery.cs" />
-    <Compile Include="Api\IHandleQueries.cs" />
+    <Compile Include="Api\Data\ICommandEntities.cs" />
+    <Compile Include="Api\Cqrs\IDefineQuery.cs" />
+    <Compile Include="Api\Cqrs\IHandleQueries.cs" />
     <Compile Include="Api\ILogExceptions.cs" />
     <Compile Include="Api\IManageConfigurations.cs" />
-    <Compile Include="Api\IProcessQueries.cs" />
-    <Compile Include="Api\IQueryEntities.cs" />
-    <Compile Include="Api\IUnitOfWork.cs" />
+    <Compile Include="Api\Cqrs\IProcessQueries.cs" />
+    <Compile Include="Api\Data\IQueryEntities.cs" />
+    <Compile Include="Api\Data\IUnitOfWork.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />
     <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\EntityExtensions.cs" />
     <Compile Include="Domain\Establishments\Entities\Establishment.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentAddress.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentCategory.cs" />
@@ -65,9 +66,10 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentsByKeyword.cs" />
     <Compile Include="Domain\Languages\Entities\Language.cs" />
     <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
-    <Compile Include="Api\OrderByDirection.cs" />
+    <Compile Include="Api\Cqrs\OrderByDirection.cs" />
     <Compile Include="Domain\Places\Entities\BoundingBox.cs" />
     <Compile Include="Domain\Places\Entities\Coordinates.cs" />
     <Compile Include="Domain\Places\Entities\GeoNamesAlternateName.cs" />
@@ -103,6 +105,7 @@
     <None Include="Domain\Places\GeoPlanetAggregate.cd" />
     <None Include="Domain\Places\PlaceAggregates.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
