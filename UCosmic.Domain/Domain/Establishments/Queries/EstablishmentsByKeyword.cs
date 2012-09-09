@@ -11,13 +11,19 @@ namespace UCosmic.Domain.Establishments
         //public StringMatchStrategy TermMatchStrategy { get; set; }
     }
 
+    public class QueriedEstablishmentsByKeyword : BaseEvent
+    {
+    }
+
     public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<Establishment>>
     {
         private readonly IQueryEntities _entities;
+        private readonly IProcessEvents _events;
 
-        public HandleEstablishmentsByKeywordQuery(IQueryEntities entities)
+        public HandleEstablishmentsByKeywordQuery(IQueryEntities entities, IProcessEvents events)
         {
             _entities = entities;
+            _events = events;
         }
 
         public PagedQueryResult<Establishment> Handle(EstablishmentsByKeyword query)
@@ -48,7 +54,25 @@ namespace UCosmic.Domain.Establishments
 
             var pagedResults = new PagedQueryResult<Establishment>(results, query.Pager);
 
+            _events.Raise(new QueriedEstablishmentsByKeyword());
+
             return pagedResults;
+        }
+    }
+
+    public class HandleQueriedEstablishmentsByKeywordEvent : IHandleEvents<QueriedEstablishmentsByKeyword>
+    {
+        public void Handle(QueriedEstablishmentsByKeyword @event)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class HandleQueriedEstablishmentsByKeywordEvent2 : IHandleEvents<QueriedEstablishmentsByKeyword>
+    {
+        public void Handle(QueriedEstablishmentsByKeyword @event)
+        {
+            throw new NotImplementedException();
         }
     }
 }

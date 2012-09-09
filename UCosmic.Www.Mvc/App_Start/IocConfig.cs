@@ -38,6 +38,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
+            container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
             //container.TryRegisterAzureCacheProvider();
         }
     }

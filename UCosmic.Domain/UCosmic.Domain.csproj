@@ -40,17 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Events\BaseEvent.cs" />
+    <Compile Include="Api\Events\IDefineEvent.cs" />
+    <Compile Include="Api\Events\IHandleEvents.cs" />
+    <Compile Include="Api\Events\IProcessEvents.cs" />
     <Compile Include="Api\IAmNumbered.cs" />
     <Compile Include="Api\Data\ICommandEntities.cs" />
-    <Compile Include="Api\Cqrs\IDefineQuery.cs" />
-    <Compile Include="Api\Cqrs\IHandleQueries.cs" />
+    <Compile Include="Api\Queries\IDefineQuery.cs" />
+    <Compile Include="Api\Queries\IHandleQueries.cs" />
     <Compile Include="Api\ILogExceptions.cs" />
     <Compile Include="Api\IManageConfigurations.cs" />
-    <Compile Include="Api\Cqrs\IProcessQueries.cs" />
+    <Compile Include="Api\Queries\IProcessQueries.cs" />
     <Compile Include="Api\Data\IQueryEntities.cs" />
     <Compile Include="Api\Data\IUnitOfWork.cs" />
-    <Compile Include="Api\Cqrs\PagedQueryResult.cs" />
-    <Compile Include="Api\Cqrs\PagedQueryRequest.cs" />
+    <Compile Include="Api\Queries\PagedQueryResult.cs" />
+    <Compile Include="Api\Queries\PagedQueryRequest.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />
     <Compile Include="Domain\Entity.cs" />
@@ -71,7 +75,7 @@
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByKeyword.cs" />
     <Compile Include="Domain\Languages\Entities\Language.cs" />
     <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
-    <Compile Include="Api\Cqrs\OrderByDirection.cs" />
+    <Compile Include="Api\Queries\OrderByDirection.cs" />
     <Compile Include="Domain\Places\Entities\BoundingBox.cs" />
     <Compile Include="Domain\Places\Entities\Coordinates.cs" />
     <Compile Include="Domain\Places\Entities\GeoNamesAlternateName.cs" />
