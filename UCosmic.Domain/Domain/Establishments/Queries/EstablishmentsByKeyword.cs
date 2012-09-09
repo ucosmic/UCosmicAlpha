@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Linq;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentsByKeyword : BaseEntitiesQuery<Establishment>, IDefineQuery<Establishment[]>
+    public class EstablishmentsByKeyword : BaseEntitiesQuery<Establishment>, IDefineQuery<PagedQueryResult<Establishment>>
     {
-        public string Term { get; set; }
-        public int MaxResults { get; set; }
+        public string Keyword { get; set; }
+        public string CountryCode { get; set; }
+        //public int MaxResults { get; set; }
+        public PagedQueryRequest Pager { get; set; }
         //public StringMatchStrategy TermMatchStrategy { get; set; }
     }
 
-    public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, Establishment[]>
+    public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<Establishment>>
     {
         private readonly IQueryEntities _entities;
 
@@ -19,7 +20,7 @@ namespace UCosmic.Domain.Establishments
             _entities = entities;
         }
 
-        public Establishment[] Handle(EstablishmentsByKeyword query)
+        public PagedQueryResult<Establishment> Handle(EstablishmentsByKeyword query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -40,10 +41,14 @@ namespace UCosmic.Domain.Establishments
                 //.WithNameOrUrl(query.Term, query.TermMatchStrategy)
                 .OrderBy(query.OrderBy);
 
-            if (query.MaxResults > 0)
-                results = results.Take(query.MaxResults);
+            //if (query.MaxResults > 0)
+            //    results = results.Take(query.MaxResults);
 
-            return results.ToArray();
+            //return results.ToArray();
+
+            var pagedResults = new PagedQueryResult<Establishment>(results, query.Pager);
+
+            return pagedResults;
         }
     }
 }

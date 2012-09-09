@@ -49,6 +49,8 @@
     <Compile Include="Api\Cqrs\IProcessQueries.cs" />
     <Compile Include="Api\Data\IQueryEntities.cs" />
     <Compile Include="Api\Data\IUnitOfWork.cs" />
+    <Compile Include="Api\Cqrs\PagedQueryResult.cs" />
+    <Compile Include="Api\Cqrs\PagedQueryRequest.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />
     <Compile Include="Domain\Entity.cs" />
