@@ -16,7 +16,11 @@ namespace UCosmic.Www.Mvc
         /// <summary>Initialize the container and register it as MVC3 Dependency Resolver.</summary>
         public static void RegisterDependencies()
         {
-            var container = new Container();
+            var container = new Container(
+                new ContainerOptions
+                {
+                    AllowOverridingRegistrations = true,
+                });
 
             InitializeContainer(container);
 
@@ -40,7 +44,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
             container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
             //container.TryRegisterAzureCacheProvider();
-            container.RegisterViewManager();
+            container.RegisterMemoryViewManager();
         }
     }
 }

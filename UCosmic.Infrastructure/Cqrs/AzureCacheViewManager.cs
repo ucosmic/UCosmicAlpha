@@ -15,19 +15,33 @@ namespace UCosmic.Cqrs
 
         public TResult Get<TResult>()
         {
-            var result = _dataCache.Get(ComputeKey(typeof (TResult)));
-            if (result != null)
+            try
             {
-                var tResult = JsonConvert.DeserializeObject<TResult>(result.ToString());
-                return tResult;
+                var result = _dataCache.Get(ComputeKey(typeof (TResult)));
+                if (result != null)
+                {
+                    var tResult = JsonConvert.DeserializeObject<TResult>(result.ToString());
+                    return tResult;
+                }
+                return default(TResult);
             }
-            return default(TResult);
+            catch (Exception ex)
+            {
+                return Get<TResult>();
+            }
         }
 
         public void Set<TResult>(object value)
         {
-            var result = JsonConvert.SerializeObject(value);
-            _dataCache.Put(ComputeKey(typeof (TResult)), result);
+            try
+            {
+                var result = JsonConvert.SerializeObject(value);
+                _dataCache.Put(ComputeKey(typeof (TResult)), result);
+            }
+            catch (Exception ex)
+            {
+                Set<TResult>(value);
+            }
         }
 
         private string ComputeKey(Type type)

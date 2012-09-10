@@ -7,14 +7,10 @@
         @Html.Partial(MVC.Admin.Views._Bib)
     </nav>
 }
-@section scripts
-{
-    <script type="text/javascript" src="@Url.Content(Links.Models.EstablishmentSearchViewModel_js)"></script>
-    <script type="text/javascript">
-        ko.applyBindings(new EstablishmentSearchViewModel(), $('#main')[0]);
-    </script>
-
-}
+    @section scripts {
+        <script type="text/javascript" src="@Url.Content(Links.Models.EstablishmentSearchViewModel_js)"></script> <script type="text/javascript"> ko.applyBindings(new EstablishmentSearchViewModel(), $('#main')[0]);
+        </script>;
+    }
 <div class="content fixed to-top" data-current-module="admin">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
@@ -59,7 +55,9 @@
                                                 <a data-bind="text: officialName"></a>
                                             </td>
                                             <td>
-                                                <span data-bind="text: websiteUrl"></span>
+                                                <div style="word-wrap: break-word;max-width:175px;">
+                                                    <span data-bind="text: websiteUrl"></span>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
