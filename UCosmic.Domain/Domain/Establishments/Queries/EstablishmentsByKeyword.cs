@@ -40,6 +40,7 @@ namespace UCosmic.Domain.Establishments
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                         {
                             x => x.Names,
+                            x => x.Urls,
                         })
                 .OrderBy(x => x.RevisionId)
             ;
@@ -49,6 +50,15 @@ namespace UCosmic.Domain.Establishments
                     RevisionId = x.RevisionId,
                     OfficialName = x.OfficialName,
                     WebsiteUrl = x.WebsiteUrl,
+                    Names = x.Names.Select(y => new EstablishmentNameView
+                        {
+                            Text = y.Text,
+                            AsciiEquivalent = y.AsciiEquivalent,
+                        }),
+                    Urls = x.Urls.Select(y => new EstablishmentUrlView
+                        {
+                            Value = y.Value,
+                        })
                 });
             _viewManager.Set<IEnumerable<EstablishmentView>>(view);
         }

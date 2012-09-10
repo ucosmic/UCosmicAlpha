@@ -19,7 +19,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
         }
 
         //[CacheHttpGet(Duration = 60)]
-        public PageOf<EstablishmentApiModel> Get([FromUri] EstablishmentSearchInputModel input)
+        public PageOf<EstablishmentView> Get([FromUri] EstablishmentSearchInputModel input)
         {
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -39,14 +39,15 @@ namespace UCosmic.Www.Mvc.ApiControllers
             };
             var results = _queryProcessor.Execute(query);
 
-            var model = new PageOf<EstablishmentApiModel>(results.PageSize, results.PageNumber, results.ItemTotal)
+            var model = new PageOf<EstablishmentView>(results.PageSize, results.PageNumber, results.ItemTotal)
             {
-                Items = results.Items.Select(x => new EstablishmentApiModel
-                {
-                    RevisionId = x.RevisionId,
-                    OfficialName = x.OfficialName,
-                    WebsiteUrl = x.WebsiteUrl,
-                }),
+                //Items = results.Items.Select(x => new EstablishmentView
+                //{
+                //    RevisionId = x.RevisionId,
+                //    OfficialName = x.OfficialName,
+                //    WebsiteUrl = x.WebsiteUrl,
+                //}),
+                Items = results.Items,
             };
 
             return model;
