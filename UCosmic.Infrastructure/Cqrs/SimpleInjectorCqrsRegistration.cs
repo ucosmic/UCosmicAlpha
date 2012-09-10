@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.Caching;
 using SimpleInjector;
 using SimpleInjector.Extensions;
 
@@ -27,5 +28,12 @@ namespace UCosmic.Cqrs
                     },
                 assemblies);
         }
+
+        public static void RegisterViewManager(this Container container)
+        {
+            container.RegisterSingle(() => new MemoryViewManager(MemoryCache.Default));
+            container.RegisterSingle<IManageViews>(container.GetInstance<MemoryViewManager>);
+        }
+
     }
 }

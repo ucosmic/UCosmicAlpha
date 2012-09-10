@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentsByKeyword : BaseEntitiesQuery<Establishment>, IDefineQuery<PagedQueryResult<Establishment>>
+    public class EstablishmentsByKeyword : BaseViewsQuery<EstablishmentView>, IDefineQuery<PagedQueryResult<EstablishmentView>>
     {
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
@@ -11,22 +14,48 @@ namespace UCosmic.Domain.Establishments
         //public StringMatchStrategy TermMatchStrategy { get; set; }
     }
 
-    public class QueriedEstablishmentsByKeyword : BaseEvent
-    {
-    }
-
-    public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<Establishment>>
+    public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<EstablishmentView>>
     {
         private readonly IQueryEntities _entities;
-        private readonly IProcessEvents _events;
+        private readonly IManageViews _viewManager;
 
-        public HandleEstablishmentsByKeywordQuery(IQueryEntities entities, IProcessEvents events)
+        public HandleEstablishmentsByKeywordQuery(IQueryEntities entities, IManageViews viewManager)
         {
             _entities = entities;
-            _events = events;
+            _viewManager = viewManager;
         }
 
-        public PagedQueryResult<Establishment> Handle(EstablishmentsByKeyword query)
+        private IEnumerable<EstablishmentView> GetView()
+        {
+            var view = _viewManager.Get<IEnumerable<EstablishmentView>>();
+            if (view == null)
+            {
+                CreateView();
+                return GetView();
+            }
+            return view;
+        }
+
+        private void CreateView()
+        {
+            var entities = _entities.Query<Establishment>()
+                .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
+                        {
+                            x => x.Names,
+                        })
+                .OrderBy(x => x.RevisionId)
+            ;
+            var view = entities.Select(x =>
+                new EstablishmentView
+                {
+                    RevisionId = x.RevisionId,
+                    OfficialName = x.OfficialName,
+                    WebsiteUrl = x.WebsiteUrl,
+                });
+            _viewManager.Set<IEnumerable<EstablishmentView>>(view);
+        }
+
+        public PagedQueryResult<EstablishmentView> Handle(EstablishmentsByKeyword query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -42,37 +71,22 @@ namespace UCosmic.Domain.Establishments
             //    new ValidationFailure("MaxResults", "MaxResults must be greater than or equal to zero", query.MaxResults),
             //});
 
-            var results = _entities.Query<Establishment>()
-                .EagerLoad(_entities, query.EagerLoad)
-                //.WithNameOrUrl(query.Term, query.TermMatchStrategy)
-                .OrderBy(query.OrderBy);
+            //var results = _entities.Query<Establishment>()
+            //    //.EagerLoad(_entities, query.EagerLoad)
+            //    //.WithNameOrUrl(query.Term, query.TermMatchStrategy)
+            //    //.OrderBy(query.OrderBy)
+            //;
 
             //if (query.MaxResults > 0)
             //    results = results.Take(query.MaxResults);
 
             //return results.ToArray();
 
-            var pagedResults = new PagedQueryResult<Establishment>(results, query.Pager);
+            var view = GetView().AsQueryable();
 
-            _events.Raise(new QueriedEstablishmentsByKeyword());
+            var pagedResults = new PagedQueryResult<EstablishmentView>(view, query.Pager);
 
             return pagedResults;
-        }
-    }
-
-    public class HandleQueriedEstablishmentsByKeywordEvent : IHandleEvents<QueriedEstablishmentsByKeyword>
-    {
-        public void Handle(QueriedEstablishmentsByKeyword @event)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class HandleQueriedEstablishmentsByKeywordEvent2 : IHandleEvents<QueriedEstablishmentsByKeyword>
-    {
-        public void Handle(QueriedEstablishmentsByKeyword @event)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Data\IQueryViews.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
     <Compile Include="Api\Events\IHandleEvents.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Api\Queries\PagedQueryRequest.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />
+    <Compile Include="Domain\BaseViewsQuery.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityExtensions.cs" />
     <Compile Include="Domain\Establishments\Entities\Establishment.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByKeyword.cs" />
+    <Compile Include="Domain\Establishments\Views\EstablishmentView.cs" />
     <Compile Include="Domain\Languages\Entities\Language.cs" />
     <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
     <Compile Include="Api\Queries\OrderByDirection.cs" />

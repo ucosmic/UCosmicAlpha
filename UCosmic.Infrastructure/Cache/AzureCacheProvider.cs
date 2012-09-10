@@ -7,10 +7,10 @@ namespace UCosmic.Cache
     {
         private readonly DataCache _dataCache;
 
-         public AzureCacheProvider(DataCache dataCache)
-         {
-             _dataCache = dataCache;
-         }
+        public AzureCacheProvider(DataCache dataCache)
+        {
+            _dataCache = dataCache;
+        }
 
         public bool Contains(string key)
         {

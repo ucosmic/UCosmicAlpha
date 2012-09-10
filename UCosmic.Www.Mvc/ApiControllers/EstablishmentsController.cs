@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Http;
 using UCosmic.Domain.Establishments;
@@ -28,14 +25,14 @@ namespace UCosmic.Www.Mvc.ApiControllers
             var query = new EstablishmentsByKeyword
             {
                 CountryCode = input.Country,
-                EagerLoad = new Expression<Func<Establishment, object>>[]
-                {
-                    e => e.Names,
-                },
-                OrderBy = new Dictionary<Expression<Func<Establishment, object>>, OrderByDirection>
-                {
-                    { e => e.RevisionId, OrderByDirection.Ascending },
-                },
+                //EagerLoad = new Expression<Func<Establishment, object>>[]
+                //{
+                //    e => e.Names,
+                //},
+                //OrderBy = new Dictionary<Expression<Func<Establishment, object>>, OrderByDirection>
+                //{
+                //    { e => e.RevisionId, OrderByDirection.Ascending },
+                //},
                 Pager = new PagedQueryRequest
                 {
                     PageNumber = input.PageNumber,

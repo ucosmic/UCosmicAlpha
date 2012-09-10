@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UCosmic.Domain;
 
 namespace UCosmic
 {
-    public class PagedQueryResult<TEntity> : IEnumerable<TEntity> where TEntity : Entity
+    public class PagedQueryResult<TEntity> : IEnumerable<TEntity>
     {
         public PagedQueryResult(IQueryable<TEntity> queryable, PagedQueryRequest request)
         {
