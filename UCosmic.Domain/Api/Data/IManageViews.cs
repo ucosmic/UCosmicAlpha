@@ -2,7 +2,7 @@
 {
     public interface IManageViews
     {
-        TResult Get<TResult>();
-        void Set<TResult>(object value);
+        TView Get<TView>();
+        void Set<TView>(object value);
     }
 }

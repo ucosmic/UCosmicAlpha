@@ -9,9 +9,7 @@ namespace UCosmic.Domain.Establishments
     {
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
-        //public int MaxResults { get; set; }
         public PagedQueryRequest Pager { get; set; }
-        //public StringMatchStrategy TermMatchStrategy { get; set; }
     }
 
     public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<EstablishmentView>>

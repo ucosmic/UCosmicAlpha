@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\Data\IQueryViews.cs" />
+    <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
     <Compile Include="Api\Events\IHandleEvents.cs" />
