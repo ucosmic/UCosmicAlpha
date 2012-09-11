@@ -25,7 +25,7 @@ namespace UCosmic.Cqrs
                 }
                 return default(TResult);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Get<TResult>();
             }
@@ -38,7 +38,7 @@ namespace UCosmic.Cqrs
                 var result = JsonConvert.SerializeObject(value);
                 _dataCache.Put(ComputeKey(typeof (TResult)), result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Set<TResult>(value);
             }

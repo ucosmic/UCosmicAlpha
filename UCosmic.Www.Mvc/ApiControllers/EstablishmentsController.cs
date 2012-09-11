@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
+using AutoMapper;
 using UCosmic.Domain.Establishments;
 using UCosmic.Www.Mvc.Models;
 
@@ -19,37 +20,14 @@ namespace UCosmic.Www.Mvc.ApiControllers
         }
 
         //[CacheHttpGet(Duration = 60)]
-        public PageOf<EstablishmentView> Get([FromUri] EstablishmentSearchInputModel input)
+        public PageOf<EstablishmentApiModel> Get([FromUri] EstablishmentSearchInputModel input)
         {
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var query = new EstablishmentsByKeyword
-            {
-                CountryCode = input.Country,
-                OrderBy = new Dictionary<Expression<Func<EstablishmentView, object>>, OrderByDirection>
-                {
-                    { e => e.RevisionId, OrderByDirection.Ascending },
-                },
-                Pager = new PagedQueryRequest
-                {
-                    PageNumber = input.PageNumber,
-                    PageSize = input.PageSize,
-                },
-            };
+            var query = Mapper.Map<EstablishmentsByKeyword>(input);
             var results = _queryProcessor.Execute(query);
-
-            var model = new PageOf<EstablishmentView>(results.PageSize, results.PageNumber, results.ItemTotal)
-            {
-                //Items = results.Items.Select(x => new EstablishmentView
-                //{
-                //    RevisionId = x.RevisionId,
-                //    OfficialName = x.OfficialName,
-                //    WebsiteUrl = x.WebsiteUrl,
-                //}),
-                Items = results.Items,
-            };
-
+            var model = Mapper.Map<PageOf<EstablishmentApiModel>>(results);
             return model;
         }
     }

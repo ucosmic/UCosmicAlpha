@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoMapper;
 
 namespace UCosmic.Domain.Establishments
 {
@@ -41,25 +42,13 @@ namespace UCosmic.Domain.Establishments
                         {
                             x => x.Names,
                             x => x.Urls,
+                            x => x.Location.Places.Select(y => y.GeoPlanetPlace),
+                            x => x.Ancestors.Select(y => y.Ancestor.Location.Places.Select(z => z.GeoPlanetPlace))
                         })
                 .OrderBy(x => x.RevisionId)
             ;
-            var view = entities.Select(x =>
-                new EstablishmentView
-                {
-                    RevisionId = x.RevisionId,
-                    OfficialName = x.OfficialName,
-                    WebsiteUrl = x.WebsiteUrl,
-                    Names = x.Names.Select(y => new EstablishmentNameView
-                        {
-                            Text = y.Text,
-                            AsciiEquivalent = y.AsciiEquivalent,
-                        }),
-                    Urls = x.Urls.Select(y => new EstablishmentUrlView
-                        {
-                            Value = y.Value,
-                        })
-                });
+
+            var view = Mapper.Map<IEnumerable<EstablishmentView>>(entities);
             _viewManager.Set<IEnumerable<EstablishmentView>>(view);
         }
 
@@ -67,30 +56,19 @@ namespace UCosmic.Domain.Establishments
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            //if (string.IsNullOrWhiteSpace(query.Term))
-            //    throw new ValidationException(new[]
-            //{
-            //    new ValidationFailure("Term", "Term cannot be null or white space string", query.Term),
-            //});
-
-            //if (query.MaxResults < 0)
-            //    throw new ValidationException(new[]
-            //{
-            //    new ValidationFailure("MaxResults", "MaxResults must be greater than or equal to zero", query.MaxResults),
-            //});
-
-            //var results = _entities.Query<Establishment>()
-            //    //.EagerLoad(_entities, query.EagerLoad)
-            //    //.WithNameOrUrl(query.Term, query.TermMatchStrategy)
-            //    //.OrderBy(query.OrderBy)
-            //;
-
-            //if (query.MaxResults > 0)
-            //    results = results.Take(query.MaxResults);
-
-            //return results.ToArray();
-
             var view = GetView().AsQueryable();
+            
+            // when the query's country code is empty string, match all establishments regardless of country.
+            // when the query's country code is null, match establishments without country
+            if (query.CountryCode == null)
+            {
+                view = view.Where(x => string.IsNullOrWhiteSpace(x.CountryCode));
+            }
+            // when the country code is specified, match establishments with country
+            else if (!string.IsNullOrWhiteSpace(query.CountryCode))
+            {
+                view = view.Where(x => x.CountryCode.Equals(query.CountryCode, StringComparison.OrdinalIgnoreCase));
+            }
 
             var pagedResults = new PagedQueryResult<EstablishmentView>(view, query.Pager);
 

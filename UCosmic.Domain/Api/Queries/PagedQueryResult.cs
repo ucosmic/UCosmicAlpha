@@ -14,7 +14,7 @@ namespace UCosmic
             _request = request;
 
             // whenever the PageCount is greater than the PageNumber, reduce PageNumber, options are out of bounds
-            if (PageNumber > PageCount) _request.PageNumber = PageCount;
+            if (PageNumber > PageCount && ItemTotal > 0) _request.PageNumber = PageCount;
 
             if (_request.PageIndex > 0)
                 queryable = queryable.Skip(_request.PageIndex * _request.PageSize);

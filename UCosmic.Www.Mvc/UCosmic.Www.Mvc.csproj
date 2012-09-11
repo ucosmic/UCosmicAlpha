@@ -41,6 +41,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoAutoMapper, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoAutoMapper.0.2.0.0\lib\net40\AutoAutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=2.0.0.232, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -168,6 +176,7 @@
     </Compile>
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -570,7 +579,6 @@
     <Content Include="styles\tenants\umn.edu\forms.scss" />
     <Content Include="styles\tenants\usf.edu\forms.scss" />
     <Content Include="Views\Shared\_SampleSidebarNav.cshtml" />
-    <Content Include="Views\Agreements\Index0.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_SampleStylingBib.cshtml" />
     <Content Include="Views\Admin\_Bib.cshtml" />

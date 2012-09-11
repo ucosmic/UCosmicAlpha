@@ -11,6 +11,16 @@ function EstablishmentSearchViewModel() {
     self.countryCode = ko.observable();
     self.keyword = ko.observable();
 
+    // countries dropdown
+    ko.computed(function () {
+        $.get(app.webApiRoutes.Countries.Get())
+        .success(function (response) {
+            response.splice(response.length, 0, { code: '-1', name: '[Without country]' });
+            self.countries(response);
+        });
+    })
+    .extend({ throttle: 1 });
+
     // paging
     self.pageSize = ko.observable();
     self.pageNumber = ko.observable(1);
@@ -70,22 +80,14 @@ function EstablishmentSearchViewModel() {
         }
     };
 
-    // countries dropdown
-    ko.computed(function () {
-        $.get(app.webApiRoutes.Countries.Get())
-        .success(function (response) {
-            self.countries(response);
-        });
-    })
-    .extend({ throttle: 1 });
-
     // results server hit
     ko.computed(function () {
         if (self.pageSize() === undefined)
             return;
         $.get('/api/establishments', {
             pageSize: self.pageSize(),
-            pageNumber: self.pageNumber()
+            pageNumber: self.pageNumber(),
+            countryCode: self.countryCode()
         })
         .success(function (response) {
             self.updateItems(response);
