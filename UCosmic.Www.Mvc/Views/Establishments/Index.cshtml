@@ -7,9 +7,14 @@
         @Html.Partial(MVC.Admin.Views._Bib)
     </nav>
 }
-    @section scripts {
-        <script type="text/javascript" src="@Url.Content(Links.Models.EstablishmentSearchViewModel_js)"></script> <script type="text/javascript"> ko.applyBindings(new EstablishmentSearchViewModel(), $('#main')[0]);
-        </script>;
+@section scripts {
+
+    <script type="text/javascript" src="@Url.Content(Links.Models.EstablishmentSearchViewModel_js)"></script>
+
+    <script type="text/javascript"> ko.applyBindings(new EstablishmentSearchViewModel(), $('#main')[0]);
+    </script>
+
+;
     }
 <div class="content fixed to-top" data-current-module="admin">
     <div data-side-swiper="root">
@@ -25,14 +30,22 @@
                         <div class="field">
                             <input type="search" placeholder="Enter the participant's name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
                         </div>
-                        <div>
-                            <strong>Showing <span data-bind="text: firstNumber"></span>&nbsp;- <span data-bind="text: lastNumber"></span>&nbsp;of <span data-bind="text: itemTotal"></span></strong>
-                            (page 
+                        <p data-bind="visible: showSpinner">
+                            <strong>Loading search results...</strong>
+                        </p>
+                        <p data-bind="visible: hasNoItems" style="display: none;">
+                            There are no results that match your search terms.
+                        </p>
+                        <p data-bind="visible: showStatus" style="display: none;">
+                            <strong>Showing <span data-bind="text: firstNumber"></span>
+                                <span data-bind="visible: hasManyItems">- <span data-bind="text: lastNumber"></span></span>
+                                of <span data-bind="text: itemTotal"></span></strong>
+                            <span data-bind="visible: hasManyPages">(page
                             <select class="inline" data-bind="options: pageNumbers, value: pageNumber">
                             </select>
-                            of <span data-bind="text: pageCount"></span>)
-                        </div>
-                        <div class="results">
+                                of <span data-bind="text: pageCount"></span>)</span>
+                        </p>
+                        <div class="results" data-bind="visible: hasItems" style="display: none;">
                             <div class="table">
                                 <table class="data">
                                     <colgroup>
@@ -45,7 +58,7 @@
                                                 Name
                                             </th>
                                             <th>
-                                                Url
+                                                Country
                                             </th>
                                         </tr>
                                     </thead>
@@ -55,9 +68,7 @@
                                                 <a data-bind="text: officialName"></a>
                                             </td>
                                             <td>
-                                                <div style="word-wrap: break-word;max-width:175px;">
-                                                    <span data-bind="text: websiteUrl"></span>
-                                                </div>
+                                                <span data-bind="text: nullDisplayCountryName"></span>
                                             </td>
                                         </tr>
                                     </tbody>
