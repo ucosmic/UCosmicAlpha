@@ -61,6 +61,7 @@
     <Compile Include="Api\Data\IUnitOfWork.cs" />
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
     <Compile Include="Api\Queries\PagedQueryRequest.cs" />
+    <Compile Include="Api\StringExtensions.cs" />
     <Compile Include="Domain\ApplicationStarted.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />

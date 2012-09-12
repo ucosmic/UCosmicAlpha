@@ -10,6 +10,8 @@ function EstablishmentSearchViewModel() {
     self.countries = ko.observableArray();
     self.countryCode = ko.observable();
     self.keyword = ko.observable();
+    self.throttledKeyword = ko.computed(self.keyword)
+        .extend({ throttle: 400 });
 
     // countries dropdown
     ko.computed(function () {
@@ -87,7 +89,8 @@ function EstablishmentSearchViewModel() {
         $.get('/api/establishments', {
             pageSize: self.pageSize(),
             pageNumber: self.pageNumber(),
-            countryCode: self.countryCode()
+            countryCode: self.countryCode(),
+            keyword: self.throttledKeyword()
         })
         .success(function (response) {
             self.updateItems(response);

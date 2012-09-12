@@ -12,6 +12,8 @@ namespace UCosmic.Domain.Establishments
         public string WebsiteUrl { get; set; }
         public string CountryCode { get; set; }
         public string CountryName { get; set; }
+        public string CeebCode { get; set; }
+        public string UCosmicCode { get; set; }
         public IEnumerable<EstablishmentNameView> Names { get; set; }
         public IEnumerable<EstablishmentUrlView> Urls { get; set; }
 
@@ -54,6 +56,8 @@ namespace UCosmic.Domain.Establishments
         {
             CreateMap<Establishment, EstablishmentView>()
                 .ConstructUsing(s => new EstablishmentView(s))
+                .ForMember(d => d.UCosmicCode, o => o.MapFrom(s => s.UCosmicCode ?? string.Empty))
+                .ForMember(d => d.CeebCode, o => o.MapFrom(s => s.CollegeBoardDesignatedIndicator ?? string.Empty))
             ;
         }
     }
