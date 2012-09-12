@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.Caching;
 using Microsoft.ApplicationServer.Caching;
 using SimpleInjector;
@@ -40,7 +41,18 @@ namespace UCosmic.Cqrs
         {
             container.RegisterSingle(() => new DataCacheFactory());
             container.RegisterSingle(() => container.GetInstance<DataCacheFactory>().GetDefaultCache());
-            container.Register<IManageViews>(() => new AzureCacheViewManager(container.GetInstance<DataCache>()));
+            container.Register<IManageViews>(() => new AzureCacheViewManager(
+                container.GetInstance<DataCache>(), new TimeSpan(24, 1, 0)));
+        }
+
+        public static void RegisterHybridMemoryAzureViewManager(this Container container)
+        {
+            container.RegisterSingle(() => new MemoryViewManager(MemoryCache.Default));
+            container.RegisterSingle(() => new DataCacheFactory());
+            container.RegisterSingle(() => container.GetInstance<DataCacheFactory>().GetDefaultCache());
+            container.Register<IManageViews>(() =>
+                new HybridMemoryAzureViewManager(container.GetInstance<MemoryViewManager>(),
+                    new AzureCacheViewManager(container.GetInstance<DataCache>(), new TimeSpan(24, 1, 0))));
         }
     }
 }

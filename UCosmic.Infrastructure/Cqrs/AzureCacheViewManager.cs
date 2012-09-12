@@ -4,13 +4,15 @@ using Newtonsoft.Json;
 
 namespace UCosmic.Cqrs
 {
-    public class AzureCacheViewManager : IManageViews
+    public class AzureCacheViewManager : BaseViewManager, IManageViews
     {
         private readonly DataCache _dataCache;
+        private readonly TimeSpan _maxTtl;
 
-        public AzureCacheViewManager(DataCache dataCache)
+        public AzureCacheViewManager(DataCache dataCache, TimeSpan maxTtl)
         {
             _dataCache = dataCache;
+            _maxTtl = maxTtl;
         }
 
         public TResult Get<TResult>()
@@ -36,17 +38,12 @@ namespace UCosmic.Cqrs
             try
             {
                 var result = JsonConvert.SerializeObject(value);
-                _dataCache.Put(ComputeKey(typeof (TResult)), result);
+                _dataCache.Put(ComputeKey(typeof (TResult)), result, _maxTtl);
             }
             catch (Exception)
             {
                 Set<TResult>(value);
             }
-        }
-
-        private string ComputeKey(Type type)
-        {
-            return string.Format("view:{0}", type.FullName);
         }
     }
 }

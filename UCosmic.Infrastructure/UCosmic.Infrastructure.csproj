@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\AzureCacheProvider.cs" />
+    <Compile Include="Cqrs\BaseViewManager.cs" />
+    <Compile Include="Cqrs\HybridMemoryAzureCacheProvider.cs" />
     <Compile Include="Cqrs\AzureCacheViewManager.cs" />
     <Compile Include="Cache\IProvideCache.cs" />
     <Compile Include="Cqrs\MemoryViewManager.cs" />
@@ -122,7 +124,7 @@
     <Compile Include="Logging\ElmahExceptionLogger.cs" />
     <Compile Include="Logging\SimpleInjectorElmahExceptionLoggerRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Cache\MemoryCacheProvider.cs" />
+    <Compile Include="Cache\ObjectCacheProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

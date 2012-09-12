@@ -45,6 +45,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
             //container.TryRegisterAzureCacheProvider();
             //container.RegisterAzureCacheViewManager();
+            //container.RegisterHybridMemoryAzureViewManager();
             container.RegisterMemoryViewManager();
         }
     }

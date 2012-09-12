@@ -61,6 +61,7 @@
     <Compile Include="Api\Data\IUnitOfWork.cs" />
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
     <Compile Include="Api\Queries\PagedQueryRequest.cs" />
+    <Compile Include="Domain\ApplicationStarted.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />
     <Compile Include="Domain\BaseViewsQuery.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByKeyword.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentViewProjector.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentNameView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentUrlView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentView.cs" />

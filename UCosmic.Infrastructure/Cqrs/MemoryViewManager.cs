@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace UCosmic.Cqrs
 {
-    public class MemoryViewManager : IManageViews
+    public class MemoryViewManager : BaseViewManager, IManageViews
     {
         private readonly ObjectCache _objectCache;
 
@@ -28,11 +28,6 @@ namespace UCosmic.Cqrs
         {
             var result = JsonConvert.SerializeObject(value);
             _objectCache.Add(ComputeKey(typeof(TResult)), result, DateTime.Now.Add(new TimeSpan(24 * 365, 0, 0, 0)));
-        }
-
-        private string ComputeKey(Type type)
-        {
-            return string.Format("view:{0}", type.FullName);
         }
     }
 }

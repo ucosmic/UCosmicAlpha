@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using AutoMapper;
 
 namespace UCosmic.Domain.Establishments
 {
@@ -15,48 +12,18 @@ namespace UCosmic.Domain.Establishments
 
     public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<EstablishmentView>>
     {
-        private readonly IQueryEntities _entities;
-        private readonly IManageViews _viewManager;
+        private readonly EstablishmentViewProjector _projector;
 
-        public HandleEstablishmentsByKeywordQuery(IQueryEntities entities, IManageViews viewManager)
+        public HandleEstablishmentsByKeywordQuery(EstablishmentViewProjector projector)
         {
-            _entities = entities;
-            _viewManager = viewManager;
-        }
-
-        private IEnumerable<EstablishmentView> GetView()
-        {
-            var view = _viewManager.Get<IEnumerable<EstablishmentView>>();
-            if (view == null)
-            {
-                CreateView();
-                return GetView();
-            }
-            return view;
-        }
-
-        private void CreateView()
-        {
-            var entities = _entities.Query<Establishment>()
-                .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
-                        {
-                            x => x.Names,
-                            x => x.Urls,
-                            x => x.Location.Places.Select(y => y.GeoPlanetPlace),
-                            x => x.Ancestors.Select(y => y.Ancestor.Location.Places.Select(z => z.GeoPlanetPlace))
-                        })
-                .OrderBy(x => x.RevisionId)
-            ;
-
-            var view = Mapper.Map<IEnumerable<EstablishmentView>>(entities);
-            _viewManager.Set<IEnumerable<EstablishmentView>>(view);
+            _projector = projector;
         }
 
         public PagedQueryResult<EstablishmentView> Handle(EstablishmentsByKeyword query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var view = GetView().AsQueryable();
+            var view = _projector.GetView().AsQueryable();
             
             // when the query's country code is empty string, match all establishments regardless of country.
             // when the query's country code is null, match establishments without country

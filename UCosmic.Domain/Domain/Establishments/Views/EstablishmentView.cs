@@ -36,11 +36,12 @@ namespace UCosmic.Domain.Establishments
             var country = establishment.Location.Places.FirstOrDefault(e => e.IsCountry);
             if (country == null)
             {
-                var ancestors = establishment.Ancestors.OrderBy(x => x.Separation).Select(x => x.Ancestor);
-                foreach (var ancestor in ancestors)
+                var parent = establishment.Parent;
+                while (parent != null)
                 {
-                    country = ancestor.Location.Places.FirstOrDefault(e => e.IsCountry);
+                    country = parent.Location.Places.FirstOrDefault(e => e.IsCountry);
                     if (country != null) break;
+                    parent = parent.Parent;
                 }
             }
             return country;

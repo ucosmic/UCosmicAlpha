@@ -1,7 +1,9 @@
-﻿using System.Web.Http;
+﻿using System.Linq;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using UCosmic.Domain;
 
 namespace UCosmic.Www.Mvc
 {
@@ -22,6 +24,7 @@ namespace UCosmic.Www.Mvc
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             AutoMapperConfig.RegisterProfiles();
+            DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
         }
     }
 }
