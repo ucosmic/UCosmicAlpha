@@ -47,6 +47,17 @@ namespace UCosmic.Www.Mvc.Models
                             var orderBy = new Dictionary<Expression<Func<EstablishmentView, object>>, OrderByDirection>();
                             if (string.IsNullOrWhiteSpace(s.OrderBy))
                                 orderBy.Add(e => e.RevisionId, OrderByDirection.Ascending);
+
+                            else if (s.OrderBy.Equals("country-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.CountryName, OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("country-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.CountryName, OrderByDirection.Descending);
+
+                            else if (s.OrderBy.Equals("name-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.TranslatedName, OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("name-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.TranslatedName, OrderByDirection.Descending);
+
                             return orderBy;
                         }))
 

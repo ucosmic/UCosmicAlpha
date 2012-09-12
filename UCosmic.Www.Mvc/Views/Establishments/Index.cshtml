@@ -65,7 +65,10 @@
                                         <tr class="hover-hilite" data-bind="click: clickAction">
                                             <td>
                                                 <div>
-                                                    <strong data-bind="text: officialName"></strong>
+                                                    <strong data-bind="text: translatedName"></strong>
+                                                </div>
+                                                <div data-bind="visible: !officialNameMatchesTranslation()">
+                                                    (<span data-bind="text: officialName"></span>)
                                                 </div>
                                                 <div data-bind="visible: websiteUrl">
                                                     <a href="#" target="_blank"
@@ -95,9 +98,11 @@
                                                 </select>
                                             </div>
                                             <div class="field">
-                                                <select class="side">
-                                                    <option>Sort by country</option>
-                                                    <option>Sort by name</option>
+                                                <select class="side" data-bind="value: orderBy">
+                                                    <option value="name-asc">Sort by name A-Z</option>
+                                                    <option value="name-desc">Sort by name Z-A</option>
+                                                    <option value="country-asc">Sort by country A-Z</option>
+                                                    <option value="country-desc">Sort by country Z-A</option>
                                                 </select>
                                             </div>
                                             <div class="field">

@@ -33,7 +33,7 @@ namespace UCosmic.Domain.Establishments
             var entities = _entities.Query<Establishment>()
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                         {
-                            x => x.Names,
+                            x => x.Names.Select(y => y.TranslationToLanguage),
                             x => x.Urls,
                             x => x.Location.Places.Select(y => y.GeoPlanetPlace),
                         })

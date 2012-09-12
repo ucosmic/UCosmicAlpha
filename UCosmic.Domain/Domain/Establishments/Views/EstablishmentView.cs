@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Places;
@@ -16,6 +17,17 @@ namespace UCosmic.Domain.Establishments
         public string UCosmicCode { get; set; }
         public IEnumerable<EstablishmentNameView> Names { get; set; }
         public IEnumerable<EstablishmentUrlView> Urls { get; set; }
+
+        public string TranslatedName
+        {
+            get
+            {
+                // try to translate to ui culture
+                var cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                var name = Names.FirstOrDefault(x => x.LanguageCode.Equals(cultureCode));
+                return name != null ? name.Text : OfficialName;
+            }
+        }
 
         public EstablishmentView()
         {

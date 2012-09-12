@@ -53,6 +53,8 @@ namespace UCosmic.Domain.Establishments
                 );
             }
 
+            view = view.OrderBy(query.OrderBy);
+
             var pagedResults = new PagedQueryResult<EstablishmentView>(view, query.Pager);
 
             return pagedResults;

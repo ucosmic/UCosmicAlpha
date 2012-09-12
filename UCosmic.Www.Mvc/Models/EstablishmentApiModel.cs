@@ -9,6 +9,7 @@ namespace UCosmic.Www.Mvc.Models
         public string OfficialName { get; set; }
         public string WebsiteUrl { get; set; }
         public string CountryName { get; set; }
+        public string TranslatedName { get; set; }
     }
 
     public static class EstablishmentApiProfiler

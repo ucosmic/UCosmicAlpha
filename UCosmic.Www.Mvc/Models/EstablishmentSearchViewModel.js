@@ -32,6 +32,10 @@
         }
         return computedValue;
     });
+
+    self.officialNameMatchesTranslation = ko.computed(function () {
+        return self.officialName() === self.translatedName();
+    });
 }
 
 function EstablishmentSearchViewModel() {
@@ -43,6 +47,7 @@ function EstablishmentSearchViewModel() {
     self.keyword = ko.observable();
     self.throttledKeyword = ko.computed(self.keyword)
         .extend({ throttle: 400 });
+    self.orderBy = ko.observable();
 
     // countries dropdown
     ko.computed(function () {
@@ -152,14 +157,15 @@ function EstablishmentSearchViewModel() {
     };
 
     self.requestResults = function() {
-        if (self.pageSize() === undefined)
+        if (self.pageSize() === undefined || self.orderBy() === undefined)
             return;
         self.startSpinning();
         $.get('/api/establishments', {
             pageSize: self.pageSize(),
             pageNumber: self.pageNumber(),
             countryCode: self.countryCode(),
-            keyword: self.throttledKeyword()
+            keyword: self.throttledKeyword(),
+            orderBy: self.orderBy()
         })
         .success(function (response) {
             self.receiveResults(response);
