@@ -465,7 +465,7 @@ body #main {
     body #main > .content a:hover {
       text-decoration: none; }
     body #main > .content a[target=_blank], body #main > .content a[target=_blank]:visited {
-      color: #0000cc; }
+      color: #7a0019; }
     body #main > .content table.data {
       width: 100%;
       margin: 16px 0; }
@@ -483,6 +483,10 @@ body #main {
         vertical-align: text-top; }
       body #main > .content table.data tbody tr:nth-child(even) td {
         background-color: #dddddd; }
+      body #main > .content table.data tbody tr.hover-hilite:hover * {
+        cursor: pointer; }
+      body #main > .content table.data tbody tr.hover-hilite:hover td {
+        background-color: #ffffaa; }
 
 /* layout footer stylesheet */
 body > footer {

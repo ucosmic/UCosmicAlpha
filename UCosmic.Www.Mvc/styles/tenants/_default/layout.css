@@ -481,6 +481,10 @@ body #main {
         vertical-align: text-top; }
       body #main > .content table.data tbody tr:nth-child(even) td {
         background-color: #dddddd; }
+      body #main > .content table.data tbody tr.hover-hilite:hover * {
+        cursor: pointer; }
+      body #main > .content table.data tbody tr.hover-hilite:hover td {
+        background-color: #ffffaa; }
 
 /* layout footer stylesheet */
 body > footer {

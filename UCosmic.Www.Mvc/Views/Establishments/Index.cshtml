@@ -14,13 +14,12 @@
     <script type="text/javascript"> ko.applyBindings(new EstablishmentSearchViewModel(), $('#main')[0]);
     </script>
 
-;
-    }
+}
 <div class="content fixed to-top" data-current-module="admin">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div id="search" data-side-swiper="on">
-                <form class="group">
+                <form class="group" data-bind="submit: requestResults">
                     <div class="float-left from-top">
                         <header>
                             <h1>
@@ -55,7 +54,7 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                Name
+                                                Establishment
                                             </th>
                                             <th>
                                                 Country
@@ -63,9 +62,15 @@
                                         </tr>
                                     </thead>
                                     <tbody data-bind="foreach: items">
-                                        <tr data-bind="">
+                                        <tr class="hover-hilite" data-bind="click: clickAction">
                                             <td>
-                                                <a data-bind="text: officialName"></a>
+                                                <div>
+                                                    <strong data-bind="text: officialName"></strong>
+                                                </div>
+                                                <div data-bind="visible: websiteUrl">
+                                                    <a href="#" target="_blank"
+                                                       data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }, click: openWebsiteUrl"></a>
+                                                </div>
                                             </td>
                                             <td>
                                                 <span data-bind="text: nullDisplayCountryName"></span>

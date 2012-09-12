@@ -50,8 +50,11 @@ $footer-link-text-color: #fff;
 $footer-link-border-color: $uc-brand-red;
 
 $heading-text-color: #000;
-$external-link-color: #00c;
+$external-link-color: $uc-brand-red;
 $main-link-color: $uc-brand-red;
+$default-hilite-bg-color: #ffa;
+$row-hilite-bg-color: $default-hilite-bg-color;
+
 $typed-item-bg-color: $uc-brand-red;
 $typed-item-text-color: #fff;
 

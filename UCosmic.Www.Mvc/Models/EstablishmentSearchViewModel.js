@@ -5,6 +5,33 @@
     self.nullDisplayCountryName = ko.computed(function () {
         return self.countryName() || '[Undefined]';
     });
+
+    self.clickAction = function() {
+        // placeholder for click action
+    };
+
+    self.openWebsiteUrl = function(vm, e) {
+        e.stopPropagation();
+        return true;
+    };
+
+    self.fitWebsiteUrl = ko.computed(function () {
+        var value = self.websiteUrl();
+        if (!value) return value;
+
+        var computedValue = value;
+        var protocolIndex = computedValue.indexOf('://');
+        if (protocolIndex > 0)
+            computedValue = computedValue.substr(protocolIndex + 3);
+        var slashIndex = computedValue.indexOf('/');
+        if (slashIndex > 0) {
+            if (slashIndex < computedValue.length -1) {
+                computedValue = computedValue.substr(slashIndex + 1);
+                computedValue = value.substr(0, value.indexOf(computedValue)) + '...';
+            }
+        }
+        return computedValue;
+    });
 }
 
 function EstablishmentSearchViewModel() {
@@ -111,7 +138,7 @@ function EstablishmentSearchViewModel() {
         },
         ignore: ['pageSize', 'pageNumber']
     };
-    self.updateResults = function (js) {
+    self.receiveResults = function (js) {
         if (!js) {
             ko.mapping.fromJS({
                 items: [],
@@ -124,8 +151,7 @@ function EstablishmentSearchViewModel() {
         self.stopSpinning();
     };
 
-    // results server hit
-    ko.computed(function () {
+    self.requestResults = function() {
         if (self.pageSize() === undefined)
             return;
         self.startSpinning();
@@ -136,8 +162,10 @@ function EstablishmentSearchViewModel() {
             keyword: self.throttledKeyword()
         })
         .success(function (response) {
-            self.updateResults(response);
+            self.receiveResults(response);
         });
-    })
-    .extend({ throttle: 1 });
+    };
+
+    // results server hit
+    ko.computed(self.requestResults).extend({ throttle: 1 });
 }
