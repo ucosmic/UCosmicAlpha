@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using AutoMapper;
 
 namespace UCosmic.Domain.Establishments
 {
@@ -40,8 +39,10 @@ namespace UCosmic.Domain.Establishments
                 .OrderBy(x => x.RevisionId)
             ;
 
-            var view = Mapper.Map<IEnumerable<EstablishmentView>>(entities);
-            _viewManager.Set<IEnumerable<EstablishmentView>>(view);
+            var view = new List<EstablishmentView>();
+            foreach (var entity in entities)
+                view.Add(new EstablishmentView(entity));
+            _viewManager.Set<IEnumerable<EstablishmentView>>(view.ToArray());
         }
 
         public void Handle(ApplicationStarted @event)

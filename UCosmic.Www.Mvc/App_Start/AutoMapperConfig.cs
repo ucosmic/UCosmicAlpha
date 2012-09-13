@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using AutoAutoMapper;
+using AutoMapper;
 using UCosmic.Domain;
 
 namespace UCosmic.Www.Mvc
@@ -15,6 +16,7 @@ namespace UCosmic.Www.Mvc
             };
 
             AutoProfiler.RegisterProfiles(assemblies);
+            Mapper.AssertConfigurationIsValid();
         }
     }
 }

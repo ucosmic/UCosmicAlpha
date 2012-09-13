@@ -7,36 +7,34 @@ namespace UCosmic
 {
     public class PagedQueryResult<TEntity> : IEnumerable<TEntity>
     {
-        public PagedQueryResult(IQueryable<TEntity> queryable, PagedQueryRequest request)
+        public PagedQueryResult(IQueryable<TEntity> queryable, int pageSize = int.MaxValue, int pageNumber = 1)
         {
-            request = request ?? PagedQueryRequest.Unpaged;
+            PageSize = pageSize;
+            PageNumber = pageNumber;
             ItemTotal = queryable.Count();
-            _request = request;
 
             // whenever the PageCount is greater than the PageNumber, reduce PageNumber, options are out of bounds
-            if (PageNumber > PageCount && ItemTotal > 0) _request.PageNumber = PageCount;
+            if (PageNumber > PageCount && ItemTotal > 0) PageNumber = PageCount;
 
-            if (_request.PageIndex > 0)
-                queryable = queryable.Skip(_request.PageIndex * _request.PageSize);
+            if (PageIndex > 0)
+                queryable = queryable.Skip(PageIndex * PageSize);
 
-            if (_request.PageSize > 0)
-                queryable = queryable.Take(_request.PageSize);
+            if (PageSize > 0)
+                queryable = queryable.Take(PageSize);
 
-            ItemsCollection = queryable.ToArray();
+            Items = queryable.ToArray();
         }
 
-        private readonly PagedQueryRequest _request;
-        private ICollection<TEntity> ItemsCollection { get; set; }
-        public IEnumerable<TEntity> Items { get { return ItemsCollection; } }
-        public int PageSize { get { return _request.PageSize; } }
-        public int PageNumber { get { return _request.PageNumber; } }
-        public int PageIndex { get { return _request.PageIndex; } }
+        public IEnumerable<TEntity> Items { get; private set; }
+        public int PageSize { get; private set; }
+        public int PageNumber { get; private set; }
+        public int PageIndex { get { return PageNumber - 1; } }
         public int ItemTotal { get; private set; }
         public int PageCount { get { return (int)Math.Ceiling(ItemTotal / (double)PageSize); } }
         public int FirstNumber { get { return FirstIndex + 1; } }
-        public int FirstIndex { get { return _request.PageIndex * PageSize; } }
+        public int FirstIndex { get { return PageIndex * PageSize; } }
         public int LastNumber { get { return LastIndex + 1; } }
-        public int LastIndex { get { return FirstIndex + ItemsCollection.Count; } }
+        public int LastIndex { get { return FirstIndex + Items.Count(); } }
 
         public IEnumerator<TEntity> GetEnumerator()
         {

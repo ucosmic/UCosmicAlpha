@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,7 +57,6 @@
     <Compile Include="Api\Data\IQueryEntities.cs" />
     <Compile Include="Api\Data\IUnitOfWork.cs" />
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
-    <Compile Include="Api\Queries\PagedQueryRequest.cs" />
     <Compile Include="Api\StringExtensions.cs" />
     <Compile Include="Domain\ApplicationStarted.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
@@ -123,7 +119,6 @@
     <None Include="Domain\Places\GeoNamesAggregate.cd" />
     <None Include="Domain\Places\GeoPlanetAggregate.cd" />
     <None Include="Domain\Places\PlaceAggregates.cd" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Places\Views\" />

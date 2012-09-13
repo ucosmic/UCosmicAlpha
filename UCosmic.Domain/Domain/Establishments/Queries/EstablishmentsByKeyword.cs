@@ -7,7 +7,8 @@ namespace UCosmic.Domain.Establishments
     {
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
-        public PagedQueryRequest Pager { get; set; }
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
     }
 
     public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<EstablishmentView>>
@@ -55,7 +56,7 @@ namespace UCosmic.Domain.Establishments
 
             view = view.OrderBy(query.OrderBy);
 
-            var pagedResults = new PagedQueryResult<EstablishmentView>(view, query.Pager);
+            var pagedResults = new PagedQueryResult<EstablishmentView>(view, query.PageSize, query.PageNumber);
 
             return pagedResults;
         }

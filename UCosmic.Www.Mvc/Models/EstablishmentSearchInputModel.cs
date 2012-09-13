@@ -32,7 +32,7 @@ namespace UCosmic.Www.Mvc.Models
                     // map the country code
                     .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
                     {
-                        // a country code value of -1 implies finding results without a country code
+                        // a country code value of null implies finding results without a country code
                         if (s.CountryCode == "-1") return null;
 
                         // a country code value of "" implies finding all results regardless of country code
@@ -59,14 +59,6 @@ namespace UCosmic.Www.Mvc.Models
                                 orderBy.Add(e => e.TranslatedName, OrderByDirection.Descending);
 
                             return orderBy;
-                        }))
-
-                    // map the pager options
-                    .ForMember(d => d.Pager, o => o.MapFrom(s =>
-                        new PagedQueryRequest
-                        {
-                            PageNumber = s.PageNumber,
-                            PageSize = s.PageSize,
                         }))
                 ;
             }

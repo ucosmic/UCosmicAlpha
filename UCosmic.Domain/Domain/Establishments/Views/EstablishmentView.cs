@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using AutoMapper;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Establishments
@@ -29,12 +28,12 @@ namespace UCosmic.Domain.Establishments
             }
         }
 
-        public EstablishmentView()
-        {
-        }
+        public EstablishmentView() { }
 
         public EstablishmentView(Establishment entity)
         {
+            RevisionId = entity.RevisionId;
+
             OfficialName = entity.Names.Single(e => e.IsOfficialName).Text;
 
             var officialUrl = entity.Urls.SingleOrDefault(e => e.IsOfficialUrl);
@@ -43,6 +42,19 @@ namespace UCosmic.Domain.Establishments
             var country = GetCountry(entity);
             CountryCode = country != null ? country.GeoPlanetPlace.Country.Code : string.Empty;
             CountryName = country != null ? country.OfficialName : string.Empty;
+
+            CeebCode = entity.CollegeBoardDesignatedIndicator;
+            UCosmicCode = entity.UCosmicCode;
+
+            var names = new List<EstablishmentNameView>();
+            foreach (var name in entity.Names)
+                names.Add(new EstablishmentNameView(name));
+            Names = names;
+
+            var urls = new List<EstablishmentUrlView>();
+            foreach (var url in entity.Urls)
+                urls.Add(new EstablishmentUrlView(url));
+            Urls = urls;
         }
 
         private Place GetCountry(Establishment establishment)
@@ -59,18 +71,6 @@ namespace UCosmic.Domain.Establishments
                 }
             }
             return country;
-        }
-    }
-
-    public class EstablishmentViewProfile : Profile
-    {
-        protected override void Configure()
-        {
-            CreateMap<Establishment, EstablishmentView>()
-                .ConstructUsing(s => new EstablishmentView(s))
-                .ForMember(d => d.UCosmicCode, o => o.MapFrom(s => s.UCosmicCode ?? string.Empty))
-                .ForMember(d => d.CeebCode, o => o.MapFrom(s => s.CollegeBoardDesignatedIndicator ?? string.Empty))
-            ;
         }
     }
 }
