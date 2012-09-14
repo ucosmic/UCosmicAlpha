@@ -43,8 +43,8 @@ namespace UCosmic.Domain.Establishments
             CountryCode = country != null ? country.GeoPlanetPlace.Country.Code : string.Empty;
             CountryName = country != null ? country.OfficialName : string.Empty;
 
-            CeebCode = entity.CollegeBoardDesignatedIndicator;
-            UCosmicCode = entity.UCosmicCode;
+            CeebCode = entity.CollegeBoardDesignatedIndicator ?? "";
+            UCosmicCode = entity.UCosmicCode ?? "";
 
             var names = new List<EstablishmentNameView>();
             foreach (var name in entity.Names)
