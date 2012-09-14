@@ -165,10 +165,11 @@ body > header {
       box-sizing: border-box;
       display: inline-block;
       border: 0px none;
+      position: relative;
       -moz-border-radius: 12px;
       -webkit-border-radius: 12px;
       border-radius: 12px;
-      margin-top: 15px;
+      top: 15px;
       margin-left: 15px;
       max-width: 700px;
       font-size: 15px;
