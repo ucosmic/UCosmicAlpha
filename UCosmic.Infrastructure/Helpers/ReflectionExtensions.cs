@@ -2,9 +2,9 @@ using System;
 
 namespace UCosmic
 {
-    internal static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
-        internal static bool IsGenericallyAssignableFrom(this Type g, Type c)
+        public static bool IsGenericallyAssignableFrom(this Type g, Type c)
         {
             var interfaceTypes = c.GetInterfaces();
 
