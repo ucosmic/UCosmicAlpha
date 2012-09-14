@@ -32,6 +32,7 @@ namespace UCosmic.Www.Mvc
                         "~/scripts/jquery-{version}.js",
                         "~/scripts/knockout-*",
                         "~/scripts/knockout.mapping-latest*",
+                        "~/scripts/app/knockout.binding-handlers.js",
                         "~/scripts/sammy/sammy.js",
                         "~/scripts/oss/jquery.placeholder*",
                         "~/scripts/oss/jquery.animate-enhanced*",

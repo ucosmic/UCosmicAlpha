@@ -61,13 +61,6 @@
         });
     }
 
-    ko.bindingHandlers.element = {
-        update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-            var name = ko.utils.unwrapObservable(valueAccessor());
-            viewModel[name] = element;
-        }
-    };
-
     window.app.flasher = new FlasherViewModel();
     window.ko.applyBindings(app.flasher, $('.flasher')[0]);
 

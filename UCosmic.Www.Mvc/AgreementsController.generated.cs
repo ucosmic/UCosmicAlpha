@@ -70,7 +70,6 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ViewNames {
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
-            public readonly string Index0 = "~/Views/Agreements/Index0.cshtml";
         }
     }
 

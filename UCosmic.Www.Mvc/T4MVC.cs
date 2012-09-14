@@ -341,6 +341,8 @@ namespace Links {
                           
             public static readonly string fixed_scroll_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fixed-scroll.min.js") ? Url("fixed-scroll.min.js") : Url("fixed-scroll.js");
                           
+            public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
+                          
             public static readonly string side_swiper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/side-swiper.min.js") ? Url("side-swiper.min.js") : Url("side-swiper.js");
                           
         }

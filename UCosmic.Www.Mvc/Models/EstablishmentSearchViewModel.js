@@ -6,11 +6,11 @@
         return self.countryName() || '[Undefined]';
     });
 
-    self.clickAction = function() {
+    self.clickAction = function () {
         // placeholder for click action
     };
 
-    self.openWebsiteUrl = function(vm, e) {
+    self.openWebsiteUrl = function (vm, e) {
         e.stopPropagation();
         return true;
     };
@@ -25,7 +25,7 @@
             computedValue = computedValue.substr(protocolIndex + 3);
         var slashIndex = computedValue.indexOf('/');
         if (slashIndex > 0) {
-            if (slashIndex < computedValue.length -1) {
+            if (slashIndex < computedValue.length - 1) {
                 computedValue = computedValue.substr(slashIndex + 1);
                 computedValue = value.substr(0, value.indexOf(computedValue)) + '...';
             }
@@ -61,7 +61,7 @@ function EstablishmentSearchViewModel() {
 
     // paging
     self.pageSize = ko.observable();
-    self.pageNumber = ko.observable(1);
+    self.pageNumber = ko.observable();
     self.itemTotal = ko.observable();
     self.pageCount = ko.observable();
     self.firstIndex = ko.observable();
@@ -78,19 +78,34 @@ function EstablishmentSearchViewModel() {
     });
     self.nextPage = function () {
         if (self.nextEnabled()) {
-            self.pageNumber(parseInt(self.pageNumber()) + 1);
+            var pageNumber = parseInt(self.pageNumber()) + 1;
+            self.pageNumber(pageNumber);
+            location.hash = '/page/' + pageNumber;
+            //self.sideSwiper.next(1, function () {
+            //    self.$itemsPage().parent().children('[data-side-swiper]').attr('data-side-swiper', 'off').hide();
+            //    self.$itemsPage().attr('data-side-swiper', 'on').show().css({ left: 0 });
+            //});
         }
     };
     self.prevPage = function () {
         if (self.prevEnabled()) {
-            self.pageNumber(parseInt(self.pageNumber()) - 1);
+            //var pageNumber = parseInt(self.pageNumber()) - 1;
+            //self.pageNumber(pageNumber);
+            //location.hash = '/page/' + pageNumber;
+            history.back();
+            //self.sideSwiper.prev(1, function () {
+            //    self.$itemsPage().parent().children('[data-side-swiper]').attr('data-side-swiper', 'off').hide();
+            //    self.$itemsPage().attr('data-side-swiper', 'on').show().css({ left: 0 });
+            //});
         }
     };
+    self.nextForceDisabled = ko.observable(false);
     self.nextEnabled = ko.computed(function () {
-        return self.pageNumber() < self.pageCount();
+        return self.pageNumber() < self.pageCount() && !self.nextForceDisabled();
     });
+    self.prevForceDisabled = ko.observable(false);
     self.prevEnabled = ko.computed(function () {
-        return self.pageNumber() > 1;
+        return self.pageNumber() > 1 && !self.prevForceDisabled();
     });
     self.hasManyPages = ko.computed(function () {
         return self.pageCount() > 1;
@@ -104,7 +119,7 @@ function EstablishmentSearchViewModel() {
     self.showSpinner = ko.observable(false);
     self.spinnerDelay = 400;
     self.inTransition = ko.observable(false);
-    self.startSpinning = function() {
+    self.startSpinning = function () {
         self.isSpinning(true); // we are entering an ajax call
         if (self.spinnerDelay < 1)
             self.showSpinner(true);
@@ -119,6 +134,27 @@ function EstablishmentSearchViewModel() {
         self.inTransition(false);
         self.showSpinner(false);
         self.isSpinning(false);
+    };
+
+    // items page
+    self.itemsPage = undefined;
+    self.$itemsPage = function () {
+        return $(self.itemsPage);
+    };
+    self.initialized = ko.observable(false);
+    self.sideSwiper = new SideSwiper({
+        frameWidth: 710,
+        speed: 'fast',
+        el: $('#search')[0]
+    });
+    self.trail = ko.observableArray([]);
+    self.lockAnimation = function () {
+        self.nextForceDisabled(true);
+        self.prevForceDisabled(true);
+    };
+    self.unlockAnimation = function () {
+        self.nextForceDisabled(false);
+        self.prevForceDisabled(false);
     };
 
     // results
@@ -156,10 +192,11 @@ function EstablishmentSearchViewModel() {
         self.stopSpinning();
     };
 
-    self.requestResults = function() {
+    self.requestResults = function () {
         if (self.pageSize() === undefined || self.orderBy() === undefined)
             return;
         self.startSpinning();
+
         $.get('/api/establishments', {
             pageSize: self.pageSize(),
             pageNumber: self.pageNumber(),
@@ -169,8 +206,64 @@ function EstablishmentSearchViewModel() {
         })
         .success(function (response) {
             self.receiveResults(response);
+            self.initialized(true);
         });
     };
+
+    ko.computed(function () {
+        Sammy(function() {
+            this.before(/.*/, function(arg1, arg2, arg3) {
+                if (self.nextForceDisabled() || self.prevForceDisabled())
+                    return false;
+
+                var pageNumber = this.params['pageNumber'];
+
+                // make sure the viewmodel pagenumber is in sync with the route
+                if (pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber()))
+                    self.pageNumber(parseInt(pageNumber));
+                return true;
+            });
+
+            this.get('#/page/:pageNumber', function() {
+                var pageNumber = this.params['pageNumber'],
+                    trail = self.trail(),
+                    clone;
+                if (trail.length > 0 && trail[trail.length - 1] === this.path) return;
+                if (trail.length > 1 && trail[trail.length - 2] === this.path) {
+                    // swipe backward
+                    trail.pop();
+                    clone = self.$itemsPage().clone(true)
+                        .removeAttr('data-bind').data('bind', undefined);
+                    clone.appendTo(self.$itemsPage().parent());
+                    self.$itemsPage().attr('data-side-swiper', 'off').hide();
+                    self.lockAnimation();
+                    $(window).scrollTop(0);
+                    self.sideSwiper.prev(1, function () {
+                        self.$itemsPage().siblings().remove();
+                        self.unlockAnimation();
+                    });
+                    return;
+                } else if (trail.length > 0) {
+                    // swipe forward
+                    clone = self.$itemsPage().clone(true)
+                        .removeAttr('data-bind').data('bind', undefined);
+                    clone.insertBefore(self.$itemsPage());
+                    self.$itemsPage().attr('data-side-swiper', 'off').hide();
+                    self.lockAnimation();
+                    $(window).scrollTop(0);
+                    self.sideSwiper.next(1, function () {
+                        self.unlockAnimation();
+                        self.nextForceDisabled(false);
+                    });
+                }
+                trail.push(this.path);
+            });
+
+            this.get('', function() {
+                this.app.runRoute('get', '#/page/1');
+            });
+        }).run();
+    });
 
     // results server hit
     ko.computed(self.requestResults).extend({ throttle: 1 });
