@@ -3,7 +3,8 @@
     BaseViewModel.call(self);
 
     self.sideSwiper = new SideSwiper({
-        frameWidth: 970
+        frameWidth: 970,
+        el: $('[data-current-module=agreements]')[0]
     });
 
     var dataSideSwiper = 'data-side-swiper';

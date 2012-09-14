@@ -3,15 +3,21 @@
     options = options || {};
     var defaults = {
         speed: '',
-        frameWidth: 710
+        frameWidth: 710,
+        el: document
     };
     var settings = $.extend(defaults, options);
 
-    var currentFrameSelector = '[data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=on]';
+    var $root = $(settings.el || document);
+    if ($root.attr('data-side-swiper') !== 'root')
+        $root = $root.find('[data-side-swiper=root]:first');
+    var $deck = $root.find('[data-side-swiper=deck]:first');
+
+    var currentFrameSelector = '[data-side-swiper=on]';
     var otherFrameSelector = '[data-side-swiper=off]';
 
     self.next = function (distance, callback) {
-        var $currentFrame = $(currentFrameSelector),
+        var $currentFrame = $deck.children(currentFrameSelector),
             $nextFrame = $currentFrame.next(otherFrameSelector);
         distance = distance || 1;
         for (var i = distance; i > 1; i--) {
@@ -49,7 +55,7 @@
     };
 
     self.prev = function (distance, callback) {
-        var $currentFrame = $(currentFrameSelector),
+        var $currentFrame = $deck.children(currentFrameSelector),
             $prevFrame = $currentFrame.prev(otherFrameSelector);
         distance = distance || 1;
         for (var i = distance; i > 1; i--) {

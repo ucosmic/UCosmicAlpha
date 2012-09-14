@@ -314,6 +314,8 @@ body #main {
             float: left;
             width: 960px;
             margin-right: 20px; }
+          body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=off].left, body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] [data-side-swiper=on].left {
+            width: 690px; }
       body #main > .content.fixed [data-fixed-scroll=root] [data-fixed-scroll=content] {
         margin-top: 20px;
         background-color: transparent; }
