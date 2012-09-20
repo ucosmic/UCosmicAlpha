@@ -1,0 +1,67 @@
+﻿<nav class="side">
+    <ul>
+        <li class="static">
+            <span class="text">Search options</span>
+            <div class="content">
+                <div class="field">
+                    <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode">
+                        <option>[Loading...]</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <select class="side" data-bind="value: orderBy">
+                        <option value="name-asc">Sort by name A-Z</option>
+                        <option value="name-desc">Sort by name Z-A</option>
+                        <option value="country-asc">Sort by country A-Z</option>
+                        <option value="country-desc">Sort by country Z-A</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <select class="side" data-bind="value: pageSize">
+                        <option value="10">Show 10 results per page</option>
+                        <option value="20">Show 20 results per page</option>
+                        <option value="50">Show 50 results per page</option>
+                        <option value="100">Show 100 results per page</option>
+                        <option value="@int.MaxValue">Show all results</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                    |
+                    <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                    <input type="hidden" value="1" data-bind="value: pageNumber" />
+                </div>
+            </div>
+        </li>
+        <li class="current">
+            <a href="#" class="group">
+                <div class="arrow float-left"></div>
+                <span class="text float-left">Table</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="group">
+                <div class="arrow float-left"></div>
+                <span class="text float-left">List</span>
+            </a>
+        </li>
+        <li class="">
+            <a href="#" class="group">
+                <div class="arrow float-left"></div>
+                <span class="text float-left">Grid</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="group">
+                <div class="arrow float-left"></div>
+                <span class="text float-left">Map</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="group">
+                <div class="arrow float-left"></div>
+                <span class="text float-left">Tree</span>
+            </a>
+        </li>
+    </ul>
+</nav>

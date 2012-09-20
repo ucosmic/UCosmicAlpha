@@ -81,22 +81,11 @@ function EstablishmentSearchViewModel() {
             var pageNumber = parseInt(self.pageNumber()) + 1;
             self.pageNumber(pageNumber);
             location.hash = '/page/' + pageNumber;
-            //self.sideSwiper.next(1, function () {
-            //    self.$itemsPage().parent().children('[data-side-swiper]').attr('data-side-swiper', 'off').hide();
-            //    self.$itemsPage().attr('data-side-swiper', 'on').show().css({ left: 0 });
-            //});
         }
     };
     self.prevPage = function () {
         if (self.prevEnabled()) {
-            //var pageNumber = parseInt(self.pageNumber()) - 1;
-            //self.pageNumber(pageNumber);
-            //location.hash = '/page/' + pageNumber;
             history.back();
-            //self.sideSwiper.prev(1, function () {
-            //    self.$itemsPage().parent().children('[data-side-swiper]').attr('data-side-swiper', 'off').hide();
-            //    self.$itemsPage().attr('data-side-swiper', 'on').show().css({ left: 0 });
-            //});
         }
     };
     self.nextForceDisabled = ko.observable(false);
@@ -145,7 +134,7 @@ function EstablishmentSearchViewModel() {
     self.sideSwiper = new SideSwiper({
         frameWidth: 710,
         speed: 'fast',
-        el: $('#search')[0]
+        root: '#search'
     });
     self.trail = ko.observableArray([]);
     self.lockAnimation = function () {
@@ -210,9 +199,11 @@ function EstablishmentSearchViewModel() {
         });
     };
 
-    ko.computed(function () {
-        Sammy(function() {
-            this.before(/.*/, function(arg1, arg2, arg3) {
+    var sam;
+    self.sammy = function() {
+        if (sam) return sam;
+        sam = Sammy(function () {
+            this.before(/.*/, function () {
                 if (self.nextForceDisabled() || self.prevForceDisabled())
                     return false;
 
@@ -224,7 +215,7 @@ function EstablishmentSearchViewModel() {
                 return true;
             });
 
-            this.get('#/page/:pageNumber', function() {
+            this.get('#/page/:pageNumber', function () {
                 var pageNumber = this.params['pageNumber'],
                     trail = self.trail(),
                     clone;
@@ -233,7 +224,7 @@ function EstablishmentSearchViewModel() {
                     // swipe backward
                     trail.pop();
                     clone = self.$itemsPage().clone(true)
-                        .removeAttr('data-bind').data('bind', undefined);
+                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                     clone.appendTo(self.$itemsPage().parent());
                     self.$itemsPage().attr('data-side-swiper', 'off').hide();
                     self.lockAnimation();
@@ -246,24 +237,25 @@ function EstablishmentSearchViewModel() {
                 } else if (trail.length > 0) {
                     // swipe forward
                     clone = self.$itemsPage().clone(true)
-                        .removeAttr('data-bind').data('bind', undefined);
+                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                     clone.insertBefore(self.$itemsPage());
                     self.$itemsPage().attr('data-side-swiper', 'off').hide();
                     self.lockAnimation();
                     $(window).scrollTop(0);
                     self.sideSwiper.next(1, function () {
                         self.unlockAnimation();
-                        self.nextForceDisabled(false);
+                        //self.nextForceDisabled(false);
                     });
                 }
                 trail.push(this.path);
             });
 
-            this.get('', function() {
+            this.get('', function () {
                 this.app.runRoute('get', '#/page/1');
             });
-        }).run();
-    });
+        });
+        return sam;
+    };
 
     // results server hit
     ko.computed(self.requestResults).extend({ throttle: 1 });

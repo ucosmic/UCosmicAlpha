@@ -4,20 +4,28 @@
     var defaults = {
         speed: '',
         frameWidth: 710,
-        el: document
+        root: document
     };
     var settings = $.extend(defaults, options);
 
-    var $root = $(settings.el || document);
-    if ($root.attr('data-side-swiper') !== 'root')
-        $root = $root.find('[data-side-swiper=root]:first');
-    var $deck = $root.find('[data-side-swiper=deck]:first');
+    //var $root = $(settings.el || document);
+    //if (settings.$root.attr('data-side-swiper') !== 'root')
+    //    settings.$root = settings.$root.find('[data-side-swiper=root]:first');
+    //var $deck = $root.find('[data-side-swiper=deck]:first');
 
     var currentFrameSelector = '[data-side-swiper=on]';
     var otherFrameSelector = '[data-side-swiper=off]';
 
+    self.$root = function() {
+        var root = $(settings.root);
+        if (root.attr('data-side-swiper') !== 'root')
+            root = root.find('[data-side-swiper=root]:first');
+        return root;
+    };
+
     self.next = function (distance, callback) {
-        var $currentFrame = $deck.children(currentFrameSelector),
+        var $deck = self.$root().find('[data-side-swiper=deck]:first'),
+            $currentFrame = $deck.children(currentFrameSelector),
             $nextFrame = $currentFrame.next(otherFrameSelector);
         distance = distance || 1;
         for (var i = distance; i > 1; i--) {
@@ -55,7 +63,8 @@
     };
 
     self.prev = function (distance, callback) {
-        var $currentFrame = $deck.children(currentFrameSelector),
+        var $deck = self.$root().find('[data-side-swiper=deck]:first'),
+            $currentFrame = $deck.children(currentFrameSelector),
             $prevFrame = $currentFrame.prev(otherFrameSelector);
         distance = distance || 1;
         for (var i = distance; i > 1; i--) {
