@@ -16,14 +16,11 @@
     self.establishmentSearchViewModel.nextPage = function() {
         if (self.establishmentSearchViewModel.nextEnabled()) {
             var pageNumber = parseInt(self.establishmentSearchViewModel.pageNumber()) + 1;
-            self.establishmentSearchViewModel.pageNumber(pageNumber);
             location.hash = '/participants/add/page/' + pageNumber;
         }
     };
     self.establishmentSearchViewModel.prevPage = function () {
         if (self.establishmentSearchViewModel.prevEnabled()) {
-            var pageNumber = parseInt(self.establishmentSearchViewModel.pageNumber()) - 1;
-            self.establishmentSearchViewModel.pageNumber(pageNumber);
             history.back();
         }
     };
@@ -48,6 +45,7 @@
                     var pageNumber = this.params['pageNumber'],
                         trail = self.establishmentSearchViewModel.trail(),
                         clone;
+                    self.establishmentSearchViewModel.pageNumber(pageNumber);
                     if (trail.length > 0 && trail[trail.length - 1] === this.path) return;
                     if (trail.length > 1 && trail[trail.length - 2] === this.path) {
                         // swipe backward

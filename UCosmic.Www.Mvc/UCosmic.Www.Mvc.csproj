@@ -360,6 +360,8 @@
     <Content Include="styles\icons\closer-24-red-disc.png" />
     <Content Include="styles\icons\closer-24-red.png" />
     <Content Include="styles\icons\minus-24-red.png" />
+    <Content Include="styles\icons\plus-16-green-disc.png" />
+    <Content Include="styles\icons\plus-20-green-disc.png" />
     <Content Include="styles\icons\plus-24-green-disc.png" />
     <Content Include="styles\icons\plus-24-green.png" />
     <Content Include="styles\icons\user-voice-24-filled.png" />

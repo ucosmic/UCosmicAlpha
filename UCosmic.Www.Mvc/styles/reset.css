@@ -64,6 +64,10 @@ table {
 strong {
     font-weight: bold;
 }
+img {
+    border: 0px none;
+    vertical-align: middle;
+}
 
 /* generic positioning styles */
 .group:after {
