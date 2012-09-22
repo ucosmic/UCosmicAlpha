@@ -1,4 +1,22 @@
-﻿function InstitutionalAgreementEditModel() {
+﻿/// <reference path="../scripts/jquery-1.8.0.js" />
+/// <reference path="../scripts/knockout-2.1.0.js" />
+/// <reference path="../scripts/sammy/sammy.js" />
+/// <reference path="BaseViewModel.js" />
+/// <reference path="EstablishmentSearchViewModel.js" />
+/// <reference path="../scripts/app/side-swiper.js" />
+
+function InstitutionalAgreementParticipantModel(js) {
+    var self = this;
+    ko.mapping.fromJS(js, {}, self);
+
+    self.isNotOwner = ko.computed(function () {
+        return !self.isOwner();
+    });
+
+    self.participantEl = undefined;
+}
+
+function InstitutionalAgreementEditModel() {
     var self = this;
     BaseViewModel.call(self);
 
@@ -7,6 +25,80 @@
         root: '[data-current-module=agreements]'
     });
 
+    // participants
+    self.participants = ko.observableArray();
+
+    // HACK ALERT: make this work for demo purposes. Customize home participant based on cookie.
+    var tenantDomain = $('#tenancy_domain').val();
+    var homeParticipant = new InstitutionalAgreementParticipantModel({
+        isOwner: true,
+        establishment: new EstablishmentResultViewModel({
+            revisionId: 1,
+            officialName: 'My Home Institution (automatically detected based on who is signed in)',
+            translatedName: 'My Home Institution (automatically detected based on who is signed in)',
+            websiteUrl: 'www.myinstitution.edu',
+            countryName: 'Earth'
+        })
+    });
+    if (tenantDomain === 'usf.edu') {
+        homeParticipant.establishment = new EstablishmentResultViewModel({
+            revisionId: 1,
+            officialName: 'University of South Florida',
+            translatedName: 'University of South Florida',
+            websiteUrl: 'www.usf.edu',
+            countryName: 'United States'
+        });
+    }
+    if (tenantDomain === 'lehigh.edu') {
+        homeParticipant.establishment = new EstablishmentResultViewModel({
+            revisionId: 1,
+            officialName: 'Lehigh University',
+            translatedName: 'Lehigh University',
+            websiteUrl: 'www.lehigh.edu',
+            countryName: 'United States'
+        });
+    }
+    if (tenantDomain === 'umn.edu') {
+        homeParticipant.establishment = new EstablishmentResultViewModel({
+            revisionId: 1,
+            officialName: 'University of Minnesota',
+            translatedName: 'University of Minnesota',
+            websiteUrl: 'www.umn.edu',
+            countryName: 'United States'
+        });
+    }
+    if (tenantDomain === 'uc.edu') {
+        homeParticipant.establishment = new EstablishmentResultViewModel({
+            revisionId: 1,
+            officialName: 'University of Cincinnati',
+            translatedName: 'University of Cincinnati',
+            websiteUrl: 'www.uc.edu',
+            countryName: 'United States'
+        });
+    }
+    if (tenantDomain === 'suny.edu') {
+        homeParticipant.establishment = new EstablishmentResultViewModel({
+            revisionId: 1,
+            officialName: 'State University of New York',
+            translatedName: 'State University of New York',
+            websiteUrl: 'www.suny.edu',
+            countryName: 'United States'
+        });
+    }
+    //var partnerParticipant1 = new InstitutionalAgreementParticipantModel({
+    //    isOwner: false,
+    //    establishment: new EstablishmentResultViewModel({
+    //        revisionId: 2,
+    //        officialName: 'Universität zu Köln',
+    //        translatedName: 'University of Cologne',
+    //        websiteUrl: 'www.uni-koeln.de',
+    //        countryName: 'Germany'
+    //    })
+    //});
+    self.participants.push(homeParticipant);
+    //self.participants.push(partnerParticipant1);
+
+    // nest the establishment search viewmodel
     self.establishmentSearchViewModel = new EstablishmentSearchViewModel();
 
     // manage routing in this viewmodel, not the nested one
@@ -23,6 +115,42 @@
         if (self.establishmentSearchViewModel.prevEnabled()) {
             history.back();
         }
+    };
+
+    // override establishment item click to add as participant
+    self.addParticipant = function (establishmentResultViewModel) {
+        var participant = new InstitutionalAgreementParticipantModel({
+            isOwner: false,
+            establishment: establishmentResultViewModel
+        });
+        self.participants.push(participant);
+        location.hash = "#/";
+    };
+    self.establishmentSearchViewModel.items.subscribe(function (newValue) {
+        if (newValue && newValue.length) {
+            for (var i = 0; i < newValue.length; i++) {
+                if (newValue[i].clickAction !== self.addParticipant) {
+                    newValue[i].clickAction = self.addParticipant;
+                }
+            }
+        }
+    });
+    self.removeParticipant = function (establishmentResultViewModel, e) {
+        if (confirm('Are you sure you want to remove "' +
+            establishmentResultViewModel.translatedName() +
+            '" as a participant from this agreement?')) {
+            self.participants.remove(function (item) {
+                if (item.establishment.revisionId() === establishmentResultViewModel.revisionId()) {
+                    $(item.participantEl).slideUp('fast', function() {
+                        self.participants.remove(item);
+                    });
+                }
+                return false;
+            });
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     };
 
     var dataSideSwiper = 'data-side-swiper';
@@ -84,4 +212,6 @@
         });
         return sam;
     };
+
+    self.isBound(true);
 }

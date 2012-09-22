@@ -34,9 +34,43 @@
                             <header>
                                 <h2>
                                     Participants
+                                    @{
+                                        // HACK ALERT this is only temporary
+                                        var tenancy = UCosmic.Www.Mvc.TenancyExtensions.Tenancy(Request) != null
+                                            ? UCosmic.Www.Mvc.TenancyExtensions.Tenancy(Request).Domain
+                                            : "default";
+                                    }
+                                    <input type="hidden" value="@tenancy" id="tenancy_domain" />
                                 </h2>
                             </header>
-                            <div>
+                            <div data-bind="visible: isBound" style="display: none;">
+                                <ul data-bind="foreach: participants">
+                                    <li data-bind="element: 'participantEl'">
+                                        <div class="typed-item" data-bind="with: establishment">
+                                            @*<a href="#" data-bind="attr: { href: '#/participants/remove/' + revisionId() }"
+                                                title="Remove this participant"><i class="red minus float-right"></i></a>*@
+                                            <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus float-right"></i></a>
+                                            <div class="type">
+                                                <span data-bind="visible: $parent.isOwner">Home</span>
+                                                <span data-bind="visible: $parent.isNotOwner">Partner</span>
+                                            </div>
+                                            <div class="item">
+                                                <div>
+                                                    <strong data-bind="text: translatedName"></strong>
+                                                    <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
+                                                </div>
+                                                <div data-bind="visible: $parent.isNotOwner() && websiteUrl()">
+                                                    <a href="#" target="_blank" data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }"></a>
+                                                </div>
+                                                <div data-bind="visible: $parent.isNotOwner() && countryName()">
+                                                    <span data-bind="text: countryName"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            @*<div>
                                 <ul>
                                     <li>
                                         <div class="typed-item">
@@ -68,7 +102,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            </div>
+                            </div>*@
                             <footer>
                                 <a href="#/participants/add/page/1" class="button">
                                     <i class="green plus"></i>

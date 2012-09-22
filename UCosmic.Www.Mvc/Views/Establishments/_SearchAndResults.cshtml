@@ -42,7 +42,7 @@
                                     <div>
                                         <strong data-bind="text: translatedName"></strong>
                                     </div>
-                                    <div data-bind="visible: !officialNameMatchesTranslation()">
+                                    <div data-bind="visible: officialNameDoesNotMatchTranslation">
                                         (<span data-bind="text: officialName"></span>)
                                     </div>
                                     <div data-bind="visible: websiteUrl">

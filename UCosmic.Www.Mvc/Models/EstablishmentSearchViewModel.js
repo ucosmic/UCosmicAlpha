@@ -8,6 +8,7 @@
 
     self.clickAction = function () {
         // placeholder for click action
+        alert('clickAction');
     };
 
     self.openWebsiteUrl = function (vm, e) {
@@ -35,6 +36,10 @@
 
     self.officialNameMatchesTranslation = ko.computed(function () {
         return self.officialName() === self.translatedName();
+    });
+
+    self.officialNameDoesNotMatchTranslation = ko.computed(function () {
+        return !self.officialNameMatchesTranslation();
     });
 }
 
