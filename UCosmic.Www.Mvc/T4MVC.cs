@@ -300,6 +300,17 @@ public class T4MVC_ActionResult : System.Web.Mvc.ActionResult, IT4MVCActionResul
     public RouteValueDictionary RouteValueDictionary { get; set; }
 }
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+public class T4MVC_ViewResult : System.Web.Mvc.ViewResult, IT4MVCActionResult {
+    public T4MVC_ViewResult(string area, string controller, string action, string protocol = null): base()  {
+        this.InitMVCT4Result(area, controller, action, protocol);
+    }
+    
+    public string Controller { get; set; }
+    public string Action { get; set; }
+    public string Protocol { get; set; }
+    public RouteValueDictionary RouteValueDictionary { get; set; }
+}
+[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public class T4MVC_RedirectResult : System.Web.Mvc.RedirectResult, IT4MVCActionResult {
     public T4MVC_RedirectResult(string area, string controller, string action, string protocol = null): base(" ", default(bool))  {
         this.InitMVCT4Result(area, controller, action, protocol);
@@ -607,6 +618,8 @@ namespace Links {
             public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
             public static readonly string closer_24_red_png = Url("closer-24-red.png");
             public static readonly string minus_24_red_png = Url("minus-24-red.png");
+            public static readonly string plus_16_green_disc_png = Url("plus-16-green-disc.png");
+            public static readonly string plus_20_green_disc_png = Url("plus-20-green-disc.png");
             public static readonly string plus_24_green_disc_png = Url("plus-24-green-disc.png");
             public static readonly string plus_24_green_png = Url("plus-24-green.png");
             public static readonly string user_voice_24_filled_png = Url("user-voice-24-filled.png");

@@ -350,6 +350,8 @@ body #main {
             display: inline-block;
             border: solid 15px transparent;
             border-left: none; }
+          body #main > .content.fixed nav.side > ul > li > a > .text > img {
+            vertical-align: top; }
         body #main > .content.fixed nav.side > ul > li > a > .text, body #main > .content.fixed nav.side > ul > li > .text {
           display: inline-block;
           -webkit-box-sizing: border-box;

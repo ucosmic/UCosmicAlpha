@@ -56,11 +56,13 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string Index = "Index";
+            public readonly string New = "New";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string Index = "Index";
+            public const string New = "New";
         }
 
 
@@ -69,9 +71,12 @@ namespace UCosmic.Www.Mvc.Controllers {
         public ViewNames Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ViewNames {
+            public readonly string _FormAndCards = "~/Views/Establishments/_FormAndCards.cshtml";
+            public readonly string _FormSideBar = "~/Views/Establishments/_FormSideBar.cshtml";
             public readonly string _SearchAndResults = "~/Views/Establishments/_SearchAndResults.cshtml";
             public readonly string _SearchSideBar = "~/Views/Establishments/_SearchSideBar.cshtml";
             public readonly string Index = "~/Views/Establishments/Index.cshtml";
+            public readonly string New = "~/Views/Establishments/New.cshtml";
         }
     }
 
@@ -79,8 +84,13 @@ namespace UCosmic.Www.Mvc.Controllers {
     public class T4MVC_EstablishmentsController: UCosmic.Www.Mvc.Controllers.EstablishmentsController {
         public T4MVC_EstablishmentsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Index() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Index);
+        public override System.Web.Mvc.ViewResult Index() {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Index);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult New() {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.New);
             return callInfo;
         }
 

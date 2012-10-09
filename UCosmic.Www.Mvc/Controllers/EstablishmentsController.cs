@@ -11,10 +11,16 @@ namespace UCosmic.Www.Mvc.Controllers
         //    _queryEntities = queryEntities;
         //}
 
-        public virtual ActionResult Index()
+        [HttpGet]
+        public virtual ViewResult Index()
         {
             return View();
         }
 
+        [HttpGet]
+        public virtual ViewResult New()
+        {
+            return View();
+        }
     }
 }

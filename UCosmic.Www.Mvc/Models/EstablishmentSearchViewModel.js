@@ -204,6 +204,13 @@ function EstablishmentSearchViewModel() {
         });
     };
 
+    // go to add new
+    self.gotoAddNew = function (vm, e) {
+        location.href = MvcJs.Establishments.New() + '/';
+        if (e) e.preventDefault();
+        return false;
+    };
+
     var sam;
     self.sammy = function() {
         if (sam) return sam;

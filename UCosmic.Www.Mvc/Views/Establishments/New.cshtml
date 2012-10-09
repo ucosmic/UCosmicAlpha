@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Establishments";
+    ViewBag.Title = "New Establishment";
 }
 @section bib
 {
@@ -7,34 +7,24 @@
         @Html.Partial(MVC.Admin.Views._Bib)
     </nav>
 }
-@section scripts {
 
-    <script type="text/javascript" src="@Url.Content(Links.Models.EstablishmentSearchViewModel_js)"></script>
-
-    <script type="text/javascript">
-        var establishmentSearchViewModel = new EstablishmentSearchViewModel();
-        ko.applyBindings(establishmentSearchViewModel, $('[data-current-module=admin]')[0]);
-        establishmentSearchViewModel.sammy().run();
-    </script>
-
-}
 <div class="content fixed to-top" data-current-module="admin">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
-                <form class="group" data-bind="submit: requestResults">
+                <form class="group">
                     <div class="float-left from-top">
                         <header>
                             <h1>
                                 @ViewBag.Title
                             </h1>
                         </header>
-                        @Html.Partial(MVC.Establishments.Views._SearchAndResults)
+                        @Html.Partial(MVC.Establishments.Views._FormAndCards)
                     </div>
                     <aside class="float-right from-top" data-fixed-scroll="root">
                         <div data-fixed-scroll="anchor"></div>
                         <div data-fixed-scroll="content">
-                            @Html.Partial(MVC.Establishments.Views._SearchSideBar)
+                            @Html.Partial(MVC.Establishments.Views._FormSideBar)
                         </div>
                     </aside>
                 </form>

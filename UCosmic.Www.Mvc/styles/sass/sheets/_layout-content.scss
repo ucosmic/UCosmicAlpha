@@ -83,6 +83,9 @@ body {
                                     border-left: none;
                                 }
                                 > .text {
+                                    > img {
+                                        vertical-align: top;
+                                    }
                                 }
                             }
                             > a > .text, > .text {

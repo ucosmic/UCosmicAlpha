@@ -588,6 +588,9 @@
     <Content Include="Views\Establishments\Index.cshtml" />
     <Content Include="Views\Establishments\_SearchAndResults.cshtml" />
     <Content Include="Views\Establishments\_SearchSideBar.cshtml" />
+    <Content Include="Views\Establishments\New.cshtml" />
+    <Content Include="Views\Establishments\_FormSideBar.cshtml" />
+    <Content Include="Views\Establishments\_FormAndCards.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />
