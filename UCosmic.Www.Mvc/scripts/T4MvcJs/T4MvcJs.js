@@ -29,6 +29,17 @@ var MvcJs = {
 
 			return url.replace(/([?&]+$)/g, "");
 		},
+		Show: function(id) {
+			var url = "/establishments/show/{id}";
+			
+			if (id) {
+				url = url.replace("{id}", id);
+			} else {
+				url = url.replace("id={id}", "").replace("?&","?").replace("&&","&");
+			}
+
+			return url.replace(/([?&]+$)/g, "");
+		},
 		NameConst: "Establishments"
 	},
 	Home: {

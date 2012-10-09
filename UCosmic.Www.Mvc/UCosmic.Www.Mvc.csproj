@@ -591,6 +591,7 @@
     <Content Include="Views\Establishments\New.cshtml" />
     <Content Include="Views\Establishments\_FormSideBar.cshtml" />
     <Content Include="Views\Establishments\_FormAndCards.cshtml" />
+    <Content Include="Views\Establishments\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />

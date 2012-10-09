@@ -22,5 +22,11 @@ namespace UCosmic.Www.Mvc.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public virtual ViewResult Show(int id)
+        {
+            return View();
+        }
     }
 }

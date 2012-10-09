@@ -40,6 +40,11 @@ namespace UCosmic.Www.Mvc.Controllers {
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Show() {
+            return new T4MVC_ViewResult(Area, Name, ActionNames.Show);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public EstablishmentsController Actions { get { return MVC.Establishments; } }
@@ -57,15 +62,24 @@ namespace UCosmic.Www.Mvc.Controllers {
         public class ActionNamesClass {
             public readonly string Index = "Index";
             public readonly string New = "New";
+            public readonly string Show = "Show";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string Index = "Index";
             public const string New = "New";
+            public const string Show = "Show";
         }
 
 
+        static readonly ActionParamsClass_Show s_params_Show = new ActionParamsClass_Show();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Show ShowParams { get { return s_params_Show; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Show {
+            public readonly string id = "id";
+        }
         static readonly ViewNames s_views = new ViewNames();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewNames Views { get { return s_views; } }
@@ -77,6 +91,7 @@ namespace UCosmic.Www.Mvc.Controllers {
             public readonly string _SearchSideBar = "~/Views/Establishments/_SearchSideBar.cshtml";
             public readonly string Index = "~/Views/Establishments/Index.cshtml";
             public readonly string New = "~/Views/Establishments/New.cshtml";
+            public readonly string Show = "~/Views/Establishments/Show.cshtml";
         }
     }
 
@@ -91,6 +106,12 @@ namespace UCosmic.Www.Mvc.Controllers {
 
         public override System.Web.Mvc.ViewResult New() {
             var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.New);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Show(int id) {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Show);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }
 
