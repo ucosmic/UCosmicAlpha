@@ -41,6 +41,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AttributeRouting">
+      <HintPath>..\packages\AttributeRouting.Core.3.1.2\lib\net40\AttributeRouting.dll</HintPath>
+    </Reference>
+    <Reference Include="AttributeRouting.Web">
+      <HintPath>..\packages\AttributeRouting.Core.Web.3.1.2\lib\net40\AttributeRouting.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="AttributeRouting.Web.Mvc">
+      <HintPath>..\packages\AttributeRouting.3.1.2\lib\net40\AttributeRouting.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="AutoAutoMapper, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoAutoMapper.0.2.0.0\lib\net40\AutoAutoMapper.dll</HintPath>
@@ -176,6 +185,7 @@
     </Compile>
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
+    <Compile Include="App_Start\AttributeRouting.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

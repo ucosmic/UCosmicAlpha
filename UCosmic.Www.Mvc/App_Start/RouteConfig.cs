@@ -1,5 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Reflection;
+using System.Web.Mvc;
 using System.Web.Routing;
+using AttributeRouting.Web.Mvc;
 using LowercaseRoutesMVC4;
 
 namespace UCosmic.Www.Mvc
@@ -8,6 +10,13 @@ namespace UCosmic.Www.Mvc
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            routes.MapAttributeRoutes(config =>
+            {
+                config.AddRoutesFromAssembly(Assembly.GetExecutingAssembly());
+                config.UseLowercaseRoutes = true;
+                config.AppendTrailingSlash = true;
+            });
+
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             // TODO: move to route sniffer
