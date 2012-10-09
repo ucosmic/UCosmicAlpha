@@ -1,9 +1,12 @@
 ﻿using System.Web.Mvc;
+using AttributeRouting.Web.Mvc;
 
 namespace UCosmic.Www.Mvc.Controllers
 {
     public partial class TenancyController : Controller
     {
+        [HttpGet]
+        [GET("as/{id?}")]
         public virtual RedirectResult Tenant(string id, string returnUrl)
         {
             Response.Tenancy(id);
@@ -11,6 +14,7 @@ namespace UCosmic.Www.Mvc.Controllers
         }
 
         [ChildActionOnly]
+        [GET("tenancy/css")]
         public virtual PartialViewResult Css()
         {
             var tenancy = Request.Tenancy();
