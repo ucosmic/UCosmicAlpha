@@ -153,6 +153,29 @@ body {
                                 }
                             }
                         }
+                        &.top {
+                            > li {
+                                &:last-child > a > .text {
+                                    @include border-radii(0, 0, 0, 0);
+                                }
+                                &:last-child.current > a > .text {
+                                    @include border-radii(0, 0, 0, 0);
+                                }
+                                &:last-child.current > .content {
+                                    @include border-radii(0, 0, 0, 0);
+                                }
+                            }
+                        }
+                        &.bottom {
+                            > li {
+                                &:first-child > a > .text {
+                                    @include border-radii(0, 0, 0, 0);
+                                }
+                                &:first-child.current > a > .text {
+                                    @include border-radii(0, 0, 0, 0);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -202,7 +225,7 @@ body {
                     }
                     &:hover {
                         .breadcrumb-arrows {
-                            text-decoration: none;                    
+                            text-decoration: none;
                         }
                         h1, h2, h3, h4, h5, h6 {
                             text-decoration: none;
@@ -263,6 +286,26 @@ body {
                             td {
                                 background-color: $row-hilite-bg-color;
                             }
+                        }
+                    }
+                }
+            }
+            ul.data, ol.data {
+                > li {
+                    &.hover-hilite:hover {
+                        background-color: $row-hilite-bg-color;
+                        * {
+                            cursor: pointer;
+                        }
+                    }
+                    > div {
+                        @include border-box;
+                        margin-bottom: 1em;
+                        border: solid 1px #555;
+                        padding: 16px;
+                        @include border-radius(8px);
+                        > .float-right {
+                            margin-left: 5px;
                         }
                     }
                 }

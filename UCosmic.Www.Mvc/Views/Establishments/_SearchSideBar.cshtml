@@ -1,7 +1,7 @@
 ﻿<nav class="side">
-    <ul>
+    <ul class="top">
         <li>
-            <a href="#/new" class="group" data-bind="click: gotoAddNew">
+            <a href="@Url.Action(MVC.Establishments.New())" class="group" data-bind="click: gotoAddNew">
                 <div class="arrow float-left"></div>
                 <span class="text float-left">
                     <img src="~/styles/icons/plus-20-green-disc.png" alt="" />
@@ -16,6 +16,7 @@
                     <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode">
                         <option>[Loading...]</option>
                     </select>
+                    <input type="hidden" data-bind="value: countryCode" />
                 </div>
                 <div class="field">
                     <select class="side" data-bind="value: orderBy">
@@ -31,7 +32,17 @@
                         <option value="20">Show 20 results per page</option>
                         <option value="50">Show 50 results per page</option>
                         <option value="100">Show 100 results per page</option>
-                        <option value="@int.MaxValue">Show all results</option>
+                        <option value="250">Show 250 results per page</option>
+                        @*<option value="@int.MaxValue">Show all results</option>*@
+                    </select>
+                </div>
+                <div class="field" style="display: none;">
+                    <select class="side" data-bind="value: lens">
+                        <option value="table">Table</option>
+                        <option value="list">List</option>
+                        <option value="grid">Grid</option>
+                        <option value="map">Map</option>
+                        <option value="tree">Tree</option>
                     </select>
                 </div>
                 <div class="field">
@@ -42,34 +53,12 @@
                 </div>
             </div>
         </li>
-        <li class="current">
-            <a href="#" class="group">
+    </ul>
+    <ul class="bottom" data-bind="foreach: lenses">
+        <li data-bind="css: { current: $parent.lens() === value }">
+            <a href="#" class="group" data-bind="click: $parent.changeLens">
                 <div class="arrow float-left"></div>
-                <span class="text float-left">Table</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="group">
-                <div class="arrow float-left"></div>
-                <span class="text float-left">List</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="#" class="group">
-                <div class="arrow float-left"></div>
-                <span class="text float-left">Grid</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="group">
-                <div class="arrow float-left"></div>
-                <span class="text float-left">Map</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="group">
-                <div class="arrow float-left"></div>
-                <span class="text float-left">Tree</span>
+                <span class="text float-left" data-bind="text: text"></span>
             </a>
         </li>
     </ul>

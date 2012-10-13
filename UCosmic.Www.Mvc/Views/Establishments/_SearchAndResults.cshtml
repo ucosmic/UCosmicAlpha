@@ -15,12 +15,13 @@
                     <span data-bind="visible: hasManyItems">- <span data-bind="text: lastNumber"></span></span>
                     of <span data-bind="text: itemTotal"></span></strong>
                 <span data-bind="visible: hasManyPages">(page
-                    <select class="inline" data-bind="options: pageNumbers, value: pageNumber">
-                    </select>
+                    @*<select class="inline" data-bind="options: pageNumberOptions, value: selectedPageNumber">
+                    </select>*@
+                    <span data-bind="text: pageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
             <div class="results" data-bind="visible: hasItems" style="display: none;">
-                <div class="table">
+                <div class="table" data-bind="visible: lens() === 'table'">
                     <table class="data">
                         <colgroup>
                             <col style="width: 75%;" />
@@ -37,7 +38,7 @@
                             </tr>
                         </thead>
                         <tbody data-bind="foreach: items">
-                            <tr class="hover-hilite" data-bind="click: clickAction">
+                            <tr class="hover-hilite" data-bind="click: clickAction" data-href="@Url.Action(MVC.Establishments.Show(0))">
                                 <td>
                                     <div>
                                         <strong data-bind="text: translatedName"></strong>
@@ -56,6 +57,43 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div data-bind="visible: lens() === 'list'">
+                    <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Establishments.Show(0))">
+                        <li class="hover-hilite" data-bind="click: clickAction">
+                            <div>
+                                <div class="float-right" style="text-align: right;">
+                                    <div data-bind="text: nullDisplayCountryName"></div>
+                                    <div data-bind="visible: websiteUrl">
+                                        <a href="#" target="_blank"
+                                            data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }, click: openWebsiteUrl"></a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong data-bind="text: translatedName"></strong>
+                                </div>
+                                <div data-bind="visible: officialNameDoesNotMatchTranslation">
+                                    (<span data-bind="text: officialName"></span>)
+                                </div>
+                                <div style="clear: right;"></div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <div data-bind="visible: lens() === 'grid'">
+                    <p>
+                        This is a placeholder for the Grid data lens. Grid data will go here.
+                    </p>
+                </div>
+                <div data-bind="visible: lens() === 'map'">
+                    <p>
+                        This is a placeholder for the Map data lens. Map data will go here.
+                    </p>
+                </div>
+                <div data-bind="visible: lens() === 'tree'">
+                    <p>
+                        This is a placeholder for the Tree data lens. Tree data will go here.
+                    </p>
                 </div>
             </div>
         </div>

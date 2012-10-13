@@ -414,6 +414,26 @@ body #main {
             color: #004c93; }
             body #main > .content.fixed nav.side > ul > li.static > .content a[disabled], body #main > .content.fixed nav.side > ul > li.static > .content button.link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=submit].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=reset].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=button].link[disabled] {
               color: #999; }
+      body #main > .content.fixed nav.side > ul.top > li:last-child > a > .text {
+        -moz-border-radius: 0 0 0 0;
+        -webkit-border-radius: 0 0 0 0;
+        border-radius: 0 0 0 0; }
+      body #main > .content.fixed nav.side > ul.top > li:last-child.current > a > .text {
+        -moz-border-radius: 0 0 0 0;
+        -webkit-border-radius: 0 0 0 0;
+        border-radius: 0 0 0 0; }
+      body #main > .content.fixed nav.side > ul.top > li:last-child.current > .content {
+        -moz-border-radius: 0 0 0 0;
+        -webkit-border-radius: 0 0 0 0;
+        border-radius: 0 0 0 0; }
+      body #main > .content.fixed nav.side > ul.bottom > li:first-child > a > .text {
+        -moz-border-radius: 0 0 0 0;
+        -webkit-border-radius: 0 0 0 0;
+        border-radius: 0 0 0 0; }
+      body #main > .content.fixed nav.side > ul.bottom > li:first-child.current > a > .text {
+        -moz-border-radius: 0 0 0 0;
+        -webkit-border-radius: 0 0 0 0;
+        border-radius: 0 0 0 0; }
     body #main > .content.fluid {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
@@ -492,6 +512,22 @@ body #main {
         cursor: pointer; }
       body #main > .content table.data tbody tr.hover-hilite:hover td {
         background-color: #ffffaa; }
+    body #main > .content ul.data > li.hover-hilite:hover, body #main > .content ol.data > li.hover-hilite:hover {
+      background-color: #ffffaa; }
+      body #main > .content ul.data > li.hover-hilite:hover *, body #main > .content ol.data > li.hover-hilite:hover * {
+        cursor: pointer; }
+    body #main > .content ul.data > li > div, body #main > .content ol.data > li > div {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      margin-bottom: 1em;
+      border: solid 1px #555;
+      padding: 16px;
+      -moz-border-radius: 8px;
+      -webkit-border-radius: 8px;
+      border-radius: 8px; }
+      body #main > .content ul.data > li > div > .float-right, body #main > .content ol.data > li > div > .float-right {
+        margin-left: 5px; }
 
 /* layout footer stylesheet */
 body > footer {

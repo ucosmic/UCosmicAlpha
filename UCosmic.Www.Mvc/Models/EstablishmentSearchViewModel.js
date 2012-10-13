@@ -1,4 +1,11 @@
-﻿function EstablishmentResultViewModel(js) {
+﻿/// <reference path="../scripts/jquery-1.8.0.js" />
+/// <reference path="../scripts/knockout-2.1.0.js" />
+/// <reference path="../scripts/sammy/sammy.js" />
+/// <reference path="../scripts/app/side-swiper.js" />
+/// <reference path="../scripts/app/app.js" />
+
+
+function EstablishmentResultViewModel(js) {
     var self = this;
     ko.mapping.fromJS(js, {}, self);
 
@@ -6,9 +13,15 @@
         return self.countryName() || '[Undefined]';
     });
 
-    self.clickAction = function () {
-        // placeholder for click action
-        alert('clickAction');
+    self.clickAction = function (vm, e) {
+        var $target = $(e.target), href;
+        while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
+            $target = $target.parent();
+        }
+        if ($target.length) {
+            href = $target.attr('href') || $target.attr('data-href');
+            location.href = href.replace('/0/', '/' + self.revisionId() + '/');
+        }
     };
 
     self.openWebsiteUrl = function (vm, e) {
@@ -46,6 +59,12 @@
 function EstablishmentSearchViewModel() {
     var self = this;
 
+    self.setLocation = function () {
+        var location = '#/page/' + self.pageNumber() + '/';
+        if (self.sammy().getLocation() !== location)
+            self.sammy().setLocation(location);
+    };
+
     // query parameters
     self.countries = ko.observableArray();
     self.countryCode = ko.observable();
@@ -56,10 +75,13 @@ function EstablishmentSearchViewModel() {
 
     // countries dropdown
     ko.computed(function () {
+        var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
         $.get(app.webApiRoutes.Countries.Get())
         .success(function (response) {
             response.splice(response.length, 0, { code: '-1', name: '[Without country]' });
             self.countries(response);
+            if (lastCountryCode && lastCountryCode !== self.countryCode())
+                self.countryCode(lastCountryCode);
         });
     })
     .extend({ throttle: 1 });
@@ -73,19 +95,16 @@ function EstablishmentSearchViewModel() {
     self.firstNumber = ko.observable();
     self.lastIndex = ko.observable();
     self.lastNumber = ko.observable();
-    self.pageNumbers = ko.observableArray([1]);
     self.pageCount.subscribe(function (newValue) {
-        var numbers = [];
-        for (var i = 1; i <= newValue; i++) {
-            numbers.push(i);
+        if (self.pageNumber() && self.pageNumber() > newValue) {
+            self.pageNumber(1);
         }
-        self.pageNumbers(numbers);
     });
+    self.pageNumber.subscribe(self.setLocation);
     self.nextPage = function () {
         if (self.nextEnabled()) {
             var pageNumber = parseInt(self.pageNumber()) + 1;
             self.pageNumber(pageNumber);
-            location.hash = '/page/' + pageNumber;
         }
     };
     self.prevPage = function () {
@@ -107,6 +126,19 @@ function EstablishmentSearchViewModel() {
     self.hasManyItems = ko.computed(function () {
         return self.lastNumber() > self.firstNumber();
     });
+
+    // lensing
+    self.lenses = ko.observableArray([
+        { text: 'Table', value: 'table' },
+        { text: 'List', value: 'list' },
+        { text: 'Grid', value: 'grid' },
+        { text: 'Map', value: 'map' },
+        { text: 'Tree', value: 'tree' }
+    ]);
+    self.lens = ko.observable();
+    self.changeLens = function (lens) {
+        self.lens(lens.value);
+    };
 
     // spinner
     self.isSpinning = ko.observable(true);
@@ -183,6 +215,7 @@ function EstablishmentSearchViewModel() {
         else {
             ko.mapping.fromJS(js, self.resultsMapping, self);
         }
+        app.windowScrollTop('restore');
         self.stopSpinning();
     };
 
@@ -205,17 +238,15 @@ function EstablishmentSearchViewModel() {
     };
 
     // go to add new
-    self.gotoAddNew = function (vm, e) {
-        location.href = MvcJs.Establishments.New() + '/';
-        if (e) e.preventDefault();
-        return false;
+    self.gotoAddNew = function () {
+        return true;
     };
 
     var sam;
-    self.sammy = function() {
+    self.sammy = function () {
         if (sam) return sam;
         sam = Sammy(function () {
-            this.before(/.*/, function () {
+            this.before(/\#\/page\/(.*)/, function () {
                 if (self.nextForceDisabled() || self.prevForceDisabled())
                     return false;
 
@@ -227,9 +258,8 @@ function EstablishmentSearchViewModel() {
                 return true;
             });
 
-            this.get('#/page/:pageNumber', function () {
-                var pageNumber = this.params['pageNumber'],
-                    trail = self.trail(),
+            this.get('#/page/:pageNumber/', function () {
+                var trail = self.trail(),
                     clone;
                 if (trail.length > 0 && trail[trail.length - 1] === this.path) return;
                 if (trail.length > 1 && trail[trail.length - 2] === this.path) {
@@ -256,14 +286,13 @@ function EstablishmentSearchViewModel() {
                     $(window).scrollTop(0);
                     self.sideSwiper.next(1, function () {
                         self.unlockAnimation();
-                        //self.nextForceDisabled(false);
                     });
                 }
                 trail.push(this.path);
             });
 
             this.get('', function () {
-                this.app.runRoute('get', '#/page/1');
+                this.app.setLocation('#/page/1/');
             });
         });
         return sam;
