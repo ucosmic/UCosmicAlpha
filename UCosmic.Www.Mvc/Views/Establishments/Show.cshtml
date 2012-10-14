@@ -1,5 +1,45 @@
 ﻿@{
-    ViewBag.Title = "Show";
+    ViewBag.Title = "Establishment Details";
+}
+@section bib
+{
+    <nav class="bib hide" data-current-bib="establishments">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}
+@section scripts {
+
+    <script type="text/javascript" src="@Url.Content(Links.Models.EstablishmentItemViewModel_js)"></script>
+
+    <script type="text/javascript">
+        var establishmentItemViewModel = new EstablishmentItemViewModel(@ViewBag.Id);
+        ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+        //establishmentItemViewModel.sammy().run();
+    </script>
+
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="content fixed to-top" data-current-module="admin">
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div data-side-swiper="on">
+                <div class="group">
+                    <div class="float-left from-top">
+                        <header>
+                            <h1>
+                                @ViewBag.Title
+                            </h1>
+                        </header>
+                        @Html.Partial(MVC.Establishments.Views._FormAndCards)
+                    </div>
+                    <aside class="float-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content">
+                            @Html.Partial(MVC.Establishments.Views._FormSideBar)
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

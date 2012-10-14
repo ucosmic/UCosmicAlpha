@@ -7,4 +7,11 @@
             return applicationPath + url;
         }
     };
+
+    self.Languages = {
+        Get: function () {
+            var url = 'api/languages';
+            return applicationPath + url;
+        }
+    };
 }

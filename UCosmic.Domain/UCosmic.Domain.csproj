@@ -77,6 +77,7 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByKeyword.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentViewProjector.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentNameView.cs" />

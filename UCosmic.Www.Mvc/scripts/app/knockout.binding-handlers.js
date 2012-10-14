@@ -4,3 +4,15 @@
         viewModel[name] = element;
     }
 };
+
+ko.bindingHandlers.slideDownVisible = {
+    update: function (element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (value && !$(element).is(':visible')) {
+            $(element).slideDown('fast');
+        }
+        else if (!value && $(element).is(':visible')) {
+            $(element).slideUp('fast');
+        }
+    }
+};

@@ -6,6 +6,7 @@ using UCosmic.Www.Mvc.Models;
 
 namespace UCosmic.Www.Mvc.ApiControllers
 {
+    [DefaultApiHttpRouteConvention]
     public class CountriesController : ApiController
     {
         private readonly IQueryEntities _queryEntities;
@@ -16,12 +17,9 @@ namespace UCosmic.Www.Mvc.ApiControllers
         }
 
         [CacheHttpGet(Duration = 3600)]
-        public IEnumerable<CountryApiModel> Get()
+        public IEnumerable<CountryApiModel> GetAll()
         {
             var countries = _queryEntities
-                //.Query<GeoNamesCountry>()
-                //.Where(c => c.Code != null && c.Code != "")
-                //.OrderBy(c => c.Name)
                 .Query<Place>()
                 .Where(p => p.IsCountry)
                 .OrderBy(p => p.OfficialName)

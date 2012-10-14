@@ -529,6 +529,34 @@ body #main {
       border-radius: 8px; }
       body #main > .content ul.data > li > div > .float-right, body #main > .content ol.data > li > div > .float-right {
         margin-left: 5px; }
+    body #main > .content ul.data-items > li, body #main > .content ol.data-items > li {
+      margin-bottom: 4px; }
+body .badge {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 0 0 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+  vertical-align: top;
+  -webkit-text-shadow: 1px 1px 0 black;
+  text-shadow: 1px 1px 0 black; }
+  body .badge.green {
+    background-color: #090;
+    color: #fff; }
+  body .badge.red {
+    background-color: #c00;
+    color: #fff; }
+  body .badge.blue {
+    background-color: #33f;
+    color: #fff; }
+body .inline-block {
+  display: inline-block; }
+body .bold {
+  font-weight: bold; }
 
 /* layout footer stylesheet */
 body > footer {

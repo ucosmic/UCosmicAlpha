@@ -7,6 +7,41 @@
                         Name(s)
                     </h2>
                 </header>
+                <ul class="data-items" data-bind="foreach: names">
+                    <li data-bind="css: { selected: editMode }">
+                        <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': $parent.editingName() }">
+                            <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
+                            <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
+                            <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
+                            <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                        </div>
+                        <div data-bind="visible: editMode" style="display: none;">
+                            <form>
+                                <div class="field">
+                                    <textarea rows="2" data-bind="value: text, element: 'textElement'" data-autosize="true"></textarea>
+                                </div>
+                                <div class="field">
+                                    <label>
+                                        <input type="checkbox" data-bind="checked: isOfficialName, enable: !originalValues.isOfficialName" />
+                                        Offical Name
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input type="checkbox" data-bind="checked: isFormerName" />
+                                        Former / Defunct Name
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <select data-bind="value: languageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', optionsCaption: '[Language Neutral]', element: 'languagesElement'"></select>
+                                </div>
+                                <div>
+                                    <a href="#" data-bind="click: saveEditor">OK</a> |
+                                    <a href="#" data-bind="click: cancelEditor">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
             </section>
         </div>
     </div>

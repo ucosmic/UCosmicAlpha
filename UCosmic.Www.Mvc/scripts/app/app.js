@@ -23,6 +23,10 @@
     };
 
     $.extend(window.app.obtruders, {
+        autosize: function (selector) {
+            if ($.fn.autosize)
+                $(selector).find('textarea[data-autosize]').autosize();
+        },
         placeholder: function (selector) {
             if ($.fn.placeholder)
                 $(selector).find('input[placeholder], textarea[placeholder]').placeholder();

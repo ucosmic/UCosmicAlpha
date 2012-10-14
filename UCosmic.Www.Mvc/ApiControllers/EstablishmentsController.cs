@@ -6,6 +6,7 @@ using UCosmic.Www.Mvc.Models;
 
 namespace UCosmic.Www.Mvc.ApiControllers
 {
+    [DefaultApiHttpRouteConvention]
     public class EstablishmentsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -15,8 +16,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        //[CacheHttpGet(Duration = 60)]
-        public PageOf<EstablishmentApiModel> Get([FromUri] EstablishmentSearchInputModel input)
+        public PageOf<EstablishmentApiModel> GetAll([FromUri] EstablishmentSearchInputModel input)
         {
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);

@@ -13,22 +13,45 @@ namespace UCosmic.Www.Mvc.Controllers
         //    _queryEntities = queryEntities;
         //}
 
-        [HttpGet]
         public virtual ViewResult Index()
         {
             return View();
         }
 
-        [HttpGet]
         public virtual ViewResult New()
         {
             return View();
         }
 
-        [HttpGet]
+        public virtual ViewResult Create()
+        {
+            return null;
+        }
+
         public virtual ViewResult Show(int id)
         {
+            ViewBag.Id = id;
             return View();
+        }
+
+        public virtual ViewResult Edit(int id)
+        {
+            return null;
+        }
+
+        public virtual ViewResult Update(int id)
+        {
+            return null;
+        }
+
+        public virtual ViewResult Delete(int id)
+        {
+            return null;
+        }
+
+        public virtual ViewResult Destroy(int id)
+        {
+            return null;
         }
     }
 }

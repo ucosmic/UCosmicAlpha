@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Reflection;
+using System.Web.Http;
+using AttributeRouting.Web.Http.WebHost;
 using Newtonsoft.Json.Serialization;
 
 namespace UCosmic.Www.Mvc
@@ -9,13 +11,19 @@ namespace UCosmic.Www.Mvc
         {
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-            config.Routes.MapHttpRoute(null,
-                "api/{controller}/{id}",
-                new
-                {
-                    id = RouteParameter.Optional
-                }
-            );
+            config.Routes.MapHttpAttributeRoutes(cfg =>
+            {
+                cfg.AddRoutesFromAssembly(Assembly.GetExecutingAssembly());
+                cfg.UseLowercaseRoutes = true;
+            });
+
+            //config.Routes.MapHttpRoute(null,
+            //    "api/{controller}/{id}",
+            //    new
+            //    {
+            //        id = RouteParameter.Optional
+            //    }
+            //);
         }
     }
 }

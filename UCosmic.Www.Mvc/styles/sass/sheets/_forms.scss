@@ -4,6 +4,7 @@ input[type="email"], input[type="number"],   input[type="password"], input[type=
 input[type="tel"],   input[type="text"],     input[type="url"],      input[type="color"],
 input[type="date"],  input[type="datetime"], input[type="datetime-local"],
 input[type="month"], input[type="time"],     input[type="week"], textarea {
+    -webkit-appearance: none;
     @include border-box;
     width: 100%;
     max-width: 100%;
@@ -12,19 +13,50 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
     border: solid 1px #aaa;
     border-right-color: #ddd;
     border-bottom-color: #ddd;
-    /* @include border-radius(3px); */
     padding: 8px;
     @include outline-none;
     vertical-align: baseline;
-    /* background-color: #eee; */
     @include transition(all, 500ms);
     cursor: text;
     @include font-arial;
-    &:focus {
-        /* background: #ffe; */
-    }
     &.placeholder {
         color: #999;
+    }
+}
+
+textarea {
+    height: auto;
+    min-height: 38px;
+}
+
+.text-box {
+    @include border-box;
+    width: 100%;
+    max-width: 100%;
+    @include font-height(16px, 20px);
+    height: 38px;
+    border: solid 1px #aaa;
+    border-right-color: #ddd;
+    border-bottom-color: #ddd;
+    padding: 8px;
+    &.when-hovered {
+        border-color: transparent;
+        cursor: pointer;
+        * {
+            cursor: pointer;
+        }
+        &:hover {
+            border-color: #aaa;
+            border-right-color: #ddd;
+            border-bottom-color: #ddd;
+        }
+        &.force-unhoverable {
+            border-color: transparent;
+            cursor: default;
+            * {
+                cursor: default;
+            }
+        }
     }
 }
 

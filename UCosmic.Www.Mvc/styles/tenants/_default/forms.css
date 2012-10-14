@@ -7,6 +7,7 @@ input[type="email"], input[type="number"], input[type="password"], input[type="s
 input[type="tel"], input[type="text"], input[type="url"], input[type="color"],
 input[type="date"], input[type="datetime"], input[type="datetime-local"],
 input[type="month"], input[type="time"], input[type="week"], textarea {
+  -webkit-appearance: none;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -18,28 +19,53 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   border: solid 1px #aaa;
   border-right-color: #ddd;
   border-bottom-color: #ddd;
-  /* @include border-radius(3px); */
   padding: 8px;
   -moz-outline: none;
   outline: none;
   vertical-align: baseline;
-  /* background-color: #eee; */
   -webkit-transition: all 500ms;
   -moz-transition: all 500ms;
   -o-transition: all 500ms;
   transition: all 500ms;
   cursor: text;
   font-family: Arial, Helvetica, sans-serif; }
-  input[type="email"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="search"]:focus,
-  input[type="tel"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="color"]:focus,
-  input[type="date"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus,
-  input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, textarea:focus {
-    /* background: #ffe; */ }
   input[type="email"].placeholder, input[type="number"].placeholder, input[type="password"].placeholder, input[type="search"].placeholder,
   input[type="tel"].placeholder, input[type="text"].placeholder, input[type="url"].placeholder, input[type="color"].placeholder,
   input[type="date"].placeholder, input[type="datetime"].placeholder, input[type="datetime-local"].placeholder,
   input[type="month"].placeholder, input[type="time"].placeholder, input[type="week"].placeholder, textarea.placeholder {
     color: #999; }
+
+textarea {
+  height: auto;
+  min-height: 38px; }
+
+.text-box {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  font-size: 16px;
+  line-height: 20px;
+  height: 38px;
+  border: solid 1px #aaa;
+  border-right-color: #ddd;
+  border-bottom-color: #ddd;
+  padding: 8px; }
+  .text-box.when-hovered {
+    border-color: transparent;
+    cursor: pointer; }
+    .text-box.when-hovered * {
+      cursor: pointer; }
+    .text-box.when-hovered:hover {
+      border-color: #aaa;
+      border-right-color: #ddd;
+      border-bottom-color: #ddd; }
+    .text-box.when-hovered.force-unhoverable {
+      border-color: transparent;
+      cursor: default; }
+      .text-box.when-hovered.force-unhoverable * {
+        cursor: default; }
 
 select {
   -webkit-box-sizing: border-box;

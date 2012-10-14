@@ -47,6 +47,12 @@
     <Reference Include="AttributeRouting.Web">
       <HintPath>..\packages\AttributeRouting.Core.Web.3.1.2\lib\net40\AttributeRouting.Web.dll</HintPath>
     </Reference>
+    <Reference Include="AttributeRouting.Web.Http">
+      <HintPath>..\packages\AttributeRouting.Core.Http.3.1.2\lib\net40\AttributeRouting.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="AttributeRouting.Web.Http.WebHost">
+      <HintPath>..\packages\AttributeRouting.WebApi.3.1.2\lib\net40\AttributeRouting.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="AttributeRouting.Web.Mvc">
       <HintPath>..\packages\AttributeRouting.3.1.2\lib\net40\AttributeRouting.Web.Mvc.dll</HintPath>
     </Reference>
@@ -75,7 +81,7 @@
     <Reference Include="Microsoft.Web.DistributedCache, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector">
       <HintPath>..\packages\SimpleInjector.1.5.0.12199\lib\net35\SimpleInjector.dll</HintPath>
@@ -183,9 +189,12 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\LanguagesController.cs" />
+    <Compile Include="ApiControllers\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
     <Compile Include="App_Start\AttributeRouting.cs" />
+    <Compile Include="App_Start\AttributeRoutingHttp.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -203,12 +212,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
     <Compile Include="Models\EstablishmentApiModel.cs" />
+    <Compile Include="Models\EstablishmentNameApiModel.cs" />
     <Compile Include="Models\EstablishmentSearchInputModel.cs" />
     <Compile Include="Models\PageOf.cs" />
     <Compile Include="Models\Tenancy.cs" />
@@ -230,6 +242,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Models\EstablishmentItemViewModel.js" />
     <Content Include="scripts\app\knockout.binding-handlers.js" />
     <None Include="startup\sql\ElmahSqlSetup.sql" />
     <Content Include="content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -312,6 +325,7 @@
     <Content Include="scripts\knockout.mapping-latest.debug.js" />
     <Content Include="scripts\knockout.mapping-latest.js" />
     <Content Include="scripts\modernizr-2.5.3.js" />
+    <Content Include="scripts\oss\jquery.autosize.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
     <Content Include="scripts\sammy\sammy.cache.js" />

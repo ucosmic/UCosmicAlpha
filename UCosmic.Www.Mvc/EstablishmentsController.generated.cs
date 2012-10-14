@@ -45,6 +45,26 @@ namespace UCosmic.Www.Mvc.Controllers {
         public System.Web.Mvc.ViewResult Show() {
             return new T4MVC_ViewResult(Area, Name, ActionNames.Show);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Edit() {
+            return new T4MVC_ViewResult(Area, Name, ActionNames.Edit);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Update() {
+            return new T4MVC_ViewResult(Area, Name, ActionNames.Update);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Delete() {
+            return new T4MVC_ViewResult(Area, Name, ActionNames.Delete);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Destroy() {
+            return new T4MVC_ViewResult(Area, Name, ActionNames.Destroy);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public EstablishmentsController Actions { get { return MVC.Establishments; } }
@@ -62,14 +82,24 @@ namespace UCosmic.Www.Mvc.Controllers {
         public class ActionNamesClass {
             public readonly string Index = "Index";
             public readonly string New = "New";
+            public readonly string Create = "Create";
             public readonly string Show = "Show";
+            public readonly string Edit = "Edit";
+            public readonly string Update = "Update";
+            public readonly string Delete = "Delete";
+            public readonly string Destroy = "Destroy";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string Index = "Index";
             public const string New = "New";
+            public const string Create = "Create";
             public const string Show = "Show";
+            public const string Edit = "Edit";
+            public const string Update = "Update";
+            public const string Delete = "Delete";
+            public const string Destroy = "Destroy";
         }
 
 
@@ -78,6 +108,34 @@ namespace UCosmic.Www.Mvc.Controllers {
         public ActionParamsClass_Show ShowParams { get { return s_params_Show; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Show {
+            public readonly string id = "id";
+        }
+        static readonly ActionParamsClass_Edit s_params_Edit = new ActionParamsClass_Edit();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Edit EditParams { get { return s_params_Edit; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Edit {
+            public readonly string id = "id";
+        }
+        static readonly ActionParamsClass_Update s_params_Update = new ActionParamsClass_Update();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Update UpdateParams { get { return s_params_Update; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Update {
+            public readonly string id = "id";
+        }
+        static readonly ActionParamsClass_Delete s_params_Delete = new ActionParamsClass_Delete();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Delete DeleteParams { get { return s_params_Delete; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Delete {
+            public readonly string id = "id";
+        }
+        static readonly ActionParamsClass_Destroy s_params_Destroy = new ActionParamsClass_Destroy();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Destroy DestroyParams { get { return s_params_Destroy; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Destroy {
             public readonly string id = "id";
         }
         static readonly ViewNames s_views = new ViewNames();
@@ -109,8 +167,37 @@ namespace UCosmic.Www.Mvc.Controllers {
             return callInfo;
         }
 
+        public override System.Web.Mvc.ViewResult Create() {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Create);
+            return callInfo;
+        }
+
         public override System.Web.Mvc.ViewResult Show(int id) {
             var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Show);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Edit(int id) {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Edit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Update(int id) {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Update);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Delete(int id) {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Delete);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Destroy(int id) {
+            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Destroy);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }

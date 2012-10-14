@@ -36,6 +36,7 @@ namespace UCosmic.Www.Mvc
                         "~/scripts/sammy/sammy.js",
                         "~/scripts/oss/jquery.placeholder*",
                         "~/scripts/oss/jquery.animate-enhanced*",
+                        "~/scripts/oss/jquery.autosize*",
                         "~/scripts/app/app.js",
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
