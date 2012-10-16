@@ -17,22 +17,26 @@
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
                             <form>
-                                <div class="field">
-                                    <textarea rows="2" data-bind="value: text, element: 'textElement'" data-autosize="true"></textarea>
+                                <div class="field" style="margin-top: 0;">
+                                    <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement'" data-autosize="true"></textarea>
                                 </div>
                                 <div class="field">
-                                    <label>
+                                    <label data-bind="click: clickOfficialNameCheckbox">
                                         <input type="checkbox" data-bind="checked: isOfficialName, enable: !originalValues.isOfficialName" />
                                         Offical Name
                                     </label>
                                     &nbsp;&nbsp;&nbsp;
                                     <label>
-                                        <input type="checkbox" data-bind="checked: isFormerName" />
+                                        <input type="checkbox" data-bind="checked: isFormerName, enable: !isOfficialName()" />
                                         Former / Defunct Name
                                     </label>
                                 </div>
                                 <div class="field">
-                                    <select data-bind="value: languageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', optionsCaption: '[Language Neutral]', element: 'languagesElement'"></select>
+                                    <select data-bind="value: selectedLanguageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', element: 'languagesElement', visible: $parent.languages().length > 0" style="display: none;">
+                                    </select>
+                                    <select data-bind="visible: $parent.languages().length < 1">
+                                        <option>[Loading...]</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <a href="#" data-bind="click: saveEditor">OK</a> |

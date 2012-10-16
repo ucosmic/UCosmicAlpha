@@ -22,12 +22,12 @@ namespace UCosmic.Cqrs
             container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorSynchronousEventProcessor>);
             container.RegisterManyForOpenGeneric(typeof(IHandleEvents<>),
                 (type, implementations) =>
-                    {
-                        if (implementations.Length == 1)
-                            container.Register(type, implementations[0]);
-                        else if (implementations.Length > 1)
-                            container.RegisterAll(type, implementations);
-                    },
+                {
+                    if (implementations.Length == 1)
+                        container.Register(type, implementations[0]);
+                    else if (implementations.Length > 1)
+                        container.RegisterAll(type, implementations);
+                },
                 assemblies);
         }
 

@@ -40,6 +40,8 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
 textarea {
   height: auto;
   min-height: 38px; }
+  textarea.no-resize {
+    resize: none; }
 
 .text-box {
   -webkit-box-sizing: border-box;
@@ -49,7 +51,7 @@ textarea {
   max-width: 100%;
   font-size: 16px;
   line-height: 20px;
-  height: 38px;
+  min-height: 38px;
   border: solid 1px #aaa;
   border-right-color: #ddd;
   border-bottom-color: #ddd;

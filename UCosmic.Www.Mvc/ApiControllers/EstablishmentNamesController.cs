@@ -10,7 +10,7 @@ using UCosmic.Www.Mvc.Models;
 
 namespace UCosmic.Www.Mvc.ApiControllers
 {
-    [RoutePrefix("api/establishments/{establishmentId}")]
+    [RoutePrefix("api/establishments")]
     public class EstablishmentNamesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -20,7 +20,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("names")]
+        [GET("{establishmentId}/names")]
         public IEnumerable<EstablishmentNameApiModel> Get(int establishmentId)
         {
             //System.Threading.Thread.Sleep(2000);
@@ -40,6 +40,13 @@ namespace UCosmic.Www.Mvc.ApiControllers
             var models = Mapper.Map<EstablishmentNameApiModel[]>(entities);
 
             return models;
+        }
+
+        [PUT("names/{establishmentNameId}")]
+        public void Put(int establishmentNameId, [FromBody] EstablishmentNameApiModel model)
+        {
+            if (establishmentNameId != model.RevisionId)
+                throw new InvalidOperationException("REST URL does not match primary key of data item.");
         }
     }
 }

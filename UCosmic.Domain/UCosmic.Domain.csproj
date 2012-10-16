@@ -86,6 +86,8 @@
     <Compile Include="Domain\Languages\Entities\Language.cs" />
     <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
     <Compile Include="Api\Queries\OrderByDirection.cs" />
+    <Compile Include="Domain\Languages\Queries\LanguagesUnfiltered.cs" />
+    <Compile Include="Domain\Languages\Views\LanguageView.cs" />
     <Compile Include="Domain\Places\Entities\BoundingBox.cs" />
     <Compile Include="Domain\Places\Entities\Coordinates.cs" />
     <Compile Include="Domain\Places\Entities\GeoNamesAlternateName.cs" />

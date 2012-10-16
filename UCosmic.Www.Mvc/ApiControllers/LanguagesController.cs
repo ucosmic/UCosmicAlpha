@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Web.Http;
+using AutoMapper;
 using UCosmic.Domain.Languages;
 using UCosmic.Www.Mvc.Models;
 
@@ -9,26 +11,27 @@ namespace UCosmic.Www.Mvc.ApiControllers
     [DefaultApiHttpRouteConvention]
     public class LanguagesController : ApiController
     {
-        private readonly IQueryEntities _queryEntities;
+        private readonly IProcessQueries _queryProcessor;
 
-        public LanguagesController(IQueryEntities queryEntities)
+        public LanguagesController(IProcessQueries queryProcessor)
         {
-            _queryEntities = queryEntities;
+            _queryProcessor = queryProcessor;
         }
 
         [CacheHttpGet(Duration = 3600)]
         public IEnumerable<LanguageApiModel> GetAll()
         {
-            var languages = _queryEntities
-                .Query<Language>()
-                .ToArray()
-            ;
-            var items = languages.Select(c => new LanguageApiModel
+            //System.Threading.Thread.Sleep(2000);
+            var views = _queryProcessor.Execute(new LanguagesUnfiltered
             {
-                Name = c.GetTranslatedName().Text,
-                Code = c.TwoLetterIsoCode,
+                UserLanguageFirst = true,
+                OrderBy = new Dictionary<Expression<Func<LanguageView, object>>, OrderByDirection>
+                {
+                    { x => x.TranslatedName, OrderByDirection.Ascending },
+                },
             });
-            return items.ToArray();
+            var items = Mapper.Map<LanguageApiModel[]>(views);
+            return items;
         }
     }
 }

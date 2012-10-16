@@ -10,10 +10,14 @@ function EstablishmentNameViewModel(js, $parent) {
     self.originalValues = js;
     ko.mapping.fromJS(js, {}, self);
 
+    self.selectedLanguageCode = ko.observable(js.languageCode);
+    $parent.languages.subscribe(function () {
+        self.selectedLanguageCode(self.languageCode());
+    });
     self.textElement = undefined;
     self.languagesElement = undefined;
     self.editMode = ko.observable();
-    self.showEditor = function (vm, e) {
+    self.showEditor = function () {
         var editingName = $parent.editingName();
         if (!editingName) {
             $parent.editingName(self.revisionId());
@@ -22,11 +26,35 @@ function EstablishmentNameViewModel(js, $parent) {
         }
     };
     self.saveEditor = function () {
-        var languageCode = self.languageCode();
+        var languageCode = self.selectedLanguageCode();
         if (!languageCode) self.languageName('');
         else if (languageCode != self.originalValues.languageCode)
             self.languageName($(self.languagesElement).children('option:selected').text());
         $parent.editingName(undefined);
+        self.originalValues = {
+            revisionId: self.revisionId(),
+            text: self.text(),
+            isOfficialName: self.isOfficialName(),
+            isFormerName: self.isFormerName(),
+            languageName: self.languageName(),
+            languageCode: self.selectedLanguageCode()
+        };
+
+        $.ajax({
+            url: '/api/establishments/names/' + self.revisionId(),
+            data: {
+                revisionId: self.revisionId(),
+                text: self.text(),
+                isOfficialName: self.isOfficialName(),
+                isFormerName: self.isFormerName(),
+                languageCode: self.languageCode(),
+            },
+            type: 'PUT'
+        })
+        .success(function (response) {
+            alert('success!');
+        });
+
         self.editMode(false);
     };
 
@@ -34,6 +62,12 @@ function EstablishmentNameViewModel(js, $parent) {
         ko.mapping.fromJS(self.originalValues, {}, self);
         $parent.editingName(undefined);
         self.editMode(false);
+    };
+
+    self.clickOfficialNameCheckbox = function() {
+        if (self.originalValues.isOfficialName)
+            alert('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
+        return true;
     };
 }
 
@@ -45,9 +79,10 @@ function EstablishmentItemViewModel(id) {
     self.languages = ko.observableArray();
 
     // languages dropdowns
-    ko.computed(function () {
+    ko.computed(function() {
         $.get(app.webApiRoutes.Languages.Get())
         .success(function (response) {
+            response.splice(0, 0, { code: undefined, name: '[Language Neutral]' });
             self.languages(response);
         });
     })
