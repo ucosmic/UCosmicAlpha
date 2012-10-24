@@ -16,7 +16,7 @@
                             <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
-                            <form>
+                            <form data-bind="submit: saveEditor">
                                 <div class="field" style="margin-top: 0;">
                                     <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement'" data-autosize="true"></textarea>
                                 </div>
@@ -39,9 +39,11 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <input type="submit" value="Save" />
-                                    <a href="#" data-bind="click: saveEditor">OK</a> |
+                                    <input type="submit" value="Save" data-bind="enable: !isSpinning()" />
+                                    &nbsp;
                                     <a href="#" data-bind="click: cancelEditor">Cancel</a>
+                                    &nbsp;
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinning" />
                                 </div>
                             </form>
                         </div>

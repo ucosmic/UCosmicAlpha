@@ -205,6 +205,8 @@ function EstablishmentSearchViewModel() {
         },
         ignore: ['pageSize', 'pageNumber']
     };
+    self.swipeCallback = function() {
+    };
     self.receiveResults = function (js) {
         if (!js) {
             ko.mapping.fromJS({
@@ -217,6 +219,7 @@ function EstablishmentSearchViewModel() {
         }
         app.windowScrollTop('restore');
         self.stopSpinning();
+        self.swipeCallback();
     };
 
     self.requestResults = function () {
@@ -265,28 +268,32 @@ function EstablishmentSearchViewModel() {
                 if (trail.length > 1 && trail[trail.length - 2] === this.path) {
                     // swipe backward
                     trail.pop();
-                    clone = self.$itemsPage().clone(true)
-                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    clone.appendTo(self.$itemsPage().parent());
-                    self.$itemsPage().attr('data-side-swiper', 'off').hide();
-                    self.lockAnimation();
-                    $(window).scrollTop(0);
-                    self.sideSwiper.prev(1, function () {
-                        self.$itemsPage().siblings().remove();
-                        self.unlockAnimation();
-                    });
+                    self.swipeCallback = function() {
+                        clone = self.$itemsPage().clone(true)
+                            .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                        clone.appendTo(self.$itemsPage().parent());
+                        self.$itemsPage().attr('data-side-swiper', 'off').hide();
+                        self.lockAnimation();
+                        $(window).scrollTop(0);
+                        self.sideSwiper.prev(1, function () {
+                            self.$itemsPage().siblings().remove();
+                            self.unlockAnimation();
+                        });
+                    };
                     return;
                 } else if (trail.length > 0) {
                     // swipe forward
-                    clone = self.$itemsPage().clone(true)
-                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    clone.insertBefore(self.$itemsPage());
-                    self.$itemsPage().attr('data-side-swiper', 'off').hide();
-                    self.lockAnimation();
-                    $(window).scrollTop(0);
-                    self.sideSwiper.next(1, function () {
-                        self.unlockAnimation();
-                    });
+                    self.swipeCallback = function() {
+                        clone = self.$itemsPage().clone(true)
+                            .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                        clone.insertBefore(self.$itemsPage());
+                        self.$itemsPage().attr('data-side-swiper', 'off').hide();
+                        self.lockAnimation();
+                        $(window).scrollTop(0);
+                        self.sideSwiper.next(1, function () {
+                            self.unlockAnimation();
+                        });
+                    };
                 }
                 trail.push(this.path);
             });

@@ -122,6 +122,24 @@ a.button {
     }
 }
 
+button, input[type=submit], [type=reset], [type=button] {
+    margin: 0 4px 0 0;
+    @include border-radius(4px);
+    padding: 6px 12px;
+    @include font-arial;
+    color: $button-text-color;
+    background-color: $button-bg-color;
+    @include opacity(.9);
+    &:hover {
+        cursor: pointer;
+        @include opacity(1);
+    }
+    &[disabled] {
+        cursor: default !important;
+        @include opacity(.5);
+    }
+}
+
 button.link, input[type=submit].link, [type=reset].link, [type=button].link {
     display: inline-block;
     margin:0;
@@ -132,6 +150,8 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link {
     text-decoration: underline;
     font-size: 16px;
     @include font-ms;
+    color: $main-link-color;
+    background-color: transparent;
     &:hover {
         text-decoration: none;
     }

@@ -18,10 +18,10 @@ function EstablishmentNameViewModel(js, $parent) {
     });
 
     self.isOfficialName.subscribe(function (newValue) {
-        if (newValue)
-            self.isFormerName(false);
+        if (newValue) self.isFormerName(false);
     });
 
+    self.isSpinning = ko.observable(false);
     self.editMode = ko.observable();
     self.showEditor = function () {
         var editingName = $parent.editingName();
@@ -37,14 +37,7 @@ function EstablishmentNameViewModel(js, $parent) {
         else if (languageCode != self.originalValues.languageCode)
             self.languageName($(self.languagesElement).children('option:selected').text());
         $parent.editingName(undefined);
-        self.originalValues = {
-            revisionId: self.revisionId(),
-            text: self.text(),
-            isOfficialName: self.isOfficialName(),
-            isFormerName: self.isFormerName(),
-            languageName: self.languageName(),
-            languageCode: self.selectedLanguageCode()
-        };
+        self.isSpinning(true);
 
         $.ajax({
             url: '/api/establishments/names/' + self.revisionId(),
@@ -58,10 +51,10 @@ function EstablishmentNameViewModel(js, $parent) {
             type: 'PUT'
         })
         .success(function () {
-            alert('success!');
+            $parent.requestNames();
+            self.editMode(false);
+            self.isSpinning(false);
         });
-
-        self.editMode(false);
     };
 
     self.cancelEditor = function () {
@@ -97,9 +90,6 @@ function EstablishmentItemViewModel(id) {
     self.names = ko.observableArray();
     self.editingName = ko.observable();
     self.namesMapping = {
-        key: function (data) {
-            return ko.utils.unwrapObservable(data.revisionId);
-        },
         create: function (options) {
             return new EstablishmentNameViewModel(options.data, self);
         }
@@ -115,5 +105,4 @@ function EstablishmentItemViewModel(id) {
         });
     };
     ko.computed(self.requestNames).extend({ throttle: 1 });
-
 }

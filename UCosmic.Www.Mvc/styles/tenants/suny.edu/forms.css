@@ -139,6 +139,32 @@ a.button {
     margin: -2px 0 0 -2px;
     background-image: url(../../icons/closer-24-red-disc.png); }
 
+button, input[type=submit], [type=reset], [type=button] {
+  margin: 0 4px 0 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: #004c93;
+  -moz-opacity: 0.9;
+  opacity: 0.9;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
+  button:hover, input[type=submit]:hover, [type=reset]:hover, [type=button]:hover {
+    cursor: pointer;
+    -moz-opacity: 1;
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
+  button[disabled], input[type=submit][disabled], [type=reset][disabled], [type=button][disabled] {
+    cursor: default !important;
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); }
+
 button.link, input[type=submit].link, [type=reset].link, [type=button].link {
   display: inline-block;
   margin: 0;
@@ -148,7 +174,9 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link {
   cursor: pointer;
   text-decoration: underline;
   font-size: 16px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #0000cc;
+  background-color: transparent; }
   button.link:hover, input[type=submit].link:hover, [type=reset].link:hover, [type=button].link:hover {
     text-decoration: none; }
   button.link[disabled], input[type=submit].link[disabled], [type=reset].link[disabled], [type=button].link[disabled] {

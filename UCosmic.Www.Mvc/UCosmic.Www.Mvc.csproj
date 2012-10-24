@@ -388,6 +388,7 @@
     <Content Include="styles\icons\plus-20-green-disc.png" />
     <Content Include="styles\icons\plus-24-green-disc.png" />
     <Content Include="styles\icons\plus-24-green.png" />
+    <Content Include="styles\icons\spinner-20-blue.gif" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
     <Content Include="styles\reset.css" />
     <Content Include="styles\tenants\lehigh.edu\banner-logo.png" />
