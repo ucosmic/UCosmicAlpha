@@ -89,6 +89,7 @@ function EstablishmentSearchViewModel() {
     // paging
     self.pageSize = ko.observable();
     self.pageNumber = ko.observable();
+    self.transitionedPageNumber = ko.observable();
     self.itemTotal = ko.observable();
     self.pageCount = ko.observable();
     self.firstIndex = ko.observable();
@@ -220,6 +221,7 @@ function EstablishmentSearchViewModel() {
         app.windowScrollTop('restore');
         self.stopSpinning();
         self.swipeCallback();
+        self.transitionedPageNumber(self.pageNumber());
     };
 
     self.requestResults = function () {
