@@ -43,6 +43,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterEntityFramework();
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
             container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
+            container.RegisterCommandHandlers(Assembly.GetAssembly(typeof(IHandleCommands<>)));
             //container.TryRegisterAzureCacheProvider();
             //container.RegisterAzureCacheViewManager();
             //container.RegisterHybridMemoryAzureViewManager();

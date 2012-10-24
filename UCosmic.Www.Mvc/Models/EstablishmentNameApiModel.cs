@@ -27,5 +27,15 @@ namespace UCosmic.Www.Mvc.Models
                 ;
             }
         }
+
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EstablishmentNameApiModel, UpdateEstablishmentName>()
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                ;
+            }
+        }
     }
 }

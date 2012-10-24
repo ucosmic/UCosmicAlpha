@@ -7,6 +7,7 @@ namespace UCosmic.Cqrs
     public class MemoryViewManager : BaseViewManager, IManageViews
     {
         private readonly ObjectCache _objectCache;
+        private static readonly object SetLock = new object();
 
         public MemoryViewManager(ObjectCache objectCache)
         {
@@ -26,8 +27,14 @@ namespace UCosmic.Cqrs
 
         public void Set<TResult>(object value)
         {
-            var result = JsonConvert.SerializeObject(value);
-            _objectCache.Add(ComputeKey(typeof(TResult)), result, DateTime.Now.Add(new TimeSpan(24 * 365, 0, 0, 0)));
+            lock (SetLock)
+            {
+                var result = JsonConvert.SerializeObject(value);
+
+                var key = ComputeKey(typeof (TResult));
+                if (_objectCache.Contains(key)) _objectCache.Remove(key);
+                _objectCache.Add(key, result, DateTime.Now.Add(new TimeSpan(24*365, 0, 0, 0)));
+            }
         }
     }
 }

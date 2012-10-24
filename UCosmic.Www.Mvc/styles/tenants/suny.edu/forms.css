@@ -50,6 +50,7 @@ textarea {
   max-width: 100%;
   font-size: 16px;
   line-height: 20px;
+  font-family: Arial, Helvetica, sans-serif;
   min-height: 38px;
   border: solid 1px #aaa;
   border-right-color: #ddd;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using AttributeRouting;
@@ -14,10 +15,15 @@ namespace UCosmic.Www.Mvc.ApiControllers
     public class EstablishmentNamesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
 
-        public EstablishmentNamesController(IProcessQueries queryProcessor)
+        public EstablishmentNamesController(
+             IProcessQueries queryProcessor
+            , IHandleCommands<UpdateEstablishmentName> updateHandler
+        )
         {
             _queryProcessor = queryProcessor;
+            _updateHandler = updateHandler;
         }
 
         [GET("{establishmentId}/names")]
@@ -28,7 +34,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             {
                 EagerLoad = new Expression<Func<EstablishmentName, object>>[]
                 {
-                    x => x.TranslationToLanguage.Names,
+                    x => x.TranslationToLanguage.Names.Select(y => y.TranslationToLanguage),
                 },
                 OrderBy = new Dictionary<Expression<Func<EstablishmentName, object>>, OrderByDirection>
                 {
@@ -47,6 +53,9 @@ namespace UCosmic.Www.Mvc.ApiControllers
         {
             if (establishmentNameId != model.RevisionId)
                 throw new InvalidOperationException("REST URL does not match primary key of data item.");
+
+            var command = Mapper.Map<UpdateEstablishmentName>(model);
+            _updateHandler.Handle(command);
         }
     }
 }

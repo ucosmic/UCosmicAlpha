@@ -18,8 +18,10 @@ namespace UCosmic.Cqrs
 
         public static void RegisterEventProcessor(this Container container, params Assembly[] assemblies)
         {
-            container.RegisterSingle<SimpleInjectorSynchronousEventProcessor>();
-            container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorSynchronousEventProcessor>);
+            //container.RegisterSingle<SimpleInjectorSynchronousEventProcessor>();
+            //container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorSynchronousEventProcessor>);
+            container.RegisterSingle<SimpleInjectorAsynchronousEventProcessor>();
+            container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorAsynchronousEventProcessor>);
             container.RegisterManyForOpenGeneric(typeof(IHandleEvents<>),
                 (type, implementations) =>
                 {
@@ -29,6 +31,11 @@ namespace UCosmic.Cqrs
                         container.RegisterAll(type, implementations);
                 },
                 assemblies);
+        }
+
+        public static void RegisterCommandHandlers(this Container container, params Assembly[] assemblies)
+        {
+            container.RegisterManyForOpenGeneric(typeof(IHandleCommands<>), assemblies);
         }
 
         public static void RegisterMemoryViewManager(this Container container)

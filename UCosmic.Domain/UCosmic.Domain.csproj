@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Domain\BaseViewsQuery.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityExtensions.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentName.cs" />
     <Compile Include="Domain\Establishments\Entities\Establishment.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentAddress.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentCategory.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
+    <Compile Include="Domain\Establishments\Events\EstablishmentChanged.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByKeyword.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentViewProjector.cs" />

@@ -10,12 +10,18 @@ function EstablishmentNameViewModel(js, $parent) {
     self.originalValues = js;
     ko.mapping.fromJS(js, {}, self);
 
+    self.textElement = undefined;
+    self.languagesElement = undefined;
     self.selectedLanguageCode = ko.observable(js.languageCode);
     $parent.languages.subscribe(function () {
         self.selectedLanguageCode(self.languageCode());
     });
-    self.textElement = undefined;
-    self.languagesElement = undefined;
+
+    self.isOfficialName.subscribe(function (newValue) {
+        if (newValue)
+            self.isFormerName(false);
+    });
+
     self.editMode = ko.observable();
     self.showEditor = function () {
         var editingName = $parent.editingName();
@@ -47,11 +53,11 @@ function EstablishmentNameViewModel(js, $parent) {
                 text: self.text(),
                 isOfficialName: self.isOfficialName(),
                 isFormerName: self.isFormerName(),
-                languageCode: self.languageCode(),
+                languageCode: self.selectedLanguageCode(),
             },
             type: 'PUT'
         })
-        .success(function (response) {
+        .success(function () {
             alert('success!');
         });
 
