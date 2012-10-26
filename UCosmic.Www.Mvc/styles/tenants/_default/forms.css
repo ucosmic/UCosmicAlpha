@@ -34,6 +34,14 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   input[type="date"].placeholder, input[type="datetime"].placeholder, input[type="datetime-local"].placeholder,
   input[type="month"].placeholder, input[type="time"].placeholder, input[type="week"].placeholder, textarea.placeholder {
     color: #999; }
+  input[type="email"].validationElement, input[type="number"].validationElement, input[type="password"].validationElement, input[type="search"].validationElement,
+  input[type="tel"].validationElement, input[type="text"].validationElement, input[type="url"].validationElement, input[type="color"].validationElement,
+  input[type="date"].validationElement, input[type="datetime"].validationElement, input[type="datetime-local"].validationElement,
+  input[type="month"].validationElement, input[type="time"].validationElement, input[type="week"].validationElement, textarea.validationElement {
+    background-color: #ffc0cb;
+    border-color: #c00;
+    border-right-color: #c66;
+    border-bottom-color: #c66; }
 
 textarea {
   height: auto;
@@ -182,6 +190,10 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link {
     color: #555;
     text-decoration: none;
     cursor: default; }
+
+.validationMessage {
+  color: #c00;
+  font-weight: bold; }
 
 i.red.minus {
   width: 24px;

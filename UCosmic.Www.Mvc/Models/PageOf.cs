@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using AutoMapper;
 
 namespace UCosmic.Www.Mvc.Models
 {
+    [DataContract(Namespace = "")]
     public class PageOf<TModel>
     {
         public PageOf()
@@ -12,9 +14,14 @@ namespace UCosmic.Www.Mvc.Models
             Items = Enumerable.Empty<TModel>();
         }
 
+        [DataMember]
         public int PageSize { get; set; }
+
+        [DataMember]
         public int PageNumber { get; set; }
         public int PageIndex { get { return PageNumber - 1; } }
+
+        [DataMember]
         public int ItemTotal { get; set; }
         public int PageCount { get { return (int)Math.Ceiling((double)ItemTotal / PageSize); } }
 
@@ -25,6 +32,7 @@ namespace UCosmic.Www.Mvc.Models
         public int LastIndex { get { return LastNumber - 1; } }
         public int LastNumber { get { return FirstIndex + Items.Count(); } }
 
+        [DataMember]
         public IEnumerable<TModel> Items { get; set; }
     }
 

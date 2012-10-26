@@ -6,6 +6,7 @@ using SimpleInjector.Integration.Web.Mvc;
 using UCosmic.Configuration;
 using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
+using UCosmic.FluentValidation;
 using UCosmic.Ioc;
 using UCosmic.Logging;
 
@@ -41,6 +42,7 @@ namespace UCosmic.Www.Mvc
             container.RegisterConfigurationManager();
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
+            container.RegisterFluentValidation(Assembly.GetAssembly(typeof (IHandleCommands<>)));
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
             container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
             container.RegisterCommandHandlers(Assembly.GetAssembly(typeof(IHandleCommands<>)));

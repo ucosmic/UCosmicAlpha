@@ -5,6 +5,8 @@
                 <header>
                     <h2>
                         Name(s)
+                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningNames" />
+
                     </h2>
                 </header>
                 <ul class="data-items" data-bind="foreach: names">
@@ -16,7 +18,7 @@
                             <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
-                            <form data-bind="submit: saveEditor">
+                            <form data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                 <div class="field" style="margin-top: 0;">
                                     <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement'" data-autosize="true"></textarea>
                                 </div>
@@ -44,6 +46,7 @@
                                     <a href="#" data-bind="click: cancelEditor">Cancel</a>
                                     &nbsp;
                                     <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinning" />
+                                    <strong data-bind="visible: isSpinning">Saving...</strong>
                                 </div>
                             </form>
                         </div>

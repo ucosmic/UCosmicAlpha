@@ -17,6 +17,9 @@ namespace UCosmic.Www.Mvc
                 cfg.UseLowercaseRoutes = true;
             });
 
+            //var exp = config.Services.GetApiExplorer();
+            //var desc = exp.ApiDescriptions;
+
             //config.Routes.MapHttpRoute(null,
             //    "api/{controller}/{id}",
             //    new

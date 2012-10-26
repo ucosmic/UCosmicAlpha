@@ -1,4 +1,5 @@
 ﻿<div class="field" style="margin-bottom: 0;">
+    <input type="hidden" data-bind="value: keyword" />
     <input type="search" placeholder="Enter the establishment's name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
 </div>
 <p data-bind="visible: hasNoItems" style="display: none;">
@@ -47,9 +48,9 @@
                                     <div data-bind="visible: officialNameDoesNotMatchTranslation">
                                         (<span data-bind="text: officialName"></span>)
                                     </div>
-                                    <div data-bind="visible: websiteUrl">
+                                    <div data-bind="visible: officialUrl">
                                         <a href="#" target="_blank"
-                                            data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }, click: openWebsiteUrl"></a>
+                                            data-bind="text: fitOfficialUrl, attr: { href: 'http://' + officialUrl() }, click: openOfficialUrl"></a>
                                     </div>
                                 </td>
                                 <td>
@@ -65,9 +66,9 @@
                             <div>
                                 <div class="float-right" style="text-align: right;">
                                     <div data-bind="text: nullDisplayCountryName"></div>
-                                    <div data-bind="visible: websiteUrl">
+                                    <div data-bind="visible: officialUrl">
                                         <a href="#" target="_blank"
-                                            data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }, click: openWebsiteUrl"></a>
+                                            data-bind="text: fitOfficialUrl, attr: { href: 'http://' + officialUrl() }, click: openOfficialUrl"></a>
                                     </div>
                                 </div>
                                 <div>

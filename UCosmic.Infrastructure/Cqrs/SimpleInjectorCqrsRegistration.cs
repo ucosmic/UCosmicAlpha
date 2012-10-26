@@ -4,6 +4,7 @@ using System.Runtime.Caching;
 using Microsoft.ApplicationServer.Caching;
 using SimpleInjector;
 using SimpleInjector.Extensions;
+using UCosmic.FluentValidation;
 
 namespace UCosmic.Cqrs
 {
@@ -36,6 +37,8 @@ namespace UCosmic.Cqrs
         public static void RegisterCommandHandlers(this Container container, params Assembly[] assemblies)
         {
             container.RegisterManyForOpenGeneric(typeof(IHandleCommands<>), assemblies);
+            container.RegisterDecorator(typeof(IHandleCommands<>),
+                typeof(FluentValidationCommandDecorator<>));
         }
 
         public static void RegisterMemoryViewManager(this Container container)

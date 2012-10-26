@@ -20,17 +20,17 @@ function EstablishmentResultViewModel(js) {
         }
         if ($target.length) {
             href = $target.attr('href') || $target.attr('data-href');
-            location.href = href.replace('/0/', '/' + self.revisionId() + '/');
+            location.href = href.replace('/0/', '/' + self.id() + '/');
         }
     };
 
-    self.openWebsiteUrl = function (vm, e) {
+    self.openOfficialUrl = function (vm, e) {
         e.stopPropagation();
         return true;
     };
 
-    self.fitWebsiteUrl = ko.computed(function () {
-        var value = self.websiteUrl();
+    self.fitOfficialUrl = ko.computed(function () {
+        var value = self.officialUrl();
         if (!value) return value;
 
         var computedValue = value;
@@ -68,7 +68,9 @@ function EstablishmentSearchViewModel() {
     // query parameters
     self.countries = ko.observableArray();
     self.countryCode = ko.observable();
-    self.keyword = ko.observable();
+    self.keywordElement = undefined;
+    var lastKeyword = $('input[type=hidden][data-bind="value: keyword"]').val();
+    self.keyword = ko.observable(lastKeyword);
     self.throttledKeyword = ko.computed(self.keyword)
         .extend({ throttle: 400 });
     self.orderBy = ko.observable();
@@ -91,11 +93,25 @@ function EstablishmentSearchViewModel() {
     self.pageNumber = ko.observable();
     self.transitionedPageNumber = ko.observable();
     self.itemTotal = ko.observable();
-    self.pageCount = ko.observable();
-    self.firstIndex = ko.observable();
-    self.firstNumber = ko.observable();
-    self.lastIndex = ko.observable();
-    self.lastNumber = ko.observable();
+    self.pageCount = ko.computed(function () {
+        return Math.ceil(self.itemTotal() / self.pageSize());
+    });
+    self.pageIndex = ko.computed(function () {
+        return parseInt(self.transitionedPageNumber()) - 1;
+    });
+    self.firstIndex = ko.computed(function () {
+        return self.pageIndex() * self.pageSize();
+    });
+    self.firstNumber = ko.computed(function () {
+        return self.firstIndex() + 1;
+    });
+    self.lastNumber = ko.computed(function () {
+        if (!self.items) return 0;
+        return self.firstIndex() + self.items().length;
+    });
+    self.lastIndex = ko.computed(function () {
+        return self.lastNumber() - 1;
+    });
     self.pageCount.subscribe(function (newValue) {
         if (self.pageNumber() && self.pageNumber() > newValue) {
             self.pageNumber(1);
@@ -198,7 +214,7 @@ function EstablishmentSearchViewModel() {
     self.resultsMapping = {
         'items': {
             key: function (data) {
-                return ko.utils.unwrapObservable(data.revisionId);
+                return ko.utils.unwrapObservable(data.id);
             },
             create: function (options) {
                 return new EstablishmentResultViewModel(options.data);
@@ -206,7 +222,7 @@ function EstablishmentSearchViewModel() {
         },
         ignore: ['pageSize', 'pageNumber']
     };
-    self.swipeCallback = function() {
+    self.swipeCallback = function () {
     };
     self.receiveResults = function (js) {
         if (!js) {
@@ -270,7 +286,7 @@ function EstablishmentSearchViewModel() {
                 if (trail.length > 1 && trail[trail.length - 2] === this.path) {
                     // swipe backward
                     trail.pop();
-                    self.swipeCallback = function() {
+                    self.swipeCallback = function () {
                         clone = self.$itemsPage().clone(true)
                             .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                         clone.appendTo(self.$itemsPage().parent());
@@ -285,7 +301,7 @@ function EstablishmentSearchViewModel() {
                     return;
                 } else if (trail.length > 0) {
                     // swipe forward
-                    self.swipeCallback = function() {
+                    self.swipeCallback = function () {
                         clone = self.$itemsPage().clone(true)
                             .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                         clone.insertBefore(self.$itemsPage());

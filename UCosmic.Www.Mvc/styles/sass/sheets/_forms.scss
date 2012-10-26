@@ -22,6 +22,12 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
     &.placeholder {
         color: #999;
     }
+    &.validationElement {
+        background-color: #ffc0cb;
+        border-color: #c00;
+        border-right-color: #c66;
+        border-bottom-color: #c66;
+    }
 }
 
 textarea {
@@ -160,6 +166,11 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link {
         text-decoration: none;
         cursor: default;
     }
+}
+
+.validationMessage {
+    color: #c00;
+    font-weight: bold;
 }
 
 i.red.minus {
