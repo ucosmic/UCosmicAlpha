@@ -66,7 +66,7 @@
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
     <Compile Include="Api\StringExtensions.cs" />
     <Compile Include="Domain\ApplicationStarted.cs" />
-    <Compile Include="Domain\Audit\Deletion.cs" />
+    <Compile Include="Domain\Audit\CommandEvent.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
     <Compile Include="Domain\BaseEntityQuery.cs" />
     <Compile Include="Domain\BaseViewsQuery.cs" />

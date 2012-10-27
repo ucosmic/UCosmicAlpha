@@ -3,6 +3,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.Domain.Establishments
@@ -69,7 +71,7 @@ namespace UCosmic.Domain.Establishments
         }
     }
 
-    public class HandleUpdateEstablishmentNameCommand: IHandleCommands<UpdateEstablishmentName>
+    public class HandleUpdateEstablishmentNameCommand : IHandleCommands<UpdateEstablishmentName>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
@@ -120,7 +122,23 @@ namespace UCosmic.Domain.Establishments
 
             // get new language
             var language = _entities.Get<Language>()
-                .SingleOrDefault(x =>  x.TwoLetterIsoCode.Equals(command.LanguageCode, StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefault(x => x.TwoLetterIsoCode.Equals(command.LanguageCode, StringComparison.OrdinalIgnoreCase));
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.Id,
+                    command.Text,
+                    command.IsFormerName,
+                    command.IsOfficialName,
+                    command.LanguageCode,
+                }),
+                PreviousState = establishmentName.ToJsonAudit(),
+            };
 
             // update scalars
             establishmentName.Text = command.Text;
@@ -128,6 +146,8 @@ namespace UCosmic.Domain.Establishments
             establishmentName.IsOfficialName = command.IsOfficialName;
             establishmentName.TranslationToLanguage = language;
 
+            audit.NewState = establishmentName.ToJsonAudit();
+            _entities.Create(audit);
             _entities.Update(establishmentName);
 
             if (!command.NoCommit)

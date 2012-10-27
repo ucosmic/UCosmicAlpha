@@ -1,4 +1,5 @@
-﻿using UCosmic.Domain.Languages;
+﻿using Newtonsoft.Json;
+using UCosmic.Domain.Languages;
 
 namespace UCosmic.Domain.Establishments
 {
@@ -42,5 +43,23 @@ namespace UCosmic.Domain.Establishments
             return Text;
         }
 
+    }
+
+    internal static class EstablishmentNameSerializer
+    {
+        internal static string ToJsonAudit(this EstablishmentName establishmentName)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = establishmentName.RevisionId,
+                ForEstablishmentId = establishmentName.ForEstablishment.RevisionId,
+                TranslationToLanguageId = (establishmentName.TranslationToLanguage != null)
+                    ? establishmentName.TranslationToLanguage.Id : (int?)null,
+                establishmentName.Text,
+                establishmentName.IsOfficialName,
+                establishmentName.IsFormerName,
+            });
+            return state;
+        }
     }
 }

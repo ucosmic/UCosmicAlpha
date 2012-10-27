@@ -3,12 +3,15 @@ using UCosmic.Domain.Audit;
 
 namespace UCosmic.EntityFramework
 {
-    public class DeletionOrm : EntityTypeConfiguration<Deletion>
+    public class CommandEventOrm : EntityTypeConfiguration<CommandEvent>
     {
-        public DeletionOrm()
+        public CommandEventOrm()
         {
-            ToTable(typeof(Deletion).Name, "Audit");
+            ToTable(typeof(CommandEvent).Name, "Audit");
 
+            Property(x => x.Name).IsRequired();
+            Property(x => x.Value).IsRequired();
+            Property(x => x.NewState).HasColumnType("ntext");
             Property(x => x.PreviousState).HasColumnType("ntext");
         }
     }

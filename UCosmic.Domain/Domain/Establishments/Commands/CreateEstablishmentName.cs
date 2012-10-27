@@ -3,6 +3,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.Domain.Establishments
@@ -133,8 +135,26 @@ namespace UCosmic.Domain.Establishments
                 IsOfficialName = command.IsOfficialName,
                 IsFormerName = command.IsFormerName,
             };
-
             establishment.Names.Add(establishmentName);
+            establishmentName.ForEstablishment = establishment;
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.OwnerId,
+                    command.Text,
+                    command.IsFormerName,
+                    command.IsOfficialName,
+                    command.LanguageCode,
+                }),
+                NewState = establishmentName.ToJsonAudit(),
+            };
+            _entities.Create(audit);
+
             _entities.Update(establishment);
             _unitOfWork.SaveChanges();
             _eventProcessor.Raise(new EstablishmentChanged());

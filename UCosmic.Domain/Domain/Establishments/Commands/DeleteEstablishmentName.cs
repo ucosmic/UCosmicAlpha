@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
 
 namespace UCosmic.Domain.Establishments
@@ -86,7 +87,8 @@ namespace UCosmic.Domain.Establishments
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var entity = _entities.Get<EstablishmentName>()
+            // load target
+            var establishmentName = _entities.Get<EstablishmentName>()
                 .EagerLoad(_entities, new Expression<Func<EstablishmentName, object>>[]
                 {
                     x => x.ForEstablishment,
@@ -95,23 +97,17 @@ namespace UCosmic.Domain.Establishments
                 .Single(x => x.RevisionId == command.Id)
             ;
 
-            var previousState = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            // log audit
+            var audit = new CommandEvent
             {
-                Id = entity.RevisionId,
-                ForEstablishmentId = entity.ForEstablishment.RevisionId,
-                TranslationToLanguageId = (entity.TranslationToLanguage != null) ? entity.TranslationToLanguage.Id : (int?)null,
-                entity.Text,
-                entity.IsOfficialName,
-                entity.IsFormerName,
-            });
-            var audit = new Deletion
-            {
-                CommandedBy = command.Principal.Identity.Name,
-                CommandName = command.GetType().FullName,
-                PreviousState = previousState,
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new { command.Id }),
+                PreviousState = establishmentName.ToJsonAudit(),
             };
+
             _entities.Create(audit);
-            _entities.Purge(entity);
+            _entities.Purge(establishmentName);
             _unitOfWork.SaveChanges();
             _eventProcessor.Raise(new EstablishmentChanged());
         }
