@@ -72,6 +72,7 @@
     <Compile Include="Domain\BaseViewsQuery.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityExtensions.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishmentName.cs" />
     <Compile Include="Domain\Establishments\Commands\DeleteEstablishmentName.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentName.cs" />
     <Compile Include="Domain\Establishments\Entities\Establishment.cs" />

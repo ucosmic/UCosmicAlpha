@@ -8,6 +8,15 @@
 
 function EstablishmentNameViewModel(js, $parent) {
     var self = this;
+    if (!js)
+        js = {
+            id: 0,
+            text: '',
+            isOfficialName: false,
+            isFormerName: false,
+            languageCode: '',
+            languageName: ''
+        };
     self.originalValues = js; // hold onto original values so they can be reset on cancel
     ko.mapping.fromJS(js, {}, self); // map api properties to observables
 
@@ -35,7 +44,7 @@ function EstablishmentNameViewModel(js, $parent) {
     self.showEditor = function () { // click to hide viewer and show editor
         var editingName = $parent.editingName(); // disallow if another name is being edited
         if (!editingName) {
-            $parent.editingName(self.revisionId()); // tell parent which item is being edited
+            $parent.editingName(self.id() || -1); // tell parent which item is being edited
             self.editMode(true); // show the form / hide the viewer
             $(self.textElement).trigger('autosize');
             $(self.textElement).focus(); // focus the text box
@@ -45,43 +54,78 @@ function EstablishmentNameViewModel(js, $parent) {
         if (!self.isValid()) { // validate
             self.errors.showAllMessages();
         }
-        else { // PUT
+        else { // hit server
             self.isSpinningSave(true); // start save spinner
 
-            $.ajax({ // submit ajax PUT request
-                url: '/api/establishments/names/' + self.revisionId(), // TODO: put this in stronger URL helper
-                data: {
-                    revisionId: self.revisionId(),
-                    text: $.trim(self.text()),
-                    isOfficialName: self.isOfficialName(),
-                    isFormerName: self.isFormerName(),
-                    languageCode: self.selectedLanguageCode(),
-                },
-                type: 'PUT'
-            })
-            .success(function () { // update the whole list (sort may be effected by this update)
-                $parent.requestNames(function () { // when parent receives response,
-                    $parent.editingName(undefined); // tell parent no item is being edited anymore
-                    self.editMode(false); // hide the form, show the view
-                    self.isSpinningSave(false); // stop save spinner
-                });
-            })
-            .error(function (xhr) { // server will throw exceptions when invalid
-                if (xhr.responseText) { // validation message will be in xht response text...
-                    var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
-                    if (response.exceptionType === 'FluentValidation.ValidationException') {
-                        alert(response.exceptionMessage); // alert validation messages only
+            if (self.id()) {
+                $.ajax({ // submit ajax PUT request
+                    url: '/api/establishments/names/' + self.id(), // TODO: put this in stronger URL helper
+                    data: {
+                        id: self.id(),
+                        text: $.trim(self.text()),
+                        isOfficialName: self.isOfficialName(),
+                        isFormerName: self.isFormerName(),
+                        languageCode: self.selectedLanguageCode(),
+                    },
+                    type: 'PUT'
+                })
+                .success(function() { // update the whole list (sort may be effected by this update)
+                    $parent.requestNames(function() { // when parent receives response,
+                        $parent.editingName(undefined); // tell parent no item is being edited anymore
+                        self.editMode(false); // hide the form, show the view
+                        self.isSpinningSave(false); // stop save spinner
+                    });
+                })
+                .error(function(xhr) { // server will throw exceptions when invalid
+                    if (xhr.responseText) { // validation message will be in xht response text...
+                        var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
+                        if (response.exceptionType === 'FluentValidation.ValidationException') {
+                            alert(response.exceptionMessage); // alert validation messages only
+                        }
                     }
-                }
-                self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
-            });
+                    self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
+                });
+            }
+            else if ($parent.id) {
+                $.ajax({ // submit ajax POST request
+                    url: '/api/establishments/' + $parent.id + '/names', // TODO: put this in stronger URL helper
+                    data: {
+                        text: $.trim(self.text()),
+                        isOfficialName: self.isOfficialName(),
+                        isFormerName: self.isFormerName(),
+                        languageCode: self.selectedLanguageCode(),
+                    },
+                    type: 'POST'
+                })
+                .success(function () { // update the whole list (sort may be effected by this update)
+                    $parent.requestNames(function () { // when parent receives response,
+                        $parent.editingName(undefined); // tell parent no item is being edited anymore
+                        self.editMode(false); // hide the form, show the view
+                        self.isSpinningSave(false); // stop save spinner
+                    });
+                })
+                .error(function (xhr) { // server will throw exceptions when invalid
+                    if (xhr.responseText) { // validation message will be in xht response text...
+                        var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
+                        if (response.exceptionType === 'FluentValidation.ValidationException') {
+                            alert(response.exceptionMessage); // alert validation messages only
+                        }
+                    }
+                    self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
+                });
+            }
         }
     };
 
     self.cancelEditor = function () { // decide not to edit this item
-        ko.mapping.fromJS(self.originalValues, {}, self); // restore original values
         $parent.editingName(undefined); // tell parent no item is being edited anymore
-        self.editMode(false); // hide the form, show the view
+        if (self.id()) {
+            ko.mapping.fromJS(self.originalValues, { }, self); // restore original values
+            self.editMode(false); // hide the form, show the view
+        }
+        else {
+            $parent.names.shift();
+        }
     };
 
     self.clickOfficialNameCheckbox = function () { // TODO educate users on how to change the official name
@@ -100,17 +144,22 @@ function EstablishmentNameViewModel(js, $parent) {
             return;
         }
         self.isSpinningPurge(true);
+        var shouldRemainSpinning = false;
         $(self.confirmPurgeDialog).dialog({
             dialogClass: 'jquery-ui',
             width: 'auto',
             maxWidth: 710,
             resizable: false,
             modal: true,
+            close: function () {
+                if (!shouldRemainSpinning) self.isSpinningPurge(false);
+            },
             buttons: {
                 'Yes, confirm delete': function () {
+                    shouldRemainSpinning = true;
                     $(self.confirmPurgeDialog).dialog('close');
                     $.ajax({ // submit ajax DELETE request
-                        url: '/api/establishments/names/' + self.revisionId(), // TODO: put this in stronger URL helper
+                        url: '/api/establishments/names/' + self.id(), // TODO: put this in stronger URL helper
                         type: 'DELETE'
                     })
                     .success(function () { // update the whole list (sort may be effected by this update)
@@ -177,5 +226,12 @@ function EstablishmentItemViewModel(id) {
             if (callback) callback(response);
         });
     };
+    self.addName = function () {
+        var newName = new EstablishmentNameViewModel(null, self);
+        self.names.unshift(newName);
+        newName.showEditor();
+        app.obtrude(document);
+    };
+
     ko.computed(self.requestNames).extend({ throttle: 1 });
 }

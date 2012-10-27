@@ -111,7 +111,7 @@ namespace UCosmic.Domain.Establishments
                 PreviousState = previousState,
             };
             _entities.Create(audit);
-
+            _entities.Purge(entity);
             _unitOfWork.SaveChanges();
             _eventProcessor.Raise(new EstablishmentChanged());
         }

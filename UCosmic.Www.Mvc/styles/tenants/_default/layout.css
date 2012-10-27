@@ -552,10 +552,10 @@ body .ui-dialog {
       top: 5px;
       right: 10px;
       margin: 0;
-      -moz-opacity: 0.8;
-      opacity: 0.8;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); }
+      -moz-opacity: 0.5;
+      opacity: 0.5;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); }
       body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon {
         width: 24px;
         height: 24px;

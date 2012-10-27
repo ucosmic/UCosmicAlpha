@@ -6,32 +6,32 @@ using UCosmic.Domain.Languages;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class UpdateEstablishmentName
+    public class CreateEstablishmentName
     {
-        public int Id { get; set; }
+        public int ForEstablishmentId { get; set; }
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
         public string LanguageCode { get; set; }
     }
 
-    public class ValidateUpdateEstablishmentNameCommand : AbstractValidator<UpdateEstablishmentName>
+    public class ValidateCreateEstablishmentNameCommand : AbstractValidator<CreateEstablishmentName>
     {
         private readonly IQueryEntities _entities;
-        private EstablishmentName _establishmentName;
+        private Establishment _establishment;
 
-        public ValidateUpdateEstablishmentNameCommand(IQueryEntities entities)
+        public ValidateCreateEstablishmentNameCommand(IQueryEntities entities)
         {
             _entities = entities;
 
-            RuleFor(x => x.Id)
+            RuleFor(x => x.ForEstablishmentId)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                .WithMessage("Establishment name id '{0}' is not valid.", x => x.Id)
+                .WithMessage("Establishment id '{0}' is not valid.", x => x.ForEstablishmentId)
 
                 // id must exist in the database
                 .Must(Exist)
-                .WithMessage("Establishment name with id '{0}' does not exist", x => x.Id)
+                .WithMessage("Establishment with id '{0}' does not exist", x => x.ForEstablishmentId)
             ;
 
             // text of the establishment name is required and has max length
@@ -53,63 +53,64 @@ namespace UCosmic.Domain.Establishments
 
         private bool Exist(int id)
         {
-            _establishmentName = _entities.Query<EstablishmentName>()
+            _establishment = _entities.Query<Establishment>()
                 .SingleOrDefault(y => y.RevisionId == id)
             ;
-            return _establishmentName != null;
+            return _establishment != null;
         }
     }
 
-    public class HandleUpdateEstablishmentNameCommand: IHandleCommands<UpdateEstablishmentName>
+    public class HandleCreateEstablishmentNameCommand: IHandleCommands<CreateEstablishmentName>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
 
-        public HandleUpdateEstablishmentNameCommand(ICommandEntities entities, IUnitOfWork unitOfWork, IProcessEvents eventProcessor)
+        public HandleCreateEstablishmentNameCommand(ICommandEntities entities, IUnitOfWork unitOfWork, IProcessEvents eventProcessor)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
         }
 
-        public void Handle(UpdateEstablishmentName command)
+        public void Handle(CreateEstablishmentName command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // eager load related entities
-            var entity = _entities.Get<EstablishmentName>()
-                .EagerLoad(_entities, new Expression<Func<EstablishmentName, object>>[]
+            // load parent
+            var establishment = _entities.Get<Establishment>()
+                .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                 {
-                    x => x.ForEstablishment.Names, // parent & siblings
-                    x => x.TranslationToLanguage, // language
+                    x => x.Names,
                 })
-                .Single(x => x.RevisionId == command.Id);
+                .Single(x => x.RevisionId == command.ForEstablishmentId)
+            ;
 
             // get new language
             var language = _entities.Get<Language>()
                 .SingleOrDefault(x =>  x.TwoLetterIsoCode.Equals(command.LanguageCode, StringComparison.OrdinalIgnoreCase));
 
-            entity.Text = command.Text;
-            entity.IsFormerName = command.IsFormerName;
-            entity.IsOfficialName = command.IsOfficialName;
-            entity.TranslationToLanguage = language;
+            var establishmentName = new EstablishmentName
+            {
+                Text = command.Text,
+                TranslationToLanguage = language,
+                IsOfficialName = command.IsOfficialName,
+                IsFormerName = command.IsFormerName,
+            };
 
-            // can only be one official name
             if (command.IsOfficialName)
             {
-                foreach (var name in entity.ForEstablishment.Names)
+                foreach (var name in establishment.Names)
                 {
                     name.IsOfficialName = false;
                     _entities.Update(name);
                 }
-                entity.ForEstablishment.OfficialName = command.Text;
-                entity.IsOfficialName = true;
-                entity.IsFormerName = false; // official name cannot be defunct
-                _entities.Update(entity.ForEstablishment);
+                establishment.OfficialName = command.Text;
+                establishmentName.IsFormerName = false; // official name cannot be defunct
             }
 
-            _entities.Update(entity);
+            establishment.Names.Add(establishmentName);
+            _entities.Update(establishment);
             _unitOfWork.SaveChanges();
             _eventProcessor.Raise(new EstablishmentChanged());
         }

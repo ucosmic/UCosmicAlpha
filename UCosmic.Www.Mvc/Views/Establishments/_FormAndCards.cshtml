@@ -5,6 +5,9 @@
                 <header>
                     <h2>
                         Name(s)
+                        <a href="#" title="Add a new name" data-bind="visible: !isSpinningNames() && !editingName(), click: addName">
+                            <img src="~/styles/icons/plus-24-green.png" alt="Add a new name" />
+                        </a>
                         <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningNames" />
                     </h2>
                 </header>
@@ -19,8 +22,8 @@
                                     <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
                                 </div>
                                 <div class="float-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
-                                    <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this establishment name">
-                                        <img src="~/styles/icons/minus-24-red.png" alt="Delete this name" /></a>
+                                    <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this name">
+                                        <img src="~/styles/icons/minus-24-red.png" alt="" /></a>
                                     <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningPurge" />
                                 </div>
                             </div>
@@ -28,7 +31,7 @@
                         <div data-bind="visible: editMode" style="display: none;">
                             <form data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                 <div class="field" style="margin-top: 0;">
-                                    <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement'" data-autosize="true"></textarea>
+                                    <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement'" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
                                 </div>
                                 <div class="field">
                                     <label data-bind="click: clickOfficialNameCheckbox">

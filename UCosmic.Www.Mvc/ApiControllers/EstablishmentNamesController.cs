@@ -17,16 +17,19 @@ namespace UCosmic.Www.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
         private readonly IHandleCommands<DeleteEstablishmentName> _deleteHandler;
+        private readonly IHandleCommands<CreateEstablishmentName> _createHandler;
 
         public EstablishmentNamesController(
              IProcessQueries queryProcessor
             , IHandleCommands<UpdateEstablishmentName> updateHandler
             , IHandleCommands<DeleteEstablishmentName> deleteHandler
+            , IHandleCommands<CreateEstablishmentName> createHandler
         )
         {
             _queryProcessor = queryProcessor;
             _updateHandler = updateHandler;
             _deleteHandler = deleteHandler;
+            _createHandler = createHandler;
         }
 
         [GET("{establishmentId}/names")]
@@ -51,11 +54,20 @@ namespace UCosmic.Www.Mvc.ApiControllers
             return models;
         }
 
+        [POST("{establishmentId}/names")]
+        public void Post(int establishmentId, [FromBody] EstablishmentNameApiModel model)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            var command = new CreateEstablishmentName { ForEstablishmentId = establishmentId };
+            Mapper.Map(model, command);
+            _createHandler.Handle(command);
+        }
+
         [PUT("names/{establishmentNameId}")]
         public void Put(int establishmentNameId, [FromBody] EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
-            if (establishmentNameId != model.RevisionId)
+            if (establishmentNameId != model.Id)
                 throw new InvalidOperationException("URL does not match primary key of data item.");
 
             var command = Mapper.Map<UpdateEstablishmentName>(model);

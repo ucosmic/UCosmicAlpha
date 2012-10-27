@@ -5,7 +5,7 @@ namespace UCosmic.Www.Mvc.Models
 {
     public class EstablishmentNameApiModel
     {
-        public int RevisionId { get; set; }
+        public int Id { get; set; }
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
@@ -20,6 +20,7 @@ namespace UCosmic.Www.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<EstablishmentName, EstablishmentNameApiModel>()
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.LanguageName, o => o.ResolveUsing(s =>
                         s.TranslationToLanguage == null ? null : s.TranslationToLanguage.GetTranslatedName()))
                     .ForMember(d => d.LanguageCode, o => o.ResolveUsing(s => 
@@ -32,8 +33,16 @@ namespace UCosmic.Www.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<EstablishmentNameApiModel, UpdateEstablishmentName>()
-                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                CreateMap<EstablishmentNameApiModel, UpdateEstablishmentName>();
+            }
+        }
+
+        public class ModelToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EstablishmentNameApiModel, CreateEstablishmentName>()
+                    .ForMember(d => d.ForEstablishmentId, o => o.Ignore())
                 ;
             }
         }
