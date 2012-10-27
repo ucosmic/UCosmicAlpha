@@ -317,6 +317,79 @@ body {
             }
         }
     }
+    .ui-dialog {
+        border: 0;
+        padding: 0;
+        max-width: 960px;
+        @include font-ms;
+        @include font-height(16px, 20px);
+        background-color: transparent;
+        .ui-dialog-titlebar {
+            border: 0;
+            @include border-radii(8px, 8px, 0, 0);
+            .ui-dialog-title {
+                cursor: move;
+            }
+            .ui-dialog-titlebar-close {
+                padding: 0;
+                width: 24px;
+                height: 24px;
+                top: 5px;
+                right: 10px;
+                margin: 0;
+                @include opacity(.8);
+                .ui-icon {
+                    width: 24px;
+                    height: 24px;
+                    background-image: url('../../icons/closer-24-dark.png');
+                    background-position: 0 0;
+                }
+                &.ui-state-hover {
+                    border: 0;
+                    background: transparent;
+                    @include opacity(1);
+                }
+            }
+        }
+        .ui-dialog-content {
+            background-color: #fff;
+            p {
+                @include font-height(16px, 1.5);
+                margin: 1em 0;
+            }
+            p:first-child {
+                margin-top: 0;
+            }
+        }
+        .ui-dialog-buttonpane {
+            margin-top: 0;
+            border: 0;
+            padding-top: 8px;
+            padding-left: 16px;
+            .ui-dialog-buttonset {
+                float: none;
+                padding-left: 0;
+                button {
+                    outline: none;
+                    margin: 0 4px 0 0;
+                    border: 0;
+                    @include border-radius(4px);
+                    padding: 6px 12px;
+                    @include font-arial;
+                    color: $button-text-color;
+                    background: $button-bg-color;
+                    .ui-button-text {
+                        padding: 0;
+                        line-height: normal;
+                    }
+                }
+            }
+        }
+    }
+    .ui-widget-overlay {
+        background: #000 url('../../../images/ui-bg_flat_black_40x100.png') 50% 50% repeat-x;
+        @include opacity(.6);
+    }
     .badge {
         display: inline-block;
         @include font-height(12px, 16px);

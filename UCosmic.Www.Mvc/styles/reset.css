@@ -83,3 +83,9 @@ img {
 .float-right {
     float: right;
 }
+
+
+.ui-button * {
+    cursor: pointer;
+}
+

@@ -6,16 +6,24 @@
                     <h2>
                         Name(s)
                         <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningNames" />
-
                     </h2>
                 </header>
                 <ul class="data-items" data-bind="foreach: names">
                     <li data-bind="css: { selected: editMode }">
                         <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': $parent.editingName() }">
-                            <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
-                            <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
-                            <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
-                            <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                            <div class="group">
+                                <div class="float-left" style="max-width: 645px;">
+                                    <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
+                                    <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
+                                    <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
+                                    <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                                </div>
+                                <div class="float-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
+                                    <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this establishment name">
+                                        <img src="~/styles/icons/minus-24-red.png" alt="Delete this name" /></a>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningPurge" />
+                                </div>
+                            </div>
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
                             <form data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
@@ -41,14 +49,27 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <input type="submit" value="Save" data-bind="enable: !isSpinning()" />
+                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave()" />
                                     &nbsp;
                                     <a href="#" data-bind="click: cancelEditor">Cancel</a>
                                     &nbsp;
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinning" />
-                                    <strong data-bind="visible: isSpinning">Saving...</strong>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSave" />
+                                    <strong data-bind="visible: isSpinningSave">Saving...</strong>
                                 </div>
                             </form>
+                        </div>
+                        <div data-bind="element: 'confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                            <div>
+                                <p>
+                                    Are you sure you want to delete this establishment name?
+                                </p>
+                                <div>
+                                    <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
+                                    <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
+                                    <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
+                                    <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </ul>

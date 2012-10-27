@@ -532,6 +532,80 @@ body #main {
         margin-left: 5px; }
     body #main > .content ul.data-items > li, body #main > .content ol.data-items > li {
       margin-bottom: 4px; }
+body .ui-dialog {
+  border: 0;
+  padding: 0;
+  max-width: 960px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  background-color: transparent; }
+  body .ui-dialog .ui-dialog-titlebar {
+    border: 0;
+    -moz-border-radius: 8px 8px 0 0;
+    -webkit-border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px 0 0; }
+    body .ui-dialog .ui-dialog-titlebar .ui-dialog-title {
+      cursor: move; }
+    body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      top: 5px;
+      right: 10px;
+      margin: 0;
+      -moz-opacity: 0.8;
+      opacity: 0.8;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80); }
+      body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon {
+        width: 24px;
+        height: 24px;
+        background-image: url("../../icons/closer-24-dark.png");
+        background-position: 0 0; }
+      body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close.ui-state-hover {
+        border: 0;
+        background: transparent;
+        -moz-opacity: 1;
+        opacity: 1;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+        filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
+  body .ui-dialog .ui-dialog-content {
+    background-color: #fff; }
+    body .ui-dialog .ui-dialog-content p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 1em 0; }
+    body .ui-dialog .ui-dialog-content p:first-child {
+      margin-top: 0; }
+  body .ui-dialog .ui-dialog-buttonpane {
+    margin-top: 0;
+    border: 0;
+    padding-top: 8px;
+    padding-left: 16px; }
+    body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+      float: none;
+      padding-left: 0; }
+      body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button {
+        outline: none;
+        margin: 0 4px 0 0;
+        border: 0;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #e0d1a5;
+        background: #006747; }
+        body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button .ui-button-text {
+          padding: 0;
+          line-height: normal; }
+body .ui-widget-overlay {
+  background: black url("../../../images/ui-bg_flat_black_40x100.png") 50% 50% repeat-x;
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); }
 body .badge {
   display: inline-block;
   font-size: 12px;

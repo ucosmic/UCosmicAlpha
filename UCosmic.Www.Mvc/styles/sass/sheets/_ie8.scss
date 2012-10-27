@@ -31,6 +31,20 @@ body {
     }
 }
 
+    .ui-dialog {
+        .ui-dialog-titlebar {
+            .ui-dialog-titlebar-close {
+                -ms-filter: none !important;
+                filter: none !important;
+                &.ui-state-hover {
+                    -ms-filter: none !important;
+                    filter: none !important;
+                }
+            }
+        }
+    }
+
+
 .typed-item {
     position: relative;
     > .type {
@@ -39,4 +53,5 @@ body {
         height: 14px;
         filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     }
+
 }

@@ -7,7 +7,7 @@
 	hidden = 'hidden',
 	borderBox = 'border-box',
 	lineHeight = 'lineHeight',
-	copy = '<textarea tabindex="-1" style="position:absolute; top:-9999px; left:-9999px; right:auto; bottom:auto; -moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box; word-wrap:break-word; height:0 !important; min-height:0 !important; overflow:hidden;">',
+	copy = '<textarea tabindex="-1" style="position:absolute; top:-9999px; left:-9999px; right:auto; bottom:auto; -moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box; word-wrap:break-word; height:0 !important; min-height:0 !important; overflow:hidden;-webkit-transition: all 0ms;-moz-transition: all 0ms;-o-transition: all 0ms;transition: all 0ms;">',
 	// line-height is omitted because IE7/IE8 doesn't return the correct value.
 	copyStyle = [
 		'fontFamily',
@@ -88,6 +88,9 @@
 
                         // Update the width in case the original textarea width has changed
                         mirror.style.width = $ta.css('width');
+                        if ($ta.css('box-sizing') === borderBox || $ta.css('-moz-box-sizing') === borderBox || $ta.css('-webkit-box-sizing') === borderBox) {
+                            if ($ta.css('width').indexOf('px') > 0) mirror.style.width = $ta.width() + 'px';
+                        }
 
                         // Needed for IE to reliably return the correct scrollHeight
                         mirror.scrollTop = 0;

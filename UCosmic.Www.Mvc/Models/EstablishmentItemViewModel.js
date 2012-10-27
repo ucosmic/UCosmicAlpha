@@ -30,13 +30,14 @@ function EstablishmentNameViewModel(js, $parent) {
         if (newValue) self.isFormerName(false);
     });
 
-    self.isSpinning = ko.observable(false); // when save button is clicked
+    self.isSpinningSave = ko.observable(false); // when save button is clicked
     self.editMode = ko.observable(); // shows either form or read-only view
     self.showEditor = function () { // click to hide viewer and show editor
         var editingName = $parent.editingName(); // disallow if another name is being edited
         if (!editingName) {
             $parent.editingName(self.revisionId()); // tell parent which item is being edited
             self.editMode(true); // show the form / hide the viewer
+            $(self.textElement).trigger('autosize');
             $(self.textElement).focus(); // focus the text box
         }
     };
@@ -45,11 +46,7 @@ function EstablishmentNameViewModel(js, $parent) {
             self.errors.showAllMessages();
         }
         else { // PUT
-            //var languageCode = self.selectedLanguageCode();
-            //if (!languageCode) self.languageName('');
-            //else if (languageCode != self.originalValues.languageCode)
-            //    self.languageName($(self.languagesElement).children('option:selected').text());
-            self.isSpinning(true); // start save spinner
+            self.isSpinningSave(true); // start save spinner
 
             $.ajax({ // submit ajax PUT request
                 url: '/api/establishments/names/' + self.revisionId(), // TODO: put this in stronger URL helper
@@ -66,7 +63,7 @@ function EstablishmentNameViewModel(js, $parent) {
                 $parent.requestNames(function () { // when parent receives response,
                     $parent.editingName(undefined); // tell parent no item is being edited anymore
                     self.editMode(false); // hide the form, show the view
-                    self.isSpinning(false); // stop save spinner
+                    self.isSpinningSave(false); // stop save spinner
                 });
             })
             .error(function (xhr) { // server will throw exceptions when invalid
@@ -76,7 +73,7 @@ function EstablishmentNameViewModel(js, $parent) {
                         alert(response.exceptionMessage); // alert validation messages only
                     }
                 }
-                self.isSpinning(false); // stop spinner TODO: what if server throws non-validation exception?
+                self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
             });
         }
     };
@@ -91,6 +88,52 @@ function EstablishmentNameViewModel(js, $parent) {
         if (self.originalValues.isOfficialName) // only when the name is already official in the db
             alert('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
         return true;
+    };
+
+    self.isSpinningPurge = ko.observable(false);
+    self.confirmPurgeName = undefined;
+    self.purge = function (vm, e) {
+        e.stopPropagation();
+        if ($parent.editingName()) return;
+        if (self.isOfficialName()) {
+            alert('You cannot delete an establishment\'s official name.\nTo delete this name, first assign another name as official.');
+            return;
+        }
+        self.isSpinningPurge(true);
+        $(self.confirmPurgeDialog).dialog({
+            dialogClass: 'jquery-ui',
+            width: 'auto',
+            maxWidth: 710,
+            resizable: false,
+            modal: true,
+            buttons: {
+                'Yes, confirm delete': function () {
+                    $(self.confirmPurgeDialog).dialog('close');
+                    $.ajax({ // submit ajax DELETE request
+                        url: '/api/establishments/names/' + self.revisionId(), // TODO: put this in stronger URL helper
+                        type: 'DELETE'
+                    })
+                    .success(function () { // update the whole list (sort may be effected by this update)
+                        $parent.requestNames(function () {
+                            self.isSpinningPurge(false);
+                        });
+                    })
+                    .error(function (xhr) { // server will throw exceptions when invalid
+                        if (xhr.responseText) { // validation message will be in xht response text...
+                            var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
+                            if (response.exceptionType === 'FluentValidation.ValidationException') {
+                                alert(response.exceptionMessage); // alert validation messages only
+                            }
+                        }
+                        self.isSpinningPurge(false);
+                    });
+                },
+                'No, cancel delete': function () {
+                    $(self.confirmPurgeDialog).dialog('close');
+                    self.isSpinningPurge(false);
+                }
+            }
+        });
     };
 
     ko.validation.group(self); // create a separate validation group for this item

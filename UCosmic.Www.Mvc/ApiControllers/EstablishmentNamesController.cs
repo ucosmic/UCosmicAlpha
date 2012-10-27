@@ -16,18 +16,21 @@ namespace UCosmic.Www.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
+        private readonly IHandleCommands<DeleteEstablishmentName> _deleteHandler;
 
         public EstablishmentNamesController(
              IProcessQueries queryProcessor
             , IHandleCommands<UpdateEstablishmentName> updateHandler
+            , IHandleCommands<DeleteEstablishmentName> deleteHandler
         )
         {
             _queryProcessor = queryProcessor;
             _updateHandler = updateHandler;
+            _deleteHandler = deleteHandler;
         }
 
         [GET("{establishmentId}/names")]
-        public IEnumerable<EstablishmentNameApiModel> Get(int establishmentId)
+        public IEnumerable<EstablishmentNameApiModel> GetAll(int establishmentId)
         {
             //System.Threading.Thread.Sleep(2000);
             var entities = _queryProcessor.Execute(new EstablishmentNames(establishmentId)
@@ -53,10 +56,18 @@ namespace UCosmic.Www.Mvc.ApiControllers
         {
             //System.Threading.Thread.Sleep(2000);
             if (establishmentNameId != model.RevisionId)
-                throw new InvalidOperationException("REST URL does not match primary key of data item.");
+                throw new InvalidOperationException("URL does not match primary key of data item.");
 
             var command = Mapper.Map<UpdateEstablishmentName>(model);
             _updateHandler.Handle(command);
+        }
+
+        [DELETE("names/{establishmentNameId}")]
+        public void Delete(int establishmentNameId)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            var command = new DeleteEstablishmentName(User, establishmentNameId);
+            _deleteHandler.Handle(command);
         }
     }
 }

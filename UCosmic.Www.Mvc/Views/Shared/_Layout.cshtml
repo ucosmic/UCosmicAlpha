@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
     <title>@ViewBag.Title</title>
+    @Styles.Render("~/content/themes/base/css")
     @Html.Action(MVC.Tenancy.Css())
     @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
