@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Languages;
 
@@ -8,11 +9,19 @@ namespace UCosmic.Domain.Establishments
 {
     public class UpdateEstablishmentName
     {
+        public UpdateEstablishmentName(IPrincipal principal)
+        {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
+        }
+
+        public IPrincipal Principal { get; private set; }
         public int Id { get; set; }
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
         public string LanguageCode { get; set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateUpdateEstablishmentNameCommand : AbstractValidator<UpdateEstablishmentName>
@@ -66,7 +75,10 @@ namespace UCosmic.Domain.Establishments
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
 
-        public HandleUpdateEstablishmentNameCommand(ICommandEntities entities, IUnitOfWork unitOfWork, IProcessEvents eventProcessor)
+        public HandleUpdateEstablishmentNameCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            , IProcessEvents eventProcessor
+        )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
@@ -77,41 +89,52 @@ namespace UCosmic.Domain.Establishments
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // eager load related entities
-            var entity = _entities.Get<EstablishmentName>()
+            // load target
+            var establishmentName = _entities.Get<EstablishmentName>()
                 .EagerLoad(_entities, new Expression<Func<EstablishmentName, object>>[]
                 {
-                    x => x.ForEstablishment.Names, // parent & siblings
+                    x => x.ForEstablishment.Names.Select(y => y.TranslationToLanguage), // parent & siblings
                     x => x.TranslationToLanguage, // language
                 })
                 .Single(x => x.RevisionId == command.Id);
+
+            // update previous official name and owner when changing official name
+            if (!establishmentName.IsOfficialName && command.IsOfficialName)
+            {
+                var establishment = establishmentName.ForEstablishment;
+                var officialName = establishment.Names.Single(x => x.IsOfficialName);
+                var changeCommand = new UpdateEstablishmentName(command.Principal)
+                {
+                    Id = officialName.RevisionId,
+                    Text = officialName.Text,
+                    IsFormerName = officialName.IsFormerName,
+                    IsOfficialName = false,
+                    LanguageCode = (officialName.TranslationToLanguage != null)
+                        ? officialName.TranslationToLanguage.TwoLetterIsoCode : null,
+                    NoCommit = true,
+                };
+                Handle(changeCommand);
+                establishment.OfficialName = command.Text;
+                _entities.Update(establishment);
+            }
 
             // get new language
             var language = _entities.Get<Language>()
                 .SingleOrDefault(x =>  x.TwoLetterIsoCode.Equals(command.LanguageCode, StringComparison.OrdinalIgnoreCase));
 
-            entity.Text = command.Text;
-            entity.IsFormerName = command.IsFormerName;
-            entity.IsOfficialName = command.IsOfficialName;
-            entity.TranslationToLanguage = language;
+            // update scalars
+            establishmentName.Text = command.Text;
+            establishmentName.IsFormerName = command.IsFormerName;
+            establishmentName.IsOfficialName = command.IsOfficialName;
+            establishmentName.TranslationToLanguage = language;
 
-            // can only be one official name
-            if (command.IsOfficialName)
+            _entities.Update(establishmentName);
+
+            if (!command.NoCommit)
             {
-                foreach (var name in entity.ForEstablishment.Names)
-                {
-                    name.IsOfficialName = false;
-                    _entities.Update(name);
-                }
-                entity.ForEstablishment.OfficialName = command.Text;
-                entity.IsOfficialName = true;
-                entity.IsFormerName = false; // official name cannot be defunct
-                _entities.Update(entity.ForEstablishment);
+                _unitOfWork.SaveChanges();
+                _eventProcessor.Raise(new EstablishmentChanged());
             }
-
-            _entities.Update(entity);
-            _unitOfWork.SaveChanges();
-            _eventProcessor.Raise(new EstablishmentChanged());
         }
     }
 }

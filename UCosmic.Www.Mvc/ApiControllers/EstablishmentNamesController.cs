@@ -58,7 +58,10 @@ namespace UCosmic.Www.Mvc.ApiControllers
         public void Post(int establishmentId, [FromBody] EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
-            var command = new CreateEstablishmentName { ForEstablishmentId = establishmentId };
+            var command = new CreateEstablishmentName(User)
+            {
+                OwnerId = establishmentId,
+            };
             Mapper.Map(model, command);
             _createHandler.Handle(command);
         }
@@ -70,7 +73,8 @@ namespace UCosmic.Www.Mvc.ApiControllers
             if (establishmentNameId != model.Id)
                 throw new InvalidOperationException("URL does not match primary key of data item.");
 
-            var command = Mapper.Map<UpdateEstablishmentName>(model);
+            var command = new UpdateEstablishmentName(User);
+            Mapper.Map(model, command);
             _updateHandler.Handle(command);
         }
 

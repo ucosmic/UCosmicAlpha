@@ -33,7 +33,9 @@ namespace UCosmic.Www.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<EstablishmentNameApiModel, UpdateEstablishmentName>();
+                CreateMap<EstablishmentNameApiModel, UpdateEstablishmentName>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                ;
             }
         }
 
@@ -42,7 +44,8 @@ namespace UCosmic.Www.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<EstablishmentNameApiModel, CreateEstablishmentName>()
-                    .ForMember(d => d.ForEstablishmentId, o => o.Ignore())
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.OwnerId, o => o.Ignore())
                 ;
             }
         }

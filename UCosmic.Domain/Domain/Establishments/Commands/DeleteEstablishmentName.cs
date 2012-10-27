@@ -16,8 +16,8 @@ namespace UCosmic.Domain.Establishments
             Id = id;
         }
 
-        public int Id { get; private set; }
         public IPrincipal Principal { get; private set; }
+        public int Id { get; private set; }
     }
 
     public class ValidateDeleteEstablishmentNameCommand : AbstractValidator<DeleteEstablishmentName>
@@ -99,7 +99,7 @@ namespace UCosmic.Domain.Establishments
             {
                 Id = entity.RevisionId,
                 ForEstablishmentId = entity.ForEstablishment.RevisionId,
-                TranslationToLanguageId = entity.TranslationToLanguage.Id,
+                TranslationToLanguageId = (entity.TranslationToLanguage != null) ? entity.TranslationToLanguage.Id : (int?)null,
                 entity.Text,
                 entity.IsOfficialName,
                 entity.IsFormerName,
