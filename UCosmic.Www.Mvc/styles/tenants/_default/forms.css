@@ -147,7 +147,7 @@ a.button {
     background-image: url(../../icons/closer-24-red-disc.png); }
 
 button, input[type=submit], [type=reset], [type=button] {
-  margin: 0 4px 0 0;
+  margin: 0 12px 0 0;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -172,23 +172,23 @@ button, input[type=submit], [type=reset], [type=button] {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); }
 
-button.link, input[type=submit].link, [type=reset].link, [type=button].link {
+button.link, input[type=submit].link, [type=reset].link, [type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
   display: inline-block;
   margin: 0;
   border: 0px none;
   padding: 0;
   background: none;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: underline !important;
   font-size: 16px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #0000cc;
   background-color: transparent; }
-  button.link:hover, input[type=submit].link:hover, [type=reset].link:hover, [type=button].link:hover {
-    text-decoration: none; }
-  button.link[disabled], input[type=submit].link[disabled], [type=reset].link[disabled], [type=button].link[disabled] {
+  button.link:hover, input[type=submit].link:hover, [type=reset].link:hover, [type=button].link:hover, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true]:hover {
+    text-decoration: none !important; }
+  button.link[disabled], input[type=submit].link[disabled], [type=reset].link[disabled], [type=button].link[disabled], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled] {
     color: #555;
-    text-decoration: none;
+    text-decoration: none !important;
     cursor: default; }
 
 .validationMessage {

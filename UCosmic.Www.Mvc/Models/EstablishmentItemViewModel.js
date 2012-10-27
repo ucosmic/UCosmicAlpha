@@ -154,34 +154,41 @@ function EstablishmentNameViewModel(js, $parent) {
             close: function () {
                 if (!shouldRemainSpinning) self.isSpinningPurge(false);
             },
-            buttons: {
-                'Yes, confirm delete': function () {
-                    shouldRemainSpinning = true;
-                    $(self.confirmPurgeDialog).dialog('close');
-                    $.ajax({ // submit ajax DELETE request
-                        url: '/api/establishments/names/' + self.id(), // TODO: put this in stronger URL helper
-                        type: 'DELETE'
-                    })
-                    .success(function () { // update the whole list (sort may be effected by this update)
-                        $parent.requestNames(function () {
+            buttons: [
+                {
+                    text: 'Yes, confirm delete',
+                    click: function () {
+                        shouldRemainSpinning = true;
+                        $(self.confirmPurgeDialog).dialog('close');
+                        $.ajax({ // submit ajax DELETE request
+                            url: '/api/establishments/names/' + self.id(), // TODO: put this in stronger URL helper
+                            type: 'DELETE'
+                        })
+                        .success(function () { // update the whole list (sort may be effected by this update)
+                            $parent.requestNames(function () {
+                                self.isSpinningPurge(false);
+                            });
+                        })
+                        .error(function (xhr) { // server will throw exceptions when invalid
+                            if (xhr.responseText) { // validation message will be in xht response text...
+                                var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
+                                if (response.exceptionType === 'FluentValidation.ValidationException') {
+                                    alert(response.exceptionMessage); // alert validation messages only
+                                }
+                            }
                             self.isSpinningPurge(false);
                         });
-                    })
-                    .error(function (xhr) { // server will throw exceptions when invalid
-                        if (xhr.responseText) { // validation message will be in xht response text...
-                            var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
-                            if (response.exceptionType === 'FluentValidation.ValidationException') {
-                                alert(response.exceptionMessage); // alert validation messages only
-                            }
-                        }
-                        self.isSpinningPurge(false);
-                    });
+                    }
                 },
-                'No, cancel delete': function () {
-                    $(self.confirmPurgeDialog).dialog('close');
-                    self.isSpinningPurge(false);
+                {
+                    text: 'No, cancel delete',
+                    click: function () {
+                        $(self.confirmPurgeDialog).dialog('close');
+                        self.isSpinningPurge(false);
+                    },
+                    'data-css-link': true
                 }
-            }
+            ]
         });
     };
 

@@ -129,7 +129,7 @@ a.button {
 }
 
 button, input[type=submit], [type=reset], [type=button] {
-    margin: 0 4px 0 0;
+    margin: 0 12px 0 0;
     @include border-radius(4px);
     padding: 6px 12px;
     @include font-arial;
@@ -146,24 +146,24 @@ button, input[type=submit], [type=reset], [type=button] {
     }
 }
 
-button.link, input[type=submit].link, [type=reset].link, [type=button].link {
+button.link, input[type=submit].link, [type=reset].link, [type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
     display: inline-block;
     margin:0;
     border: 0px none;
     padding: 0;
     background: none;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: underline !important;
     font-size: 16px;
     @include font-ms;
     color: $main-link-color;
     background-color: transparent;
     &:hover {
-        text-decoration: none;
+        text-decoration: none !important;
     }
     &[disabled] {
         color: #555;
-        text-decoration: none;
+        text-decoration: none !important;
         cursor: default;
     }
 }
