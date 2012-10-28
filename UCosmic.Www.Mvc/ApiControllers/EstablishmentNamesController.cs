@@ -6,6 +6,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
 using UCosmic.Domain.Establishments;
 using UCosmic.Www.Mvc.Models;
 
@@ -15,21 +16,27 @@ namespace UCosmic.Www.Mvc.ApiControllers
     public class EstablishmentNamesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IValidator<CreateEstablishmentName> _createValidator;
+        private readonly IHandleCommands<CreateEstablishmentName> _createHandler;
+        private readonly IValidator<UpdateEstablishmentName> _updateValidator;
         private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
         private readonly IHandleCommands<DeleteEstablishmentName> _deleteHandler;
-        private readonly IHandleCommands<CreateEstablishmentName> _createHandler;
 
         public EstablishmentNamesController(
              IProcessQueries queryProcessor
-            , IHandleCommands<UpdateEstablishmentName> updateHandler
-            , IHandleCommands<DeleteEstablishmentName> deleteHandler
             , IHandleCommands<CreateEstablishmentName> createHandler
+            , IValidator<CreateEstablishmentName> createValidator
+            , IHandleCommands<UpdateEstablishmentName> updateHandler
+            , IValidator<UpdateEstablishmentName> updateValidator
+            , IHandleCommands<DeleteEstablishmentName> deleteHandler
         )
         {
             _queryProcessor = queryProcessor;
-            _updateHandler = updateHandler;
-            _deleteHandler = deleteHandler;
             _createHandler = createHandler;
+            _createValidator = createValidator;
+            _updateHandler = updateHandler;
+            _updateValidator = updateValidator;
+            _deleteHandler = deleteHandler;
         }
 
         [GET("{establishmentId}/names")]
@@ -40,6 +47,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             {
                 EagerLoad = new Expression<Func<EstablishmentName, object>>[]
                 {
+                    x => x.ForEstablishment,
                     x => x.TranslationToLanguage.Names.Select(y => y.TranslationToLanguage),
                 },
                 OrderBy = new Dictionary<Expression<Func<EstablishmentName, object>>, OrderByDirection>
@@ -58,16 +66,13 @@ namespace UCosmic.Www.Mvc.ApiControllers
         public void Post(int establishmentId, [FromBody] EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
-            var command = new CreateEstablishmentName(User)
-            {
-                OwnerId = establishmentId,
-            };
+            var command = new CreateEstablishmentName(User);
             Mapper.Map(model, command);
             _createHandler.Handle(command);
         }
 
-        [PUT("names/{establishmentNameId}")]
-        public void Put(int establishmentNameId, [FromBody] EstablishmentNameApiModel model)
+        [PUT("{establishmentId}/names/{establishmentNameId}")]
+        public void Put(int establishmentId, int establishmentNameId, [FromBody] EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
             if (establishmentNameId != model.Id)
@@ -78,12 +83,33 @@ namespace UCosmic.Www.Mvc.ApiControllers
             _updateHandler.Handle(command);
         }
 
-        [DELETE("names/{establishmentNameId}")]
-        public void Delete(int establishmentNameId)
+        [DELETE("{establishmentId}/names/{establishmentNameId}")]
+        public void Delete(int establishmentId, int establishmentNameId)
         {
             //System.Threading.Thread.Sleep(2000);
             var command = new DeleteEstablishmentName(User, establishmentNameId);
             _deleteHandler.Handle(command);
+        }
+
+
+        [POST("{establishmentId}/names/{establishmentNameId}/validate")]
+        public void Validate(int establishmentId, int establishmentNameId, [FromBody] EstablishmentNameApiModel model)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            model.OwnerId = establishmentId;
+            model.Id = establishmentNameId;
+            if (model.Id < 1)
+            {
+                var command = new CreateEstablishmentName(User);
+                Mapper.Map(model, command);
+                _createValidator.ValidateAndThrow(command);
+            }
+            else
+            {
+                var command = new UpdateEstablishmentName(User);
+                Mapper.Map(model, command);
+                _updateValidator.ValidateAndThrow(command);
+            }
         }
     }
 }

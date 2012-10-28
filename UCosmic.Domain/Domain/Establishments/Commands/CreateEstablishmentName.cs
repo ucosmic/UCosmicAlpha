@@ -29,6 +29,7 @@ namespace UCosmic.Domain.Establishments
     {
         private readonly IQueryEntities _entities;
         private Establishment _establishment;
+        private EstablishmentName _duplicate;
 
         public ValidateCreateEstablishmentNameCommand(IQueryEntities entities)
         {
@@ -52,6 +53,8 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} character{1}.",
                         name => name.Text.Length,
                         name => name.Text.Length == 1 ? "" : "s")
+                .Must(NotBeDuplicate)
+                    .WithMessage("The establishment name '{0}' already exists.", x => _duplicate.Text)
             ;
 
             // when the establishment name is official, it cannot be a former / defunct name
@@ -67,6 +70,16 @@ namespace UCosmic.Domain.Establishments
                 .SingleOrDefault(y => y.RevisionId == id)
             ;
             return _establishment != null;
+        }
+
+        private bool NotBeDuplicate(CreateEstablishmentName command, string text)
+        {
+            _duplicate =
+                _entities.Query<EstablishmentName>().FirstOrDefault(
+                    x =>
+                    x.Text.Equals(text, StringComparison.OrdinalIgnoreCase) ||
+                    (x.AsciiEquivalent != null && x.AsciiEquivalent.Equals(text, StringComparison.OrdinalIgnoreCase)));
+            return _duplicate == null;
         }
     }
 

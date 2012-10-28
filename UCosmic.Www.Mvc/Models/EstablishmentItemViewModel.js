@@ -5,12 +5,44 @@
 /// <reference path="../scripts/app/app.js" />
 /// <reference path="../scripts/T4MvcJs/WebApiRoutes.js" />
 
+ko.validation.rules['uniqueEstablishmentName'] = {
+    async: true,
+    validator: function (val, vm, callback) {
+        if (!vm.editMode()) {
+            callback(true);
+        }
+        else {
+            var validator = this;
+            $.ajax({
+                url: '/api/establishments/' + vm.ownerId() + '/names/' + vm.id() + '/validate',
+                type: 'POST',
+                data: {
+                    id: vm.id(),
+                    text: $.trim(vm.text()),
+                    isOfficialName: vm.isOfficialName(),
+                    isFormerName: vm.isFormerName(),
+                    languageCode: vm.selectedLanguageCode(),
+                }
+            })
+            .success(function() {
+                callback(true);
+            })
+            .error(function(xhr) {
+                var message = validator.message.replace("{0}", vm.text());
+                callback({ isValid: false, message: message });
+            });
+        }
+    },
+    message: 'The establishment name \'{0}\' already exists.'
+};
+ko.validation.registerExtenders();
 
 function EstablishmentNameViewModel(js, $parent) {
     var self = this;
     if (!js)
         js = {
             id: 0,
+            ownerId: $parent.id,
             text: '',
             isOfficialName: false,
             isFormerName: false,
@@ -25,7 +57,23 @@ function EstablishmentNameViewModel(js, $parent) {
         required: {
             message: 'Establishment name is required.'
         },
-        maxLength: 400
+        maxLength: 400,
+        uniqueEstablishmentName: self
+    });
+
+    var isValidatingAsync = 0;
+    self.text.isValidating.subscribe(function (isValidating) {
+        if (isValidating) {
+            self.isSpinningSaveValidator(true);
+            isValidatingAsync++;
+        }
+        else {
+            isValidatingAsync--;
+            if (isValidatingAsync < 1) {
+                self.isSpinningSaveValidator(false);
+                if (self.saveEditorClicked()) self.saveEditor();
+            }
+        }
     });
 
     self.textElement = undefined; // bind to this so we can focus it on actions
@@ -39,6 +87,7 @@ function EstablishmentNameViewModel(js, $parent) {
         if (newValue) self.isFormerName(false);
     });
 
+    self.isSpinningSaveValidator = ko.observable(false);
     self.isSpinningSave = ko.observable(false); // when save button is clicked
     self.editMode = ko.observable(); // shows either form or read-only view
     self.showEditor = function () { // click to hide viewer and show editor
@@ -50,24 +99,28 @@ function EstablishmentNameViewModel(js, $parent) {
             $(self.textElement).focus(); // focus the text box
         }
     };
+    self.saveEditorClicked = ko.observable(false);
     self.saveEditor = function () {
+        self.saveEditorClicked(true);
         if (!self.isValid()) { // validate
             self.errors.showAllMessages();
+            self.saveEditorClicked(false);
         }
-        else { // hit server
+        else if (isValidatingAsync < 1) { // hit server
             self.isSpinningSave(true); // start save spinner
+            self.saveEditorClicked(false);
 
             if (self.id()) {
                 $.ajax({ // submit ajax PUT request
-                    url: '/api/establishments/names/' + self.id(), // TODO: put this in stronger URL helper
+                    url: '/api/establishments/' + $parent.id + '/names/' + self.id(), // TODO: put this in stronger URL helper
+                    type: 'PUT',
                     data: {
                         id: self.id(),
                         text: $.trim(self.text()),
                         isOfficialName: self.isOfficialName(),
                         isFormerName: self.isFormerName(),
                         languageCode: self.selectedLanguageCode(),
-                    },
-                    type: 'PUT'
+                    }
                 })
                 .success(function() { // update the whole list (sort may be effected by this update)
                     $parent.requestNames(function() { // when parent receives response,
@@ -89,13 +142,14 @@ function EstablishmentNameViewModel(js, $parent) {
             else if ($parent.id) {
                 $.ajax({ // submit ajax POST request
                     url: '/api/establishments/' + $parent.id + '/names', // TODO: put this in stronger URL helper
+                    type: 'POST',
                     data: {
+                        ownerId: self.ownerId(),
                         text: $.trim(self.text()),
                         isOfficialName: self.isOfficialName(),
                         isFormerName: self.isFormerName(),
                         languageCode: self.selectedLanguageCode(),
-                    },
-                    type: 'POST'
+                    }
                 })
                 .success(function () { // update the whole list (sort may be effected by this update)
                     $parent.requestNames(function () { // when parent receives response,
@@ -161,7 +215,7 @@ function EstablishmentNameViewModel(js, $parent) {
                         shouldRemainSpinning = true;
                         $(self.confirmPurgeDialog).dialog('close');
                         $.ajax({ // submit ajax DELETE request
-                            url: '/api/establishments/names/' + self.id(), // TODO: put this in stronger URL helper
+                            url: '/api/establishments/ ' + $parent.id + '/names/' + self.id(), // TODO: put this in stronger URL helper
                             type: 'DELETE'
                         })
                         .success(function () { // update the whole list (sort may be effected by this update)

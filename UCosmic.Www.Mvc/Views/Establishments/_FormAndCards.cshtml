@@ -52,9 +52,11 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave()" />
-                                    <a href="#" data-bind="click: cancelEditor">Cancel</a>
+                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave() && !isSpinningSaveValidator()" />
+                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !isSpinningSave() && !isSpinningSaveValidator()" class="link" />
                                     &nbsp;
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSaveValidator" />
+                                    <strong data-bind="visible: isSpinningSaveValidator">Validating...</strong>
                                     <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSave" />
                                     <strong data-bind="visible: isSpinningSave">Saving...</strong>
                                 </div>

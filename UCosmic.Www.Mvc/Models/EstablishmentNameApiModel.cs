@@ -6,6 +6,7 @@ namespace UCosmic.Www.Mvc.Models
     public class EstablishmentNameApiModel
     {
         public int Id { get; set; }
+        public int OwnerId { get; set; }
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
@@ -21,6 +22,7 @@ namespace UCosmic.Www.Mvc.Models
             {
                 CreateMap<EstablishmentName, EstablishmentNameApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.OwnerId, o => o.MapFrom(s => s.ForEstablishment.RevisionId))
                     .ForMember(d => d.LanguageName, o => o.ResolveUsing(s =>
                         s.TranslationToLanguage == null ? null : s.TranslationToLanguage.GetTranslatedName()))
                     .ForMember(d => d.LanguageCode, o => o.ResolveUsing(s => 
@@ -45,7 +47,6 @@ namespace UCosmic.Www.Mvc.Models
             {
                 CreateMap<EstablishmentNameApiModel, CreateEstablishmentName>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.OwnerId, o => o.Ignore())
                 ;
             }
         }
