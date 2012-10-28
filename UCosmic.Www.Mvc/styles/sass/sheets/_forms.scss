@@ -44,7 +44,7 @@ textarea {
     max-width: 100%;
     @include font-height(16px, 20px);
     @include font-arial;
-    min-height: 38px;
+    min-height: 20px;
     border: solid 1px #aaa;
     border-right-color: #ddd;
     border-bottom-color: #ddd;

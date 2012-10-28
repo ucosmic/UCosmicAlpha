@@ -390,6 +390,7 @@
     <Content Include="styles\icons\closer-24-light.png" />
     <Content Include="styles\icons\closer-24-red-disc.png" />
     <Content Include="styles\icons\closer-24-red.png" />
+    <Content Include="styles\icons\minus-20-red.png" />
     <Content Include="styles\icons\minus-24-red.png" />
     <Content Include="styles\icons\plus-16-green-disc.png" />
     <Content Include="styles\icons\plus-20-green-disc.png" />

@@ -60,7 +60,7 @@ textarea {
   font-size: 16px;
   line-height: 20px;
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 38px;
+  min-height: 20px;
   border: solid 1px #aaa;
   border-right-color: #ddd;
   border-bottom-color: #ddd;

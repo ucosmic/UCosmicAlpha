@@ -26,6 +26,9 @@ body #main {
     -ms-filter: none !important;
     filter: none !important; }
 
+textarea {
+  min-height: 20px; }
+
 .typed-item {
   position: relative; }
   .typed-item > .type {

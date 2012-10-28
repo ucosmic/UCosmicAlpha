@@ -31,18 +31,22 @@ body {
     }
 }
 
-    .ui-dialog {
-        .ui-dialog-titlebar {
-            .ui-dialog-titlebar-close {
+.ui-dialog {
+    .ui-dialog-titlebar {
+        .ui-dialog-titlebar-close {
+            -ms-filter: none !important;
+            filter: none !important;
+            &.ui-state-hover {
                 -ms-filter: none !important;
                 filter: none !important;
-                &.ui-state-hover {
-                    -ms-filter: none !important;
-                    filter: none !important;
-                }
             }
         }
     }
+}
+
+textarea {
+    min-height: 20px;
+}
 
 
 .typed-item {
