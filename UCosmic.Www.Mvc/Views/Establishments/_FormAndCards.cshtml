@@ -29,9 +29,9 @@
                             </div>
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
-                            <form data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                            <form method="POST" data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                 <div class="field" style="margin-top: 0;">
-                                    <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement'" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
+                                    <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement', css: { spinning: isSpinningSaveValidator }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
                                 </div>
                                 <div class="field">
                                     <label data-bind="click: clickOfficialNameCheckbox">
@@ -52,8 +52,8 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave() && !isSpinningSaveValidator()" />
-                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !isSpinningSave() && !isSpinningSaveValidator()" class="link" />
+                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave()" />
+                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !isSpinningSave()" class="link" />
                                     &nbsp;
                                     <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSaveValidator" />
                                     <strong data-bind="visible: isSpinningSaveValidator">Validating...</strong>

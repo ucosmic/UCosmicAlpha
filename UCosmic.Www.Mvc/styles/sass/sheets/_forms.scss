@@ -28,6 +28,13 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
         border-right-color: #c66;
         border-bottom-color: #c66;
     }
+    &.spinning {
+        @include transition(background, 0ms);
+        background-image: url('../../icons/spinner-20-blue.gif');
+        background-position: right top;
+        background-repeat: no-repeat;
+        background-origin: content-box;
+    }
 }
 
 textarea {
@@ -128,7 +135,7 @@ a.button {
     }
 }
 
-button, input[type=submit], [type=reset], [type=button] {
+button, input[type=submit], input[type=reset], input[type=button] {
     margin: 0 12px 0 0;
     @include border-radius(4px);
     padding: 6px 12px;
@@ -146,7 +153,7 @@ button, input[type=submit], [type=reset], [type=button] {
     }
 }
 
-button.link, input[type=submit].link, [type=reset].link, [type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
+button.link, input[type=submit].link, input[type=reset].link, input[type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
     display: inline-block;
     margin:0;
     border: 0px none;
@@ -158,6 +165,7 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link, bod
     @include font-ms;
     color: $main-link-color;
     background-color: transparent;
+    @include opacity(1);
     &:hover {
         text-decoration: none !important;
     }

@@ -54,6 +54,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
                 {
                     { x => x.IsOfficialName, OrderByDirection.Descending },
                     { x => x.IsFormerName, OrderByDirection.Ascending },
+                    { x => x.Text, OrderByDirection.Ascending },
                 }
             });
 

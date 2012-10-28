@@ -42,6 +42,18 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
     border-color: #c00;
     border-right-color: #c66;
     border-bottom-color: #c66; }
+  input[type="email"].spinning, input[type="number"].spinning, input[type="password"].spinning, input[type="search"].spinning,
+  input[type="tel"].spinning, input[type="text"].spinning, input[type="url"].spinning, input[type="color"].spinning,
+  input[type="date"].spinning, input[type="datetime"].spinning, input[type="datetime-local"].spinning,
+  input[type="month"].spinning, input[type="time"].spinning, input[type="week"].spinning, textarea.spinning {
+    -webkit-transition: background 0ms;
+    -moz-transition: background 0ms;
+    -o-transition: background 0ms;
+    transition: background 0ms;
+    background-image: url("../../icons/spinner-20-blue.gif");
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-origin: content-box; }
 
 textarea {
   height: auto;
@@ -146,7 +158,7 @@ a.button {
     margin: -2px 0 0 -2px;
     background-image: url(../../icons/closer-24-red-disc.png); }
 
-button, input[type=submit], [type=reset], [type=button] {
+button, input[type=submit], input[type=reset], input[type=button] {
   margin: 0 12px 0 0;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -159,20 +171,20 @@ button, input[type=submit], [type=reset], [type=button] {
   opacity: 0.9;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
-  button:hover, input[type=submit]:hover, [type=reset]:hover, [type=button]:hover {
+  button:hover, input[type=submit]:hover, input[type=reset]:hover, input[type=button]:hover {
     cursor: pointer;
     -moz-opacity: 1;
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
-  button[disabled], input[type=submit][disabled], [type=reset][disabled], [type=button][disabled] {
+  button[disabled], input[type=submit][disabled], input[type=reset][disabled], input[type=button][disabled] {
     cursor: default !important;
     -moz-opacity: 0.5;
     opacity: 0.5;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); }
 
-button.link, input[type=submit].link, [type=reset].link, [type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
+button.link, input[type=submit].link, input[type=reset].link, input[type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
   display: inline-block;
   margin: 0;
   border: 0px none;
@@ -183,10 +195,14 @@ button.link, input[type=submit].link, [type=reset].link, [type=button].link, bod
   font-size: 16px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #0000cc;
-  background-color: transparent; }
-  button.link:hover, input[type=submit].link:hover, [type=reset].link:hover, [type=button].link:hover, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true]:hover {
+  background-color: transparent;
+  -moz-opacity: 1;
+  opacity: 1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
+  button.link:hover, input[type=submit].link:hover, input[type=reset].link:hover, input[type=button].link:hover, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true]:hover {
     text-decoration: none !important; }
-  button.link[disabled], input[type=submit].link[disabled], [type=reset].link[disabled], [type=button].link[disabled], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled] {
+  button.link[disabled], input[type=submit].link[disabled], input[type=reset].link[disabled], input[type=button].link[disabled], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled] {
     color: #555;
     text-decoration: none !important;
     cursor: default; }

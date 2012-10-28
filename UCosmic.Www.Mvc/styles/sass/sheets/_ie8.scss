@@ -48,6 +48,11 @@ textarea {
     min-height: 20px;
 }
 
+button.link, input[type=submit].link, [type=reset].link, [type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
+    -ms-filter: none !important;
+    filter: none !important;
+}
+
 
 .typed-item {
     position: relative;

@@ -1,14 +1,14 @@
 ﻿/// <reference path="../scripts/jquery-1.8.0.js" />
 /// <reference path="../scripts/knockout-2.1.0.js" />
 /// <reference path="../scripts/knockout.mapping-latest.js" />
-/// <reference path="../scripts/knockout.validation.js" />
+/// <reference path="../scripts/knockout.validation.debug.js" />
 /// <reference path="../scripts/app/app.js" />
 /// <reference path="../scripts/T4MvcJs/WebApiRoutes.js" />
 
 ko.validation.rules['uniqueEstablishmentName'] = {
     async: true,
     validator: function (val, vm, callback) {
-        if (!vm.editMode()) {
+        if (!vm.isValidatableAsync) {
             callback(true);
         }
         else {
@@ -27,7 +27,7 @@ ko.validation.rules['uniqueEstablishmentName'] = {
             .success(function() {
                 callback(true);
             })
-            .error(function(xhr) {
+            .error(function() {
                 var message = validator.message.replace("{0}", vm.text());
                 callback({ isValid: false, message: message });
             });
@@ -52,6 +52,11 @@ function EstablishmentNameViewModel(js, $parent) {
     self.originalValues = js; // hold onto original values so they can be reset on cancel
     ko.mapping.fromJS(js, {}, self); // map api properties to observables
 
+    self.isValidatableAsync = false;
+    self.text.subscribe(function () {
+        self.isValidatableAsync = true;
+    });
+
     // validate text property
     self.text.extend({
         required: {
@@ -71,7 +76,7 @@ function EstablishmentNameViewModel(js, $parent) {
             isValidatingAsync--;
             if (isValidatingAsync < 1) {
                 self.isSpinningSaveValidator(false);
-                if (self.saveEditorClicked()) self.saveEditor();
+                if (self.saveEditorClicked) self.saveEditor();
             }
         }
     });
@@ -99,16 +104,16 @@ function EstablishmentNameViewModel(js, $parent) {
             $(self.textElement).focus(); // focus the text box
         }
     };
-    self.saveEditorClicked = ko.observable(false);
+    self.saveEditorClicked = false;
     self.saveEditor = function () {
-        self.saveEditorClicked(true);
+        self.saveEditorClicked = true;
         if (!self.isValid()) { // validate
             self.errors.showAllMessages();
-            self.saveEditorClicked(false);
+            self.saveEditorClicked = false;
         }
         else if (isValidatingAsync < 1) { // hit server
             self.isSpinningSave(true); // start save spinner
-            self.saveEditorClicked(false);
+            self.saveEditorClicked = false;
 
             if (self.id()) {
                 $.ajax({ // submit ajax PUT request

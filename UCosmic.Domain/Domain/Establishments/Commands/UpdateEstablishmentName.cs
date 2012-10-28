@@ -114,6 +114,16 @@ namespace UCosmic.Domain.Establishments
                 })
                 .Single(x => x.RevisionId == command.Id);
 
+            // only mutate when state is modified
+            if (command.Text == establishmentName.Text &&
+                command.IsFormerName == establishmentName.IsFormerName &&
+                command.IsOfficialName == establishmentName.IsOfficialName &&
+                (!string.IsNullOrWhiteSpace(command.LanguageCode)
+                    ? establishmentName.TranslationToLanguage != null &&
+                        command.LanguageCode.Equals(establishmentName.TranslationToLanguage.TwoLetterIsoCode)
+                    : establishmentName.TranslationToLanguage == null))
+                return;
+
             // update previous official name and owner when changing official name
             if (!establishmentName.IsOfficialName && command.IsOfficialName)
             {
