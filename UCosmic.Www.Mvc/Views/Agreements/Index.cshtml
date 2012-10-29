@@ -47,7 +47,7 @@
                                 <ul data-bind="foreach: participants">
                                     <li data-bind="element: 'participantEl'">
                                         <div class="typed-item" data-bind="with: establishment">
-                                            @*<a href="#" data-bind="attr: { href: '#/participants/remove/' + revisionId() }"
+                                            @*<a href="#" data-bind="attr: { href: '#/participants/remove/' + id() }"
                                                 title="Remove this participant"><i class="red minus float-right"></i></a>*@
                                             <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus float-right"></i></a>
                                             <div class="type">

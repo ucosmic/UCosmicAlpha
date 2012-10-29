@@ -5,12 +5,12 @@ namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentNames : BaseEntitiesQuery<EstablishmentName>, IDefineQuery<EstablishmentName[]>
     {
-        public EstablishmentNames(int establishmentId)
+        public EstablishmentNames(int? establishmentId = null)
         {
             EstablishmentId = establishmentId;
         }
 
-        public int EstablishmentId { get; private set; }
+        public int? EstablishmentId { get; private set; }
     }
 
     public class HandleEstablishmentNamesQuery : IHandleQueries<EstablishmentNames, EstablishmentName[]>
@@ -28,7 +28,9 @@ namespace UCosmic.Domain.Establishments
 
             var results = _entities.Query<EstablishmentName>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .Where(x => x.ForEstablishment.RevisionId == query.EstablishmentId)
+                .Where(x => query.EstablishmentId.HasValue
+                    ? x.ForEstablishment.RevisionId == query.EstablishmentId.Value
+                    : x.RevisionId != 0)
                 .OrderBy(query.OrderBy)
             ;
 

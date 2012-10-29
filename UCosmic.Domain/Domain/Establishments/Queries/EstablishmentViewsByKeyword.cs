@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentsByKeyword : BaseViewsQuery<EstablishmentView>, IDefineQuery<PagedQueryResult<EstablishmentView>>
+    public class EstablishmentViewsByKeyword : BaseViewsQuery<EstablishmentView>, IDefineQuery<PagedQueryResult<EstablishmentView>>
     {
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
@@ -11,16 +11,16 @@ namespace UCosmic.Domain.Establishments
         public int PageNumber { get; set; }
     }
 
-    public class HandleEstablishmentsByKeywordQuery : IHandleQueries<EstablishmentsByKeyword, PagedQueryResult<EstablishmentView>>
+    public class HandleEstablishmentViewsByKeywordQuery : IHandleQueries<EstablishmentViewsByKeyword, PagedQueryResult<EstablishmentView>>
     {
         private readonly EstablishmentViewProjector _projector;
 
-        public HandleEstablishmentsByKeywordQuery(EstablishmentViewProjector projector)
+        public HandleEstablishmentViewsByKeywordQuery(EstablishmentViewProjector projector)
         {
             _projector = projector;
         }
 
-        public PagedQueryResult<EstablishmentView> Handle(EstablishmentsByKeyword query)
+        public PagedQueryResult<EstablishmentView> Handle(EstablishmentViewsByKeyword query)
         {
             if (query == null) throw new ArgumentNullException("query");
 

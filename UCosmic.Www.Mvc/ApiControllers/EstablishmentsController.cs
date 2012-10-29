@@ -21,7 +21,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             //System.Threading.Thread.Sleep(2000);
-            var query = Mapper.Map<EstablishmentsByKeyword>(input);
+            var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
             var results = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfEstablishmentApiModel>(results);
             return model;

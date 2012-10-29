@@ -38,15 +38,18 @@ namespace UCosmic.Domain.Establishments
                 // id must exist in the database
                 .Must(Exist)
                 .WithMessage("Establishment name with id '{0}' does not exist", x => x.Id)
-
-                // establishment name must not be official
-                .Must(NotBeOfficial)
-                .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the official name.", x => x.Id)
-
-                // establishment name cannot be only one
-                .Must(HaveSiblings)
-                .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the only name.", x => x.Id)
             ;
+
+            When(x => _establishmentName != null,() =>
+                RuleFor(x => x.Id)
+                    // establishment name must not be official
+                    .Must(NotBeOfficial)
+                    .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the official name.", x => x.Id)
+
+                    // establishment name cannot be only one
+                    .Must(HaveSiblings)
+                    .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the only name.", x => x.Id)
+            );
         }
 
         private bool Exist(int id)
@@ -54,7 +57,7 @@ namespace UCosmic.Domain.Establishments
             _establishmentName = _entities.Query<EstablishmentName>()
                 .SingleOrDefault(y => y.RevisionId == id)
             ;
-            return _establishmentName != null;
+            return true;
         }
 
         private bool NotBeOfficial(int id)
@@ -94,8 +97,9 @@ namespace UCosmic.Domain.Establishments
                     x => x.ForEstablishment,
                     x => x.TranslationToLanguage,
                 })
-                .Single(x => x.RevisionId == command.Id)
+                .SingleOrDefault(x => x.RevisionId == command.Id)
             ;
+            if (establishmentName == null) return; // delete idempotently
 
             // log audit
             var audit = new CommandEvent

@@ -12,28 +12,20 @@ ko.validation.rules['uniqueEstablishmentName'] = {
             callback(true);
         }
         else {
-            var validator = this;
             $.ajax({
-                url: '/api/establishments/' + vm.ownerId() + '/names/' + vm.id() + '/validate',
+                url: '/api/establishments/' + vm.ownerId() + '/names/' + vm.id() + '/validate-text',
                 type: 'POST',
-                data: {
-                    id: vm.id(),
-                    text: $.trim(vm.text()),
-                    isOfficialName: vm.isOfficialName(),
-                    isFormerName: vm.isFormerName(),
-                    languageCode: vm.selectedLanguageCode(),
-                }
+                data: vm.serializeData()
             })
             .success(function() {
                 callback(true);
             })
-            .error(function() {
-                var message = validator.message.replace("{0}", vm.text());
-                callback({ isValid: false, message: message });
+            .error(function(xhr) {
+                callback({ isValid: false, message: xhr.responseText.substr(1, xhr.responseText.length - 2) });
             });
         }
     },
-    message: 'The establishment name \'{0}\' already exists.'
+    message: 'error'
 };
 ko.validation.registerExtenders();
 
@@ -53,8 +45,8 @@ function EstablishmentNameViewModel(js, $parent) {
     ko.mapping.fromJS(js, {}, self); // map api properties to observables
 
     self.isValidatableAsync = false;
-    self.text.subscribe(function () {
-        self.isValidatableAsync = true;
+    self.text.subscribe(function (newValue) {
+        self.isValidatableAsync = newValue !== self.originalValues.text;
     });
 
     // validate text property
@@ -119,59 +111,17 @@ function EstablishmentNameViewModel(js, $parent) {
                 $.ajax({ // submit ajax PUT request
                     url: '/api/establishments/' + $parent.id + '/names/' + self.id(), // TODO: put this in stronger URL helper
                     type: 'PUT',
-                    data: {
-                        id: self.id(),
-                        text: $.trim(self.text()),
-                        isOfficialName: self.isOfficialName(),
-                        isFormerName: self.isFormerName(),
-                        languageCode: self.selectedLanguageCode(),
-                    }
+                    data: self.serializeData()
                 })
-                .success(function() { // update the whole list (sort may be effected by this update)
-                    $parent.requestNames(function() { // when parent receives response,
-                        $parent.editingName(undefined); // tell parent no item is being edited anymore
-                        self.editMode(false); // hide the form, show the view
-                        self.isSpinningSave(false); // stop save spinner
-                    });
-                })
-                .error(function(xhr) { // server will throw exceptions when invalid
-                    if (xhr.responseText) { // validation message will be in xht response text...
-                        var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
-                        if (response.exceptionType === 'FluentValidation.ValidationException') {
-                            alert(response.exceptionMessage); // alert validation messages only
-                        }
-                    }
-                    self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
-                });
+                .success(mutationSuccess).error(mutationError);
             }
             else if ($parent.id) {
                 $.ajax({ // submit ajax POST request
                     url: '/api/establishments/' + $parent.id + '/names', // TODO: put this in stronger URL helper
                     type: 'POST',
-                    data: {
-                        ownerId: self.ownerId(),
-                        text: $.trim(self.text()),
-                        isOfficialName: self.isOfficialName(),
-                        isFormerName: self.isFormerName(),
-                        languageCode: self.selectedLanguageCode(),
-                    }
+                    data: self.serializeData()
                 })
-                .success(function () { // update the whole list (sort may be effected by this update)
-                    $parent.requestNames(function () { // when parent receives response,
-                        $parent.editingName(undefined); // tell parent no item is being edited anymore
-                        self.editMode(false); // hide the form, show the view
-                        self.isSpinningSave(false); // stop save spinner
-                    });
-                })
-                .error(function (xhr) { // server will throw exceptions when invalid
-                    if (xhr.responseText) { // validation message will be in xht response text...
-                        var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
-                        if (response.exceptionType === 'FluentValidation.ValidationException') {
-                            alert(response.exceptionMessage); // alert validation messages only
-                        }
-                    }
-                    self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
-                });
+                .success(mutationSuccess).error(mutationError);
             }
         }
     };
@@ -223,20 +173,8 @@ function EstablishmentNameViewModel(js, $parent) {
                             url: '/api/establishments/ ' + $parent.id + '/names/' + self.id(), // TODO: put this in stronger URL helper
                             type: 'DELETE'
                         })
-                        .success(function () { // update the whole list (sort may be effected by this update)
-                            $parent.requestNames(function () {
-                                self.isSpinningPurge(false);
-                            });
-                        })
-                        .error(function (xhr) { // server will throw exceptions when invalid
-                            if (xhr.responseText) { // validation message will be in xht response text...
-                                var response = $.parseJSON(xhr.responseText); // ...as a string, parse it to JS
-                                if (response.exceptionType === 'FluentValidation.ValidationException') {
-                                    alert(response.exceptionMessage); // alert validation messages only
-                                }
-                            }
-                            self.isSpinningPurge(false);
-                        });
+                        .success(mutationSuccess)
+                        .error(mutationError);
                     }
                 },
                 {
@@ -248,6 +186,32 @@ function EstablishmentNameViewModel(js, $parent) {
                     'data-css-link': true
                 }
             ]
+        });
+    };
+
+    self.serializeData = function() {
+        return {
+            id: self.id(),
+            ownerId: self.ownerId(),
+            text: $.trim(self.text()),
+            isOfficialName: self.isOfficialName(),
+            isFormerName: self.isFormerName(),
+            languageCode: self.selectedLanguageCode(),
+        };
+    };
+    var mutationError = function(xhr) {
+        if (xhr.status === 400) { // validation message will be in xhr response text...
+            alert(xhr.responseText.substr(1, xhr.responseText.length - 2).replace('\\r', '\r').replace('\\n', '\n')); // alert validation messages only
+        }
+        self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
+        self.isSpinningPurge(false);
+    };
+    var mutationSuccess = function () {
+        $parent.requestNames(function () { // when parent receives response,
+            $parent.editingName(undefined); // tell parent no item is being edited anymore
+            self.editMode(false); // hide the form, show the view
+            self.isSpinningSave(false); // stop save spinner
+            self.isSpinningPurge(false);
         });
     };
 

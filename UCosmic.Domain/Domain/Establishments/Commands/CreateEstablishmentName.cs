@@ -18,6 +18,7 @@ namespace UCosmic.Domain.Establishments
         }
 
         public IPrincipal Principal { get; private set; }
+        public int Id { get; internal set; }
         public int OwnerId { get; set; }
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
@@ -170,6 +171,7 @@ namespace UCosmic.Domain.Establishments
 
             _entities.Update(establishment);
             _unitOfWork.SaveChanges();
+            command.Id = establishmentName.RevisionId;
             _eventProcessor.Raise(new EstablishmentChanged());
         }
     }

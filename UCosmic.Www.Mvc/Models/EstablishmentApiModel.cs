@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
+﻿using System.Runtime.Serialization;
 using AutoMapper;
 using UCosmic.Domain.Establishments;
 
@@ -44,7 +42,6 @@ namespace UCosmic.Www.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<EstablishmentView, EstablishmentApiModel>()
-                    .ForMember(d => d.Id, o => o.ResolveUsing(s => s.RevisionId))
                     .ForMember(d => d.OfficialUrl, o => o.ResolveUsing(s => s.WebsiteUrl))
                 ;
             }

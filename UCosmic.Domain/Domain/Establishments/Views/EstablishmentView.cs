@@ -7,7 +7,7 @@ namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentView
     {
-        public int RevisionId { get; set; }
+        public int Id { get; set; }
         public string OfficialName { get; set; }
         public string WebsiteUrl { get; set; }
         public string CountryCode { get; set; }
@@ -32,7 +32,7 @@ namespace UCosmic.Domain.Establishments
 
         public EstablishmentView(Establishment entity)
         {
-            RevisionId = entity.RevisionId;
+            Id = entity.RevisionId;
 
             OfficialName = entity.Names.Single(e => e.IsOfficialName).Text;
 

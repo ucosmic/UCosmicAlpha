@@ -33,7 +33,7 @@ function InstitutionalAgreementEditModel() {
     var homeParticipant = new InstitutionalAgreementParticipantModel({
         isOwner: true,
         establishment: new EstablishmentResultViewModel({
-            revisionId: 1,
+            id: 1,
             officialName: 'My Home Institution (automatically detected based on who is signed in)',
             translatedName: 'My Home Institution (automatically detected based on who is signed in)',
             websiteUrl: 'www.myinstitution.edu',
@@ -42,7 +42,7 @@ function InstitutionalAgreementEditModel() {
     });
     if (tenantDomain === 'usf.edu') {
         homeParticipant.establishment = new EstablishmentResultViewModel({
-            revisionId: 1,
+            id: 1,
             officialName: 'University of South Florida',
             translatedName: 'University of South Florida',
             websiteUrl: 'www.usf.edu',
@@ -51,7 +51,7 @@ function InstitutionalAgreementEditModel() {
     }
     if (tenantDomain === 'lehigh.edu') {
         homeParticipant.establishment = new EstablishmentResultViewModel({
-            revisionId: 1,
+            id: 1,
             officialName: 'Lehigh University',
             translatedName: 'Lehigh University',
             websiteUrl: 'www.lehigh.edu',
@@ -60,7 +60,7 @@ function InstitutionalAgreementEditModel() {
     }
     if (tenantDomain === 'umn.edu') {
         homeParticipant.establishment = new EstablishmentResultViewModel({
-            revisionId: 1,
+            id: 1,
             officialName: 'University of Minnesota',
             translatedName: 'University of Minnesota',
             websiteUrl: 'www.umn.edu',
@@ -69,7 +69,7 @@ function InstitutionalAgreementEditModel() {
     }
     if (tenantDomain === 'uc.edu') {
         homeParticipant.establishment = new EstablishmentResultViewModel({
-            revisionId: 1,
+            id: 1,
             officialName: 'University of Cincinnati',
             translatedName: 'University of Cincinnati',
             websiteUrl: 'www.uc.edu',
@@ -78,7 +78,7 @@ function InstitutionalAgreementEditModel() {
     }
     if (tenantDomain === 'suny.edu') {
         homeParticipant.establishment = new EstablishmentResultViewModel({
-            revisionId: 1,
+            id: 1,
             officialName: 'State University of New York',
             translatedName: 'State University of New York',
             websiteUrl: 'www.suny.edu',
@@ -88,7 +88,7 @@ function InstitutionalAgreementEditModel() {
     //var partnerParticipant1 = new InstitutionalAgreementParticipantModel({
     //    isOwner: false,
     //    establishment: new EstablishmentResultViewModel({
-    //        revisionId: 2,
+    //        id: 2,
     //        officialName: 'Universität zu Köln',
     //        translatedName: 'University of Cologne',
     //        websiteUrl: 'www.uni-koeln.de',
@@ -140,7 +140,7 @@ function InstitutionalAgreementEditModel() {
             establishmentResultViewModel.translatedName() +
             '" as a participant from this agreement?')) {
             self.participants.remove(function (item) {
-                if (item.establishment.revisionId() === establishmentResultViewModel.revisionId()) {
+                if (item.establishment.id() === establishmentResultViewModel.id()) {
                     $(item.participantEl).slideUp('fast', function() {
                         self.participants.remove(item);
                     });

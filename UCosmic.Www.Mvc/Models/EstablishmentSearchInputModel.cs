@@ -27,7 +27,7 @@ namespace UCosmic.Www.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<EstablishmentSearchInputModel, EstablishmentsByKeyword>()
+                CreateMap<EstablishmentSearchInputModel, EstablishmentViewsByKeyword>()
 
                     // map the country code
                     .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
@@ -46,7 +46,7 @@ namespace UCosmic.Www.Mvc.Models
                         {
                             var orderBy = new Dictionary<Expression<Func<EstablishmentView, object>>, OrderByDirection>();
                             if (string.IsNullOrWhiteSpace(s.OrderBy))
-                                orderBy.Add(e => e.RevisionId, OrderByDirection.Ascending);
+                                orderBy.Add(e => e.Id, OrderByDirection.Ascending);
 
                             else if (s.OrderBy.Equals("country-asc", StringComparison.OrdinalIgnoreCase))
                                 orderBy.Add(e => e.CountryName, OrderByDirection.Ascending);
