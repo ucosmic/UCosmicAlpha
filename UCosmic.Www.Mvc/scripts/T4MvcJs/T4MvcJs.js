@@ -8,6 +8,9 @@ var MvcJs = {
 	Agreements: {
 		NameConst: "Agreements"
 	},
+	Errors: {
+		NameConst: "Errors"
+	},
 	Establishments: {
 		NameConst: "Establishments"
 	},

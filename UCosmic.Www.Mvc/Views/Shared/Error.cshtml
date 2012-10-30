@@ -1,16 +1,25 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "An unexpected error has occurred";
 }
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <h2>
-        Sorry, an error occurred while processing your request.
-    </h2>
-</body>
-</html>
+@section bib
+{
+    <div class="bib" data-current-bib="errors">
+        @Html.Partial(MVC.Errors.Views._Bib)
+    </div>
+}
+<div class="fixed content" data-current-module="home">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <p>
+        Please be patient while we debug UCosmic.com.
+    </p>
+    <p>
+        Every error is logged, and a notification email is sent immediately. Someone may
+        be reading about this one right now.
+    </p>
+    <p>
+        If you were signed on when this error occurred, we may contact you with questions
+        or further information.
+    </p>
+</div>

@@ -23,9 +23,6 @@ using T4MVC;
 namespace UCosmic.Www.Mvc.Controllers {
     public partial class EstablishmentsController {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public EstablishmentsController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected EstablishmentsController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -42,8 +39,8 @@ namespace UCosmic.Www.Mvc.Controllers {
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ViewResult Show() {
-            return new T4MVC_ViewResult(Area, Name, ActionNames.Show);
+        public System.Web.Mvc.ActionResult Show() {
+            return new T4MVC_ActionResult(Area, Name, ActionNames.Show);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -172,8 +169,8 @@ namespace UCosmic.Www.Mvc.Controllers {
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Show(int id) {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Show);
+        public override System.Web.Mvc.ActionResult Show(int id) {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Show);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }

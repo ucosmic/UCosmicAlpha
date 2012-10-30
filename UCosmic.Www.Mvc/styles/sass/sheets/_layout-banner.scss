@@ -228,4 +228,22 @@ body {
             }
         }
     }
+    > div.bib {
+        position: relative;
+        padding: 10px 16px 10px;
+        @include border-box;
+        @include ie-box-shadow;
+        background-color: $nav-bib-bg-color;
+        color: $nav-bib-link-text-color;
+        a {
+            color: $nav-bib-link-text-color;
+            text-decoration: underline;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        &.hide {
+            display: none;
+        }
+    }
 }

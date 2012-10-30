@@ -1,17 +1,18 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Www.Mvc.Controllers
 {
     [RestfulRouteConvention]
     public partial class EstablishmentsController : Controller
     {
-        //private readonly IQueryEntities _queryEntities;
+        private readonly IProcessQueries _queryProcessor;
 
-        //public EstablishmentsController(IQueryEntities queryEntities)
-        //{
-        //    _queryEntities = queryEntities;
-        //}
+        public EstablishmentsController(IProcessQueries queryProcessor)
+        {
+            _queryProcessor = queryProcessor;
+        }
 
         public virtual ViewResult Index()
         {
@@ -28,8 +29,12 @@ namespace UCosmic.Www.Mvc.Controllers
             return null;
         }
 
-        public virtual ViewResult Show(int id)
+        public virtual ActionResult Show(int id)
         {
+            var entity = _queryProcessor.Execute(new EstablishmentById(id));
+            if (entity == null)
+                return HttpNotFound();
+
             ViewBag.Id = id;
             return View();
         }

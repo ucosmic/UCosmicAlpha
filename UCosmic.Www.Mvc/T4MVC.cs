@@ -25,6 +25,7 @@ using T4MVC;
 public static class MVC {
     public static UCosmic.Www.Mvc.Controllers.AdminController Admin = new UCosmic.Www.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Www.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Www.Mvc.Controllers.T4MVC_AgreementsController();
+    public static UCosmic.Www.Mvc.Controllers.ErrorsController Errors = new UCosmic.Www.Mvc.Controllers.T4MVC_ErrorsController();
     public static UCosmic.Www.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Www.Mvc.Controllers.T4MVC_EstablishmentsController();
     public static UCosmic.Www.Mvc.Controllers.HomeController Home = new UCosmic.Www.Mvc.Controllers.T4MVC_HomeController();
     public static UCosmic.Www.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Www.Mvc.Controllers.T4MVC_TenancyController();
@@ -385,6 +386,10 @@ namespace Links {
                       
         public static readonly string knockout_mapping_latest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.min.js") ? Url("knockout.mapping-latest.min.js") : Url("knockout.mapping-latest.js");
                       
+        public static readonly string knockout_validation_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.validation.debug.min.js") ? Url("knockout.validation.debug.min.js") : Url("knockout.validation.debug.js");
+                      
+        public static readonly string knockout_validation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.validation.min.js") ? Url("knockout.validation.min.js") : Url("knockout.validation.js");
+                      
         public static readonly string modernizr_2_5_3_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modernizr-2.5.3.min.js") ? Url("modernizr-2.5.3.min.js") : Url("modernizr-2.5.3.js");
                       
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -393,6 +398,8 @@ namespace Links {
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             public static readonly string jquery_animate_enhanced_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.animate-enhanced.min.js") ? Url("jquery.animate-enhanced.min.js") : Url("jquery.animate-enhanced.js");
+                          
+            public static readonly string jquery_autosize_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.autosize.min.js") ? Url("jquery.autosize.min.js") : Url("jquery.autosize.js");
                           
             public static readonly string jquery_placeholder_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.placeholder.min.js") ? Url("jquery.placeholder.min.js") : Url("jquery.placeholder.js");
                           
@@ -617,11 +624,13 @@ namespace Links {
             public static readonly string closer_24_light_png = Url("closer-24-light.png");
             public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
             public static readonly string closer_24_red_png = Url("closer-24-red.png");
+            public static readonly string minus_20_red_png = Url("minus-20-red.png");
             public static readonly string minus_24_red_png = Url("minus-24-red.png");
             public static readonly string plus_16_green_disc_png = Url("plus-16-green-disc.png");
             public static readonly string plus_20_green_disc_png = Url("plus-20-green-disc.png");
             public static readonly string plus_24_green_disc_png = Url("plus-24-green-disc.png");
             public static readonly string plus_24_green_png = Url("plus-24-green.png");
+            public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
             public static readonly string user_voice_24_filled_png = Url("user-voice-24-filled.png");
         }
     

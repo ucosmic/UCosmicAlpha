@@ -212,9 +212,13 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
+    <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\EstablishmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
+    <Compile Include="ErrorsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="EstablishmentsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -630,6 +634,8 @@
     <Content Include="Views\Establishments\_FormSideBar.cshtml" />
     <Content Include="Views\Establishments\_FormAndCards.cshtml" />
     <Content Include="Views\Establishments\Show.cshtml" />
+    <Content Include="Views\Errors\NotFound.cshtml" />
+    <Content Include="Views\Errors\_Bib.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />
