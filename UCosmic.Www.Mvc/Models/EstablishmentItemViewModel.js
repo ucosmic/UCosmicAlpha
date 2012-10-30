@@ -21,7 +21,7 @@ ko.validation.rules['uniqueEstablishmentName'] = {
                 callback(true);
             })
             .error(function(xhr) {
-                callback({ isValid: false, message: xhr.responseText.substr(1, xhr.responseText.length - 2) });
+                callback({ isValid: false, message: xhr.responseText });
             });
         }
     },
@@ -201,7 +201,7 @@ function EstablishmentNameViewModel(js, $parent) {
     };
     var mutationError = function(xhr) {
         if (xhr.status === 400) { // validation message will be in xhr response text...
-            alert(xhr.responseText.substr(1, xhr.responseText.length - 2).replace('\\r', '\r').replace('\\n', '\n')); // alert validation messages only
+            alert(xhr.responseText); // alert validation messages only
         }
         self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
         self.isSpinningPurge(false);

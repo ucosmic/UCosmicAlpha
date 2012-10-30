@@ -2,6 +2,7 @@
 using System.Web.Http;
 using AttributeRouting.Web.Http.WebHost;
 using Newtonsoft.Json.Serialization;
+using WebApiContrib.Formatting;
 
 namespace UCosmic.Www.Mvc
 {
@@ -10,6 +11,8 @@ namespace UCosmic.Www.Mvc
         public static void RegisterApi(HttpConfiguration config)
         {
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            config.Formatters.Add(new PlainTextFormatter());
 
             config.Routes.MapHttpAttributeRoutes(cfg =>
             {

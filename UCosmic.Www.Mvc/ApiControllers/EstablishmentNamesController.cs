@@ -107,7 +107,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             }
             catch (ValidationException ex)
             {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
                 return badRequest;
             }
 
@@ -141,7 +141,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             }
             catch (ValidationException ex)
             {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
                 return badRequest;
             }
 
@@ -164,7 +164,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             }
             catch (ValidationException ex)
             {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
                 return badRequest;
             }
 
@@ -201,7 +201,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
             if (validationResult.Errors.Any(forText))
                 return Request.CreateResponse(HttpStatusCode.BadRequest,
-                    validationResult.Errors.First(forText).ErrorMessage);
+                    validationResult.Errors.First(forText).ErrorMessage, "text/plain");
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

@@ -177,6 +177,9 @@
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="WebApiContrib">
+      <HintPath>..\packages\WebAPIContrib.0.9.1\lib\net40\WebApiContrib.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
@@ -197,6 +200,8 @@
     <Compile Include="ApiControllers\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.1\TaskHelpers.cs" />
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.1\TaskHelpersExtensions.cs" />
     <Compile Include="App_Start\AttributeRouting.cs" />
     <Compile Include="App_Start\AttributeRoutingHttp.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
