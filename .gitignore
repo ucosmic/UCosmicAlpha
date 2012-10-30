@@ -61,3 +61,6 @@ ServiceDefinition.build.csdef
 
 #Ignore private folder
 /Private/
+
+#Ignore sass cache
+.sass-cache

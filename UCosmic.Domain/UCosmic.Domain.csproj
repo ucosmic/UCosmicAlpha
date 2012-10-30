@@ -90,6 +90,7 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Entities\KnownEstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Events\EstablishmentChanged.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentById.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentViewById.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNameById.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNames.cs" />

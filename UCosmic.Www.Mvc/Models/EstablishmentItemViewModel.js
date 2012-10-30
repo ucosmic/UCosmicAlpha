@@ -17,10 +17,10 @@ ko.validation.rules['uniqueEstablishmentName'] = {
                 type: 'POST',
                 data: vm.serializeData()
             })
-            .success(function() {
+            .success(function () {
                 callback(true);
             })
-            .error(function(xhr) {
+            .error(function (xhr) {
                 callback({ isValid: false, message: xhr.responseText });
             });
         }
@@ -129,7 +129,7 @@ function EstablishmentNameViewModel(js, $parent) {
     self.cancelEditor = function () { // decide not to edit this item
         $parent.editingName(undefined); // tell parent no item is being edited anymore
         if (self.id()) {
-            ko.mapping.fromJS(self.originalValues, { }, self); // restore original values
+            ko.mapping.fromJS(self.originalValues, {}, self); // restore original values
             self.editMode(false); // hide the form, show the view
         }
         else {
@@ -138,8 +138,20 @@ function EstablishmentNameViewModel(js, $parent) {
     };
 
     self.clickOfficialNameCheckbox = function () { // TODO educate users on how to change the official name
-        if (self.originalValues.isOfficialName) // only when the name is already official in the db
-            alert('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
+        if (self.originalValues.isOfficialName) { // only when the name is already official in the db
+            $($parent.genericAlertDialog).find('p.content')
+                .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
+            $($parent.genericAlertDialog).dialog({
+                title: 'Alert Message',
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Ok': function () { $(this).dialog('close'); }
+                }
+            });
+        }
         return true;
     };
 
@@ -149,7 +161,18 @@ function EstablishmentNameViewModel(js, $parent) {
         e.stopPropagation();
         if ($parent.editingName()) return;
         if (self.isOfficialName()) {
-            alert('You cannot delete an establishment\'s official name.\nTo delete this name, first assign another name as official.');
+            $($parent.genericAlertDialog).find('p.content')
+                .html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
+            $($parent.genericAlertDialog).dialog({
+                title: 'Alert Message',
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Ok': function () { $(this).dialog('close'); }
+                }
+            });
             return;
         }
         self.isSpinningPurge(true);
@@ -157,7 +180,6 @@ function EstablishmentNameViewModel(js, $parent) {
         $(self.confirmPurgeDialog).dialog({
             dialogClass: 'jquery-ui',
             width: 'auto',
-            maxWidth: 710,
             resizable: false,
             modal: true,
             close: function () {
@@ -189,7 +211,7 @@ function EstablishmentNameViewModel(js, $parent) {
         });
     };
 
-    self.serializeData = function() {
+    self.serializeData = function () {
         return {
             id: self.id(),
             ownerId: self.ownerId(),
@@ -199,9 +221,19 @@ function EstablishmentNameViewModel(js, $parent) {
             languageCode: self.selectedLanguageCode(),
         };
     };
-    var mutationError = function(xhr) {
+    var mutationError = function (xhr) {
         if (xhr.status === 400) { // validation message will be in xhr response text...
-            alert(xhr.responseText); // alert validation messages only
+            $($parent.genericAlertDialog).find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+            $($parent.genericAlertDialog).dialog({
+                title: 'Alert Message',
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Ok': function () { $(this).dialog('close'); }
+                }
+            });
         }
         self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
         self.isSpinningPurge(false);
@@ -222,7 +254,7 @@ function EstablishmentItemViewModel(id) {
     var self = this;
 
     self.id = id || 0; // initialize the aggregate id
-
+    self.genericAlertDialog = undefined;
 
     // languages dropdowns
     self.languages = ko.observableArray(); // select options

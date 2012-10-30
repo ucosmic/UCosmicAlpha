@@ -534,7 +534,7 @@ body #main {
 body .ui-dialog {
   border: 0;
   padding: 0;
-  max-width: 960px;
+  max-width: 730px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
   line-height: 20px;

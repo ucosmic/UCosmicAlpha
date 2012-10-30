@@ -208,12 +208,12 @@ namespace UCosmic.Www.Mvc.ApiControllers
 
         private bool FindResources(int establishmentId, int? establishmentNameId = null)
         {
-            var establishment = _queryProcessor.Execute(new EstablishmentViewById(establishmentId));
+            var establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId));
             if (establishment == null)
                 return false;
 
             if (establishmentNameId.HasValue &&
-                establishment.Names.SingleOrDefault(x => x.Id == establishmentNameId.Value) == null)
+                establishment.Names.SingleOrDefault(x => x.RevisionId == establishmentNameId.Value) == null)
                 return false;
 
             return true;
