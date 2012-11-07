@@ -14,7 +14,7 @@ namespace UCosmic.Www.Mvc.Controllers
         }
 
         [ChildActionOnly]
-        [GET("tenancy/css")]
+        [Route("tenancy/css")]
         public virtual PartialViewResult Css()
         {
             var tenancy = Request.Tenancy();

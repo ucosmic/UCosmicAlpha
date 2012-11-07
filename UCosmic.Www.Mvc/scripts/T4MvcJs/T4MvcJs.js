@@ -17,6 +17,9 @@ var MvcJs = {
 	Home: {
 		NameConst: "Home"
 	},
+	Identity: {
+		NameConst: "Identity"
+	},
 	Tenancy: {
 		NameConst: "Tenancy"
 	},

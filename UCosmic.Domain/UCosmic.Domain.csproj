@@ -56,6 +56,8 @@
     <Compile Include="Api\Events\IProcessEvents.cs" />
     <Compile Include="Api\IAmNumbered.cs" />
     <Compile Include="Api\Data\ICommandEntities.cs" />
+    <Compile Include="Api\Security\ISignUsers.cs" />
+    <Compile Include="Api\Security\IStorePasswords.cs" />
     <Compile Include="Api\Queries\IDefineQuery.cs" />
     <Compile Include="Api\Queries\IHandleQueries.cs" />
     <Compile Include="Api\ILogExceptions.cs" />

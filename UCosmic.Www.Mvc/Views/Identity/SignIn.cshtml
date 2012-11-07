@@ -1,0 +1,16 @@
+﻿@model UCosmic.Www.Mvc.Models.SignInForm
+@{
+    ViewBag.Title = "Sign on to UCosmic";
+}
+
+<div class="fixed content" data-current-module="admin">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    @using(Html.BeginForm())
+    {
+        @Html.TextBoxFor(m => m.UserName)
+        @Html.PasswordFor(m => m.Password)
+        <input type="submit" value="Submit" />
+    }
+</div>

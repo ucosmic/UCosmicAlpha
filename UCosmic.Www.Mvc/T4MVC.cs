@@ -28,6 +28,7 @@ public static class MVC {
     public static UCosmic.Www.Mvc.Controllers.ErrorsController Errors = new UCosmic.Www.Mvc.Controllers.T4MVC_ErrorsController();
     public static UCosmic.Www.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Www.Mvc.Controllers.T4MVC_EstablishmentsController();
     public static UCosmic.Www.Mvc.Controllers.HomeController Home = new UCosmic.Www.Mvc.Controllers.T4MVC_HomeController();
+    public static UCosmic.Www.Mvc.Controllers.IdentityController Identity = new UCosmic.Www.Mvc.Controllers.T4MVC_IdentityController();
     public static UCosmic.Www.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Www.Mvc.Controllers.T4MVC_TenancyController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }

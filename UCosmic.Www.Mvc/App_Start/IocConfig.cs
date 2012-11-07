@@ -9,6 +9,7 @@ using UCosmic.EntityFramework;
 using UCosmic.FluentValidation;
 using UCosmic.Ioc;
 using UCosmic.Logging;
+using UCosmic.Security;
 
 namespace UCosmic.Www.Mvc
 {
@@ -39,6 +40,7 @@ namespace UCosmic.Www.Mvc
 
         private static void InitializeContainer(Container container)
         {
+            container.RegisterMemberAuthentication();
             container.RegisterConfigurationManager();
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();

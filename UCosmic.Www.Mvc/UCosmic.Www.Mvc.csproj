@@ -215,6 +215,7 @@
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\EstablishmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
     <Compile Include="ErrorsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -225,9 +226,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
     <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="HomeController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IdentityController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LanguageApiModel.cs" />
@@ -236,6 +241,7 @@
     <Compile Include="Models\EstablishmentNameApiModel.cs" />
     <Compile Include="Models\EstablishmentSearchInputModel.cs" />
     <Compile Include="Models\PageOf.cs" />
+    <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="scripts\T4MvcJs\T4Proxy.cs" />
@@ -636,6 +642,7 @@
     <Content Include="Views\Establishments\Show.cshtml" />
     <Content Include="Views\Errors\NotFound.cshtml" />
     <Content Include="Views\Errors\_Bib.cshtml" />
+    <Content Include="Views\Identity\SignIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />
