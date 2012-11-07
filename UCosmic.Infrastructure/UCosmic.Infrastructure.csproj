@@ -110,6 +110,7 @@
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="EntityFramework\Fluent\Audits.cs" />
+    <Compile Include="EntityFramework\Fluent\Identity.cs" />
     <Compile Include="FluentValidation\FluentValidationCommandDecorator.cs" />
     <Compile Include="FluentValidation\SimpleInjectorFluentValidationRegistration.cs" />
     <Compile Include="Configuration\AppSettingsKey.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Logging\SimpleInjectorElmahExceptionLoggerRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Cache\ObjectCacheProvider.cs" />
+    <Compile Include="Security\CustomRoleProvider.cs" />
     <Compile Include="Security\DotNetFormsAuthentication.cs" />
     <Compile Include="Security\DotNetMembershipProvider.cs" />
     <Compile Include="Security\SimpleInjectorSecurityRegistration.cs" />

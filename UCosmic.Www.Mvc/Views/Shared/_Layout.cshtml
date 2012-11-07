@@ -14,9 +14,16 @@
         <div class="content group">
             <div class="left">
                 <div class="group">
-                    <a href="#/account" class="email float-left">Daniel.Ludwig@uc.edu</a>
-                    <a href="#/account" class="my float-left">My International</a>
-                    <a href="#/account" class="out float-left">Sign out</a>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <a href="" class="email float-left">@User.Identity.Name</a>
+                        <a href="#/account" class="my float-left">My International</a>
+                        <a href="@Url.Action(MVC.Identity.SignOut())" class="out float-left">Sign out</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))" class="in float-left">Sign in</a>
+                    }
                 </div>
             </div>
             <div class="right">

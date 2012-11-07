@@ -14,6 +14,13 @@ namespace UCosmic.Www.Mvc.Controllers
             return View(MVC.Shared.Views.Error);
         }
 
+        [GET("401")]
+        public virtual ActionResult Unauthorized()
+        {
+            Response.StatusCode = 401;
+            return View();
+        }
+
         [GET("404")]
         public virtual ActionResult NotFound()
         {

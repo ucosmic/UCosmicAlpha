@@ -28,9 +28,18 @@ namespace UCosmic.Www.Mvc.Controllers
             if (_passwords.Validate(model.UserName, model.Password))
             {
                 _userSigner.SignOn(model.UserName, model.RememberMe);
+                return Redirect(model.ReturnUrl ?? _userSigner.DefaultSignedOnUrl);
             }
 
             return View();
         }
+
+        [GET("sign-out")]
+        public virtual ActionResult SignOut()
+        {
+            _userSigner.SignOff();
+            return View();
+        }
+
     }
 }

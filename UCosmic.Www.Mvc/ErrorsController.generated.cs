@@ -56,12 +56,14 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string Unexpected = "Unexpected";
+            public readonly string Unauthorized = "Unauthorized";
             public readonly string NotFound = "NotFound";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string Unexpected = "Unexpected";
+            public const string Unauthorized = "Unauthorized";
             public const string NotFound = "NotFound";
         }
 
@@ -73,6 +75,7 @@ namespace UCosmic.Www.Mvc.Controllers {
         public class ViewNames {
             public readonly string _Bib = "~/Views/Errors/_Bib.cshtml";
             public readonly string NotFound = "~/Views/Errors/NotFound.cshtml";
+            public readonly string Unauthorized = "~/Views/Errors/Unauthorized.cshtml";
         }
     }
 
@@ -82,6 +85,11 @@ namespace UCosmic.Www.Mvc.Controllers {
 
         public override System.Web.Mvc.ActionResult Unexpected() {
             var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Unexpected);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Unauthorized() {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Unauthorized);
             return callInfo;
         }
 

@@ -101,6 +101,12 @@
     <Compile Include="Domain\Establishments\Views\EstablishmentNameView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentUrlView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentView.cs" />
+    <Compile Include="Domain\Identity\Entities\EduPersonScopedAffiliation.cs" />
+    <Compile Include="Domain\Identity\Entities\Role.cs" />
+    <Compile Include="Domain\Identity\Entities\RoleGrant.cs" />
+    <Compile Include="Domain\Identity\Entities\SubjectNameIdentifier.cs" />
+    <Compile Include="Domain\Identity\Entities\User.cs" />
+    <Compile Include="Domain\Identity\Queries\RolesGrantedTo.cs" />
     <Compile Include="Domain\Languages\Entities\Language.cs" />
     <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
     <Compile Include="Api\Queries\OrderByDirection.cs" />

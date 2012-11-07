@@ -229,6 +229,7 @@
     <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
     <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
+    <Compile Include="Helpers\TryAuthorizeAttribute.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -643,6 +644,8 @@
     <Content Include="Views\Errors\NotFound.cshtml" />
     <Content Include="Views\Errors\_Bib.cshtml" />
     <Content Include="Views\Identity\SignIn.cshtml" />
+    <Content Include="Views\Errors\Unauthorized.cshtml" />
+    <Content Include="Views\Identity\SignOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />

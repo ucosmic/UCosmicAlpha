@@ -58,11 +58,13 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string SignIn = "SignIn";
+            public readonly string SignOut = "SignOut";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string SignIn = "SignIn";
+            public const string SignOut = "SignOut";
         }
 
 
@@ -79,6 +81,7 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ViewNames {
             public readonly string SignIn = "~/Views/Identity/SignIn.cshtml";
+            public readonly string SignOut = "~/Views/Identity/SignOut.cshtml";
         }
     }
 
@@ -95,6 +98,11 @@ namespace UCosmic.Www.Mvc.Controllers {
         public override System.Web.Mvc.ActionResult SignIn(UCosmic.Www.Mvc.Models.SignInForm model) {
             var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.SignIn);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult SignOut() {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.SignOut);
             return callInfo;
         }
 

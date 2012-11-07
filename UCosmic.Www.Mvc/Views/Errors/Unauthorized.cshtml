@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "401 - Not Authorized";
+}
+@section bib
+{
+    <div class="bib" data-current-bib="errors">
+        @Html.Partial(MVC.Errors.Views._Bib)
+    </div>
+}
+
+<div class="fixed content" data-current-module="home">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <p>
+        Your user account is not authorized to access the content at this location.
+    </p>
+    <p>
+        If you reached this page using a bookmark, please remove it.
+    </p>
+    <p>
+        If you reached this page by manually typing a URL into your browser, please don't.
+    </p>
+    <p>
+        If you believe you have reached this page in error, please report your concerns using our <a href="#">Feedback &amp; Support link</a>.
+    </p>
+</div>
