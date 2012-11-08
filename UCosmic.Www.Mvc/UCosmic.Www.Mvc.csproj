@@ -95,6 +95,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PKCS12ProtectedConfigurationProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=34da007ac91f901d, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Pkcs12ProtectedConfigurationProvider.1.0.1\lib\NET40\PKCS12ProtectedConfigurationProvider.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector">
       <HintPath>..\packages\SimpleInjector.1.5.0.12199\lib\net35\SimpleInjector.dll</HintPath>
     </Reference>
@@ -658,6 +662,9 @@
     <Content Include="Views\Errors\Unauthorized.cshtml" />
     <Content Include="Views\Identity\SignOut.cshtml" />
     <Content Include="Views\Errors\Forbidden.cshtml" />
+    <None Include="Web.Alpha.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />
