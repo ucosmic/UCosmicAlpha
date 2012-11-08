@@ -196,6 +196,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\IdentityController.cs" />
     <Compile Include="ApiControllers\LanguagesController.cs" />
     <Compile Include="ApiControllers\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\CountriesController.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Models\EstablishmentNameApiModel.cs" />
     <Compile Include="Models\EstablishmentSearchInputModel.cs" />
     <Compile Include="Models\PageOf.cs" />
+    <Compile Include="Models\SignInApiModel.cs" />
     <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -646,6 +648,7 @@
     <Content Include="Views\Identity\SignIn.cshtml" />
     <Content Include="Views\Errors\Unauthorized.cshtml" />
     <Content Include="Views\Identity\SignOut.cshtml" />
+    <Content Include="Views\Errors\Forbidden.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />

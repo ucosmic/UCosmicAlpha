@@ -21,6 +21,13 @@ namespace UCosmic.Www.Mvc.Controllers
             return View();
         }
 
+        [GET("403")]
+        public virtual ActionResult Forbidden()
+        {
+            Response.StatusCode = 403;
+            return View();
+        }
+
         [GET("404")]
         public virtual ActionResult NotFound()
         {

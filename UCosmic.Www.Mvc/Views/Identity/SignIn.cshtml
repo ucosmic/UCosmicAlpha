@@ -13,4 +13,35 @@
         @Html.PasswordFor(m => m.Password)
         <input type="submit" value="Submit" />
     }
+    @*<a id="sign_in_async" href="#">Sign In Async</a>
+    <a id="sign_out_async" href="#">Sign Out Async</a>*@
 </div>
+@*@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#sign_in_async').on('click', function () {
+                $.ajax({
+                    url: '/api/sign-in',
+                    type: 'POST',
+                    data: {
+                        userName: 'Daniel.Ludwig@uc.edu',
+                        password: 'asdfasdf'
+                    }
+                })
+                .success(function (response, arg2, arg3, arg4, arg5) {
+                    alert('in success');
+                });
+            });
+            $('#sign_out_async').on('click', function () {
+                $.ajax({
+                    url: '/api/sign-out',
+                    type: 'GET',
+                })
+                .success(function (response, arg2, arg3, arg4, arg5) {
+                    alert('out success');
+                });
+            });
+        });
+    </script>
+}*@

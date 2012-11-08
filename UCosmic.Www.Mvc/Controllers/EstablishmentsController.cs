@@ -14,7 +14,7 @@ namespace UCosmic.Www.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [TryAuthorize(Roles = "Establishments Administrator")]
+        [TryAuthorize(Roles = "Establishment Administrator")]
         public virtual ViewResult Index()
         {
             return View();
@@ -30,7 +30,7 @@ namespace UCosmic.Www.Mvc.Controllers
             return null;
         }
 
-        [TryAuthorize(Roles = "Establishments Administrator")]
+        [TryAuthorize(Roles = "Establishment Administrator")]
         public virtual ActionResult Show(int id)
         {
             var entity = _queryProcessor.Execute(new EstablishmentById(id));

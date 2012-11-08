@@ -10,7 +10,8 @@ namespace UCosmic.Www.Mvc.Controllers
         private readonly IStorePasswords _passwords;
 
         public IdentityController(ISignUsers userSigner
-            , IStorePasswords passwords)
+            , IStorePasswords passwords
+        )
         {
             _userSigner = userSigner;
             _passwords = passwords;

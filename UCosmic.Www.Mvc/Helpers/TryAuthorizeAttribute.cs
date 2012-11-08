@@ -8,10 +8,7 @@ namespace UCosmic.Www.Mvc
         {
             if (!string.IsNullOrWhiteSpace(filterContext.HttpContext.User.Identity.Name))
             {
-                filterContext.Result = new ViewResult
-                {
-                    ViewName = MVC.Errors.Views.Unauthorized,
-                };
+                filterContext.HttpContext.Response.StatusCode = 403;
             }
             else
             {

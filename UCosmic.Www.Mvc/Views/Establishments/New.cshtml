@@ -12,14 +12,15 @@
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
-                <form class="group">
+                <div class="group">
                     <div class="float-left from-top">
                         <header>
                             <h1>
                                 @ViewBag.Title
                             </h1>
                         </header>
-                        @Html.Partial(MVC.Establishments.Views._FormAndCards)
+                        @*@Html.Partial(MVC.Establishments.Views._FormAndCards)*@
+                        This page is not working yet.
                     </div>
                     <aside class="float-right from-top" data-fixed-scroll="root">
                         <div data-fixed-scroll="anchor"></div>
@@ -27,7 +28,7 @@
                             @Html.Partial(MVC.Establishments.Views._FormSideBar)
                         </div>
                     </aside>
-                </form>
+                </div>
             </div>
         </div>
     </div>
