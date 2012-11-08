@@ -3,7 +3,17 @@
   <Role name="UCosmic.Www.Mvc">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=ucosmicdiagnostics;AccountKey=here" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="UCosmicBriarhill" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEKcETAj6UihRRKiJpADWNEwDQYJKoZIhvcNAQEBBQAEggEAVb1MtrnZD9nzQxjK1XTewFF90QEYmek16TnuTrvneGH/IJkdoCTlH8RsMwYdEg/WP9Aw6DzkEcU8ejtZxLSVJDUxixIrDJHkTCT5bpuNsF0HDAv2y9QMu10kG4zcyJ5tgEQdSP4GhKUgwvbbf52q+OWSSf4JsKEau610pMprsQQGMleiXWEkzc4HbIzs2ekdLnRwyWizIC1GqGw9HYdQY7RMItYa5/xC3CWV43+bk/HWlU+FT+9pXizZJ+26bsCipGG2ZKV0xXTnTE+0M0ls0qhvJy96wiCi98DAaPvhLusFsiZL4BrqBKFDj40GI3kuKkl7UpFZ6QX+7b1lYoP/WzAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECPxKqImKMMKXgBBFFc5cl2WgRame/0TZRXp4" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-11-08T23:59:59.0000000-05:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+      <Setting name="UCosmic.Www.Mvc.DeployedToEmulator" value="false" />
     </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
+      <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
+    </Certificates>
   </Role>
 </ServiceConfiguration>
