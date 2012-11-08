@@ -20,14 +20,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Domain", "UCosmic.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Infrastructure", "UCosmic.Infrastructure\UCosmic.Infrastructure.csproj", "{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}"
 EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "UCosmic.Azure", "UCosmic.Azure\UCosmic.Azure.ccproj", "{79B4E604-5ADC-49AF-9886-E49F7122AB97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{57DDDCAD-3A84-4501-994C-B0326C625183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57DDDCAD-3A84-4501-994C-B0326C625183}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57DDDCAD-3A84-4501-994C-B0326C625183}.Debug|Any CPU.ActiveCfg = Alpha|Any CPU
+		{57DDDCAD-3A84-4501-994C-B0326C625183}.Debug|Any CPU.Build.0 = Alpha|Any CPU
 		{57DDDCAD-3A84-4501-994C-B0326C625183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57DDDCAD-3A84-4501-994C-B0326C625183}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66444F14-2971-43DE-B0BB-75A926B6F191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B4E604-5ADC-49AF-9886-E49F7122AB97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B4E604-5ADC-49AF-9886-E49F7122AB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B4E604-5ADC-49AF-9886-E49F7122AB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B4E604-5ADC-49AF-9886-E49F7122AB97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
