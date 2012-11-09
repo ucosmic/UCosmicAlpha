@@ -8,12 +8,14 @@
     <Sites>
       <Site name="Web">
         <Bindings>
-          <Binding name="Endpoint1" endpointName="Endpoint1" />
+          <Binding name="HttpBinding" endpointName="HttpEndpoint" />
+          <Binding name="HttpsBinding" endpointName="HttpsEndpoint" />
         </Bindings>
       </Site>
     </Sites>
     <Endpoints>
-      <InputEndpoint name="Endpoint1" protocol="http" port="80" />
+      <InputEndpoint name="HttpEndpoint" protocol="http" port="80" />
+      <InputEndpoint name="HttpsEndpoint" protocol="https" port="443" certificate="star.ucosmic.com" />
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
@@ -24,7 +26,10 @@
       <Setting name="UCosmic.Www.Mvc.DeployedToEmulator" />
     </ConfigurationSettings>
     <Certificates>
+      <Certificate name="star.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="azureconfig" storeLocation="LocalMachine" storeName="My" />
+      <Certificate name="saml.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
+      <Certificate name="saml.ucosmic.dev" storeLocation="LocalMachine" storeName="My" />
     </Certificates>
   </WebRole>
 </ServiceDefinition>

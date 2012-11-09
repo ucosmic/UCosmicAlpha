@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*" schemaVersion="2012-05.1.7">
   <Role name="UCosmic.Www.Mvc">
-    <Instances count="1" />
+    <Instances count="2" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=ucosmicdiagnostics;AccountKey=here" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
@@ -12,8 +12,11 @@
       <Setting name="UCosmic.Www.Mvc.DeployedToEmulator" value="false" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
+      <Certificate name="star.ucosmic.com" thumbprint="B5126825E11A70CDC52D56A69356230050A4B251" thumbprintAlgorithm="sha1" />
       <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
+      <Certificate name="saml.ucosmic.com" thumbprint="F98BAF8C0A12C49819AA16AF32233FF523F672FF" thumbprintAlgorithm="sha1" />
+      <Certificate name="saml.ucosmic.dev" thumbprint="1945D599DF7F3B3D6513C87A8CDDF4CE6E0899B6" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
 </ServiceConfiguration>

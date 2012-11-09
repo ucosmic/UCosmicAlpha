@@ -12,7 +12,6 @@ namespace UCosmic.Www.Mvc
             var assemblies = new[]
             {
                 Assembly.GetAssembly(typeof(WebApiApplication)),
-                Assembly.GetAssembly(typeof(Entity)),
             };
 
             AutoProfiler.RegisterProfiles(assemblies);
