@@ -248,6 +248,7 @@
     <Compile Include="Helpers\RequireHttpsMessageHandler.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="Helpers\TryAuthorizeAttribute.cs" />
+    <Compile Include="Helpers\WebRole.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
