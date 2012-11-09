@@ -11,8 +11,11 @@ namespace UCosmic.Www.Mvc
         public static void RegisterApi(HttpConfiguration config)
         {
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
             config.Formatters.Add(new PlainTextFormatter());
+
+#if !DEBUG
+            config.MessageHandlers.Add(new RequireHttpsMessageHandler());
+#endif
 
             config.Routes.MapHttpAttributeRoutes(cfg =>
             {

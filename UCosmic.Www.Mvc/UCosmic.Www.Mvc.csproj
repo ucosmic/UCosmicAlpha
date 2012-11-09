@@ -18,7 +18,7 @@
     <UseIISExpress>true</UseIISExpress>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -245,6 +245,7 @@
     </Compile>
     <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
     <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
+    <Compile Include="Helpers\RequireHttpsMessageHandler.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="Helpers\TryAuthorizeAttribute.cs" />
     <Compile Include="HomeController.generated.cs">
