@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Domain", "UCosmic.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Infrastructure", "UCosmic.Infrastructure\UCosmic.Infrastructure.csproj", "{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}"
 EndProject
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "UCosmic.Azure", "UCosmic.Azure\UCosmic.Azure.ccproj", "{273FEDA1-B466-4BE2-9166-8C7E39774BDD}"
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "UCosmic.Azure", "UCosmic.Azure\UCosmic.Azure.ccproj", "{F8E86A95-A775-449F-A818-60D8AD4B1B0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +40,10 @@ Global
 		{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2F07B41-3AA3-46B0-A23D-2FCE1F402B09}.Release|Any CPU.Build.0 = Release|Any CPU
-		{273FEDA1-B466-4BE2-9166-8C7E39774BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{273FEDA1-B466-4BE2-9166-8C7E39774BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{273FEDA1-B466-4BE2-9166-8C7E39774BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{273FEDA1-B466-4BE2-9166-8C7E39774BDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8E86A95-A775-449F-A818-60D8AD4B1B0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8E86A95-A775-449F-A818-60D8AD4B1B0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8E86A95-A775-449F-A818-60D8AD4B1B0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8E86A95-A775-449F-A818-60D8AD4B1B0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
