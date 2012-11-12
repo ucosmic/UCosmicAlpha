@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AttributeRouting;
 using AttributeRouting.Web.Mvc;
 
@@ -12,6 +13,14 @@ namespace UCosmic.Www.Mvc.Controllers
         {
             Response.StatusCode = 500;
             return View(MVC.Shared.Views.Error);
+        }
+
+        [GET("throw")]
+        [TryAuthorize(Roles = "Elmah Viewer")]
+        public virtual ActionResult Throw()
+        {
+            var ex = new Exception("This is a test exception thrown on purpose from the web server.");
+            throw ex;
         }
 
         [GET("401")]
