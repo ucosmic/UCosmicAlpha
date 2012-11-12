@@ -64,6 +64,3 @@ ServiceDefinition.build.csdef
 
 #Ignore sass cache
 .sass-cache
-
-#Ignore publish profiles
-*/Properties/PublishProfiles/*.pubxml
