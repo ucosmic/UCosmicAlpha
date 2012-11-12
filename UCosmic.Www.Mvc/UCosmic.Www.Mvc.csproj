@@ -249,6 +249,7 @@
     </Compile>
     <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
     <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
+    <Compile Include="Helpers\EnforceHttpsAttribute.cs" />
     <Compile Include="Helpers\RequireHttpsMessageHandler.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="Helpers\TryAuthorizeAttribute.cs" />
