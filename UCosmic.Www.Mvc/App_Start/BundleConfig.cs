@@ -29,9 +29,9 @@ namespace UCosmic.Www.Mvc
                         "~/scripts/knockout-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
-                        "~/scripts/jquery-{version}.js",
-                        "~/scripts/jquery-ui-{version}.js",
-                        "~/scripts/knockout-*",
+                        //"~/scripts/jquery-{version}.js",
+                        //"~/scripts/jquery-ui-{version}.js",
+                        //"~/scripts/knockout-*",
                         "~/scripts/knockout.mapping-latest*",
                         "~/scripts/knockout.validation*",
                         "~/scripts/app/knockout.binding-handlers.js",
@@ -45,8 +45,7 @@ namespace UCosmic.Www.Mvc
                         "~/scripts/T4MvcJs/T4MvcJs.js",
                         "~/scripts/T4MvcJs/WebApiRoutes.js",
                         "~/models/BaseViewModel.js",
-                        "~/models/FlasherViewModel.js",
-                        "~/scripts/oss/jquery.palceholder*"));
+                        "~/models/FlasherViewModel.js"));
 
             // bootstrap css bundles
             var tenants = new[]
