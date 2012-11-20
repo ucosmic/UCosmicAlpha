@@ -29,6 +29,7 @@ namespace UCosmic.Www.Mvc.Controllers
             if (_passwords.Validate(model.UserName, model.Password))
             {
                 _userSigner.SignOn(model.UserName, model.RememberMe);
+                TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", model.UserName));
                 return Redirect(model.ReturnUrl ?? _userSigner.DefaultSignedOnUrl);
             }
 
@@ -36,9 +37,16 @@ namespace UCosmic.Www.Mvc.Controllers
         }
 
         [GET("sign-out")]
-        public virtual ActionResult SignOut()
+        public virtual ActionResult SignOut(string returnUrl)
         {
-            _userSigner.SignOff();
+            // if user is signed on, sign out and redirect back to this action
+            if (!string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                _userSigner.SignOff();
+                TempData.Flash("You have successfully been signed out of UCosmic.");
+                return RedirectToAction(MVC.Identity.SignOut(returnUrl));
+            }
+
             return View();
         }
 

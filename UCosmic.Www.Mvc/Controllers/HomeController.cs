@@ -57,7 +57,7 @@ namespace UCosmic.Www.Mvc.Controllers
         [GET("global-press")]
         public virtual ActionResult GlobalPress()
         {
-            //TempData.Add("Flasher", "This is the global press page.");
+            //TempData.Flash("This is the global press page.");
             return View();
         }
     }

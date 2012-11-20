@@ -18,7 +18,7 @@
                     {
                         <a href="" class="email float-left">@User.Identity.Name</a>
                         <a href="#/account" class="my float-left">My International</a>
-                        <a href="@Url.Action(MVC.Identity.SignOut())" class="out float-left">Sign out</a>
+                        <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))" class="out float-left">Sign out</a>
                     }
                     else
                     {

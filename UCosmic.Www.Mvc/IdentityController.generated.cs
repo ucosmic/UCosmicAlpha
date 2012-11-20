@@ -42,6 +42,11 @@ namespace UCosmic.Www.Mvc.Controllers {
         public System.Web.Mvc.ActionResult SignIn() {
             return new T4MVC_ActionResult(Area, Name, ActionNames.SignIn);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult SignOut() {
+            return new T4MVC_ActionResult(Area, Name, ActionNames.SignOut);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public IdentityController Actions { get { return MVC.Identity; } }
@@ -75,6 +80,13 @@ namespace UCosmic.Www.Mvc.Controllers {
         public class ActionParamsClass_SignIn {
             public readonly string returnUrl = "returnUrl";
         }
+        static readonly ActionParamsClass_SignOut s_params_SignOut = new ActionParamsClass_SignOut();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_SignOut SignOutParams { get { return s_params_SignOut; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_SignOut {
+            public readonly string returnUrl = "returnUrl";
+        }
         static readonly ViewNames s_views = new ViewNames();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewNames Views { get { return s_views; } }
@@ -101,8 +113,9 @@ namespace UCosmic.Www.Mvc.Controllers {
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult SignOut() {
+        public override System.Web.Mvc.ActionResult SignOut(string returnUrl) {
             var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.SignOut);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
             return callInfo;
         }
 
