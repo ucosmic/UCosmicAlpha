@@ -266,6 +266,7 @@
     <Compile Include="Helpers\TempDataExtensions.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />
     <Compile Include="Helpers\TryAuthorizeAttribute.cs" />
+    <Compile Include="Helpers\ValidateSigningReturnUrlAttribute.cs" />
     <Compile Include="Helpers\WebRole.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>

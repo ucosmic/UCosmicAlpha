@@ -8,5 +8,12 @@ namespace UCosmic
         {
             return container.IndexOf(value, comparison) >= 0;
         }
+
+        public static string WithoutTrailingSlash(this string input)
+        {
+            if (input != null && (input.EndsWith("/") || input.EndsWith("\\")))
+                return input.Substring(0, input.Length - 1);
+            return input;
+        }
     }
 }

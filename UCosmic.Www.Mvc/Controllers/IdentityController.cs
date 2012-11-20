@@ -18,6 +18,7 @@ namespace UCosmic.Www.Mvc.Controllers
         }
 
         [GET("sign-in")]
+        [ValidateSigningReturnUrl]
         public virtual ActionResult SignIn(string returnUrl)
         {
             return View();
@@ -37,6 +38,7 @@ namespace UCosmic.Www.Mvc.Controllers
         }
 
         [GET("sign-out")]
+        [ValidateSigningReturnUrl]
         public virtual ActionResult SignOut(string returnUrl)
         {
             // if user is signed on, sign out and redirect back to this action
