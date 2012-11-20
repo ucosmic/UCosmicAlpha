@@ -56,6 +56,7 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string Unexpected = "Unexpected";
+            public readonly string Throw = "Throw";
             public readonly string Unauthorized = "Unauthorized";
             public readonly string Forbidden = "Forbidden";
             public readonly string NotFound = "NotFound";
@@ -64,6 +65,7 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants {
             public const string Unexpected = "Unexpected";
+            public const string Throw = "Throw";
             public const string Unauthorized = "Unauthorized";
             public const string Forbidden = "Forbidden";
             public const string NotFound = "NotFound";
@@ -88,6 +90,11 @@ namespace UCosmic.Www.Mvc.Controllers {
 
         public override System.Web.Mvc.ActionResult Unexpected() {
             var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Unexpected);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Throw() {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Throw);
             return callInfo;
         }
 
