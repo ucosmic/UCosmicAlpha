@@ -356,6 +356,8 @@ namespace Links {
                           
             public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
                           
+            public static readonly string routes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/routes.min.js") ? Url("routes.min.js") : Url("routes.js");
+                          
             public static readonly string side_swiper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/side-swiper.min.js") ? Url("side-swiper.min.js") : Url("side-swiper.js");
                           
         }
@@ -478,20 +480,6 @@ namespace Links {
             public static readonly string sammy_tmpl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.tmpl.min.js") ? Url("sammy.tmpl.min.js") : Url("sammy.tmpl.js");
                           
             public static readonly string sammy_tmpl_min_js = Url("sammy.tmpl.min.js");
-        }
-    
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class T4MvcJs {
-            private const string URLPATH = "~/scripts/T4MvcJs";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string T4MVC_source_t4 = Url("T4MVC.source.t4");
-            public static readonly string T4MVC_tt_settings_t4 = Url("T4MVC.tt.settings.t4");
-            public static readonly string T4MvcJs_tt = Url("T4MvcJs.tt");
-            public static readonly string T4MvcJs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/T4MvcJs.min.js") ? Url("T4MvcJs.min.js") : Url("T4MvcJs.js");
-                          
-            public static readonly string WebApiRoutes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/WebApiRoutes.min.js") ? Url("WebApiRoutes.min.js") : Url("WebApiRoutes.js");
-                          
         }
     
     }

@@ -284,7 +284,6 @@
     <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="scripts\T4MvcJs\T4Proxy.cs" />
     <Compile Include="SharedController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -436,12 +435,7 @@
     <Content Include="scripts\sammy\sammy.title.min.js" />
     <Content Include="scripts\sammy\sammy.tmpl.js" />
     <Content Include="scripts\sammy\sammy.tmpl.min.js" />
-    <Content Include="scripts\T4MvcJs\T4MvcJs.js">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>T4MvcJs.tt</DependentUpon>
-    </Content>
-    <Content Include="scripts\T4MvcJs\WebApiRoutes.js" />
+    <Content Include="scripts\app\routes.js" />
     <Content Include="styles\icons\closer-16-red-disc.png" />
     <Content Include="styles\icons\closer-20-red-disc.png" />
     <Content Include="styles\icons\closer-24-dark.png" />
@@ -557,12 +551,6 @@
     <Content Include="Views\Home\Students.cshtml" />
     <Content Include="Views\Home\Employees.cshtml" />
     <Content Include="scripts\oss\jquery.animate-enhanced.js" />
-    <None Include="scripts\T4MvcJs\T4MVC.source.t4" />
-    <None Include="scripts\T4MvcJs\T4MVC.tt.settings.t4" />
-    <None Include="scripts\T4MvcJs\T4MvcJs.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>T4MvcJs.js</LastGenOutput>
-    </None>
     <Content Include="T4MVC.tt.settings.t4" />
     <Content Include="T4MVC.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -3,7 +3,7 @@
 /// <reference path="../scripts/knockout.mapping-latest.js" />
 /// <reference path="../scripts/knockout.validation.debug.js" />
 /// <reference path="../scripts/app/app.js" />
-/// <reference path="../scripts/T4MvcJs/WebApiRoutes.js" />
+/// <reference path="../scripts/app/routes.js" />
 
 ko.validation.rules['uniqueEstablishmentName'] = {
     async: true,

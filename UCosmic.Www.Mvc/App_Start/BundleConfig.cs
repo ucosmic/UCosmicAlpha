@@ -42,8 +42,7 @@ namespace UCosmic.Www.Mvc
                         "~/scripts/app/app.js",
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
-                        "~/scripts/T4MvcJs/T4MvcJs.js",
-                        "~/scripts/T4MvcJs/WebApiRoutes.js",
+                        "~/scripts/app/routes.js",
                         "~/models/BaseViewModel.js",
                         "~/models/FlasherViewModel.js"));
 
