@@ -218,8 +218,9 @@
     <Reference Include="T4MVCExtensions">
       <HintPath>..\packages\T4MVCExtensions.3.0.2\lib\net40\T4MVCExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="WebActivator">
-      <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
+    <Reference Include="WebActivator, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebActivator.1.5.2\lib\net40\WebActivator.dll</HintPath>
     </Reference>
     <Reference Include="WebApiContrib">
       <HintPath>..\packages\WebAPIContrib.0.9.1\lib\net40\WebApiContrib.dll</HintPath>
