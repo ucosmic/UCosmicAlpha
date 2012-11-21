@@ -178,79 +178,11 @@ namespace Links
             public static readonly string jquery_placeholder_min_js = Url("jquery.placeholder.min.js");
         }
     
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class sammy {
-            private const string URLPATH = "~/scripts/sammy";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string sammy_cache_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.cache.min.js") ? Url("sammy.cache.min.js") : Url("sammy.cache.js");
-                          
-            public static readonly string sammy_cache_min_js = Url("sammy.cache.min.js");
-            public static readonly string sammy_data_location_proxy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.data_location_proxy.min.js") ? Url("sammy.data_location_proxy.min.js") : Url("sammy.data_location_proxy.js");
-                          
-            public static readonly string sammy_data_location_proxy_min_js = Url("sammy.data_location_proxy.min.js");
-            public static readonly string sammy_ejs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.ejs.min.js") ? Url("sammy.ejs.min.js") : Url("sammy.ejs.js");
-                          
-            public static readonly string sammy_ejs_min_js = Url("sammy.ejs.min.js");
-            public static readonly string sammy_exceptional_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.exceptional.min.js") ? Url("sammy.exceptional.min.js") : Url("sammy.exceptional.js");
-                          
-            public static readonly string sammy_flash_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.flash.min.js") ? Url("sammy.flash.min.js") : Url("sammy.flash.js");
-                          
-            public static readonly string sammy_flash_min_js = Url("sammy.flash.min.js");
-            public static readonly string sammy_form_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.form.min.js") ? Url("sammy.form.min.js") : Url("sammy.form.js");
-                          
-            public static readonly string sammy_form_min_js = Url("sammy.form.min.js");
-            public static readonly string sammy_googleanalytics_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.googleanalytics.min.js") ? Url("sammy.googleanalytics.min.js") : Url("sammy.googleanalytics.js");
-                          
-            public static readonly string sammy_googleanalytics_min_js = Url("sammy.googleanalytics.min.js");
-            public static readonly string sammy_haml_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.haml.min.js") ? Url("sammy.haml.min.js") : Url("sammy.haml.js");
-                          
-            public static readonly string sammy_haml_min_js = Url("sammy.haml.min.js");
-            public static readonly string sammy_handlebars_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.handlebars.min.js") ? Url("sammy.handlebars.min.js") : Url("sammy.handlebars.js");
-                          
-            public static readonly string sammy_handlebars_min_js = Url("sammy.handlebars.min.js");
-            public static readonly string sammy_hoptoad_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.hoptoad.min.js") ? Url("sammy.hoptoad.min.js") : Url("sammy.hoptoad.js");
-                          
-            public static readonly string sammy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.min.js") ? Url("sammy.min.js") : Url("sammy.js");
-                          
-            public static readonly string sammy_json_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.min.json.min.js") ? Url("sammy.min.json.min.js") : Url("sammy.json.js");
-                          
-            public static readonly string sammy_json_min_js = Url("sammy.json.min.js");
-            public static readonly string sammy_meld_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.meld.min.js") ? Url("sammy.meld.min.js") : Url("sammy.meld.js");
-                          
-            public static readonly string sammy_meld_min_js = Url("sammy.meld.min.js");
-            public static readonly string sammy_min_js = Url("sammy.min.js");
-            public static readonly string sammy_mustache_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.mustache.min.js") ? Url("sammy.mustache.min.js") : Url("sammy.mustache.js");
-                          
-            public static readonly string sammy_mustache_min_js = Url("sammy.mustache.min.js");
-            public static readonly string sammy_nested_params_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.nested_params.min.js") ? Url("sammy.nested_params.min.js") : Url("sammy.nested_params.js");
-                          
-            public static readonly string sammy_nested_params_min_js = Url("sammy.nested_params.min.js");
-            public static readonly string sammy_oauth2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.oauth2.min.js") ? Url("sammy.oauth2.min.js") : Url("sammy.oauth2.js");
-                          
-            public static readonly string sammy_oauth2_min_js = Url("sammy.oauth2.min.js");
-            public static readonly string sammy_path_location_proxy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.path_location_proxy.min.js") ? Url("sammy.path_location_proxy.min.js") : Url("sammy.path_location_proxy.js");
-                          
-            public static readonly string sammy_path_location_proxy_min_js = Url("sammy.path_location_proxy.min.js");
-            public static readonly string sammy_pure_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.pure.min.js") ? Url("sammy.pure.min.js") : Url("sammy.pure.js");
-                          
-            public static readonly string sammy_pure_min_js = Url("sammy.pure.min.js");
-            public static readonly string sammy_push_location_proxy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.push_location_proxy.min.js") ? Url("sammy.push_location_proxy.min.js") : Url("sammy.push_location_proxy.js");
-                          
-            public static readonly string sammy_storage_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.storage.min.js") ? Url("sammy.storage.min.js") : Url("sammy.storage.js");
-                          
-            public static readonly string sammy_storage_min_js = Url("sammy.storage.min.js");
-            public static readonly string sammy_template_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.template.min.js") ? Url("sammy.template.min.js") : Url("sammy.template.js");
-                          
-            public static readonly string sammy_template_min_js = Url("sammy.template.min.js");
-            public static readonly string sammy_title_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.title.min.js") ? Url("sammy.title.min.js") : Url("sammy.title.js");
-                          
-            public static readonly string sammy_title_min_js = Url("sammy.title.min.js");
-            public static readonly string sammy_tmpl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy.tmpl.min.js") ? Url("sammy.tmpl.min.js") : Url("sammy.tmpl.js");
-                          
-            public static readonly string sammy_tmpl_min_js = Url("sammy.tmpl.min.js");
-        }
-    
+        public static readonly string sammy_0_7_1_vsdoc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1-vsdoc.min.js") ? Url("sammy-0.7.1-vsdoc.min.js") : Url("sammy-0.7.1-vsdoc.js");
+                      
+        public static readonly string sammy_0_7_1_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1.min.js") ? Url("sammy-0.7.1.min.js") : Url("sammy-0.7.1.js");
+                      
+        public static readonly string sammy_0_7_1_min_js = Url("sammy-0.7.1.min.js");
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
