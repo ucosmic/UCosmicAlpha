@@ -20,32 +20,38 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers {
-    public partial class IdentityController {
+namespace UCosmic.Www.Mvc.Controllers
+{
+    public partial class IdentityController
+    {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected IdentityController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToAction(ActionResult result) {
+        protected RedirectToRouteResult RedirectToAction(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result) {
+        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult SignIn() {
-            return new T4MVC_ActionResult(Area, Name, ActionNames.SignIn);
+        public System.Web.Mvc.ActionResult SignIn()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult SignOut() {
-            return new T4MVC_ActionResult(Area, Name, ActionNames.SignOut);
+        public System.Web.Mvc.ActionResult SignOut()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -61,13 +67,15 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionNamesClass ActionNames { get { return s_actions; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNamesClass {
+        public class ActionNamesClass
+        {
             public readonly string SignIn = "SignIn";
             public readonly string SignOut = "SignOut";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNameConstants {
+        public class ActionNameConstants
+        {
             public const string SignIn = "SignIn";
             public const string SignOut = "SignOut";
         }
@@ -77,44 +85,59 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_SignIn SignInParams { get { return s_params_SignIn; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_SignIn {
+        public class ActionParamsClass_SignIn
+        {
             public readonly string returnUrl = "returnUrl";
+            public readonly string model = "model";
         }
         static readonly ActionParamsClass_SignOut s_params_SignOut = new ActionParamsClass_SignOut();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_SignOut SignOutParams { get { return s_params_SignOut; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_SignOut {
+        public class ActionParamsClass_SignOut
+        {
             public readonly string returnUrl = "returnUrl";
         }
-        static readonly ViewNames s_views = new ViewNames();
+        static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ViewNames Views { get { return s_views; } }
+        public ViewsClass Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ViewNames {
+        public class ViewsClass
+        {
+            static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+            public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+            public class _ViewNamesClass
+            {
+                public readonly string SignIn = "SignIn";
+                public readonly string SignOut = "SignOut";
+            }
             public readonly string SignIn = "~/Views/Identity/SignIn.cshtml";
             public readonly string SignOut = "~/Views/Identity/SignOut.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_IdentityController: UCosmic.Www.Mvc.Controllers.IdentityController {
+    public class T4MVC_IdentityController : UCosmic.Www.Mvc.Controllers.IdentityController
+    {
         public T4MVC_IdentityController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult SignIn(string returnUrl) {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.SignIn);
+        public override System.Web.Mvc.ActionResult SignIn(string returnUrl)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult SignIn(UCosmic.Www.Mvc.Models.SignInForm model) {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.SignIn);
+        public override System.Web.Mvc.ActionResult SignIn(UCosmic.Www.Mvc.Models.SignInForm model)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult SignOut(string returnUrl) {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.SignOut);
+        public override System.Web.Mvc.ActionResult SignOut(string returnUrl)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
             return callInfo;
         }

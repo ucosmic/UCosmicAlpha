@@ -206,6 +206,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="T4MVCExtensions">
+      <HintPath>..\packages\T4MVCExtensions.3.0.2\lib\net40\T4MVCExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
@@ -290,9 +293,6 @@
     <Compile Include="T4MVC.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4MVC.ModelUnbinder.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="TenancyController.generated.cs">
@@ -516,8 +516,14 @@
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="styles\_resharper-unused.css" />
+    <Content Include="T4MVC.tt.settings.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="T4MVC.tt.hooks.t4" />
+    <Content Include="T4MVC.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -551,11 +557,6 @@
     <Content Include="Views\Home\Students.cshtml" />
     <Content Include="Views\Home\Employees.cshtml" />
     <Content Include="scripts\oss\jquery.animate-enhanced.js" />
-    <Content Include="T4MVC.tt.settings.t4" />
-    <Content Include="T4MVC.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>T4MVC.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\Home\Alumni.cshtml" />
     <Content Include="Views\Home\GlobalPress.cshtml" />
     <Content Include="Views\Home\CorporateEngagement.cshtml" />

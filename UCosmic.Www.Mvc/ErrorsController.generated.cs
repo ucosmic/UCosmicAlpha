@@ -20,8 +20,10 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers {
-    public partial class ErrorsController {
+namespace UCosmic.Www.Mvc.Controllers
+{
+    public partial class ErrorsController
+    {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ErrorsController() { }
 
@@ -29,13 +31,15 @@ namespace UCosmic.Www.Mvc.Controllers {
         protected ErrorsController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToAction(ActionResult result) {
+        protected RedirectToRouteResult RedirectToAction(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result) {
+        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
@@ -54,7 +58,8 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionNamesClass ActionNames { get { return s_actions; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNamesClass {
+        public class ActionNamesClass
+        {
             public readonly string Unexpected = "Unexpected";
             public readonly string Throw = "Throw";
             public readonly string Unauthorized = "Unauthorized";
@@ -63,7 +68,8 @@ namespace UCosmic.Www.Mvc.Controllers {
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNameConstants {
+        public class ActionNameConstants
+        {
             public const string Unexpected = "Unexpected";
             public const string Throw = "Throw";
             public const string Unauthorized = "Unauthorized";
@@ -72,11 +78,21 @@ namespace UCosmic.Www.Mvc.Controllers {
         }
 
 
-        static readonly ViewNames s_views = new ViewNames();
+        static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ViewNames Views { get { return s_views; } }
+        public ViewsClass Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ViewNames {
+        public class ViewsClass
+        {
+            static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+            public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+            public class _ViewNamesClass
+            {
+                public readonly string _Bib = "_Bib";
+                public readonly string Forbidden = "Forbidden";
+                public readonly string NotFound = "NotFound";
+                public readonly string Unauthorized = "Unauthorized";
+            }
             public readonly string _Bib = "~/Views/Errors/_Bib.cshtml";
             public readonly string Forbidden = "~/Views/Errors/Forbidden.cshtml";
             public readonly string NotFound = "~/Views/Errors/NotFound.cshtml";
@@ -85,31 +101,37 @@ namespace UCosmic.Www.Mvc.Controllers {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_ErrorsController: UCosmic.Www.Mvc.Controllers.ErrorsController {
+    public class T4MVC_ErrorsController : UCosmic.Www.Mvc.Controllers.ErrorsController
+    {
         public T4MVC_ErrorsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Unexpected() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Unexpected);
+        public override System.Web.Mvc.ActionResult Unexpected()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Unexpected);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Throw() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Throw);
+        public override System.Web.Mvc.ActionResult Throw()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Throw);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Unauthorized() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Unauthorized);
+        public override System.Web.Mvc.ActionResult Unauthorized()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Unauthorized);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Forbidden() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Forbidden);
+        public override System.Web.Mvc.ActionResult Forbidden()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Forbidden);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult NotFound() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.NotFound);
+        public override System.Web.Mvc.ActionResult NotFound()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.NotFound);
             return callInfo;
         }
 

@@ -20,14 +20,28 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace T4MVC {
-    public class SharedController {
+namespace T4MVC
+{
+    public class SharedController
+    {
 
-        static readonly ViewNames s_views = new ViewNames();
+        static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ViewNames Views { get { return s_views; } }
+        public ViewsClass Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ViewNames {
+        public class ViewsClass
+        {
+            static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+            public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+            public class _ViewNamesClass
+            {
+                public readonly string _Layout = "_Layout";
+                public readonly string _LayoutCss = "_LayoutCss";
+                public readonly string _SampleSidebarNav = "_SampleSidebarNav";
+                public readonly string _SampleStylingBib = "_SampleStylingBib";
+                public readonly string _SampleVerticalContent = "_SampleVerticalContent";
+                public readonly string Error = "Error";
+            }
             public readonly string _Layout = "~/Views/Shared/_Layout.cshtml";
             public readonly string _LayoutCss = "~/Views/Shared/_LayoutCss.cshtml";
             public readonly string _SampleSidebarNav = "~/Views/Shared/_SampleSidebarNav.cshtml";

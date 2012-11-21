@@ -20,8 +20,10 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers {
-    public partial class TenancyController {
+namespace UCosmic.Www.Mvc.Controllers
+{
+    public partial class TenancyController
+    {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public TenancyController() { }
 
@@ -29,21 +31,24 @@ namespace UCosmic.Www.Mvc.Controllers {
         protected TenancyController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToAction(ActionResult result) {
+        protected RedirectToRouteResult RedirectToAction(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result) {
+        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.RedirectResult Tenant() {
-            return new T4MVC_RedirectResult(Area, Name, ActionNames.Tenant);
+        public System.Web.Mvc.RedirectResult Tenant()
+        {
+            return new T4MVC_System_Web_Mvc_RedirectResult(Area, Name, ActionNames.Tenant);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -59,13 +64,15 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionNamesClass ActionNames { get { return s_actions; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNamesClass {
+        public class ActionNamesClass
+        {
             public readonly string Tenant = "Tenant";
             public readonly string Css = "Css";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNameConstants {
+        public class ActionNameConstants
+        {
             public const string Tenant = "Tenant";
             public const string Css = "Css";
         }
@@ -75,31 +82,41 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Tenant TenantParams { get { return s_params_Tenant; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Tenant {
+        public class ActionParamsClass_Tenant
+        {
             public readonly string id = "id";
             public readonly string returnUrl = "returnUrl";
         }
-        static readonly ViewNames s_views = new ViewNames();
+        static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ViewNames Views { get { return s_views; } }
+        public ViewsClass Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ViewNames {
+        public class ViewsClass
+        {
+            static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+            public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+            public class _ViewNamesClass
+            {
+            }
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_TenancyController: UCosmic.Www.Mvc.Controllers.TenancyController {
+    public class T4MVC_TenancyController : UCosmic.Www.Mvc.Controllers.TenancyController
+    {
         public T4MVC_TenancyController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.RedirectResult Tenant(string id, string returnUrl) {
-            var callInfo = new T4MVC_RedirectResult(Area, Name, ActionNames.Tenant);
+        public override System.Web.Mvc.RedirectResult Tenant(string id, string returnUrl)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_RedirectResult(Area, Name, ActionNames.Tenant);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
             return callInfo;
         }
 
-        public override System.Web.Mvc.PartialViewResult Css() {
-            var callInfo = new T4MVC_PartialViewResult(Area, Name, ActionNames.Css);
+        public override System.Web.Mvc.PartialViewResult Css()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.Css);
             return callInfo;
         }
 

@@ -20,8 +20,10 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers {
-    public partial class HomeController {
+namespace UCosmic.Www.Mvc.Controllers
+{
+    public partial class HomeController
+    {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public HomeController() { }
 
@@ -29,13 +31,15 @@ namespace UCosmic.Www.Mvc.Controllers {
         protected HomeController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToAction(ActionResult result) {
+        protected RedirectToRouteResult RedirectToAction(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result) {
+        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
@@ -54,7 +58,8 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionNamesClass ActionNames { get { return s_actions; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNamesClass {
+        public class ActionNamesClass
+        {
             public readonly string Index = "Index";
             public readonly string Employees = "Employees";
             public readonly string Alumni = "Alumni";
@@ -66,7 +71,8 @@ namespace UCosmic.Www.Mvc.Controllers {
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNameConstants {
+        public class ActionNameConstants
+        {
             public const string Index = "Index";
             public const string Employees = "Employees";
             public const string Alumni = "Alumni";
@@ -78,11 +84,25 @@ namespace UCosmic.Www.Mvc.Controllers {
         }
 
 
-        static readonly ViewNames s_views = new ViewNames();
+        static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ViewNames Views { get { return s_views; } }
+        public ViewsClass Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ViewNames {
+        public class ViewsClass
+        {
+            static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+            public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+            public class _ViewNamesClass
+            {
+                public readonly string Alumni = "Alumni";
+                public readonly string CorporateEngagement = "CorporateEngagement";
+                public readonly string Employees = "Employees";
+                public readonly string GlobalPress = "GlobalPress";
+                public readonly string Index = "Index";
+                public readonly string Representatives = "Representatives";
+                public readonly string Students = "Students";
+                public readonly string Travel = "Travel";
+            }
             public readonly string Alumni = "~/Views/Home/Alumni.cshtml";
             public readonly string CorporateEngagement = "~/Views/Home/CorporateEngagement.cshtml";
             public readonly string Employees = "~/Views/Home/Employees.cshtml";
@@ -95,46 +115,55 @@ namespace UCosmic.Www.Mvc.Controllers {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_HomeController: UCosmic.Www.Mvc.Controllers.HomeController {
+    public class T4MVC_HomeController : UCosmic.Www.Mvc.Controllers.HomeController
+    {
         public T4MVC_HomeController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Index() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Index);
+        public override System.Web.Mvc.ActionResult Index()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Employees() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Employees);
+        public override System.Web.Mvc.ActionResult Employees()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Employees);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Alumni() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Alumni);
+        public override System.Web.Mvc.ActionResult Alumni()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Alumni);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Students() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Students);
+        public override System.Web.Mvc.ActionResult Students()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Students);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Representatives() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Representatives);
+        public override System.Web.Mvc.ActionResult Representatives()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Representatives);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Travel() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Travel);
+        public override System.Web.Mvc.ActionResult Travel()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Travel);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult CorporateEngagement() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.CorporateEngagement);
+        public override System.Web.Mvc.ActionResult CorporateEngagement()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.CorporateEngagement);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult GlobalPress() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.GlobalPress);
+        public override System.Web.Mvc.ActionResult GlobalPress()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GlobalPress);
             return callInfo;
         }
 

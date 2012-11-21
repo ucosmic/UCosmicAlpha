@@ -20,47 +20,56 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers {
-    public partial class EstablishmentsController {
+namespace UCosmic.Www.Mvc.Controllers
+{
+    public partial class EstablishmentsController
+    {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected EstablishmentsController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToAction(ActionResult result) {
+        protected RedirectToRouteResult RedirectToAction(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result) {
+        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
+        {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult Show() {
-            return new T4MVC_ActionResult(Area, Name, ActionNames.Show);
+        public System.Web.Mvc.ActionResult Show()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Show);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ViewResult Edit() {
-            return new T4MVC_ViewResult(Area, Name, ActionNames.Edit);
+        public System.Web.Mvc.ViewResult Edit()
+        {
+            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Edit);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ViewResult Update() {
-            return new T4MVC_ViewResult(Area, Name, ActionNames.Update);
+        public System.Web.Mvc.ViewResult Update()
+        {
+            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Update);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ViewResult Delete() {
-            return new T4MVC_ViewResult(Area, Name, ActionNames.Delete);
+        public System.Web.Mvc.ViewResult Delete()
+        {
+            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Delete);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ViewResult Destroy() {
-            return new T4MVC_ViewResult(Area, Name, ActionNames.Destroy);
+        public System.Web.Mvc.ViewResult Destroy()
+        {
+            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Destroy);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -76,7 +85,8 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionNamesClass ActionNames { get { return s_actions; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNamesClass {
+        public class ActionNamesClass
+        {
             public readonly string Index = "Index";
             public readonly string New = "New";
             public readonly string Create = "Create";
@@ -88,7 +98,8 @@ namespace UCosmic.Www.Mvc.Controllers {
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionNameConstants {
+        public class ActionNameConstants
+        {
             public const string Index = "Index";
             public const string New = "New";
             public const string Create = "Create";
@@ -104,42 +115,60 @@ namespace UCosmic.Www.Mvc.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Show ShowParams { get { return s_params_Show; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Show {
+        public class ActionParamsClass_Show
+        {
             public readonly string id = "id";
         }
         static readonly ActionParamsClass_Edit s_params_Edit = new ActionParamsClass_Edit();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Edit EditParams { get { return s_params_Edit; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Edit {
+        public class ActionParamsClass_Edit
+        {
             public readonly string id = "id";
         }
         static readonly ActionParamsClass_Update s_params_Update = new ActionParamsClass_Update();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Update UpdateParams { get { return s_params_Update; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Update {
+        public class ActionParamsClass_Update
+        {
             public readonly string id = "id";
         }
         static readonly ActionParamsClass_Delete s_params_Delete = new ActionParamsClass_Delete();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Delete DeleteParams { get { return s_params_Delete; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Delete {
+        public class ActionParamsClass_Delete
+        {
             public readonly string id = "id";
         }
         static readonly ActionParamsClass_Destroy s_params_Destroy = new ActionParamsClass_Destroy();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Destroy DestroyParams { get { return s_params_Destroy; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Destroy {
+        public class ActionParamsClass_Destroy
+        {
             public readonly string id = "id";
         }
-        static readonly ViewNames s_views = new ViewNames();
+        static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ViewNames Views { get { return s_views; } }
+        public ViewsClass Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ViewNames {
+        public class ViewsClass
+        {
+            static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+            public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+            public class _ViewNamesClass
+            {
+                public readonly string _FormAndCards = "_FormAndCards";
+                public readonly string _FormSideBar = "_FormSideBar";
+                public readonly string _SearchAndResults = "_SearchAndResults";
+                public readonly string _SearchSideBar = "_SearchSideBar";
+                public readonly string Index = "Index";
+                public readonly string New = "New";
+                public readonly string Show = "Show";
+            }
             public readonly string _FormAndCards = "~/Views/Establishments/_FormAndCards.cshtml";
             public readonly string _FormSideBar = "~/Views/Establishments/_FormSideBar.cshtml";
             public readonly string _SearchAndResults = "~/Views/Establishments/_SearchAndResults.cshtml";
@@ -151,50 +180,59 @@ namespace UCosmic.Www.Mvc.Controllers {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_EstablishmentsController: UCosmic.Www.Mvc.Controllers.EstablishmentsController {
+    public class T4MVC_EstablishmentsController : UCosmic.Www.Mvc.Controllers.EstablishmentsController
+    {
         public T4MVC_EstablishmentsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ViewResult Index() {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Index);
+        public override System.Web.Mvc.ViewResult Index()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Index);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult New() {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.New);
+        public override System.Web.Mvc.ViewResult New()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Create() {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Create);
+        public override System.Web.Mvc.ViewResult Create()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Create);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Show(int id) {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Show);
+        public override System.Web.Mvc.ActionResult Show(int id)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Show);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Edit(int id) {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Edit);
+        public override System.Web.Mvc.ViewResult Edit(int id)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Edit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Update(int id) {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Update);
+        public override System.Web.Mvc.ViewResult Update(int id)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Update);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Delete(int id) {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Delete);
+        public override System.Web.Mvc.ViewResult Delete(int id)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Delete);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Destroy(int id) {
-            var callInfo = new T4MVC_ViewResult(Area, Name, ActionNames.Destroy);
+        public override System.Web.Mvc.ViewResult Destroy(int id)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Destroy);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             return callInfo;
         }
