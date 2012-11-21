@@ -29,9 +29,9 @@ namespace UCosmic.Www.Mvc
                         "~/scripts/knockout-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
-                        //"~/scripts/jquery-{version}.js",
-                        //"~/scripts/jquery-ui-{version}.js",
-                        //"~/scripts/knockout-*",
+                        "~/scripts/jquery-{version}.js",
+                        "~/scripts/jquery-ui-{version}.js",
+                        "~/scripts/knockout-*",
                         "~/scripts/knockout.mapping-latest*",
                         "~/scripts/knockout.validation*",
                         "~/scripts/app/knockout.binding-handlers.js",
