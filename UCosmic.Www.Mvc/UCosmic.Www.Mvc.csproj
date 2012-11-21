@@ -393,7 +393,7 @@
     <Content Include="scripts\knockout.mapping-latest.js" />
     <Content Include="scripts\knockout.validation.debug.js" />
     <Content Include="scripts\knockout.validation.js" />
-    <Content Include="scripts\modernizr-2.5.3.js" />
+    <Content Include="scripts\modernizr-2.6.2.js" />
     <Content Include="scripts\oss\jquery.autosize.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
