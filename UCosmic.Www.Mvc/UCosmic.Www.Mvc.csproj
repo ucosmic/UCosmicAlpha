@@ -398,8 +398,8 @@
     <Content Include="scripts\jquery.validate.min.js" />
     <Content Include="scripts\jquery.validate.unobtrusive.js" />
     <Content Include="scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="scripts\knockout-2.1.0.debug.js" />
-    <Content Include="scripts\knockout-2.1.0.js" />
+    <Content Include="scripts\knockout-2.2.0.debug.js" />
+    <Content Include="scripts\knockout-2.2.0.js" />
     <Content Include="scripts\knockout.mapping-latest.debug.js" />
     <Content Include="scripts\knockout.mapping-latest.js" />
     <Content Include="scripts\knockout.validation.debug.js" />
