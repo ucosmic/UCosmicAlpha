@@ -238,12 +238,13 @@ function EstablishmentNameViewModel(js, $parent) {
         self.isSpinningSave(false); // stop save spinner TODO: what if server throws non-validation exception?
         self.isSpinningPurge(false);
     };
-    var mutationSuccess = function () {
+    var mutationSuccess = function (response) {
         $parent.requestNames(function () { // when parent receives response,
             $parent.editingName(undefined); // tell parent no item is being edited anymore
             self.editMode(false); // hide the form, show the view
             self.isSpinningSave(false); // stop save spinner
-            self.isSpinningPurge(false);
+            self.isSpinningPurge(false); // stop purge spinner
+            app.flasher.flash(response);
         });
     };
 

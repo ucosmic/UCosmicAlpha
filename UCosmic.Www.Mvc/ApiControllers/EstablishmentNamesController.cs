@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -112,15 +113,18 @@ namespace UCosmic.Www.Mvc.ApiControllers
                 return badRequest;
             }
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, Get(establishmentId, command.Id));
-            var uri = Url.Link(null, new
+            //var response = Request.CreateResponse(HttpStatusCode.Created, Get(establishmentId, command.Id));
+            var response = Request.CreateResponse(HttpStatusCode.Created,
+                string.Format("Establishment name '{0}' was successfully created.", model.Text));
+            var url = Url.Link(null, new
             {
                 controller = "EstablishmentNames",
                 action = "Get",
                 establishmentId,
                 establishmentNameId = command.Id,
             });
-            response.Headers.Location = new Uri(uri);
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
             return response;
         }
 
@@ -147,7 +151,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
                 return badRequest;
             }
 
-            var response = Request.CreateResponse(HttpStatusCode.NoContent);
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
             return response;
         }
 
@@ -159,6 +163,7 @@ namespace UCosmic.Www.Mvc.ApiControllers
             if (!FindResources(establishmentId, establishmentNameId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            var entity = Get(establishmentId, establishmentNameId);
             var command = new DeleteEstablishmentName(User, establishmentNameId);
 
             try
@@ -171,7 +176,9 @@ namespace UCosmic.Www.Mvc.ApiControllers
                 return badRequest;
             }
 
-            return new HttpResponseMessage(HttpStatusCode.NoContent);
+            var response = Request.CreateResponse(HttpStatusCode.OK,
+                string.Format("Establishment name '{0}' was successfully deleted.", entity.Text));
+            return response;
         }
 
         [POST("{establishmentId}/names/{establishmentNameId}/validate-text")]
