@@ -54,6 +54,13 @@ body {
                         background-color: transparent;
                     }
                 }
+                &.in {
+                    border-right: 0px none;
+                    margin-left: -6px;
+                }
+                &.my, &.out {
+                    display: inline-block;
+                }
                 &.user-voice {
                     background-image: $user-voice-24-filled;
                     background-position: 8px -1px;

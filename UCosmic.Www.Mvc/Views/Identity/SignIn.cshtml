@@ -1,18 +1,26 @@
 ﻿@model UCosmic.Www.Mvc.Models.SignInForm
 @{
-    ViewBag.Title = "Sign on to UCosmic";
+    ViewBag.Title = "Sign into UCosmic";
 }
 
 <div class="fixed content" data-current-module="admin">
     <header>
         <h1>@ViewBag.Title</h1>
     </header>
-    @using(Html.BeginForm())
-    {
-        @Html.TextBoxFor(m => m.UserName)
-        @Html.PasswordFor(m => m.Password)
-        <input type="submit" value="Submit" />
-    }
+    <div class="group">
+        <div class="float-left" style="width: 470px;">
+            @using (Html.BeginForm())
+            {
+                <div class="field">
+                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "[Email Address]" })
+                </div>
+                <div class="field">
+                    @Html.PasswordFor(m => m.Password, new { placeholder = "[Password]" })
+                </div>
+                <input type="submit" value="Submit" />
+            }
+        </div>
+    </div>
     @*<a id="sign_in_async" href="#">Sign In Async</a>
     <a id="sign_out_async" href="#">Sign Out Async</a>*@
 </div>
