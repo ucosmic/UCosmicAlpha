@@ -439,25 +439,25 @@ body #main {
             body #main > .content.fixed nav.side > ul > li.static > .content a[disabled], body #main > .content.fixed nav.side > ul > li.static > .content button.link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=submit].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=reset].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=button].link[disabled] {
               color: #999; }
       body #main > .content.fixed nav.side > ul.top > li:last-child > a > .text {
-        -moz-border-radius: 0 0 0 0;
-        -webkit-border-radius: 0 0 0 0;
-        border-radius: 0 0 0 0; }
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0; }
       body #main > .content.fixed nav.side > ul.top > li:last-child.current > a > .text {
-        -moz-border-radius: 0 0 0 0;
-        -webkit-border-radius: 0 0 0 0;
-        border-radius: 0 0 0 0; }
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0; }
       body #main > .content.fixed nav.side > ul.top > li:last-child.current > .content {
-        -moz-border-radius: 0 0 0 0;
-        -webkit-border-radius: 0 0 0 0;
-        border-radius: 0 0 0 0; }
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0; }
       body #main > .content.fixed nav.side > ul.bottom > li:first-child > a > .text {
-        -moz-border-radius: 0 0 0 0;
-        -webkit-border-radius: 0 0 0 0;
-        border-radius: 0 0 0 0; }
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0; }
       body #main > .content.fixed nav.side > ul.bottom > li:first-child.current > a > .text {
-        -moz-border-radius: 0 0 0 0;
-        -webkit-border-radius: 0 0 0 0;
-        border-radius: 0 0 0 0; }
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0; }
     body #main > .content.fluid {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;

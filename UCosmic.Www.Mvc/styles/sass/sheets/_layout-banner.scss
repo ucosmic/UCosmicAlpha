@@ -85,7 +85,7 @@ body {
                     display: inline-block;
                     @include border-box;
                     margin: 4px 2px 0 0;
-                    @include border-radii(8px, 8px, 0, 0);
+                    @include border-radius(8px 8px 0 0);
                     padding: 6px 8px;
                     height: 28px;
                     @include font-height(14px, 16px);
@@ -212,7 +212,7 @@ body {
                     display: inline-block;
                     @include border-box;
                     margin: 0 2px 0 0;
-                    @include border-radii(0, 0, 8px, 8px);
+                    @include border-radius(0 0 8px 8px);
                     @include font-height(16px, 1);
                     @include font-height(14px, 16px);
                     padding: 10px 16px 8px;

@@ -56,16 +56,10 @@ $banner-logo: 'banner-logo.png';
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$ms-value});
 }
 
-@mixin border-radius($value: 0) {
+@mixin border-radius($value: 0 0 0 0) {
     -moz-border-radius: $value;
     -webkit-border-radius: $value;
     border-radius: $value;
-}
-
-@mixin border-radii($topLeft: 0, $topRight: 0, $bottom: 0, $right: 0) {
-    -moz-border-radius: $topLeft $topRight $bottom $right;
-    -webkit-border-radius: $topLeft $topRight $bottom $right;
-    border-radius: $topLeft $topRight $bottom $right;
 }
 
 @mixin outline-none {
