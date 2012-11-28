@@ -316,7 +316,7 @@ function EstablishmentSearchViewModel() {
                 trail.push(this.path);
             });
 
-            this.get('', function () {
+            this.get('/establishments[\/]?', function () { // match /establishments or /establishments/
                 this.app.setLocation('#/page/1/');
             });
         });
