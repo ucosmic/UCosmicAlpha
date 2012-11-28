@@ -8,7 +8,7 @@
 ko.validation.rules['uniqueEstablishmentName'] = {
     async: true,
     validator: function (val, vm, callback) {
-        if (!vm.isValidatableAsync) {
+        if (!vm.isTextValidatableAsync()) {
             callback(true);
         }
         else {
@@ -28,6 +28,7 @@ ko.validation.registerExtenders();
 
 function EstablishmentNameViewModel(js, $parent) {
     var self = this;
+    var saveEditorClicked = false;
     if (!js)
         js = {
             id: 0,
@@ -38,12 +39,15 @@ function EstablishmentNameViewModel(js, $parent) {
             languageCode: '',
             languageName: ''
         };
-    self.originalValues = js; // hold onto original values so they can be reset on cancel
+    var originalValues = js; // hold onto original values so they can be reset on cancel
     ko.mapping.fromJS(js, {}, self); // map api properties to observables
 
-    self.isValidatableAsync = false;
-    self.text.subscribe(function (newValue) {
-        self.isValidatableAsync = newValue !== self.originalValues.text;
+    self.isOfficialNameEnabled = ko.computed(function() {
+        return !originalValues.isOfficialName;
+    });
+
+    self.isTextValidatableAsync = ko.computed(function () {
+        return self.text() !== originalValues.text;
     });
 
     // validate text property
@@ -55,18 +59,13 @@ function EstablishmentNameViewModel(js, $parent) {
         uniqueEstablishmentName: self
     });
 
-    var isValidatingAsync = 0;
     self.text.isValidating.subscribe(function (isValidating) {
         if (isValidating) {
             self.isSpinningSaveValidator(true);
-            isValidatingAsync++;
         }
         else {
-            isValidatingAsync--;
-            if (isValidatingAsync < 1) {
-                self.isSpinningSaveValidator(false);
-                if (self.saveEditorClicked) self.saveEditor();
-            }
+            self.isSpinningSaveValidator(false);
+            if (saveEditorClicked) self.saveEditor();
         }
     });
 
@@ -93,16 +92,16 @@ function EstablishmentNameViewModel(js, $parent) {
             $(self.textElement).focus(); // focus the text box
         }
     };
-    self.saveEditorClicked = false;
+
     self.saveEditor = function () {
-        self.saveEditorClicked = true;
+        saveEditorClicked = true;
         if (!self.isValid()) { // validate
+            saveEditorClicked = false;
             self.errors.showAllMessages();
-            self.saveEditorClicked = false;
         }
-        else if (isValidatingAsync < 1) { // hit server
+        else if (!self.text.isValidating()) { // hit server
+            saveEditorClicked = false;
             self.isSpinningSave(true); // start save spinner
-            self.saveEditorClicked = false;
 
             if (self.id()) {
                 $.ajax({ // submit ajax PUT request
@@ -126,16 +125,16 @@ function EstablishmentNameViewModel(js, $parent) {
     self.cancelEditor = function () { // decide not to edit this item
         $parent.editingName(undefined); // tell parent no item is being edited anymore
         if (self.id()) {
-            ko.mapping.fromJS(self.originalValues, {}, self); // restore original values
+            ko.mapping.fromJS(originalValues, {}, self); // restore original values
             self.editMode(false); // hide the form, show the view
         }
         else {
-            $parent.names.shift();
+            $parent.names.shift(); // remove the new empty item
         }
     };
 
     self.clickOfficialNameCheckbox = function () { // educate users on how to change the official name
-        if (self.originalValues.isOfficialName) { // only when the name is already official in the db
+        if (originalValues.isOfficialName) { // only when the name is already official in the db
             $($parent.genericAlertDialog).find('p.content')
                 .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
             $($parent.genericAlertDialog).dialog({
@@ -257,7 +256,7 @@ function EstablishmentItemViewModel(id) {
     // languages dropdowns
     self.languages = ko.observableArray(); // select options
     ko.computed(function () { // get languages from the server
-        $.get(app.routes.webApi.languages.get())
+        $.getJSON(app.routes.webApi.languages.get())
         .success(function (response) {
             response.splice(0, 0, { code: undefined, name: '[Language Neutral]' }); // add null option
             self.languages(response); // set the options dropdown
