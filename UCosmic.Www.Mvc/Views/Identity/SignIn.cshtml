@@ -29,23 +29,16 @@
     <script type="text/javascript">
         $(function () {
             $('#sign_in_async').on('click', function () {
-                $.ajax({
-                    url: '/api/sign-in',
-                    type: 'POST',
-                    data: {
-                        userName: 'Daniel.Ludwig@uc.edu',
-                        password: 'asdfasdf'
-                    }
+                $.post(app.routes.webApi.identity.signIn(), {
+                    userName: 'Daniel.Ludwig@uc.edu',
+                    password: 'asdfasdf'
                 })
                 .success(function (response, arg2, arg3, arg4, arg5) {
                     alert('in success');
                 });
             });
             $('#sign_out_async').on('click', function () {
-                $.ajax({
-                    url: '/api/sign-out',
-                    type: 'GET',
-                })
+                $.get(app.routes.webApi.identity.signOut())
                 .success(function (response, arg2, arg3, arg4, arg5) {
                     alert('out success');
                 });

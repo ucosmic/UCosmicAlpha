@@ -152,7 +152,7 @@
 
     <script type="text/javascript">
         app.flasher.text('@TempData["Flasher"]');
-        app.webApiRoutes = new WebApiRoutes('@Request.ApplicationPath');
+        app.routes = new Routes('@Request.ApplicationPath');
         $(function () {
             $('[data-current-module]').each(function () {
                 var module = $(this).data('current-module');

@@ -1,5 +1,5 @@
 ﻿/// <reference path="../scripts/jquery-1.8.0.js" />
-/// <reference path="../scripts/knockout-2.1.0.js" />
+/// <reference path="../scripts/knockout-2.2.0.js" />
 /// <reference path="../scripts/knockout.mapping-latest.js" />
 /// <reference path="../scripts/knockout.validation.debug.js" />
 /// <reference path="../scripts/app/app.js" />
@@ -12,11 +12,8 @@ ko.validation.rules['uniqueEstablishmentName'] = {
             callback(true);
         }
         else {
-            $.ajax({
-                url: '/api/establishments/' + vm.ownerId() + '/names/' + vm.id() + '/validate-text',
-                type: 'POST',
-                data: vm.serializeData()
-            })
+            var route = app.routes.webApi.establishmentNames.validateText(vm.ownerId(), vm.id());
+            $.post(route, vm.serializeData())
             .success(function () {
                 callback(true);
             })
@@ -109,7 +106,7 @@ function EstablishmentNameViewModel(js, $parent) {
 
             if (self.id()) {
                 $.ajax({ // submit ajax PUT request
-                    url: '/api/establishments/' + $parent.id + '/names/' + self.id(), // TODO: put this in stronger URL helper
+                    url: app.routes.webApi.establishmentNames.put($parent.id, self.id()),
                     type: 'PUT',
                     data: self.serializeData()
                 })
@@ -117,7 +114,7 @@ function EstablishmentNameViewModel(js, $parent) {
             }
             else if ($parent.id) {
                 $.ajax({ // submit ajax POST request
-                    url: '/api/establishments/' + $parent.id + '/names', // TODO: put this in stronger URL helper
+                    url: app.routes.webApi.establishmentNames.post($parent.id),
                     type: 'POST',
                     data: self.serializeData()
                 })
@@ -137,7 +134,7 @@ function EstablishmentNameViewModel(js, $parent) {
         }
     };
 
-    self.clickOfficialNameCheckbox = function () { // TODO educate users on how to change the official name
+    self.clickOfficialNameCheckbox = function () { // educate users on how to change the official name
         if (self.originalValues.isOfficialName) { // only when the name is already official in the db
             $($parent.genericAlertDialog).find('p.content')
                 .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
@@ -192,7 +189,7 @@ function EstablishmentNameViewModel(js, $parent) {
                         shouldRemainSpinning = true;
                         $(self.confirmPurgeDialog).dialog('close');
                         $.ajax({ // submit ajax DELETE request
-                            url: '/api/establishments/ ' + $parent.id + '/names/' + self.id(), // TODO: put this in stronger URL helper
+                            url: app.routes.webApi.establishmentNames.del($parent.id, self.id()),
                             type: 'DELETE'
                         })
                         .success(mutationSuccess)
@@ -260,7 +257,7 @@ function EstablishmentItemViewModel(id) {
     // languages dropdowns
     self.languages = ko.observableArray(); // select options
     ko.computed(function () { // get languages from the server
-        $.get(app.webApiRoutes.Languages.Get())
+        $.get(app.routes.webApi.languages.get())
         .success(function (response) {
             response.splice(0, 0, { code: undefined, name: '[Language Neutral]' }); // add null option
             self.languages(response); // set the options dropdown
@@ -283,7 +280,7 @@ function EstablishmentItemViewModel(id) {
     };
     self.requestNames = function (callback) {
         self.isSpinningNames(true);
-        $.get('/api/establishments/' + self.id + '/names', {})
+        $.get(app.routes.webApi.establishmentNames.get(self.id), {})
         .success(function (response) {
             self.receiveNames(response);
             if (callback) callback(response);

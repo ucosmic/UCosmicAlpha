@@ -1,6 +1,6 @@
 ﻿/// <reference path="../scripts/jquery-1.8.0.js" />
-/// <reference path="../scripts/knockout-2.1.0.js" />
-/// <reference path="../scripts/sammy/sammy.js" />
+/// <reference path="../scripts/knockout-2.2.0.js" />
+/// <reference path="../scripts/sammy-0.7.1.js" />
 /// <reference path="../scripts/app/side-swiper.js" />
 /// <reference path="../scripts/app/app.js" />
 
@@ -78,7 +78,7 @@ function EstablishmentSearchViewModel() {
     // countries dropdown
     ko.computed(function () {
         var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-        $.get(app.webApiRoutes.Countries.Get())
+        $.get(app.routes.webApi.countries.get())
         .success(function (response) {
             response.splice(response.length, 0, { code: '-1', name: '[Without country]' });
             self.countries(response);
@@ -245,7 +245,7 @@ function EstablishmentSearchViewModel() {
             return;
         self.startSpinning();
 
-        $.get('/api/establishments', {
+        $.get(app.routes.webApi.establishments.get(), {
             pageSize: self.pageSize(),
             pageNumber: self.pageNumber(),
             countryCode: self.countryCode(),
