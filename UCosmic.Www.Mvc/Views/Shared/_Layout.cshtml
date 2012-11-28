@@ -16,21 +16,21 @@
                 <div class="group">
                     @if (Request.IsAuthenticated)
                     {
-                        <a href="" class="email float-left">@User.Identity.Name</a>
-                        <a href="#/account" class="my float-left">My International</a>
-                        <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))" class="out float-left">Sign out</a>
+                        <a href="" class="email">@User.Identity.Name</a>
+                        <a href="#/account" class="my">My International</a>
+                        <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }
                     else
                     {
-                        <a href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))" class="in float-left">Sign in</a>
+                        <a href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))">Sign in</a>
                     }
                 </div>
             </div>
             <div class="right">
                 <div class="group">
-                    <a href="#/uv" class="float-left user-voice" title="Powered by uservoice">Feedback &amp; Support</a>
-                    <a href="#/uv" class="float-left">Blog</a>
-                    <a href="#/uv" class="float-left">Consortium</a>
+                    <a href="#/uv" class="user-voice" title="Powered by uservoice">Feedback &amp; Support</a>
+                    <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
+                    <a href="http://www.ucosmic.org" target="_blank">Consortium</a>
                 </div>
             </div>
         </div>
@@ -74,11 +74,11 @@
             <div class="flasher hide" data-bind="element: 'element'">
                 <a data-bind="click: dismiss">
                     <div class="group">
-                        <p class="float-left">
+                        <p>
                             <span class="content" data-bind="text: text"></span>
                             <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
                         </p>
-                        <i class="float-right closer"></i>
+                        <i class="on-right closer"></i>
                     </div>
                 </a>
             </div>

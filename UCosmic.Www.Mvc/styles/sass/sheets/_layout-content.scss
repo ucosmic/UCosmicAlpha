@@ -19,12 +19,12 @@ body {
                 padding-left: $tube-outer-width - $tube-inner-width;
                 padding-top: $tube-outer-width - $tube-inner-width;
                 .group {
-                    .float-left.from-top {
+                    .on-left.from-top {
                         padding-top: $tube-outer-width - $tube-inner-width;
                         @include border-box;
                         width: 690px;
                     }
-                    .float-right.from-top {
+                    .on-right.from-top {
                         @include border-box;
                         width: 260px;
                         display: block;
@@ -81,6 +81,7 @@ body {
                                     display: inline-block;
                                     border: solid 15px transparent;
                                     border-left: none;
+                                    float: left;
                                 }
                                 > .text {
                                     > img {
@@ -93,6 +94,7 @@ body {
                                 @include border-box;
                                 width: 245px;
                                 padding: 5px 8px 5px 8px;
+                                float: left;
                                 @include font-height(16px, 20px);
                                 font-weight: bold;
                                 color: $sidebar-default-text-color;
@@ -304,7 +306,7 @@ body {
                         border: solid 1px #555;
                         padding: 16px;
                         @include border-radius(8px);
-                        > .float-right {
+                        > .on-right {
                             margin-left: 5px;
                         }
                     }

@@ -24,7 +24,7 @@
         <div data-side-swiper="deck">
             <div id="all" data-side-swiper="on">
                 <form class="group">
-                    <div class="float-left from-top">
+                    <div class="on-left from-top">
                         <header>
                             <h1>
                                 @ViewBag.Title
@@ -48,8 +48,8 @@
                                     <li data-bind="element: 'participantEl'">
                                         <div class="typed-item" data-bind="with: establishment">
                                             @*<a href="#" data-bind="attr: { href: '#/participants/remove/' + id() }"
-                                                title="Remove this participant"><i class="red minus float-right"></i></a>*@
-                                            <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus float-right"></i></a>
+                                                title="Remove this participant"><i class="red minus on-right"></i></a>*@
+                                            <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
                                             <div class="type">
                                                 <span data-bind="visible: $parent.isOwner">Home</span>
                                                 <span data-bind="visible: $parent.isNotOwner">Partner</span>
@@ -74,7 +74,7 @@
                                 <ul>
                                     <li>
                                         <div class="typed-item">
-                                            <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
+                                            <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus on-right"></i></a>
                                             <div class="type">
                                                 Home
                                             </div>
@@ -87,7 +87,7 @@
                                     </li>
                                     <li>
                                         <div class="typed-item">
-                                            <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus float-right"></i></a>
+                                            <a href="#/participants/remove/6" title="Remove this participant"><i class="red minus on-right"></i></a>
                                             <div class="type">
                                                 Partner
                                             </div>
@@ -112,7 +112,7 @@
                         </section>
                         @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
                     </div>
-                    <aside class="float-right from-top" data-fixed-scroll="root">
+                    <aside class="on-right from-top" data-fixed-scroll="root">
                         <div data-fixed-scroll="anchor"></div>
                         <div data-fixed-scroll="content">
                             @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
@@ -122,7 +122,7 @@
             </div>
             <div id="participants_add" data-side-swiper="off">
                 <form class="group">
-                    <div class="float-left from-top">
+                    <div class="on-left from-top">
                         <header>
                             <a href="#/"><span class="breadcrumb-arrows">&lt;&lt;&nbsp;</span><h1>Institutional Agreement</h1>
                             </a>
@@ -135,7 +135,7 @@
                             @Html.Partial(MVC.Establishments.Views._SearchAndResults)
                         </div>
                     </div>
-                    <aside class="float-right from-top" data-fixed-scroll="root">
+                    <aside class="on-right from-top" data-fixed-scroll="root">
                         <div data-fixed-scroll="anchor"></div>
                         <div data-fixed-scroll="content" data-bind="with: establishmentSearchViewModel">
                             @Html.Partial(MVC.Establishments.Views._SearchSideBar)

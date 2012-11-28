@@ -22,8 +22,8 @@
                     <span data-bind="text: transitionedPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
-            <div class="results" data-bind="visible: hasItems" style="display: none;">
-                <div class="table" data-bind="visible: lens() === 'table'">
+            <div data-bind="visible: hasItems" style="display: none;">
+                <div data-bind="visible: lens() === 'table'">
                     <table class="data">
                         <colgroup>
                             <col style="width: 75%;" />
@@ -64,7 +64,7 @@
                     <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Establishments.Show(0))">
                         <li class="hover-hilite" data-bind="click: clickAction">
                             <div>
-                                <div class="float-right" style="text-align: right;">
+                                <div class="on-right" style="text-align: right;">
                                     <div data-bind="text: nullDisplayCountryName"></div>
                                     <div data-bind="visible: officialUrl">
                                         <a href="#" target="_blank"

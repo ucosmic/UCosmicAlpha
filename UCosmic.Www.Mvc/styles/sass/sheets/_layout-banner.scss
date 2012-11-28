@@ -37,6 +37,7 @@ body {
                 @include border-box;
                 border-right: solid 1px $nav-my-link-border-color;
                 padding: 4px 12px;
+                float: left;
                 @include font-height(14px, 1);
                 font-weight: bold;
                 color: $nav-my-link-color;
@@ -57,9 +58,6 @@ body {
                 &.in {
                     border-right: 0px none;
                     margin-left: -6px;
-                }
-                &.my, &.out {
-                    display: inline-block;
                 }
                 &.user-voice {
                     background-image: $user-voice-24-filled;
@@ -169,6 +167,7 @@ body {
                         @include border-box;
                         /* paragraph width is flasher width minus 70 px to allow for closer image and padding */
                         max-width: 630px;
+                        float: left;
                         @media only screen and (max-width : 320px) {
                             max-width: 240px;
                         }

@@ -219,7 +219,7 @@ i.red.minus {
   background-image: url(../../icons/closer-24-red.png);
   background-position: top left;
   background-repeat: no-repeat; }
-  i.red.minus.float-right {
+  i.red.minus.on-right {
     margin: 8px; }
 
 form {

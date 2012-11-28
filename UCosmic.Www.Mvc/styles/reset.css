@@ -78,11 +78,11 @@ img {
     display: table;
 }
 
-.float-left {
+.on-left {
     float: left;
 }
 
-.float-right {
+.on-right {
     float: right;
 }
 

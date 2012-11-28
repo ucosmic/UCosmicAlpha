@@ -15,13 +15,13 @@
                     <li data-bind="css: { selected: editMode }">
                         <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': $parent.editingName() }">
                             <div class="group">
-                                <div class="float-left" style="max-width: 645px;">
+                                <div class="on-left" style="max-width: 645px;">
                                     <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
                                     <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
                                     <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
                                     <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
                                 </div>
-                                <div class="float-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
+                                <div class="on-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
                                     <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this name">
                                         <img src="~/styles/icons/minus-20-red.png" alt="" class="align-top" /></a>
                                     <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: isSpinningPurge" />
