@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using UCosmic.Www.Mvc.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -16,7 +17,7 @@
                 <div class="group">
                     @if (Request.IsAuthenticated)
                     {
-                        <a href="" class="email">@User.Identity.Name</a>
+                        <a href="#/me" class="email">@User.Identity.Name</a>
                         <a href="#/account" class="my">My International</a>
                         <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }
@@ -28,7 +29,8 @@
             </div>
             <div class="right">
                 <div class="group">
-                    <a href="#/uv" class="user-voice" title="Powered by uservoice">Feedback &amp; Support</a>
+                    @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
+                    @*<a href="#/uv" class="user-voice" title="Powered by uservoice">Feedback &amp; Support</a>*@
                     <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
                     <a href="http://www.ucosmic.org" target="_blank">Consortium</a>
                 </div>
@@ -139,7 +141,7 @@
             </nav>
         </div>
     </footer>
-    <input id="scroll_top_tracker" type="hidden"/>
+    <input id="scroll_top_tracker" type="hidden" />
 
     @*
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -174,6 +176,7 @@
         });
     </script>
 
+    @Html.Partial(MVC.Shared.Views._UserVoiceScript)
     @RenderSection("scripts", required: false)
 </body>
 </html>

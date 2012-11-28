@@ -1,4 +1,5 @@
-﻿@{
+﻿@using UCosmic.Www.Mvc.Models
+@{
     ViewBag.Title = "404 - Page not found";
 }
 @section bib
@@ -21,6 +22,7 @@
         If you reached this page by manually typing a URL into your browser, please don't.
     </p>
     <p>
-        If you believe you have reached this page in error, please report your concerns using our <a href="#">Feedback &amp; Support link</a>.
+        If you believe you have reached this page in error, please report your concerns using our 
+        @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData)) link.
     </p>
 </div>

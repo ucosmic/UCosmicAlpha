@@ -40,6 +40,8 @@ namespace T4MVC
                 public readonly string _SampleSidebarNav = "_SampleSidebarNav";
                 public readonly string _SampleStylingBib = "_SampleStylingBib";
                 public readonly string _SampleVerticalContent = "_SampleVerticalContent";
+                public readonly string _UserVoiceLink = "_UserVoiceLink";
+                public readonly string _UserVoiceScript = "_UserVoiceScript";
                 public readonly string Error = "Error";
             }
             public readonly string _Layout = "~/Views/Shared/_Layout.cshtml";
@@ -47,6 +49,8 @@ namespace T4MVC
             public readonly string _SampleSidebarNav = "~/Views/Shared/_SampleSidebarNav.cshtml";
             public readonly string _SampleStylingBib = "~/Views/Shared/_SampleStylingBib.cshtml";
             public readonly string _SampleVerticalContent = "~/Views/Shared/_SampleVerticalContent.cshtml";
+            public readonly string _UserVoiceLink = "~/Views/Shared/_UserVoiceLink.cshtml";
+            public readonly string _UserVoiceScript = "~/Views/Shared/_UserVoiceScript.cshtml";
             public readonly string Error = "~/Views/Shared/Error.cshtml";
         }
     }

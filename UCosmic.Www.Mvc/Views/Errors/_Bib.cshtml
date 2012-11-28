@@ -1,1 +1,4 @@
-﻿To report a suspected bug in UCosmic, please use the <a href="#">Feedback &amp; Support link</a>.
+﻿@using UCosmic.Www.Mvc.Models
+To report a suspected bug in UCosmic, please use the 
+@Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData))
+link.
