@@ -66,25 +66,24 @@ namespace UCosmic.Www.Mvc.ApiControllers
             return models;
         }
 
-        //[GET("{establishmentId}/names/{establishmentNameId}")]
-        //public EstablishmentNameApiModel Get(int establishmentId, int establishmentNameId)
-        //{
-        //    //System.Threading.Thread.Sleep(2000);
-        //    if (!FindResources(establishmentId, establishmentNameId))
-        //        throw new HttpResponseException(HttpStatusCode.NotFound);
-        //
-        //    var entity = _queryProcessor.Execute(new EstablishmentNameById(establishmentNameId)
-        //    {
-        //        EagerLoad = new Expression<Func<EstablishmentName, object>>[]
-        //        {
-        //            x => x.ForEstablishment,
-        //            x => x.TranslationToLanguage.Names.Select(y => y.TranslationToLanguage),
-        //        },
-        //    });
-        //
-        //    var model = Mapper.Map<EstablishmentNameApiModel>(entity);
-        //    return model;
-        //}
+        [GET("{establishmentId}/urls/{establishmentUrlId}")]
+        public EstablishmentUrlApiModel Get(int establishmentId, int establishmentUrlId)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            if (!FindResources(establishmentId, establishmentUrlId))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var entity = _queryProcessor.Execute(new EstablishmentUrlById(establishmentUrlId)
+            {
+                EagerLoad = new Expression<Func<EstablishmentUrl, object>>[]
+                {
+                    x => x.ForEstablishment,
+                },
+            });
+
+            var model = Mapper.Map<EstablishmentUrlApiModel>(entity);
+            return model;
+        }
 
         //[POST("{establishmentId}/names")]
         //[Authorize(Roles = "Establishment Administrator")]
@@ -211,14 +210,14 @@ namespace UCosmic.Www.Mvc.ApiControllers
         //    return Request.CreateResponse(HttpStatusCode.OK);
         //}
 
-        private bool FindResources(int establishmentId, int? establishmentNameId = null)
+        private bool FindResources(int establishmentId, int? establishmentUrlId = null)
         {
             var establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId));
             if (establishment == null)
                 return false;
 
-            if (establishmentNameId.HasValue &&
-                establishment.Names.SingleOrDefault(x => x.RevisionId == establishmentNameId.Value) == null)
+            if (establishmentUrlId.HasValue &&
+                establishment.Urls.SingleOrDefault(x => x.RevisionId == establishmentUrlId.Value) == null)
                 return false;
 
             return true;
