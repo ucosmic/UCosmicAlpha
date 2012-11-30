@@ -52,6 +52,24 @@
             return getAbsoluteUrl('api/establishments/' + establishmentId + '/names/' + establishmentNameId + '/validate-text/');
         }
     };
+
+    self.establishmentUrls = {
+        get: function (establishmentId, establishmentUrlId) {
+            var url = 'api/establishments/' + establishmentId + '/urls/';
+            if (establishmentUrlId)
+                url += establishmentUrlId + '/';
+            return getAbsoluteUrl(url);
+        },
+        post: function (establishmentId) {
+            return this.get(establishmentId);
+        },
+        put: function (establishmentId, establishmentUrlId) {
+            return getAbsoluteUrl('api/establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/');
+        },
+        del: function (establishmentId, establishmentUrlId) {
+            return this.put(establishmentId, establishmentUrlId);
+        }
+    };
 }
 
 //function MvcRoutes(applicationPath) {

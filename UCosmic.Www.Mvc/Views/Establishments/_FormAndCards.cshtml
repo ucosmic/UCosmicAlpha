@@ -1,7 +1,7 @@
 ﻿<div data-side-swiper="root" id="search">
     <div data-side-swiper="deck">
         <div data-side-swiper="on" class="left">
-            <section id="participants">
+            <section id="names" class="fieldset">
                 <header>
                     <h2>
                         Name(s)
@@ -72,6 +72,83 @@
                                     <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
                                     <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
                                     <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section id="urls" class="fieldset">
+                <header>
+                    <h2>
+                        URL(s)
+                        <a href="#" title="Add a new URL" data-bind="visible: !isSpinningUrls() && !editingUrl(), click: addUrl">
+                            <img src="~/styles/icons/plus-24-green.png" alt="Add a new URL" />
+                        </a>
+                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningUrls" />
+                    </h2>
+                </header>
+                <ul class="data-items" data-bind="foreach: urls">
+                    <li data-bind="css: { selected: editMode }">
+                        <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': $parent.editingUrl() }">
+                            <div class="group">
+                                <div class="on-left" style="max-width: 645px;">
+                                    <span data-bind="text: value, css: { 'bold': isOfficialUrl() }" class="inline-block"></span>
+                                    <span class="green badge" data-bind="visible: isOfficialUrl" style="display: none;">Official</span>
+                                    @*<span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>*@
+                                    <span class="red badge" data-bind="visible: isFormerUrl" style="display: none;">Former / Defunct</span>
+                                </div>
+                                <div class="on-right" data-bind="visible: !isOfficialUrl() && !$parent.editingUrl()">
+                                    <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this URL">
+                                        <img src="~/styles/icons/minus-20-red.png" alt="" class="align-top" /></a>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: isSpinningPurge" />
+                                </div>
+                            </div>
+                        </div>
+                        <div data-bind="visible: editMode" style="display: none;">
+                            <form method="POST" data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                                <div class="field" style="margin-top: 0;">
+                                    <textarea rows="1" class="no-resize" data-bind="value: value, element: 'valueElement', css: { spinning: isSpinningSaveValidator }" data-autosize="true" placeholder="[Enter establishment URL here]"></textarea>
+                                </div>
+                                <div class="field">
+                                    <label data-bind="click: clickOfficialUrlCheckbox">
+                                        <input type="checkbox" data-bind="checked: isOfficialUrl, enable: isOfficialUrlEnabled" />
+                                        Offical URL
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input type="checkbox" data-bind="checked: isFormerUrl, enable: !isOfficialUrl()" />
+                                        Former / Defunct URL
+                                    </label>
+                                </div>
+                                @*<div class="field">
+                                    <select data-bind="value: selectedLanguageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', element: 'languagesElement', visible: $parent.languages().length > 0" style="display: none;">
+                                    </select>
+                                    <select data-bind="visible: $parent.languages().length < 1">
+                                        <option>[Loading...]</option>
+                                    </select>
+                                </div>*@
+                                <div>
+                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave()" />
+                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !isSpinningSave()" class="link" />
+                                    &nbsp;
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSaveValidator" />
+                                    <strong data-bind="visible: isSpinningSaveValidator">Validating...</strong>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSave" />
+                                    <strong data-bind="visible: isSpinningSave">Saving...</strong>
+                                </div>
+                            </form>
+                        </div>
+                        <div data-bind="element: 'confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                            <div>
+                                <p>
+                                    Are you sure you want to delete this establishment URL?
+                                </p>
+                                <div>
+                                    <span data-bind="text: value, css: { 'bold': isOfficialUrl() }" class="inline-block"></span>
+                                    <span class="green badge" data-bind="visible: isOfficialUrl" style="display: none;">Official</span>
+                                    @*<span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>*@
+                                    <span class="red badge" data-bind="visible: isFormerUrl" style="display: none;">Former / Defunct</span>
                                 </div>
                             </div>
                         </div>

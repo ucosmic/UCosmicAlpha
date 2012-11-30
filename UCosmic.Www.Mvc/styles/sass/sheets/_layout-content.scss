@@ -200,6 +200,11 @@ body {
                 @include font-height(16px, 1.5);
                 margin: 1em 0;
             }
+            section {
+                &.fieldset {
+                    margin-bottom: 20px;
+                }
+            }
             header {
                 $temp-vertical-align: text-top;
                 margin: 16px 0;

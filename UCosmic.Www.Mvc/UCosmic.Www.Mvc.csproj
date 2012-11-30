@@ -239,6 +239,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\EstablishmentUrlsController.cs" />
     <Compile Include="ApiControllers\IdentityController.cs" />
     <Compile Include="ApiControllers\LanguagesController.cs" />
     <Compile Include="ApiControllers\EstablishmentNamesController.cs" />
@@ -286,6 +287,7 @@
     <Compile Include="IdentityController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
     <Compile Include="Models\EstablishmentApiModel.cs" />
