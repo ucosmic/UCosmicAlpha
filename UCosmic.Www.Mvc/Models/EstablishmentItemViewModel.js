@@ -301,7 +301,7 @@ function EstablishmentUrlViewModel(js, $parent) {
         if (!editingUrl) {
             $parent.editingUrl(self.id() || -1); // tell parent which item is being edited
             self.editMode(true); // show the form / hide the viewer
-            //$(self.valueElement).trigger('autosize');
+            $(self.valueElement).trigger('autosize');
             $(self.valueElement).focus(); // focus the text box
         }
     };

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
 using UCosmic.Domain.Establishments;
 using UCosmic.Www.Mvc.Models;
 
@@ -16,27 +19,27 @@ namespace UCosmic.Www.Mvc.ApiControllers
     public class EstablishmentUrlsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        //private readonly IValidator<CreateEstablishmentName> _createValidator;
-        //private readonly IHandleCommands<CreateEstablishmentName> _createHandler;
-        //private readonly IValidator<UpdateEstablishmentName> _updateValidator;
-        //private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
-        //private readonly IHandleCommands<DeleteEstablishmentName> _deleteHandler;
+        //private readonly IValidator<CreateEstablishmentUrl> _createValidator;
+        private readonly IHandleCommands<CreateEstablishmentUrl> _createHandler;
+        //private readonly IValidator<UpdateEstablishmentUrl> _updateValidator;
+        private readonly IHandleCommands<UpdateEstablishmentUrl> _updateHandler;
+        private readonly IHandleCommands<DeleteEstablishmentUrl> _deleteHandler;
 
         public EstablishmentUrlsController(
-             IProcessQueries queryProcessor
-            //, IHandleCommands<CreateEstablishmentName> createHandler
-            //, IValidator<CreateEstablishmentName> createValidator
-            //, IHandleCommands<UpdateEstablishmentName> updateHandler
-            //, IValidator<UpdateEstablishmentName> updateValidator
-            //, IHandleCommands<DeleteEstablishmentName> deleteHandler
+            IProcessQueries queryProcessor
+            , IHandleCommands<CreateEstablishmentUrl> createHandler
+            //, IValidator<CreateEstablishmentUrl> createValidator
+            , IHandleCommands<UpdateEstablishmentUrl> updateHandler
+            //, IValidator<UpdateEstablishmentUrl> updateValidator
+            , IHandleCommands<DeleteEstablishmentUrl> deleteHandler
         )
         {
             _queryProcessor = queryProcessor;
-            //_createHandler = createHandler;
+            _createHandler = createHandler;
             //_createValidator = createValidator;
-            //_updateHandler = updateHandler;
+            _updateHandler = updateHandler;
             //_updateValidator = updateValidator;
-            //_deleteHandler = deleteHandler;
+            _deleteHandler = deleteHandler;
         }
 
         [GET("{establishmentId}/urls")]
@@ -85,95 +88,94 @@ namespace UCosmic.Www.Mvc.ApiControllers
             return model;
         }
 
-        //[POST("{establishmentId}/names")]
-        //[Authorize(Roles = "Establishment Administrator")]
-        //public HttpResponseMessage Post(int establishmentId, EstablishmentNameApiModel model)
-        //{
-        //    //System.Threading.Thread.Sleep(2000);
-        //    if (!FindResources(establishmentId))
-        //        throw new HttpResponseException(HttpStatusCode.NotFound);
-        //    model.OwnerId = establishmentId;
-        //
-        //    var command = new CreateEstablishmentName(User);
-        //    Mapper.Map(model, command);
-        //
-        //    try
-        //    {
-        //        _createHandler.Handle(command);
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-        //        return badRequest;
-        //    }
-        //
-        //    //var response = Request.CreateResponse(HttpStatusCode.Created, Get(establishmentId, command.Id));
-        //    var response = Request.CreateResponse(HttpStatusCode.Created,
-        //        string.Format("Establishment name '{0}' was successfully created.", model.Text));
-        //    var url = Url.Link(null, new
-        //    {
-        //        controller = "EstablishmentNames",
-        //        action = "Get",
-        //        establishmentId,
-        //        establishmentNameId = command.Id,
-        //    });
-        //    Debug.Assert(url != null);
-        //    response.Headers.Location = new Uri(url);
-        //    return response;
-        //}
+        [POST("{establishmentId}/urls")]
+        [Authorize(Roles = "Establishment Administrator")]
+        public HttpResponseMessage Post(int establishmentId, EstablishmentUrlApiModel model)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            if (!FindResources(establishmentId))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            model.OwnerId = establishmentId;
 
-        //[PUT("{establishmentId}/names/{establishmentNameId}")]
-        //[Authorize(Roles = "Establishment Administrator")]
-        //public HttpResponseMessage Put(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
-        //{
-        //    //System.Threading.Thread.Sleep(2000);
-        //    if (!FindResources(establishmentId, establishmentNameId))
-        //        throw new HttpResponseException(HttpStatusCode.NotFound);
-        //    model.OwnerId = establishmentId;
-        //    model.Id = establishmentNameId;
-        //
-        //    var command = new UpdateEstablishmentName(User);
-        //    Mapper.Map(model, command);
-        //
-        //    try
-        //    {
-        //        _updateHandler.Handle(command);
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-        //        return badRequest;
-        //    }
-        //
-        //    var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
-        //    return response;
-        //}
+            var command = new CreateEstablishmentUrl(User);
+            Mapper.Map(model, command);
 
-        //[DELETE("{establishmentId}/names/{establishmentNameId}")]
-        //[Authorize(Roles = "Establishment Administrator")]
-        //public HttpResponseMessage Delete(int establishmentId, int establishmentNameId)
-        //{
-        //    //System.Threading.Thread.Sleep(2000);
-        //    if (!FindResources(establishmentId, establishmentNameId))
-        //        throw new HttpResponseException(HttpStatusCode.NotFound);
-        //
-        //    var entity = Get(establishmentId, establishmentNameId);
-        //    var command = new DeleteEstablishmentName(User, establishmentNameId);
-        //
-        //    try
-        //    {
-        //        _deleteHandler.Handle(command);
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-        //        return badRequest;
-        //    }
-        //
-        //    var response = Request.CreateResponse(HttpStatusCode.OK,
-        //        string.Format("Establishment name '{0}' was successfully deleted.", entity.Text));
-        //    return response;
-        //}
+            try
+            {
+                _createHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.Created,
+                string.Format("Establishment URL '{0}' was successfully created.", model.Value));
+            var url = Url.Link(null, new
+            {
+                controller = "EstablishmentUrls",
+                action = "Get",
+                establishmentId,
+                establishmentUrlId = command.Id,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
+        }
+
+        [PUT("{establishmentId}/urls/{establishmentUrlId}")]
+        [Authorize(Roles = "Establishment Administrator")]
+        public HttpResponseMessage Put(int establishmentId, int establishmentUrlId, EstablishmentUrlApiModel model)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            if (!FindResources(establishmentId, establishmentUrlId))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            model.OwnerId = establishmentId;
+            model.Id = establishmentUrlId;
+
+            var command = new UpdateEstablishmentUrl(User);
+            Mapper.Map(model, command);
+
+            try
+            {
+                _updateHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment URL was successfully updated.");
+            return response;
+        }
+
+        [DELETE("{establishmentId}/urls/{establishmentUrlId}")]
+        [Authorize(Roles = "Establishment Administrator")]
+        public HttpResponseMessage Delete(int establishmentId, int establishmentUrlId)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            if (!FindResources(establishmentId, establishmentUrlId))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var entity = Get(establishmentId, establishmentUrlId);
+            var command = new DeleteEstablishmentUrl(User, establishmentUrlId);
+
+            try
+            {
+                _deleteHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK,
+                string.Format("Establishment URL '{0}' was successfully deleted.", entity.Value));
+            return response;
+        }
 
         //[POST("{establishmentId}/names/{establishmentNameId}/validate-text")]
         //public HttpResponseMessage Validate(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)

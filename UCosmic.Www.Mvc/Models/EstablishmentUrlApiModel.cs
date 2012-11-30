@@ -25,24 +25,24 @@ namespace UCosmic.Www.Mvc.Models
             }
         }
 
-        //public class ModelToUpdateCommandProfile : Profile
-        //{
-        //    protected override void Configure()
-        //    {
-        //        CreateMap<EstablishmentUrlApiModel, UpdateEstablishmentUrl>()
-        //            .ForMember(d => d.Principal, o => o.Ignore())
-        //        ;
-        //    }
-        //}
-        //
-        //public class ModelToCreateCommandProfile : Profile
-        //{
-        //    protected override void Configure()
-        //    {
-        //        CreateMap<EstablishmentUrlApiModel, CreateEstablishmentUrl>()
-        //            .ForMember(d => d.Principal, o => o.Ignore())
-        //        ;
-        //    }
-        //}
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EstablishmentUrlApiModel, UpdateEstablishmentUrl>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                ;
+            }
+        }
+
+        public class ModelToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EstablishmentUrlApiModel, CreateEstablishmentUrl>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                ;
+            }
+        }
     }
 }

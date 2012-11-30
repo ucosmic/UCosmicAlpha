@@ -1,4 +1,6 @@
-﻿namespace UCosmic.Domain.Establishments
+﻿using Newtonsoft.Json;
+
+namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentUrl : RevisableEntity
     {
@@ -15,6 +17,23 @@
         public override string ToString()
         {
             return Value;
+        }
+    }
+
+
+    internal static class EstablishmentUrlSerializer
+    {
+        internal static string ToJsonAudit(this EstablishmentUrl establishmentUrl)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = establishmentUrl.RevisionId,
+                ForEstablishmentId = establishmentUrl.ForEstablishment.RevisionId,
+                establishmentUrl.Value,
+                establishmentUrl.IsOfficialUrl,
+                establishmentUrl.IsFormerUrl,
+            });
+            return state;
         }
     }
 }
