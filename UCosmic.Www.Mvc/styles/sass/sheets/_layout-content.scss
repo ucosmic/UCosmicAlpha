@@ -181,6 +181,14 @@ body {
                     }
                 }
             }
+            &.flush {
+                @include border-box;
+                width: $tube-outer-width;
+                > *:first-child {
+                    position: relative;
+                    z-index: -1;
+                }
+            }
             &.fluid {
                 @include border-box;
                 width: 100%;
@@ -366,6 +374,9 @@ body {
             }
             p:first-child {
                 margin-top: 0;
+            }
+            select, textarea {
+                @include font-arial;
             }
         }
         .ui-dialog-buttonpane {

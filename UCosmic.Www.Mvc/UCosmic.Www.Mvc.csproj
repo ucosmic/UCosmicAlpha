@@ -505,6 +505,7 @@
     </Content>
     <Content Include="Views\Shared\_UserVoiceScript.cshtml" />
     <Content Include="Views\Shared\_UserVoiceLink.cshtml" />
+    <Content Include="Views\Shared\_GoogleMapsScript.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -232,7 +232,8 @@ body > nav.bib {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAADCAYAAACEeL/nAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MkFDNTEyQ0YyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MkFDNTEyQkYyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1MjY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgxVvS8AAAAfSURBVHjaYmRgYGhhGADAAsT3B8JiRiBWHAiLAQIMAJ6pAYtOzUtHAAAAAElFTkSuQmCC");
   background-position: top left;
   background-repeat: repeat-x;
-  background-color: #009ee0; }
+  background-color: #009ee0;
+  z-index: 100; }
   body > nav.bib.hide {
     display: none; }
   body > nav.bib > ul {
@@ -460,6 +461,14 @@ body #main {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
         border-radius: 0; }
+    body #main > .content.flush {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 980px; }
+      body #main > .content.flush > *:first-child {
+        position: relative;
+        z-index: -1; }
     body #main > .content.fluid {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
@@ -604,6 +613,8 @@ body .ui-dialog {
       margin: 1em 0; }
     body .ui-dialog .ui-dialog-content p:first-child {
       margin-top: 0; }
+    body .ui-dialog .ui-dialog-content select, body .ui-dialog .ui-dialog-content textarea {
+      font-family: Arial, Helvetica, sans-serif; }
   body .ui-dialog .ui-dialog-buttonpane {
     margin-top: 0;
     border: 0;
