@@ -68,6 +68,8 @@
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
     <Compile Include="Api\ReflectionExtensions.cs" />
     <Compile Include="Api\StringExtensions.cs" />
+    <Compile Include="Api\Validation\UrlStringMustBeWellFormed.cs" />
+    <Compile Include="Api\Validation\UrlStringMustNotContainProtocol.cs" />
     <Compile Include="Domain\ApplicationStarted.cs" />
     <Compile Include="Domain\Audit\CommandEvent.cs" />
     <Compile Include="Domain\BaseEntitiesQuery.cs" />
