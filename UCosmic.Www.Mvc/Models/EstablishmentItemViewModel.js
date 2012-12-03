@@ -8,12 +8,17 @@
 ko.validation.rules['validEstablishmentNameText'] = {
     async: true,
     validator: function (val, vm, callback) {
+        var validation = this;
         if (!vm.isTextValidatableAsync()) {
             callback(true);
         }
-        else {
+        else if (!validation.isAwaitingResponse) {
             var route = app.routes.webApi.establishmentNames.validateText(vm.ownerId(), vm.id());
+            validation.isAwaitingResponse = true;
             $.post(route, vm.serializeData())
+            .complete(function () {
+                validation.isAwaitingResponse = false;
+            })
             .success(function () {
                 callback(true);
             })
@@ -248,12 +253,17 @@ function EstablishmentNameViewModel(js, $parent) {
 ko.validation.rules['validEstablishmentUrlValue'] = {
     async: true,
     validator: function (val, vm, callback) {
+        var validation = this;
         if (!vm.isValueValidatableAsync()) {
             callback(true);
         }
-        else {
+        else if (!validation.isAwaitingResponse) {
             var route = app.routes.webApi.establishmentUrls.validateValue(vm.ownerId(), vm.id());
+            validation.isAwaitingResponse = true;
             $.post(route, vm.serializeData())
+            .complete(function() {
+                validation.isAwaitingResponse = false;
+            })
             .success(function () {
                 callback(true);
             })
