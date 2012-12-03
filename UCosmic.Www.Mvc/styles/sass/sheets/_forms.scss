@@ -196,6 +196,9 @@ form {
     line-height: 1.25;
     .field {
         margin: 16px 0;
+        .example {
+            font-size: 85%;
+        }
     }
     footer {
         margin: 16px 0;

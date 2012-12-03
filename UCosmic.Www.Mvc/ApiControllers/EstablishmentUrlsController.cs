@@ -10,6 +10,7 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using UCosmic.Domain.Establishments;
 using UCosmic.Www.Mvc.Models;
 
@@ -19,26 +20,26 @@ namespace UCosmic.Www.Mvc.ApiControllers
     public class EstablishmentUrlsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        //private readonly IValidator<CreateEstablishmentUrl> _createValidator;
+        private readonly IValidator<CreateEstablishmentUrl> _createValidator;
         private readonly IHandleCommands<CreateEstablishmentUrl> _createHandler;
-        //private readonly IValidator<UpdateEstablishmentUrl> _updateValidator;
+        private readonly IValidator<UpdateEstablishmentUrl> _updateValidator;
         private readonly IHandleCommands<UpdateEstablishmentUrl> _updateHandler;
         private readonly IHandleCommands<DeleteEstablishmentUrl> _deleteHandler;
 
         public EstablishmentUrlsController(
             IProcessQueries queryProcessor
             , IHandleCommands<CreateEstablishmentUrl> createHandler
-            //, IValidator<CreateEstablishmentUrl> createValidator
+            , IValidator<CreateEstablishmentUrl> createValidator
             , IHandleCommands<UpdateEstablishmentUrl> updateHandler
-            //, IValidator<UpdateEstablishmentUrl> updateValidator
+            , IValidator<UpdateEstablishmentUrl> updateValidator
             , IHandleCommands<DeleteEstablishmentUrl> deleteHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
-            //_createValidator = createValidator;
+            _createValidator = createValidator;
             _updateHandler = updateHandler;
-            //_updateValidator = updateValidator;
+            _updateValidator = updateValidator;
             _deleteHandler = deleteHandler;
         }
 
@@ -177,40 +178,40 @@ namespace UCosmic.Www.Mvc.ApiControllers
             return response;
         }
 
-        //[POST("{establishmentId}/names/{establishmentNameId}/validate-text")]
-        //public HttpResponseMessage Validate(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
-        //{
-        //    //System.Threading.Thread.Sleep(2000);
-        //    if (!FindResources(establishmentId, establishmentNameId > 0 ? establishmentNameId : (int?)null))
-        //        throw new HttpResponseException(HttpStatusCode.NotFound);
-        //
-        //    model.OwnerId = establishmentId;
-        //    model.Id = establishmentNameId;
-        //
-        //    ValidationResult validationResult;
-        //    string propertyName;
-        //    if (model.Id < 1)
-        //    {
-        //        var command = new CreateEstablishmentName(User);
-        //        Mapper.Map(model, command);
-        //        validationResult = _createValidator.Validate(command);
-        //        propertyName = command.PropertyName(y => y.Text);
-        //    }
-        //    else
-        //    {
-        //        var command = new UpdateEstablishmentName(User);
-        //        Mapper.Map(model, command);
-        //        validationResult = _updateValidator.Validate(command);
-        //        propertyName = command.PropertyName(y => y.Text);
-        //    }
-        //
-        //    Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
-        //    if (validationResult.Errors.Any(forText))
-        //        return Request.CreateResponse(HttpStatusCode.BadRequest,
-        //            validationResult.Errors.First(forText).ErrorMessage, "text/plain");
-        //
-        //    return Request.CreateResponse(HttpStatusCode.OK);
-        //}
+        [POST("{establishmentId}/urls/{establishmentUrlId}/validate-value")]
+        public HttpResponseMessage Validate(int establishmentId, int establishmentUrlId, EstablishmentUrlApiModel model)
+        {
+            //System.Threading.Thread.Sleep(2000);
+            if (!FindResources(establishmentId, establishmentUrlId > 0 ? establishmentUrlId : (int?)null))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            model.OwnerId = establishmentId;
+            model.Id = establishmentUrlId;
+
+            ValidationResult validationResult;
+            string propertyName;
+            if (model.Id < 1)
+            {
+                var command = new CreateEstablishmentUrl(User);
+                Mapper.Map(model, command);
+                validationResult = _createValidator.Validate(command);
+                propertyName = command.PropertyName(y => y.Value);
+            }
+            else
+            {
+                var command = new UpdateEstablishmentUrl(User);
+                Mapper.Map(model, command);
+                validationResult = _updateValidator.Validate(command);
+                propertyName = command.PropertyName(y => y.Value);
+            }
+
+            Func<ValidationFailure, bool> forValue = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forValue))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forValue).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
 
         private bool FindResources(int establishmentId, int? establishmentUrlId = null)
         {

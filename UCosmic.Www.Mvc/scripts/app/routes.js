@@ -68,6 +68,9 @@
         },
         del: function (establishmentId, establishmentUrlId) {
             return this.put(establishmentId, establishmentUrlId);
+        },
+        validateValue: function (establishmentId, establishmentUrlId) {
+            return getAbsoluteUrl('api/establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/validate-value/');
         }
     };
 }

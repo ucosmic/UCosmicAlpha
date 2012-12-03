@@ -5,7 +5,7 @@
 /// <reference path="../scripts/app/app.js" />
 /// <reference path="../scripts/app/routes.js" />
 
-ko.validation.rules['uniqueEstablishmentName'] = {
+ko.validation.rules['validEstablishmentNameText'] = {
     async: true,
     validator: function (val, vm, callback) {
         if (!vm.isTextValidatableAsync()) {
@@ -24,7 +24,6 @@ ko.validation.rules['uniqueEstablishmentName'] = {
     },
     message: 'error'
 };
-ko.validation.registerExtenders();
 
 function EstablishmentNameViewModel(js, $parent) {
     var self = this;
@@ -56,7 +55,7 @@ function EstablishmentNameViewModel(js, $parent) {
             message: 'Establishment name is required.'
         },
         maxLength: 400,
-        uniqueEstablishmentName: self
+        validEstablishmentNameText: self
     });
 
     self.text.isValidating.subscribe(function (isValidating) {
@@ -246,6 +245,26 @@ function EstablishmentNameViewModel(js, $parent) {
     ko.validation.group(self); // create a separate validation group for this item
 }
 
+ko.validation.rules['validEstablishmentUrlValue'] = {
+    async: true,
+    validator: function (val, vm, callback) {
+        if (!vm.isValueValidatableAsync()) {
+            callback(true);
+        }
+        else {
+            var route = app.routes.webApi.establishmentUrls.validateValue(vm.ownerId(), vm.id());
+            $.post(route, vm.serializeData())
+            .success(function () {
+                callback(true);
+            })
+            .error(function (xhr) {
+                callback({ isValid: false, message: xhr.responseText });
+            });
+        }
+    },
+    message: 'error'
+};
+
 function EstablishmentUrlViewModel(js, $parent) {
     var self = this;
     var saveEditorClicked;
@@ -264,28 +283,28 @@ function EstablishmentUrlViewModel(js, $parent) {
         return !originalValues.isOfficialUrl;
     });
 
-    //self.isValueValidatableAsync = ko.computed(function () {
-    //    return self.value() !== originalValues.value;
-    //});
+    self.isValueValidatableAsync = ko.computed(function () {
+        return self.value() !== originalValues.value;
+    });
 
     // validate value property
     self.value.extend({
         required: {
             message: 'Establishment URL is required.'
         },
-        maxLength: 200//,
-        //uniqueEstablishmentName: self
+        maxLength: 200,
+        validEstablishmentUrlValue: self
     });
 
-    //self.text.isValidating.subscribe(function (isValidating) {
-    //    if (isValidating) {
-    //        self.isSpinningSaveValidator(true);
-    //    }
-    //    else {
-    //        self.isSpinningSaveValidator(false);
-    //        if (saveEditorClicked) self.saveEditor();
-    //    }
-    //});
+    self.value.isValidating.subscribe(function (isValidating) {
+        if (isValidating) {
+            self.isSpinningSaveValidator(true);
+        }
+        else {
+            self.isSpinningSaveValidator(false);
+            if (saveEditorClicked) self.saveEditor();
+        }
+    });
 
     self.valueElement = undefined; // bind to this so we can focus it on actions
 
@@ -312,8 +331,7 @@ function EstablishmentUrlViewModel(js, $parent) {
             saveEditorClicked = false;
             self.errors.showAllMessages();
         }
-        //else if (!self.text.isValidating()) { // hit server
-        else { // hit server
+        else if (!self.value.isValidating()) { // hit server
             saveEditorClicked = false;
             self.isSpinningSave(true); // start save spinner
 
@@ -362,6 +380,17 @@ function EstablishmentUrlViewModel(js, $parent) {
                 }
             });
         }
+        return true;
+    };
+
+    self.valueHref = ko.computed(function() {
+        var url = self.value();
+        if (!url) return url;
+        return 'http://' + url;
+    });
+
+    self.clickLink = function (vm, e) {
+        e.stopPropagation();
         return true;
     };
 
@@ -538,3 +567,5 @@ function EstablishmentItemViewModel(id) {
 
     ko.computed(self.requestUrls).extend({ throttle: 1 });
 }
+
+ko.validation.registerExtenders();

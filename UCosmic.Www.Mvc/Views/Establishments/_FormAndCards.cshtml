@@ -97,6 +97,7 @@
                                     <span class="green badge" data-bind="visible: isOfficialUrl" style="display: none;">Official</span>
                                     @*<span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>*@
                                     <span class="red badge" data-bind="visible: isFormerUrl" style="display: none;">Former / Defunct</span>
+                                    <a class="link badge" href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }">Link</a>
                                 </div>
                                 <div class="on-right" data-bind="visible: !isOfficialUrl() && !$parent.editingUrl()">
                                     <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this URL">
@@ -109,6 +110,12 @@
                             <form method="POST" data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                 <div class="field" style="margin-top: 0;">
                                     <textarea rows="1" class="no-resize" data-bind="value: value, element: 'valueElement', css: { spinning: isSpinningSaveValidator }" data-autosize="true" placeholder="[Enter establishment URL here]"></textarea>
+                                    <span class="example">
+                                        <br />
+                                        <span>Enter without protocol. For example, use <strong>www.domain.edu</strong> instead of <strong>http://www.domain.edu</strong>.</span>
+                                        <a href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }, visible: valueHref">Test Link</a>
+                                        <span data-bind="visible: !valueHref()" style="color: #999;">Test Link</span>
+                                    </span>
                                 </div>
                                 <div class="field">
                                     <label data-bind="click: clickOfficialUrlCheckbox">

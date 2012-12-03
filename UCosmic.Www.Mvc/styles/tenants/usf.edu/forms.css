@@ -226,6 +226,8 @@ form {
   line-height: 1.25; }
   form .field {
     margin: 16px 0; }
+    form .field .example {
+      font-size: 85%; }
   form footer {
     margin: 16px 0; }
   form .side .static .content .field {

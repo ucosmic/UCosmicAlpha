@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -54,6 +55,10 @@ namespace UCosmic.Domain.Establishments
                         x => x.Value.Length == 1 ? "" : "s")
                 .Must(NotBeDuplicate)
                     .WithMessage("The establishment URL '{0}' already exists.", x => _duplicate.Value)
+                .Must(NotStartWithProtocol)
+                    .WithMessage("Please enter a URL without the protocol (http:// or https://).", x => x.Value)
+                .Must(BeWellFormed)
+                    .WithMessage("The value '{0}' does not appear to be a valid URL.", x => x.Value)
             ;
 
             // when the establishment URL is official, it cannot be former / defunct
@@ -71,14 +76,28 @@ namespace UCosmic.Domain.Establishments
             return _establishmentUrl != null;
         }
 
-        private bool NotBeDuplicate(UpdateEstablishmentUrl command, string text)
+        private bool NotBeDuplicate(UpdateEstablishmentUrl command, string value)
         {
             _duplicate =
                 _entities.Query<EstablishmentUrl>().FirstOrDefault(
                     x =>
                     x.RevisionId != command.Id &&
-                    x.Value.Equals(text, StringComparison.OrdinalIgnoreCase));
+                    x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
             return _duplicate == null;
+        }
+
+        private bool NotStartWithProtocol(UpdateEstablishmentUrl command, string value)
+        {
+            Debug.Assert(value != null);
+            return value.IndexOf("//", StringComparison.Ordinal) == -1;
+        }
+
+        private bool BeWellFormed(UpdateEstablishmentUrl command, string value)
+        {
+            if (value.IndexOf('.') == -1) return false;
+            var absoluteValue = string.Format("http://{0}", value);
+            var isValid = Uri.IsWellFormedUriString(absoluteValue, UriKind.Absolute);
+            return isValid;
         }
     }
 
