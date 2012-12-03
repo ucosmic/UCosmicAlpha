@@ -28,59 +28,31 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateCreateEstablishmentNameCommand : AbstractValidator<CreateEstablishmentName>
     {
-        private readonly IQueryEntities _entities;
-        private Establishment _establishment;
-        private EstablishmentName _duplicate;
-
         public ValidateCreateEstablishmentNameCommand(IQueryEntities entities)
         {
-            _entities = entities;
-
+            // owner id must be within valid range and exist in the database
             RuleFor(x => x.OwnerId)
-                // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                .WithMessage("Establishment id '{0}' is not valid.", x => x.OwnerId)
-
-                // id must exist in the database
-                .Must(Exist)
-                .WithMessage("Establishment with id '{0}' does not exist", x => x.OwnerId)
+                    .WithMessage("Establishment id '{0}' is not valid.", x => x.OwnerId)
+                .MustExistAsEstablishment(entities)
+                    .WithMessage("Establishment with id '{0}' does not exist", x => x.OwnerId)
             ;
 
-            // text of the establishment name is required and has max length
+            // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Text)
                 .NotEmpty()
                     .WithMessage("Establishment name is required.")
                 .Length(1, 400)
-                    .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} character{1}.",
-                        name => name.Text.Length,
-                        name => name.Text.Length == 1 ? "" : "s")
-                .Must(NotBeDuplicate)
-                    .WithMessage("The establishment name '{0}' already exists.", x => _duplicate.Text)
+                    .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} characters.", x => x.Text.Length)
+                .MustBeUniqueEstablishmentNameText(entities)
+                    .WithMessage("The establishment name '{0}' already exists.", x => x.Text)
             ;
 
             // when the establishment name is official, it cannot be a former / defunct name
             When(x => x.IsOfficialName, () =>
                 RuleFor(x => x.IsFormerName).Equal(false)
-                .WithMessage("An official establishment name cannot also be a former or defunct name.")
+                    .WithMessage("An official establishment name cannot also be a former or defunct name.")
             );
-        }
-
-        private bool Exist(int id)
-        {
-            _establishment = _entities.Query<Establishment>()
-                .SingleOrDefault(y => y.RevisionId == id)
-            ;
-            return _establishment != null;
-        }
-
-        private bool NotBeDuplicate(CreateEstablishmentName command, string text)
-        {
-            _duplicate =
-                _entities.Query<EstablishmentName>().FirstOrDefault(
-                    x =>
-                    x.Text.Equals(text, StringComparison.OrdinalIgnoreCase) ||
-                    (x.AsciiEquivalent != null && x.AsciiEquivalent.Equals(text, StringComparison.OrdinalIgnoreCase)));
-            return _duplicate == null;
         }
     }
 

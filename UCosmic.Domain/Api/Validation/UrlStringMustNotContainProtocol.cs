@@ -6,18 +6,19 @@ namespace UCosmic
 {
     public class UrlStringMustNotContainProtocol : PropertyValidator
     {
-        public UrlStringMustNotContainProtocol() 
+        internal UrlStringMustNotContainProtocol()
             : base("Please enter a URL without the protocol (http:// or https://).") { }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
             if (!(context.PropertyValue is string))
-                throw new NotSupportedException(string.Format("The {0} PropertyValidator can only operate on string properties", GetType().Name));
+                throw new NotSupportedException(string.Format(
+                    "The {0} PropertyValidator can only operate on string properties", GetType().Name));
 
-            var url = (string)context.PropertyValue;
+            var value = (string)context.PropertyValue;
 
-            if (url != null)
-                return url.IndexOf("//", StringComparison.Ordinal) == -1;
+            if (value != null)
+                return value.IndexOf("//", StringComparison.Ordinal) == -1;
 
             return true;
         }

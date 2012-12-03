@@ -6,20 +6,22 @@ namespace UCosmic
 {
     public class UrlStringMustBeWellFormed : PropertyValidator
     {
-        public UrlStringMustBeWellFormed()
+        internal UrlStringMustBeWellFormed()
             : base("The value '{PropertyValue}' does not appear to be a valid URL.") { }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
             if (!(context.PropertyValue is string))
-                throw new NotSupportedException(string.Format("The {0} PropertyValidator can only operate on string properties", GetType().Name));
+                throw new NotSupportedException(string.Format(
+                    "The {0} PropertyValidator can only operate on string properties", GetType().Name));
 
-            var url = (string)context.PropertyValue;
+            var value = (string)context.PropertyValue;
 
-            if (url != null)
+            if (value != null)
             {
-                if (url.IndexOf('.') == -1) return false;
-                var absoluteValue = string.Format("http://{0}", url);
+                context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+                if (value.IndexOf('.') == -1) return false;
+                var absoluteValue = string.Format("http://{0}", value);
                 var isValid = Uri.IsWellFormedUriString(absoluteValue, UriKind.Absolute);
                 return isValid;
             }

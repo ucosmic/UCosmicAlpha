@@ -30,38 +30,33 @@ namespace UCosmic.Domain.Establishments
     {
         private readonly IQueryEntities _entities;
         private EstablishmentName _establishmentName;
-        private EstablishmentName _duplicate;
 
         public ValidateUpdateEstablishmentNameCommand(IQueryEntities entities)
         {
             _entities = entities;
 
+            // id must be within valid range and exist in the database
             RuleFor(x => x.Id)
-                // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                .WithMessage("Establishment name id '{0}' is not valid.", x => x.Id)
-
-                // id must exist in the database
+                    .WithMessage("Establishment name id '{0}' is not valid.", x => x.Id)
                 .Must(Exist)
-                .WithMessage("Establishment name with id '{0}' does not exist", x => x.Id)
+                    .WithMessage("Establishment name with id '{0}' does not exist", x => x.Id)
             ;
 
-            // text of the establishment name is required and has max length
+            // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Text)
                 .NotEmpty()
                     .WithMessage("Establishment name is required.")
                 .Length(1, 400)
-                    .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} character{1}.",
-                        name => name.Text.Length,
-                        name => name.Text.Length == 1 ? "" : "s")
-                .Must(NotBeDuplicate)
-                    .WithMessage("The establishment name '{0}' already exists.", x => _duplicate.Text)
+                    .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} characters.", x => x.Text.Length)
+                .MustBeUniqueEstablishmentNameText(_entities, x => x.Id)
+                    .WithMessage("The establishment name '{0}' already exists.", x => x.Text)
             ;
 
             // when the establishment name is official, it cannot be a former / defunct name
             When(x => x.IsOfficialName, () =>
                 RuleFor(x => x.IsFormerName).Equal(false)
-                .WithMessage("An official establishment name cannot also be a former or defunct name.")
+                    .WithMessage("An official establishment name cannot also be a former or defunct name.")
             );
         }
 
@@ -71,17 +66,6 @@ namespace UCosmic.Domain.Establishments
                 .SingleOrDefault(y => y.RevisionId == id)
             ;
             return _establishmentName != null;
-        }
-
-        private bool NotBeDuplicate(UpdateEstablishmentName command, string text)
-        {
-            _duplicate =
-                _entities.Query<EstablishmentName>().FirstOrDefault(
-                    x =>
-                    x.RevisionId != command.Id &&
-                    (x.Text.Equals(text, StringComparison.OrdinalIgnoreCase) ||
-                    (x.AsciiEquivalent != null && x.AsciiEquivalent.Equals(text, StringComparison.OrdinalIgnoreCase))));
-            return _duplicate == null;
         }
     }
 
