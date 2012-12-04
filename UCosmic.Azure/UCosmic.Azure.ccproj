@@ -40,7 +40,7 @@
     <Folder Include="Profiles" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UCosmic.Www.Mvc\UCosmic.Web.Mvc.csproj">
+    <ProjectReference Include="..\UCosmic.Web.Mvc\UCosmic.Web.Mvc.csproj">
       <Name>UCosmic.Web.Mvc</Name>
       <Project>{57dddcad-3a84-4501-994c-b0326c625183}</Project>
       <Private>True</Private>
