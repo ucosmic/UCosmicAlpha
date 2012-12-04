@@ -389,9 +389,9 @@
     <Content Include="scripts\app\app.js" />
     <Content Include="scripts\app\fixed-scroll.js" />
     <Content Include="scripts\app\side-swiper.js" />
-    <None Include="scripts\jquery-1.8.2.intellisense.js" />
-    <Content Include="scripts\jquery-1.8.2.js" />
-    <Content Include="scripts\jquery-1.8.2.min.js" />
+    <None Include="scripts\jquery-1.8.3.intellisense.js" />
+    <Content Include="scripts\jquery-1.8.3.js" />
+    <Content Include="scripts\jquery-1.8.3.min.js" />
     <Content Include="scripts\jquery-ui-1.9.0.js" />
     <Content Include="scripts\jquery-ui-1.9.0.min.js" />
     <Content Include="scripts\jquery.unobtrusive-ajax.js" />

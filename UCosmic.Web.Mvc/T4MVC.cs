@@ -131,11 +131,11 @@ namespace Links
                           
         }
     
-        public static readonly string jquery_1_8_2_intellisense_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-1.8.2.intellisense.min.js") ? Url("jquery-1.8.2.intellisense.min.js") : Url("jquery-1.8.2.intellisense.js");
+        public static readonly string jquery_1_8_3_intellisense_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-1.8.3.intellisense.min.js") ? Url("jquery-1.8.3.intellisense.min.js") : Url("jquery-1.8.3.intellisense.js");
                       
-        public static readonly string jquery_1_8_2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-1.8.2.min.js") ? Url("jquery-1.8.2.min.js") : Url("jquery-1.8.2.js");
+        public static readonly string jquery_1_8_3_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-1.8.3.min.js") ? Url("jquery-1.8.3.min.js") : Url("jquery-1.8.3.js");
                       
-        public static readonly string jquery_1_8_2_min_js = Url("jquery-1.8.2.min.js");
+        public static readonly string jquery_1_8_3_min_js = Url("jquery-1.8.3.min.js");
         public static readonly string jquery_ui_1_9_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-ui-1.9.0.min.js") ? Url("jquery-ui-1.9.0.min.js") : Url("jquery-ui-1.9.0.js");
                       
         public static readonly string jquery_ui_1_9_0_min_js = Url("jquery-ui-1.9.0.min.js");
