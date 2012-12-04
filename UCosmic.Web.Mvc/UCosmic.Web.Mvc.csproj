@@ -46,25 +46,25 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AttributeRouting, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AttributeRouting, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AttributeRouting.Core.3.2\lib\net40\AttributeRouting.dll</HintPath>
+      <HintPath>..\packages\AttributeRouting.Core.3.3\lib\net40\AttributeRouting.dll</HintPath>
     </Reference>
-    <Reference Include="AttributeRouting.Web, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AttributeRouting.Web, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AttributeRouting.Core.Web.3.2\lib\net40\AttributeRouting.Web.dll</HintPath>
+      <HintPath>..\packages\AttributeRouting.Core.Web.3.3\lib\net40\AttributeRouting.Web.dll</HintPath>
     </Reference>
-    <Reference Include="AttributeRouting.Web.Http, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AttributeRouting.Web.Http, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AttributeRouting.Core.Http.3.2\lib\net40\AttributeRouting.Web.Http.dll</HintPath>
+      <HintPath>..\packages\AttributeRouting.Core.Http.3.3\lib\net40\AttributeRouting.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="AttributeRouting.Web.Http.WebHost, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AttributeRouting.Web.Http.WebHost, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AttributeRouting.WebApi.3.2\lib\net40\AttributeRouting.Web.Http.WebHost.dll</HintPath>
+      <HintPath>..\packages\AttributeRouting.WebApi.3.3\lib\net40\AttributeRouting.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="AttributeRouting.Web.Mvc, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AttributeRouting.Web.Mvc, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AttributeRouting.3.2\lib\net40\AttributeRouting.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\AttributeRouting.3.3\lib\net40\AttributeRouting.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="AutoAutoMapper, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

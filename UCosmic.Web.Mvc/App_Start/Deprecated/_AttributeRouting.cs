@@ -1,4 +1,3 @@
-//using System.Reflection;
 //using System.Web.Routing;
 //using AttributeRouting.Web.Mvc;
 
@@ -11,12 +10,7 @@
 //            // See http://github.com/mccalltd/AttributeRouting/wiki for more options.
 //            // To debug routes locally using the built in ASP.NET development server, go to /routes.axd
             
-//            routes.MapAttributeRoutes(config =>
-//                                          {
-//                                              config.AddRoutesFromAssembly(Assembly.GetExecutingAssembly());
-//                                              config.UseLowercaseRoutes = true;
-//                                              config.AppendTrailingSlash = true;
-//                                          });
+//            routes.MapAttributeRoutes();
 //        }
 
 //        public static void Start() {
