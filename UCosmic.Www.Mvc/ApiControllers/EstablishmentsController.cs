@@ -2,9 +2,9 @@
 using System.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Establishments;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc.ApiControllers
+namespace UCosmic.Web.Mvc.ApiControllers
 {
     [DefaultApiHttpRouteConvention]
     public class EstablishmentsController : ApiController

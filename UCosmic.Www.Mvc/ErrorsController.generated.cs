@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class ErrorsController
     {
@@ -101,7 +101,7 @@ namespace UCosmic.Www.Mvc.Controllers
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_ErrorsController : UCosmic.Www.Mvc.Controllers.ErrorsController
+    public class T4MVC_ErrorsController : UCosmic.Web.Mvc.Controllers.ErrorsController
     {
         public T4MVC_ErrorsController() : base(Dummy.Instance) { }
 

@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace UCosmic.Www.Mvc.Models
+namespace UCosmic.Web.Mvc.Models
 {
     public class UserVoiceLinkModel
     {

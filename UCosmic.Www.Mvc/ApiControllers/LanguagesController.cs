@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Languages;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc.ApiControllers
+namespace UCosmic.Web.Mvc.ApiControllers
 {
     [DefaultApiHttpRouteConvention]
     public class LanguagesController : ApiController

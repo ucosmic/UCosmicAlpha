@@ -1,4 +1,4 @@
-﻿namespace UCosmic.Www.Mvc.Models
+﻿namespace UCosmic.Web.Mvc.Models
 {
     public class CountryApiModel
     {

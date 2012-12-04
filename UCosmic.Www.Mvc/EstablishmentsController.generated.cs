@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class EstablishmentsController
     {
@@ -180,7 +180,7 @@ namespace UCosmic.Www.Mvc.Controllers
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_EstablishmentsController : UCosmic.Www.Mvc.Controllers.EstablishmentsController
+    public class T4MVC_EstablishmentsController : UCosmic.Web.Mvc.Controllers.EstablishmentsController
     {
         public T4MVC_EstablishmentsController() : base(Dummy.Instance) { }
 

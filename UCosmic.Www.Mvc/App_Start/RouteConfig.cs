@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using AttributeRouting.Web.Mvc;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class RouteConfig
     {

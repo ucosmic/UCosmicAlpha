@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public class RequireHttpsMessageHandler : DelegatingHandler
     {

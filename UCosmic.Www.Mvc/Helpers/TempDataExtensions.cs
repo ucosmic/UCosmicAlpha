@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class TempDataExtensions
     {

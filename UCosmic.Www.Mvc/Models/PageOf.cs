@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using AutoMapper;
 
-namespace UCosmic.Www.Mvc.Models
+namespace UCosmic.Web.Mvc.Models
 {
     [DataContract(Namespace = "")]
     public class PageOf<TModel>

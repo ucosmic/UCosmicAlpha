@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using UCosmic.Domain.Languages;
 
-namespace UCosmic.Www.Mvc.Models
+namespace UCosmic.Web.Mvc.Models
 {
     public class LanguageApiModel
     {

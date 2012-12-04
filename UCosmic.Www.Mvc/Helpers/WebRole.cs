@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public class WebRole : RoleEntryPoint
     {
@@ -16,7 +16,7 @@ namespace UCosmic.Www.Mvc
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
 
             // skip role setup when emulating azure
-            var isDeployedToEmulator = RoleEnvironment.GetConfigurationSettingValue("UCosmic.Www.Mvc.DeployedToEmulator");
+            var isDeployedToEmulator = RoleEnvironment.GetConfigurationSettingValue("UCosmic.Web.Mvc.DeployedToEmulator");
             if (isDeployedToEmulator == "true") return base.OnStart();
 
             #region Diagnostics Trace Logging

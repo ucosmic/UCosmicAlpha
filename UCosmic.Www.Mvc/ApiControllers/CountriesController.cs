@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Web.Http;
 using UCosmic.Domain.Places;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc.ApiControllers
+namespace UCosmic.Web.Mvc.ApiControllers
 {
     [DefaultApiHttpRouteConvention]
     public class CountriesController : ApiController

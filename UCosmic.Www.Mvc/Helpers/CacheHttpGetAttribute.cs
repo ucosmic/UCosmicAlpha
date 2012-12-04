@@ -8,7 +8,7 @@ using System.Web.Http.Filters;
 using Newtonsoft.Json;
 using UCosmic.Cache;
 
-namespace UCosmic
+namespace UCosmic.Web.Mvc
 {
     // based on strathweb implementation
     // http://www.strathweb.com/2012/05/output-caching-in-asp-net-web-api/

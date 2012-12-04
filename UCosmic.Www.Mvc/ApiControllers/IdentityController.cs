@@ -6,9 +6,9 @@ using System.Web.Http;
 using System.Web.Security;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc.ApiControllers
+namespace UCosmic.Web.Mvc.ApiControllers
 {
     [RoutePrefix("api")]
     public class IdentityController : ApiController

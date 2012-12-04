@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class AgreementsController
     {
@@ -87,7 +87,7 @@ namespace UCosmic.Www.Mvc.Controllers
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_AgreementsController : UCosmic.Www.Mvc.Controllers.AgreementsController
+    public class T4MVC_AgreementsController : UCosmic.Web.Mvc.Controllers.AgreementsController
     {
         public T4MVC_AgreementsController() : base(Dummy.Instance) { }
 

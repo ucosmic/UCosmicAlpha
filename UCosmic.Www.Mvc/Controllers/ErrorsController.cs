@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using AttributeRouting;
 using AttributeRouting.Web.Mvc;
 
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     [RoutePrefix("errors")]
     public partial class ErrorsController : Controller

@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     [RestfulRouteConvention]
     [UserVoiceForum(UserVoiceForum.InstitutionalAgreements)]

@@ -2,7 +2,7 @@
 using AutoMapper;
 using UCosmic.Domain.Establishments;
 
-namespace UCosmic.Www.Mvc.Models
+namespace UCosmic.Web.Mvc.Models
 {
     [DataContract(Name = "Establishment", Namespace = "")]
     public class EstablishmentApiModel

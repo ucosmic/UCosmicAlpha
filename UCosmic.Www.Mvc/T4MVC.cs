@@ -24,13 +24,13 @@ using T4MVC;
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC
 {
-    public static UCosmic.Www.Mvc.Controllers.AdminController Admin = new UCosmic.Www.Mvc.Controllers.T4MVC_AdminController();
-    public static UCosmic.Www.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Www.Mvc.Controllers.T4MVC_AgreementsController();
-    public static UCosmic.Www.Mvc.Controllers.ErrorsController Errors = new UCosmic.Www.Mvc.Controllers.T4MVC_ErrorsController();
-    public static UCosmic.Www.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Www.Mvc.Controllers.T4MVC_EstablishmentsController();
-    public static UCosmic.Www.Mvc.Controllers.HomeController Home = new UCosmic.Www.Mvc.Controllers.T4MVC_HomeController();
-    public static UCosmic.Www.Mvc.Controllers.IdentityController Identity = new UCosmic.Www.Mvc.Controllers.T4MVC_IdentityController();
-    public static UCosmic.Www.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Www.Mvc.Controllers.T4MVC_TenancyController();
+    public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
+    public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
+    public static UCosmic.Web.Mvc.Controllers.ErrorsController Errors = new UCosmic.Web.Mvc.Controllers.T4MVC_ErrorsController();
+    public static UCosmic.Web.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Web.Mvc.Controllers.T4MVC_EstablishmentsController();
+    public static UCosmic.Web.Mvc.Controllers.HomeController Home = new UCosmic.Web.Mvc.Controllers.T4MVC_HomeController();
+    public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
+    public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 

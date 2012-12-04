@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class IdentityController
     {
@@ -117,7 +117,7 @@ namespace UCosmic.Www.Mvc.Controllers
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_IdentityController : UCosmic.Www.Mvc.Controllers.IdentityController
+    public class T4MVC_IdentityController : UCosmic.Web.Mvc.Controllers.IdentityController
     {
         public T4MVC_IdentityController() : base(Dummy.Instance) { }
 
@@ -128,7 +128,7 @@ namespace UCosmic.Www.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult SignIn(UCosmic.Www.Mvc.Models.SignInForm model)
+        public override System.Web.Mvc.ActionResult SignIn(UCosmic.Web.Mvc.Models.SignInForm model)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);

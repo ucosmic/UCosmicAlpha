@@ -2,7 +2,7 @@
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.Establishments;
 
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     [RestfulRouteConvention]
     public partial class EstablishmentsController : Controller

@@ -4,7 +4,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class ValidateSigningReturnUrlAttribute : ActionFilterAttribute

@@ -1,6 +1,6 @@
 ﻿using AttributeRouting.Web.Http;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public class DefaultApiHttpRouteConventionAttribute : DefaultHttpRouteConventionAttribute
     {

@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class TenancyController
     {
@@ -102,7 +102,7 @@ namespace UCosmic.Www.Mvc.Controllers
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_TenancyController : UCosmic.Www.Mvc.Controllers.TenancyController
+    public class T4MVC_TenancyController : UCosmic.Web.Mvc.Controllers.TenancyController
     {
         public T4MVC_TenancyController() : base(Dummy.Instance) { }
 

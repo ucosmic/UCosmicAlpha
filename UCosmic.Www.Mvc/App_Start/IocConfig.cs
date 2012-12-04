@@ -11,7 +11,7 @@ using UCosmic.Ioc;
 using UCosmic.Logging;
 using UCosmic.Security;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class IocConfig
     {

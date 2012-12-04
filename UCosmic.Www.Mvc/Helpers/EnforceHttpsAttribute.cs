@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
     public class EnforceHttpsAttribute : RequireHttpsAttribute

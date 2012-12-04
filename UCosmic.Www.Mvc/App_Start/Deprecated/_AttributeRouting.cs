@@ -2,9 +2,9 @@
 //using System.Web.Routing;
 //using AttributeRouting.Web.Mvc;
 
-//[assembly: WebActivator.PreApplicationStartMethod(typeof(UCosmic.Www.Mvc.App_Start.AttributeRouting), "Start")]
+//[assembly: WebActivator.PreApplicationStartMethod(typeof(UCosmic.Web.Mvc.App_Start.AttributeRouting), "Start")]
 
-//namespace UCosmic.Www.Mvc.App_Start {
+//namespace UCosmic.Web.Mvc.App_Start {
 //    public static class AttributeRouting {
 //        public static void RegisterRoutes(RouteCollection routes) {
             

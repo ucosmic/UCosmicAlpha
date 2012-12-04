@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class TenancyExtensions
     {

@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class IdentityController : Controller
     {

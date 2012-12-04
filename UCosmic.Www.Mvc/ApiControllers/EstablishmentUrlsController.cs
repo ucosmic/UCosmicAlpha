@@ -12,9 +12,9 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using UCosmic.Domain.Establishments;
-using UCosmic.Www.Mvc.Models;
+using UCosmic.Web.Mvc.Models;
 
-namespace UCosmic.Www.Mvc.ApiControllers
+namespace UCosmic.Web.Mvc.ApiControllers
 {
     [RoutePrefix("api/establishments")]
     public class EstablishmentUrlsController : ApiController

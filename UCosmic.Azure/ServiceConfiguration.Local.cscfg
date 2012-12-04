@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2012-10.1.8">
-  <Role name="UCosmic.Www.Mvc">
+  <Role name="UCosmic.Web.Mvc">
     <Instances count="2" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
@@ -9,7 +9,7 @@
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEKcETAj6UihRRKiJpADWNEwDQYJKoZIhvcNAQEBBQAEggEAjrwzUOUBBgGiew2YV6rrGoZlAMCk4ByDypEq8tyvDDDiusGk0pBu8up/TVKwDLwhrIP53YIQ3d32OYu5VC1j1011C6+SeRfv/pMm5ch0jGCpjXGGMGXZot4B/NHxbKukyWC0zhVyt/+dkrZWgZfnxKXACRVHjGC7SlzrLVyvzR60O9VUigACcyNffdOwWSenak7NQ40Rowv6MruePUG57rRxq8Z2JuBWK88sMh0/BZfKFXmvSWhTroZQ1SB76Tt5sbLC9idH66t+Ff89/8kZ/6ufmf+cY33Ws+DyOiTf07MFTnYB5bXXqwAs2aafbGWaX7mSvCWQPGxNp+r9BQNqNTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECHFDv+9cfETjgBDuFLiODQWwnZFI8/dPQytb" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-11-09T23:59:59.0000000-05:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
-      <Setting name="UCosmic.Www.Mvc.DeployedToEmulator" value="true" />
+      <Setting name="UCosmic.Web.Mvc.DeployedToEmulator" value="true" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="star.ucosmic.com" thumbprint="118107675D865C7D6473289BFFA5270E780F8DA6" thumbprintAlgorithm="sha1" />

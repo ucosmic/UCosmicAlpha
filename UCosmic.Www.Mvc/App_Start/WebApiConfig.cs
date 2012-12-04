@@ -4,7 +4,7 @@ using AttributeRouting.Web.Http.WebHost;
 using Newtonsoft.Json.Serialization;
 using WebApiContrib.Formatting;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class WebApiConfig
     {

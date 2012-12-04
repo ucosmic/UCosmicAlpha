@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Www.Mvc", "UCosmic.Www.Mvc\UCosmic.Www.Mvc.csproj", "{57DDDCAD-3A84-4501-994C-B0326C625183}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Web.Mvc", "UCosmic.Www.Mvc\UCosmic.Web.Mvc.csproj", "{57DDDCAD-3A84-4501-994C-B0326C625183}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Domain", "UCosmic.Domain\UCosmic.Domain.csproj", "{66444F14-2971-43DE-B0BB-75A926B6F191}"
 EndProject

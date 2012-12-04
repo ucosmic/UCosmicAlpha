@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="UCosmic.Www.Mvc.WebApiApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="UCosmic.Web.Mvc.WebApiApplication" Language="C#" %>

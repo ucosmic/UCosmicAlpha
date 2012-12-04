@@ -2,7 +2,7 @@
 using AutoAutoMapper;
 using AutoMapper;
 
-namespace UCosmic.Www.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class AutoMapperConfig
     {

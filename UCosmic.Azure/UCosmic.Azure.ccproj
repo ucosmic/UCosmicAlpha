@@ -37,17 +37,17 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UCosmic.Www.Mvc\UCosmic.Www.Mvc.csproj">
-      <Name>UCosmic.Www.Mvc</Name>
+    <Folder Include="Profiles" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UCosmic.Www.Mvc\UCosmic.Web.Mvc.csproj">
+      <Name>UCosmic.Web.Mvc</Name>
       <Project>{57dddcad-3a84-4501-994c-b0326c625183}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
-      <RoleName>UCosmic.Www.Mvc</RoleName>
+      <RoleName>UCosmic.Web.Mvc</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Profiles" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
