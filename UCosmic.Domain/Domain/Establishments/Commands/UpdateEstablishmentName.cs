@@ -28,18 +28,13 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateUpdateEstablishmentNameCommand : AbstractValidator<UpdateEstablishmentName>
     {
-        private readonly IQueryEntities _entities;
-        private EstablishmentName _establishmentName;
-
         public ValidateUpdateEstablishmentNameCommand(IQueryEntities entities)
         {
-            _entities = entities;
-
             // id must be within valid range and exist in the database
             RuleFor(x => x.Id)
                 .GreaterThanOrEqualTo(1)
                     .WithMessage("Establishment name id '{0}' is not valid.", x => x.Id)
-                .Must(Exist)
+                .MustExistAsEstablishmentName(entities)
                     .WithMessage("Establishment name with id '{0}' does not exist", x => x.Id)
             ;
 
@@ -49,7 +44,7 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("Establishment name is required.")
                 .Length(1, 400)
                     .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} characters.", x => x.Text.Length)
-                .MustBeUniqueEstablishmentNameText(_entities, x => x.Id)
+                .MustBeUniqueEstablishmentNameText(entities, x => x.Id)
                     .WithMessage("The establishment name '{0}' already exists.", x => x.Text)
             ;
 
@@ -58,14 +53,6 @@ namespace UCosmic.Domain.Establishments
                 RuleFor(x => x.IsFormerName).Equal(false)
                     .WithMessage("An official establishment name cannot also be a former or defunct name.")
             );
-        }
-
-        private bool Exist(int id)
-        {
-            _establishmentName = _entities.Query<EstablishmentName>()
-                .SingleOrDefault(y => y.RevisionId == id)
-            ;
-            return _establishmentName != null;
         }
     }
 

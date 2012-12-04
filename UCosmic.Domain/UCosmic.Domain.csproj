@@ -105,6 +105,9 @@
     <Compile Include="Domain\Establishments\Queries\EstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentViewsByKeyword.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentViewProjector.cs" />
+    <Compile Include="Domain\Establishments\Validation\EstablishmentUrlValueMustBeUnique.cs" />
+    <Compile Include="Domain\Establishments\Validation\EstablishmentUrlIdMustExist.cs" />
+    <Compile Include="Domain\Establishments\Validation\EstablishmentNameIdMustExist.cs" />
     <Compile Include="Domain\Establishments\Validation\EstablishmentNameTextMustBeUnique.cs" />
     <Compile Include="Domain\Establishments\Validation\EstablishmentIdMustExist.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentNameView.cs" />

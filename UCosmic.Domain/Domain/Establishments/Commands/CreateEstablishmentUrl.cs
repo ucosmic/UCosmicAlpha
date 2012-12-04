@@ -26,18 +26,13 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateCreateEstablishmentUrlCommand : AbstractValidator<CreateEstablishmentUrl>
     {
-        private readonly IQueryEntities _entities;
-        private EstablishmentUrl _duplicate;
-
         public ValidateCreateEstablishmentUrlCommand(IQueryEntities entities)
         {
-            _entities = entities;
-
             // owner id must be within valid range and exist in the database
             RuleFor(x => x.OwnerId)
                 .GreaterThanOrEqualTo(1)
                     .WithMessage("Establishment id '{0}' is not valid.", x => x.OwnerId)
-                .MustExistAsEstablishment(_entities)
+                .MustExistAsEstablishment(entities)
                     .WithMessage("Establishment with id '{0}' does not exist", x => x.OwnerId)
             ;
 
@@ -51,8 +46,8 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("Please enter a URL without the protocol (http:// or https://).", x => x.Value)
                 .MustBeWellFormedUrl()
                     .WithMessage("The value '{0}' does not appear to be a valid URL.", x => x.Value)
-                .Must(NotBeDuplicate)
-                    .WithMessage("The establishment URL '{0}' already exists.", x => _duplicate.Value)
+                .MustBeUniqueEstablishmentUrlValue(entities)
+                    .WithMessage("The establishment URL '{0}' already exists.", x => x.Value)
             ;
 
             // when the establishment URL is official, it cannot be former / defunct
@@ -60,15 +55,6 @@ namespace UCosmic.Domain.Establishments
                 RuleFor(x => x.IsFormerUrl).Equal(false)
                     .WithMessage("An official establishment URL cannot also be a former or defunct URL.")
             );
-        }
-
-        private bool NotBeDuplicate(CreateEstablishmentUrl command, string value)
-        {
-            _duplicate =
-                _entities.Query<EstablishmentUrl>().FirstOrDefault(
-                    x =>
-                    x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
-            return _duplicate == null;
         }
     }
 

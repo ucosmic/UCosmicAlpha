@@ -5,13 +5,13 @@ using FluentValidation.Validators;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentNameTextMustBeUnique<T> : PropertyValidator
+    public class EstablishmentUrlValueMustBeUnique<T> : PropertyValidator
     {
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _ownId;
 
-        internal EstablishmentNameTextMustBeUnique(IQueryEntities entities, Func<T, int> ownId)
-            : base("The establishment name '{PropertyValue}' already exists.")
+        internal EstablishmentUrlValueMustBeUnique(IQueryEntities entities, Func<T, int> ownId)
+            : base("The establishment URL '{PropertyValue}' already exists.")
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
@@ -28,24 +28,23 @@ namespace UCosmic.Domain.Establishments
             var value = (string)context.PropertyValue;
             var ownId = _ownId != null ? _ownId((T)context.Instance) : (int?) null;
 
-            var entity = _entities.Query<EstablishmentName>()
+            var entity = _entities.Query<EstablishmentUrl>()
                 .FirstOrDefault(
                     x =>
                     (ownId.HasValue ? x.RevisionId != ownId.Value : x.RevisionId != 0) &&
-                    (x.Text.Equals(value, StringComparison.OrdinalIgnoreCase) ||
-                    (x.AsciiEquivalent != null && x.AsciiEquivalent.Equals(value, StringComparison.OrdinalIgnoreCase)))
+                    (x.Value.Equals(value, StringComparison.OrdinalIgnoreCase))
                 );
 
             return entity == null;
         }
     }
 
-    public static class EstablishmentNameTextMustBeUniqueExtensions
+    public static class EstablishmentUrlValueMustBeUniqueExtensions
     {
-        public static IRuleBuilderOptions<T, string> MustBeUniqueEstablishmentNameText<T>
+        public static IRuleBuilderOptions<T, string> MustBeUniqueEstablishmentUrlValue<T>
             (this IRuleBuilder<T, string> ruleBuilder, IQueryEntities entities, Func<T, int> ownId = null)
         {
-            return ruleBuilder.SetValidator(new EstablishmentNameTextMustBeUnique<T>(entities, ownId));
+            return ruleBuilder.SetValidator(new EstablishmentUrlValueMustBeUnique<T>(entities, ownId));
         }
     }
 }

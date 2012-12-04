@@ -26,21 +26,15 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateUpdateEstablishmentUrlCommand : AbstractValidator<UpdateEstablishmentUrl>
     {
-        private readonly IQueryEntities _entities;
-        private EstablishmentUrl _establishmentUrl;
-        private EstablishmentUrl _duplicate;
-
         public ValidateUpdateEstablishmentUrlCommand(IQueryEntities entities)
         {
-            _entities = entities;
-
             RuleFor(x => x.Id)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
                     .WithMessage("Establishment URL id '{0}' is not valid.", x => x.Id)
 
                 // id must exist in the database
-                .Must(Exist)
+                .MustExistAsEstablishmentUrl(entities)
                     .WithMessage("Establishment URL with id '{0}' does not exist", x => x.Id)
             ;
 
@@ -54,8 +48,8 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("Please enter a URL without the protocol (http:// or https://).", x => x.Value)
                 .MustBeWellFormedUrl()
                     .WithMessage("The value '{0}' does not appear to be a valid URL.", x => x.Value)
-                .Must(NotBeDuplicate)
-                    .WithMessage("The establishment URL '{0}' already exists.", x => _duplicate.Value)
+                .MustBeUniqueEstablishmentUrlValue(entities, x => x.Id)
+                    .WithMessage("The establishment URL '{0}' already exists.", x => x.Value)
             ;
 
             // when the establishment URL is official, it cannot be former / defunct
@@ -63,24 +57,6 @@ namespace UCosmic.Domain.Establishments
                 RuleFor(x => x.IsFormerUrl).Equal(false)
                     .WithMessage("An official establishment URL cannot also be a former or defunct URL.")
             );
-        }
-
-        private bool Exist(int id)
-        {
-            _establishmentUrl = _entities.Query<EstablishmentUrl>()
-                .SingleOrDefault(y => y.RevisionId == id)
-            ;
-            return _establishmentUrl != null;
-        }
-
-        private bool NotBeDuplicate(UpdateEstablishmentUrl command, string value)
-        {
-            _duplicate =
-                _entities.Query<EstablishmentUrl>().FirstOrDefault(
-                    x =>
-                    x.RevisionId != command.Id &&
-                    x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
-            return _duplicate == null;
         }
     }
 

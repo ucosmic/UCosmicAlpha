@@ -5,12 +5,12 @@ using FluentValidation.Validators;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentIdMustExist : PropertyValidator
+    public class EstablishmentNameIdMustExist : PropertyValidator
     {
         private readonly IQueryEntities _entities;
 
-        internal EstablishmentIdMustExist(IQueryEntities entities)
-            : base("Establishment with id '{PropertyValue}' does not exist")
+        internal EstablishmentNameIdMustExist(IQueryEntities entities)
+            : base("Establishment name with id '{PropertyValue}' does not exist")
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
@@ -25,19 +25,19 @@ namespace UCosmic.Domain.Establishments
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var value = (int)context.PropertyValue;
 
-            var entity = _entities.Query<Establishment>()
+            var entity = _entities.Query<EstablishmentName>()
                 .SingleOrDefault(x => x.RevisionId == value);
 
             return entity != null;
         }
     }
 
-    public static class EstablishmentIdMustExistExtensions
+    public static class EstablishmentNameIdMustExistExtensions
     {
-        public static IRuleBuilderOptions<T, int> MustExistAsEstablishment<T>
+        public static IRuleBuilderOptions<T, int> MustExistAsEstablishmentName<T>
             (this IRuleBuilder<T, int> ruleBuilder, IQueryEntities entities)
         {
-            return ruleBuilder.SetValidator(new EstablishmentIdMustExist(entities));
+            return ruleBuilder.SetValidator(new EstablishmentNameIdMustExist(entities));
         }
     }
 }
