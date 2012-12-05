@@ -9,16 +9,16 @@ namespace UCosmic.Web.Mvc
         {
             // jQuery
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/scripts/jquery-{version}.js"));
+                        "~/scripts/jquery/jquery-{version}.js"));
 
             // jQuery UI
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/scripts/jquery-ui-{version}.js"));
+                        "~/scripts/jquery/jquery-ui-{version}.js"));
 
             // jquery validation, plus ms unobtrusive validation and ajax
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/scripts/jquery.unobtrusive*",
-                        "~/scripts/jquery.validate*"));
+                        "~/scripts/oss/jquery.unobtrusive*",
+                        "~/scripts/oss/jquery.validate*"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
@@ -29,13 +29,13 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/knockout-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
-                        "~/scripts/jquery-{version}.js",
-                        "~/scripts/jquery-ui-{version}.js",
-                        "~/scripts/knockout-*",
-                        "~/scripts/knockout.mapping-latest*",
-                        "~/scripts/knockout.validation*",
+                        "~/scripts/jquery/jquery-{version}.js",
+                        "~/scripts/jquery/jquery-ui-{version}.js",
+                        "~/scripts/ko/knockout-*",
+                        "~/scripts/ko/knockout.mapping-latest*",
+                        "~/scripts/ko/knockout.validation*",
                         "~/scripts/app/knockout.binding-handlers.js",
-                        "~/scripts/sammy*",
+                        "~/scripts/sammy/sammy*",
                         "~/scripts/oss/jquery.placeholder*",
                         "~/scripts/oss/jquery.animate-enhanced*",
                         "~/scripts/oss/jquery.autosize*",
@@ -43,8 +43,7 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
                         "~/scripts/app/routes.js",
-                        "~/models/BaseViewModel.js",
-                        "~/models/FlasherViewModel.js"));
+                        "~/scripts/viewmodels/FlasherViewModel.js"));
 
             // bootstrap css bundles
             var tenants = new[]

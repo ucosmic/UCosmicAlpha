@@ -113,9 +113,9 @@ body > nav.modules {
       text-decoration: none;
       -webkit-text-shadow: 1px 1px 3px rgba(99, 99, 99, 0.5);
       text-shadow: 1px 1px 3px rgba(99, 99, 99, 0.5);
-      -moz-box-shadow: inset 0 -1px 5px 0 black;
-      -webkit-box-shadow: inset 0 -1px 5px 0 black;
-      box-shadow: inset 0 -1px 5px 0 black;
+      -moz-box-shadow: inset 0 -1px 5px 0 rgba(33, 33, 33, 0.2);
+      -webkit-box-shadow: inset 0 -1px 5px 0 rgba(33, 33, 33, 0.2);
+      box-shadow: inset 0 -1px 5px 0 rgba(33, 33, 33, 0.2);
       -webkit-transition: all 500ms;
       -moz-transition: all 500ms;
       -o-transition: all 500ms;

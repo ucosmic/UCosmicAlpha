@@ -1,9 +1,8 @@
-﻿/// <reference path="../scripts/jquery-1.8.0.js" />
-/// <reference path="../scripts/knockout-2.1.0.js" />
-/// <reference path="../scripts/sammy/sammy.js" />
-/// <reference path="BaseViewModel.js" />
-/// <reference path="EstablishmentSearchViewModel.js" />
-/// <reference path="../scripts/app/side-swiper.js" />
+﻿/// <reference path="../../jquery/jquery-1.8.3.js" />
+/// <reference path="../../ko/knockout-2.2.0.js" />
+/// <reference path="../../sammy/sammy-0.7.1.js" />
+/// <reference path="../../app/side-swiper.js" />
+/// <reference path="../establishments/EstablishmentSearchViewModel.js" />
 
 function InstitutionalAgreementParticipantModel(js) {
     var self = this;
@@ -18,7 +17,12 @@ function InstitutionalAgreementParticipantModel(js) {
 
 function InstitutionalAgreementEditModel() {
     var self = this;
-    BaseViewModel.call(self);
+
+    self.isBound = ko.observable();
+
+    self.back = function () {
+        history.back();
+    };
 
     self.sideSwiper = new SideSwiper({
         frameWidth: 970,

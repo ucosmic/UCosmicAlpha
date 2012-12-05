@@ -43,9 +43,9 @@ See http://mvccontrib.codeplex.com/workitem/7163 for potential issues with this 
   <AddTimestampToStaticLinks>False</AddTimestampToStaticLinks>
   <!--Folders containing static files for which links are generated (e.g. Links.Scripts.Map_js)-->
   <StaticFilesFolders>
-    <FileFolder>Scripts</FileFolder>
-    <FileFolder>Content</FileFolder>
-    <FileFolder>Models</FileFolder>
+    <FileFolder>scripts</FileFolder>
+    <FileFolder>content</FileFolder>
+    <FileFolder>viewmodels</FileFolder>
   </StaticFilesFolders>
   <!--Static files to exclude from the generated links-->
   <ExcludedStaticFileExtensions>

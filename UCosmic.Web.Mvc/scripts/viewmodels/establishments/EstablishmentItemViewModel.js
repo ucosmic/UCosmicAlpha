@@ -1,9 +1,10 @@
-﻿/// <reference path="../scripts/jquery-1.8.0.js" />
-/// <reference path="../scripts/knockout-2.2.0.js" />
-/// <reference path="../scripts/knockout.mapping-latest.js" />
-/// <reference path="../scripts/knockout.validation.debug.js" />
-/// <reference path="../scripts/app/app.js" />
-/// <reference path="../scripts/app/routes.js" />
+﻿/// <reference path="../../jquery/jquery-1.8.3.js" />
+/// <reference path="../../jquery/jquery-ui-1.9.2.js" />
+/// <reference path="../../ko/knockout-2.2.0.js" />
+/// <reference path="../../ko/knockout.mapping-latest.js" />
+/// <reference path="../../ko/knockout.validation.js" />
+/// <reference path="../../app/app.js" />
+/// <reference path="../../app/routes.js" />
 
 ko.validation.rules['validEstablishmentNameText'] = {
     async: true,
