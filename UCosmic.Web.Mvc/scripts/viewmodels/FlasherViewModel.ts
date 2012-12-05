@@ -6,47 +6,29 @@ declare var app: any;
 class FlasherViewModel {
 
     constructor () {
-        ko.computed(() => {
-            if (this.text()) {
+        ko.computed(() => { this.init(); });
+    }
+
+    private init(): void {
+        if (this.text()) {
+            window.clearInterval(this._tickInterval);
+            this._ticks = 9;
+            this.tickCount(this._ticks);
+            this._tickInterval = window.setInterval(() => {
+                this.tick();
+            }, 1000);
+            this.$element().hide().removeClass('hide').fadeIn('fast');
+        }
+        else {
+            if (this._tickInterval)
                 window.clearInterval(this._tickInterval);
-                this._ticks = 9;
-                this.tickCount(this._ticks);
-                this._tickInterval = window.setInterval(() => {
-                    this.tick();
-                }, 1000);
-                this.$element().hide().removeClass('hide').fadeIn('fast');
-            }
-            else {
-                if (this._tickInterval)
-                    window.clearInterval(this._tickInterval);
-                if (this.element)
-                    this.$element().addClass('hide');
-            }
-        });
-    }
-
-    // text to be displayed in the flasher
-    text: KnockoutObservableString = ko.observable();
-
-    // DOM element that wraps the flasher markup
-    element: Element = undefined;
-    $element(): JQuery {
-        return $(this.element);
-    }
-
-    // number of seconds to display the flashed text
-    tickCount: KnockoutObservableNumber = ko.observable(9);
-    private _ticks: number = 0;
-    private _tickInterval: any = undefined;
-
-    // set the text to be displayed in the flasher
-    flash(text: string): void {
-        this.text(undefined);
-        if (text) this.text(text);
+            if (this.element)
+                this.$element().addClass('hide');
+        }
     }
 
     // tick once for each second the flasher is visible
-    tick(): void {
+    private tick(): void {
         if (this._ticks <= 0) { // flasher ticking is complete
             this._ticks = 0;
             window.clearInterval(this._tickInterval);
@@ -56,6 +38,26 @@ class FlasherViewModel {
             --this._ticks;
         }
         this.tickCount(this._ticks);
+    }
+
+    // text to be displayed in the flasher
+    text: KnockoutObservableString = ko.observable();
+
+    // number of seconds to display the flashed text
+    tickCount: KnockoutObservableNumber = ko.observable(9);
+    private _ticks: number = 0;
+    private _tickInterval: any = undefined;
+
+    // DOM element that wraps the flasher markup
+    element: Element = undefined;
+    private $element(): JQuery {
+        return $(this.element);
+    }
+
+    // set the text to be displayed in the flasher
+    flash(text: string): void {
+        this.text(undefined);
+        if (text) this.text(text);
     }
 
     // fade out and then hide the flasher DOM element
