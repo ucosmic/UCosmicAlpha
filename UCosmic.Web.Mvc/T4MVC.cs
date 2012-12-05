@@ -225,7 +225,11 @@ namespace Links
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string EstablishmentItemViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentItemViewModel.min.js") ? Url("EstablishmentItemViewModel.min.js") : Url("EstablishmentItemViewModel.js");
                               
+                public static readonly string EstablishmentNameViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentNameViewModel.min.js") ? Url("EstablishmentNameViewModel.min.js") : Url("EstablishmentNameViewModel.js");
+                              
                 public static readonly string EstablishmentSearchViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentSearchViewModel.min.js") ? Url("EstablishmentSearchViewModel.min.js") : Url("EstablishmentSearchViewModel.js");
+                              
+                public static readonly string EstablishmentUrlViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentUrlViewModel.min.js") ? Url("EstablishmentUrlViewModel.min.js") : Url("EstablishmentUrlViewModel.js");
                               
             }
         
