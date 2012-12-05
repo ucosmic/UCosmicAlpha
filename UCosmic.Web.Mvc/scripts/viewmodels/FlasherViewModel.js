@@ -1,68 +1,57 @@
-﻿(function (window, $, undefined) {
-
-    // ReSharper disable InconsistentNaming
+var FlasherViewModel = (function () {
     function FlasherViewModel() {
-        // ReSharper restore InconsistentNaming
-        var self = this;
-
-        self.text = ko.observable();
-        self.element = undefined;
-        self.$element = function () {
-            return $(self.element);
-        };
-
-        self.dismiss = function () {
-            self.$element().fadeOut('slow', function () {
-                self.text('');
-                self.$element().addClass('hide');
-            });
-        };
-
-        self.flash = function (text) {
-            self.text(undefined);
-            if (text) self.text(text);
-        };
-
-        self.ticks = 0;
-        self.tickInterval = undefined;
-        self.tickCount = ko.observable(10);
-
-        self.tick = function () {
-            if (self.ticks <= 0) {
-                self.ticks = 0;
-                self.tickCount(self.ticks);
-                clearInterval(self.tickInterval);
-                self.dismiss();
-            }
-            else {
-                --self.ticks;
-                self.tickCount(self.ticks);
-            }
-        };
-
+        var _this = this;
+        this.text = ko.observable();
+        this.element = undefined;
+        this.tickCount = ko.observable(9);
+        this._ticks = 0;
+        this._tickInterval = undefined;
         ko.computed(function () {
-            if (self.text()) {
-                clearInterval(self.tickInterval);
-                self.ticks = 9;
-                self.tickCount(self.ticks);
-                self.tickInterval = setInterval(function () {
-                    self.tick();
+            if(_this.text()) {
+                window.clearInterval(_this._tickInterval);
+                _this._ticks = 9;
+                _this.tickCount(_this._ticks);
+                _this._tickInterval = window.setInterval(function () {
+                    _this.tick();
                 }, 1000);
-                self.$element().hide();
-                self.$element().removeClass('hide');
-                self.$element().fadeIn('fast');
-            }
-            else {
-                if (self.tickInterval)
-                    clearInterval(self.tickInterval);
-                if (self.element)
-                    self.$element().addClass('hide');
+                _this.$element().hide().removeClass('hide').fadeIn('fast');
+            } else {
+                if(_this._tickInterval) {
+                    window.clearInterval(_this._tickInterval);
+                }
+                if(_this.element) {
+                    _this.$element().addClass('hide');
+                }
             }
         });
     }
-
-    window.app.flasher = new FlasherViewModel();
-    window.ko.applyBindings(app.flasher, $('.flasher')[0]);
-
-}(window, jQuery));
-
+    FlasherViewModel.prototype.$element = function () {
+        return $(this.element);
+    };
+    FlasherViewModel.prototype.flash = function (text) {
+        this.text(undefined);
+        if(text) {
+            this.text(text);
+        }
+    };
+    FlasherViewModel.prototype.tick = function () {
+        if(this._ticks <= 0) {
+            this._ticks = 0;
+            window.clearInterval(this._tickInterval);
+            this.dismiss();
+        } else {
+            --this._ticks;
+        }
+        this.tickCount(this._ticks);
+    };
+    FlasherViewModel.prototype.dismiss = function () {
+        var _this = this;
+        this.$element().fadeOut('slow', function () {
+            _this.text('');
+            _this.$element().addClass('hide');
+        });
+    };
+    return FlasherViewModel;
+})();
+app.flasher = new FlasherViewModel();
+ko.applyBindings(app.flasher, $('.flasher')[0]);

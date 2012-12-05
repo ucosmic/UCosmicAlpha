@@ -141,9 +141,11 @@ namespace Links
             public static readonly string jquery_1_8_3_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-1.8.3.min.js") ? Url("jquery-1.8.3.min.js") : Url("jquery-1.8.3.js");
                           
             public static readonly string jquery_1_8_3_min_js = Url("jquery-1.8.3.min.js");
+            public static readonly string jquery_1_8_d_ts = Url("jquery-1.8.d.ts");
             public static readonly string jquery_ui_1_9_2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-ui-1.9.2.min.js") ? Url("jquery-ui-1.9.2.min.js") : Url("jquery-ui-1.9.2.js");
                           
             public static readonly string jquery_ui_1_9_2_min_js = Url("jquery-ui-1.9.2.min.js");
+            public static readonly string jqueryui_1_9_d_ts = Url("jqueryui-1.9.d.ts");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -155,6 +157,8 @@ namespace Links
                           
             public static readonly string knockout_2_2_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout-2.2.0.min.js") ? Url("knockout-2.2.0.min.js") : Url("knockout-2.2.0.js");
                           
+            public static readonly string knockout_2_2_d_ts = Url("knockout-2.2.d.ts");
+            public static readonly string knockout_mapping_2_0_d_ts = Url("knockout.mapping-2.0.d.ts");
             public static readonly string knockout_mapping_latest_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.debug.min.js") ? Url("knockout.mapping-latest.debug.min.js") : Url("knockout.mapping-latest.debug.js");
                           
             public static readonly string knockout_mapping_latest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.min.js") ? Url("knockout.mapping-latest.min.js") : Url("knockout.mapping-latest.js");
@@ -165,8 +169,16 @@ namespace Links
                           
         }
     
-        public static readonly string modernizr_2_6_2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modernizr-2.6.2.min.js") ? Url("modernizr-2.6.2.min.js") : Url("modernizr-2.6.2.js");
-                      
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class modernizr {
+            private const string URLPATH = "~/scripts/modernizr";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string modernizr_2_6_2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modernizr-2.6.2.min.js") ? Url("modernizr-2.6.2.min.js") : Url("modernizr-2.6.2.js");
+                          
+            public static readonly string modernizr_2_6_d_ts = Url("modernizr-2.6.d.ts");
+        }
+    
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class oss {
             private const string URLPATH = "~/scripts/oss";
@@ -202,6 +214,7 @@ namespace Links
             public static readonly string sammy_0_7_1_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1.min.js") ? Url("sammy-0.7.1.min.js") : Url("sammy-0.7.1.js");
                           
             public static readonly string sammy_0_7_1_min_js = Url("sammy-0.7.1.min.js");
+            public static readonly string sammyjs_0_7_d_ts = Url("sammyjs-0.7.d.ts");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -209,6 +222,8 @@ namespace Links
             private const string URLPATH = "~/scripts/viewmodels";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string _FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_FlasherViewModel.min.js") ? Url("_FlasherViewModel.min.js") : Url("_FlasherViewModel.js");
+                          
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class agreements {
                 private const string URLPATH = "~/scripts/viewmodels/agreements";
@@ -233,8 +248,10 @@ namespace Links
                               
             }
         
+            public static readonly string FlasherViewModel_ts = Url("FlasherViewModel.ts");
             public static readonly string FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FlasherViewModel.min.js") ? Url("FlasherViewModel.min.js") : Url("FlasherViewModel.js");
                           
+            public static readonly string FlasherViewModel_min_js = Url("FlasherViewModel.min.js");
         }
     
     }

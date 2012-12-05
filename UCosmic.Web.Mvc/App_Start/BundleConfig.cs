@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/scripts/modernizr-*"));
+                        "~/scripts/modernizr/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                         "~/scripts/knockout-*"));
@@ -43,7 +43,7 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
                         "~/scripts/app/routes.js",
-                        "~/scripts/viewmodels/FlasherViewModel.js"));
+                        "~/scripts/viewmodels/FlasherViewModel*"));
 
             // bootstrap css bundles
             var tenants = new[]

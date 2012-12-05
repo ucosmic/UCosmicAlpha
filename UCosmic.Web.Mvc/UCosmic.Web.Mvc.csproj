@@ -389,6 +389,19 @@
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\ui-bg_flat_black_40x100.png" />
+    <TypeScriptCompile Include="scripts\viewmodels\FlasherViewModel.ts" />
+    <None Include="scripts\jquery\jquery-1.8.d.ts" />
+    <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
+    <None Include="scripts\ko\knockout-2.2.d.ts" />
+    <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
+    <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
+    <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
+    <Content Include="scripts\viewmodels\FlasherViewModel.js">
+      <DependentUpon>FlasherViewModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\FlasherViewModel.min.js">
+      <DependentUpon>FlasherViewModel.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\EstablishmentNameViewModel.js" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentUrlViewModel.js" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentItemViewModel.js" />
@@ -400,7 +413,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentSearchViewModel.js" />
-    <Content Include="scripts\viewmodels\FlasherViewModel.js" />
+    <Content Include="scripts\viewmodels\_FlasherViewModel.js" />
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
     <Content Include="scripts\app\app.js" />
     <Content Include="scripts\app\fixed-scroll.js" />
@@ -423,7 +436,7 @@
     <Content Include="scripts\ko\knockout.mapping-latest.js" />
     <Content Include="scripts\ko\knockout.validation.debug.js" />
     <Content Include="scripts\ko\knockout.validation.js" />
-    <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\modernizr\modernizr-2.6.2.js" />
     <Content Include="scripts\oss\jquery.autosize.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
@@ -537,7 +550,7 @@
     <Content Include="images\orderedList7.png" />
     <Content Include="images\orderedList8.png" />
     <Content Include="images\orderedList9.png" />
-    <Content Include="scripts\_references.js" />
+    <None Include="scripts\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
