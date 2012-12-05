@@ -46,10 +46,10 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   input[type="tel"].spinning, input[type="text"].spinning, input[type="url"].spinning, input[type="color"].spinning,
   input[type="date"].spinning, input[type="datetime"].spinning, input[type="datetime-local"].spinning,
   input[type="month"].spinning, input[type="time"].spinning, input[type="week"].spinning, textarea.spinning {
-    -webkit-transition: background 0ms;
-    -moz-transition: background 0ms;
-    -o-transition: background 0ms;
-    transition: background 0ms;
+    -webkit-transition: background 0;
+    -moz-transition: background 0;
+    -o-transition: background 0;
+    transition: background 0;
     background-image: url("../../icons/spinner-20-blue.gif");
     background-position: right top;
     background-repeat: no-repeat;
@@ -121,23 +121,23 @@ a.button {
   padding: 8px 10px 8px 8px;
   font-size: 16px;
   line-height: 20px;
-  background-image: -webkit-linear-gradient(270deg, #dddddd 0%, #bbbbbb 100%);
-  background-image: -moz-linear-gradient(270deg, #dddddd 0%, #bbbbbb 100%);
-  background-image: linear-gradient(270deg, #dddddd 0%, #bbbbbb 100%);
+  background-image: -webkit-linear-gradient(270deg, #dddddd 0, #bbbbbb 100%);
+  background-image: -moz-linear-gradient(270deg, #dddddd 0, #bbbbbb 100%);
+  background-image: linear-gradient(270deg, #dddddd 0, #bbbbbb 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dddddd', EndColorStr='#bbbbbb');
   color: #333 !important;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-decoration: none !important; }
   a.button:hover {
-    background-image: -webkit-linear-gradient(270deg, #cccccc 0%, #aaaaaa 100%);
-    background-image: -moz-linear-gradient(270deg, #cccccc 0%, #aaaaaa 100%);
-    background-image: linear-gradient(270deg, #cccccc 0%, #aaaaaa 100%);
+    background-image: -webkit-linear-gradient(270deg, #cccccc 0, #aaaaaa 100%);
+    background-image: -moz-linear-gradient(270deg, #cccccc 0, #aaaaaa 100%);
+    background-image: linear-gradient(270deg, #cccccc 0, #aaaaaa 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#cccccc', EndColorStr='#aaaaaa'); }
   a.button:active {
-    background-image: -webkit-linear-gradient(270deg, #aaaaaa 0%, #cccccc 100%);
-    background-image: -moz-linear-gradient(270deg, #aaaaaa 0%, #cccccc 100%);
-    background-image: linear-gradient(270deg, #aaaaaa 0%, #cccccc 100%);
+    background-image: -webkit-linear-gradient(270deg, #aaaaaa 0, #cccccc 100%);
+    background-image: -moz-linear-gradient(270deg, #aaaaaa 0, #cccccc 100%);
+    background-image: linear-gradient(270deg, #aaaaaa 0, #cccccc 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#aaaaaa', EndColorStr='#cccccc'); }
   a.button > .text {
     display: inline-block;
@@ -187,7 +187,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
 button.link, input[type=submit].link, input[type=reset].link, input[type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
   display: inline-block;
   margin: 0;
-  border: 0px none;
+  border: 0 none;
   padding: 0;
   background: none;
   cursor: pointer;
@@ -251,7 +251,7 @@ form {
   .typed-item > .type {
     position: relative;
     width: 80px;
-    height: 0px;
+    height: 0;
     line-height: 13px;
     font-size: 13px;
     left: -75px;

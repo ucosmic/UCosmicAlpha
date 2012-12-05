@@ -29,7 +29,7 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
         border-bottom-color: #c66;
     }
     &.spinning {
-        @include transition(background, 0ms);
+        @include transition(background, 0);
         background-image: url('../../icons/spinner-20-blue.gif');
         background-position: right top;
         background-repeat: no-repeat;
@@ -101,16 +101,16 @@ a.button {
     border: solid 1px #ccc;
     padding: 8px 10px 8px 8px;
     @include font-height(16px, 20px);
-    @include linear-bg-gradient(270deg, #dddddd, 0%, #bbbbbb, 100%);
+    @include linear-bg-gradient(270deg, #dddddd, 0, #bbbbbb, 100%);
     color: #333 !important;
     @include font-arial;
     font-weight: bold;
     text-decoration: none !important;
     &:hover {
-        @include linear-bg-gradient(270deg, #cccccc, 0%, #aaaaaa, 100%);
+        @include linear-bg-gradient(270deg, #cccccc, 0, #aaaaaa, 100%);
     }
     &:active {
-        @include linear-bg-gradient(270deg, #aaaaaa, 0%, #cccccc, 100%);
+        @include linear-bg-gradient(270deg, #aaaaaa, 0, #cccccc, 100%);
     }
     > .text {
         display: inline-block;
@@ -156,7 +156,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
 button.link, input[type=submit].link, input[type=reset].link, input[type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
     display: inline-block;
     margin:0;
-    border: 0px none;
+    border: 0 none;
     padding: 0;
     background: none;
     cursor: pointer;
@@ -224,7 +224,7 @@ form {
     > .type {
         position: relative;
         width: 80px;
-        height: 0px;
+        height: 0;
         line-height: 13px;
         font-size: 13px;
         left: -75px;
