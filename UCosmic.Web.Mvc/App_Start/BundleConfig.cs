@@ -43,7 +43,7 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/oss/jquery.autosize.js",
                         "~/scripts/app/App2.js",
                         "~/scripts/app/app.js",
-                        "~/scripts/app/fixed-scroll.js",
+                        //"~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
                         "~/scripts/app/routes.js",
                         "~/scripts/viewmodels/FlasherViewModel.js"));
