@@ -121,6 +121,10 @@ namespace Links
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             public static readonly string app_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/app.min.js") ? Url("app.min.js") : Url("app.js");
                           
+            public static readonly string App2_ts = Url("App2.ts");
+            public static readonly string App2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/App2.min.js") ? Url("App2.min.js") : Url("App2.js");
+                          
+            public static readonly string App2_min_js = Url("App2.min.js");
             public static readonly string fixed_scroll_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fixed-scroll.min.js") ? Url("fixed-scroll.min.js") : Url("fixed-scroll.js");
                           
             public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");

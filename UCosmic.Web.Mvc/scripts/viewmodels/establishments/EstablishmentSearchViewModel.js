@@ -4,7 +4,7 @@
 /// <reference path="../../sammy/sammy-0.7.1.js" />
 /// <reference path="../../app/side-swiper.js" />
 /// <reference path="../../app/app.js" />
-
+/// <reference path="../../app/App2.js" />
 
 function EstablishmentResultViewModel(js) {
     var self = this;
@@ -235,7 +235,7 @@ function EstablishmentSearchViewModel() {
         else {
             ko.mapping.fromJS(js, self.resultsMapping, self);
         }
-        app.windowScrollTop('restore');
+        App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
         self.stopSpinning();
         self.swipeCallback();
         self.transitionedPageNumber(self.pageNumber());

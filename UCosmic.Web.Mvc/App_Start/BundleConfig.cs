@@ -7,6 +7,8 @@ namespace UCosmic.Web.Mvc
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
+            //BundleTable.EnableOptimizations = true;
+
             // jQuery
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/scripts/jquery/jquery-{version}.js"));
@@ -23,7 +25,7 @@ namespace UCosmic.Web.Mvc
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/scripts/modernizr/modernizr-*"));
+                        "~/scripts/modernizr/modernizr-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                         "~/scripts/knockout-*"));
@@ -31,19 +33,20 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
                         "~/scripts/jquery/jquery-{version}.js",
                         "~/scripts/jquery/jquery-ui-{version}.js",
-                        "~/scripts/ko/knockout-*",
-                        "~/scripts/ko/knockout.mapping-latest*",
-                        "~/scripts/ko/knockout.validation*",
+                        "~/scripts/ko/knockout-{version}.js",
+                        "~/scripts/ko/knockout.mapping-latest.js",
+                        "~/scripts/ko/knockout.validation.js",
                         "~/scripts/app/knockout.binding-handlers.js",
-                        "~/scripts/sammy/sammy*",
-                        "~/scripts/oss/jquery.placeholder*",
-                        "~/scripts/oss/jquery.animate-enhanced*",
-                        "~/scripts/oss/jquery.autosize*",
+                        "~/scripts/sammy/sammy-{version}.js",
+                        "~/scripts/oss/jquery.placeholder.js",
+                        "~/scripts/oss/jquery.animate-enhanced.js",
+                        "~/scripts/oss/jquery.autosize.js",
+                        "~/scripts/app/App2.js",
                         "~/scripts/app/app.js",
                         "~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
                         "~/scripts/app/routes.js",
-                        "~/scripts/viewmodels/FlasherViewModel*"));
+                        "~/scripts/viewmodels/FlasherViewModel.js"));
 
             // bootstrap css bundles
             var tenants = new[]

@@ -396,6 +396,13 @@
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
+    <TypeScriptCompile Include="scripts\app\App2.ts" />
+    <Content Include="scripts\app\App2.js">
+      <DependentUpon>App2.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\App2.min.js">
+      <DependentUpon>App2.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>
