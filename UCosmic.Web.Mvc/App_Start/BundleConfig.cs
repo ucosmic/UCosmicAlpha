@@ -36,16 +36,13 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/ko/knockout-{version}.js",
                         "~/scripts/ko/knockout.mapping-latest.js",
                         "~/scripts/ko/knockout.validation.js",
-                        "~/scripts/app/knockout.binding-handlers.js",
+                        "~/scripts/ko/knockout.binding-handlers.js",
                         "~/scripts/sammy/sammy-{version}.js",
                         "~/scripts/oss/jquery.placeholder.js",
                         "~/scripts/oss/jquery.animate-enhanced.js",
                         "~/scripts/oss/jquery.autosize.js",
                         "~/scripts/app/App.js",
-                        //"~/scripts/app/app.js",
-                        //"~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
-                        //"~/scripts/app/routes.js",
                         "~/scripts/app/Routes.js",
                         "~/scripts/viewmodels/FlasherViewModel.js"));
 

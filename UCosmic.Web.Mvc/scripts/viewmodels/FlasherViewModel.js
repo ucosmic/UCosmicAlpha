@@ -7,7 +7,7 @@ var App;
             this.tickCount = ko.observable(9);
             this._ticks = 0;
             this._tickInterval = undefined;
-            this.element = undefined;
+            this.$element = undefined;
             ko.computed(function () {
                 _this.init();
             });
@@ -21,13 +21,13 @@ var App;
                 this._tickInterval = window.setInterval(function () {
                     _this.tick();
                 }, 1000);
-                this.$element().hide().removeClass('hide').fadeIn('fast');
+                this.$element.hide().removeClass('hide').fadeIn('fast');
             } else {
                 if(this._tickInterval) {
                     window.clearInterval(this._tickInterval);
                 }
-                if(this.element) {
-                    this.$element().addClass('hide');
+                if(this.$element) {
+                    this.$element.addClass('hide');
                 }
             }
         };
@@ -44,9 +44,6 @@ var App;
                     _this.$element().addClass('hide');
             }
             this.tickCount(this._ticks);
-        };
-        FlasherViewModel.prototype.$element = function () {
-            return $(this.element);
         };
         FlasherViewModel.prototype.flash = function (text) {
             this.text(undefined);
@@ -80,14 +77,13 @@ ko.applyBindings(app.flasher, $('.flasher')[0]);
         };
         FlasherViewModel.prototype.dismiss = function () {
             var _this = this;
-            this.$element().fadeOut('slow', function () {
+            this.$element.fadeOut('slow', function () {
                 _this.text('');
-                _this.$element().addClass('hide');
+                _this.$element.addClass('hide');
             });
         };
         return FlasherViewModel;
-    })();
-    App.FlasherViewModel = FlasherViewModel;    
+    })();    
     App.flasher = new FlasherViewModel();
 })(App || (App = {}));
 

@@ -2,7 +2,7 @@
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 
 module App {
-    export class FlasherViewModel {
+    class FlasherViewModel {
 
         constructor () {
             ko.computed(() => { this.init(); });
@@ -16,13 +16,13 @@ module App {
                 this._tickInterval = window.setInterval(() => {
                     this.tick();
                 }, 1000);
-                this.$element().hide().removeClass('hide').fadeIn('fast');
+                this.$element.hide().removeClass('hide').fadeIn('fast');
             }
             else {
                 if (this._tickInterval)
                     window.clearInterval(this._tickInterval);
-                if (this.element)
-                    this.$element().addClass('hide');
+                if (this.$element)
+                    this.$element.addClass('hide');
             }
         }
 
@@ -48,10 +48,7 @@ module App {
         private _tickInterval: any = undefined;
 
         // DOM element that wraps the flasher markup
-        element: Element = undefined;
-        private $element(): JQuery {
-            return $(this.element);
-        }
+        $element: JQuery = undefined;
 
         // set the text to be displayed in the flasher
         flash(text: string): void {
@@ -61,9 +58,9 @@ module App {
 
         // fade out and then hide the flasher DOM element
         dismiss(): void {
-            this.$element().fadeOut('slow', () => { // lambda captures outer 'this'
+            this.$element.fadeOut('slow', () => { // lambda captures outer 'this'
                 this.text('');
-                this.$element().addClass('hide');
+                this.$element.addClass('hide');
             });
         }
     }

@@ -404,11 +404,18 @@
       <DependentUpon>App.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\app\Routes.ts" />
+    <TypeScriptCompile Include="scripts\ko\knockout.binding-handlers.ts" />
     <Content Include="scripts\app\Routes.js">
       <DependentUpon>Routes.ts</DependentUpon>
     </Content>
     <Content Include="scripts\app\Routes.min.js">
       <DependentUpon>Routes.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\ko\knockout.binding-handlers.js">
+      <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\ko\knockout.binding-handlers.min.js">
+      <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
     <Content Include="scripts\oss\jquery.placeholder.d.ts" />
     <Content Include="scripts\oss\jquery.autosize.d.ts" />
@@ -421,7 +428,7 @@
     <Content Include="scripts\viewmodels\establishments\EstablishmentNameViewModel.js" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentUrlViewModel.js" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentItemViewModel.js" />
-    <Content Include="scripts\app\knockout.binding-handlers.js" />
+    <Content Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
     <None Include="startup\disableTimeout.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
