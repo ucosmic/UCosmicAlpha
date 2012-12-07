@@ -263,8 +263,8 @@
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
-    <Compile Include="App_Start\Deprecated\_AttributeRouting.cs" />
-    <Compile Include="App_Start\Deprecated\_AttributeRoutingHttp.cs" />
+    <Compile Include="App_Start\_Deprecated\_AttributeRouting.cs" />
+    <Compile Include="App_Start\_Deprecated\_AttributeRoutingHttp.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -396,13 +396,15 @@
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
-    <TypeScriptCompile Include="scripts\app\App2.ts" />
-    <Content Include="scripts\app\App2.js">
-      <DependentUpon>App2.ts</DependentUpon>
+    <TypeScriptCompile Include="scripts\app\App.ts" />
+    <Content Include="scripts\app\App.js">
+      <DependentUpon>App.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\app\App2.min.js">
-      <DependentUpon>App2.ts</DependentUpon>
+    <Content Include="scripts\app\App.min.js">
+      <DependentUpon>App.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\oss\jquery.placeholder.d.ts" />
+    <Content Include="scripts\oss\jquery.autosize.d.ts" />
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>
@@ -420,10 +422,10 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentSearchViewModel.js" />
-    <Content Include="scripts\viewmodels\_FlasherViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
-    <Content Include="scripts\app\app.js" />
-    <Content Include="scripts\app\fixed-scroll.js" />
+    <Content Include="scripts\app\_deprecated\_app.js" />
+    <Content Include="scripts\app\_deprecated\_fixed-scroll.js" />
     <Content Include="scripts\app\side-swiper.js" />
     <None Include="scripts\jquery\jquery-1.8.3.intellisense.js" />
     <Content Include="scripts\jquery\jquery-1.8.3.js" />

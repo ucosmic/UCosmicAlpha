@@ -3,8 +3,8 @@
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../ko/knockout.mapping-latest.js" />
 /// <reference path="../../ko/knockout.validation.js" />
-/// <reference path="../../app/app.js" />
 /// <reference path="../../app/routes.js" />
+/// <reference path="../FlasherViewModel.js" />
 
 ko.validation.rules['validEstablishmentUrlValue'] = {
     async: true,
@@ -249,7 +249,7 @@ function EstablishmentUrlViewModel(js, $parent) {
             self.editMode(false); // hide the form, show the view
             self.isSpinningSave(false); // stop save spinner
             self.isSpinningPurge(false); // stop purge spinner
-            app.flasher.flash(response);
+            App.flasher.flash(response);
         });
     };
 

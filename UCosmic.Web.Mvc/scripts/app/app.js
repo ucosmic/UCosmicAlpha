@@ -1,54 +1,133 @@
-﻿(function (window, $) {
-    window.app = window.app || {
-        obtruders: {},
-        obtrude: function (selector, obtruders) {
-            var obtruder;
-            obtruders = obtruders || window.app.obtruders;
-            for (obtruder in obtruders) { // execute every registered obtruder
-                if (obtruders.hasOwnProperty(obtruder)) { // skip any inherited members
+var App;
+(function (App) {
+    var WindowScroller = (function () {
+        function WindowScroller() { }
+        WindowScroller.scrollTopTrackerId = '#scroll_top_tracker';
+        WindowScroller.init = function init() {
+            var trackTop = function () {
+                var windowScrollTop = $(window).scrollTop();
+                $(WindowScroller.scrollTopTrackerId).val(windowScrollTop);
+            };
+            $(window).off('scroll', trackTop);
+            $(window).on('scroll', trackTop);
+        }
+        WindowScroller.getTop = function getTop() {
+            return $(window).scrollTop();
+        }
+        WindowScroller.setTop = function setTop(value) {
+            $(window).scrollTop(value);
+        }
+        WindowScroller.restoreTop = function restoreTop() {
+            $(window).scrollTop($(WindowScroller.scrollTopTrackerId).val());
+        }
+        return WindowScroller;
+    })();
+    App.WindowScroller = WindowScroller;    
+    $(function () {
+        App.WindowScroller.init();
+    });
+    var SidebarFixedScroller = (function () {
+        function SidebarFixedScroller() { }
+        SidebarFixedScroller.init = function init() {
+            $('[data-fixed-scroll=root]').each(function () {
+                var $window = $(window);
+                var $root = $(this);
+                var $content = $root.find('[data-fixed-scroll=content]');
+                var $anchor = $root.find('[data-fixed-scroll=anchor]');
+                var contentWidth = $content.width();
+                var update = function () {
+                    var windowScrollTop = $window.scrollTop();
+                    var anchorOffsetTop = $anchor.offset().top;
 
-                    // apply an unobtrusive behavior
-                    if (typeof obtruders[obtruder] === 'function') {
-                        obtruders[obtruder].apply(this,
-                            Array.prototype.slice.call(arguments, 0, 1) || document);
+                    if(windowScrollTop > anchorOffsetTop) {
+                        $content.css({
+                            position: 'fixed',
+                            width: contentWidth
+                        });
+                        if($content.height() > $window.height()) {
+                            $content.css({
+                                top: '',
+                                bottom: '0px'
+                            });
+                        } else {
+                            $content.css({
+                                top: '0px',
+                                bottom: ''
+                            });
+                        }
+                    } else {
+                        if(windowScrollTop <= anchorOffsetTop) {
+                            $content.css({
+                                position: 'relative',
+                                top: '',
+                                bottom: ''
+                            });
+                        }
                     }
+                };
 
-                    // apply all unobtrusive behaviors in set
-                    if (typeof obtruders[obtruder] === 'object') {
-                        window.app.obtrude(selector, obtruders[obtruder]);
+                $window.scroll(update).resize(update);
+                update();
+            });
+        }
+        return SidebarFixedScroller;
+    })();    
+    $(function () {
+        SidebarFixedScroller.init();
+    });
+    (function (Obtruders) {
+        function autosize(selector) {
+            if($.fn.autosize) {
+                $(selector).find('textarea[data-autosize]').autosize();
+            }
+        }
+        Obtruders.autosize = autosize;
+        function placeholder(selector) {
+            if($.fn.placeholder) {
+                $(selector).find('input[placeholder], textarea[placeholder]').placeholder();
+            }
+        }
+        Obtruders.placeholder = placeholder;
+        function moduleNav(selector) {
+            $(selector).find('[data-current-module]').each(function () {
+                var current = $(this).data('current-module');
+                $('nav.modules li.' + current).addClass('current');
+            });
+            $('nav.modules').removeClass('hide');
+        }
+        Obtruders.moduleNav = moduleNav;
+        function bibNav(selector) {
+            $(selector).find('[data-current-bib]').each(function () {
+                var current = $(this).data('current-bib');
+                $('nav.bib li.' + current).addClass('current');
+            });
+            $('nav.bib').removeClass('hide');
+        }
+        Obtruders.bibNav = bibNav;
+    })(App.Obtruders || (App.Obtruders = {}));
+    var Obtruders = App.Obtruders;
+
+    var Obtrusion = (function () {
+        function Obtrusion() { }
+        Obtrusion.obtrude = function obtrude(selector, obtruders) {
+            var obtruder;
+            obtruders = obtruders || App.Obtruders;
+            for(obtruder in obtruders) {
+                if(obtruders.hasOwnProperty(obtruder)) {
+                    if(typeof obtruders[obtruder] === 'function') {
+                        obtruders[obtruder].apply(this, Array.prototype.slice.call(arguments, 0, 1) || document);
+                    }
+                    if(typeof obtruders[obtruder] === 'object') {
+                        App.Obtrusion.obtrude(selector, obtruders[obtruder]);
                     }
                 }
             }
         }
-    };
-
-    $.extend(window.app.obtruders, {
-        autosize: function (selector) {
-            if ($.fn.autosize)
-                $(selector).find('textarea[data-autosize]').autosize();
-        },
-        placeholder: function (selector) {
-            if ($.fn.placeholder)
-                $(selector).find('input[placeholder], textarea[placeholder]').placeholder();
-        }
-    });
-
-    //$(window).on('scroll', function () {
-    //    $('#scroll_top_tracker').val($(window).scrollTop());
-    //});
-    //
-    //window.app.windowScrollTop = function (val) {
-    //    if (val === undefined)
-    //        return $(window).scrollTop();
-    //    else if (val && typeof val === 'string' && val.toLowerCase() === 'restore')
-    //        $(window).scrollTop($('#scroll_top_tracker').val());
-    //    else if (typeof val === 'number')
-    //        $(window).scrollTop(val);
-    //    return true;
-    //};
-
+        return Obtrusion;
+    })();
+    App.Obtrusion = Obtrusion;    
     $(function () {
-        window.app.obtrude(document);
+        App.Obtrusion.obtrude(document);
     });
+})(App || (App = {}));
 
-}(window, jQuery, undefined));

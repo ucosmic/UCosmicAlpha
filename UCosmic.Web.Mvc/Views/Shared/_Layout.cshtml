@@ -30,7 +30,6 @@
             <div class="right">
                 <div class="group">
                     @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
-                    @*<a href="#/uv" class="user-voice" title="Powered by uservoice">Feedback &amp; Support</a>*@
                     <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
                     <a href="http://www.ucosmic.org" target="_blank">Consortium</a>
                 </div>
@@ -148,32 +147,20 @@
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
     *@
+
     @Html.Partial(MVC.Shared.Views._GoogleMapsScript)
     @Scripts.Render("~/bundles/layout")
 
     <script type="text/javascript">
-        app.flasher.text('@TempData["Flasher"]');
+        App.flasher.text('@TempData["Flasher"]');
         app.routes = new Routes('@Request.ApplicationPath');
-        $(function () {
-            $('[data-current-module]').each(function () {
-                var module = $(this).data('current-module');
-                $('nav.modules li.' + module).addClass('current');
-            });
-            $('nav.modules').removeClass('hide');
-
-            $('[data-current-bib]').each(function () {
-                var module = $(this).data('current-bib');
-                $('nav.bib li.' + module).addClass('current');
-            });
-            $('nav.bib').removeClass('hide');
-        });
 
         $('a[href="#/flashlong"]').on('click', function () {
-            app.flasher.flash('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');
+            App.flasher.flash('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');
         });
 
         $('a[href="#/flashshort"]').on('click', function () {
-            app.flasher.flash('Here is a short feedback message.');
+            App.flasher.flash('Here is a short feedback message.');
         });
     </script>
 

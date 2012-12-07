@@ -1,4 +1,6 @@
-﻿function WebApiRoutes(applicationPath) {
+﻿window.app = window.app || {};
+
+function WebApiRoutes(applicationPath) {
     var self = this;
 
     function getAbsoluteUrl(url) {

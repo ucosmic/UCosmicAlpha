@@ -119,14 +119,21 @@ namespace Links
             private const string URLPATH = "~/scripts/app";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string app_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/app.min.js") ? Url("app.min.js") : Url("app.js");
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class _deprecated {
+                private const string URLPATH = "~/scripts/app/_deprecated";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _app_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_app.min.js") ? Url("_app.min.js") : Url("_app.js");
+                              
+                public static readonly string _fixed_scroll_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_fixed-scroll.min.js") ? Url("_fixed-scroll.min.js") : Url("_fixed-scroll.js");
+                              
+            }
+        
+            public static readonly string App_ts = Url("App.ts");
+            public static readonly string App_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/App.min.js") ? Url("App.min.js") : Url("App.js");
                           
-            public static readonly string App2_ts = Url("App2.ts");
-            public static readonly string App2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/App2.min.js") ? Url("App2.min.js") : Url("App2.js");
-                          
-            public static readonly string App2_min_js = Url("App2.min.js");
-            public static readonly string fixed_scroll_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fixed-scroll.min.js") ? Url("fixed-scroll.min.js") : Url("fixed-scroll.js");
-                          
+            public static readonly string App_min_js = Url("App.min.js");
             public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
                           
             public static readonly string routes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/routes.min.js") ? Url("routes.min.js") : Url("routes.js");
@@ -190,8 +197,10 @@ namespace Links
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             public static readonly string jquery_animate_enhanced_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.animate-enhanced.min.js") ? Url("jquery.animate-enhanced.min.js") : Url("jquery.animate-enhanced.js");
                           
+            public static readonly string jquery_autosize_d_ts = Url("jquery.autosize.d.ts");
             public static readonly string jquery_autosize_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.autosize.min.js") ? Url("jquery.autosize.min.js") : Url("jquery.autosize.js");
                           
+            public static readonly string jquery_placeholder_d_ts = Url("jquery.placeholder.d.ts");
             public static readonly string jquery_placeholder_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.placeholder.min.js") ? Url("jquery.placeholder.min.js") : Url("jquery.placeholder.js");
                           
             public static readonly string jquery_placeholder_min_js = Url("jquery.placeholder.min.js");
@@ -226,8 +235,15 @@ namespace Links
             private const string URLPATH = "~/scripts/viewmodels";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string _FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_FlasherViewModel.min.js") ? Url("_FlasherViewModel.min.js") : Url("_FlasherViewModel.js");
-                          
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class _deprecated {
+                private const string URLPATH = "~/scripts/viewmodels/_deprecated";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_FlasherViewModel.min.js") ? Url("_FlasherViewModel.min.js") : Url("_FlasherViewModel.js");
+                              
+            }
+        
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class agreements {
                 private const string URLPATH = "~/scripts/viewmodels/agreements";

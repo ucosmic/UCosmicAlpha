@@ -3,8 +3,7 @@
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../sammy/sammy-0.7.1.js" />
 /// <reference path="../../app/side-swiper.js" />
-/// <reference path="../../app/app.js" />
-/// <reference path="../../app/App2.js" />
+/// <reference path="../../app/App.js" />
 
 function EstablishmentResultViewModel(js) {
     var self = this;

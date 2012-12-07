@@ -3,7 +3,7 @@
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../ko/knockout.mapping-latest.js" />
 /// <reference path="../../ko/knockout.validation.js" />
-/// <reference path="../../app/app.js" />
+/// <reference path="../../app/App.js" />
 /// <reference path="../../app/routes.js" />
 /// <reference path="EstablishmentNameViewModel.js" />
 /// <reference path="EstablishmentUrlViewModel.js" />
@@ -37,7 +37,7 @@ function EstablishmentItemViewModel(id) {
     self.receiveNames = function (js) {
         ko.mapping.fromJS(js || [], self.namesMapping, self.names);
         self.isSpinningNames(false);
-        app.obtrude(document);
+        App.Obtrusion.obtrude(document);
     };
     self.requestNames = function (callback) {
         self.isSpinningNames(true);
@@ -51,7 +51,7 @@ function EstablishmentItemViewModel(id) {
         var newName = new EstablishmentNameViewModel(null, self);
         self.names.unshift(newName);
         newName.showEditor();
-        app.obtrude(document);
+        App.Obtrusion.obtrude(document);
     };
 
     ko.computed(self.requestNames).extend({ throttle: 1 });
@@ -68,7 +68,7 @@ function EstablishmentItemViewModel(id) {
     self.receiveUrls = function (js) {
         ko.mapping.fromJS(js || [], self.urlsMapping, self.urls);
         self.isSpinningUrls(false);
-        app.obtrude(document);
+        App.Obtrusion.obtrude(document);
     };
     self.requestUrls = function (callback) {
         self.isSpinningUrls(true);
@@ -82,7 +82,7 @@ function EstablishmentItemViewModel(id) {
         var newUrl = new EstablishmentUrlViewModel(null, self);
         self.urls.unshift(newUrl);
         newUrl.showEditor();
-        app.obtrude(document);
+        App.Obtrusion.obtrude(document);
     };
 
     ko.computed(self.requestUrls).extend({ throttle: 1 });
