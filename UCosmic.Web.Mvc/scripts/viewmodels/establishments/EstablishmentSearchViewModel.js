@@ -78,7 +78,7 @@ function EstablishmentSearchViewModel() {
     // countries dropdown
     ko.computed(function () {
         var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-        $.get(app.routes.webApi.countries.get())
+        $.get(App.Routes.WebApi.Countries.get())
         .success(function (response) {
             response.splice(response.length, 0, { code: '-1', name: '[Without country]' });
             self.countries(response);
@@ -245,7 +245,7 @@ function EstablishmentSearchViewModel() {
             return;
         self.startSpinning();
 
-        $.get(app.routes.webApi.establishments.get(), {
+        $.get(App.Routes.WebApi.Establishments.get(), {
             pageSize: self.pageSize(),
             pageNumber: self.pageNumber(),
             countryCode: self.countryCode(),

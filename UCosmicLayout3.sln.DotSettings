@@ -16,6 +16,8 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=57DDDCAD_002D3A84_002D4501_002D994C_002DB0326C625183_002Ff_003AT4MVC_002Ecs/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=57DDDCAD_002D3A84_002D4501_002D994C_002DB0326C625183_002Ff_003AT4MVC_002EModelUnbinder_002Ecs/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=57DDDCAD_002D3A84_002D4501_002D994C_002DB0326C625183_002Fd_003AContent_002Fd_003Athemes_002Fd_003Abase/@EntryIndexedValue">57DDDCAD-3A84-4501-994C-B0326C625183/d:Content/d:themes/d:base</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=57DDDCAD_002D3A84_002D4501_002D994C_002DB0326C625183_002Fd_003Ascripts_002Fd_003Aapp_002Ff_003AApp_002Ejs/@EntryIndexedValue">57DDDCAD-3A84-4501-994C-B0326C625183/d:scripts/d:app/f:App.js</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=57DDDCAD_002D3A84_002D4501_002D994C_002DB0326C625183_002Fd_003Ascripts_002Fd_003Aviewmodels_002Ff_003AFlasherViewModel_002Ejs/@EntryIndexedValue">57DDDCAD-3A84-4501-994C-B0326C625183/d:scripts/d:viewmodels/f:FlasherViewModel.js</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=Html_002EIdNotResolved/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=LoopCanBeConvertedToQuery/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantCommaInArrayInitializer/@EntryIndexedValue">DO_NOT_SHOW</s:String>

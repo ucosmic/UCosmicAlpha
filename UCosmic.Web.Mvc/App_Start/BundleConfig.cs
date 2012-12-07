@@ -45,7 +45,8 @@ namespace UCosmic.Web.Mvc
                         //"~/scripts/app/app.js",
                         //"~/scripts/app/fixed-scroll.js",
                         "~/scripts/app/side-swiper.js",
-                        "~/scripts/app/routes.js",
+                        //"~/scripts/app/routes.js",
+                        "~/scripts/app/Routes.js",
                         "~/scripts/viewmodels/FlasherViewModel.js"));
 
             // bootstrap css bundles

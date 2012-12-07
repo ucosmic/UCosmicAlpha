@@ -29,7 +29,7 @@
     <script type="text/javascript">
         $(function () {
             $('#sign_in_async').on('click', function () {
-                $.post(app.routes.webApi.identity.signIn(), {
+                $.post(App.Routes.WebApi.Identity.signIn(), {
                     userName: 'Daniel.Ludwig@uc.edu',
                     password: 'asdfasdf'
                 })
@@ -38,7 +38,7 @@
                 });
             });
             $('#sign_out_async').on('click', function () {
-                $.get(app.routes.webApi.identity.signOut())
+                $.get(App.Routes.WebApi.Identity.signOut())
                 .success(function (response, arg2, arg3, arg4, arg5) {
                     alert('out success');
                 });

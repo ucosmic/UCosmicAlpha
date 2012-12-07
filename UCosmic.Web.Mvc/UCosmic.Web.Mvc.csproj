@@ -403,6 +403,13 @@
     <Content Include="scripts\app\App.min.js">
       <DependentUpon>App.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\app\Routes.ts" />
+    <Content Include="scripts\app\Routes.js">
+      <DependentUpon>Routes.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Routes.min.js">
+      <DependentUpon>Routes.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\oss\jquery.placeholder.d.ts" />
     <Content Include="scripts\oss\jquery.autosize.d.ts" />
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
@@ -449,7 +456,7 @@
     <Content Include="scripts\oss\jquery.autosize.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
-    <Content Include="scripts\app\routes.js" />
+    <Content Include="scripts\app\_deprecated\_routes.js" />
     <None Include="scripts\sammy\sammy-0.7.1-vsdoc.js" />
     <Content Include="scripts\sammy\sammy-0.7.1.js" />
     <Content Include="scripts\sammy\sammy-0.7.1.min.js" />

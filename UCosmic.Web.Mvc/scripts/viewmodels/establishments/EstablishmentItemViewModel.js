@@ -4,7 +4,7 @@
 /// <reference path="../../ko/knockout.mapping-latest.js" />
 /// <reference path="../../ko/knockout.validation.js" />
 /// <reference path="../../app/App.js" />
-/// <reference path="../../app/routes.js" />
+/// <reference path="../../app/Routes.js" />
 /// <reference path="EstablishmentNameViewModel.js" />
 /// <reference path="EstablishmentUrlViewModel.js" />
 
@@ -17,7 +17,7 @@ function EstablishmentItemViewModel(id) {
     // languages dropdowns
     self.languages = ko.observableArray(); // select options
     ko.computed(function () { // get languages from the server
-        $.getJSON(app.routes.webApi.languages.get())
+        $.getJSON(App.Routes.WebApi.Languages.get())
         .success(function (response) {
             response.splice(0, 0, { code: undefined, name: '[Language Neutral]' }); // add null option
             self.languages(response); // set the options dropdown
@@ -41,7 +41,7 @@ function EstablishmentItemViewModel(id) {
     };
     self.requestNames = function (callback) {
         self.isSpinningNames(true);
-        $.get(app.routes.webApi.establishmentNames.get(self.id), {})
+        $.get(App.Routes.WebApi.EstablishmentNames.get(self.id), {})
         .success(function (response) {
             self.receiveNames(response);
             if (callback) callback(response);
@@ -72,7 +72,7 @@ function EstablishmentItemViewModel(id) {
     };
     self.requestUrls = function (callback) {
         self.isSpinningUrls(true);
-        $.get(app.routes.webApi.establishmentUrls.get(self.id), {})
+        $.get(App.Routes.WebApi.EstablishmentUrls.get(self.id), {})
         .success(function (response) {
             self.receiveUrls(response);
             if (callback) callback(response);

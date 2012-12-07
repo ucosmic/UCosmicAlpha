@@ -153,7 +153,8 @@
 
     <script type="text/javascript">
         App.flasher.text('@TempData["Flasher"]');
-        app.routes = new Routes('@Request.ApplicationPath');
+        App.Routes.applicationPath = '@Request.ApplicationPath';
+        App.Routes.WebApi.urlPrefix = 'api';
 
         $('a[href="#/flashlong"]').on('click', function () {
             App.flasher.flash('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');

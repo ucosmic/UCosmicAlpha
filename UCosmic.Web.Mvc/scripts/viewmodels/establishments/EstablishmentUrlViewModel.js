@@ -3,7 +3,7 @@
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../ko/knockout.mapping-latest.js" />
 /// <reference path="../../ko/knockout.validation.js" />
-/// <reference path="../../app/routes.js" />
+/// <reference path="../../app/Routes.js" />
 /// <reference path="../FlasherViewModel.js" />
 
 ko.validation.rules['validEstablishmentUrlValue'] = {
@@ -14,7 +14,7 @@ ko.validation.rules['validEstablishmentUrlValue'] = {
             callback(true);
         }
         else if (!validation.isAwaitingResponse) {
-            var route = app.routes.webApi.establishmentUrls.validateValue(vm.ownerId(), vm.id());
+            var route = App.Routes.WebApi.EstablishmentUrls.validateValue(vm.ownerId(), vm.id());
             validation.isAwaitingResponse = true;
             $.post(route, vm.serializeData())
             .complete(function() {
@@ -105,7 +105,7 @@ function EstablishmentUrlViewModel(js, $parent) {
 
             if (self.id()) {
                 $.ajax({ // submit ajax PUT request
-                    url: app.routes.webApi.establishmentUrls.put($parent.id, self.id()),
+                    url: App.Routes.WebApi.EstablishmentUrls.put($parent.id, self.id()),
                     type: 'PUT',
                     data: self.serializeData()
                 })
@@ -113,7 +113,7 @@ function EstablishmentUrlViewModel(js, $parent) {
             }
             else if ($parent.id) {
                 $.ajax({ // submit ajax POST request
-                    url: app.routes.webApi.establishmentUrls.post($parent.id),
+                    url: App.Routes.WebApi.EstablishmentUrls.post($parent.id),
                     type: 'POST',
                     data: self.serializeData()
                 })
@@ -198,7 +198,7 @@ function EstablishmentUrlViewModel(js, $parent) {
                         shouldRemainSpinning = true;
                         $(self.confirmPurgeDialog).dialog('close');
                         $.ajax({ // submit ajax DELETE request
-                            url: app.routes.webApi.establishmentUrls.del($parent.id, self.id()),
+                            url: App.Routes.WebApi.EstablishmentUrls.del($parent.id, self.id()),
                             type: 'DELETE'
                         })
                         .success(mutationSuccess)
