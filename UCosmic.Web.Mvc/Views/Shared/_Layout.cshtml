@@ -152,6 +152,7 @@
     @Scripts.Render("~/bundles/layout")
 
     <script type="text/javascript">
+        ko.applyBindings(App.flasher, $('.flasher')[0]);
         App.flasher.text('@TempData["Flasher"]');
         App.Routes.applicationPath = '@Request.ApplicationPath';
         App.Routes.WebApi.urlPrefix = 'api';

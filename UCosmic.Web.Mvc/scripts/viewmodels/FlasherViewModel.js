@@ -1,50 +1,49 @@
 var App;
 (function (App) {
+    var ticks;
+    var tickInterval;
+    function init(flasher) {
+        if(flasher.text()) {
+            window.clearInterval(tickInterval);
+            ticks = 9;
+            flasher.tickCount(ticks);
+            tickInterval = window.setInterval(function () {
+                tick(flasher);
+            }, 1000);
+            flasher.$element.hide().removeClass('hide').fadeIn('fast');
+        } else {
+            if(tickInterval) {
+                window.clearInterval(tickInterval);
+            }
+            if(flasher.$element) {
+                flasher.$element.addClass('hide');
+            }
+        }
+    }
+    function tick(flasher) {
+        if(ticks <= 0) {
+            ticks = 0;
+            window.clearInterval(tickInterval);
+            flasher.dismiss();
+        } else {
+            --ticks;
+        }
+        flasher.tickCount(ticks);
+    }
     var FlasherViewModel = (function () {
         function FlasherViewModel() {
             var _this = this;
             this.text = ko.observable();
             this.tickCount = ko.observable(9);
-            this._ticks = 0;
-            this._tickInterval = undefined;
             this.$element = undefined;
             ko.computed(function () {
-                _this.init();
+                init(_this);
             });
         }
-        FlasherViewModel.prototype.init = function () {
-            var _this = this;
-            if(this.text()) {
-                window.clearInterval(this._tickInterval);
-                this._ticks = 9;
-                this.tickCount(this._ticks);
-                this._tickInterval = window.setInterval(function () {
-                    _this.tick();
-                }, 1000);
-                this.$element.hide().removeClass('hide').fadeIn('fast');
-            } else {
-                if(this._tickInterval) {
-                    window.clearInterval(this._tickInterval);
-                }
-                if(this.$element) {
-                    this.$element.addClass('hide');
-                }
-            }
-        };
-        FlasherViewModel.prototype.tick = function () {
-            if(this._ticks <= 0) {
-                this._ticks = 0;
-                window.clearInterval(this._tickInterval);
-                this.dismiss();
-            } else {
-                --this._ticks;
                     window.clearInterval(_this._tickInterval);
                 }
                 if(_this.element) {
                     _this.$element().addClass('hide');
-            }
-            this.tickCount(this._ticks);
-        };
         FlasherViewModel.prototype.flash = function (text) {
             this.text(undefined);
             if(text) {
@@ -87,4 +86,3 @@ ko.applyBindings(app.flasher, $('.flasher')[0]);
     App.flasher = new FlasherViewModel();
 })(App || (App = {}));
 
-ko.applyBindings(App.flasher, $('.flasher')[0]);

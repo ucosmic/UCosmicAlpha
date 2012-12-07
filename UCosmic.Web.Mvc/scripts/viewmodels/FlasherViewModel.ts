@@ -2,41 +2,48 @@
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 
 module App {
+
+    // private properties
+    var ticks: number;
+    var tickInterval: number;
+
+    //private methods
+    function init(flasher: FlasherViewModel): void {
+        // executes once each time the flasher text changes
+        if (flasher.text()) { // when there is flasher text
+            window.clearInterval(tickInterval); // clear the tick interval
+            ticks = 9; // reset ticks to top value
+            flasher.tickCount(ticks); // update the viewmodel tick count
+            tickInterval = window.setInterval(() => { // set up new tick interval
+                tick(flasher); // tick once each second
+            }, 1000);
+            flasher.$element.hide().removeClass('hide').fadeIn('fast'); // fade in element
+        }
+        else { // when there is no flasher text
+            if (tickInterval) // clear the tick interval
+                window.clearInterval(tickInterval);
+            if (flasher.$element) // hide the flasher element
+                flasher.$element.addClass('hide');
+        }
+    }
+
+    function tick(flasher: FlasherViewModel): void {
+        // executes once each second until tick interval is cleared
+        if (ticks <= 0) { // if ticks is zero or lower,
+            ticks = 0; // reset ticks to zero
+            window.clearInterval(tickInterval); // clear the tick interval
+            flasher.dismiss(); // dismiss the flasher (fade out & hide)
+        }
+        else { // when ticks is greater than zero
+            --ticks; // decrement the ticks (one second has passed)
+        }
+        flasher.tickCount(ticks); // update the viewmodel tick count
+    }
+
     class FlasherViewModel {
 
         constructor () {
-            ko.computed(() => { this.init(); });
-        }
-
-        private init(): void {
-            if (this.text()) {
-                window.clearInterval(this._tickInterval);
-                this._ticks = 9;
-                this.tickCount(this._ticks);
-                this._tickInterval = window.setInterval(() => {
-                    this.tick();
-                }, 1000);
-                this.$element.hide().removeClass('hide').fadeIn('fast');
-            }
-            else {
-                if (this._tickInterval)
-                    window.clearInterval(this._tickInterval);
-                if (this.$element)
-                    this.$element.addClass('hide');
-            }
-        }
-
-        // tick once for each second the flasher is visible
-        private tick(): void {
-            if (this._ticks <= 0) { // flasher ticking is complete
-                this._ticks = 0;
-                window.clearInterval(this._tickInterval);
-                this.dismiss();
-            }
-            else { // reduce ticks by one
-                --this._ticks;
-            }
-            this.tickCount(this._ticks);
+            ko.computed(() => { init(this); });
         }
 
         // text to be displayed in the flasher
@@ -44,8 +51,6 @@ module App {
 
         // number of seconds to display the flashed text
         tickCount: KnockoutObservableNumber = ko.observable(9);
-        private _ticks: number = 0;
-        private _tickInterval: any = undefined;
 
         // DOM element that wraps the flasher markup
         $element: JQuery = undefined;
@@ -65,6 +70,5 @@ module App {
         }
     }
 
-    export var flasher = new FlasherViewModel();
+    export var flasher = new FlasherViewModel(); // implement flasher as singleton instance
 }
-ko.applyBindings(App.flasher, $('.flasher')[0]);
