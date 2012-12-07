@@ -103,7 +103,7 @@ module App {
     }
 
     // unobtrusive behavior applicator
-    export class Obtrusion {
+    export class Obtruder {
         static obtrude(selector: any, obtruders?: any):void {
             var obtruder;
             obtruders = obtruders || App.Obtruders;
@@ -118,12 +118,12 @@ module App {
 
                     // apply all unobtrusive behaviors in set
                     if (typeof obtruders[obtruder] === 'object') {
-                        App.Obtrusion.obtrude(selector, obtruders[obtruder]);
+                        App.Obtruder.obtrude(selector, obtruders[obtruder]);
                     }
                 }
             }
         }
     }
-    $(function () { App.Obtrusion.obtrude(document); });
+    $(function () { App.Obtruder.obtrude(document); });
 }
 

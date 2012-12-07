@@ -37,7 +37,7 @@ function EstablishmentItemViewModel(id) {
     self.receiveNames = function (js) {
         ko.mapping.fromJS(js || [], self.namesMapping, self.names);
         self.isSpinningNames(false);
-        App.Obtrusion.obtrude(document);
+        App.Obtruder.obtrude(document);
     };
     self.requestNames = function (callback) {
         self.isSpinningNames(true);
@@ -51,7 +51,7 @@ function EstablishmentItemViewModel(id) {
         var newName = new EstablishmentNameViewModel(null, self);
         self.names.unshift(newName);
         newName.showEditor();
-        App.Obtrusion.obtrude(document);
+        App.Obtruder.obtrude(document);
     };
 
     ko.computed(self.requestNames).extend({ throttle: 1 });
@@ -68,7 +68,7 @@ function EstablishmentItemViewModel(id) {
     self.receiveUrls = function (js) {
         ko.mapping.fromJS(js || [], self.urlsMapping, self.urls);
         self.isSpinningUrls(false);
-        App.Obtrusion.obtrude(document);
+        App.Obtruder.obtrude(document);
     };
     self.requestUrls = function (callback) {
         self.isSpinningUrls(true);
@@ -82,7 +82,7 @@ function EstablishmentItemViewModel(id) {
         var newUrl = new EstablishmentUrlViewModel(null, self);
         self.urls.unshift(newUrl);
         newUrl.showEditor();
-        App.Obtrusion.obtrude(document);
+        App.Obtruder.obtrude(document);
     };
 
     ko.computed(self.requestUrls).extend({ throttle: 1 });

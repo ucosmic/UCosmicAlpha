@@ -107,9 +107,9 @@ var App;
     })(App.Obtruders || (App.Obtruders = {}));
     var Obtruders = App.Obtruders;
 
-    var Obtrusion = (function () {
-        function Obtrusion() { }
-        Obtrusion.obtrude = function obtrude(selector, obtruders) {
+    var Obtruder = (function () {
+        function Obtruder() { }
+        Obtruder.obtrude = function obtrude(selector, obtruders) {
             var obtruder;
             obtruders = obtruders || App.Obtruders;
             for(obtruder in obtruders) {
@@ -118,16 +118,16 @@ var App;
                         obtruders[obtruder].apply(this, Array.prototype.slice.call(arguments, 0, 1) || document);
                     }
                     if(typeof obtruders[obtruder] === 'object') {
-                        App.Obtrusion.obtrude(selector, obtruders[obtruder]);
+                        App.Obtruder.obtrude(selector, obtruders[obtruder]);
                     }
                 }
             }
         }
-        return Obtrusion;
+        return Obtruder;
     })();
-    App.Obtrusion = Obtrusion;    
+    App.Obtruder = Obtruder;    
     $(function () {
-        App.Obtrusion.obtrude(document);
+        App.Obtruder.obtrude(document);
     });
 })(App || (App = {}));
 
