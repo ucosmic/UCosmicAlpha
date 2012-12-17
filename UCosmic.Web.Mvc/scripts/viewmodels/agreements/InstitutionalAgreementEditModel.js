@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../jquery/jquery-1.8.3.js" />
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../sammy/sammy-0.7.1.js" />
-/// <reference path="../../app/side-swiper.js" />
+/// <reference path="../../app/SideSwiper.js" />
 /// <reference path="../establishments/EstablishmentSearchViewModel.js" />
 
 function InstitutionalAgreementParticipantModel(js) {
@@ -24,7 +24,7 @@ function InstitutionalAgreementEditModel() {
         history.back();
     };
 
-    self.sideSwiper = new SideSwiper({
+    self.sideSwiper = new App.SideSwiper({
         frameWidth: 970,
         root: '[data-current-module=agreements]'
     });

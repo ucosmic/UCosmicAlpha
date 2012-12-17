@@ -128,7 +128,11 @@ namespace Links
                               
                 public static readonly string _fixed_scroll_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_fixed-scroll.min.js") ? Url("_fixed-scroll.min.js") : Url("_fixed-scroll.js");
                               
+                public static readonly string _knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_knockout.binding-handlers.min.js") ? Url("_knockout.binding-handlers.min.js") : Url("_knockout.binding-handlers.js");
+                              
                 public static readonly string _routes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_routes.min.js") ? Url("_routes.min.js") : Url("_routes.js");
+                              
+                public static readonly string _side_swiper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_side-swiper.min.js") ? Url("_side-swiper.min.js") : Url("_side-swiper.js");
                               
             }
         
@@ -136,14 +140,14 @@ namespace Links
             public static readonly string App_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/App.min.js") ? Url("App.min.js") : Url("App.js");
                           
             public static readonly string App_min_js = Url("App.min.js");
-            public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
-                          
             public static readonly string Routes_ts = Url("Routes.ts");
             public static readonly string Routes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Routes.min.js") ? Url("Routes.min.js") : Url("Routes.js");
                           
             public static readonly string Routes_min_js = Url("Routes.min.js");
-            public static readonly string side_swiper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/side-swiper.min.js") ? Url("side-swiper.min.js") : Url("side-swiper.js");
+            public static readonly string SideSwiper_ts = Url("SideSwiper.ts");
+            public static readonly string SideSwiper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SideSwiper.min.js") ? Url("SideSwiper.min.js") : Url("SideSwiper.js");
                           
+            public static readonly string SideSwiper_min_js = Url("SideSwiper.min.js");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -173,6 +177,10 @@ namespace Links
             public static readonly string knockout_2_2_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout-2.2.0.min.js") ? Url("knockout-2.2.0.min.js") : Url("knockout-2.2.0.js");
                           
             public static readonly string knockout_2_2_d_ts = Url("knockout-2.2.d.ts");
+            public static readonly string knockout_binding_handlers_ts = Url("knockout.binding-handlers.ts");
+            public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
+                          
+            public static readonly string knockout_binding_handlers_min_js = Url("knockout.binding-handlers.min.js");
             public static readonly string knockout_mapping_2_0_d_ts = Url("knockout.mapping-2.0.d.ts");
             public static readonly string knockout_mapping_latest_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.debug.min.js") ? Url("knockout.mapping-latest.debug.min.js") : Url("knockout.mapping-latest.debug.js");
                           

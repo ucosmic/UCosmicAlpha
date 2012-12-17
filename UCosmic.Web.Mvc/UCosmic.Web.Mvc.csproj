@@ -411,12 +411,12 @@
     <Content Include="scripts\app\Routes.min.js">
       <DependentUpon>Routes.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\app\SideSwiper2.ts" />
-    <Content Include="scripts\app\SideSwiper2.js">
-      <DependentUpon>SideSwiper2.ts</DependentUpon>
+    <TypeScriptCompile Include="scripts\app\SideSwiper.ts" />
+    <Content Include="scripts\app\SideSwiper.js">
+      <DependentUpon>SideSwiper.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\app\SideSwiper2.min.js">
-      <DependentUpon>SideSwiper2.ts</DependentUpon>
+    <Content Include="scripts\app\SideSwiper.min.js">
+      <DependentUpon>SideSwiper.ts</DependentUpon>
     </Content>
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
@@ -447,7 +447,7 @@
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
     <Content Include="scripts\app\_deprecated\_app.js" />
     <Content Include="scripts\app\_deprecated\_fixed-scroll.js" />
-    <Content Include="scripts\app\side-swiper.js" />
+    <Content Include="scripts\app\_deprecated\_side-swiper.js" />
     <None Include="scripts\jquery\jquery-1.8.3.intellisense.js" />
     <Content Include="scripts\jquery\jquery-1.8.3.js" />
     <Content Include="scripts\jquery\jquery-1.8.3.min.js" />

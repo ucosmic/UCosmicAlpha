@@ -21,7 +21,7 @@ module App {
     var currentFrameSelector = '[data-side-swiper=on]';
     var otherFrameSelector = '[data-side-swiper=off]';
 
-    export class SideSwiper2 {
+    export class SideSwiper {
 
         private settings: SideSwiperOptions;
         private $root: JQuery;

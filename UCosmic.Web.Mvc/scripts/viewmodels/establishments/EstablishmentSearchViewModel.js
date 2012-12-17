@@ -2,7 +2,7 @@
 /// <reference path="../../jquery/jquery-ui-1.9.2.js" />
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../sammy/sammy-0.7.1.js" />
-/// <reference path="../../app/side-swiper.js" />
+/// <reference path="../../app/SideSwiper.js" />
 /// <reference path="../../app/App.js" />
 
 function EstablishmentResultViewModel(js) {
@@ -185,7 +185,7 @@ function EstablishmentSearchViewModel() {
         return $(self.itemsPage);
     };
     self.initialized = ko.observable(false);
-    self.sideSwiper = new SideSwiper({
+    self.sideSwiper = new App.SideSwiper({
         frameWidth: 710,
         speed: 'fast',
         root: '#search'

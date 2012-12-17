@@ -7,15 +7,15 @@ var App;
     };
     var currentFrameSelector = '[data-side-swiper=on]';
     var otherFrameSelector = '[data-side-swiper=off]';
-    var SideSwiper2 = (function () {
-        function SideSwiper2(options) {
+    var SideSwiper = (function () {
+        function SideSwiper(options) {
             this.settings = $.extend(defaults, options);
             this.$root = $(this.settings.root);
             if(this.$root.attr('data-side-swiper') !== 'root') {
                 this.$root = this.$root.find('[data-side-swiper=root]:first');
             }
         }
-        SideSwiper2.prototype.next = function (distance, callback) {
+        SideSwiper.prototype.next = function (distance, callback) {
             var $deck = this.$root.find('[data-side-swiper=deck]:first');
             var $currentFrame = $deck.children(currentFrameSelector);
             var $nextFrame = $currentFrame.next(otherFrameSelector);
@@ -49,7 +49,7 @@ var App;
                 }
             });
         };
-        SideSwiper2.prototype.prev = function (distance, callback) {
+        SideSwiper.prototype.prev = function (distance, callback) {
             var $deck = this.$root.find('[data-side-swiper=deck]:first');
             var $currentFrame = $deck.children(currentFrameSelector);
             var $prevFrame = $currentFrame.prev(otherFrameSelector);
@@ -83,8 +83,8 @@ var App;
                 }
             });
         };
-        return SideSwiper2;
+        return SideSwiper;
     })();
-    App.SideSwiper2 = SideSwiper2;    
+    App.SideSwiper = SideSwiper;    
 })(App || (App = {}));
 
