@@ -411,6 +411,13 @@
     <Content Include="scripts\app\Routes.min.js">
       <DependentUpon>Routes.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\app\SideSwiper2.ts" />
+    <Content Include="scripts\app\SideSwiper2.js">
+      <DependentUpon>SideSwiper2.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\SideSwiper2.min.js">
+      <DependentUpon>SideSwiper2.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
