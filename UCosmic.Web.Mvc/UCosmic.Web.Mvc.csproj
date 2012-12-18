@@ -474,7 +474,6 @@
     <None Include="startup\sql\ElmahSqlSetup.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="scripts\viewmodels\establishments\EstablishmentSearchViewModel.js" />
     <TypeScriptCompile Include="scripts\viewmodels\PagedSearch.ts" />
     <Content Include="scripts\viewmodels\PagedSearch.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>
@@ -489,6 +488,7 @@
     <Content Include="scripts\viewmodels\Spinner.min.js">
       <DependentUpon>Spinner.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentSearchViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
     <Content Include="scripts\app\_deprecated\_app.js" />

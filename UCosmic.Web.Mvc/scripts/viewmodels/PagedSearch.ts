@@ -50,7 +50,7 @@ module ViewModels {
             ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
         throttledKeyword: KnockoutComputed;
 
-        // spinner observables
+        // spinner component
         spinner: Spinner = new ViewModels.Spinner();
 
         constructor () {
