@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Identity
 {
@@ -15,7 +16,7 @@ namespace UCosmic.Domain.Identity
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
-        //public virtual Person Person { get; protected internal set; }
+        public virtual Person Person { get; protected internal set; }
         public string Name { get; protected internal set; }
         public bool IsRegistered { get; protected internal set; }
 

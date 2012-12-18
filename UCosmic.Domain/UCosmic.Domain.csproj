@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
+    <Compile Include="Api\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
     <Compile Include="Api\Events\IHandleEvents.cs" />
@@ -124,6 +125,12 @@
     <Compile Include="Api\Queries\OrderByDirection.cs" />
     <Compile Include="Domain\Languages\Queries\LanguagesUnfiltered.cs" />
     <Compile Include="Domain\Languages\Views\LanguageView.cs" />
+    <Compile Include="Domain\People\Entities\Affiliation.cs" />
+    <Compile Include="Domain\People\Entities\EmailAddress.cs" />
+    <Compile Include="Domain\People\Entities\EmailConfirmation.cs" />
+    <Compile Include="Domain\People\Entities\EmailConfirmationIntent.cs" />
+    <Compile Include="Domain\People\Entities\EmailMessage.cs" />
+    <Compile Include="Domain\People\Entities\Person.cs" />
     <Compile Include="Domain\Places\Entities\BoundingBox.cs" />
     <Compile Include="Domain\Places\Entities\Coordinates.cs" />
     <Compile Include="Domain\Places\Entities\GeoNamesAlternateName.cs" />

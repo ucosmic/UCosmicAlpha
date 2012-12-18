@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Establishments
 {
@@ -62,7 +63,7 @@ namespace UCosmic.Domain.Establishments
         public bool IsMember { get; protected internal set; }
 
         public virtual ICollection<EstablishmentEmailDomain> EmailDomains { get; protected internal set; }
-        //public virtual ICollection<Affiliation> Affiliates { get; protected internal set; }
+        public virtual ICollection<Affiliation> Affiliates { get; protected internal set; }
 
         public virtual EstablishmentType Type { get; protected internal set; }
         public bool IsInstitution

@@ -7,12 +7,12 @@ namespace UCosmic.Domain
 {
     internal static class EntityExtensions
     {
-        //internal static int NextNumber(this IEnumerable<IAmNumbered> enumerable)
-        //{
-        //    var collection = enumerable.Select(x => x.Number).ToArray();
-        //    var max = collection.Any() ? collection.Max() : 0;
-        //    return ++max;
-        //}
+        internal static int NextNumber(this IEnumerable<IAmNumbered> enumerable)
+        {
+            var collection = enumerable.Select(x => x.Number).ToArray();
+            var max = collection.Any() ? collection.Max() : 0;
+            return ++max;
+        }
 
         private static IQueryable<TEntity> EagerLoad<TEntity>(this IQueryable<TEntity> queryable,
             Expression<Func<TEntity, object>> expression,
