@@ -121,6 +121,14 @@
     <Compile Include="Domain\Identity\Entities\SubjectNameIdentifier.cs" />
     <Compile Include="Domain\Identity\Entities\User.cs" />
     <Compile Include="Domain\Identity\Queries\RolesGrantedTo.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreement.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementConfiguration.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementContact.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementFieldValue.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementFile.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementNode.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementParticipant.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementVisibility.cs" />
     <Compile Include="Domain\Languages\Entities\Language.cs" />
     <Compile Include="Domain\Languages\Entities\LanguageName.cs" />
     <Compile Include="Api\Queries\OrderByDirection.cs" />
