@@ -169,7 +169,7 @@ module ViewModels.Establishments {
                 ko.mapping.fromJS(js, this.resultsMapping, this);
             }
             App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
-            this.stopSpinning();
+            this.spinner.stop();
             this.swipeCallback();
             this.transitionedPageNumber(this.pageNumber());
         }
@@ -177,7 +177,7 @@ module ViewModels.Establishments {
         requestResults(): void {
             if (this.pageSize() === undefined || this.orderBy() === undefined)
                 return;
-            this.startSpinning();
+            this.spinner.start();
 
             $.get(App.Routes.WebApi.Establishments.get(), {
                 pageSize: this.pageSize(),

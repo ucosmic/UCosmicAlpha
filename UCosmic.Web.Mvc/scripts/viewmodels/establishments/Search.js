@@ -160,7 +160,7 @@ var ViewModels;
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
                 App.WindowScroller.restoreTop();
-                this.stopSpinning();
+                this.spinner.stop();
                 this.swipeCallback();
                 this.transitionedPageNumber(this.pageNumber());
             };
@@ -169,7 +169,7 @@ var ViewModels;
                 if(this.pageSize() === undefined || this.orderBy() === undefined) {
                     return;
                 }
-                this.startSpinning();
+                this.spinner.start();
                 $.get(App.Routes.WebApi.Establishments.get(), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),

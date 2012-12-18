@@ -12,10 +12,7 @@ var ViewModels;
             this.items = ko.observableArray();
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
-            this.spinnerDelay = 400;
-            this.isSpinning = ko.observable(true);
-            this.showSpinner = ko.observable(false);
-            this.inTransition = ko.observable(false);
+            this.spinner = new ViewModels.Spinner();
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
@@ -55,13 +52,13 @@ var ViewModels;
                 return _this.lastNumber() > _this.firstNumber();
             });
             this.hasNoItems = ko.computed(function () {
-                return !_this.isSpinning() && !_this.hasItems();
+                return !_this.spinner.isVisible() && !_this.hasItems();
             });
             this.hasManyPages = ko.computed(function () {
                 return _this.pageCount() > 1;
             });
             this.showStatus = ko.computed(function () {
-                return _this.hasItems() && !_this.showSpinner();
+                return _this.hasItems() && !_this.spinner.isVisible();
             });
             this.throttledKeyword = ko.computed(this.keyword).extend({
                 throttle: 400
@@ -77,24 +74,6 @@ var ViewModels;
             if(this.prevEnabled()) {
                 history.back();
             }
-        };
-        PagedSearch.prototype.startSpinning = function () {
-            var _this = this;
-            this.isSpinning(true);
-            if(this.spinnerDelay < 1) {
-                this.showSpinner(true);
-            } else {
-                setTimeout(function () {
-                    if(_this.isSpinning() && !_this.inTransition()) {
-                        _this.showSpinner(true);
-                    }
-                }, this.spinnerDelay);
-            }
-        };
-        PagedSearch.prototype.stopSpinning = function () {
-            this.inTransition(false);
-            this.showSpinner(false);
-            this.isSpinning(false);
         };
         return PagedSearch;
     })();

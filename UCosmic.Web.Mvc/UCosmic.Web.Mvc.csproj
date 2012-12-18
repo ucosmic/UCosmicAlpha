@@ -482,6 +482,13 @@
     <Content Include="scripts\viewmodels\PagedSearch.min.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\Spinner.ts" />
+    <Content Include="scripts\viewmodels\Spinner.js">
+      <DependentUpon>Spinner.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\Spinner.min.js">
+      <DependentUpon>Spinner.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
     <Content Include="scripts\app\_deprecated\_app.js" />

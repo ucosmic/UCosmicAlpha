@@ -1,6 +1,7 @@
 /// <reference path="../lib-ext.d.ts" />
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 /// <reference path="../ko/knockout-2.2.d.ts" />
+/// <reference path="Spinner.ts" />
 
 module ViewModels {
     export class PagedSearch {
@@ -50,28 +51,7 @@ module ViewModels {
         throttledKeyword: KnockoutComputed;
 
         // spinner observables
-        spinnerDelay: number = 400;
-        isSpinning: KnockoutObservableBool = ko.observable(true);
-        showSpinner: KnockoutObservableBool = ko.observable(false);
-        inTransition: KnockoutObservableBool = ko.observable(false);
-
-        // spinner methods
-        startSpinning(): void {
-            this.isSpinning(true); // we are entering an ajax call
-            if (this.spinnerDelay < 1)
-                this.showSpinner(true);
-            else
-                setTimeout((): void => {
-                    // only show spinner when load is still being processed
-                    if (this.isSpinning() && !this.inTransition())
-                        this.showSpinner(true);
-                }, this.spinnerDelay);
-        }
-        stopSpinning(): void {
-            this.inTransition(false);
-            this.showSpinner(false);
-            this.isSpinning(false);
-        }
+        spinner: Spinner = new ViewModels.Spinner();
 
         constructor () {
 
@@ -116,13 +96,13 @@ module ViewModels {
                 return this.lastNumber() > this.firstNumber();
             });
             this.hasNoItems = ko.computed((): bool => {
-                return !this.isSpinning() && !this.hasItems();
+                return !this.spinner.isVisible() && !this.hasItems();
             });
             this.hasManyPages = ko.computed((): bool => {
                 return this.pageCount() > 1;
             });
             this.showStatus = ko.computed((): bool => {
-                return this.hasItems() && !this.showSpinner();
+                return this.hasItems() && !this.spinner.isVisible();
             });
 
             // filtering computeds
