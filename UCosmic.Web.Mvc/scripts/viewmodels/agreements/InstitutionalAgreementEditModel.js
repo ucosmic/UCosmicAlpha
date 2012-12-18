@@ -3,6 +3,7 @@
 /// <reference path="../../sammy/sammy-0.7.1.js" />
 /// <reference path="../../app/SideSwiper.js" />
 /// <reference path="../establishments/EstablishmentSearchViewModel.js" />
+/// <reference path="../establishments/SearchResult.js" />
 
 function InstitutionalAgreementParticipantModel(js) {
     var self = this;
@@ -36,7 +37,7 @@ function InstitutionalAgreementEditModel() {
     var tenantDomain = $('#tenancy_domain').val();
     var homeParticipant = new InstitutionalAgreementParticipantModel({
         isOwner: true,
-        establishment: new EstablishmentResultViewModel({
+        establishment: new ViewModels.Establishments.SearchResult({
             id: 1,
             officialName: 'My Home Institution (automatically detected based on who is signed in)',
             translatedName: 'My Home Institution (automatically detected based on who is signed in)',
@@ -45,7 +46,7 @@ function InstitutionalAgreementEditModel() {
         })
     });
     if (tenantDomain === 'usf.edu') {
-        homeParticipant.establishment = new EstablishmentResultViewModel({
+        homeParticipant.establishment = new ViewModels.Establishments.SearchResult({
             id: 1,
             officialName: 'University of South Florida',
             translatedName: 'University of South Florida',
@@ -54,7 +55,7 @@ function InstitutionalAgreementEditModel() {
         });
     }
     if (tenantDomain === 'lehigh.edu') {
-        homeParticipant.establishment = new EstablishmentResultViewModel({
+        homeParticipant.establishment = new ViewModels.Establishments.SearchResult({
             id: 1,
             officialName: 'Lehigh University',
             translatedName: 'Lehigh University',
@@ -63,7 +64,7 @@ function InstitutionalAgreementEditModel() {
         });
     }
     if (tenantDomain === 'umn.edu') {
-        homeParticipant.establishment = new EstablishmentResultViewModel({
+        homeParticipant.establishment = new ViewModels.Establishments.SearchResult({
             id: 1,
             officialName: 'University of Minnesota',
             translatedName: 'University of Minnesota',
@@ -72,7 +73,7 @@ function InstitutionalAgreementEditModel() {
         });
     }
     if (tenantDomain === 'uc.edu') {
-        homeParticipant.establishment = new EstablishmentResultViewModel({
+        homeParticipant.establishment = new ViewModels.Establishments.SearchResult({
             id: 1,
             officialName: 'University of Cincinnati',
             translatedName: 'University of Cincinnati',
@@ -81,7 +82,7 @@ function InstitutionalAgreementEditModel() {
         });
     }
     if (tenantDomain === 'suny.edu') {
-        homeParticipant.establishment = new EstablishmentResultViewModel({
+        homeParticipant.establishment = new ViewModels.Establishments.SearchResult({
             id: 1,
             officialName: 'State University of New York',
             translatedName: 'State University of New York',
@@ -91,7 +92,7 @@ function InstitutionalAgreementEditModel() {
     }
     //var partnerParticipant1 = new InstitutionalAgreementParticipantModel({
     //    isOwner: false,
-    //    establishment: new EstablishmentResultViewModel({
+    //    establishment: new ViewModels.Establishments.SearchResult({
     //        id: 2,
     //        officialName: 'Universität zu Köln',
     //        translatedName: 'University of Cologne',

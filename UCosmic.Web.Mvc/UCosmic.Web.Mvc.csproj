@@ -426,6 +426,34 @@
     </Content>
     <Content Include="scripts\oss\jquery.placeholder.d.ts" />
     <Content Include="scripts\oss\jquery.autosize.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\countries\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\countries\ServerApiModel.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\countries\ServerApiModel.min.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Search.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Search.min.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\SearchResult.js">
+      <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\SearchResult.min.js">
+      <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\establishments\ServerApiModel.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\ServerApiModel.min.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>

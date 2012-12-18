@@ -9,27 +9,31 @@ namespace UCosmic.Web.Mvc
         {
             //BundleTable.EnableOptimizations = true;
 
-            // jQuery
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/scripts/jquery/jquery-{version}.js"));
-
-            // jQuery UI
-            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/scripts/jquery/jquery-ui-{version}.js"));
-
-            // jquery validation, plus ms unobtrusive validation and ajax
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/scripts/oss/jquery.unobtrusive*",
-                        "~/scripts/oss/jquery.validate*"));
+            #region Default Bundles
+            //// jQuery
+            //bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+            //            "~/scripts/jquery/jquery-{version}.js"));
+            //
+            //// jQuery UI
+            //bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
+            //            "~/scripts/jquery/jquery-ui-{version}.js"));
+            //
+            //// jquery validation, plus ms unobtrusive validation and ajax
+            //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
+            //            "~/scripts/oss/jquery.unobtrusive*",
+            //            "~/scripts/oss/jquery.validate*"));
+            //
+            //// knockout
+            //bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
+            //            "~/scripts/knockout-*"));
+            #endregion
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/scripts/modernizr/modernizr-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
-                        "~/scripts/knockout-*"));
-
+            // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
                         "~/scripts/jquery/jquery-{version}.js",
                         "~/scripts/jquery/jquery-ui-{version}.js",
@@ -45,6 +49,12 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/app/SideSwiper.js",
                         "~/scripts/app/Routes.js",
                         "~/scripts/viewmodels/FlasherViewModel.js"));
+
+            // establishment search page
+            bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
+                "~/scripts/viewmodels/countries/ServerApiModel.js",
+                "~/scripts/viewmodels/establishments/SearchResult.js",
+                "~/scripts/viewmodels/establishments/Search.js"));
 
             // bootstrap css bundles
             var tenants = new[]

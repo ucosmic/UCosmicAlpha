@@ -266,6 +266,17 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class countries {
+                private const string URLPATH = "~/scripts/viewmodels/countries";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string ServerApiModel_ts = Url("ServerApiModel.ts");
+                public static readonly string ServerApiModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.min.js") ? Url("ServerApiModel.min.js") : Url("ServerApiModel.js");
+                              
+                public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class establishments {
                 private const string URLPATH = "~/scripts/viewmodels/establishments";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -278,6 +289,18 @@ namespace Links
                               
                 public static readonly string EstablishmentUrlViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentUrlViewModel.min.js") ? Url("EstablishmentUrlViewModel.min.js") : Url("EstablishmentUrlViewModel.js");
                               
+                public static readonly string Search_ts = Url("Search.ts");
+                public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
+                              
+                public static readonly string Search_min_js = Url("Search.min.js");
+                public static readonly string SearchResult_ts = Url("SearchResult.ts");
+                public static readonly string SearchResult_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchResult.min.js") ? Url("SearchResult.min.js") : Url("SearchResult.js");
+                              
+                public static readonly string SearchResult_min_js = Url("SearchResult.min.js");
+                public static readonly string ServerApiModel_ts = Url("ServerApiModel.ts");
+                public static readonly string ServerApiModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.min.js") ? Url("ServerApiModel.min.js") : Url("ServerApiModel.js");
+                              
+                public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
             }
         
             public static readonly string FlasherViewModel_ts = Url("FlasherViewModel.ts");
