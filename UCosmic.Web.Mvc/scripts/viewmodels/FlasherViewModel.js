@@ -40,39 +40,11 @@ var App;
                 init(_this);
             });
         }
-                    window.clearInterval(_this._tickInterval);
-                }
-                if(_this.element) {
-                    _this.$element().addClass('hide');
         FlasherViewModel.prototype.flash = function (text) {
             this.text(undefined);
             if(text) {
                 this.text(text);
             }
-    };
-    FlasherViewModel.prototype.dismiss = function () {
-        var _this = this;
-        this.$element().fadeOut('slow', function () {
-            _this.text('');
-            _this.$element().addClass('hide');
-        });
-    };
-    return FlasherViewModel;
-})();
-app.flasher = new FlasherViewModel();
-ko.applyBindings(app.flasher, $('.flasher')[0]);
-            this.text(text);
-        }
-    };
-    FlasherViewModel.prototype.tick = function () {
-        if(this._ticks <= 0) {
-            this._ticks = 0;
-            window.clearInterval(this._tickInterval);
-            this.dismiss();
-        } else {
-            --this._ticks;
-        }
-        this.tickCount(this._ticks);
         };
         FlasherViewModel.prototype.dismiss = function () {
             var _this = this;

@@ -192,6 +192,9 @@ namespace Links
                           
         }
     
+        public static readonly string lib_ext_d_ts = Url("lib-ext.d.ts");
+        public static readonly string lib_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/lib.d.min.js") ? Url("lib.d.min.js") : Url("lib.d.js");
+                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class modernizr {
             private const string URLPATH = "~/scripts/modernizr";
@@ -307,6 +310,10 @@ namespace Links
             public static readonly string FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FlasherViewModel.min.js") ? Url("FlasherViewModel.min.js") : Url("FlasherViewModel.js");
                           
             public static readonly string FlasherViewModel_min_js = Url("FlasherViewModel.min.js");
+            public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
+            public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
+                          
+            public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
         }
     
     }

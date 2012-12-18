@@ -5,12 +5,10 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../PagedSearch.ts" />
 /// <reference path="../countries/ServerApiModel.ts" />
 /// <reference path="ServerApiModel.ts" />
 /// <reference path="SearchResult.ts" />
-
-// need this to allow parseInt to operate on numbers as well as strings
-declare function parseInt(n: number, radix?: number): number;
 
 interface Lens {
     text: string;
@@ -19,28 +17,10 @@ interface Lens {
 
 module ViewModels.Establishments {
 
-    export class Search {
-
-        // computed observables
-        throttledKeyword: KnockoutComputed;
-        pageCount: KnockoutComputed;
-        pageIndex: KnockoutComputed;
-        firstIndex: KnockoutComputed;
-        firstNumber: KnockoutComputed;
-        lastNumber: KnockoutComputed;
-        lastIndex: KnockoutComputed;
-        nextEnabled: KnockoutComputed;
-        prevEnabled: KnockoutComputed;
-        hasManyPages: KnockoutComputed;
-        hasItems: KnockoutComputed;
-        hasManyItems: KnockoutComputed;
-        hasNoItems: KnockoutComputed;
-        showStatus: KnockoutComputed;
+    export class Search extends ViewModels.PagedSearch {
 
         constructor () {
-            // keyword input throttler
-            this.throttledKeyword = ko.computed(this.keyword)
-                .extend({ throttle: 400 });
+            super();
 
             // countries dropdown
             ko.computed((): void => {
@@ -56,57 +36,9 @@ module ViewModels.Establishments {
             })
             .extend({ throttle: 1 });
 
-            // paging computeds
-            this.pageCount = ko.computed((): number => {
-                return Math.ceil(this.itemTotal() / this.pageSize());
-            });
-            this.pageIndex = ko.computed((): number =>  {
-                return parseInt(this.transitionedPageNumber()) - 1;
-            });
-            this.firstIndex = ko.computed((): number => {
-                return this.pageIndex() * this.pageSize();
-            });
-            this.firstNumber = ko.computed((): number => {
-                return this.firstIndex() + 1;
-            });
-            this.lastNumber = ko.computed((): number => {
-                if (!this.items) return 0;
-                return this.firstIndex() + this.items().length;
-            });
-            this.lastIndex = ko.computed((): number => {
-                return this.lastNumber() - 1;
-            });
-            this.nextEnabled = ko.computed((): bool => {
-                return this.pageNumber() < this.pageCount() && !this.nextForceDisabled();
-            });
-            this.prevEnabled = ko.computed((): bool => {
-                return this.pageNumber() > 1 && !this.prevForceDisabled();
-            });
-            this.hasManyPages = ko.computed((): bool => {
-                return this.pageCount() > 1;
-            });
-            this.hasManyItems = ko.computed((): bool => {
-                return this.lastNumber() > this.firstNumber();
-            });
-
             // paging subscriptions
-            this.pageCount.subscribe((newValue: number) => {
-                if (this.pageNumber() && this.pageNumber() > newValue)
-                    this.pageNumber(1);
-            });
             this.pageNumber.subscribe((newValue: number) => {
                 this.setLocation();
-            });
-
-            // results computeds
-            this.hasItems = ko.computed((): bool => {
-                return this.items() && this.items().length > 0;
-            });
-            this.hasNoItems = ko.computed((): bool => {
-                return !this.isSpinning() && !this.hasItems();
-            });
-            this.showStatus = ko.computed((): bool => {
-                return this.hasItems() && !this.showSpinner();
             });
 
             // sammy
@@ -131,14 +63,14 @@ module ViewModels.Establishments {
                     // swipe backward
                     trail.pop();
                     self.swipeCallback = function () {
-                        clone = self.$itemsPage().clone(true)
+                        clone = self.$itemsPage.clone(true)
                             .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                        clone.appendTo(self.$itemsPage().parent());
-                        self.$itemsPage().attr('data-side-swiper', 'off').hide();
+                        clone.appendTo(self.$itemsPage.parent());
+                        self.$itemsPage.attr('data-side-swiper', 'off').hide();
                         self.lockAnimation();
                         $(window).scrollTop(0);
                         self.sideSwiper.prev(1, function () {
-                            self.$itemsPage().siblings().remove();
+                            self.$itemsPage.siblings().remove();
                             self.unlockAnimation();
                         });
                     };
@@ -146,10 +78,10 @@ module ViewModels.Establishments {
                 } else if (trail.length > 0) {
                     // swipe forward
                     self.swipeCallback = function () {
-                        clone = self.$itemsPage().clone(true)
+                        clone = self.$itemsPage.clone(true)
                             .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                        clone.insertBefore(self.$itemsPage());
-                        self.$itemsPage().attr('data-side-swiper', 'off').hide();
+                        clone.insertBefore(self.$itemsPage);
+                        self.$itemsPage.attr('data-side-swiper', 'off').hide();
                         self.lockAnimation();
                         $(window).scrollTop(0);
                         self.sideSwiper.next(1, function () {
@@ -178,31 +110,9 @@ module ViewModels.Establishments {
                 this.sammy.setLocation(location);
         }
 
-        // query parameters
+        // filtering
         countries: KnockoutObservableArray = ko.observableArray();
         countryCode: KnockoutObservableString = ko.observable();
-        keywordElement: Element = undefined;
-        keyword: KnockoutObservableString =
-            ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
-        orderBy: KnockoutObservableString = ko.observable();
-
-        // paging
-        pageSize: KnockoutObservableNumber = ko.observable();
-        pageNumber: KnockoutObservableNumber = ko.observable();
-        transitionedPageNumber: KnockoutObservableNumber = ko.observable();
-        itemTotal: KnockoutObservableNumber = ko.observable();
-        nextForceDisabled: KnockoutObservableBool = ko.observable(false);
-        prevForceDisabled: KnockoutObservableBool = ko.observable(false);
-        nextPage(): void {
-            if (this.nextEnabled()) {
-                var pageNumber = parseInt(this.pageNumber()) + 1;
-                this.pageNumber(pageNumber);
-            }
-        }
-        prevPage(): void {
-            if (this.prevEnabled())
-                history.back();
-        }
 
         // lensing
         lenses: KnockoutObservableArray = ko.observableArray([
@@ -217,34 +127,8 @@ module ViewModels.Establishments {
             this.lens(lens.value);
         }
 
-        // spinner
-        private spinnerDelay: number = 400;
-        isSpinning: KnockoutObservableBool = ko.observable(true);
-        showSpinner: KnockoutObservableBool = ko.observable(false);
-        inTransition: KnockoutObservableBool = ko.observable(false);
-        startSpinning(): void {
-            this.isSpinning(true); // we are entering an ajax call
-            if (this.spinnerDelay < 1)
-                this.showSpinner(true);
-            else
-                setTimeout((): void => {
-                    // only show spinner when load is still being processed
-                    if (this.isSpinning() && !this.inTransition())
-                        this.showSpinner(true);
-                }, this.spinnerDelay);
-        }
-        stopSpinning(): void {
-            this.inTransition(false);
-            this.showSpinner(false);
-            this.isSpinning(false);
-        }
-
         // items page
-        itemsPage: Element = undefined;
-        initialized: KnockoutObservableBool = ko.observable(false);
-        $itemsPage(): JQuery {
-            return $(this.itemsPage);
-        }
+        $itemsPage: JQuery = undefined;
         sideSwiper = new App.SideSwiper({
             frameWidth: 710,
             speed: 'fast',
@@ -261,7 +145,6 @@ module ViewModels.Establishments {
         }
 
         // results
-        items: KnockoutObservableArray = ko.observableArray();
         resultsMapping = {
             'items': {
                 key: function (data) {
@@ -305,7 +188,6 @@ module ViewModels.Establishments {
             })
             .done((response: IServerApiModel[]): void => {
                 this.receiveResults(response);
-                this.initialized(true);
             });
         }
 

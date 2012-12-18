@@ -52,6 +52,7 @@ namespace UCosmic.Web.Mvc
 
             // establishment search page
             bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
+                "~/scripts/viewmodels/PagedSearch.js",
                 "~/scripts/viewmodels/countries/ServerApiModel.js",
                 "~/scripts/viewmodels/establishments/SearchResult.js",
                 "~/scripts/viewmodels/establishments/Search.js"));

@@ -424,6 +424,10 @@
     <Content Include="scripts\ko\knockout.binding-handlers.min.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\lib-ext.d.ts" />
+    <Content Include="scripts\lib.d.js">
+      <DependentUpon>lib-ext.d.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\oss\jquery.placeholder.d.ts" />
     <Content Include="scripts\oss\jquery.autosize.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
@@ -471,6 +475,13 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="scripts\viewmodels\establishments\EstablishmentSearchViewModel.js" />
+    <TypeScriptCompile Include="scripts\viewmodels\PagedSearch.ts" />
+    <Content Include="scripts\viewmodels\PagedSearch.js">
+      <DependentUpon>PagedSearch.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\PagedSearch.min.js">
+      <DependentUpon>PagedSearch.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
     <Content Include="scripts\app\_deprecated\_app.js" />
