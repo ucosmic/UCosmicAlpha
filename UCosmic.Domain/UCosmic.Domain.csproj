@@ -114,6 +114,7 @@
     <Compile Include="Domain\Establishments\Views\EstablishmentNameView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentUrlView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentView.cs" />
+    <Compile Include="Domain\Files\Entities\LooseFile.cs" />
     <Compile Include="Domain\Identity\Entities\EduPersonScopedAffiliation.cs" />
     <Compile Include="Domain\Identity\Entities\Role.cs" />
     <Compile Include="Domain\Identity\Entities\RoleGrant.cs" />
