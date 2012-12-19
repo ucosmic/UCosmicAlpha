@@ -9,6 +9,21 @@ namespace UCosmic.EntityFramework
     {
         public static void RegisterEntityFramework(this Container container)
         {
+            // Db Optimizer (for extra indices, statistics, etc)
+#if DEBUG
+            container.Register<IOptimizeDatabase, SqlDatabaseOptimizer>();
+#endif
+
+            // DbInitializer (change this to drop & recreate the database, but then change it back)
+#if DEBUG
+            //container.Register<IDatabaseInitializer<UCosmicContext>, DropCreateDbOnModelChange>();
+            //container.Register<IDatabaseInitializer<UCosmicContext>, DropCreateDbOnEveryBuild>();
+            container.Register<IDatabaseInitializer<UCosmicContext>, DoNotDropCreateUpdateOrMigrateDb<UCosmicContext>>();
+#else
+            container.Register<IDatabaseInitializer<UCosmicContext>, DoNotDropCreateUpdateOrMigrateDb<UCosmicContext>>();
+#endif
+            container.RegisterInitializer<UCosmicContext>(container.InjectProperties);
+
             // DbContext lifetime
             container.RegisterPerWebRequest<DbContext, UCosmicContext>();
             container.RegisterLifetimeScope<IObjectContextAdapter, UCosmicContext>();
@@ -24,9 +39,6 @@ namespace UCosmic.EntityFramework
             container.Register<IQueryEntities>(container.GetInstance<UCosmicContext>);
             container.Register<ICommandEntities>(container.GetInstance<UCosmicContext>);
 
-            // DbInitializer
-            container.Register<IDatabaseInitializer<UCosmicContext>, DoNotDropCreateUpdateOrMigrateDatabase<UCosmicContext>>();
-            container.RegisterInitializer<UCosmicContext>(container.InjectProperties);
         }
     }
 }

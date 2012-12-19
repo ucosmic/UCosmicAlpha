@@ -3,7 +3,7 @@ using System.Runtime.Caching;
 using SimpleInjector;
 using SimpleInjector.Extensions;
 using UCosmic.FluentValidation;
-#if !DEBUG
+#if AZURE
 using System;
 using Microsoft.ApplicationServer.Caching;
 #endif
@@ -46,10 +46,10 @@ namespace UCosmic.Cqrs
         // in prodiction use azure cache for view manager, otherwise memory cache
         public static void RegisterViewManager(this Container container)
         {
-#if DEBUG
-            container.RegisterMemoryViewManager();
-#else
+#if AZURE
             container.RegisterAzureCacheViewManager();
+#else
+            container.RegisterMemoryViewManager();
 #endif
         }
 
@@ -59,7 +59,7 @@ namespace UCosmic.Cqrs
             container.RegisterSingle<IManageViews>(container.GetInstance<MemoryViewManager>);
         }
 
-#if !DEBUG
+#if AZURE
         private static void RegisterAzureCacheViewManager(this Container container)
         {
             container.RegisterSingle(() => new DataCacheFactory());

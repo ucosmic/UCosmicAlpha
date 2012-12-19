@@ -2,7 +2,7 @@
 
 namespace UCosmic.EntityFramework
 {
-    public class DoNotDropCreateUpdateOrMigrateDatabase<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
+    public class DoNotDropCreateUpdateOrMigrateDb<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
         public void InitializeDatabase(TContext dbContext)
         {
