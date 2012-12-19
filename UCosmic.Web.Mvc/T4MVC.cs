@@ -255,6 +255,8 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/_deprecated";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _EstablishmentSearchViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_EstablishmentSearchViewModel.min.js") ? Url("_EstablishmentSearchViewModel.min.js") : Url("_EstablishmentSearchViewModel.js");
+                              
                 public static readonly string _FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_FlasherViewModel.min.js") ? Url("_FlasherViewModel.min.js") : Url("_FlasherViewModel.js");
                               
             }
@@ -288,8 +290,6 @@ namespace Links
                               
                 public static readonly string EstablishmentNameViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentNameViewModel.min.js") ? Url("EstablishmentNameViewModel.min.js") : Url("EstablishmentNameViewModel.js");
                               
-                public static readonly string EstablishmentSearchViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentSearchViewModel.min.js") ? Url("EstablishmentSearchViewModel.min.js") : Url("EstablishmentSearchViewModel.js");
-                              
                 public static readonly string EstablishmentUrlViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentUrlViewModel.min.js") ? Url("EstablishmentUrlViewModel.min.js") : Url("EstablishmentUrlViewModel.js");
                               
                 public static readonly string Search_ts = Url("Search.ts");
@@ -314,6 +314,10 @@ namespace Links
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
+            public static readonly string Spinner_ts = Url("Spinner.ts");
+            public static readonly string Spinner_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Spinner.min.js") ? Url("Spinner.min.js") : Url("Spinner.js");
+                          
+            public static readonly string Spinner_min_js = Url("Spinner.min.js");
         }
     
     }
