@@ -17,6 +17,19 @@ namespace UCosmic
             return input;
         }
 
+        public static byte[] ToHexBytes(this string hex)
+        {
+            if (string.IsNullOrWhiteSpace(hex)) return null;
+
+            var charCount = hex.Length;
+            var bytes = new byte[charCount / 2];
+            for (var i = 0; i < charCount; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+            return bytes;
+        }
+
         public static string GetEmailDomain(this string email)
         {
             if (email == null) throw new ArgumentNullException("email");

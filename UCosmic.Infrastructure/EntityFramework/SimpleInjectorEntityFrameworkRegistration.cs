@@ -60,7 +60,7 @@ namespace UCosmic.EntityFramework
 #if SEED_SQL
             container.Register<ISeedData, CompositeSqlSeeder>();
 #elif SEED_ENTITIES
-            //container.Register<ISeedData, CompositeEntitySeeder>();
+            container.Register<ISeedData, CompositeEntitySeeder>();
 #endif
         }
 

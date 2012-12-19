@@ -12,6 +12,7 @@ using UCosmic.FluentValidation;
 using UCosmic.Logging;
 using UCosmic.Saml;
 using UCosmic.Security;
+using UCosmic.SeedData;
 using UCosmic.WebApi;
 
 namespace UCosmic.Web.Mvc
@@ -39,6 +40,8 @@ namespace UCosmic.Web.Mvc
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorHttpDependencyResolver(container);
+
+            InitializeData(container);
         }
 
         private static void InitializeContainer(Container container)
@@ -57,6 +60,14 @@ namespace UCosmic.Web.Mvc
             container.RegisterCommandHandlers(Assembly.GetAssembly(typeof(IHandleCommands<>)));
             container.TryRegisterAzureCacheProvider();
             container.RegisterViewManager();
+        }
+
+        private static void InitializeData(Container container)
+        {
+#if DEBUG && !AZURE
+            var seeder = container.GetInstance<ISeedData>();
+            if (seeder != null) seeder.Seed();
+#endif
         }
     }
 }
