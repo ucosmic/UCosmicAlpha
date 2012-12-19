@@ -1,10 +1,12 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.Caching;
-using Microsoft.ApplicationServer.Caching;
 using SimpleInjector;
 using SimpleInjector.Extensions;
 using UCosmic.FluentValidation;
+#if !DEBUG
+using System;
+using Microsoft.ApplicationServer.Caching;
+#endif
 
 namespace UCosmic.Cqrs
 {
@@ -41,28 +43,41 @@ namespace UCosmic.Cqrs
                 typeof(FluentValidationCommandDecorator<>));
         }
 
-        public static void RegisterMemoryViewManager(this Container container)
+        // in prodiction use azure cache for view manager, otherwise memory cache
+        public static void RegisterViewManager(this Container container)
+        {
+#if DEBUG
+            container.RegisterMemoryViewManager();
+#else
+            container.RegisterAzureCacheViewManager();
+#endif
+        }
+
+        private static void RegisterMemoryViewManager(this Container container)
         {
             container.RegisterSingle(() => new MemoryViewManager(MemoryCache.Default));
             container.RegisterSingle<IManageViews>(container.GetInstance<MemoryViewManager>);
         }
 
-        public static void RegisterAzureCacheViewManager(this Container container)
+#if !DEBUG
+        private static void RegisterAzureCacheViewManager(this Container container)
         {
             container.RegisterSingle(() => new DataCacheFactory());
             container.RegisterSingle(() => container.GetInstance<DataCacheFactory>().GetDefaultCache());
             container.Register<IManageViews>(() => new AzureCacheViewManager(
                 container.GetInstance<DataCache>(), new TimeSpan(24, 1, 0)));
         }
+#endif
 
-        public static void RegisterHybridMemoryAzureViewManager(this Container container)
-        {
-            container.RegisterSingle(() => new MemoryViewManager(MemoryCache.Default));
-            container.RegisterSingle(() => new DataCacheFactory());
-            container.RegisterSingle(() => container.GetInstance<DataCacheFactory>().GetDefaultCache());
-            container.Register<IManageViews>(() =>
-                new HybridMemoryAzureViewManager(container.GetInstance<MemoryViewManager>(),
-                    new AzureCacheViewManager(container.GetInstance<DataCache>(), new TimeSpan(24, 1, 0))));
-        }
+        //// hybrid view manager deprecated since azure cache also uses local memory cache
+        //public static void RegisterHybridMemoryAzureViewManager(this Container container)
+        //{
+        //    container.RegisterSingle(() => new MemoryViewManager(MemoryCache.Default));
+        //    container.RegisterSingle(() => new DataCacheFactory());
+        //    container.RegisterSingle(() => container.GetInstance<DataCacheFactory>().GetDefaultCache());
+        //    container.Register<IManageViews>(() =>
+        //        new HybridMemoryAzureViewManager(container.GetInstance<MemoryViewManager>(),
+        //            new AzureCacheViewManager(container.GetInstance<DataCache>(), new TimeSpan(24, 1, 0))));
+        //}
     }
 }

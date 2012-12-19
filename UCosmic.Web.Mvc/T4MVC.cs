@@ -193,8 +193,6 @@ namespace Links
         }
     
         public static readonly string lib_ext_d_ts = Url("lib-ext.d.ts");
-        public static readonly string lib_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/lib.d.min.js") ? Url("lib.d.min.js") : Url("lib.d.js");
-                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class modernizr {
             private const string URLPATH = "~/scripts/modernizr";

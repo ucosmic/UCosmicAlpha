@@ -3,6 +3,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
+using UCosmic.Cache;
 using UCosmic.Configuration;
 using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
@@ -48,10 +49,8 @@ namespace UCosmic.Web.Mvc
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
             container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
             container.RegisterCommandHandlers(Assembly.GetAssembly(typeof(IHandleCommands<>)));
-            //container.TryRegisterAzureCacheProvider();
-            //container.RegisterAzureCacheViewManager();
-            //container.RegisterHybridMemoryAzureViewManager();
-            container.RegisterMemoryViewManager();
+            container.TryRegisterAzureCacheProvider();
+            container.RegisterViewManager();
         }
     }
 }
