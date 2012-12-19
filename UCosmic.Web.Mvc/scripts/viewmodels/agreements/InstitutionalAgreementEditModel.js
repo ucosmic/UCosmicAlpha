@@ -2,8 +2,8 @@
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../sammy/sammy-0.7.1.js" />
 /// <reference path="../../app/SideSwiper.js" />
-/// <reference path="../establishments/EstablishmentSearchViewModel.js" />
 /// <reference path="../establishments/SearchResult.js" />
+/// <reference path="../establishments/Search.js" />
 
 function InstitutionalAgreementParticipantModel(js) {
     var self = this;
@@ -104,7 +104,7 @@ function InstitutionalAgreementEditModel() {
     //self.participants.push(partnerParticipant1);
 
     // nest the establishment search viewmodel
-    self.establishmentSearchViewModel = new EstablishmentSearchViewModel();
+    self.establishmentSearchViewModel = new ViewModels.Establishments.Search();
 
     // manage routing in this viewmodel, not the nested one
     self.establishmentSearchViewModel.sammy = undefined;

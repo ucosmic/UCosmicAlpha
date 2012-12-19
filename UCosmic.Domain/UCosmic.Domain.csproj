@@ -50,25 +50,25 @@
   <ItemGroup>
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
-    <Compile Include="Api\EnumExtensions.cs" />
+    <Compile Include="Api\_Extensions\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
     <Compile Include="Api\Events\IHandleEvents.cs" />
     <Compile Include="Api\Events\IProcessEvents.cs" />
-    <Compile Include="Api\IAmNumbered.cs" />
+    <Compile Include="Api\_Etc\IAmNumbered.cs" />
     <Compile Include="Api\Data\ICommandEntities.cs" />
     <Compile Include="Api\Security\ISignUsers.cs" />
     <Compile Include="Api\Security\IStorePasswords.cs" />
     <Compile Include="Api\Queries\IDefineQuery.cs" />
     <Compile Include="Api\Queries\IHandleQueries.cs" />
-    <Compile Include="Api\ILogExceptions.cs" />
-    <Compile Include="Api\IManageConfigurations.cs" />
+    <Compile Include="Api\_Etc\ILogExceptions.cs" />
+    <Compile Include="Api\_Etc\IManageConfigurations.cs" />
     <Compile Include="Api\Queries\IProcessQueries.cs" />
     <Compile Include="Api\Data\IQueryEntities.cs" />
     <Compile Include="Api\Data\IUnitOfWork.cs" />
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
-    <Compile Include="Api\ReflectionExtensions.cs" />
-    <Compile Include="Api\StringExtensions.cs" />
+    <Compile Include="Api\_Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\UrlStringMustBeWellFormed.cs" />
     <Compile Include="Api\Validation\UrlStringMustNotContainProtocol.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
@@ -77,13 +77,13 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
-    <Compile Include="Domain\ApplicationStarted.cs" />
+    <Compile Include="Domain\_Etc\ApplicationStarted.cs" />
     <Compile Include="Domain\Audit\CommandEvent.cs" />
-    <Compile Include="Domain\BaseEntitiesQuery.cs" />
-    <Compile Include="Domain\BaseEntityQuery.cs" />
-    <Compile Include="Domain\BaseViewsQuery.cs" />
-    <Compile Include="Domain\Entity.cs" />
-    <Compile Include="Domain\EntityExtensions.cs" />
+    <Compile Include="Domain\_Etc\BaseEntitiesQuery.cs" />
+    <Compile Include="Domain\_Etc\BaseEntityQuery.cs" />
+    <Compile Include="Domain\_Etc\BaseViewsQuery.cs" />
+    <Compile Include="Domain\_Etc\Entity.cs" />
+    <Compile Include="Domain\_Etc\EntityExtensions.cs" />
     <Compile Include="Domain\Establishments\Commands\DeleteEstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentUrl.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentUrl.cs" />
@@ -171,8 +171,8 @@
     <Compile Include="Domain\Places\Entities\Place.cs" />
     <Compile Include="Domain\Places\Entities\PlaceName.cs" />
     <Compile Include="Domain\Places\Entities\PlaceNode.cs" />
-    <Compile Include="Domain\RevisableEntity.cs" />
-    <Compile Include="Domain\UnicodeToAsciiConverter.cs" />
+    <Compile Include="Domain\_Etc\RevisableEntity.cs" />
+    <Compile Include="Domain\_Etc\UnicodeToAsciiConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

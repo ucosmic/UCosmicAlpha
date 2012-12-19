@@ -424,10 +424,7 @@
     <Content Include="scripts\ko\knockout.binding-handlers.min.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\lib-ext.d.ts" />
-    <Content Include="scripts\lib.d.js">
-      <DependentUpon>lib-ext.d.ts</DependentUpon>
-    </Content>
+    <None Include="scripts\lib-ext.d.ts" />
     <Content Include="scripts\oss\jquery.placeholder.d.ts" />
     <Content Include="scripts\oss\jquery.autosize.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
