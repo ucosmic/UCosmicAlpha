@@ -126,7 +126,10 @@
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="EntityFramework\Fluent\Audits.cs" />
+    <Compile Include="EntityFramework\Fluent\Files.cs" />
     <Compile Include="EntityFramework\Fluent\Identity.cs" />
+    <Compile Include="EntityFramework\Fluent\InstitutionalAgreements.cs" />
+    <Compile Include="EntityFramework\Fluent\People.cs" />
     <Compile Include="FluentValidation\FluentValidationCommandDecorator.cs" />
     <Compile Include="FluentValidation\SimpleInjectorFluentValidationRegistration.cs" />
     <Compile Include="Configuration\AppSettingsKey.cs" />

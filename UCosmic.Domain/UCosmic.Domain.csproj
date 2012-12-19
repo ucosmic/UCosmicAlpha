@@ -84,6 +84,8 @@
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentName.cs" />
     <Compile Include="Domain\Establishments\Commands\DeleteEstablishmentName.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentName.cs" />
+    <Compile Include="Domain\Establishments\Entities\EmailTemplate.cs" />
+    <Compile Include="Domain\Establishments\Entities\EmailTemplateName.cs" />
     <Compile Include="Domain\Establishments\Entities\Establishment.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentAddress.cs" />
     <Compile Include="Domain\Establishments\Entities\EstablishmentCategory.cs" />

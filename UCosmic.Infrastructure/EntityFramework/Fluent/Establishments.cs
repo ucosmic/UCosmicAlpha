@@ -39,11 +39,11 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.EstablishmentId)
                 .WillCascadeOnDelete(true);
 
-            //// has many affiliates
-            //HasMany(p => p.Affiliates)
-            //    .WithRequired(d => d.Establishment)
-            //    .HasForeignKey(d => d.EstablishmentId)
-            //    .WillCascadeOnDelete(true);
+            // has many affiliates
+            HasMany(p => p.Affiliates)
+                .WithRequired(d => d.Establishment)
+                .HasForeignKey(d => d.EstablishmentId)
+                .WillCascadeOnDelete(true);
 
             // has many ancestors
             HasMany(p => p.Ancestors)
@@ -216,27 +216,27 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    //public class EmailTemplateOrm : RevisableEntityTypeConfiguration<EmailTemplate>
-    //{
-    //    public EmailTemplateOrm()
-    //    {
-    //        ToTable(typeof(EmailTemplate).Name, DbSchemaName.Establishments);
+    public class EmailTemplateOrm : RevisableEntityTypeConfiguration<EmailTemplate>
+    {
+        public EmailTemplateOrm()
+        {
+            ToTable(typeof(EmailTemplate).Name, DbSchemaName.Establishments);
 
-    //        // may have an establishment
-    //        HasOptional(d => d.Establishment)
-    //            .WithMany()
-    //            .HasForeignKey(d => d.EstablishmentId)
-    //            .WillCascadeOnDelete(true);
+            // may have an establishment
+            HasOptional(d => d.Establishment)
+                .WithMany()
+                .HasForeignKey(d => d.EstablishmentId)
+                .WillCascadeOnDelete(true);
 
-    //        Property(t => t.Name).IsRequired().HasMaxLength(150);
-    //        Property(t => t.SubjectFormat).IsRequired().HasMaxLength(250);
-    //        Property(t => t.FromAddress).HasMaxLength(256);
-    //        Property(t => t.FromDisplayName).HasMaxLength(150);
-    //        Property(t => t.ReplyToAddress).HasMaxLength(256);
-    //        Property(t => t.ReplyToDisplayName).HasMaxLength(150);
-    //        Property(t => t.BodyFormat).IsRequired();
-    //        Property(t => t.Instructions).HasColumnType("ntext");
-    //        Property(t => t.BodyFormat).HasColumnType("ntext");
-    //    }
-    //}
+            Property(t => t.Name).IsRequired().HasMaxLength(150);
+            Property(t => t.SubjectFormat).IsRequired().HasMaxLength(250);
+            Property(t => t.FromAddress).HasMaxLength(256);
+            Property(t => t.FromDisplayName).HasMaxLength(150);
+            Property(t => t.ReplyToAddress).HasMaxLength(256);
+            Property(t => t.ReplyToDisplayName).HasMaxLength(150);
+            Property(t => t.BodyFormat).IsRequired();
+            Property(t => t.Instructions).HasColumnType("ntext");
+            Property(t => t.BodyFormat).HasColumnType("ntext");
+        }
+    }
 }
