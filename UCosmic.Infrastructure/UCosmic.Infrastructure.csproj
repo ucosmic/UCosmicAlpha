@@ -158,6 +158,7 @@
     <Compile Include="Geography\SimpleInjectorNGeoRegistration.cs" />
     <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />
     <Compile Include="SeedData\EstablishmentEntitySeeder.cs" />
+    <Compile Include="SeedData\PersonEntitySeeder.cs" />
     <Compile Include="SeedData\RoleEntitySeeder.cs" />
     <Compile Include="WebApi\SimpleInjectorHttpDependencyResolver.cs" />
     <Compile Include="WebApi\SimpleInjectorHttpFilterProvider.cs" />
