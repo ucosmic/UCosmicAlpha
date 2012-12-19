@@ -61,6 +61,7 @@
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Queries\StringMatchStrategy.cs" />
+    <Compile Include="Api\Security\RoleName.cs" />
     <Compile Include="Api\_Extensions\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
@@ -88,6 +89,11 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
+    <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
+    <Compile Include="Domain\Identity\Queries\RoleBySlug.cs" />
+    <Compile Include="Domain\Identity\Commands\GrantRoleToUser.cs" />
+    <Compile Include="Domain\Identity\Commands\RevokeRoleFromUser.cs" />
+    <Compile Include="Domain\Identity\Commands\UpdateRole.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />
     <Compile Include="Domain\Languages\Queries\LanguageByIsoCode.cs" />
