@@ -156,6 +156,7 @@
     <Compile Include="EntityFramework\UCosmicContext.cs" />
     <Compile Include="FluentValidation\UnspecifiedValidator.cs" />
     <Compile Include="Geography\SimpleInjectorNGeoRegistration.cs" />
+    <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />
     <Compile Include="SeedData\EstablishmentEntitySeeder.cs" />
     <Compile Include="SeedData\RoleEntitySeeder.cs" />
     <Compile Include="WebApi\SimpleInjectorHttpDependencyResolver.cs" />

@@ -103,6 +103,7 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCategory.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentType.cs" />
@@ -114,6 +115,8 @@
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategoryByCode.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentTypeByEnglishName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByUrl.cs" />
+    <Compile Include="Domain\Establishments\Queries\EmailTemplateByName.cs" />
+    <Compile Include="Domain\Establishments\Queries\QueryEmailTemplates.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishments.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishmentUrls.cs" />
