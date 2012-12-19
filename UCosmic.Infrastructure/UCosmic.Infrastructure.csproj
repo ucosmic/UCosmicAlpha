@@ -125,6 +125,7 @@
     <Compile Include="Cqrs\SimpleInjectorCqrsRegistration.cs" />
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
+    <Compile Include="EntityFramework\Fluent\Activities.cs" />
     <Compile Include="EntityFramework\Fluent\Audits.cs" />
     <Compile Include="EntityFramework\Fluent\Files.cs" />
     <Compile Include="EntityFramework\Fluent\Identity.cs" />
