@@ -3,7 +3,7 @@ using NGeo.Yahoo.GeoPlanet;
 using NGeo.Yahoo.PlaceFinder;
 using SimpleInjector;
 
-namespace UCosmic.Geography
+namespace UCosmic.WebApi
 {
     public static class SimpleInjectorNGeoRegistration
     {

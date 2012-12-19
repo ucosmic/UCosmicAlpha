@@ -155,11 +155,12 @@
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />
     <Compile Include="FluentValidation\UnspecifiedValidator.cs" />
-    <Compile Include="Geography\SimpleInjectorNGeoRegistration.cs" />
+    <Compile Include="WebApi\SimpleInjectorNGeoRegistration.cs" />
     <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />
     <Compile Include="SeedData\EstablishmentEntitySeeder.cs" />
     <Compile Include="SeedData\PersonEntitySeeder.cs" />
     <Compile Include="SeedData\RoleEntitySeeder.cs" />
+    <Compile Include="WebApi\SimpleInjectorHttpConsumerRegistration.cs" />
     <Compile Include="WebApi\SimpleInjectorHttpDependencyResolver.cs" />
     <Compile Include="WebApi\SimpleInjectorHttpFilterProvider.cs" />
     <Compile Include="WebApi\SimpleInjectorHttpFilterRegistration.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="SeedData\MemberEntitySeeder.cs" />
     <Compile Include="SeedData\PlaceByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\SqlSeeder.cs" />
+    <Compile Include="WebApi\WebRequestHttpConsumer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
