@@ -129,6 +129,9 @@
     <Compile Include="Domain\Identity\Commands\RevokeRoleFromUser.cs" />
     <Compile Include="Domain\Identity\Commands\UpdateRole.cs" />
     <Compile Include="Domain\Identity\Validation\ValidateUser.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Commands\CreateOrUpdateSettings.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Queries\MyInstitutionalAgreementSettings.cs" />
+    <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />
     <Compile Include="Domain\Languages\Queries\LanguageByIsoCode.cs" />
