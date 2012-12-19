@@ -67,6 +67,7 @@
     <Compile Include="Api\Queries\StringMatchStrategy.cs" />
     <Compile Include="Api\Saml\IParseSaml2Metadata.cs" />
     <Compile Include="Api\Saml\IProvideSaml2Service.cs" />
+    <Compile Include="Api\Saml\IStoreSamlCertificates.cs" />
     <Compile Include="Api\Saml\Saml2Response.cs" />
     <Compile Include="Api\Saml\Saml2SsoBinding.cs" />
     <Compile Include="Api\Saml\Saml2SsoBindingUri.cs" />

@@ -5,6 +5,11 @@ namespace UCosmic.Configuration
 {
     public class DotNetConfigurationManager : IManageConfigurations
     {
+        public string SamlRealServiceProviderEntityId { get { return GetString(AppSettingsKey.SamlRealServiceProviderEntityId); } }
+        public string SamlRealCertificateThumbprint { get { return GetString(AppSettingsKey.SamlRealCertificateThumbprint); } }
+        public string SamlTestServiceProviderEntityId { get { return GetString(AppSettingsKey.SamlTestServiceProviderEntityId); } }
+        public string SamlTestCertificateThumbprint { get { return GetString(AppSettingsKey.SamlTestCertificateThumbprint); } }
+
         public string DefaultMailFromAddress { get { return GetString(AppSettingsKey.DefaultMailFromAddress); } }
         public string DefaultMailFromDisplayName { get { return GetString(AppSettingsKey.DefaultMailFromDisplayName); } }
 
@@ -13,7 +18,6 @@ namespace UCosmic.Configuration
 
         public string[] EmergencyMailAddresses { get { return GetStrings(AppSettingsKey.EmergencyMailAddresses, ';'); } }
         public string MailInterceptAddress { get { return GetString(AppSettingsKey.MailInterceptAddress); } }
-
         private static string GetString(AppSettingsKey key)
         {
             return ConfigurationManager.AppSettings[key.ToString()];

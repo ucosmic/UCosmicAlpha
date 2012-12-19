@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ComponentSpace.SAML2">
+      <HintPath>..\Etc\ComponentSpace.SAML2.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
@@ -102,6 +105,7 @@
     </Reference>
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -155,6 +159,12 @@
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />
     <Compile Include="FluentValidation\UnspecifiedValidator.cs" />
+    <Compile Include="Saml\ComponentSpaceSaml2MetadataParser.cs" />
+    <Compile Include="Saml\ComponentSpaceSaml2Response.cs" />
+    <Compile Include="Saml\ComponentSpaceSaml2ServiceProvider.cs" />
+    <Compile Include="Saml\RealSamlCertificateStorage.cs" />
+    <Compile Include="Saml\SimpleInjectorSamlRegistration.cs" />
+    <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="WebApi\SimpleInjectorNGeoRegistration.cs" />
     <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />
     <Compile Include="SeedData\EstablishmentEntitySeeder.cs" />

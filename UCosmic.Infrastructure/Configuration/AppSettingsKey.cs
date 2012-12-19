@@ -5,6 +5,11 @@
         GeoNamesUserName,
         GeoPlanetAppId,
 
+        SamlRealServiceProviderEntityId,
+        SamlRealCertificateThumbprint,
+        SamlTestServiceProviderEntityId,
+        SamlTestCertificateThumbprint,
+
         DefaultMailFromAddress,
         DefaultMailFromDisplayName,
 
