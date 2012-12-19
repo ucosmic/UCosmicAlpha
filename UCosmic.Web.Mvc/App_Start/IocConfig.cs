@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -8,9 +9,10 @@ using UCosmic.Configuration;
 using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
 using UCosmic.FluentValidation;
-using UCosmic.Ioc;
+using UCosmic.Geography;
 using UCosmic.Logging;
 using UCosmic.Security;
+using UCosmic.WebApi;
 
 namespace UCosmic.Web.Mvc
 {
@@ -43,6 +45,8 @@ namespace UCosmic.Web.Mvc
         {
             container.RegisterMemberAuthentication();
             container.RegisterConfigurationManager();
+            container.RegisterNGeo(ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()],
+                ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()]);
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
             container.RegisterFluentValidation(Assembly.GetAssembly(typeof (IHandleCommands<>)));

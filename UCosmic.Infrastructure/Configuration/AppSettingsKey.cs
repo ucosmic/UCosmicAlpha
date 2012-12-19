@@ -2,6 +2,9 @@
 {
     public enum AppSettingsKey
     {
+        GeoNamesUserName,
+        GeoPlanetAppId,
+
         DefaultMailFromAddress,
         DefaultMailFromDisplayName,
 

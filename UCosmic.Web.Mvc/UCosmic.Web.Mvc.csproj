@@ -128,6 +128,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NGeo">
+      <HintPath>..\packages\NGeo.1.7.5.0\lib\net40\NGeo.dll</HintPath>
+    </Reference>
     <Reference Include="PKCS12ProtectedConfigurationProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=34da007ac91f901d, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Pkcs12ProtectedConfigurationProvider.1.0.1\lib\NET40\PKCS12ProtectedConfigurationProvider.dll</HintPath>
@@ -162,6 +165,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Spatial.5.1.0\lib\net40\System.Spatial.dll</HintPath>
@@ -517,6 +521,9 @@
     <None Include="scripts\sammy\sammy-0.7.1-vsdoc.js" />
     <Content Include="scripts\sammy\sammy-0.7.1.js" />
     <Content Include="scripts\sammy\sammy-0.7.1.min.js" />
+    <None Include="startup\sql\CoreData.sql" />
+    <None Include="startup\sql\DevelopmentData.sql" />
+    <None Include="startup\sql\LanguagesData.sql" />
     <Content Include="styles\icons\closer-16-red-disc.png" />
     <Content Include="styles\icons\closer-20-red-disc.png" />
     <Content Include="styles\icons\closer-24-dark.png" />

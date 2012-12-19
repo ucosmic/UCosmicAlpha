@@ -33,14 +33,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit">
+      <HintPath>..\packages\LinqKit.1.0\lib\35\LinqKit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NGeo">
+      <HintPath>..\packages\NGeo.1.7.5.0\lib\net40\NGeo.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
+    <Compile Include="Api\Queries\StringMatchStrategy.cs" />
     <Compile Include="Api\_Extensions\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
@@ -77,6 +88,25 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
+    <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />
+    <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />
+    <Compile Include="Domain\Languages\Queries\LanguageByIsoCode.cs" />
+    <Compile Include="Domain\Languages\Queries\QueryLanguages.cs" />
+    <Compile Include="Domain\Places\_Etc\GeoNamesConverter.cs" />
+    <Compile Include="Domain\Places\_Etc\GeoPlanetConverter.cs" />
+    <Compile Include="Domain\Places\_Etc\KnownWoeIds.cs" />
+    <Compile Include="Domain\Places\Queries\GeoNameIdByWoeId.cs" />
+    <Compile Include="Domain\Places\Queries\PlaceByGeoNameId.cs" />
+    <Compile Include="Domain\Places\Queries\PlaceByWoeId.cs" />
+    <Compile Include="Domain\Places\_Etc\QueryPlaceNames.cs" />
+    <Compile Include="Domain\Places\_Etc\QueryPlaces.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoNamesFeature.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoNamesFeatureClass.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoNamesTimeZone.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoNamesToponym.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoPlanetPlace.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoPlanetPlaceByGeoNameId.cs" />
+    <Compile Include="Domain\Places\Queries\SingleGeoPlanetPlaceType.cs" />
     <Compile Include="Domain\_Etc\ApplicationStarted.cs" />
     <Compile Include="Domain\Audit\CommandEvent.cs" />
     <Compile Include="Domain\_Etc\BaseEntitiesQuery.cs" />
@@ -176,17 +206,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Domain\Establishments\EstablishmentAggregate.cd" />
     <None Include="Domain\Languages\LanguageAggregate.cd" />
-    <None Include="Domain\Places\Entities\PlaceAggregate.cd" />
+    <None Include="Domain\Places\PlaceAggregate.cd" />
     <None Include="Domain\Places\GeoNamesAggregate.cd" />
     <None Include="Domain\Places\GeoPlanetAggregate.cd" />
     <None Include="Domain\Places\PlaceAggregates.cd" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Places\Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

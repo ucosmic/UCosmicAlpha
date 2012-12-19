@@ -67,6 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NGeo">
+      <HintPath>..\packages\NGeo.1.7.5.0\lib\net40\NGeo.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SimpleInjector.1.6.0.12319\lib\net35\SimpleInjector.dll</HintPath>
@@ -99,6 +102,7 @@
     </Reference>
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -150,9 +154,11 @@
     <Compile Include="Configuration\DotNetConfigurationManager.cs" />
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />
-    <Compile Include="Ioc\SimpleInjectorHttpDependencyResolver.cs" />
-    <Compile Include="Ioc\SimpleInjectorHttpFilterProvider.cs" />
-    <Compile Include="Ioc\SimpleInjectorHttpFilterRegistration.cs" />
+    <Compile Include="FluentValidation\UnspecifiedValidator.cs" />
+    <Compile Include="Geography\SimpleInjectorNGeoRegistration.cs" />
+    <Compile Include="WebApi\SimpleInjectorHttpDependencyResolver.cs" />
+    <Compile Include="WebApi\SimpleInjectorHttpFilterProvider.cs" />
+    <Compile Include="WebApi\SimpleInjectorHttpFilterRegistration.cs" />
     <Compile Include="Logging\ElmahExceptionLogger.cs" />
     <Compile Include="Logging\SimpleInjectorElmahExceptionLoggerRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -161,6 +167,16 @@
     <Compile Include="Security\DotNetFormsAuthentication.cs" />
     <Compile Include="Security\DotNetMembershipProvider.cs" />
     <Compile Include="Security\SimpleInjectorSecurityRegistration.cs" />
+    <Compile Include="SeedData\CompositeEntitySeeder.cs" />
+    <Compile Include="SeedData\CompositeSqlSeeder.cs" />
+    <Compile Include="SeedData\CoreSqlSeeder.cs" />
+    <Compile Include="SeedData\DevelopmentSqlSeeder.cs" />
+    <Compile Include="SeedData\ISeedData.cs" />
+    <Compile Include="SeedData\LanguageEntitySeeder.cs" />
+    <Compile Include="SeedData\LanguageSqlSeeder.cs" />
+    <Compile Include="SeedData\MemberEntitySeeder.cs" />
+    <Compile Include="SeedData\PlaceByGeoPlanetEntitySeeder.cs" />
+    <Compile Include="SeedData\SqlSeeder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
