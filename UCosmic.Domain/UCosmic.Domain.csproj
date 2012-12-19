@@ -48,9 +48,13 @@
     <Reference Include="NGeo">
       <HintPath>..\packages\NGeo.1.7.5.0\lib\net40\NGeo.dll</HintPath>
     </Reference>
+    <Reference Include="Pluralize">
+      <HintPath>..\packages\Pluralizer.0.3.0.1\lib\net40\Pluralize.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,7 +65,17 @@
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Queries\StringMatchStrategy.cs" />
+    <Compile Include="Api\Saml\IParseSaml2Metadata.cs" />
+    <Compile Include="Api\Saml\IProvideSaml2Service.cs" />
+    <Compile Include="Api\Saml\Saml2Response.cs" />
+    <Compile Include="Api\Saml\Saml2SsoBinding.cs" />
+    <Compile Include="Api\Saml\Saml2SsoBindingUri.cs" />
+    <Compile Include="Api\Saml\SamlAttributeFriendlyName.cs" />
+    <Compile Include="Api\Saml\SamlAttributeFriendlyNameString.cs" />
+    <Compile Include="Api\Saml\SamlAttributeName.cs" />
+    <Compile Include="Api\Saml\SamlAttributeNameString.cs" />
     <Compile Include="Api\Security\RoleName.cs" />
+    <Compile Include="Api\_Etc\IConsumeHttp.cs" />
     <Compile Include="Api\_Extensions\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
@@ -89,6 +103,20 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCategory.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishmentType.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchies.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentCategoryByCode.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentTypeByEnglishName.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentByUrl.cs" />
+    <Compile Include="Domain\Establishments\Queries\QueryEstablishmentNames.cs" />
+    <Compile Include="Domain\Establishments\Queries\QueryEstablishments.cs" />
+    <Compile Include="Domain\Establishments\Queries\QueryEstablishmentUrls.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
     <Compile Include="Domain\Identity\Queries\RoleBySlug.cs" />
     <Compile Include="Domain\Identity\Commands\GrantRoleToUser.cs" />
@@ -98,6 +126,7 @@
     <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />
     <Compile Include="Domain\Languages\Queries\LanguageByIsoCode.cs" />
     <Compile Include="Domain\Languages\Queries\QueryLanguages.cs" />
+    <Compile Include="Domain\Places\Queries\WoeIdByCoordinates.cs" />
     <Compile Include="Domain\Places\_Etc\GeoNamesConverter.cs" />
     <Compile Include="Domain\Places\_Etc\GeoPlanetConverter.cs" />
     <Compile Include="Domain\Places\_Etc\KnownWoeIds.cs" />
