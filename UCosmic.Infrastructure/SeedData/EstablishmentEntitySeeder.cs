@@ -9,11 +9,11 @@ namespace UCosmic.SeedData
         private readonly EstablishmentTypeAndCategorySeeder _typeAndCategorySeeder;
         private readonly EstablishmentSunyEntitySeeder _sunySeeder;
         private readonly EstablishmentUcEntitySeeder _ucSeeder;
+        private readonly EstablishmentFoundingMemberEntitySeeder _foundingMemberSeeder;
+        private readonly EstablishmentSamplePartnerEntitySeeder _samplePartnerSeeder;
         private readonly EstablishmentUmnEntitySeeder _umnSeeder;
         private readonly EstablishmentUsfEntitySeeder _usfSeeder;
         private readonly EstablishmentUwoEntitySeeder _uwoSeeder;
-        private readonly EstablishmentFoundingMemberEntitySeeder _foundingMemberSeeder;
-        private readonly EstablishmentSamplePartnerEntitySeeder _samplePartnerSeeder;
         private readonly EstablishmentTestShibEntitySeeder _testShibSeeder;
         //private readonly EstablishmentUcShibEntitySeeder _ucShibSeeder;
         private readonly EstablishmentRecruitmentAgencyEntitySeeder _agencySeeder;
@@ -21,11 +21,11 @@ namespace UCosmic.SeedData
         public EstablishmentEntitySeeder(EstablishmentTypeAndCategorySeeder typeAndCategorySeeder
             , EstablishmentSunyEntitySeeder sunySeeder
             , EstablishmentUcEntitySeeder ucSeeder
+            , EstablishmentFoundingMemberEntitySeeder foundingMemberSeeder
+            , EstablishmentSamplePartnerEntitySeeder samplePartnerSeeder
             , EstablishmentUmnEntitySeeder umnSeeder
             , EstablishmentUsfEntitySeeder usfSeeder
             , EstablishmentUwoEntitySeeder uwoSeeder
-            , EstablishmentFoundingMemberEntitySeeder foundingMemberSeeder
-            , EstablishmentSamplePartnerEntitySeeder samplePartnerSeeder
             , EstablishmentTestShibEntitySeeder testShibSeeder
             //, EstablishmentUcShibEntitySeeder ucShibSeeder
             , EstablishmentRecruitmentAgencyEntitySeeder agencySeeder
@@ -34,11 +34,11 @@ namespace UCosmic.SeedData
             _typeAndCategorySeeder = typeAndCategorySeeder;
             _sunySeeder = sunySeeder;
             _ucSeeder = ucSeeder;
+            _foundingMemberSeeder = foundingMemberSeeder;
+            _samplePartnerSeeder = samplePartnerSeeder;
             _umnSeeder = umnSeeder;
             _usfSeeder = usfSeeder;
             _uwoSeeder = uwoSeeder;
-            _foundingMemberSeeder = foundingMemberSeeder;
-            _samplePartnerSeeder = samplePartnerSeeder;
             _testShibSeeder = testShibSeeder;
             //_ucShibSeeder = ucShibSeeder;
             _agencySeeder = agencySeeder;
@@ -49,11 +49,11 @@ namespace UCosmic.SeedData
             _typeAndCategorySeeder.Seed();
             _sunySeeder.Seed();
             _ucSeeder.Seed();
+            _foundingMemberSeeder.Seed();
+            _samplePartnerSeeder.Seed();
             _umnSeeder.Seed();
             _usfSeeder.Seed();
             _uwoSeeder.Seed();
-            _foundingMemberSeeder.Seed();
-            _samplePartnerSeeder.Seed();
             _testShibSeeder.Seed();
             //_ucShibSeeder.Seed();
             _agencySeeder.Seed();
@@ -901,6 +901,390 @@ namespace UCosmic.SeedData
         }
     }
 
+    public class EstablishmentFoundingMemberEntitySeeder : BaseEstablishmentEntitySeeder
+    {
+        private readonly IProcessQueries _queryProcessor;
+
+        public EstablishmentFoundingMemberEntitySeeder(IProcessQueries queryProcessor
+            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IUnitOfWork unitOfWork
+        )
+            : base(queryProcessor, createEstablishment, unitOfWork)
+        {
+            _queryProcessor = queryProcessor;
+        }
+
+        public override void Seed()
+        {
+            #region Lehigh
+
+            var lehigh = Seed(new CreateEstablishment
+            {
+                OfficialName = "Lehigh University",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.lehigh.edu",
+                EmailDomains = new[] { "@lehigh.edu" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Lehigh University College of Arts and Sciences",
+                IsMember = true,
+                ParentId = lehigh.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "cas.lehigh.edu",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Lehigh University College of Business and Economics",
+                IsMember = true,
+                ParentId = lehigh.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.lehigh.edu/business",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Lehigh University College of Education",
+                IsMember = true,
+                ParentId = lehigh.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.lehigh.edu/education",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Lehigh University P.C. Rossin College of Engineering and Applied Science",
+                IsMember = true,
+                ParentId = lehigh.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.lehigh.edu/engineering",
+            });
+
+            #endregion
+            #region Manipal
+
+            var manipalGlobal = Seed(new CreateEstablishment
+            {
+                OfficialName = "Manipal Education",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.UniversitySystem.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.manipalglobal.com",
+            });
+            var manipalEdu = Seed(new CreateEstablishment
+            {
+                OfficialName = "Manipal University",
+                IsMember = true,
+                ParentId = manipalGlobal.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.manipal.edu",
+                EmailDomains = new[] { "@manipal.edu" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Melaka Manipal Medical College",
+                IsMember = true,
+                ParentId = manipalEdu.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.manipal.edu/Institutions/Medicine/MMMCMelaka",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "ICICI Manipal Academy",
+                IsMember = true,
+                ParentId = manipalEdu.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.ima.manipal.edu",
+                EmailDomains = new[] { "@ima.manipal.edu" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "American University of Antigua",
+                IsMember = true,
+                ParentId = manipalGlobal.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.auamed.org",
+                EmailDomains = new[] { "@auamed.org" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Manipal University Dubai Campus",
+                IsMember = true,
+                ParentId = manipalGlobal.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.manipaldubai.com",
+                EmailDomains = new[] { "@manipaldubai.com" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Manipal College of Medical Sciences, Nepal",
+                IsMember = true,
+                ParentId = manipalGlobal.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.manipal.edu.np",
+                EmailDomains = new[] { "@manipal.edu.np" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Sikkim Manipal University",
+                IsMember = true,
+                ParentId = manipalGlobal.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.smude.edu.in",
+                EmailDomains = new[] { "@smude.edu.in" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Manipal International University",
+                IsMember = true,
+                ParentId = manipalGlobal.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.miu.edu.my",
+                EmailDomains = new[] { "@miu.edu.my" },
+            });
+
+            #endregion
+            #region Usil
+
+            var usil = Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidad San Ignacio de Loyola",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usil.edu.pe",
+                EmailDomains = new[] { "@usil.edu.pe" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidad San Ignacio de Loyola Facultad de Ciencias Empresariales",
+                IsMember = true,
+                ParentId = usil.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=9",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidad San Ignacio de Loyola Facultad de Educación",
+                IsMember = true,
+                ParentId = usil.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=12",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidad San Ignacio de Loyola Facultad de Administración Hotelera, Turismo y Gastronomía",
+                IsMember = true,
+                ParentId = usil.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=8",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidad San Ignacio de Loyola Facultad de  Humanidades",
+                IsMember = true,
+                ParentId = usil.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=11",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidad San Ignacio de Loyola Ingeniería y Arquitectura",
+                IsMember = true,
+                ParentId = usil.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usil.edu.pe/0/modulos/EVE/EVE_DetallarEvento.aspx?PFL=0&EVE=711",
+            });
+
+            #endregion
+            #region Griffith
+
+            var griffith = Seed(new CreateEstablishment
+            {
+                OfficialName = "Griffith University",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.griffith.edu.au",
+                EmailDomains = new[] { "@griffith.edu.au" },
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Griffith University Gold Coast Campus",
+                IsMember = true,
+                ParentId = griffith.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/gold-coast-campus",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Griffith University Logan Campus",
+                IsMember = true,
+                ParentId = griffith.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/logan-campus",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Griffith University Mt Gravatt Campus",
+                IsMember = true,
+                ParentId = griffith.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/mt-gravatt-campus",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Griffith University Nathan Campus",
+                IsMember = true,
+                ParentId = griffith.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/nathan-campus",
+            });
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Griffith University South Bank Campus",
+                IsMember = true,
+                ParentId = griffith.RevisionId,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/south-bank-campus",
+            });
+
+            #endregion
+            #region Singles (Bjtu, Edinburgh, etc)
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Beijing Jiaotong University",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.bjtu.edu.cn",
+                EmailDomains = new[] { "@bjtu.edu.cn", "@njtu.edu.cn" },
+                NonOfficialUrls = new[]
+                {
+                    new CreateEstablishment.NonOfficialUrl
+                    {
+                        Value = "www.njtu.edu.cn",
+                        IsDefunct = true,
+                    }
+                },
+                NonOfficialNames = new[]
+                {
+                    new CreateEstablishment.NonOfficialName
+                    {
+                        Text = "Northern Jiaotong University",
+                        IsDefunct = true,
+                        TranslationToLanguageId = _queryProcessor.Execute(
+                            new LanguageByIsoCode("en")).Id,
+                    }
+                },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Edinburgh Napier University",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.napier.ac.uk",
+                EmailDomains = new[] { "@napier.ac.uk" },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Future University in Egypt",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.fue.edu.eg",
+                EmailDomains = new[] { "@fue.edu.eg" },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Universidade Presbiteriana Mackenzie",
+                IsMember = false,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.mackenzie.br",
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "The University of New South Wales",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.unsw.edu.au",
+                EmailDomains = new[] { "@unsw.edu.au" },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "University of Minnesota",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.umn.edu",
+                EmailDomains = new[] { "@umn.edu" },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "The College Board",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.BusinessOrCorporation.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.collegeboard.org",
+                EmailDomains = new[] { "@collegeboard.org" },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Institute of International Education (IIE)",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.Association.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.iie.org",
+                EmailDomains = new[] { "@iie.org" },
+            });
+
+            Seed(new CreateEstablishment
+            {
+                OfficialName = "Terra Dotta, LLC",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.BusinessOrCorporation.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.terradotta.com",
+                EmailDomains = new[] { "@terradotta.com" },
+            });
+
+            #endregion
+        }
+    }
+
     public class EstablishmentUmnEntitySeeder : BaseEstablishmentEntitySeeder
     {
         private readonly IProcessQueries _queryProcessor;
@@ -916,15 +1300,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var umn = Seed(new CreateEstablishment
-            {
-                OfficialName = "University of Minnesota",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.umn.edu",
-                EmailDomains = new[] { "@umn.edu" },
-            });
+            var umn = _queryProcessor.Execute(new EstablishmentByUrl("www.umn.edu"));
             Seed(new CreateEstablishment
             {
                 OfficialName = "Center for Allied Health Programs, University of Minnesota",
@@ -1226,361 +1602,6 @@ namespace UCosmic.SeedData
                 MetadataUrl = "https://qalogin.uc.edu/idp/profile/Metadata/SAML",
             });
             _unitOfWork.SaveChanges();
-        }
-    }
-
-    public class EstablishmentFoundingMemberEntitySeeder : BaseEstablishmentEntitySeeder
-    {
-        private readonly IProcessQueries _queryProcessor;
-
-        public EstablishmentFoundingMemberEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
-            , IUnitOfWork unitOfWork
-        )
-            : base(queryProcessor, createEstablishment, unitOfWork)
-        {
-            _queryProcessor = queryProcessor;
-        }
-
-        public override void Seed()
-        {
-            #region Lehigh
-
-            var lehigh = Seed(new CreateEstablishment
-            {
-                OfficialName = "Lehigh University",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.lehigh.edu",
-                EmailDomains = new[] { "@lehigh.edu" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Lehigh University College of Arts and Sciences",
-                IsMember = true,
-                ParentId = lehigh.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "cas.lehigh.edu",
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Lehigh University College of Business and Economics",
-                IsMember = true,
-                ParentId = lehigh.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.lehigh.edu/business",
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Lehigh University College of Education",
-                IsMember = true,
-                ParentId = lehigh.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.lehigh.edu/education",
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Lehigh University P.C. Rossin College of Engineering and Applied Science",
-                IsMember = true,
-                ParentId = lehigh.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.lehigh.edu/engineering",
-            });
-
-            #endregion
-            #region Manipal
-
-            var manipalGlobal = Seed(new CreateEstablishment
-            {
-                OfficialName = "Manipal Education",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversitySystem.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.manipalglobal.com",
-            });
-            var manipalEdu = Seed(new CreateEstablishment
-            {
-                OfficialName = "Manipal University",
-                IsMember = true,
-                ParentId = manipalGlobal.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.manipal.edu",
-                EmailDomains = new[] { "@manipal.edu" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Melaka Manipal Medical College",
-                IsMember = true,
-                ParentId = manipalEdu.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.manipal.edu/Institutions/Medicine/MMMCMelaka",
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "ICICI Manipal Academy",
-                IsMember = true,
-                ParentId = manipalEdu.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.ima.manipal.edu",
-                EmailDomains = new[] { "@ima.manipal.edu" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "American University of Antigua",
-                IsMember = true,
-                ParentId = manipalGlobal.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.auamed.org",
-                EmailDomains = new[] { "@auamed.org" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Manipal University Dubai Campus",
-                IsMember = true,
-                ParentId = manipalGlobal.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.manipaldubai.com",
-                EmailDomains = new[] { "@manipaldubai.com" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Manipal College of Medical Sciences, Nepal",
-                IsMember = true,
-                ParentId = manipalGlobal.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.manipal.edu.np",
-                EmailDomains = new[] { "@manipal.edu.np" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Sikkim Manipal University",
-                IsMember = true,
-                ParentId = manipalGlobal.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.smude.edu.in",
-                EmailDomains = new[] { "@smude.edu.in" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Manipal International University",
-                IsMember = true,
-                ParentId = manipalGlobal.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.miu.edu.my",
-                EmailDomains = new[] { "@miu.edu.my" },
-            });
-
-            #endregion
-            #region Usil
-
-            var usil = Seed(new CreateEstablishment
-            {
-                OfficialName = "Universidad San Ignacio de Loyola",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.usil.edu.pe",
-                EmailDomains = new[] { "@usil.edu.pe" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Universidad San Ignacio de Loyola Facultad de Ciencias Empresariales",
-                IsMember = true,
-                ParentId = usil.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Universidad San Ignacio de Loyola Facultad de Educación",
-                IsMember = true,
-                ParentId = usil.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Universidad San Ignacio de Loyola Facultad de Administración Hotelera, Turismo y Gastronomía",
-                IsMember = true,
-                ParentId = usil.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Universidad San Ignacio de Loyola Facultad de  Humanidades",
-                IsMember = true,
-                ParentId = usil.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Universidad San Ignacio de Loyola Ingeniería y Arquitectura",
-                IsMember = true,
-                ParentId = usil.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-            });
-
-            #endregion
-            #region Griffith
-
-            var griffith = Seed(new CreateEstablishment
-            {
-                OfficialName = "Griffith University",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.griffith.edu.au",
-                EmailDomains = new[] { "@griffith.edu.au" },
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Griffith University Gold Coast Campus",
-                IsMember = true,
-                ParentId = griffith.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Griffith University Logan Campus",
-                IsMember = true,
-                ParentId = griffith.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Griffith University Mt Gravatt Campus",
-                IsMember = true,
-                ParentId = griffith.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Griffith University Nathan Campus",
-                IsMember = true,
-                ParentId = griffith.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
-            });
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Griffith University South Bank Campus",
-                IsMember = true,
-                ParentId = griffith.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
-            });
-
-            #endregion
-            #region Singles (Bjtu, Edinburgh, etc)
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Beijing Jiaotong University",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.bjtu.edu.cn",
-                EmailDomains = new[] { "@bjtu.edu.cn", "@njtu.edu.cn" },
-                NonOfficialUrls = new[]
-                {
-                    new CreateEstablishment.NonOfficialUrl
-                    {
-                        Value = "www.njtu.edu.cn",
-                        IsDefunct = true,
-                    }
-                },
-                NonOfficialNames = new[]
-                {
-                    new CreateEstablishment.NonOfficialName
-                    {
-                        Text = "Northern Jiaotong University",
-                        IsDefunct = true,
-                        TranslationToLanguageId = _queryProcessor.Execute(
-                            new LanguageByIsoCode("en")).Id,
-                    }
-                },
-            });
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Edinburgh Napier University",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.napier.ac.uk",
-                EmailDomains = new[] { "@napier.ac.uk" },
-            });
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Future University in Egypt",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.fue.edu.eg",
-                EmailDomains = new[] { "@fue.edu.eg" },
-            });
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "The University of New South Wales",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.unsw.edu.au",
-                EmailDomains = new[] { "@unsw.edu.au" },
-            });
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "The College Board",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.BusinessOrCorporation.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.collegeboard.org",
-                EmailDomains = new[] { "@collegeboard.org" },
-            });
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Institute of International Education (IIE)",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Association.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.iie.org",
-                EmailDomains = new[] { "@iie.org" },
-            });
-
-            Seed(new CreateEstablishment
-            {
-                OfficialName = "Terra Dotta, LLC",
-                IsMember = true,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.BusinessOrCorporation.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.terradotta.com",
-                EmailDomains = new[] { "@terradotta.com" },
-            });
-
-            #endregion
         }
     }
 

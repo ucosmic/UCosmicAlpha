@@ -61,6 +61,8 @@ namespace UCosmic.EntityFramework
             container.Register<ISeedData, CompositeSqlSeeder>();
 #elif SEED_ENTITIES
             container.Register<ISeedData, CompositeEntitySeeder>();
+#else
+            container.Register<ISeedData, BrownfieldSeeder>();
 #endif
         }
 

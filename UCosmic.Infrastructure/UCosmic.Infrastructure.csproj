@@ -165,6 +165,7 @@
     <Compile Include="Saml\RealSamlCertificateStorage.cs" />
     <Compile Include="Saml\SimpleInjectorSamlRegistration.cs" />
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
+    <Compile Include="SeedData\BrownfieldSeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />
