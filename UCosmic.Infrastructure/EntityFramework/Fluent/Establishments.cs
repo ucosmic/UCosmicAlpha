@@ -201,8 +201,8 @@ namespace UCosmic.EntityFramework
                 .WithMany()
                 .Map(d => d.MapKey("TranslationToLanguageId"));
 
-            Property(p => p.Text).IsRequired().HasMaxLength(400);
-            Property(p => p.AsciiEquivalent).HasMaxLength(400);
+            Property(p => p.Text).IsRequired().HasMaxLength(EstablishmentNameConstraints.TextMaxLength);
+            Property(p => p.AsciiEquivalent).HasMaxLength(EstablishmentNameConstraints.TextMaxLength);
         }
     }
 
@@ -212,7 +212,7 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(EstablishmentUrl).Name, DbSchemaName.Establishments);
 
-            Property(p => p.Value).IsRequired().HasMaxLength(200);
+            Property(p => p.Value).IsRequired().HasMaxLength(EstablishmentUrlConstraints.ValueMaxLength);
         }
     }
 

@@ -21,30 +21,35 @@ namespace UCosmic.Domain.People
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             Person person = null;
-            Establishment establishment = null;
+            //Establishment establishment = null;
 
-            var establishmentLoad = new Expression<Func<Establishment, object>>[]
-            {
-                e => e.Type.Category,
-            };
+            //var establishmentLoad = new Expression<Func<Establishment, object>>[]
+            //{
+            //    e => e.Type.Category,
+            //};
             var personLoad = new Expression<Func<Person, object>>[]
             {
-                p => p.Affiliations.Select(a => a.Establishment)
+               x => x.Affiliations.Select(y => y.Establishment)
             };
 
-            RuleFor(p => p.EstablishmentId)
+            RuleFor(x => x.EstablishmentId)
                 // establishment id must exist in database
-                .Must(p => ValidateEstablishment.IdMatchesEntity(p, entities, establishmentLoad, out establishment))
-                    .WithMessage(ValidateEstablishment.FailedBecauseIdMatchedNoEntity,
-                        p => p.EstablishmentId)
+                .MustExistAsEstablishment(entities)
+                    .WithMessage(EstablishmentIdMustExist.FailMessageFormat, x => x.EstablishmentId)
+                //.Must(p => ValidateEstablishment.IdMatchesEntity(p, entities, establishmentLoad, out establishment))
+                //    .WithMessage(ValidateEstablishment.FailedBecauseIdMatchedNoEntity,
+                //        p => p.EstablishmentId)
+
             ;
 
             RuleFor(p => p.IsClaimingStudent)
                 // cannot claim student unless affiliation establishment is an academic institution
-                .Must(p => ValidateAffiliation.EstablishmentIsInstitutionWhenIsClaimingStudent(p, establishment))
-                    .When(p => establishment != null)
-                    .WithMessage(ValidateAffiliation.FailedBecauseIsClaimingStudentButEstablishmentIsNotInstitution,
-                        p => p.EstablishmentId)
+                .MustBeFalseWhenEstablishmentIsNotInstitution(entities, "EstablishmentId")
+                    .WithMessage(IsClaimingStudentMustBeFalseForNonInstitutions.FailMessageFormat, x => x.EstablishmentId)
+                //.Must(p => ValidateAffiliation.EstablishmentIsInstitutionWhenIsClaimingStudent(p, establishment))
+                //    //.When(p => establishment != null)
+                //    .WithMessage(ValidateAffiliation.FailedBecauseIsClaimingStudentButEstablishmentIsNotInstitution,
+                //        p => p.EstablishmentId)
             ;
 
             RuleFor(p => p.PersonId)

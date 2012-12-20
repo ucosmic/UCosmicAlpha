@@ -33,22 +33,22 @@ namespace UCosmic.Domain.Establishments
             RuleFor(x => x.Id)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                .WithMessage("Establishment name id '{0}' is not valid.", x => x.Id)
+                    .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment name id", x => x.Id)
 
                 // id must exist in the database
                 .Must(Exist)
-                .WithMessage("Establishment name with id '{0}' does not exist", x => x.Id)
+                    .WithMessage(EstablishmentNameIdMustExist.FailMessageFormat, x => x.Id)
             ;
 
             When(x => _establishmentName != null,() =>
                 RuleFor(x => x.Id)
                     // establishment name must not be official
                     .Must(NotBeOfficial)
-                    .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the official name.", x => x.Id)
+                        .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the official name.", x => x.Id)
 
                     // establishment name cannot be only one
                     .Must(HaveSiblings)
-                    .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the only name.", x => x.Id)
+                        .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the only name.", x => x.Id)
             );
         }
 

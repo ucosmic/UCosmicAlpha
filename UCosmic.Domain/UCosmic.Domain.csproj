@@ -76,6 +76,9 @@
     <Compile Include="Api\Saml\SamlAttributeName.cs" />
     <Compile Include="Api\Saml\SamlAttributeNameString.cs" />
     <Compile Include="Api\Security\RoleName.cs" />
+    <Compile Include="Api\Validation\StringMustNotExceedLength.cs" />
+    <Compile Include="Api\Validation\ValueIsRequired.cs" />
+    <Compile Include="Api\Validation\PrimaryKeyMustBeGreaterThanZero.cs" />
     <Compile Include="Api\_Etc\IConsumeHttp.cs" />
     <Compile Include="Api\_Extensions\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Domain\Establishments\Queries\QueryEstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishments.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishmentUrls.cs" />
+    <Compile Include="Domain\Establishments\Validation\EstablishmentConstraints.cs" />
     <Compile Include="Domain\Establishments\Validation\ValidateEstablishment.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
@@ -152,6 +156,7 @@
     <Compile Include="Domain\People\Commands\CreatePerson.cs" />
     <Compile Include="Domain\People\Queries\PersonByEmail.cs" />
     <Compile Include="Domain\People\Queries\QueryPeople.cs" />
+    <Compile Include="Domain\People\Validation\IsClaimingStudentMustBeFalseForNonInstitutions.cs" />
     <Compile Include="Domain\People\Validation\ValidateAffiliation.cs" />
     <Compile Include="Domain\People\Validation\ValidatePerson.cs" />
     <Compile Include="Domain\Places\Queries\WoeIdByCoordinates.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace UCosmic.Domain.Establishments
@@ -9,36 +8,37 @@ namespace UCosmic.Domain.Establishments
     {
         #region EstablishmentId matches entity
 
-        public const string FailedBecauseIdMatchedNoEntity =
-            "Establishment with id '{0}' could not be found.";
+        // DEPRECATED: instead use EstablishmentIdMustExist PropertyValidator
+        //public const string FailedBecauseIdMatchedNoEntity =
+        //    "Establishment with id '{0}' could not be found.";
 
-        public static bool IdMatchesEntity(int id, IQueryEntities entities,
-            IEnumerable<Expression<Func<Establishment, object>>> eagerLoad, out Establishment entity)
-        {
-            if (id < 0)
-            {
-                entity = null;
-                return false;
-            }
+        //public static bool IdMatchesEntity(int id, IQueryEntities entities,
+        //    IEnumerable<Expression<Func<Establishment, object>>> eagerLoad, out Establishment entity)
+        //{
+        //    if (id < 0)
+        //    {
+        //        entity = null;
+        //        return false;
+        //    }
 
-            entity = entities.Query<Establishment>()
-                .EagerLoad(entities, eagerLoad).SingleOrDefault(x => x.RevisionId == id);
+        //    entity = entities.Query<Establishment>()
+        //        .EagerLoad(entities, eagerLoad).SingleOrDefault(x => x.RevisionId == id);
 
-            // return true (valid) if there is an entity
-            return entity != null;
-        }
+        //    // return true (valid) if there is an entity
+        //    return entity != null;
+        //}
 
-        public static bool IdMatchesEntity(int id, IQueryEntities entities,
-            IEnumerable<Expression<Func<Establishment, object>>> eagerLoad = null)
-        {
-            Establishment entity;
-            return IdMatchesEntity(id, entities, eagerLoad, out entity);
-        }
+        //public static bool IdMatchesEntity(int id, IQueryEntities entities,
+        //    IEnumerable<Expression<Func<Establishment, object>>> eagerLoad = null)
+        //{
+        //    Establishment entity;
+        //    return IdMatchesEntity(id, entities, eagerLoad, out entity);
+        //}
 
-        public static bool IdMatchesEntity(int id, IQueryEntities entities, out Establishment entity)
-        {
-            return IdMatchesEntity(id, entities, null, out entity);
-        }
+        //public static bool IdMatchesEntity(int id, IQueryEntities entities, out Establishment entity)
+        //{
+        //    return IdMatchesEntity(id, entities, null, out entity);
+        //}
 
         #endregion
         #region Email matches entity

@@ -7,11 +7,13 @@ namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentNameTextMustBeUnique<T> : PropertyValidator
     {
+        public const string FailMessageFormat = "The establishment name '{0}' already exists.";
+
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _ownId;
 
         internal EstablishmentNameTextMustBeUnique(IQueryEntities entities, Func<T, int> ownId)
-            : base("The establishment name '{PropertyValue}' already exists.")
+            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;

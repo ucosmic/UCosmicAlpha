@@ -7,10 +7,12 @@ namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentUrlIdMustExist : PropertyValidator
     {
+        public const string FailMessageFormat = "Establishment URL with id '{0}' does not exist.";
+
         private readonly IQueryEntities _entities;
 
         internal EstablishmentUrlIdMustExist(IQueryEntities entities)
-            : base("Establishment URL with id '{PropertyValue}' does not exist")
+            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;

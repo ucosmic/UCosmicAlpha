@@ -83,7 +83,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 entity = new InstitutionalAgreement();
             if (entity == null)
                 throw new InvalidOperationException(string.Format(
-                    "Agreement with id '{0}' does not exist", command.RevisionId));
+                    "Agreement with id '{0}' does not exist.", command.RevisionId));
 
             // update scalars
             CopyScalars(command, entity);

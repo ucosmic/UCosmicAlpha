@@ -33,19 +33,20 @@ namespace UCosmic.Domain.Establishments
             // owner id must be within valid range and exist in the database
             RuleFor(x => x.OwnerId)
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage("Establishment id '{0}' is not valid.", x => x.OwnerId)
+                    .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment id", x => x.OwnerId)
                 .MustExistAsEstablishment(entities)
-                    .WithMessage("Establishment with id '{0}' does not exist", x => x.OwnerId)
+                    .WithMessage(EstablishmentIdMustExist.FailMessageFormat, x => x.OwnerId)
             ;
 
             // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Text)
                 .NotEmpty()
-                    .WithMessage("Establishment name is required.")
-                .Length(1, 400)
-                    .WithMessage("Establishment name cannot exceed 400 characters. You entered {0} characters.", x => x.Text.Length)
+                    .WithMessage(ValueIsRequired.FailMessageFormat, x => "Establishment name")
+                .Length(1, EstablishmentNameConstraints.TextMaxLength)
+                    .WithMessage(StringMustNotExceedLength.FailMessageFormat,
+                        x => "Establishment name", x => EstablishmentNameConstraints.TextMaxLength, x => x.Text.Length)
                 .MustBeUniqueEstablishmentNameText(entities)
-                    .WithMessage("The establishment name '{0}' already exists.", x => x.Text)
+                    .WithMessage(EstablishmentNameTextMustBeUnique<object>.FailMessageFormat, x => x.Text)
             ;
 
             // when the establishment name is official, it cannot be a former / defunct name

@@ -31,25 +31,26 @@ namespace UCosmic.Domain.Establishments
             RuleFor(x => x.Id)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage("Establishment URL id '{0}' is not valid.", x => x.Id)
+                    .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment URL id", x => x.Id)
 
                 // id must exist in the database
                 .MustExistAsEstablishmentUrl(entities)
-                    .WithMessage("Establishment URL with id '{0}' does not exist", x => x.Id)
+                    .WithMessage(EstablishmentUrlIdMustExist.FailMessageFormat, x => x.Id)
             ;
 
             // value of the establishment URL is required, has max length, follows format, and must be unique
             RuleFor(x => x.Value)
                 .NotEmpty()
-                    .WithMessage("Establishment URL is required.")
-                .Length(1, 200)
-                    .WithMessage("Establishment URL cannot exceed 200 characters. You entered {0} characters.", x => x.Value.Length)
+                    .WithMessage(ValueIsRequired.FailMessageFormat, x => "Establishment URL")
+                .Length(1, EstablishmentUrlConstraints.ValueMaxLength)
+                    .WithMessage(StringMustNotExceedLength.FailMessageFormat,
+                        x => "Establishment URL", x => EstablishmentUrlConstraints.ValueMaxLength, x => x.Value.Length)
                 .MustNotContainUrlProtocol()
-                    .WithMessage("Please enter a URL without the protocol (http:// or https://).", x => x.Value)
+                    .WithMessage(UrlStringMustNotContainProtocol.FailMessage)
                 .MustBeWellFormedUrl()
-                    .WithMessage("The value '{0}' does not appear to be a valid URL.", x => x.Value)
+                    .WithMessage(UrlStringMustBeWellFormed.FailMessageFormat, x => x.Value)
                 .MustBeUniqueEstablishmentUrlValue(entities, x => x.Id)
-                    .WithMessage("The establishment URL '{0}' already exists.", x => x.Value)
+                    .WithMessage(EstablishmentUrlValueMustBeUnique<object>.FailMessageFormat, x => x.Value)
             ;
 
             // when the establishment URL is official, it cannot be former / defunct

@@ -27,5 +27,10 @@ namespace UCosmic
             var memberExpression = (MemberExpression)expression.Body;
             return memberExpression.Member.Name;
         }
+
+        public static T PropertyValue<T>(this object owner, string propertyName)
+        {
+            return (T)owner.GetType().GetProperty(propertyName).GetValue(owner, null);
+        }
     }
 }

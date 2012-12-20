@@ -6,8 +6,10 @@ namespace UCosmic
 {
     public class UrlStringMustBeWellFormed : PropertyValidator
     {
+        public const string FailMessageFormat = "The value '{0}' does not appear to be a valid URL.";
+
         internal UrlStringMustBeWellFormed()
-            : base("The value '{PropertyValue}' does not appear to be a valid URL.") { }
+            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}")) { }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {

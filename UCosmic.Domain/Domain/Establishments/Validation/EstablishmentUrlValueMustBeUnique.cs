@@ -7,11 +7,13 @@ namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentUrlValueMustBeUnique<T> : PropertyValidator
     {
+        public const string FailMessageFormat = "The establishment URL '{0}' already exists.";
+
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _ownId;
 
         internal EstablishmentUrlValueMustBeUnique(IQueryEntities entities, Func<T, int> ownId)
-            : base("The establishment URL '{PropertyValue}' already exists.")
+            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;

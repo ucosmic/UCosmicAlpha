@@ -6,8 +6,10 @@ namespace UCosmic
 {
     public class UrlStringMustNotContainProtocol : PropertyValidator
     {
+        public const string FailMessage = "Please enter a URL without the protocol (http:// or https://).";
+
         internal UrlStringMustNotContainProtocol()
-            : base("Please enter a URL without the protocol (http:// or https://).") { }
+            : base(FailMessage) { }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
