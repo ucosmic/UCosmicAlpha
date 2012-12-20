@@ -6,22 +6,20 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.People
 {
-    public class AffiliationIsClaimingStudentMustBeFalseForNonInstitutions : PropertyValidator
+    public class MustNotBeClaimingStudentAffiliationForNonInstitutions<T> : PropertyValidator
     {
         public const string FailMessageFormat = "Affiliation cannot claim student because establishment '{0}' is not an academic institution.";
 
         private readonly IQueryEntities _entities;
-        private readonly string _establishmentIdPropertyName;
+        private readonly Func<T, int> _establishmentId;
 
-        internal AffiliationIsClaimingStudentMustBeFalseForNonInstitutions(IQueryEntities entities, string establishmentIdPropertyName)
+        internal MustNotBeClaimingStudentAffiliationForNonInstitutions(IQueryEntities entities, Func<T, int> establishmentId)
             : base(FailMessageFormat.Replace("{0}", "{EstablishmentId}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
 
-            if (string.IsNullOrWhiteSpace(establishmentIdPropertyName))
-                throw new ArgumentException("Cannot be null or whitespace.", "establishmentIdPropertyName");
-            _establishmentIdPropertyName = establishmentIdPropertyName;
+            _establishmentId = establishmentId;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
@@ -30,8 +28,7 @@ namespace UCosmic.Domain.People
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on bool properties", GetType().Name));
 
-            // reflect to get the establishment ID
-            var establishmentId = context.Instance.PropertyValue<int>(_establishmentIdPropertyName);
+            var establishmentId = _establishmentId((T)context.Instance);
 
             context.MessageFormatter.AppendArgument("EstablishmentId", establishmentId);
             var isClaimingStudent = (bool)context.PropertyValue;
@@ -43,12 +40,12 @@ namespace UCosmic.Domain.People
         }
     }
 
-    public static class IsClaimingStudentMustBeFalseForNonInstitutionsExtensions
+    public static class MustNotBeClaimingStudentAffiliationForNonInstitutionsExtensions
     {
-        public static IRuleBuilderOptions<T, bool> MustBeFalseWhenEstablishmentIsNotInstitution<T>
-            (this IRuleBuilder<T, bool> ruleBuilder, IQueryEntities entities, string establishmentIdPropertyName)
+        public static IRuleBuilderOptions<T, bool> MustNotBeClaimingStudentAffiliationForNonInstitutions<T>
+            (this IRuleBuilder<T, bool> ruleBuilder, IQueryEntities entities, Func<T, int> establishmentId)
         {
-            return ruleBuilder.SetValidator(new AffiliationIsClaimingStudentMustBeFalseForNonInstitutions(entities, establishmentIdPropertyName));
+            return ruleBuilder.SetValidator(new MustNotBeClaimingStudentAffiliationForNonInstitutions<T>(entities, establishmentId));
         }
     }
 }

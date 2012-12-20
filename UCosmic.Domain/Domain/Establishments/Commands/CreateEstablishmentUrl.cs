@@ -33,30 +33,30 @@ namespace UCosmic.Domain.Establishments
             // owner id must be within valid range and exist in the database
             RuleFor(x => x.OwnerId)
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment id", x => x.OwnerId)
-                .MustExistAsEstablishment(entities)
-                    .WithMessage(EstablishmentIdMustExist.FailMessageFormat, x => x.OwnerId)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment id", x => x.OwnerId)
+                .MustFindEstablishmentById(entities)
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.OwnerId)
             ;
 
             // value of the establishment URL is required, has max length, follows format, and must be unique
             RuleFor(x => x.Value)
                 .NotEmpty()
-                    .WithMessage(ValueIsRequired.FailMessageFormat, x => "Establishment URL")
+                    .WithMessage(MustNotBeEmpty.FailMessageFormat, x => "Establishment URL")
                 .Length(1, EstablishmentUrlConstraints.ValueMaxLength)
-                    .WithMessage(StringMustNotExceedLength.FailMessageFormat,
+                    .WithMessage(MustNotExceedStringLength.FailMessageFormat,
                         x => "Establishment URL", x => EstablishmentUrlConstraints.ValueMaxLength, x => x.Value.Length)
                 .MustNotContainUrlProtocol()
-                    .WithMessage(UrlStringMustNotContainProtocol.FailMessage)
+                    .WithMessage(MustNotContainUrlProtocol.FailMessage)
                 .MustBeWellFormedUrl()
-                    .WithMessage(UrlStringMustBeWellFormed.FailMessageFormat, x => x.Value)
+                    .WithMessage(MustBeWellFormedUrl.FailMessageFormat, x => x.Value)
                 .MustBeUniqueEstablishmentUrlValue(entities)
-                    .WithMessage(EstablishmentUrlValueMustBeUnique<object>.FailMessageFormat, x => x.Value)
+                    .WithMessage(MustBeUniqueEstablishmentUrlValue<object>.FailMessageFormat, x => x.Value)
             ;
 
             // when the establishment URL is official, it cannot be former / defunct
             When(x => x.IsOfficialUrl, () =>
                 RuleFor(x => x.IsFormerUrl).Equal(false)
-                    .WithMessage(EstablishmentUrlIsFormerMustBeFalseWhenIsOfficial.FailMessage)
+                    .WithMessage(MustNotBeFormerEstablishmentUrlWhenIsOfficial.FailMessage)
             );
         }
     }

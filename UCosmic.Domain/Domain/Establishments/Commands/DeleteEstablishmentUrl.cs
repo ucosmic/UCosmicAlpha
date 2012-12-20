@@ -30,11 +30,11 @@ namespace UCosmic.Domain.Establishments
             RuleFor(x => x.Id)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment URL id", x => x.Id)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment URL id", x => x.Id)
 
                 // id must exist in the database
-                .MustExistAsEstablishmentUrl(entities)
-                    .WithMessage(EstablishmentUrlIdMustExist.FailMessageFormat, x => x.Id)
+                .MustFindEstablishmentUrlById(entities)
+                    .WithMessage(MustFindEstablishmentUrlById.FailMessageFormat, x => x.Id)
 
                 // establishment URL must not be official
                 .MustNotBeOfficialEstablishmentUrl(entities)

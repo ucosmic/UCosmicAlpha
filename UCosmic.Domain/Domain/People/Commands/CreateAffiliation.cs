@@ -34,8 +34,8 @@ namespace UCosmic.Domain.People
 
             RuleFor(x => x.EstablishmentId)
                 // establishment id must exist in database
-                .MustExistAsEstablishment(entities)
-                    .WithMessage(EstablishmentIdMustExist.FailMessageFormat, x => x.EstablishmentId)
+                .MustFindEstablishmentById(entities)
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId)
                 //.Must(p => ValidateEstablishment.IdMatchesEntity(p, entities, establishmentLoad, out establishment))
                 //    .WithMessage(ValidateEstablishment.FailedBecauseIdMatchedNoEntity,
                 //        p => p.EstablishmentId)
@@ -44,8 +44,8 @@ namespace UCosmic.Domain.People
 
             RuleFor(p => p.IsClaimingStudent)
                 // cannot claim student unless affiliation establishment is an academic institution
-                .MustBeFalseWhenEstablishmentIsNotInstitution(entities, "EstablishmentId")
-                    .WithMessage(AffiliationIsClaimingStudentMustBeFalseForNonInstitutions.FailMessageFormat, x => x.EstablishmentId)
+                .MustNotBeClaimingStudentAffiliationForNonInstitutions(entities, x => x.EstablishmentId)
+                    .WithMessage(MustNotBeClaimingStudentAffiliationForNonInstitutions<object>.FailMessageFormat, x => x.EstablishmentId)
                 //.Must(p => ValidateAffiliation.EstablishmentIsInstitutionWhenIsClaimingStudent(p, establishment))
                 //    //.When(p => establishment != null)
                 //    .WithMessage(ValidateAffiliation.FailedBecauseIsClaimingStudentButEstablishmentIsNotInstitution,

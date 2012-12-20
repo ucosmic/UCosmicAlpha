@@ -6,9 +6,9 @@ namespace UCosmic.Domain.Establishments
 {
     public static class ValidateEstablishment
     {
-        #region EstablishmentId matches entity
+        // DEPRECATED: instead use MustFindEstablishmentById PropertyValidator
+        //#region EstablishmentId matches entity
 
-        // DEPRECATED: instead use EstablishmentIdMustExist PropertyValidator
         //public const string FailedBecauseIdMatchedNoEntity =
         //    "Establishment with id '{0}' could not be found.";
 
@@ -40,7 +40,7 @@ namespace UCosmic.Domain.Establishments
         //    return IdMatchesEntity(id, entities, null, out entity);
         //}
 
-        #endregion
+        //#endregion
         #region Email matches entity
 
         public const string FailedBecauseEmailMatchedNoEntity =

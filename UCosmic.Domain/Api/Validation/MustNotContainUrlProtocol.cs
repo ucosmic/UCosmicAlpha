@@ -4,11 +4,11 @@ using FluentValidation.Validators;
 
 namespace UCosmic
 {
-    public class UrlStringMustNotContainProtocol : PropertyValidator
+    public class MustNotContainUrlProtocol : PropertyValidator
     {
         public const string FailMessage = "Please enter a URL without the protocol (http:// or https://).";
 
-        internal UrlStringMustNotContainProtocol()
+        internal MustNotContainUrlProtocol()
             : base(FailMessage) { }
 
         protected override bool IsValid(PropertyValidatorContext context)
@@ -26,11 +26,11 @@ namespace UCosmic
         }
     }
 
-    public static class UrlStringMustNotContainProtocolExtensions
+    public static class MustNotContainUrlProtocolExtensions
     {
         public static IRuleBuilderOptions<T, string> MustNotContainUrlProtocol<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
-            return ruleBuilder.SetValidator(new UrlStringMustNotContainProtocol());
+            return ruleBuilder.SetValidator(new MustNotContainUrlProtocol());
         }
     }
 }

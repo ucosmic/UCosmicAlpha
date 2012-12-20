@@ -35,26 +35,26 @@ namespace UCosmic.Domain.Establishments
             // id must be within valid range and exist in the database
             RuleFor(x => x.Id)
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment name id", x => x.Id)
-                .MustExistAsEstablishmentName(entities)
-                    .WithMessage(EstablishmentNameIdMustExist.FailMessageFormat, x => x.Id)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment name id", x => x.Id)
+                .MustFindEstablishmentNameById(entities)
+                    .WithMessage(MustFindEstablishmentNameById.FailMessageFormat, x => x.Id)
             ;
 
             // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Text)
                 .NotEmpty()
-                    .WithMessage(ValueIsRequired.FailMessageFormat, x => "Establishment name")
+                    .WithMessage(MustNotBeEmpty.FailMessageFormat, x => "Establishment name")
                 .Length(1, EstablishmentNameConstraints.TextMaxLength)
-                    .WithMessage(StringMustNotExceedLength.FailMessageFormat,
+                    .WithMessage(MustNotExceedStringLength.FailMessageFormat,
                         x => "Establishment name", x => EstablishmentNameConstraints.TextMaxLength, x => x.Text.Length)
                 .MustBeUniqueEstablishmentNameText(entities, x => x.Id)
-                    .WithMessage(EstablishmentNameTextMustBeUnique<object>.FailMessageFormat, x => x.Text)
+                    .WithMessage(MustBeUniqueEstablishmentNameText<object>.FailMessageFormat, x => x.Text)
             ;
 
             // when the establishment name is official, it cannot be a former / defunct name
             When(x => x.IsOfficialName, () =>
                 RuleFor(x => x.IsFormerName).Equal(false)
-                    .WithMessage(EstablishmentNameIsFormerMustBeFalseWhenIsOfficial.FailMessage)
+                    .WithMessage(MustNotBeFormerEstablishmentNameWhenIsOfficial.FailMessage)
             );
         }
     }

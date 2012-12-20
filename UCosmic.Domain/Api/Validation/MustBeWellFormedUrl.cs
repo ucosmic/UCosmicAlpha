@@ -4,11 +4,11 @@ using FluentValidation.Validators;
 
 namespace UCosmic
 {
-    public class UrlStringMustBeWellFormed : PropertyValidator
+    public class MustBeWellFormedUrl : PropertyValidator
     {
         public const string FailMessageFormat = "The value '{0}' does not appear to be a valid URL.";
 
-        internal UrlStringMustBeWellFormed()
+        internal MustBeWellFormedUrl()
             : base(FailMessageFormat.Replace("{0}", "{PropertyValue}")) { }
 
         protected override bool IsValid(PropertyValidatorContext context)
@@ -32,11 +32,11 @@ namespace UCosmic
         }
     }
 
-    public static class UrlStringMustBeWellFormedExtensions
+    public static class MustBeWellFormedUrlExtensions
     {
         public static IRuleBuilderOptions<T, string> MustBeWellFormedUrl<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
-            return ruleBuilder.SetValidator(new UrlStringMustBeWellFormed());
+            return ruleBuilder.SetValidator(new MustBeWellFormedUrl());
         }
     }
 }
