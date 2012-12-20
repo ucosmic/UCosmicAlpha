@@ -23,12 +23,9 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateDeleteEstablishmentNameCommand : AbstractValidator<DeleteEstablishmentName>
     {
-        private readonly IQueryEntities _entities;
-        private EstablishmentName _establishmentName;
-
         public ValidateDeleteEstablishmentNameCommand(IQueryEntities entities)
         {
-            _entities = entities;
+            CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Id)
                 // id must be within valid range
@@ -36,40 +33,17 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment name id", x => x.Id)
 
                 // id must exist in the database
-                .Must(Exist)
+                .MustExistAsEstablishmentName(entities)
                     .WithMessage(EstablishmentNameIdMustExist.FailMessageFormat, x => x.Id)
+
+                // establishment name must not be official
+                .MustNotBeOfficialEstablishmentName(entities)
+                    .WithMessage(MustNotBeOfficialEstablishmentName.FailMessageFormat, x => x.Id)
+
+                // establishment name cannot be only one
+                .MustNotBeOnlyEstablishmentName(entities)
+                    .WithMessage(MustNotBeOnlyEstablishmentName.FailMessageFormat, x => x.Id)
             ;
-
-            When(x => _establishmentName != null,() =>
-                RuleFor(x => x.Id)
-                    // establishment name must not be official
-                    .Must(NotBeOfficial)
-                        .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the official name.", x => x.Id)
-
-                    // establishment name cannot be only one
-                    .Must(HaveSiblings)
-                        .WithMessage("Establishment name with id '{0}' cannot be deleted because it is the only name.", x => x.Id)
-            );
-        }
-
-        private bool Exist(int id)
-        {
-            _establishmentName = _entities.Query<EstablishmentName>()
-                .SingleOrDefault(y => y.RevisionId == id)
-            ;
-            return true;
-        }
-
-        private bool NotBeOfficial(int id)
-        {
-            return !_establishmentName.IsOfficialName;
-        }
-
-        private bool HaveSiblings(int id)
-        {
-            var siblings = _entities.Query<EstablishmentName>()
-                .Where(x => x.ForEstablishment.RevisionId == _establishmentName.ForEstablishment.RevisionId);
-            return siblings.Count() > 1;
         }
     }
 

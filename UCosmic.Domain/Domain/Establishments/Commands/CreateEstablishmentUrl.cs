@@ -28,6 +28,8 @@ namespace UCosmic.Domain.Establishments
     {
         public ValidateCreateEstablishmentUrlCommand(IQueryEntities entities)
         {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
             // owner id must be within valid range and exist in the database
             RuleFor(x => x.OwnerId)
                 .GreaterThanOrEqualTo(1)
@@ -54,7 +56,7 @@ namespace UCosmic.Domain.Establishments
             // when the establishment URL is official, it cannot be former / defunct
             When(x => x.IsOfficialUrl, () =>
                 RuleFor(x => x.IsFormerUrl).Equal(false)
-                    .WithMessage("An official establishment URL cannot also be a former or defunct URL.")
+                    .WithMessage(EstablishmentUrlIsFormerMustBeFalseWhenIsOfficial.FailMessage)
             );
         }
     }

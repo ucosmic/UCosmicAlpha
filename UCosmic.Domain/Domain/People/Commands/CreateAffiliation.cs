@@ -45,7 +45,7 @@ namespace UCosmic.Domain.People
             RuleFor(p => p.IsClaimingStudent)
                 // cannot claim student unless affiliation establishment is an academic institution
                 .MustBeFalseWhenEstablishmentIsNotInstitution(entities, "EstablishmentId")
-                    .WithMessage(IsClaimingStudentMustBeFalseForNonInstitutions.FailMessageFormat, x => x.EstablishmentId)
+                    .WithMessage(AffiliationIsClaimingStudentMustBeFalseForNonInstitutions.FailMessageFormat, x => x.EstablishmentId)
                 //.Must(p => ValidateAffiliation.EstablishmentIsInstitutionWhenIsClaimingStudent(p, establishment))
                 //    //.When(p => establishment != null)
                 //    .WithMessage(ValidateAffiliation.FailedBecauseIsClaimingStudentButEstablishmentIsNotInstitution,

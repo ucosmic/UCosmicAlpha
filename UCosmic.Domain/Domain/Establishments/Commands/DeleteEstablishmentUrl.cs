@@ -23,12 +23,9 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateDeleteEstablishmentUrlCommand : AbstractValidator<DeleteEstablishmentUrl>
     {
-        private readonly IQueryEntities _entities;
-        private EstablishmentUrl _establishmentUrl;
-
         public ValidateDeleteEstablishmentUrlCommand(IQueryEntities entities)
         {
-            _entities = entities;
+            CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Id)
                 // id must be within valid range
@@ -36,40 +33,16 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(PrimaryKeyMustBeGreaterThanZero.FailMessageFormat, x => "Establishment URL id", x => x.Id)
 
                 // id must exist in the database
-                .Must(Exist)
+                .MustExistAsEstablishmentUrl(entities)
                     .WithMessage(EstablishmentUrlIdMustExist.FailMessageFormat, x => x.Id)
+
+                // establishment URL must not be official
+                .MustNotBeOfficialEstablishmentUrl(entities)
+                    .WithMessage(MustNotBeOfficialEstablishmentUrl.FailMessageFormat, x => x.Id)
+
+                .MustNotBeOnlyEstablishmentUrl(entities)
+                    .WithMessage(MustNotBeOnlyEstablishmentUrl.FailMessageFormat, x => x.Id)
             ;
-
-            When(x => _establishmentUrl != null,() =>
-                RuleFor(x => x.Id)
-                    // establishment URL must not be official
-                    .Must(NotBeOfficial)
-                        .WithMessage("Establishment URL with id '{0}' cannot be deleted because it is the official URL.", x => x.Id)
-
-                    // establishment URL cannot be only one
-                    .Must(HaveSiblings)
-                        .WithMessage("Establishment URL with id '{0}' cannot be deleted because it is the only URL.", x => x.Id)
-            );
-        }
-
-        private bool Exist(int id)
-        {
-            _establishmentUrl = _entities.Query<EstablishmentUrl>()
-                .SingleOrDefault(y => y.RevisionId == id)
-            ;
-            return true;
-        }
-
-        private bool NotBeOfficial(int id)
-        {
-            return !_establishmentUrl.IsOfficialUrl;
-        }
-
-        private bool HaveSiblings(int id)
-        {
-            var siblings = _entities.Query<EstablishmentUrl>()
-                .Where(x => x.ForEstablishment.RevisionId == _establishmentUrl.ForEstablishment.RevisionId);
-            return siblings.Count() > 1;
         }
     }
 

@@ -125,7 +125,13 @@
     <Compile Include="Domain\Establishments\Queries\QueryEstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishments.cs" />
     <Compile Include="Domain\Establishments\Queries\QueryEstablishmentUrls.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustNotBeOfficialEstablishmentUrl.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustNotBeOnlyEstablishmentUrl.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustNotBeOnlyEstablishmentName.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustNotBeOfficialEstablishmentName.cs" />
+    <Compile Include="Domain\Establishments\Validation\EstablishmentUrlIsFormerMustBeFalseWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\Validation\EstablishmentConstraints.cs" />
+    <Compile Include="Domain\Establishments\Validation\EstablishmentNameIsFormerMustBeFalseWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\Validation\ValidateEstablishment.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
@@ -156,7 +162,7 @@
     <Compile Include="Domain\People\Commands\CreatePerson.cs" />
     <Compile Include="Domain\People\Queries\PersonByEmail.cs" />
     <Compile Include="Domain\People\Queries\QueryPeople.cs" />
-    <Compile Include="Domain\People\Validation\IsClaimingStudentMustBeFalseForNonInstitutions.cs" />
+    <Compile Include="Domain\People\Validation\AffiliationIsClaimingStudentMustBeFalseForNonInstitutions.cs" />
     <Compile Include="Domain\People\Validation\ValidateAffiliation.cs" />
     <Compile Include="Domain\People\Validation\ValidatePerson.cs" />
     <Compile Include="Domain\Places\Queries\WoeIdByCoordinates.cs" />

@@ -6,14 +6,14 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.People
 {
-    public class IsClaimingStudentMustBeFalseForNonInstitutions : PropertyValidator
+    public class AffiliationIsClaimingStudentMustBeFalseForNonInstitutions : PropertyValidator
     {
         public const string FailMessageFormat = "Affiliation cannot claim student because establishment '{0}' is not an academic institution.";
 
         private readonly IQueryEntities _entities;
         private readonly string _establishmentIdPropertyName;
 
-        internal IsClaimingStudentMustBeFalseForNonInstitutions(IQueryEntities entities, string establishmentIdPropertyName)
+        internal AffiliationIsClaimingStudentMustBeFalseForNonInstitutions(IQueryEntities entities, string establishmentIdPropertyName)
             : base(FailMessageFormat.Replace("{0}", "{EstablishmentId}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
@@ -48,7 +48,7 @@ namespace UCosmic.Domain.People
         public static IRuleBuilderOptions<T, bool> MustBeFalseWhenEstablishmentIsNotInstitution<T>
             (this IRuleBuilder<T, bool> ruleBuilder, IQueryEntities entities, string establishmentIdPropertyName)
         {
-            return ruleBuilder.SetValidator(new IsClaimingStudentMustBeFalseForNonInstitutions(entities, establishmentIdPropertyName));
+            return ruleBuilder.SetValidator(new AffiliationIsClaimingStudentMustBeFalseForNonInstitutions(entities, establishmentIdPropertyName));
         }
     }
 }

@@ -30,6 +30,8 @@ namespace UCosmic.Domain.Establishments
     {
         public ValidateUpdateEstablishmentNameCommand(IQueryEntities entities)
         {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
             // id must be within valid range and exist in the database
             RuleFor(x => x.Id)
                 .GreaterThanOrEqualTo(1)
@@ -52,7 +54,7 @@ namespace UCosmic.Domain.Establishments
             // when the establishment name is official, it cannot be a former / defunct name
             When(x => x.IsOfficialName, () =>
                 RuleFor(x => x.IsFormerName).Equal(false)
-                    .WithMessage("An official establishment name cannot also be a former or defunct name.")
+                    .WithMessage(EstablishmentNameIsFormerMustBeFalseWhenIsOfficial.FailMessage)
             );
         }
     }
