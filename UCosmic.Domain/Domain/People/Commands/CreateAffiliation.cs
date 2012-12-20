@@ -20,17 +20,17 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            Person person = null;
+            //Person person = null;
             //Establishment establishment = null;
 
             //var establishmentLoad = new Expression<Func<Establishment, object>>[]
             //{
             //    e => e.Type.Category,
             //};
-            var personLoad = new Expression<Func<Person, object>>[]
-            {
-               x => x.Affiliations.Select(y => y.Establishment)
-            };
+            //var personLoad = new Expression<Func<Person, object>>[]
+            //{
+            //   x => x.Affiliations.Select(y => y.Establishment)
+            //};
 
             RuleFor(x => x.EstablishmentId)
                 // establishment id must exist in database
@@ -54,13 +54,17 @@ namespace UCosmic.Domain.People
 
             RuleFor(p => p.PersonId)
                 // person id must exist in database
-                .Must(p => ValidatePerson.IdMatchesEntity(p, entities, personLoad, out person))
-                    .WithMessage(ValidatePerson.FailedBecauseIdMatchedNoEntity,
-                        p => p.PersonId)
+                .MustFindPersonById(entities)
+                    .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
+                //.Must(p => ValidatePerson.IdMatchesEntity(p, entities, personLoad, out person))
+                //    .WithMessage(ValidatePerson.FailedBecauseIdMatchedNoEntity,
+                //        p => p.PersonId)
                 // cannot create a duplicate affiliation
-                .Must((o, p) => ValidatePerson.IsNotAlreadyAffiliatedWithEstablishment(person, o.EstablishmentId))
-                    .WithMessage(ValidatePerson.FailedBecausePersonIsAlreadyAffiliatedWithEstablishment,
-                        p => p.PersonId, p => p.EstablishmentId)
+                .MustNotBePersonAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
+                    .WithMessage(MustNotBePersonAffiliatedWithEstablishment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
+                //.Must((o, p) => ValidatePerson.IsNotAlreadyAffiliatedWithEstablishment(person, o.EstablishmentId))
+                //    .WithMessage(ValidatePerson.FailedBecausePersonIsAlreadyAffiliatedWithEstablishment,
+                //        p => p.PersonId, p => p.EstablishmentId)
             ;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using FluentValidation;
 using FluentValidation.Validators;
 
@@ -28,6 +29,10 @@ namespace UCosmic.Domain.Establishments
             var value = (int)context.PropertyValue;
 
             var entity = _entities.Query<EstablishmentName>()
+                .EagerLoad(_entities, new Expression<Func<EstablishmentName, object>>[]
+                {
+                    x => x.ForEstablishment,
+                })
                 .Single(x => x.RevisionId == value);
 
             var siblings = _entities.Query<EstablishmentName>()

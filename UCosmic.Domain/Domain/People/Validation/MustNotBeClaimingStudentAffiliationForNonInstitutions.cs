@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using FluentValidation;
 using FluentValidation.Validators;
 using UCosmic.Domain.Establishments;
@@ -34,6 +35,10 @@ namespace UCosmic.Domain.People
             var isClaimingStudent = (bool)context.PropertyValue;
 
             var entity = _entities.Query<Establishment>()
+                .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
+                {
+                    x => x.Type.Category,
+                })
                 .SingleOrDefault(x => x.RevisionId == establishmentId);
 
             return entity != null && (entity.IsInstitution || isClaimingStudent == false);

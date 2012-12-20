@@ -162,6 +162,8 @@
     <Compile Include="Domain\People\Commands\CreatePerson.cs" />
     <Compile Include="Domain\People\Queries\PersonByEmail.cs" />
     <Compile Include="Domain\People\Queries\QueryPeople.cs" />
+    <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithEstablishment.cs" />
+    <Compile Include="Domain\People\Validation\MustFindPersonById.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeClaimingStudentAffiliationForNonInstitutions.cs" />
     <Compile Include="Domain\People\Validation\ValidateAffiliation.cs" />
     <Compile Include="Domain\People\Validation\ValidatePerson.cs" />
