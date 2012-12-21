@@ -22,16 +22,16 @@
                                     <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
                                 </div>
                                 <div class="on-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
-                                    <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this name">
+                                    <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this name">
                                         <img src="~/styles/icons/minus-20-red.png" alt="" class="align-top" /></a>
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: isSpinningPurge" />
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
                                 </div>
                             </div>
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
                             <form method="POST" data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                 <div class="field" style="margin-top: 0;">
-                                    <textarea rows="1" class="no-resize" data-bind="value: text, element: 'textElement', css: { spinning: isSpinningSaveValidator }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
+                                    <textarea rows="1" class="no-resize" data-bind="value: text, jqElement: '$textElement', css: { spinning: textValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
                                 </div>
                                 <div class="field">
                                     <label data-bind="click: clickOfficialNameCheckbox">
@@ -45,20 +45,20 @@
                                     </label>
                                 </div>
                                 <div class="field">
-                                    <select data-bind="value: selectedLanguageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', element: 'languagesElement', visible: $parent.languages().length > 0" style="display: none;">
+                                    <select data-bind="value: selectedLanguageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', jqElement: '$languagesElement', visible: $parent.languages().length > 0" style="display: none;">
                                     </select>
                                     <select data-bind="visible: $parent.languages().length < 1">
                                         <option>[Loading...]</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave()" />
-                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !isSpinningSave()" class="link" />
+                                    <input type="submit" value="Save" data-bind="enable: !saveSpinner.isVisible()" />
+                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
                                     &nbsp;
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSaveValidator" />
-                                    <strong data-bind="visible: isSpinningSaveValidator">Validating...</strong>
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSave" />
-                                    <strong data-bind="visible: isSpinningSave">Saving...</strong>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: textValidationSpinner.isVisible" />
+                                    <strong data-bind="visible: textValidationSpinner.isVisible">Validating...</strong>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                                    <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
                                 </div>
                             </form>
                         </div>

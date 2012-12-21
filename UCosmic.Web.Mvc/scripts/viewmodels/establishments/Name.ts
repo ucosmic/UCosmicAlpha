@@ -26,7 +26,7 @@ module ViewModels.Establishments {
 
     ko.validation.rules['validEstablishmentNameText'] = {
         async: true,
-        validator: (val, vm: Name, callback: KnockoutValidationAsyncCallback):void => {
+        validator: function (val: string, vm: Name, callback: KnockoutValidationAsyncCallback) {
             var validation = this;
             if (!vm.isTextValidatableAsync()) {
                 callback(true);
@@ -85,6 +85,8 @@ module ViewModels.Establishments {
         private saveEditorClicked: bool = false;
         private originalValues: ServerNameApiModel;
         private $parent: any;
+        private mutationSuccess: (response: string) => void;
+        private mutationError: (xhr: JQueryXHR) => void;
 
         constructor (js: ServerNameApiModel, $parent: any) {
             this.$parent = $parent;
@@ -119,13 +121,10 @@ module ViewModels.Establishments {
             });
             this.text.isValidating.subscribe((isValidating: bool): void => {
                 if (isValidating) {
-                    //self.isSpinningSaveValidator(true);
-                    this.saveSpinner.start();
+                    this.textValidationSpinner.start();
                 }
                 else {
-                    //self.isSpinningSaveValidator(false);
-                    this.saveSpinner.stop();
-                    //if (saveEditorClicked) self.saveEditor();
+                    this.textValidationSpinner.stop();
                     if (this.saveEditorClicked) this.saveEditor();
                 }
             });
@@ -140,6 +139,35 @@ module ViewModels.Establishments {
             this.isOfficialName.subscribe((newValue: bool): void {
                 if (newValue) this.isFormerName(false);
             });
+
+            this.mutationSuccess = (response: string): void => {
+                this.$parent.requestNames((): void => {
+                    this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+                    this.editMode(false); // hide the form, show the view
+                    this.saveSpinner.stop(); // stop save spinner
+                    this.purgeSpinner.stop(); // stop purge spinner
+                    App.flasher.flash(response);
+                });
+            };
+
+            this.mutationError = (xhr: JQueryXHR): void => {
+                if (xhr.status === 400) { // validation message will be in xhr response text...
+                    $(this.$parent.genericAlertDialog).find('p.content')
+                        .html(xhr.responseText.replace('\n', '<br /><br />'));
+                    $(this.$parent.genericAlertDialog).dialog({
+                        title: 'Alert Message',
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            'Ok': ():void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                        }
+                    });
+                }
+                this.saveSpinner.stop();
+                this.purgeSpinner.stop();
+            };
 
             ko.validation.group(this);
         }
@@ -162,8 +190,7 @@ module ViewModels.Establishments {
             }
             else if (!this.text.isValidating()) { // hit server
                 this.saveEditorClicked = false;
-                //self.isSpinningSave(true); // start save spinner
-                this.saveSpinner.start();
+                this.saveSpinner.start(); // start save spinner
 
                 if (this.id()) {
                     $.ajax({ // submit ajax PUT request
@@ -206,7 +233,7 @@ module ViewModels.Establishments {
                     resizable: false,
                     modal: true,
                     buttons: {
-                        'Ok': (): void => { $(this).dialog('close'); }
+                        'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
                     }
                 });
             }
@@ -226,13 +253,12 @@ module ViewModels.Establishments {
                     resizable: false,
                     modal: true,
                     buttons: {
-                        'Ok': (): void => { $(this).dialog('close'); }
+                        'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
                     }
                 });
                 return;
             }
-            //self.isSpinningPurge(true);
-            this.purgeSpinner.stop();
+            this.purgeSpinner.start();
             var shouldRemainSpinning = false;
             $(this.confirmPurgeDialog).dialog({
                 dialogClass: 'jquery-ui',
@@ -240,7 +266,6 @@ module ViewModels.Establishments {
                 resizable: false,
                 modal: true,
                 close: (): void => {
-                    //if (!shouldRemainSpinning) self.isSpinningPurge(false);
                     if (!shouldRemainSpinning) this.purgeSpinner.stop();
                 },
                 buttons: [
@@ -270,45 +295,15 @@ module ViewModels.Establishments {
             });
         }
 
-        serializeData(): IServerNameApiModel {
+        serializeData(): IServerNameInputModel {
             return {
                 id: this.id(),
                 ownerId: this.ownerId(),
                 text: $.trim(this.text()),
                 isOfficialName: this.isOfficialName(),
                 isFormerName: this.isFormerName(),
-                languageCode: this.selectedLanguageCode(),
-                languageName: undefined
+                languageCode: this.selectedLanguageCode()
             };
-        }
-
-        private mutationError(xhr: JQueryXHR): void {
-            if (xhr.status === 400) { // validation message will be in xhr response text...
-                $(this.$parent.genericAlertDialog).find('p.content')
-                    .html(xhr.responseText.replace('\n', '<br /><br />'));
-                $(this.$parent.genericAlertDialog).dialog({
-                    title: 'Alert Message',
-                    dialogClass: 'jquery-ui',
-                    width: 'auto',
-                    resizable: false,
-                    modal: true,
-                    buttons: {
-                        'Ok': ():void => { $(this).dialog('close'); }
-                    }
-                });
-            }
-        }
-
-        private mutationSuccess(response: string): void {
-            this.$parent.requestNames((): void => {
-                this.$parent.editingName(undefined); // tell parent no item is being edited anymore
-                this.editMode(false); // hide the form, show the view
-                //self.isSpinningSave(false); // stop save spinner
-                this.saveSpinner.stop();
-                //self.isSpinningPurge(false); // stop purge spinner
-                this.purgeSpinner.stop();
-                App.flasher.flash(response);
-            });
         }
     }
 }

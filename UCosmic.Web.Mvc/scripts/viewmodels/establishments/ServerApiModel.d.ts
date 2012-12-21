@@ -11,13 +11,16 @@ module ViewModels.Establishments {
         ceebCode: string;
     }
 
-    export interface IServerNameApiModel {
+    export interface IServerNameInputModel {
         id: number;
         ownerId: number;
         text: string;
         isOfficialName: bool;
         isFormerName: bool;
-        languageName: string;
         languageCode: string;
+    }
+
+    export interface IServerNameApiModel extends IServerNameInputModel {
+        languageName: string;
     }
 }

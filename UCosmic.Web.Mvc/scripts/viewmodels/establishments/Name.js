@@ -17,7 +17,7 @@ var ViewModels;
         ko.validation.rules['validEstablishmentNameText'] = {
             async: true,
             validator: function (val, vm, callback) {
-                var validation = _this;
+                var validation = this;
                 if(!vm.isTextValidatableAsync()) {
                     callback(true);
                 } else {
@@ -81,9 +81,9 @@ var ViewModels;
                 });
                 this.text.isValidating.subscribe(function (isValidating) {
                     if(isValidating) {
-                        _this.saveSpinner.start();
+                        _this.textValidationSpinner.start();
                     } else {
-                        _this.saveSpinner.stop();
+                        _this.textValidationSpinner.stop();
                         if(_this.saveEditorClicked) {
                             _this.saveEditor();
                         }
@@ -98,6 +98,34 @@ var ViewModels;
                         _this.isFormerName(false);
                     }
                 });
+                this.mutationSuccess = function (response) {
+                    _this.$parent.requestNames(function () {
+                        _this.$parent.editingName(undefined);
+                        _this.editMode(false);
+                        _this.saveSpinner.stop();
+                        _this.purgeSpinner.stop();
+                        App.flasher.flash(response);
+                    });
+                };
+                this.mutationError = function (xhr) {
+                    if(xhr.status === 400) {
+                        $(_this.$parent.genericAlertDialog).find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                        $(_this.$parent.genericAlertDialog).dialog({
+                            title: 'Alert Message',
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                'Ok': function () {
+                                    $(_this.$parent.genericAlertDialog).dialog('close');
+                                }
+                            }
+                        });
+                    }
+                    _this.saveSpinner.stop();
+                    _this.purgeSpinner.stop();
+                };
                 ko.validation.group(this);
             }
             Name.prototype.showEditor = function () {
@@ -158,7 +186,7 @@ var ViewModels;
                         modal: true,
                         buttons: {
                             'Ok': function () {
-                                $(_this).dialog('close');
+                                $(_this.$parent.genericAlertDialog).dialog('close');
                             }
                         }
                     });
@@ -181,13 +209,13 @@ var ViewModels;
                         modal: true,
                         buttons: {
                             'Ok': function () {
-                                $(_this).dialog('close');
+                                $(_this.$parent.genericAlertDialog).dialog('close');
                             }
                         }
                     });
                     return;
                 }
-                this.purgeSpinner.stop();
+                this.purgeSpinner.start();
                 var shouldRemainSpinning = false;
                 $(this.confirmPurgeDialog).dialog({
                     dialogClass: 'jquery-ui',
@@ -229,37 +257,8 @@ var ViewModels;
                     text: $.trim(this.text()),
                     isOfficialName: this.isOfficialName(),
                     isFormerName: this.isFormerName(),
-                    languageCode: this.selectedLanguageCode(),
-                    languageName: undefined
+                    languageCode: this.selectedLanguageCode()
                 };
-            };
-            Name.prototype.mutationError = function (xhr) {
-                var _this = this;
-                if(xhr.status === 400) {
-                    $(this.$parent.genericAlertDialog).find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                    $(this.$parent.genericAlertDialog).dialog({
-                        title: 'Alert Message',
-                        dialogClass: 'jquery-ui',
-                        width: 'auto',
-                        resizable: false,
-                        modal: true,
-                        buttons: {
-                            'Ok': function () {
-                                $(_this).dialog('close');
-                            }
-                        }
-                    });
-                }
-            };
-            Name.prototype.mutationSuccess = function (response) {
-                var _this = this;
-                this.$parent.requestNames(function () {
-                    _this.$parent.editingName(undefined);
-                    _this.editMode(false);
-                    _this.saveSpinner.stop();
-                    _this.purgeSpinner.stop();
-                    App.flasher.flash(response);
-                });
             };
             return Name;
         })();
