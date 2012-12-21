@@ -48,6 +48,7 @@ namespace UCosmic.SeedData
                 },
                 "Dan", "Ludwig", "www.uc.edu", developerRoles);
             Seed("ganesh_c@uc.edu", "Ganesh", "Chitrothu", "www.uc.edu", developerRoles);
+            Seed("corarito@usf.edu", "Douglas", "Corarito", "www.usf.edu", developerRoles);
 
             // seed example non-academic users
             Seed("test@terradotta.com", "Terradotta", "Test", "www.terradotta.com");
