@@ -1,7 +1,7 @@
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
-/// <reference path="ServerApiModel.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 
 module ViewModels.Establishments {
 

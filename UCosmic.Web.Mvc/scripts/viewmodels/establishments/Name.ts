@@ -1,0 +1,315 @@
+/// <reference path="../../jquery/jquery-1.8.d.ts" />
+/// <reference path="../../jquery/jqueryui-1.9.d.ts" />
+/// <reference path="../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../ko/knockout.validation.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../FlasherViewModel.ts" />
+/// <reference path="../Spinner.ts" />
+/// <reference path="ServerApiModel.d.ts" />
+
+module ViewModels.Establishments {
+
+    export class ServerNameApiModel implements IServerNameApiModel {
+
+        id: number = 0;
+        ownerId: number = 0;
+        text: string = '';
+        isOfficialName: bool = false;
+        isFormerName: bool = false;
+        languageCode: string = '';
+        languageName: string = '';
+
+        constructor () {
+        }
+    }
+
+    ko.validation.rules['validEstablishmentNameText'] = {
+        async: true,
+        validator: (val, vm: Name, callback: KnockoutValidationAsyncCallback):void => {
+            var validation = this;
+            if (!vm.isTextValidatableAsync()) {
+                callback(true);
+            }
+            else if (!validation.isAwaitingResponse) {
+                var route = App.Routes.WebApi.EstablishmentNames
+                    .validateText(vm.ownerId(), vm.id());
+                validation.isAwaitingResponse = true;
+                $.post(route, vm.serializeData())
+                .always((): void => {
+                    validation.isAwaitingResponse = false;
+                })
+                .done(():void => {
+                    callback(true);
+                })
+                .fail((xhr: JQueryXHR):void => {
+                    callback({ isValid: false, message: xhr.responseText });
+                });
+            }
+        },
+        message: 'error'
+    };
+
+    ko.validation.registerExtenders();
+
+    export class Name {
+
+        // api observables
+        id: KnockoutObservableNumber = ko.observable();
+        ownerId: KnockoutObservableNumber = ko.observable();
+        text: KnockoutObservableString = ko.observable();
+        isOfficialName: KnockoutObservableBool = ko.observable();
+        isFormerName: KnockoutObservableBool = ko.observable();
+        languageName: KnockoutObservableString = ko.observable();
+        languageCode: KnockoutObservableString = ko.observable();
+
+        // other observables
+        editMode: KnockoutObservableBool = ko.observable();
+        $textElement: JQuery = undefined; // bind to this so we can focus it on actions
+        $languagesElement: JQuery = undefined; // bind to this so we can restore on back button
+        selectedLanguageCode: KnockoutObservableString; // shadow to restore after list items are bound
+        confirmPurgeDialog: Element = undefined;
+        isValid: () => bool;
+        errors: any;
+
+        // computeds
+        isOfficialNameEnabled: KnockoutComputed;
+        isTextValidatableAsync: KnockoutComputed;
+
+        // spinners
+        saveSpinner: Spinner = new Spinner(0);
+        purgeSpinner: Spinner = new Spinner(0);
+        textValidationSpinner = new Spinner(0);
+
+        // private fields
+        private saveEditorClicked: bool = false;
+        private originalValues: ServerNameApiModel;
+        private $parent: any;
+
+        constructor (js: ServerNameApiModel, $parent: any) {
+            this.$parent = $parent;
+
+            // when adding new name, js is not defined
+            if (!js) {
+                js = new ServerNameApiModel();
+                js.ownerId = this.$parent.id;
+            }
+
+            // hold onto original values so they can be reset on cancel
+            this.originalValues = js;
+
+            // map api properties to observables
+            ko.mapping.fromJS(js, {}, this);
+
+            // view computeds
+            this.isOfficialNameEnabled = ko.computed((): bool => {
+                return !this.originalValues.isOfficialName;
+            });
+
+            // text validation
+            this.isTextValidatableAsync = ko.computed((): bool => {
+                return this.text() !== this.originalValues.text;
+            });
+            this.text.extend({
+                required: {
+                    message: 'Establishment name is required.'
+                },
+                maxLength: 400,
+                validEstablishmentNameText: this
+            });
+            this.text.isValidating.subscribe((isValidating: bool): void => {
+                if (isValidating) {
+                    //self.isSpinningSaveValidator(true);
+                    this.saveSpinner.start();
+                }
+                else {
+                    //self.isSpinningSaveValidator(false);
+                    this.saveSpinner.stop();
+                    //if (saveEditorClicked) self.saveEditor();
+                    if (this.saveEditorClicked) this.saveEditor();
+                }
+            });
+
+            // languages
+            this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
+            this.$parent.languages.subscribe((): void => { // select correct option after options are loaded
+                this.selectedLanguageCode(this.languageCode()); // shadow property is bound to dropdown list
+            });
+
+            // official name cannot be former name
+            this.isOfficialName.subscribe((newValue: bool): void {
+                if (newValue) this.isFormerName(false);
+            });
+
+            ko.validation.group(this);
+        }
+
+        showEditor(): void { // click to hide viewer and show editor
+            var editingName = this.$parent.editingName(); // disallow if another name is being edited
+            if (!editingName) {
+                this.$parent.editingName(this.id() || -1); // tell parent which item is being edited
+                this.editMode(true); // show the form / hide the viewer
+                this.$textElement.trigger('autosize');
+                this.$textElement.focus(); // focus the text box
+            }
+        }
+
+        saveEditor(): void {
+            this.saveEditorClicked = true;
+            if (!this.isValid()) { // validate
+                this.saveEditorClicked = false;
+                this.errors.showAllMessages();
+            }
+            else if (!this.text.isValidating()) { // hit server
+                this.saveEditorClicked = false;
+                //self.isSpinningSave(true); // start save spinner
+                this.saveSpinner.start();
+
+                if (this.id()) {
+                    $.ajax({ // submit ajax PUT request
+                        url: App.Routes.WebApi.EstablishmentNames.put(this.$parent.id, this.id()),
+                        type: 'PUT',
+                        data: this.serializeData()
+                    })
+                    .done(this.mutationSuccess).fail(this.mutationError);
+                }
+                else if (this.$parent.id) {
+                    $.ajax({ // submit ajax POST request
+                        url: App.Routes.WebApi.EstablishmentNames.post(this.$parent.id),
+                        type: 'POST',
+                        data: this.serializeData()
+                    })
+                    .done(this.mutationSuccess).fail(this.mutationError);
+                }
+            }
+        }
+
+        cancelEditor(): void {
+            this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+            if (this.id()) {
+                ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
+                this.editMode(false); // hide the form, show the view
+            }
+            else {
+                this.$parent.names.shift(); // remove the new empty item
+            }
+        }
+
+        clickOfficialNameCheckbox(): bool { // educate users on how to change the official name
+            if (this.originalValues.isOfficialName) { // only when the name is already official in the db
+                $(this.$parent.genericAlertDialog).find('p.content')
+                    .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
+                $(this.$parent.genericAlertDialog).dialog({
+                    title: 'Alert Message',
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                        'Ok': (): void => { $(this).dialog('close'); }
+                    }
+                });
+            }
+            return true;
+        }
+
+        purge(vm: Name, e: JQueryEventObject): void {
+            e.stopPropagation();
+            if (this.$parent.editingName()) return;
+            if (this.isOfficialName()) {
+                $(this.$parent.genericAlertDialog).find('p.content')
+                    .html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
+                $(this.$parent.genericAlertDialog).dialog({
+                    title: 'Alert Message',
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                        'Ok': (): void => { $(this).dialog('close'); }
+                    }
+                });
+                return;
+            }
+            //self.isSpinningPurge(true);
+            this.purgeSpinner.stop();
+            var shouldRemainSpinning = false;
+            $(this.confirmPurgeDialog).dialog({
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                close: (): void => {
+                    //if (!shouldRemainSpinning) self.isSpinningPurge(false);
+                    if (!shouldRemainSpinning) this.purgeSpinner.stop();
+                },
+                buttons: [
+                    {
+                        text: 'Yes, confirm delete',
+                        click: (): void => {
+                            shouldRemainSpinning = true;
+                            $(this.confirmPurgeDialog).dialog('close');
+                            $.ajax({ // submit ajax DELETE request
+                                url: App.Routes.WebApi.EstablishmentNames.del(this.$parent.id, this.id()),
+                                type: 'DELETE'
+                            })
+                            .done(this.mutationSuccess)
+                            .fail(this.mutationError);
+                        }
+                    },
+                    {
+                        text: 'No, cancel delete',
+                        click: (): void => {
+                            $(this.confirmPurgeDialog).dialog('close');
+                            //self.isSpinningPurge(false);
+                            this.purgeSpinner.stop();
+                        },
+                        'data-css-link': true
+                    }
+                ]
+            });
+        }
+
+        serializeData(): IServerNameApiModel {
+            return {
+                id: this.id(),
+                ownerId: this.ownerId(),
+                text: $.trim(this.text()),
+                isOfficialName: this.isOfficialName(),
+                isFormerName: this.isFormerName(),
+                languageCode: this.selectedLanguageCode(),
+                languageName: undefined
+            };
+        }
+
+        private mutationError(xhr: JQueryXHR): void {
+            if (xhr.status === 400) { // validation message will be in xhr response text...
+                $(this.$parent.genericAlertDialog).find('p.content')
+                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                $(this.$parent.genericAlertDialog).dialog({
+                    title: 'Alert Message',
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                        'Ok': ():void => { $(this).dialog('close'); }
+                    }
+                });
+            }
+        }
+
+        private mutationSuccess(response: string): void {
+            this.$parent.requestNames((): void => {
+                this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+                this.editMode(false); // hide the form, show the view
+                //self.isSpinningSave(false); // stop save spinner
+                this.saveSpinner.stop();
+                //self.isSpinningPurge(false); // stop purge spinner
+                this.purgeSpinner.stop();
+                App.flasher.flash(response);
+            });
+        }
+    }
+}
+

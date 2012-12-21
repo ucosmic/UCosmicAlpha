@@ -292,7 +292,7 @@ interface JQueryStatic {
 
     makeArray(obj: any): any[];
 
-    map(array: any[], callback: (elementOfArray: any, indexInArray: any) =>any): JQuery;
+    map(array: any[], callback: (elementOfArray: any, indexInArray: any) =>any): any[];
 
     merge(first: any[], second: any[]): any[];
 
@@ -580,6 +580,9 @@ interface JQuery {
     undelegate(selector: any, eventType: string, handler?: (eventObject: JQueryEventObject) => any): JQuery;
     undelegate(selector: any, events: any): JQuery;
     undelegate(namespace: string): JQuery;
+
+    unload(eventData?: any, handler?: (eventObject: JQueryEventObject) => any): JQuery;
+    unload(handler: (eventObject: JQueryEventObject) => any): JQuery;
 
     /*********
      INTERNALS

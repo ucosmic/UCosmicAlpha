@@ -435,6 +435,7 @@
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
     <None Include="scripts\lib-ext.d.ts" />
+    <None Include="scripts\ko\knockout.validation.d.ts" />
     <Content Include="scripts\oss\jquery.placeholder.d.ts" />
     <Content Include="scripts\oss\jquery.autosize.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
@@ -445,6 +446,13 @@
     </Content>
     <Content Include="scripts\viewmodels\countries\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\Name.ts" />
+    <Content Include="scripts\viewmodels\establishments\Name.js">
+      <DependentUpon>Name.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Name.min.js">
+      <DependentUpon>Name.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
@@ -458,13 +466,7 @@
     <Content Include="scripts\viewmodels\establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\establishments\ServerApiModel.ts" />
-    <Content Include="scripts\viewmodels\establishments\ServerApiModel.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\establishments\ServerApiModel.min.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
-    </Content>
+    <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>

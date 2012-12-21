@@ -7,7 +7,7 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../PagedSearch.ts" />
 /// <reference path="../countries/ServerApiModel.ts" />
-/// <reference path="ServerApiModel.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="SearchResult.ts" />
 
 interface Lens {
