@@ -304,6 +304,10 @@ namespace Links
                               
                 public static readonly string SearchResult_min_js = Url("SearchResult.min.js");
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
+                public static readonly string Url_ts = Url("Url.ts");
+                public static readonly string Url_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Url.min.js") ? Url("Url.min.js") : Url("Url.js");
+                              
+                public static readonly string Url_min_js = Url("Url.min.js");
             }
         
             public static readonly string FlasherViewModel_ts = Url("FlasherViewModel.ts");

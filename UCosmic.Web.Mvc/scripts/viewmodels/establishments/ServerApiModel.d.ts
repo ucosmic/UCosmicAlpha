@@ -23,4 +23,12 @@ module ViewModels.Establishments {
     export interface IServerNameApiModel extends IServerNameInputModel {
         languageName: string;
     }
+
+    export interface IServerUrlApiModel {
+        id: number;
+        ownerId: number;
+        value: string;
+        isOfficialUrl: bool;
+        isFormerUrl: bool;
+    }
 }

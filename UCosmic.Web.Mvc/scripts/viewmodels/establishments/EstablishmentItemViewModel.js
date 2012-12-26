@@ -8,6 +8,7 @@
 /// <reference path="EstablishmentNameViewModel.js" />
 /// <reference path="EstablishmentUrlViewModel.js" />
 /// <reference path="Name.js" />
+/// <reference path="Url.js" />
 
 function EstablishmentItemViewModel(id) {
     var self = this;
@@ -65,7 +66,8 @@ function EstablishmentItemViewModel(id) {
     self.editingUrl = ko.observable();
     self.urlsMapping = {
         create: function (options) {
-            return new EstablishmentUrlViewModel(options.data, self);
+            //return new EstablishmentUrlViewModel(options.data, self);
+            return new ViewModels.Establishments.Url(options.data, self);
         }
     };
     self.receiveUrls = function (js) {
@@ -82,7 +84,8 @@ function EstablishmentItemViewModel(id) {
         });
     };
     self.addUrl = function () {
-        var newUrl = new EstablishmentUrlViewModel(null, self);
+        //var newUrl = new EstablishmentUrlViewModel(null, self);
+        var newUrl = new ViewModels.Establishments.Url(null, self);
         self.urls.unshift(newUrl);
         newUrl.showEditor();
         App.Obtruder.obtrude(document);

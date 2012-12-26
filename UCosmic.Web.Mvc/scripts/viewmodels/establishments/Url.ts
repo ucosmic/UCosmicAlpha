@@ -10,32 +10,30 @@
 
 module ViewModels.Establishments {
 
-    export class ServerNameApiModel implements IServerNameApiModel {
+    export class ServerUrlApiModel implements IServerUrlApiModel {
 
         id: number = 0;
         ownerId: number = 0;
-        text: string = '';
-        isOfficialName: bool = false;
-        isFormerName: bool = false;
-        languageCode: string = '';
-        languageName: string = '';
+        value: string = '';
+        isOfficialUrl: bool = false;
+        isFormerUrl: bool = false;
 
         constructor () {
         }
     }
 
-    class EstablishmentNameTextValidator implements KnockoutValidationAsyncRuleDefinition {
-        private _ruleName: string = 'validEstablishmentNameText';
+    class EstablishmentUrlValueValidator implements KnockoutValidationAsyncRuleDefinition {
+        private _ruleName: string = 'validEstablishmentUrlValue';
         private _isAwaitingResponse: bool = false;
         async: bool = true;
         message: string =  'error';
-        validator(val: string, vm: Name, callback: KnockoutValidationAsyncCallback) {
-            if (!vm.isTextValidatableAsync()) {
+        validator(val: string, vm: Url, callback: KnockoutValidationAsyncCallback) {
+            if (!vm.isValueValidatableAsync()) {
                 callback(true);
             }
             else if (!this._isAwaitingResponse) {
-                var route = App.Routes.WebApi.EstablishmentNames
-                    .validateText(vm.ownerId(), vm.id());
+                var route = App.Routes.WebApi.EstablishmentUrls
+                    .validateValue(vm.ownerId(), vm.id());
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
                 .always((): void => {
@@ -54,50 +52,47 @@ module ViewModels.Establishments {
             ko.validation.addExtender(this._ruleName);
         }
     }
-    new EstablishmentNameTextValidator();
+    new EstablishmentUrlValueValidator();
 
-    export class Name implements KnockoutValidationGroup {
+    export class Url implements KnockoutValidationGroup {
 
         // api observables
         id: KnockoutObservableNumber = ko.observable();
         ownerId: KnockoutObservableNumber = ko.observable();
-        text: KnockoutObservableString = ko.observable();
-        isOfficialName: KnockoutObservableBool = ko.observable();
-        isFormerName: KnockoutObservableBool = ko.observable();
-        languageName: KnockoutObservableString = ko.observable();
-        languageCode: KnockoutObservableString = ko.observable();
+        value: KnockoutObservableString = ko.observable();
+        isOfficialUrl: KnockoutObservableBool = ko.observable();
+        isFormerUrl: KnockoutObservableBool = ko.observable();
 
         // other observables
         editMode: KnockoutObservableBool = ko.observable();
-        $textElement: JQuery = undefined; // bind to this so we can focus it on actions
-        $languagesElement: JQuery = undefined; // bind to this so we can restore on back button
-        selectedLanguageCode: KnockoutObservableString; // shadow to restore after list items are bound
+        $valueElement: JQuery = undefined; // bind to this so we can focus it on actions
         confirmPurgeDialog: Element = undefined;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
 
         // computeds
-        isOfficialNameEnabled: KnockoutComputed;
-        isTextValidatableAsync: KnockoutComputed;
+        isOfficialUrlEnabled: KnockoutComputed;
+        isValueValidatableAsync: KnockoutComputed;
+        valueHref: KnockoutComputed;
 
         // spinners
         saveSpinner: Spinner = new Spinner(0);
         purgeSpinner: Spinner = new Spinner(0);
-        textValidationSpinner = new Spinner(0);
+        valueValidationSpinner = new Spinner(0);
 
         // private fields
         private saveEditorClicked: bool = false;
-        private originalValues: ServerNameApiModel;
+        private originalValues: ServerUrlApiModel;
         private $parent: any;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerNameApiModel, $parent: any) {
+        constructor (js: ServerUrlApiModel, $parent: any) {
             this.$parent = $parent;
 
-            // when adding new name, js is not defined
+            // when adding new URL, js is not defined
             if (!js) {
-                js = new ServerNameApiModel();
+                js = new ServerUrlApiModel();
                 js.ownerId = this.$parent.id;
             }
 
@@ -108,45 +103,46 @@ module ViewModels.Establishments {
             ko.mapping.fromJS(js, {}, this);
 
             // view computeds
-            this.isOfficialNameEnabled = ko.computed((): bool => {
-                return !this.originalValues.isOfficialName;
+            this.isOfficialUrlEnabled = ko.computed((): bool => {
+                return !this.originalValues.isOfficialUrl;
             });
 
-            // text validation
-            this.isTextValidatableAsync = ko.computed((): bool => {
-                return this.text() !== this.originalValues.text;
+            // value validation
+            this.isValueValidatableAsync = ko.computed((): bool => {
+                return this.value() !== this.originalValues.value;
             });
-            this.text.extend({
+            this.value.extend({
                 required: {
-                    message: 'Establishment name is required.'
+                    message: 'Establishment URL is required.'
                 },
-                maxLength: 400,
-                validEstablishmentNameText: this
+                maxLength: 200,
+                validEstablishmentUrlValue: this
             });
-            this.text.isValidating.subscribe((isValidating: bool): void => {
+            this.value.isValidating.subscribe((isValidating: bool): void => {
                 if (isValidating) {
-                    this.textValidationSpinner.start();
+                    this.valueValidationSpinner.start();
                 }
                 else {
-                    this.textValidationSpinner.stop();
+                    this.valueValidationSpinner.stop();
                     if (this.saveEditorClicked) this.saveEditor();
                 }
             });
 
-            // languages
-            this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
-            this.$parent.languages.subscribe((): void => { // select correct option after options are loaded
-                this.selectedLanguageCode(this.languageCode()); // shadow property is bound to dropdown list
+            // official URL cannot be former URL
+            this.isOfficialUrl.subscribe((newValue: bool): void {
+                if (newValue) this.isFormerUrl(false);
             });
 
-            // official name cannot be former name
-            this.isOfficialName.subscribe((newValue: bool): void {
-                if (newValue) this.isFormerName(false);
+            // prepend protocol to URL for hrefs
+            this.valueHref = ko.computed((): string => {
+                var url = this.value();
+                if (!url) return url;
+                return 'http://' + url;
             });
 
             this.mutationSuccess = (response: string): void => {
-                this.$parent.requestNames((): void => {
-                    this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+                this.$parent.requestUrls((): void => {
+                    this.$parent.editingUrl(undefined); // tell parent no item is being edited anymore
                     this.editMode(false); // hide the form, show the view
                     this.saveSpinner.stop(); // stop save spinner
                     this.purgeSpinner.stop(); // stop purge spinner
@@ -176,10 +172,15 @@ module ViewModels.Establishments {
             ko.validation.group(this);
         }
 
-        clickOfficialNameCheckbox(): bool { // educate users on how to change the official name
-            if (this.originalValues.isOfficialName) { // only when the name is already official in the db
+        clickLink(vm: Url, e: JQueryEventObject): bool {
+            e.stopPropagation();
+            return true;
+        }
+
+        clickOfficialUrlCheckbox(): bool { // educate users on how to change the official URL
+            if (this.originalValues.isOfficialUrl) { // only when the URL is already official in the db
                 $(this.$parent.genericAlertDialog).find('p.content')
-                    .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
+                    .html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
                 $(this.$parent.genericAlertDialog).dialog({
                     title: 'Alert Message',
                     dialogClass: 'jquery-ui',
@@ -194,13 +195,13 @@ module ViewModels.Establishments {
             return true;
         }
 
-        showEditor(): void { // click to hide viewer and show editor
-            var editingName = this.$parent.editingName(); // disallow if another name is being edited
-            if (!editingName) {
-                this.$parent.editingName(this.id() || -1); // tell parent which item is being edited
+        showEditor(): void {
+            var editingUrl = this.$parent.editingUrl(); // disallow if another URL is being edited
+            if (!editingUrl) {
+                this.$parent.editingUrl(this.id() || -1); // tell parent which item is being edited
                 this.editMode(true); // show the form / hide the viewer
-                this.$textElement.trigger('autosize');
-                this.$textElement.focus(); // focus the text box
+                this.$valueElement.trigger('autosize');
+                this.$valueElement.focus(); // focus the text box
             }
         }
 
@@ -210,13 +211,13 @@ module ViewModels.Establishments {
                 this.saveEditorClicked = false;
                 this.errors.showAllMessages();
             }
-            else if (!this.text.isValidating()) { // hit server
+            else if (!this.value.isValidating()) { // hit server
                 this.saveEditorClicked = false;
                 this.saveSpinner.start(); // start save spinner
 
                 if (this.id()) {
                     $.ajax({ // submit ajax PUT request
-                        url: App.Routes.WebApi.EstablishmentNames.put(this.$parent.id, this.id()),
+                        url: App.Routes.WebApi.EstablishmentUrls.put(this.$parent.id, this.id()),
                         type: 'PUT',
                         data: this.serializeData()
                     })
@@ -224,7 +225,7 @@ module ViewModels.Establishments {
                 }
                 else if (this.$parent.id) {
                     $.ajax({ // submit ajax POST request
-                        url: App.Routes.WebApi.EstablishmentNames.post(this.$parent.id),
+                        url: App.Routes.WebApi.EstablishmentUrls.post(this.$parent.id),
                         type: 'POST',
                         data: this.serializeData()
                     })
@@ -234,22 +235,22 @@ module ViewModels.Establishments {
         }
 
         cancelEditor(): void {
-            this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+            this.$parent.editingUrl(undefined); // tell parent no item is being edited anymore
             if (this.id()) {
                 ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
                 this.editMode(false); // hide the form, show the view
             }
             else {
-                this.$parent.names.shift(); // remove the new empty item
+                this.$parent.urls.shift(); // remove the new empty item
             }
         }
 
-        purge(vm: Name, e: JQueryEventObject): void {
+        purge(vm: Url, e: JQueryEventObject): void {
             e.stopPropagation();
-            if (this.$parent.editingName()) return;
-            if (this.isOfficialName()) {
+            if (this.$parent.editingUrl()) return;
+            if (this.isOfficialUrl()) {
                 $(this.$parent.genericAlertDialog).find('p.content')
-                    .html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
+                    .html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
                 $(this.$parent.genericAlertDialog).dialog({
                     title: 'Alert Message',
                     dialogClass: 'jquery-ui',
@@ -279,7 +280,7 @@ module ViewModels.Establishments {
                             shouldRemainSpinning = true;
                             $(this.confirmPurgeDialog).dialog('close');
                             $.ajax({ // submit ajax DELETE request
-                                url: App.Routes.WebApi.EstablishmentNames.del(this.$parent.id, this.id()),
+                                url: App.Routes.WebApi.EstablishmentUrls.del(this.$parent.id, this.id()),
                                 type: 'DELETE'
                             })
                             .done(this.mutationSuccess)
@@ -298,16 +299,14 @@ module ViewModels.Establishments {
             });
         }
 
-        serializeData(): IServerNameInputModel {
+        serializeData(): IServerUrlApiModel {
             return {
                 id: this.id(),
                 ownerId: this.ownerId(),
-                text: $.trim(this.text()),
-                isOfficialName: this.isOfficialName(),
-                isFormerName: this.isFormerName(),
-                languageCode: this.selectedLanguageCode()
+                value: $.trim(this.value()),
+                isOfficialUrl: this.isOfficialUrl(),
+                isFormerUrl: this.isFormerUrl(),
             };
         }
     }
 }
-

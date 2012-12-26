@@ -100,16 +100,16 @@
                                     <a class="link badge" href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }">Link</a>
                                 </div>
                                 <div class="on-right" data-bind="visible: !isOfficialUrl() && !$parent.editingUrl()">
-                                    <a href="#" data-bind="click: purge, visible: !isSpinningPurge()" title="Delete this URL">
+                                    <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this URL">
                                         <img src="~/styles/icons/minus-20-red.png" alt="" class="align-top" /></a>
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: isSpinningPurge" />
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
                                 </div>
                             </div>
                         </div>
                         <div data-bind="visible: editMode" style="display: none;">
                             <form method="POST" data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                 <div class="field" style="margin-top: 0;">
-                                    <textarea rows="1" class="no-resize" data-bind="value: value, element: 'valueElement', css: { spinning: isSpinningSaveValidator }" data-autosize="true" placeholder="[Enter establishment URL here]"></textarea>
+                                    <textarea rows="1" class="no-resize" data-bind="value: value, jqElement: '$valueElement', css: { spinning: valueValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment URL here]"></textarea>
                                     <span class="example">
                                         <br />
                                         <span>Enter without protocol. For example, use <strong>www.domain.edu</strong> instead of <strong>http://www.domain.edu</strong>.</span>
@@ -128,21 +128,14 @@
                                         Former / Defunct URL
                                     </label>
                                 </div>
-                                @*<div class="field">
-                                    <select data-bind="value: selectedLanguageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', element: 'languagesElement', visible: $parent.languages().length > 0" style="display: none;">
-                                    </select>
-                                    <select data-bind="visible: $parent.languages().length < 1">
-                                        <option>[Loading...]</option>
-                                    </select>
-                                </div>*@
                                 <div>
-                                    <input type="submit" value="Save" data-bind="enable: !isSpinningSave()" />
-                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !isSpinningSave()" class="link" />
+                                    <input type="submit" value="Save" data-bind="enable: !saveSpinner.isVisible()" />
+                                    <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
                                     &nbsp;
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSaveValidator" />
-                                    <strong data-bind="visible: isSpinningSaveValidator">Validating...</strong>
-                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningSave" />
-                                    <strong data-bind="visible: isSpinningSave">Saving...</strong>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: valueValidationSpinner.isVisible" />
+                                    <strong data-bind="visible: valueValidationSpinner.isVisible">Validating...</strong>
+                                    <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                                    <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
                                 </div>
                             </form>
                         </div>

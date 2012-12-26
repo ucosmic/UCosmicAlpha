@@ -467,6 +467,13 @@
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
+    <Content Include="scripts\viewmodels\establishments\Url.js">
+      <DependentUpon>Url.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Url.min.js">
+      <DependentUpon>Url.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>
