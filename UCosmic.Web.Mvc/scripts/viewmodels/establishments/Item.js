@@ -10,9 +10,9 @@ var ViewModels;
                 this.$genericAlertDialog = undefined;
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
-                this.editingName = ko.observable();
+                this.editingName = ko.observable(0);
                 this.urls = ko.observableArray();
-                this.editingUrl = ko.observable();
+                this.editingUrl = ko.observable(0);
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -28,8 +28,18 @@ var ViewModels;
                         return new Establishments.Name(options.data, _this);
                     }
                 };
+                this.canAddName = ko.computed(function () {
+                    return !_this.namesSpinner.isVisible() && _this.editingName() === 0 && _this.id !== 0;
+                });
                 ko.computed(function () {
-                    _this.requestNames();
+                    if(_this.id) {
+                        _this.requestNames();
+                    } else {
+                        setTimeout(function () {
+                            _this.namesSpinner.stop();
+                            _this.addName();
+                        }, 0);
+                    }
                 }).extend({
                     throttle: 1
                 });
@@ -38,8 +48,18 @@ var ViewModels;
                         return new Establishments.Url(options.data, _this);
                     }
                 };
+                this.canAddUrl = ko.computed(function () {
+                    return !_this.urlsSpinner.isVisible() && _this.editingUrl() === 0 && _this.id !== 0;
+                });
                 ko.computed(function () {
-                    _this.requestUrls();
+                    if(_this.id) {
+                        _this.requestUrls();
+                    } else {
+                        setTimeout(function () {
+                            _this.urlsSpinner.stop();
+                            _this.addUrl();
+                        }, 0);
+                    }
                 }).extend({
                     throttle: 1
                 });
@@ -60,7 +80,11 @@ var ViewModels;
                 App.Obtruder.obtrude(document);
             };
             Item.prototype.addName = function () {
-                var newName = new Establishments.Name(null, this);
+                var apiModel = new Establishments.ServerNameApiModel(this.id);
+                if(this.names().length === 0) {
+                    apiModel.isOfficialName = true;
+                }
+                var newName = new Establishments.Name(apiModel, this);
                 this.names.unshift(newName);
                 newName.showEditor();
                 App.Obtruder.obtrude(document);
@@ -81,7 +105,11 @@ var ViewModels;
                 App.Obtruder.obtrude(document);
             };
             Item.prototype.addUrl = function () {
-                var newUrl = new Establishments.Url(null, this);
+                var apiModel = new Establishments.ServerUrlApiModel(this.id);
+                if(this.urls().length === 0) {
+                    apiModel.isOfficialUrl = true;
+                }
+                var newUrl = new Establishments.Url(apiModel, this);
                 this.urls.unshift(newUrl);
                 newUrl.showEditor();
                 App.Obtruder.obtrude(document);

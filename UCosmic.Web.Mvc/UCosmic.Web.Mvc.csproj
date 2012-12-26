@@ -645,6 +645,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
+    <Content Include="Views\Establishments\Form.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -785,10 +786,8 @@
     <Content Include="Views\Establishments\Index.cshtml" />
     <Content Include="Views\Establishments\_SearchAndResults.cshtml" />
     <Content Include="Views\Establishments\_SearchSideBar.cshtml" />
-    <Content Include="Views\Establishments\New.cshtml" />
     <Content Include="Views\Establishments\_FormSideBar.cshtml" />
     <Content Include="Views\Establishments\_FormAndCards.cshtml" />
-    <Content Include="Views\Establishments\Show.cshtml" />
     <Content Include="Views\Errors\NotFound.cshtml" />
     <Content Include="Views\Errors\_Bib.cshtml" />
     <Content Include="Views\Identity\SignIn.cshtml" />

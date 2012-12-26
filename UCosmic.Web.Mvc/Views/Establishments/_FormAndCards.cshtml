@@ -4,8 +4,9 @@
             <section id="names" class="fieldset">
                 <header>
                     <h2>
-                        Name(s)
-                        <a href="#" title="Add a new name" data-bind="visible: !namesSpinner.isVisible() && !editingName(), click: addName">
+                        <span data-bind="visible: id">Name(s)</span>
+                        <span data-bind="visible: id === 0">Official Name</span>
+                        <a href="#" title="Add a new name" data-bind="visible: canAddName, click: addName">
                             <img src="~/styles/icons/plus-24-green.png" alt="Add a new name" />
                         </a>
                         <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" />
@@ -33,7 +34,7 @@
                                 <div class="field" style="margin-top: 0;">
                                     <textarea rows="1" class="no-resize" data-bind="value: text, jqElement: '$textElement', css: { spinning: textValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
                                 </div>
-                                <div class="field">
+                                <div class="field" data-bind="visible: owner.id">
                                     <label data-bind="click: clickOfficialNameCheckbox">
                                         <input type="checkbox" data-bind="checked: isOfficialName, enable: isOfficialNameEnabled" />
                                         Offical Name
@@ -51,7 +52,7 @@
                                         <option>[Loading...]</option>
                                     </select>
                                 </div>
-                                <div>
+                                <div data-bind="visible: owner.id">
                                     <input type="submit" value="Save" data-bind="enable: !saveSpinner.isVisible()" />
                                     <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
                                     &nbsp;
@@ -81,8 +82,9 @@
             <section id="urls" class="fieldset">
                 <header>
                     <h2>
-                        URL(s)
-                        <a href="#" title="Add a new URL" data-bind="visible: !urlsSpinner.isVisible() && !editingUrl(), click: addUrl">
+                        <span data-bind="visible: id">URL(s)</span>
+                        <span data-bind="visible: id === 0">Official URL</span>
+                        <a href="#" title="Add a new URL" data-bind="visible: canAddUrl, click: addUrl">
                             <img src="~/styles/icons/plus-24-green.png" alt="Add a new URL" />
                         </a>
                         <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: urlsSpinner.isVisible" />
@@ -114,10 +116,10 @@
                                         <br />
                                         <span>Enter without protocol. For example, use <strong>www.domain.edu</strong> instead of <strong>http://www.domain.edu</strong>.</span>
                                         <a href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }, visible: valueHref">Test Link</a>
-                                        <span data-bind="visible: !valueHref()" style="color: #999;">Test Link</span>
+                                        @*<span data-bind="visible: !valueHref()" style="color: #999;">Test Link</span>*@
                                     </span>
                                 </div>
-                                <div class="field">
+                                <div class="field" data-bind="visible: owner.id">
                                     <label data-bind="click: clickOfficialUrlCheckbox">
                                         <input type="checkbox" data-bind="checked: isOfficialUrl, enable: isOfficialUrlEnabled" />
                                         Offical URL
@@ -128,7 +130,7 @@
                                         Former / Defunct URL
                                     </label>
                                 </div>
-                                <div>
+                                <div data-bind="visible: owner.id">
                                     <input type="submit" value="Save" data-bind="enable: !saveSpinner.isVisible()" />
                                     <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
                                     &nbsp;

@@ -2,12 +2,13 @@ var ViewModels;
 (function (ViewModels) {
     (function (Establishments) {
         var ServerUrlApiModel = (function () {
-            function ServerUrlApiModel() {
+            function ServerUrlApiModel(ownerId) {
                 this.id = 0;
                 this.ownerId = 0;
                 this.value = '';
                 this.isOfficialUrl = false;
                 this.isFormerUrl = false;
+                this.ownerId = ownerId;
             }
             return ServerUrlApiModel;
         })();
@@ -26,7 +27,7 @@ var ViewModels;
                 if(!vm.isValueValidatableAsync()) {
                     callback(true);
                 } else {
-                    if(!this._isAwaitingResponse) {
+                    if(!this._isAwaitingResponse && vm.value()) {
                         var route = App.Routes.WebApi.EstablishmentUrls.validateValue(vm.ownerId(), vm.id());
                         this._isAwaitingResponse = true;
                         $.post(route, vm.serializeData()).always(function () {
@@ -62,7 +63,9 @@ var ViewModels;
                 this.saveEditorClicked = false;
                 this.owner = owner;
                 if(!js) {
-                    js = new ServerUrlApiModel();
+                    js = new ServerUrlApiModel(this.owner.id);
+                }
+                if(js.id === 0) {
                     js.ownerId = this.owner.id;
                 }
                 this.originalValues = js;
@@ -75,12 +78,16 @@ var ViewModels;
                     return _this.value() !== _this.originalValues.value;
                 });
                 this.value.extend({
-                    required: {
-                        message: 'Establishment URL is required.'
-                    },
                     maxLength: 200,
                     validEstablishmentUrlValue: this
                 });
+                if(this.owner.id) {
+                    this.value.extend({
+                        required: {
+                            message: 'Establishment URL is required.'
+                        }
+                    });
+                }
                 this.value.isValidating.subscribe(function (isValidating) {
                     if(isValidating) {
                         _this.valueValidationSpinner.start();
@@ -105,7 +112,7 @@ var ViewModels;
                 });
                 this.mutationSuccess = function (response) {
                     _this.owner.requestUrls(function () {
-                        _this.owner.editingUrl(undefined);
+                        _this.owner.editingUrl(0);
                         _this.editMode(false);
                         _this.saveSpinner.stop();
                         _this.purgeSpinner.stop();
@@ -193,7 +200,7 @@ var ViewModels;
                 }
             };
             Url.prototype.cancelEditor = function () {
-                this.owner.editingUrl(undefined);
+                this.owner.editingUrl(0);
                 if(this.id()) {
                     ko.mapping.fromJS(this.originalValues, {
                     }, this);

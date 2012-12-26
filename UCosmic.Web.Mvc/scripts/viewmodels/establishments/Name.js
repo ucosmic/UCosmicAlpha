@@ -2,7 +2,7 @@ var ViewModels;
 (function (ViewModels) {
     (function (Establishments) {
         var ServerNameApiModel = (function () {
-            function ServerNameApiModel() {
+            function ServerNameApiModel(ownerId) {
                 this.id = 0;
                 this.ownerId = 0;
                 this.text = '';
@@ -10,6 +10,7 @@ var ViewModels;
                 this.isFormerName = false;
                 this.languageCode = '';
                 this.languageName = '';
+                this.ownerId = ownerId;
             }
             return ServerNameApiModel;
         })();
@@ -67,7 +68,9 @@ var ViewModels;
                 this.saveEditorClicked = false;
                 this.owner = owner;
                 if(!js) {
-                    js = new ServerNameApiModel();
+                    js = new ServerNameApiModel(this.owner.id);
+                }
+                if(js.id === 0) {
                     js.ownerId = this.owner.id;
                 }
                 this.originalValues = js;
@@ -107,7 +110,7 @@ var ViewModels;
                 });
                 this.mutationSuccess = function (response) {
                     _this.owner.requestNames(function () {
-                        _this.owner.editingName(undefined);
+                        _this.owner.editingName(0);
                         _this.editMode(false);
                         _this.saveSpinner.stop();
                         _this.purgeSpinner.stop();
@@ -191,7 +194,7 @@ var ViewModels;
                 }
             };
             Name.prototype.cancelEditor = function () {
-                this.owner.editingName(undefined);
+                this.owner.editingName(0);
                 if(this.id()) {
                     ko.mapping.fromJS(this.originalValues, {
                     }, this);

@@ -21,7 +21,8 @@ module ViewModels.Establishments {
         languageCode: string = '';
         languageName: string = '';
 
-        constructor () {
+        constructor (ownerId: number) {
+            this.ownerId = ownerId;
         }
     }
 
@@ -97,10 +98,8 @@ module ViewModels.Establishments {
             this.owner = owner;
 
             // when adding new name, js is not defined
-            if (!js) {
-                js = new ServerNameApiModel();
-                js.ownerId = this.owner.id;
-            }
+            if (!js) js = new ServerNameApiModel(this.owner.id);
+            if (js.id === 0) js.ownerId = this.owner.id;
 
             // hold onto original values so they can be reset on cancel
             this.originalValues = js;
@@ -147,7 +146,7 @@ module ViewModels.Establishments {
 
             this.mutationSuccess = (response: string): void => {
                 this.owner.requestNames((): void => {
-                    this.owner.editingName(undefined); // tell parent no item is being edited anymore
+                    this.owner.editingName(0); // tell parent no item is being edited anymore
                     this.editMode(false); // hide the form, show the view
                     this.saveSpinner.stop(); // stop save spinner
                     this.purgeSpinner.stop(); // stop purge spinner
@@ -235,7 +234,7 @@ module ViewModels.Establishments {
         }
 
         cancelEditor(): void {
-            this.owner.editingName(undefined); // tell parent no item is being edited anymore
+            this.owner.editingName(0); // tell parent no item is being edited anymore
             if (this.id()) {
                 ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
                 this.editMode(false); // hide the form, show the view

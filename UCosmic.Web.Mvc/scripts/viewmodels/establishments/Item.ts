@@ -46,13 +46,23 @@ module ViewModels.Establishments {
                 }
             };
 
-            //#endregion
-            //#region URLs
+            this.canAddName = ko.computed((): bool => {
+                return !this.namesSpinner.isVisible() && this.editingName() === 0 && this.id !== 0;
+            });
 
             // request names
             ko.computed((): void => {
-                this.requestNames();
+                if (this.id)
+                    this.requestNames();
+
+                else setTimeout(() => {
+                    this.namesSpinner.stop();
+                    this.addName();
+                }, 0);
             }).extend({ throttle: 1 });
+
+            //#endregion
+            //#region URLs
 
             // set up URLs mapping
             this.urlsMapping = {
@@ -61,20 +71,31 @@ module ViewModels.Establishments {
                 }
             };
 
+            this.canAddUrl = ko.computed((): bool => {
+                return !this.urlsSpinner.isVisible() && this.editingUrl() === 0 && this.id !== 0;
+            });
+
             // request URLs
             ko.computed((): void => {
-                this.requestUrls();
+                if (this.id)
+                    this.requestUrls();
+
+                else setTimeout(() => {
+                    this.urlsSpinner.stop();
+                    this.addUrl();
+                }, 0);
             }).extend({ throttle: 1 });
-            
+
             //#endregion
         }
 
         //#region Names
 
-        // observables
+        // observables, computeds, & variables
         languages: KnockoutObservableArray = ko.observableArray(); // select options
         names: KnockoutObservableArray = ko.observableArray();
-        editingName: KnockoutObservableNumber = ko.observable();
+        editingName: KnockoutObservableNumber = ko.observable(0);
+        canAddName: KnockoutComputed;
         namesMapping: any;
 
         // methods
@@ -94,7 +115,10 @@ module ViewModels.Establishments {
         }
 
         addName(): void {
-            var newName = new Name(null, this);
+            var apiModel = new ServerNameApiModel(this.id);
+            if (this.names().length === 0)
+                apiModel.isOfficialName = true;
+            var newName = new Name(apiModel, this);
             this.names.unshift(newName);
             newName.showEditor();
             App.Obtruder.obtrude(document);
@@ -103,9 +127,10 @@ module ViewModels.Establishments {
         //#endregion
         //#region URLs
 
-        // observables
+        // observables, computeds, & variables
         urls: KnockoutObservableArray = ko.observableArray();
-        editingUrl: KnockoutObservableNumber = ko.observable();
+        editingUrl: KnockoutObservableNumber = ko.observable(0);
+        canAddUrl: KnockoutComputed;
         urlsMapping: any;
 
         // methods
@@ -125,7 +150,10 @@ module ViewModels.Establishments {
         }
 
         addUrl(): void {
-            var newUrl = new Url(null, this);
+            var apiModel = new ServerUrlApiModel(this.id);
+            if (this.urls().length === 0)
+                apiModel.isOfficialUrl = true;
+            var newUrl = new Url(apiModel, this);
             this.urls.unshift(newUrl);
             newUrl.showEditor();
             App.Obtruder.obtrude(document);

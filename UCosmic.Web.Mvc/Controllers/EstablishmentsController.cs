@@ -22,7 +22,8 @@ namespace UCosmic.Web.Mvc.Controllers
 
         public virtual ViewResult New()
         {
-            return View();
+            ViewBag.Id = 0;
+            return View(MVC.Establishments.Views.Form);
         }
 
         public virtual ViewResult Create()
@@ -38,7 +39,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 return HttpNotFound();
 
             ViewBag.Id = id;
-            return View();
+            return View(MVC.Establishments.Views.Form);
         }
 
         public virtual ViewResult Edit(int id)

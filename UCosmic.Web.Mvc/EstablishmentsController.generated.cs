@@ -165,17 +165,15 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _FormSideBar = "_FormSideBar";
                 public readonly string _SearchAndResults = "_SearchAndResults";
                 public readonly string _SearchSideBar = "_SearchSideBar";
+                public readonly string Form = "Form";
                 public readonly string Index = "Index";
-                public readonly string New = "New";
-                public readonly string Show = "Show";
             }
             public readonly string _FormAndCards = "~/Views/Establishments/_FormAndCards.cshtml";
             public readonly string _FormSideBar = "~/Views/Establishments/_FormSideBar.cshtml";
             public readonly string _SearchAndResults = "~/Views/Establishments/_SearchAndResults.cshtml";
             public readonly string _SearchSideBar = "~/Views/Establishments/_SearchSideBar.cshtml";
+            public readonly string Form = "~/Views/Establishments/Form.cshtml";
             public readonly string Index = "~/Views/Establishments/Index.cshtml";
-            public readonly string New = "~/Views/Establishments/New.cshtml";
-            public readonly string Show = "~/Views/Establishments/Show.cshtml";
         }
     }
 

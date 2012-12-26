@@ -19,7 +19,8 @@ module ViewModels.Establishments {
         isOfficialUrl: bool = false;
         isFormerUrl: bool = false;
 
-        constructor () {
+        constructor (ownerId: number) {
+            this.ownerId = ownerId;
         }
     }
 
@@ -32,7 +33,7 @@ module ViewModels.Establishments {
             if (!vm.isValueValidatableAsync()) {
                 callback(true);
             }
-            else if (!this._isAwaitingResponse) {
+            else if (!this._isAwaitingResponse && vm.value()) {
                 var route = App.Routes.WebApi.EstablishmentUrls
                     .validateValue(vm.ownerId(), vm.id());
                 this._isAwaitingResponse = true;
@@ -92,10 +93,8 @@ module ViewModels.Establishments {
             this.owner = owner;
 
             // when adding new URL, js is not defined
-            if (!js) {
-                js = new ServerUrlApiModel();
-                js.ownerId = this.owner.id;
-            }
+            if (!js) js = new ServerUrlApiModel(this.owner.id);
+            if (js.id === 0) js.ownerId = this.owner.id;
 
             // hold onto original values so they can be reset on cancel
             this.originalValues = js;
@@ -113,12 +112,16 @@ module ViewModels.Establishments {
                 return this.value() !== this.originalValues.value;
             });
             this.value.extend({
-                required: {
-                    message: 'Establishment URL is required.'
-                },
                 maxLength: 200,
                 validEstablishmentUrlValue: this
             });
+            if (this.owner.id) {
+                this.value.extend({
+                    required: {
+                        message: 'Establishment URL is required.'
+                    },
+                });
+            }
             this.value.isValidating.subscribe((isValidating: bool): void => {
                 if (isValidating) {
                     this.valueValidationSpinner.start();
@@ -143,7 +146,7 @@ module ViewModels.Establishments {
 
             this.mutationSuccess = (response: string): void => {
                 this.owner.requestUrls((): void => {
-                    this.owner.editingUrl(undefined); // tell parent no item is being edited anymore
+                    this.owner.editingUrl(0); // tell parent no item is being edited anymore
                     this.editMode(false); // hide the form, show the view
                     this.saveSpinner.stop(); // stop save spinner
                     this.purgeSpinner.stop(); // stop purge spinner
@@ -236,7 +239,7 @@ module ViewModels.Establishments {
         }
 
         cancelEditor(): void {
-            this.owner.editingUrl(undefined); // tell parent no item is being edited anymore
+            this.owner.editingUrl(0); // tell parent no item is being edited anymore
             if (this.id()) {
                 ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
                 this.editMode(false); // hide the form, show the view
