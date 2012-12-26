@@ -646,6 +646,8 @@
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Establishments\Form.cshtml" />
+    <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
+    <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
