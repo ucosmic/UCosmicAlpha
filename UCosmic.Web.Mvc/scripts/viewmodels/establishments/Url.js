@@ -56,9 +56,9 @@ var ViewModels;
                 this.editMode = ko.observable();
                 this.$valueElement = undefined;
                 this.$confirmPurgeDialog = undefined;
-                this.saveSpinner = new ViewModels.Spinner(0);
-                this.purgeSpinner = new ViewModels.Spinner(0);
-                this.valueValidationSpinner = new ViewModels.Spinner(0);
+                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                this.valueValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.saveEditorClicked = false;
                 this.$parent = $parent;
                 if(!js) {

@@ -5,10 +5,10 @@
                 <header>
                     <h2>
                         Name(s)
-                        <a href="#" title="Add a new name" data-bind="visible: !isSpinningNames() && !editingName(), click: addName">
+                        <a href="#" title="Add a new name" data-bind="visible: !namesSpinner.isVisible() && !editingName(), click: addName">
                             <img src="~/styles/icons/plus-24-green.png" alt="Add a new name" />
                         </a>
-                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningNames" />
+                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" />
                     </h2>
                 </header>
                 <ul class="data-items" data-bind="foreach: names">
@@ -82,10 +82,10 @@
                 <header>
                     <h2>
                         URL(s)
-                        <a href="#" title="Add a new URL" data-bind="visible: !isSpinningUrls() && !editingUrl(), click: addUrl">
+                        <a href="#" title="Add a new URL" data-bind="visible: !urlsSpinner.isVisible() && !editingUrl(), click: addUrl">
                             <img src="~/styles/icons/plus-24-green.png" alt="Add a new URL" />
                         </a>
-                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: isSpinningUrls" />
+                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: urlsSpinner.isVisible" />
                     </h2>
                 </header>
                 <ul class="data-items" data-bind="foreach: urls">

@@ -61,9 +61,9 @@ var ViewModels;
                 this.$textElement = undefined;
                 this.$languagesElement = undefined;
                 this.$confirmPurgeDialog = undefined;
-                this.saveSpinner = new ViewModels.Spinner(0);
-                this.purgeSpinner = new ViewModels.Spinner(0);
-                this.textValidationSpinner = new ViewModels.Spinner(0);
+                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                this.textValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.saveEditorClicked = false;
                 this.$parent = $parent;
                 if(!js) {

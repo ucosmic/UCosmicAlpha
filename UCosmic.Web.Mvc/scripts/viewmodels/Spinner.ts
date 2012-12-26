@@ -1,9 +1,25 @@
 /// <reference path="../ko/knockout-2.2.d.ts" />
 
 module ViewModels {
+
+    export interface ISpinnerOptions {
+        delay?: number;
+        isVisible?: bool;
+    }
+
+    export class SpinnerOptions implements ISpinnerOptions {
+        delay: number;
+        isVisible: bool;
+
+        constructor (delay?: number = 0, isVisible: bool = false) {
+            this.delay = delay;
+            this.isVisible = isVisible;
+        }
+    }
+
     export class Spinner {
 
-        private delay: number = 400;
+        private delay: number;
 
         // this offers a way to short circuit the spinner when its activity time is 
         // greater than zero but less than the delay
@@ -30,8 +46,10 @@ module ViewModels {
             this.isActivated(false);
         }
 
-        constructor (delay?: number = 400) {
-            this.delay = delay;
+        constructor (options?: ISpinnerOptions) {
+            if (!options) options = new SpinnerOptions();
+            this.delay = options.delay;
+            this.isVisible(options.isVisible);
         }
 
     }

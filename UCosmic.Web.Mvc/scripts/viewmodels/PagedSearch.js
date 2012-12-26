@@ -12,7 +12,7 @@ var ViewModels;
             this.items = ko.observableArray();
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
-            this.spinner = new ViewModels.Spinner();
+            this.spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400, true));
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });

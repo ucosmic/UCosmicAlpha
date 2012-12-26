@@ -441,6 +441,13 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\countries\ServerApiModel.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\languages\ServerApiModel.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\languages\ServerApiModel.min.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\countries\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
@@ -448,6 +455,13 @@
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Name.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\Item.ts" />
+    <Content Include="scripts\viewmodels\establishments\Item.js">
+      <DependentUpon>Item.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Item.min.js">
+      <DependentUpon>Item.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
     </Content>
@@ -480,9 +494,9 @@
     <Content Include="scripts\viewmodels\FlasherViewModel.min.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\establishments\EstablishmentNameViewModel.js" />
-    <Content Include="scripts\viewmodels\establishments\EstablishmentUrlViewModel.js" />
-    <Content Include="scripts\viewmodels\establishments\EstablishmentItemViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\EstablishmentNameViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\EstablishmentUrlViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\EstablishmentItemViewModel.js" />
     <Content Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
     <None Include="startup\disableTimeout.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

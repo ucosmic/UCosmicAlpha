@@ -1,12 +1,24 @@
 var ViewModels;
 (function (ViewModels) {
+    var SpinnerOptions = (function () {
+        function SpinnerOptions(delay, isVisible) {
+            if (typeof delay === "undefined") { delay = 0; }
+            if (typeof isVisible === "undefined") { isVisible = false; }
+            this.delay = delay;
+            this.isVisible = isVisible;
+        }
+        return SpinnerOptions;
+    })();
+    ViewModels.SpinnerOptions = SpinnerOptions;    
     var Spinner = (function () {
-        function Spinner(delay) {
-            if (typeof delay === "undefined") { delay = 400; }
-            this.delay = 400;
+        function Spinner(options) {
             this.isActivated = ko.observable(true);
             this.isVisible = ko.observable(false);
-            this.delay = delay;
+            if(!options) {
+                options = new SpinnerOptions();
+            }
+            this.delay = options.delay;
+            this.isVisible(options.isVisible);
         }
         Spinner.prototype.start = function () {
             var _this = this;

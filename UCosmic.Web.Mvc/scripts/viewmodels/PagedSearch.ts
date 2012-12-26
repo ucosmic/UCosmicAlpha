@@ -51,7 +51,7 @@ module ViewModels {
         throttledKeyword: KnockoutComputed;
 
         // spinner component
-        spinner: Spinner = new ViewModels.Spinner();
+        spinner: Spinner = new Spinner(new SpinnerOptions(400, true));
 
         constructor () {
 
