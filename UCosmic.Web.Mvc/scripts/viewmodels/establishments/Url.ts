@@ -66,7 +66,7 @@ module ViewModels.Establishments {
         // other observables
         editMode: KnockoutObservableBool = ko.observable();
         $valueElement: JQuery = undefined; // bind to this so we can focus it on actions
-        confirmPurgeDialog: Element = undefined;
+        $confirmPurgeDialog: JQuery = undefined;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
 
@@ -265,7 +265,7 @@ module ViewModels.Establishments {
             }
             this.purgeSpinner.start();
             var shouldRemainSpinning = false;
-            $(this.confirmPurgeDialog).dialog({
+            this.$confirmPurgeDialog.dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
                 resizable: false,
@@ -278,7 +278,7 @@ module ViewModels.Establishments {
                         text: 'Yes, confirm delete',
                         click: (): void => {
                             shouldRemainSpinning = true;
-                            $(this.confirmPurgeDialog).dialog('close');
+                            this.$confirmPurgeDialog.dialog('close');
                             $.ajax({ // submit ajax DELETE request
                                 url: App.Routes.WebApi.EstablishmentUrls.del(this.$parent.id, this.id()),
                                 type: 'DELETE'
@@ -290,7 +290,7 @@ module ViewModels.Establishments {
                     {
                         text: 'No, cancel delete',
                         click: (): void => {
-                            $(this.confirmPurgeDialog).dialog('close');
+                            this.$confirmPurgeDialog.dialog('close');
                             this.purgeSpinner.stop();
                         },
                         'data-css-link': true

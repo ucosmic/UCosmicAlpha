@@ -60,7 +60,7 @@ var ViewModels;
                 this.editMode = ko.observable();
                 this.$textElement = undefined;
                 this.$languagesElement = undefined;
-                this.confirmPurgeDialog = undefined;
+                this.$confirmPurgeDialog = undefined;
                 this.saveSpinner = new ViewModels.Spinner(0);
                 this.purgeSpinner = new ViewModels.Spinner(0);
                 this.textValidationSpinner = new ViewModels.Spinner(0);
@@ -224,7 +224,7 @@ var ViewModels;
                 }
                 this.purgeSpinner.start();
                 var shouldRemainSpinning = false;
-                $(this.confirmPurgeDialog).dialog({
+                this.$confirmPurgeDialog.dialog({
                     dialogClass: 'jquery-ui',
                     width: 'auto',
                     resizable: false,
@@ -239,7 +239,7 @@ var ViewModels;
                             text: 'Yes, confirm delete',
                             click: function () {
                                 shouldRemainSpinning = true;
-                                $(_this.confirmPurgeDialog).dialog('close');
+                                _this.$confirmPurgeDialog.dialog('close');
                                 $.ajax({
                                     url: App.Routes.WebApi.EstablishmentNames.del(_this.$parent.id, _this.id()),
                                     type: 'DELETE'
@@ -249,7 +249,7 @@ var ViewModels;
                         {
                             text: 'No, cancel delete',
                             click: function () {
-                                $(_this.confirmPurgeDialog).dialog('close');
+                                _this.$confirmPurgeDialog.dialog('close');
                                 _this.purgeSpinner.stop();
                             },
                             'data-css-link': true

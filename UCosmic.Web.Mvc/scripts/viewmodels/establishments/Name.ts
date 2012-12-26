@@ -72,7 +72,7 @@ module ViewModels.Establishments {
         $textElement: JQuery = undefined; // bind to this so we can focus it on actions
         $languagesElement: JQuery = undefined; // bind to this so we can restore on back button
         selectedLanguageCode: KnockoutObservableString; // shadow to restore after list items are bound
-        confirmPurgeDialog: Element = undefined;
+        $confirmPurgeDialog: JQuery = undefined;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
 
@@ -264,7 +264,7 @@ module ViewModels.Establishments {
             }
             this.purgeSpinner.start();
             var shouldRemainSpinning = false;
-            $(this.confirmPurgeDialog).dialog({
+            this.$confirmPurgeDialog.dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
                 resizable: false,
@@ -277,7 +277,7 @@ module ViewModels.Establishments {
                         text: 'Yes, confirm delete',
                         click: (): void => {
                             shouldRemainSpinning = true;
-                            $(this.confirmPurgeDialog).dialog('close');
+                            this.$confirmPurgeDialog.dialog('close');
                             $.ajax({ // submit ajax DELETE request
                                 url: App.Routes.WebApi.EstablishmentNames.del(this.$parent.id, this.id()),
                                 type: 'DELETE'
@@ -289,7 +289,7 @@ module ViewModels.Establishments {
                     {
                         text: 'No, cancel delete',
                         click: (): void => {
-                            $(this.confirmPurgeDialog).dialog('close');
+                            this.$confirmPurgeDialog.dialog('close');
                             this.purgeSpinner.stop();
                         },
                         'data-css-link': true
