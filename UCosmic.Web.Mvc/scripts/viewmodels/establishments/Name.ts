@@ -24,35 +24,39 @@ module ViewModels.Establishments {
         }
     }
 
-    ko.validation.rules['validEstablishmentNameText'] = {
-        async: true,
-        validator: function (val: string, vm: Name, callback: KnockoutValidationAsyncCallback) {
-            var validation = this;
+    class EstablishmentNameTextValidator implements KnockoutValidationAsyncRuleDefinition {
+        private _ruleName: string = 'validEstablishmentNameText';
+        private isAwaitingResponse: bool = false;
+        async: bool = true;
+        message: string =  'error';
+        validator(val: string, vm: Name, callback: KnockoutValidationAsyncCallback) {
             if (!vm.isTextValidatableAsync()) {
                 callback(true);
             }
-            else if (!validation.isAwaitingResponse) {
+            else if (!this.isAwaitingResponse) {
                 var route = App.Routes.WebApi.EstablishmentNames
                     .validateText(vm.ownerId(), vm.id());
-                validation.isAwaitingResponse = true;
+                this.isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
                 .always((): void => {
-                    validation.isAwaitingResponse = false;
+                    this.isAwaitingResponse = false;
                 })
-                .done(():void => {
+                .done((): void => {
                     callback(true);
                 })
-                .fail((xhr: JQueryXHR):void => {
+                .fail((xhr: JQueryXHR): void => {
                     callback({ isValid: false, message: xhr.responseText });
                 });
             }
-        },
-        message: 'error'
-    };
+        }
+        constructor () {
+            ko.validation.rules[this._ruleName] = this;
+            ko.validation.addExtender(this._ruleName);
+        }
+    }
+    new EstablishmentNameTextValidator();
 
-    ko.validation.registerExtenders();
-
-    export class Name {
+    export class Name implements KnockoutValidationGroup {
 
         // api observables
         id: KnockoutObservableNumber = ko.observable();
@@ -70,7 +74,7 @@ module ViewModels.Establishments {
         selectedLanguageCode: KnockoutObservableString; // shadow to restore after list items are bound
         confirmPurgeDialog: Element = undefined;
         isValid: () => bool;
-        errors: any;
+        errors: KnockoutValidationErrors;
 
         // computeds
         isOfficialNameEnabled: KnockoutComputed;
@@ -161,7 +165,7 @@ module ViewModels.Establishments {
                         resizable: false,
                         modal: true,
                         buttons: {
-                            'Ok': ():void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                            'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
                         }
                     });
                 }

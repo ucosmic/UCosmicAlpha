@@ -14,18 +14,25 @@ var ViewModels;
             return ServerNameApiModel;
         })();
         Establishments.ServerNameApiModel = ServerNameApiModel;        
-        ko.validation.rules['validEstablishmentNameText'] = {
-            async: true,
-            validator: function (val, vm, callback) {
-                var validation = this;
+        var EstablishmentNameTextValidator = (function () {
+            function EstablishmentNameTextValidator() {
+                this._ruleName = 'validEstablishmentNameText';
+                this.isAwaitingResponse = false;
+                this.async = true;
+                this.message = 'error';
+                ko.validation.rules[this._ruleName] = this;
+                ko.validation.addExtender(this._ruleName);
+            }
+            EstablishmentNameTextValidator.prototype.validator = function (val, vm, callback) {
+                var _this = this;
                 if(!vm.isTextValidatableAsync()) {
                     callback(true);
                 } else {
-                    if(!validation.isAwaitingResponse) {
+                    if(!this.isAwaitingResponse) {
                         var route = App.Routes.WebApi.EstablishmentNames.validateText(vm.ownerId(), vm.id());
-                        validation.isAwaitingResponse = true;
+                        this.isAwaitingResponse = true;
                         $.post(route, vm.serializeData()).always(function () {
-                            validation.isAwaitingResponse = false;
+                            _this.isAwaitingResponse = false;
                         }).done(function () {
                             callback(true);
                         }).fail(function (xhr) {
@@ -36,10 +43,10 @@ var ViewModels;
                         });
                     }
                 }
-            },
-            message: 'error'
-        };
-        ko.validation.registerExtenders();
+            };
+            return EstablishmentNameTextValidator;
+        })();        
+        new EstablishmentNameTextValidator();
         var Name = (function () {
             function Name(js, $parent) {
                 var _this = this;
