@@ -7,7 +7,7 @@ var ViewModels;
                 this.namesSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, true));
                 this.urlsSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, true));
                 this.id = 0;
-                this.genericAlertDialog = undefined;
+                this.$genericAlertDialog = undefined;
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable();

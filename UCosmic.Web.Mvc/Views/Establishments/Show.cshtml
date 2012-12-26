@@ -9,17 +9,9 @@
 }
 @section scripts {
 
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.Spinner_js)"></script>
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.languages.ServerApiModel_js)"></script>
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.establishments.Name_js)"></script>
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.establishments.Url_js)"></script>
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.establishments.Item_js)"></script>
-    @*<script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.establishments.EstablishmentNameViewModel_js)"></script>
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.establishments.EstablishmentUrlViewModel_js)"></script>
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.establishments.EstablishmentItemViewModel_js)"></script>*@
+    @Scripts.Render("~/bundles/establishments/item")
 
     <script type="text/javascript">
-        //var establishmentItemViewModel = new EstablishmentItemViewModel(@ViewBag.Id);
         var establishmentItemViewModel = new ViewModels.Establishments.Item(@ViewBag.Id);
         ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
     </script>

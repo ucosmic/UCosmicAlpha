@@ -6,6 +6,7 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../FlasherViewModel.ts" />
 /// <reference path="../Spinner.ts" />
+/// <reference path="Item.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 
 module ViewModels.Establishments {
@@ -88,17 +89,17 @@ module ViewModels.Establishments {
         // private fields
         private saveEditorClicked: bool = false;
         private originalValues: ServerNameApiModel;
-        private $parent: any;
+        private owner: any;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerNameApiModel, $parent: any) {
-            this.$parent = $parent;
+        constructor (js: ServerNameApiModel, owner: Item) {
+            this.owner = owner;
 
             // when adding new name, js is not defined
             if (!js) {
                 js = new ServerNameApiModel();
-                js.ownerId = this.$parent.id;
+                js.ownerId = this.owner.id;
             }
 
             // hold onto original values so they can be reset on cancel
@@ -135,7 +136,7 @@ module ViewModels.Establishments {
 
             // languages
             this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
-            this.$parent.languages.subscribe((): void => { // select correct option after options are loaded
+            this.owner.languages.subscribe((): void => { // select correct option after options are loaded
                 this.selectedLanguageCode(this.languageCode()); // shadow property is bound to dropdown list
             });
 
@@ -145,8 +146,8 @@ module ViewModels.Establishments {
             });
 
             this.mutationSuccess = (response: string): void => {
-                this.$parent.requestNames((): void => {
-                    this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+                this.owner.requestNames((): void => {
+                    this.owner.editingName(undefined); // tell parent no item is being edited anymore
                     this.editMode(false); // hide the form, show the view
                     this.saveSpinner.stop(); // stop save spinner
                     this.purgeSpinner.stop(); // stop purge spinner
@@ -156,16 +157,16 @@ module ViewModels.Establishments {
 
             this.mutationError = (xhr: JQueryXHR): void => {
                 if (xhr.status === 400) { // validation message will be in xhr response text...
-                    $(this.$parent.genericAlertDialog).find('p.content')
+                    this.owner.$genericAlertDialog.find('p.content')
                         .html(xhr.responseText.replace('\n', '<br /><br />'));
-                    $(this.$parent.genericAlertDialog).dialog({
+                    this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
                         width: 'auto',
                         resizable: false,
                         modal: true,
                         buttons: {
-                            'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                            'Ok': (): void => { this.owner.$genericAlertDialog.dialog('close'); }
                         }
                     });
                 }
@@ -178,16 +179,16 @@ module ViewModels.Establishments {
 
         clickOfficialNameCheckbox(): bool { // educate users on how to change the official name
             if (this.originalValues.isOfficialName) { // only when the name is already official in the db
-                $(this.$parent.genericAlertDialog).find('p.content')
+                this.owner.$genericAlertDialog.find('p.content')
                     .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
-                $(this.$parent.genericAlertDialog).dialog({
+                this.owner.$genericAlertDialog.dialog({
                     title: 'Alert Message',
                     dialogClass: 'jquery-ui',
                     width: 'auto',
                     resizable: false,
                     modal: true,
                     buttons: {
-                        'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                        'Ok': (): void => { this.owner.$genericAlertDialog.dialog('close'); }
                     }
                 });
             }
@@ -195,9 +196,9 @@ module ViewModels.Establishments {
         }
 
         showEditor(): void { // click to hide viewer and show editor
-            var editingName = this.$parent.editingName(); // disallow if another name is being edited
+            var editingName = this.owner.editingName(); // disallow if another name is being edited
             if (!editingName) {
-                this.$parent.editingName(this.id() || -1); // tell parent which item is being edited
+                this.owner.editingName(this.id() || -1); // tell parent which item is being edited
                 this.editMode(true); // show the form / hide the viewer
                 this.$textElement.trigger('autosize');
                 this.$textElement.focus(); // focus the text box
@@ -216,15 +217,15 @@ module ViewModels.Establishments {
 
                 if (this.id()) {
                     $.ajax({ // submit ajax PUT request
-                        url: App.Routes.WebApi.EstablishmentNames.put(this.$parent.id, this.id()),
+                        url: App.Routes.WebApi.EstablishmentNames.put(this.owner.id, this.id()),
                         type: 'PUT',
                         data: this.serializeData()
                     })
                     .done(this.mutationSuccess).fail(this.mutationError);
                 }
-                else if (this.$parent.id) {
+                else if (this.owner.id) {
                     $.ajax({ // submit ajax POST request
-                        url: App.Routes.WebApi.EstablishmentNames.post(this.$parent.id),
+                        url: App.Routes.WebApi.EstablishmentNames.post(this.owner.id),
                         type: 'POST',
                         data: this.serializeData()
                     })
@@ -234,30 +235,30 @@ module ViewModels.Establishments {
         }
 
         cancelEditor(): void {
-            this.$parent.editingName(undefined); // tell parent no item is being edited anymore
+            this.owner.editingName(undefined); // tell parent no item is being edited anymore
             if (this.id()) {
                 ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
                 this.editMode(false); // hide the form, show the view
             }
             else {
-                this.$parent.names.shift(); // remove the new empty item
+                this.owner.names.shift(); // remove the new empty item
             }
         }
 
         purge(vm: Name, e: JQueryEventObject): void {
             e.stopPropagation();
-            if (this.$parent.editingName()) return;
+            if (this.owner.editingName()) return;
             if (this.isOfficialName()) {
-                $(this.$parent.genericAlertDialog).find('p.content')
+                this.owner.$genericAlertDialog.find('p.content')
                     .html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
-                $(this.$parent.genericAlertDialog).dialog({
+                this.owner.$genericAlertDialog.dialog({
                     title: 'Alert Message',
                     dialogClass: 'jquery-ui',
                     width: 'auto',
                     resizable: false,
                     modal: true,
                     buttons: {
-                        'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                        'Ok': (): void => { this.owner.$genericAlertDialog.dialog('close'); }
                     }
                 });
                 return;
@@ -279,7 +280,7 @@ module ViewModels.Establishments {
                             shouldRemainSpinning = true;
                             this.$confirmPurgeDialog.dialog('close');
                             $.ajax({ // submit ajax DELETE request
-                                url: App.Routes.WebApi.EstablishmentNames.del(this.$parent.id, this.id()),
+                                url: App.Routes.WebApi.EstablishmentNames.del(this.owner.id, this.id()),
                                 type: 'DELETE'
                             })
                             .done(this.mutationSuccess)

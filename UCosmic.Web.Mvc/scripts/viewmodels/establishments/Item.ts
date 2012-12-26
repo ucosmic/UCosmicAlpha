@@ -19,7 +19,7 @@ module ViewModels.Establishments {
 
         // fields
         id: number = 0;
-        genericAlertDialog: Element = undefined;
+        $genericAlertDialog: JQuery = undefined;
 
         constructor (id?: number) {
 

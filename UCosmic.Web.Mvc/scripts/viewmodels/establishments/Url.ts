@@ -7,6 +7,7 @@
 /// <reference path="../FlasherViewModel.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="ServerApiModel.d.ts" />
+/// <reference path="Item.ts" />
 
 module ViewModels.Establishments {
 
@@ -83,17 +84,17 @@ module ViewModels.Establishments {
         // private fields
         private saveEditorClicked: bool = false;
         private originalValues: ServerUrlApiModel;
-        private $parent: any;
+        private owner: any;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerUrlApiModel, $parent: any) {
-            this.$parent = $parent;
+        constructor (js: ServerUrlApiModel, owner: Item) {
+            this.owner = owner;
 
             // when adding new URL, js is not defined
             if (!js) {
                 js = new ServerUrlApiModel();
-                js.ownerId = this.$parent.id;
+                js.ownerId = this.owner.id;
             }
 
             // hold onto original values so they can be reset on cancel
@@ -141,8 +142,8 @@ module ViewModels.Establishments {
             });
 
             this.mutationSuccess = (response: string): void => {
-                this.$parent.requestUrls((): void => {
-                    this.$parent.editingUrl(undefined); // tell parent no item is being edited anymore
+                this.owner.requestUrls((): void => {
+                    this.owner.editingUrl(undefined); // tell parent no item is being edited anymore
                     this.editMode(false); // hide the form, show the view
                     this.saveSpinner.stop(); // stop save spinner
                     this.purgeSpinner.stop(); // stop purge spinner
@@ -152,16 +153,16 @@ module ViewModels.Establishments {
 
             this.mutationError = (xhr: JQueryXHR): void => {
                 if (xhr.status === 400) { // validation message will be in xhr response text...
-                    $(this.$parent.genericAlertDialog).find('p.content')
+                    this.owner.$genericAlertDialog.find('p.content')
                         .html(xhr.responseText.replace('\n', '<br /><br />'));
-                    $(this.$parent.genericAlertDialog).dialog({
+                    this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
                         width: 'auto',
                         resizable: false,
                         modal: true,
                         buttons: {
-                            'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                            'Ok': (): void => { this.owner.$genericAlertDialog.dialog('close'); }
                         }
                     });
                 }
@@ -179,16 +180,16 @@ module ViewModels.Establishments {
 
         clickOfficialUrlCheckbox(): bool { // educate users on how to change the official URL
             if (this.originalValues.isOfficialUrl) { // only when the URL is already official in the db
-                $(this.$parent.genericAlertDialog).find('p.content')
+                this.owner.$genericAlertDialog.find('p.content')
                     .html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
-                $(this.$parent.genericAlertDialog).dialog({
+                this.owner.$genericAlertDialog.dialog({
                     title: 'Alert Message',
                     dialogClass: 'jquery-ui',
                     width: 'auto',
                     resizable: false,
                     modal: true,
                     buttons: {
-                        'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                        'Ok': (): void => { this.owner.$genericAlertDialog.dialog('close'); }
                     }
                 });
             }
@@ -196,9 +197,9 @@ module ViewModels.Establishments {
         }
 
         showEditor(): void {
-            var editingUrl = this.$parent.editingUrl(); // disallow if another URL is being edited
+            var editingUrl = this.owner.editingUrl(); // disallow if another URL is being edited
             if (!editingUrl) {
-                this.$parent.editingUrl(this.id() || -1); // tell parent which item is being edited
+                this.owner.editingUrl(this.id() || -1); // tell parent which item is being edited
                 this.editMode(true); // show the form / hide the viewer
                 this.$valueElement.trigger('autosize');
                 this.$valueElement.focus(); // focus the text box
@@ -217,15 +218,15 @@ module ViewModels.Establishments {
 
                 if (this.id()) {
                     $.ajax({ // submit ajax PUT request
-                        url: App.Routes.WebApi.EstablishmentUrls.put(this.$parent.id, this.id()),
+                        url: App.Routes.WebApi.EstablishmentUrls.put(this.owner.id, this.id()),
                         type: 'PUT',
                         data: this.serializeData()
                     })
                     .done(this.mutationSuccess).fail(this.mutationError);
                 }
-                else if (this.$parent.id) {
+                else if (this.owner.id) {
                     $.ajax({ // submit ajax POST request
-                        url: App.Routes.WebApi.EstablishmentUrls.post(this.$parent.id),
+                        url: App.Routes.WebApi.EstablishmentUrls.post(this.owner.id),
                         type: 'POST',
                         data: this.serializeData()
                     })
@@ -235,30 +236,30 @@ module ViewModels.Establishments {
         }
 
         cancelEditor(): void {
-            this.$parent.editingUrl(undefined); // tell parent no item is being edited anymore
+            this.owner.editingUrl(undefined); // tell parent no item is being edited anymore
             if (this.id()) {
                 ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
                 this.editMode(false); // hide the form, show the view
             }
             else {
-                this.$parent.urls.shift(); // remove the new empty item
+                this.owner.urls.shift(); // remove the new empty item
             }
         }
 
         purge(vm: Url, e: JQueryEventObject): void {
             e.stopPropagation();
-            if (this.$parent.editingUrl()) return;
+            if (this.owner.editingUrl()) return;
             if (this.isOfficialUrl()) {
-                $(this.$parent.genericAlertDialog).find('p.content')
+                this.owner.$genericAlertDialog.find('p.content')
                     .html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
-                $(this.$parent.genericAlertDialog).dialog({
+                this.owner.$genericAlertDialog.dialog({
                     title: 'Alert Message',
                     dialogClass: 'jquery-ui',
                     width: 'auto',
                     resizable: false,
                     modal: true,
                     buttons: {
-                        'Ok': (): void => { $(this.$parent.genericAlertDialog).dialog('close'); }
+                        'Ok': (): void => { this.owner.$genericAlertDialog.dialog('close'); }
                     }
                 });
                 return;
@@ -280,7 +281,7 @@ module ViewModels.Establishments {
                             shouldRemainSpinning = true;
                             this.$confirmPurgeDialog.dialog('close');
                             $.ajax({ // submit ajax DELETE request
-                                url: App.Routes.WebApi.EstablishmentUrls.del(this.$parent.id, this.id()),
+                                url: App.Routes.WebApi.EstablishmentUrls.del(this.owner.id, this.id()),
                                 type: 'DELETE'
                             })
                             .done(this.mutationSuccess)

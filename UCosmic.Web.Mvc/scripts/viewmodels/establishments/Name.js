@@ -48,7 +48,7 @@ var ViewModels;
         })();        
         new EstablishmentNameTextValidator();
         var Name = (function () {
-            function Name(js, $parent) {
+            function Name(js, owner) {
                 var _this = this;
                 this.id = ko.observable();
                 this.ownerId = ko.observable();
@@ -65,10 +65,10 @@ var ViewModels;
                 this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.textValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.saveEditorClicked = false;
-                this.$parent = $parent;
+                this.owner = owner;
                 if(!js) {
                     js = new ServerNameApiModel();
-                    js.ownerId = this.$parent.id;
+                    js.ownerId = this.owner.id;
                 }
                 this.originalValues = js;
                 ko.mapping.fromJS(js, {
@@ -97,7 +97,7 @@ var ViewModels;
                     }
                 });
                 this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
-                this.$parent.languages.subscribe(function () {
+                this.owner.languages.subscribe(function () {
                     _this.selectedLanguageCode(_this.languageCode());
                 });
                 this.isOfficialName.subscribe(function (newValue) {
@@ -106,8 +106,8 @@ var ViewModels;
                     }
                 });
                 this.mutationSuccess = function (response) {
-                    _this.$parent.requestNames(function () {
-                        _this.$parent.editingName(undefined);
+                    _this.owner.requestNames(function () {
+                        _this.owner.editingName(undefined);
                         _this.editMode(false);
                         _this.saveSpinner.stop();
                         _this.purgeSpinner.stop();
@@ -116,8 +116,8 @@ var ViewModels;
                 };
                 this.mutationError = function (xhr) {
                     if(xhr.status === 400) {
-                        $(_this.$parent.genericAlertDialog).find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                        $(_this.$parent.genericAlertDialog).dialog({
+                        _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                        _this.owner.$genericAlertDialog.dialog({
                             title: 'Alert Message',
                             dialogClass: 'jquery-ui',
                             width: 'auto',
@@ -125,7 +125,7 @@ var ViewModels;
                             modal: true,
                             buttons: {
                                 'Ok': function () {
-                                    $(_this.$parent.genericAlertDialog).dialog('close');
+                                    _this.owner.$genericAlertDialog.dialog('close');
                                 }
                             }
                         });
@@ -138,8 +138,8 @@ var ViewModels;
             Name.prototype.clickOfficialNameCheckbox = function () {
                 var _this = this;
                 if(this.originalValues.isOfficialName) {
-                    $(this.$parent.genericAlertDialog).find('p.content').html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
-                    $(this.$parent.genericAlertDialog).dialog({
+                    this.owner.$genericAlertDialog.find('p.content').html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
+                    this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
                         width: 'auto',
@@ -147,7 +147,7 @@ var ViewModels;
                         modal: true,
                         buttons: {
                             'Ok': function () {
-                                $(_this.$parent.genericAlertDialog).dialog('close');
+                                _this.owner.$genericAlertDialog.dialog('close');
                             }
                         }
                     });
@@ -155,9 +155,9 @@ var ViewModels;
                 return true;
             };
             Name.prototype.showEditor = function () {
-                var editingName = this.$parent.editingName();
+                var editingName = this.owner.editingName();
                 if(!editingName) {
-                    this.$parent.editingName(this.id() || -1);
+                    this.owner.editingName(this.id() || -1);
                     this.editMode(true);
                     this.$textElement.trigger('autosize');
                     this.$textElement.focus();
@@ -174,14 +174,14 @@ var ViewModels;
                         this.saveSpinner.start();
                         if(this.id()) {
                             $.ajax({
-                                url: App.Routes.WebApi.EstablishmentNames.put(this.$parent.id, this.id()),
+                                url: App.Routes.WebApi.EstablishmentNames.put(this.owner.id, this.id()),
                                 type: 'PUT',
                                 data: this.serializeData()
                             }).done(this.mutationSuccess).fail(this.mutationError);
                         } else {
-                            if(this.$parent.id) {
+                            if(this.owner.id) {
                                 $.ajax({
-                                    url: App.Routes.WebApi.EstablishmentNames.post(this.$parent.id),
+                                    url: App.Routes.WebApi.EstablishmentNames.post(this.owner.id),
                                     type: 'POST',
                                     data: this.serializeData()
                                 }).done(this.mutationSuccess).fail(this.mutationError);
@@ -191,24 +191,24 @@ var ViewModels;
                 }
             };
             Name.prototype.cancelEditor = function () {
-                this.$parent.editingName(undefined);
+                this.owner.editingName(undefined);
                 if(this.id()) {
                     ko.mapping.fromJS(this.originalValues, {
                     }, this);
                     this.editMode(false);
                 } else {
-                    this.$parent.names.shift();
+                    this.owner.names.shift();
                 }
             };
             Name.prototype.purge = function (vm, e) {
                 var _this = this;
                 e.stopPropagation();
-                if(this.$parent.editingName()) {
+                if(this.owner.editingName()) {
                     return;
                 }
                 if(this.isOfficialName()) {
-                    $(this.$parent.genericAlertDialog).find('p.content').html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
-                    $(this.$parent.genericAlertDialog).dialog({
+                    this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
+                    this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
                         width: 'auto',
@@ -216,7 +216,7 @@ var ViewModels;
                         modal: true,
                         buttons: {
                             'Ok': function () {
-                                $(_this.$parent.genericAlertDialog).dialog('close');
+                                _this.owner.$genericAlertDialog.dialog('close');
                             }
                         }
                     });
@@ -241,7 +241,7 @@ var ViewModels;
                                 shouldRemainSpinning = true;
                                 _this.$confirmPurgeDialog.dialog('close');
                                 $.ajax({
-                                    url: App.Routes.WebApi.EstablishmentNames.del(_this.$parent.id, _this.id()),
+                                    url: App.Routes.WebApi.EstablishmentNames.del(_this.owner.id, _this.id()),
                                     type: 'DELETE'
                                 }).done(_this.mutationSuccess).fail(_this.mutationError);
                             }

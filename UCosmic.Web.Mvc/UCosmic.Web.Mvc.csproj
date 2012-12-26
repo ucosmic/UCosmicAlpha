@@ -442,6 +442,18 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\countries\ServerApiModel.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\establishments\Name.js">
+      <DependentUpon>Name.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Name.min.js">
+      <DependentUpon>Name.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Url.js">
+      <DependentUpon>Url.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Url.min.js">
+      <DependentUpon>Url.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\languages\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
@@ -462,12 +474,6 @@
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\establishments\Name.js">
-      <DependentUpon>Name.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\establishments\Name.min.js">
-      <DependentUpon>Name.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\establishments\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
@@ -482,12 +488,6 @@
     </Content>
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
-    <Content Include="scripts\viewmodels\establishments\Url.js">
-      <DependentUpon>Url.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\establishments\Url.min.js">
-      <DependentUpon>Url.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\FlasherViewModel.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>

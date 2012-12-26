@@ -46,7 +46,7 @@ var ViewModels;
         })();        
         new EstablishmentUrlValueValidator();
         var Url = (function () {
-            function Url(js, $parent) {
+            function Url(js, owner) {
                 var _this = this;
                 this.id = ko.observable();
                 this.ownerId = ko.observable();
@@ -60,10 +60,10 @@ var ViewModels;
                 this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.valueValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.saveEditorClicked = false;
-                this.$parent = $parent;
+                this.owner = owner;
                 if(!js) {
                     js = new ServerUrlApiModel();
-                    js.ownerId = this.$parent.id;
+                    js.ownerId = this.owner.id;
                 }
                 this.originalValues = js;
                 ko.mapping.fromJS(js, {
@@ -104,8 +104,8 @@ var ViewModels;
                     return 'http://' + url;
                 });
                 this.mutationSuccess = function (response) {
-                    _this.$parent.requestUrls(function () {
-                        _this.$parent.editingUrl(undefined);
+                    _this.owner.requestUrls(function () {
+                        _this.owner.editingUrl(undefined);
                         _this.editMode(false);
                         _this.saveSpinner.stop();
                         _this.purgeSpinner.stop();
@@ -114,8 +114,8 @@ var ViewModels;
                 };
                 this.mutationError = function (xhr) {
                     if(xhr.status === 400) {
-                        $(_this.$parent.genericAlertDialog).find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                        $(_this.$parent.genericAlertDialog).dialog({
+                        _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                        _this.owner.$genericAlertDialog.dialog({
                             title: 'Alert Message',
                             dialogClass: 'jquery-ui',
                             width: 'auto',
@@ -123,7 +123,7 @@ var ViewModels;
                             modal: true,
                             buttons: {
                                 'Ok': function () {
-                                    $(_this.$parent.genericAlertDialog).dialog('close');
+                                    _this.owner.$genericAlertDialog.dialog('close');
                                 }
                             }
                         });
@@ -140,8 +140,8 @@ var ViewModels;
             Url.prototype.clickOfficialUrlCheckbox = function () {
                 var _this = this;
                 if(this.originalValues.isOfficialUrl) {
-                    $(this.$parent.genericAlertDialog).find('p.content').html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
-                    $(this.$parent.genericAlertDialog).dialog({
+                    this.owner.$genericAlertDialog.find('p.content').html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
+                    this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
                         width: 'auto',
@@ -149,7 +149,7 @@ var ViewModels;
                         modal: true,
                         buttons: {
                             'Ok': function () {
-                                $(_this.$parent.genericAlertDialog).dialog('close');
+                                _this.owner.$genericAlertDialog.dialog('close');
                             }
                         }
                     });
@@ -157,9 +157,9 @@ var ViewModels;
                 return true;
             };
             Url.prototype.showEditor = function () {
-                var editingUrl = this.$parent.editingUrl();
+                var editingUrl = this.owner.editingUrl();
                 if(!editingUrl) {
-                    this.$parent.editingUrl(this.id() || -1);
+                    this.owner.editingUrl(this.id() || -1);
                     this.editMode(true);
                     this.$valueElement.trigger('autosize');
                     this.$valueElement.focus();
@@ -176,14 +176,14 @@ var ViewModels;
                         this.saveSpinner.start();
                         if(this.id()) {
                             $.ajax({
-                                url: App.Routes.WebApi.EstablishmentUrls.put(this.$parent.id, this.id()),
+                                url: App.Routes.WebApi.EstablishmentUrls.put(this.owner.id, this.id()),
                                 type: 'PUT',
                                 data: this.serializeData()
                             }).done(this.mutationSuccess).fail(this.mutationError);
                         } else {
-                            if(this.$parent.id) {
+                            if(this.owner.id) {
                                 $.ajax({
-                                    url: App.Routes.WebApi.EstablishmentUrls.post(this.$parent.id),
+                                    url: App.Routes.WebApi.EstablishmentUrls.post(this.owner.id),
                                     type: 'POST',
                                     data: this.serializeData()
                                 }).done(this.mutationSuccess).fail(this.mutationError);
@@ -193,24 +193,24 @@ var ViewModels;
                 }
             };
             Url.prototype.cancelEditor = function () {
-                this.$parent.editingUrl(undefined);
+                this.owner.editingUrl(undefined);
                 if(this.id()) {
                     ko.mapping.fromJS(this.originalValues, {
                     }, this);
                     this.editMode(false);
                 } else {
-                    this.$parent.urls.shift();
+                    this.owner.urls.shift();
                 }
             };
             Url.prototype.purge = function (vm, e) {
                 var _this = this;
                 e.stopPropagation();
-                if(this.$parent.editingUrl()) {
+                if(this.owner.editingUrl()) {
                     return;
                 }
                 if(this.isOfficialUrl()) {
-                    $(this.$parent.genericAlertDialog).find('p.content').html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
-                    $(this.$parent.genericAlertDialog).dialog({
+                    this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
+                    this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
                         width: 'auto',
@@ -218,7 +218,7 @@ var ViewModels;
                         modal: true,
                         buttons: {
                             'Ok': function () {
-                                $(_this.$parent.genericAlertDialog).dialog('close');
+                                _this.owner.$genericAlertDialog.dialog('close');
                             }
                         }
                     });
@@ -243,7 +243,7 @@ var ViewModels;
                                 shouldRemainSpinning = true;
                                 _this.$confirmPurgeDialog.dialog('close');
                                 $.ajax({
-                                    url: App.Routes.WebApi.EstablishmentUrls.del(_this.$parent.id, _this.id()),
+                                    url: App.Routes.WebApi.EstablishmentUrls.del(_this.owner.id, _this.id()),
                                     type: 'DELETE'
                                 }).done(_this.mutationSuccess).fail(_this.mutationError);
                             }

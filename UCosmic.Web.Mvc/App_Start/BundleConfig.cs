@@ -58,6 +58,14 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/SearchResult.js",
                 "~/scripts/viewmodels/establishments/Search.js"));
 
+            // establishment item form
+            bundles.Add(new ScriptBundle("~/bundles/establishments/item").Include(
+                "~/scripts/viewmodels/Spinner.js",
+                "~/scripts/viewmodels/languages/ServerApiModel.js",
+                "~/scripts/viewmodels/establishments/Name.js",
+                "~/scripts/viewmodels/establishments/Url.js",
+                "~/scripts/viewmodels/establishments/Item.js"));
+
             // bootstrap css bundles
             var tenants = new[]
             {
