@@ -414,7 +414,7 @@
       <DependentUpon>App.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\app\Routes.ts" />
-    <TypeScriptCompile Include="scripts\ko\knockout.binding-handlers.ts" />
+    <None Include="scripts\ko\knockout.binding-handlers.ts" />
     <Content Include="scripts\app\Routes.js">
       <DependentUpon>Routes.ts</DependentUpon>
     </Content>
@@ -428,6 +428,7 @@
     <Content Include="scripts\app\SideSwiper.min.js">
       <DependentUpon>SideSwiper.ts</DependentUpon>
     </Content>
+    <None Include="scripts\google\google.maps.d.ts" />
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
@@ -436,8 +437,8 @@
     </Content>
     <None Include="scripts\lib-ext.d.ts" />
     <None Include="scripts\ko\knockout.validation.d.ts" />
-    <Content Include="scripts\oss\jquery.placeholder.d.ts" />
-    <Content Include="scripts\oss\jquery.autosize.d.ts" />
+    <None Include="scripts\oss\jquery.placeholder.d.ts" />
+    <None Include="scripts\oss\jquery.autosize.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\countries\ServerApiModel.ts" />

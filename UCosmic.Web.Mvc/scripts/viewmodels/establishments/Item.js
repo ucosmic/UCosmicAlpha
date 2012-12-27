@@ -114,6 +114,31 @@ var ViewModels;
                 newUrl.showEditor();
                 App.Obtruder.obtrude(document);
             };
+            Item.prototype.initMap = function (elementId) {
+                var center = new google.maps.LatLng(0, 0);
+                var mapType = google.maps.MapTypeId.ROADMAP;
+                var mapOptions = {
+                    center: center,
+                    zoom: 1,
+                    mapTypeId: mapType
+                };
+                this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
+                var self = this;
+                google.maps.event.addListenerOnce(this.map, 'idle', function () {
+                    var mapControls = function (owner) {
+                        this.owner = owner;
+                        this.map = owner.map;
+                        this.init();
+                    };
+                    mapControls.prototype = new google.maps.OverlayView();
+                    mapControls.prototype.draw = function () {
+                    };
+                    mapControls.prototype.init = function () {
+                        this.map.controls[google.maps.ControlPosition['TOP_LEFT']].push(document.getElementById('map_tools'));
+                    };
+                    self.mapTools = new mapControls(self);
+                });
+            };
             return Item;
         })();
         Establishments.Item = Item;        

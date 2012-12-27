@@ -4,7 +4,7 @@
     <Position X="12.314" Y="4.878" Height="0.291" Width="1.7" />
   </Comment>
   <Comment CommentText="Place Root">
-    <Position X="11.768" Y="10.026" Height="0.302" Width="1.835" />
+    <Position X="11.706" Y="7.599" Height="0.302" Width="1.835" />
   </Comment>
   <Class Name="UCosmic.Domain.Establishments.Establishment">
     <Position X="4.5" Y="4.75" Width="2.5" />
@@ -12,31 +12,23 @@
       <Method Name="Establishment" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
     </Members>
-    <AssociationLine Name="Children" Type="UCosmic.Domain.Establishments.Establishment" ManuallyRouted="true">
-      <Path>
-        <Point X="5.387" Y="8.165" />
-        <Point X="5.387" Y="8.491" />
-        <Point X="6.131" Y="8.491" />
-        <Point X="6.131" Y="8.165" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>IAAAgAAAAQAAYEAEJEIEQYQQAAAAAACAAYAAAAEAgAA=</HashCode>
+      <HashCode>IAAAgAAAAQAAYEAEJEIEQYQQAAAAAACAAYAABAEAgAA=</HashCode>
       <FileName>Domain\Establishments\Entities\Establishment.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Parent" />
-      <Property Name="Type" />
       <Property Name="Location" />
       <Property Name="SamlSignOn" />
+      <Property Name="Type" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Names" />
+      <Property Name="Urls" />
       <Property Name="Ancestors" />
       <Property Name="Children" />
       <Property Name="Offspring" />
       <Property Name="EmailDomains" />
-      <Property Name="Urls" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="UCosmic.Domain.Establishments.EstablishmentName">
@@ -97,10 +89,6 @@
   </Class>
   <Class Name="UCosmic.Domain.Languages.Language" Collapsed="true">
     <Position X="12.25" Y="5.25" Width="2.5" />
-    <Members>
-      <Method Name="Language" Hidden="true" />
-      <Method Name="ToString" Hidden="true" />
-    </Members>
     <TypeIdentifier>
       <HashCode>AgAChAAAAAAAAQQEAEAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>Domain\Languages\Entities\Language.cs</FileName>
@@ -129,8 +117,8 @@
       <FileName>Domain\Establishments\Entities\EstablishmentCategory.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UCosmic.Domain.Places.Place" Collapsed="true">
-    <Position X="11.75" Y="10.5" Width="1.75" />
+  <Class Name="UCosmic.Domain.Places.Place">
+    <Position X="11.75" Y="8" Width="1.75" />
     <Members>
       <Method Name="Place" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
@@ -158,8 +146,8 @@
       <Property Name="ForEstablishment" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="Places" />
       <Property Name="Addresses" />
+      <Property Name="Places" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="UCosmic.Domain.Establishments.EstablishmentAddress">

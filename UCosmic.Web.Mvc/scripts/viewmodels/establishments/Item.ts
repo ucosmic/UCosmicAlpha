@@ -1,6 +1,7 @@
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../google/google.maps.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
@@ -87,6 +88,10 @@ module ViewModels.Establishments {
             }).extend({ throttle: 1 });
 
             //#endregion
+            //#region Location
+
+
+            //#endregion
         }
 
         //#region Names
@@ -157,6 +162,39 @@ module ViewModels.Establishments {
             this.urls.unshift(newUrl);
             newUrl.showEditor();
             App.Obtruder.obtrude(document);
+        }
+
+        //#endregion
+        //#region Location
+
+        map: google.maps.Map;
+        mapTools: any;
+
+        initMap(elementId: string): void {
+            var center = new google.maps.LatLng(0, 0);
+            var mapType = google.maps.MapTypeId.ROADMAP;
+            var mapOptions: google.maps.MapOptions = {
+                center: center,
+                zoom: 1,
+                mapTypeId: mapType
+            };
+            this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
+
+            var self = this;
+            google.maps.event.addListenerOnce(this.map, 'idle', function() {
+                var mapControls = function (owner) {
+                    this.owner = owner;
+                    this.map = owner.map;
+                    this.init();
+                }
+                mapControls.prototype = new google.maps.OverlayView();
+                mapControls.prototype.draw = function () { };
+                mapControls.prototype.init = function () {
+                    this.map.controls[google.maps.ControlPosition['TOP_LEFT']].push(document.getElementById('map_tools'));
+                };
+
+                self.mapTools = new mapControls(self);
+            });
         }
 
         //#endregion
