@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Web.Http;
+using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
@@ -22,8 +23,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             //System.Threading.Thread.Sleep(2000);
             var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
-            var results = _queryProcessor.Execute(query);
-            var model = Mapper.Map<PageOfEstablishmentApiModel>(results);
+            var views = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PageOfEstablishmentApiModel>(views);
+            return model;
+        }
+
+        [GET("{establishmentId}")]
+        public EstablishmentApiModel Get(int establishmentId)
+        {
+            var view = _queryProcessor.Execute(new EstablishmentViewById(establishmentId));
+            if (view == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<EstablishmentApiModel>(view);
             return model;
         }
     }

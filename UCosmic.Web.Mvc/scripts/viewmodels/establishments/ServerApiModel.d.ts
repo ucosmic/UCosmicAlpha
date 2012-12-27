@@ -1,3 +1,5 @@
+/// <reference path="../places/ServerApiModel.d.ts" />
+
 module ViewModels.Establishments {
 
     export interface IServerApiModel {
@@ -30,5 +32,10 @@ module ViewModels.Establishments {
         value: string;
         isOfficialUrl: bool;
         isFormerUrl: bool;
+    }
+
+    export interface IServerLocationApiModel {
+        center: Places.IServerPointModel;
+        box: Places.IServerBoxModel;
     }
 }

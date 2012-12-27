@@ -49,6 +49,13 @@ module App.Routes {
                 return makeUrl('establishments');
             }
         }
+        export class EstablishmentLocations {
+
+            static get(establishmentId: number): string {
+                var url = 'establishments/' + establishmentId + '/location';
+                return makeUrl(url);
+            }
+        }
         export class EstablishmentNames {
 
             static get(establishmentId: number, establishmentNameId?: number): string {

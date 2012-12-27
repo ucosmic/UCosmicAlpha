@@ -124,8 +124,15 @@ var ViewModels;
                     mapTypeId: mapType
                 };
                 this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
-                google.maps.event.addListenerOnce(this.map, 'idle', function () {
-                    _this.mapTools = new App.GoogleMaps.ToolsOverlay(_this.map);
+                var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
+                $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id)).done(function (response) {
+                    toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);
+                }).fail(function () {
+                    toolsOptions.markerLatLng = undefined;
+                }).always(function () {
+                    google.maps.event.addListenerOnce(_this.map, 'idle', function () {
+                        _this.mapTools = new App.GoogleMaps.ToolsOverlay(_this.map, toolsOptions);
+                    });
                 });
             };
             return Item;

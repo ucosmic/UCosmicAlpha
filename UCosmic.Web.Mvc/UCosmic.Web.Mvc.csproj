@@ -265,6 +265,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\EstablishmentLocationsController.cs" />
     <Compile Include="ApiControllers\EstablishmentUrlsController.cs" />
     <Compile Include="ApiControllers\IdentityController.cs" />
     <Compile Include="ApiControllers\LanguagesController.cs" />
@@ -313,12 +314,15 @@
     <Compile Include="IdentityController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EstablishmentLocationApiModel.cs" />
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
     <Compile Include="Models\EstablishmentApiModel.cs" />
     <Compile Include="Models\EstablishmentNameApiModel.cs" />
     <Compile Include="Models\EstablishmentSearchInputModel.cs" />
+    <Compile Include="Models\MapBoxModel.cs" />
+    <Compile Include="Models\MapPointModel.cs" />
     <Compile Include="Models\PageOf.cs" />
     <Compile Include="Models\SignInApiModel.cs" />
     <Compile Include="Models\SignInForm.cs" />
@@ -502,6 +506,7 @@
     <Content Include="scripts\viewmodels\FlasherViewModel.min.js">
       <DependentUpon>FlasherViewModel.ts</DependentUpon>
     </Content>
+    <None Include="scripts\viewmodels\places\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\_deprecated\EstablishmentNameViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\EstablishmentUrlViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\EstablishmentItemViewModel.js" />

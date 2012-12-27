@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-
-namespace UCosmic.Domain.People
+﻿namespace UCosmic.Domain.People
 {
     public static class ValidatePerson
     {

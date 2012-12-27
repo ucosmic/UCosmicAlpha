@@ -181,9 +181,21 @@ module ViewModels.Establishments {
             };
             this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
 
-            google.maps.event.addListenerOnce(this.map, 'idle', () => {
-                this.mapTools = new App.GoogleMaps.ToolsOverlay(this.map);
-            });
+            var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
+            $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id))
+                .done((response: IServerLocationApiModel): void => {
+                    toolsOptions.markerLatLng = new google.maps.LatLng(
+                        response.center.latitude, response.center.longitude);
+                })
+                .fail(() => {
+                    toolsOptions.markerLatLng = undefined;
+                })
+                .always(() => {
+                    google.maps.event.addListenerOnce(this.map, 'idle', () => {
+                        this.mapTools = new App.GoogleMaps.ToolsOverlay(this.map, toolsOptions);
+                    });
+                });
+
         }
 
         //#endregion

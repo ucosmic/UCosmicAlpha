@@ -53,6 +53,15 @@ var App;
                 return Establishments;
             })();
             WebApi.Establishments = Establishments;            
+            var EstablishmentLocations = (function () {
+                function EstablishmentLocations() { }
+                EstablishmentLocations.get = function get(establishmentId) {
+                    var url = 'establishments/' + establishmentId + '/location';
+                    return makeUrl(url);
+                }
+                return EstablishmentLocations;
+            })();
+            WebApi.EstablishmentLocations = EstablishmentLocations;            
             var EstablishmentNames = (function () {
                 function EstablishmentNames() { }
                 EstablishmentNames.get = function get(establishmentId, establishmentNameId) {
