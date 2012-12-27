@@ -429,6 +429,13 @@
       <DependentUpon>SideSwiper.ts</DependentUpon>
     </Content>
     <None Include="scripts\google\google.maps.d.ts" />
+    <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
+    <Content Include="scripts\google\ToolsOverlay.js">
+      <DependentUpon>ToolsOverlay.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\google\ToolsOverlay.min.js">
+      <DependentUpon>ToolsOverlay.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
@@ -560,6 +567,8 @@
     <Content Include="styles\icons\closer-24-light.png" />
     <Content Include="styles\icons\closer-24-red-disc.png" />
     <Content Include="styles\icons\closer-24-red.png" />
+    <Content Include="styles\icons\maps\tools-marker-pushed.png" />
+    <Content Include="styles\icons\maps\tools-marker-ready.png" />
     <Content Include="styles\icons\minus-20-red.png" />
     <Content Include="styles\icons\minus-24-red.png" />
     <Content Include="styles\icons\plus-16-green-disc.png" />

@@ -2,6 +2,7 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../google/google.maps.d.ts" />
+/// <reference path="../../google/ToolsOverlay.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
@@ -168,7 +169,7 @@ module ViewModels.Establishments {
         //#region Location
 
         map: google.maps.Map;
-        mapTools: any;
+        mapTools: App.GoogleMaps.ToolsOverlay;
 
         initMap(elementId: string): void {
             var center = new google.maps.LatLng(0, 0);
@@ -180,20 +181,8 @@ module ViewModels.Establishments {
             };
             this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
 
-            var self = this;
-            google.maps.event.addListenerOnce(this.map, 'idle', function() {
-                var mapControls = function (owner) {
-                    this.owner = owner;
-                    this.map = owner.map;
-                    this.init();
-                }
-                mapControls.prototype = new google.maps.OverlayView();
-                mapControls.prototype.draw = function () { };
-                mapControls.prototype.init = function () {
-                    this.map.controls[google.maps.ControlPosition['TOP_LEFT']].push(document.getElementById('map_tools'));
-                };
-
-                self.mapTools = new mapControls(self);
+            google.maps.event.addListenerOnce(this.map, 'idle', () => {
+                this.mapTools = new App.GoogleMaps.ToolsOverlay(this.map);
             });
         }
 

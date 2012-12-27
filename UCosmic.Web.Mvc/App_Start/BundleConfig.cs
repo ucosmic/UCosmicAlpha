@@ -60,6 +60,7 @@ namespace UCosmic.Web.Mvc
 
             // establishment item form
             bundles.Add(new ScriptBundle("~/bundles/establishments/item").Include(
+                "~/scripts/google/ToolsOverlay.js",
                 "~/scripts/viewmodels/Spinner.js",
                 "~/scripts/viewmodels/languages/ServerApiModel.js",
                 "~/scripts/viewmodels/establishments/Name.js",

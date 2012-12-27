@@ -151,6 +151,18 @@ namespace Links
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class google {
+            private const string URLPATH = "~/scripts/google";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string google_maps_d_ts = Url("google.maps.d.ts");
+            public static readonly string ToolsOverlay_ts = Url("ToolsOverlay.ts");
+            public static readonly string ToolsOverlay_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ToolsOverlay.min.js") ? Url("ToolsOverlay.min.js") : Url("ToolsOverlay.js");
+                          
+            public static readonly string ToolsOverlay_min_js = Url("ToolsOverlay.min.js");
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class jquery {
             private const string URLPATH = "~/scripts/jquery";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
