@@ -10,6 +10,7 @@ var App;
             function ToolsOverlayOptions() {
                 this.position = google.maps.ControlPosition.TOP_LEFT;
                 this.elementId = 'map_tools';
+                this.markerLatLng = undefined;
             }
             return ToolsOverlayOptions;
         })();
@@ -24,13 +25,20 @@ var App;
                 this.position = options.position;
                 this.elementId = options.elementId;
                 this.$element = $('#' + this.elementId);
-                this.element = document.getElementById(this.elementId);
+                this.element = this.$element[0];
+                this.markerLatLng = options.markerLatLng;
                 this.init();
             }
             ToolsOverlay.prototype.draw = function () {
             };
             ToolsOverlay.prototype.init = function () {
                 this.map.controls[this.position].push(this.element);
+                if(this.markerLatLng) {
+                    this.$element.find('.marker img.ready-icon').hide();
+                } else {
+                    this.$element.find('.marker img.pushed-icon').hide();
+                }
+                this.$element.show();
             };
             return ToolsOverlay;
         })(google.maps.OverlayView);

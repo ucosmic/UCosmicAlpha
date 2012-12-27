@@ -578,6 +578,9 @@
     <Content Include="styles\icons\spinner-20-blue.gif" />
     <Content Include="styles\icons\user-voice-24-filled.png" />
     <Content Include="styles\reset.css" />
+    <Content Include="styles\sass\sheets\maps.css">
+      <DependentUpon>maps.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\lehigh.edu\banner-logo.png" />
     <Content Include="styles\tenants\lehigh.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
@@ -658,6 +661,7 @@
     <Content Include="Views\Establishments\Form.cshtml" />
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
+    <Content Include="styles\sass\sheets\maps.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

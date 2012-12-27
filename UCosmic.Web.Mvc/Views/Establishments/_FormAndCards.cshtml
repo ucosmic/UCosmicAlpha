@@ -10,10 +10,13 @@
                     </h2>
                 </header>
                 <div>
-                    <div id="map_tools">
-                        <div style="width: 20px; height: 20px; background: red;"></div>
+                    <div id="map_canvas" class="map-canvas-w100-h500"></div>
+                    <div id="map_tools" class="map-tools">
+                        <div class="marker">
+                            <img src="~/styles/icons/maps/tools-marker-ready.png" alt="Add a placemarker" title="Add a placemarker" class="ready-icon" />
+                            <img src="~/styles/icons/maps/tools-marker-pushed.png" alt="Remove placemarker" title="Remove placemarker" class="pushed-icon" />
+                        </div>
                     </div>
-                    <div id="map_canvas" style="width: 100%; height: 500px;"></div>
                 </div>
             </section>
             <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">

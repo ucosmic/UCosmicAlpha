@@ -1,0 +1,15 @@
+@import '../../sass/bootstrap';
+
+.map-canvas-w100-h500 {
+    width: 100%;
+    height: 500px;
+}
+.map-tools {
+    display: none;
+    margin-top: 7px;
+    .marker {
+        img.ready-icon, img.pushed-icon {
+            @include unselectable;
+        }
+    }
+}
