@@ -184,8 +184,9 @@ module ViewModels.Establishments {
             var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
             $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
-                    toolsOptions.markerLatLng = new google.maps.LatLng(
-                        response.center.latitude, response.center.longitude);
+                    if (response.center.hasValue)
+                        toolsOptions.markerLatLng = new google.maps.LatLng(
+                            response.center.latitude, response.center.longitude);
                 })
                 .fail(() => {
                     toolsOptions.markerLatLng = undefined;

@@ -126,7 +126,9 @@ var ViewModels;
                 this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
                 var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
                 $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id)).done(function (response) {
-                    toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);
+                    if(response.center.hasValue) {
+                        toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);
+                    }
                 }).fail(function () {
                     toolsOptions.markerLatLng = undefined;
                 }).always(function () {

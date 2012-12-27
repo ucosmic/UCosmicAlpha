@@ -27,18 +27,71 @@ var App;
                 this.$element = $('#' + this.elementId);
                 this.element = this.$element[0];
                 this.markerLatLng = options.markerLatLng;
+                this.$markerReadyButton = this.$element.find('.marker img.ready-icon');
+                this.$markerPushedButton = this.$element.find('.marker img.pushed-icon');
                 this.init();
             }
             ToolsOverlay.prototype.draw = function () {
             };
             ToolsOverlay.prototype.init = function () {
+                var _this = this;
                 this.map.controls[this.position].push(this.element);
                 if(this.markerLatLng) {
-                    this.$element.find('.marker img.ready-icon').hide();
+                    this.$markerReadyButton.hide();
                 } else {
-                    this.$element.find('.marker img.pushed-icon').hide();
+                    this.$markerPushedButton.hide();
                 }
+                this.$markerReadyButton.on('click', this, function (e) {
+                    _this.createMarker(e);
+                });
+                this.$markerPushedButton.on('click', this, function (e) {
+                    _this.destroyMarker(e);
+                });
                 this.$element.show();
+            };
+            ToolsOverlay.prototype.getCreatedMarkerLatLng = function () {
+                var pointX = this.$element.position().left + (this.$element.outerWidth() / 2);
+                var pointY = this.$element.outerHeight();
+                var point = new google.maps.Point(pointX, pointY);
+                var projection = this.getProjection();
+                return projection.fromContainerPixelToLatLng(point);
+            };
+            ToolsOverlay.prototype.putMarker = function (latLng) {
+            };
+            ToolsOverlay.prototype.createMarker = function (e) {
+                var _this = this;
+                this.$markerReadyButton.hide();
+                this.$markerPushedButton.show();
+                this.map.setOptions({
+                    draggableCursor: 'pointer'
+                });
+                this.marker = new google.maps.Marker({
+                    map: this.map,
+                    position: this.getCreatedMarkerLatLng(),
+                    cursor: 'pointer',
+                    clickable: false,
+                    icon: new google.maps.MarkerImage('/styles/icons/maps/tools-marker-new.png', new google.maps.Size(52, 61), new google.maps.Point(0, 0), new google.maps.Point(10, 10))
+                });
+                this.markerMoveListener = google.maps.event.addListener(this.map, 'mousemove', function (e) {
+                    _this.marker.setPosition(e.latLng);
+                });
+                this.markerDropListener = google.maps.event.addListenerOnce(this.map, 'click', function (e) {
+                    google.maps.event.removeListener(_this.markerMoveListener);
+                    _this.map.setOptions({
+                        draggableCursor: undefined
+                    });
+                    _this.marker.setMap(undefined);
+                    var overlayView = new google.maps.OverlayView();
+                    overlayView.setMap(_this.map);
+                    var pixels = overlayView.getProjection().fromLatLngToContainerPixel(e.latLng);
+                    pixels.y += 43;
+                    e.latLng = overlayView.getProjection().fromContainerPixelToLatLng(pixels);
+                    _this.putMarker(e.latLng);
+                    $(_this.map.getDiv()).trigger('marker_created', _this);
+                });
+            };
+            ToolsOverlay.prototype.destroyMarker = function (e) {
+                alert('clicked destroy');
             };
             return ToolsOverlay;
         })(google.maps.OverlayView);

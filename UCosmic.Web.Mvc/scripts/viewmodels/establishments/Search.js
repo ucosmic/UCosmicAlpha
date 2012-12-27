@@ -74,6 +74,9 @@ var ViewModels;
                 this.pageNumber.subscribe(function (newValue) {
                     _this.setLocation();
                 });
+                this.changeLens = function (lens) {
+                    _this.lens(lens.value);
+                };
                 var self = this;
                 this.sammy.before(/\#\/page\/(.*)/, function () {
                     if(self.nextForceDisabled() || self.prevForceDisabled()) {
@@ -136,9 +139,6 @@ var ViewModels;
                 if(this.sammy.getLocation() !== location) {
                     this.sammy.setLocation(location);
                 }
-            };
-            Search.prototype.changeLens = function (lens) {
-                this.lens(lens.value);
             };
             Search.prototype.lockAnimation = function () {
                 this.nextForceDisabled(true);

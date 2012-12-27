@@ -572,6 +572,7 @@
     <Content Include="styles\icons\closer-24-light.png" />
     <Content Include="styles\icons\closer-24-red-disc.png" />
     <Content Include="styles\icons\closer-24-red.png" />
+    <Content Include="styles\icons\maps\tools-marker-new.png" />
     <Content Include="styles\icons\maps\tools-marker-pushed.png" />
     <Content Include="styles\icons\maps\tools-marker-ready.png" />
     <Content Include="styles\icons\minus-20-red.png" />

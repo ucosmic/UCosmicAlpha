@@ -41,6 +41,11 @@ module ViewModels.Establishments {
                 this.setLocation();
             });
 
+            // lensing
+            this.changeLens = (lens: Lens): void => {
+                this.lens(lens.value);
+            };
+
             // sammy
             var self = this;
             this.sammy.before(/\#\/page\/(.*)/, function () {
@@ -123,9 +128,7 @@ module ViewModels.Establishments {
             { text: 'Tree', value: 'tree' }
         ]);
         lens: KnockoutObservableString = ko.observable();
-        changeLens(lens: Lens): void {
-            this.lens(lens.value);
-        }
+        changeLens: (lens: Lens) => void;
 
         // items page
         $itemsPage: JQuery = undefined;
