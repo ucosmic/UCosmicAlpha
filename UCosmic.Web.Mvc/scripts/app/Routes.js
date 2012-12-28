@@ -18,98 +18,103 @@ var App;
                 }
                 return url;
             }
-            var Identity = (function () {
-                function Identity() { }
-                Identity.signIn = function signIn() {
+            (function (Identity) {
+                function signIn() {
                     return makeUrl('sign-in');
                 }
-                Identity.signOut = function signOut() {
+                Identity.signIn = signIn;
+                function signOut() {
                     return makeUrl('sign-out');
                 }
-                return Identity;
-            })();
-            WebApi.Identity = Identity;            
-            var Countries = (function () {
-                function Countries() { }
-                Countries.get = function get() {
-                    return makeUrl('countries');
-                }
-                return Countries;
-            })();
-            WebApi.Countries = Countries;            
-            var Languages = (function () {
-                function Languages() { }
-                Languages.get = function get() {
+                Identity.signOut = signOut;
+            })(WebApi.Identity || (WebApi.Identity = {}));
+            var Identity = WebApi.Identity;
+
+            (function (Languages) {
+                function get() {
                     return makeUrl('languages');
                 }
-                return Languages;
-            })();
-            WebApi.Languages = Languages;            
-            var Establishments = (function () {
-                function Establishments() { }
-                Establishments.get = function get() {
-                    return makeUrl('establishments');
+                Languages.get = get;
+            })(WebApi.Languages || (WebApi.Languages = {}));
+            var Languages = WebApi.Languages;
+
+            (function (Countries) {
+                function get() {
+                    return makeUrl('countries');
                 }
-                return Establishments;
-            })();
-            WebApi.Establishments = Establishments;            
-            var EstablishmentLocations = (function () {
-                function EstablishmentLocations() { }
-                EstablishmentLocations.get = function get(establishmentId) {
-                    var url = 'establishments/' + establishmentId + '/location';
-                    return makeUrl(url);
-                }
-                return EstablishmentLocations;
-            })();
-            WebApi.EstablishmentLocations = EstablishmentLocations;            
-            var EstablishmentNames = (function () {
-                function EstablishmentNames() { }
-                EstablishmentNames.get = function get(establishmentId, establishmentNameId) {
-                    var url = 'establishments/' + establishmentId + '/names';
-                    if(establishmentNameId) {
-                        url += '/' + establishmentNameId;
+                Countries.get = get;
+            })(WebApi.Countries || (WebApi.Countries = {}));
+            var Countries = WebApi.Countries;
+
+            (function (Establishments) {
+                function get(establishmentId) {
+                    var url = 'establishments';
+                    if(establishmentId) {
+                        url += '/' + establishmentId;
                     }
                     return makeUrl(url);
                 }
-                EstablishmentNames.post = function post(establishmentId) {
-                    return EstablishmentNames.get(establishmentId);
-                }
-                EstablishmentNames.put = function put(establishmentId, establishmentNameId) {
-                    return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId);
-                }
-                EstablishmentNames.del = function del(establishmentId, establishmentNameId) {
-                    return EstablishmentNames.put(establishmentId, establishmentNameId);
-                }
-                EstablishmentNames.validateText = function validateText(establishmentId, establishmentNameId) {
-                    return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId + '/validate-text');
-                }
-                return EstablishmentNames;
-            })();
-            WebApi.EstablishmentNames = EstablishmentNames;            
-            var EstablishmentUrls = (function () {
-                function EstablishmentUrls() { }
-                EstablishmentUrls.get = function get(establishmentId, establishmentUrlId) {
-                    var url = 'establishments/' + establishmentId + '/urls';
-                    if(establishmentUrlId) {
-                        url += '/' + establishmentUrlId;
+                Establishments.get = get;
+                var Names = (function () {
+                    function Names() { }
+                    Names.get = function get(establishmentId, establishmentNameId) {
+                        var url = 'establishments/' + establishmentId + '/names';
+                        if(establishmentNameId) {
+                            url += '/' + establishmentNameId;
+                        }
+                        return makeUrl(url);
                     }
-                    return makeUrl(url);
-                }
-                EstablishmentUrls.post = function post(establishmentId) {
-                    return EstablishmentUrls.get(establishmentId);
-                }
-                EstablishmentUrls.put = function put(establishmentId, establishmentUrlId) {
-                    return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId);
-                }
-                EstablishmentUrls.del = function del(establishmentId, establishmentUrlId) {
-                    return EstablishmentUrls.put(establishmentId, establishmentUrlId);
-                }
-                EstablishmentUrls.validateValue = function validateValue(establishmentId, establishmentUrlId) {
-                    return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/validate-value');
-                }
-                return EstablishmentUrls;
-            })();
-            WebApi.EstablishmentUrls = EstablishmentUrls;            
+                    Names.post = function post(establishmentId) {
+                        return Names.get(establishmentId);
+                    }
+                    Names.put = function put(establishmentId, establishmentNameId) {
+                        return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId);
+                    }
+                    Names.del = function del(establishmentId, establishmentNameId) {
+                        return Names.put(establishmentId, establishmentNameId);
+                    }
+                    Names.validateText = function validateText(establishmentId, establishmentNameId) {
+                        return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId + '/validate-text');
+                    }
+                    return Names;
+                })();
+                Establishments.Names = Names;                
+                var Urls = (function () {
+                    function Urls() { }
+                    Urls.get = function get(establishmentId, establishmentUrlId) {
+                        var url = 'establishments/' + establishmentId + '/urls';
+                        if(establishmentUrlId) {
+                            url += '/' + establishmentUrlId;
+                        }
+                        return makeUrl(url);
+                    }
+                    Urls.post = function post(establishmentId) {
+                        return Urls.get(establishmentId);
+                    }
+                    Urls.put = function put(establishmentId, establishmentUrlId) {
+                        return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId);
+                    }
+                    Urls.del = function del(establishmentId, establishmentUrlId) {
+                        return Urls.put(establishmentId, establishmentUrlId);
+                    }
+                    Urls.validateValue = function validateValue(establishmentId, establishmentUrlId) {
+                        return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/validate-value');
+                    }
+                    return Urls;
+                })();
+                Establishments.Urls = Urls;                
+                var Locations = (function () {
+                    function Locations() { }
+                    Locations.get = function get(establishmentId) {
+                        var url = 'establishments/' + establishmentId + '/location';
+                        return makeUrl(url);
+                    }
+                    return Locations;
+                })();
+                Establishments.Locations = Locations;                
+            })(WebApi.Establishments || (WebApi.Establishments = {}));
+            var Establishments = WebApi.Establishments;
+
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
 

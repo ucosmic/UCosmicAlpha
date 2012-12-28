@@ -18,97 +18,104 @@ module App.Routes {
             return url;
         }
 
-        export class Identity {
+        export module Identity {
 
-            static signIn(): string {
+            export function signIn(): string {
                 return makeUrl('sign-in');
             }
 
-            static signOut(): string {
+            export function signOut(): string {
                 return makeUrl('sign-out');
             }
         }
 
-        export class Countries {
+        export module Languages {
 
-            static get(): string {
-                return makeUrl('countries');
-            }
-        }
-
-        export class Languages {
-
-            static get(): string {
+            export function get(): string {
                 return makeUrl('languages');
             }
         }
 
-        export class Establishments {
+        export module Countries {
 
-            static get(): string {
-                return makeUrl('establishments');
+            export function get(): string {
+                return makeUrl('countries');
             }
         }
-        export class EstablishmentLocations {
 
-            static get(establishmentId: number): string {
-                var url = 'establishments/' + establishmentId + '/location';
-                return makeUrl(url);
-            }
-        }
-        export class EstablishmentNames {
+        export module Establishments {
 
-            static get(establishmentId: number, establishmentNameId?: number): string {
-                var url = 'establishments/' + establishmentId + '/names';
-                if (establishmentNameId)
-                    url += '/' + establishmentNameId;
+            export function get(establishmentId?: number): string {
+                var url = 'establishments';
+                if (establishmentId)
+                    url += '/' + establishmentId;
                 return makeUrl(url);
             }
 
-            static post(establishmentId: number): string {
-                return EstablishmentNames.get(establishmentId);
+            export class Names {
+
+                static get(establishmentId: number, establishmentNameId?: number): string {
+                    var url = 'establishments/' + establishmentId + '/names';
+                    if (establishmentNameId)
+                        url += '/' + establishmentNameId;
+                    return makeUrl(url);
+                }
+
+                static post(establishmentId: number): string {
+                    return Names.get(establishmentId);
+                }
+
+                static put(establishmentId: number, establishmentNameId: number): string {
+                    return makeUrl('establishments/' + establishmentId + '/names/'
+                        + establishmentNameId);
+                }
+
+                static del(establishmentId: number, establishmentNameId: number): string {
+                    return Names.put(establishmentId, establishmentNameId);
+                }
+
+                static validateText(establishmentId: number, establishmentNameId: number): string {
+                    return makeUrl('establishments/' + establishmentId + '/names/'
+                        + establishmentNameId + '/validate-text');
+                }
             }
 
-            static put(establishmentId: number, establishmentNameId: number): string {
-                return makeUrl('establishments/' + establishmentId + '/names/'
-                    + establishmentNameId);
+            export class Urls {
+
+                static get(establishmentId: number, establishmentUrlId?: number): string {
+                var url = 'establishments/' + establishmentId + '/urls';
+                if (establishmentUrlId)
+                    url += '/' + establishmentUrlId;
+                return makeUrl(url);
+                }
+
+                static post(establishmentId: number): string {
+                    return Urls.get(establishmentId);
+                }
+
+                static put(establishmentId: number, establishmentUrlId: number): string {
+                    return makeUrl('establishments/' + establishmentId + '/urls/'
+                        + establishmentUrlId);
+                }
+
+                static del(establishmentId: number, establishmentUrlId: number): string {
+                    return Urls.put(establishmentId, establishmentUrlId);
+                }
+
+                static validateValue(establishmentId: number, establishmentUrlId: number): string {
+                    return makeUrl('establishments/' + establishmentId + '/urls/'
+                        + establishmentUrlId + '/validate-value');
+                }
             }
 
-            static del(establishmentId: number, establishmentNameId: number): string {
-                return EstablishmentNames.put(establishmentId, establishmentNameId);
+            export class Locations {
+
+                static get(establishmentId: number): string {
+                    var url = 'establishments/' + establishmentId + '/location';
+                    return makeUrl(url);
+                }
             }
 
-            static validateText(establishmentId: number, establishmentNameId: number): string {
-                return makeUrl('establishments/' + establishmentId + '/names/'
-                    + establishmentNameId + '/validate-text');
-            }
-        }
-        export class EstablishmentUrls {
-
-            static get(establishmentId: number, establishmentUrlId?: number): string {
-            var url = 'establishments/' + establishmentId + '/urls';
-            if (establishmentUrlId)
-                url += '/' + establishmentUrlId;
-            return makeUrl(url);
-            }
-
-            static post(establishmentId: number): string {
-                return EstablishmentUrls.get(establishmentId);
-            }
-
-            static put(establishmentId: number, establishmentUrlId: number): string {
-                return makeUrl('establishments/' + establishmentId + '/urls/'
-                    + establishmentUrlId);
-            }
-
-            static del(establishmentId: number, establishmentUrlId: number): string {
-                return EstablishmentUrls.put(establishmentId, establishmentUrlId);
-            }
-
-            static validateValue(establishmentId: number, establishmentUrlId: number): string {
-                return makeUrl('establishments/' + establishmentId + '/urls/'
-                    + establishmentUrlId + '/validate-value');
-            }
         }
     }
 }

@@ -69,7 +69,7 @@ var ViewModels;
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
                 this.namesSpinner.start();
-                $.get(App.Routes.WebApi.EstablishmentNames.get(this.id)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Names.get(this.id)).done(function (response) {
                     _this.receiveNames(response);
                     if(callback) {
                         callback(response);
@@ -94,7 +94,7 @@ var ViewModels;
             Item.prototype.requestUrls = function (callback) {
                 var _this = this;
                 this.urlsSpinner.start();
-                $.get(App.Routes.WebApi.EstablishmentUrls.get(this.id)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Urls.get(this.id)).done(function (response) {
                     _this.receiveUrls(response);
                     if(callback) {
                         callback(response);
@@ -129,7 +129,7 @@ var ViewModels;
                 var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
                 toolsOptions.markerLatObservable = this.toolsMarkerLat;
                 toolsOptions.markerLngObservable = this.toolsMarkerLng;
-                $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {
                     if(response.center.hasValue) {
                         toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);
                     }

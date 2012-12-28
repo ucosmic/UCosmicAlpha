@@ -30,7 +30,7 @@ var ViewModels;
                     callback(true);
                 } else {
                     if(!this._isAwaitingResponse) {
-                        var route = App.Routes.WebApi.EstablishmentNames.validateText(vm.ownerId(), vm.id());
+                        var route = App.Routes.WebApi.Establishments.Names.validateText(vm.ownerId(), vm.id());
                         this._isAwaitingResponse = true;
                         $.post(route, vm.serializeData()).always(function () {
                             _this._isAwaitingResponse = false;
@@ -177,14 +177,14 @@ var ViewModels;
                         this.saveSpinner.start();
                         if(this.id()) {
                             $.ajax({
-                                url: App.Routes.WebApi.EstablishmentNames.put(this.owner.id, this.id()),
+                                url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
                                 type: 'PUT',
                                 data: this.serializeData()
                             }).done(this.mutationSuccess).fail(this.mutationError);
                         } else {
                             if(this.owner.id) {
                                 $.ajax({
-                                    url: App.Routes.WebApi.EstablishmentNames.post(this.owner.id),
+                                    url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
                                     type: 'POST',
                                     data: this.serializeData()
                                 }).done(this.mutationSuccess).fail(this.mutationError);
@@ -244,7 +244,7 @@ var ViewModels;
                                 shouldRemainSpinning = true;
                                 _this.$confirmPurgeDialog.dialog('close');
                                 $.ajax({
-                                    url: App.Routes.WebApi.EstablishmentNames.del(_this.owner.id, _this.id()),
+                                    url: App.Routes.WebApi.Establishments.Names.del(_this.owner.id, _this.id()),
                                     type: 'DELETE'
                                 }).done(_this.mutationSuccess).fail(_this.mutationError);
                             }

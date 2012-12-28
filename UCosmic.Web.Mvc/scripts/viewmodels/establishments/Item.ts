@@ -107,7 +107,7 @@ module ViewModels.Establishments {
         // methods
         requestNames(callback?: (response?: IServerNameApiModel[]) => void ): void {
             this.namesSpinner.start();
-            $.get(App.Routes.WebApi.EstablishmentNames.get(this.id))
+            $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
                 .done((response: IServerNameApiModel[]): void => {
                     this.receiveNames(response);
                     if (callback) callback(response);
@@ -142,7 +142,7 @@ module ViewModels.Establishments {
         // methods
         requestUrls(callback?: (response?: IServerUrlApiModel[]) => void ): void {
             this.urlsSpinner.start();
-            $.get(App.Routes.WebApi.EstablishmentUrls.get(this.id))
+            $.get(App.Routes.WebApi.Establishments.Urls.get(this.id))
                 .done((response: IServerUrlApiModel[]): void => {
                     this.receiveUrls(response);
                     if (callback) callback(response);
@@ -186,7 +186,7 @@ module ViewModels.Establishments {
             var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
             toolsOptions.markerLatObservable = this.toolsMarkerLat;
             toolsOptions.markerLngObservable = this.toolsMarkerLng;
-            $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id))
+            $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
                     if (response.center.hasValue)
                         toolsOptions.markerLatLng = new google.maps.LatLng(
