@@ -27,6 +27,9 @@ var App;
                 this.$element = $('#' + this.elementId);
                 this.element = this.$element[0];
                 this.markerLatLng = options.markerLatLng;
+                this.markerLat = options.markerLatObservable || ko.observable();
+                this.markerLng = options.markerLngObservable || ko.observable();
+                this.updateMarkerLatLng(this.markerLatLng);
                 this.$markerReadyButton = this.$element.find('.marker img.ready-icon');
                 this.$markerPushedButton = this.$element.find('.marker img.pushed-icon');
                 this.init();
@@ -41,13 +44,22 @@ var App;
                 } else {
                     this.$markerPushedButton.hide();
                 }
+                if(this.markerLatLng) {
+                    this.putMarker(this.markerLatLng);
+                }
                 this.$markerReadyButton.on('click', this, function (e) {
                     _this.createMarker(e);
                 });
                 this.$markerPushedButton.on('click', this, function (e) {
-                    _this.destroyMarker(e);
+                    _this.removeMarker(e);
                 });
                 this.$element.show();
+            };
+            ToolsOverlay.prototype.updateMarkerLatLng = function (latLng) {
+                if(latLng) {
+                    this.markerLat(latLng.lat());
+                    this.markerLng(latLng.lng());
+                }
             };
             ToolsOverlay.prototype.getCreatedMarkerLatLng = function () {
                 var pointX = this.$element.position().left + (this.$element.outerWidth() / 2);
@@ -57,6 +69,25 @@ var App;
                 return projection.fromContainerPixelToLatLng(point);
             };
             ToolsOverlay.prototype.putMarker = function (latLng) {
+                var _this = this;
+                this.marker = new google.maps.Marker({
+                    map: this.map,
+                    position: latLng,
+                    draggable: true
+                });
+                this.updateMarkerLatLng(latLng);
+                google.maps.event.addListener(this.marker, 'dragstart', function (e) {
+                    _this.updateMarkerLatLng(e.latLng);
+                    $(_this.map.getDiv()).trigger('marker_dragstart', _this);
+                });
+                google.maps.event.addListener(this.marker, 'drag', function (e) {
+                    _this.updateMarkerLatLng(e.latLng);
+                    $(_this.map.getDiv()).trigger('marker_drag', _this);
+                });
+                google.maps.event.addListener(this.marker, 'dragend', function (e) {
+                    _this.updateMarkerLatLng(e.latLng);
+                    $(_this.map.getDiv()).trigger('marker_dragend', _this);
+                });
             };
             ToolsOverlay.prototype.createMarker = function (e) {
                 var _this = this;
@@ -80,8 +111,10 @@ var App;
                     _this.map.setOptions({
                         draggableCursor: undefined
                     });
-                    _this.marker.setMap(undefined);
+                    _this.marker.setMap(null);
                     var overlayView = new google.maps.OverlayView();
+                    overlayView.draw = function () {
+                    };
                     overlayView.setMap(_this.map);
                     var pixels = overlayView.getProjection().fromLatLngToContainerPixel(e.latLng);
                     pixels.y += 43;
@@ -90,8 +123,60 @@ var App;
                     $(_this.map.getDiv()).trigger('marker_created', _this);
                 });
             };
-            ToolsOverlay.prototype.destroyMarker = function (e) {
-                alert('clicked destroy');
+            ToolsOverlay.prototype.removeMarker = function (e) {
+                var _this = this;
+                if(!this.$destroyMarkerConfirmDialog) {
+                    this.$destroyMarkerConfirmDialog = this.$element.find('.confirm-destroy-marker-dialog');
+                }
+                if(this.$destroyMarkerConfirmDialog.length) {
+                    this.$destroyMarkerConfirmDialog.dialog({
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: 'Yes, confirm removal',
+                                click: function () {
+                                    _this.$destroyMarkerConfirmDialog.dialog('close');
+                                    _this.destroyMarker();
+                                }
+                            }, 
+                            {
+                                text: 'No, do not remove',
+                                click: function () {
+                                    _this.$destroyMarkerConfirmDialog.dialog('close');
+                                },
+                                'data-css-link': true
+                            }
+                        ]
+                    });
+                } else {
+                    if(confirm('Are you sure you want to remove this placemark?')) {
+                        this.destroyMarker();
+                    }
+                }
+            };
+            ToolsOverlay.prototype.destroyMarker = function () {
+                this.$markerPushedButton.hide();
+                this.$markerReadyButton.show();
+                this.map.setOptions({
+                    draggableCursor: undefined
+                });
+                if(this.markerMoveListener) {
+                    google.maps.event.removeListener(this.markerMoveListener);
+                    this.markerMoveListener = undefined;
+                }
+                if(this.markerDropListener) {
+                    google.maps.event.removeListener(this.markerDropListener);
+                    this.markerDropListener = undefined;
+                }
+                google.maps.event.clearInstanceListeners(this.marker);
+                this.marker.setMap(null);
+                this.marker = undefined;
+                this.markerLat(null);
+                this.markerLng(null);
+                $(this.map.getDiv()).trigger('marker_destroyed', this);
             };
             return ToolsOverlay;
         })(google.maps.OverlayView);

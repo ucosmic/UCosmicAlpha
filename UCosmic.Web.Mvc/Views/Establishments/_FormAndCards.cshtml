@@ -10,11 +10,20 @@
                     </h2>
                 </header>
                 <div>
+                    Lat: <input type="text" data-bind="value: toolsMarkerLat" />
+                    Lng: <input type="text" data-bind="value: toolsMarkerLng" />
                     <div id="map_canvas" class="map-canvas-w100-h500"></div>
                     <div id="map_tools" class="map-tools">
                         <div class="marker">
                             <img src="~/styles/icons/maps/tools-marker-ready.png" alt="Add a placemarker" title="Add a placemarker" class="ready-icon" />
                             <img src="~/styles/icons/maps/tools-marker-pushed.png" alt="Remove placemarker" title="Remove placemarker" class="pushed-icon" />
+                            <div class="confirm-destroy-marker-dialog" title="Please confirm your intent" style="display: none;">
+                                <div>
+                                    <p>
+                                        Are you sure you want to remove this placemark?
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -13,6 +13,8 @@ var ViewModels;
                 this.editingName = ko.observable(0);
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
+                this.toolsMarkerLat = ko.observable();
+                this.toolsMarkerLng = ko.observable();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -125,6 +127,8 @@ var ViewModels;
                 };
                 this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
                 var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
+                toolsOptions.markerLatObservable = this.toolsMarkerLat;
+                toolsOptions.markerLngObservable = this.toolsMarkerLng;
                 $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id)).done(function (response) {
                     if(response.center.hasValue) {
                         toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);

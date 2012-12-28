@@ -170,6 +170,8 @@ module ViewModels.Establishments {
 
         map: google.maps.Map;
         mapTools: App.GoogleMaps.ToolsOverlay;
+        toolsMarkerLat: KnockoutObservableNumber = ko.observable();
+        toolsMarkerLng: KnockoutObservableNumber = ko.observable();
 
         initMap(elementId: string): void {
             var center = new google.maps.LatLng(0, 0);
@@ -182,6 +184,8 @@ module ViewModels.Establishments {
             this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
 
             var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
+            toolsOptions.markerLatObservable = this.toolsMarkerLat;
+            toolsOptions.markerLngObservable = this.toolsMarkerLng;
             $.get(App.Routes.WebApi.EstablishmentLocations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
                     if (response.center.hasValue)
