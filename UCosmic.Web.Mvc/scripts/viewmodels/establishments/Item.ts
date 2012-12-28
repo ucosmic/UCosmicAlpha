@@ -177,9 +177,14 @@ module ViewModels.Establishments {
             var center = new google.maps.LatLng(0, 0);
             var mapType = google.maps.MapTypeId.ROADMAP;
             var mapOptions: google.maps.MapOptions = {
+                mapTypeId: mapType,
                 center: center,
                 zoom: 1,
-                mapTypeId: mapType
+                scrollwheel: false,
+                overviewMapControl: true,
+                overviewMapControlOptions: {
+                    opened: false
+                }
             };
             this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
 
@@ -191,12 +196,27 @@ module ViewModels.Establishments {
                     if (response.center.hasValue)
                         toolsOptions.markerLatLng = new google.maps.LatLng(
                             response.center.latitude, response.center.longitude);
+                    google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
+                        if (response.googleMapZoomLevel) {
+                            this.map.setZoom(response.googleMapZoomLevel);
+                        }
+                        else if (response.box.hasValue) {
+                            var ne = new google.maps.LatLng(response.box.northEast.latitude,
+                                response.box.northEast.longitude);
+                            var sw = new google.maps.LatLng(response.box.southWest.latitude,
+                                response.box.southWest.longitude);
+                            this.map.fitBounds(new google.maps.LatLngBounds(sw, ne));
+                        }
+                        if (response.center.hasValue) {
+                            this.map.setCenter(toolsOptions.markerLatLng);
+                        }
+                    });
                 })
                 .fail(() => {
                     toolsOptions.markerLatLng = undefined;
                 })
                 .always(() => {
-                    google.maps.event.addListenerOnce(this.map, 'idle', () => {
+                    google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
                         this.mapTools = new App.GoogleMaps.ToolsOverlay(this.map, toolsOptions);
                     });
                 });

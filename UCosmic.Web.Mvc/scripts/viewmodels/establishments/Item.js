@@ -121,9 +121,14 @@ var ViewModels;
                 var center = new google.maps.LatLng(0, 0);
                 var mapType = google.maps.MapTypeId.ROADMAP;
                 var mapOptions = {
+                    mapTypeId: mapType,
                     center: center,
                     zoom: 1,
-                    mapTypeId: mapType
+                    scrollwheel: false,
+                    overviewMapControl: true,
+                    overviewMapControlOptions: {
+                        opened: false
+                    }
                 };
                 this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
                 var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
@@ -133,6 +138,20 @@ var ViewModels;
                     if(response.center.hasValue) {
                         toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);
                     }
+                    google.maps.event.addListenerOnce(_this.map, 'idle', function () {
+                        if(response.googleMapZoomLevel) {
+                            _this.map.setZoom(response.googleMapZoomLevel);
+                        } else {
+                            if(response.box.hasValue) {
+                                var ne = new google.maps.LatLng(response.box.northEast.latitude, response.box.northEast.longitude);
+                                var sw = new google.maps.LatLng(response.box.southWest.latitude, response.box.southWest.longitude);
+                                _this.map.fitBounds(new google.maps.LatLngBounds(sw, ne));
+                            }
+                        }
+                        if(response.center.hasValue) {
+                            _this.map.setCenter(toolsOptions.markerLatLng);
+                        }
+                    });
                 }).fail(function () {
                     toolsOptions.markerLatLng = undefined;
                 }).always(function () {

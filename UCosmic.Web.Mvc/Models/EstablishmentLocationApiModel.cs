@@ -7,6 +7,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public MapPointModel Center { get; set; }
         public MapBoxModel Box { get; set; }
+        public int? GoogleMapZoomLevel { get; set; }
     }
 
     public static class EstablishmentLocationApiProfiler

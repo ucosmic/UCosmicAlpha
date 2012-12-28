@@ -37,5 +37,6 @@ module ViewModels.Establishments {
     export interface IServerLocationApiModel {
         center: Places.IServerPointModel;
         box: Places.IServerBoxModel;
+        googleMapZoomLevel?: number;
     }
 }
