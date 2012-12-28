@@ -14,7 +14,7 @@ var ViewModels;
                 this.editingName = ko.observable(0);
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
-                this.mapToolsObservable = ko.observable();
+                this.mapTools = ko.observable();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -66,10 +66,10 @@ var ViewModels;
                     throttle: 1
                 });
                 this.toolsMarkerLat = ko.computed(function () {
-                    return _this.mapToolsObservable() ? _this.mapTools.markerLat() : null;
+                    return _this.mapTools() && _this.mapTools().markerLatLng() ? _this.mapTools().markerLatLng().lat() : null;
                 });
                 this.toolsMarkerLng = ko.computed(function () {
-                    return _this.mapToolsObservable() ? _this.mapTools.markerLng() : null;
+                    return _this.mapTools() && _this.mapTools().markerLatLng() ? _this.mapTools().markerLatLng().lng() : null;
                 });
             }
             Item.prototype.requestNames = function (callback) {
@@ -160,8 +160,7 @@ var ViewModels;
                     toolsOptions.markerLatLng = undefined;
                 }).always(function () {
                     gm.event.addListenerOnce(_this.map, 'idle', function () {
-                        _this.mapTools = new App.GoogleMaps.ToolsOverlay(_this.map, toolsOptions);
-                        _this.mapToolsObservable(_this.mapTools);
+                        _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map, toolsOptions));
                     });
                 });
             };

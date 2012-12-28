@@ -434,6 +434,7 @@
     </Content>
     <None Include="scripts\google\google.maps.d.ts" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
+    <None Include="scripts\google\google.maps-knockout.extensions.d.ts" />
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>

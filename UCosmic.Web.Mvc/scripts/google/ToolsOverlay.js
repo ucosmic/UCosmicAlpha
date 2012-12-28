@@ -21,14 +21,12 @@ var App;
             function ToolsOverlay(map, options) {
                 if (typeof options === "undefined") { options = new ToolsOverlayOptions(); }
                         _super.call(this);
-                this.markerLat = ko.observable();
-                this.markerLng = ko.observable();
+                this.markerLatLng = ko.observable();
                 this.position = options.position;
                 this.elementId = options.elementId;
                 this.$element = $('#' + this.elementId);
                 this.element = this.$element[0];
-                this.markerLatLng = options.markerLatLng;
-                this.updateMarkerLatLng(this.markerLatLng);
+                this.markerLatLng(options.markerLatLng);
                 this.$markerAddButton = this.$element.find('.marker img.add-button');
                 this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
                 this.setMap(map);
@@ -36,13 +34,13 @@ var App;
             ToolsOverlay.prototype.onAdd = function () {
                 var _this = this;
                 this.getMap().controls[this.position].push(this.element);
-                if(this.markerLatLng) {
+                if(this.markerLatLng()) {
                     this.$markerAddButton.hide();
                 } else {
                     this.$markerRemoveButton.hide();
                 }
-                if(this.markerLatLng) {
-                    this.placeMarker(this.markerLatLng);
+                if(this.markerLatLng()) {
+                    this.placeMarker(this.markerLatLng());
                 }
                 this.$markerAddButton.on('click', this, function (e) {
                     _this.createMarker(e);
@@ -58,15 +56,8 @@ var App;
             ToolsOverlay.prototype.draw = function () {
             };
             ToolsOverlay.prototype.updateMarkerLatLng = function (latLng) {
-                if(latLng) {
-                    this.markerLat(latLng.lat());
-                    this.markerLng(latLng.lng());
-                    this.markerLatLng = new gm.LatLng(this.markerLat(), this.markerLng());
-                } else {
-                    this.markerLat(null);
-                    this.markerLng(null);
-                    this.markerLatLng = null;
-                }
+                var newLatLng = latLng ? new gm.LatLng(latLng.lat(), latLng.lng()) : null;
+                this.markerLatLng(newLatLng);
             };
             ToolsOverlay.prototype.getCreatedMarkerLatLng = function () {
                 var pointX = this.$element.position().left + (this.$element.outerWidth() / 2);

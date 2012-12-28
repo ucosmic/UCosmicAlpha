@@ -95,10 +95,12 @@ module ViewModels.Establishments {
             //#region Location
 
             this.toolsMarkerLat = ko.computed((): number => {
-                return this.mapToolsObservable() ? this.mapTools.markerLat() : null;
+                return this.mapTools() && this.mapTools().markerLatLng()
+                    ? this.mapTools().markerLatLng().lat() : null;
             });
             this.toolsMarkerLng = ko.computed((): number => {
-                return this.mapToolsObservable() ? this.mapTools.markerLng() : null;
+                return this.mapTools() && this.mapTools().markerLatLng()
+                    ? this.mapTools().markerLatLng().lng() : null;
             });
 
             //#endregion
@@ -178,10 +180,9 @@ module ViewModels.Establishments {
         //#region Location
 
         map: google.maps.Map;
-        mapTools: App.GoogleMaps.ToolsOverlay;
+        mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
-        private mapToolsObservable: KnockoutObservableAny = ko.observable();
 
         initMap(elementId: string): void {
             var center = new gm.LatLng(0, 0);
@@ -225,8 +226,7 @@ module ViewModels.Establishments {
                 })
                 .always(() => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
-                        this.mapTools = new App.GoogleMaps.ToolsOverlay(this.map, toolsOptions);
-                        this.mapToolsObservable(this.mapTools);
+                        this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map, toolsOptions));
                     });
                 });
 

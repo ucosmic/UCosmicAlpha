@@ -1,7 +1,8 @@
 /// <reference path="google.maps.d.ts" />
+/// <reference path="../ko/knockout-2.2.d.ts" />
+/// <reference path="google.maps-knockout.extensions.d.ts" />
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 /// <reference path="../jquery/jqueryui-1.9.d.ts" />
-/// <reference path="../ko/knockout-2.2.d.ts" />
 
 module App.GoogleMaps {
 
@@ -13,15 +14,15 @@ module App.GoogleMaps {
         markerLatLng: gm.LatLng = undefined;
     }
 
-        // https://developers.google.com/maps/documentation/javascript/overlays#CustomOverlays
-        // https://developers.google.com/maps/documentation/javascript/reference#OverlayView
-        export class ToolsOverlay extends google.maps.OverlayView {
+    // https://developers.google.com/maps/documentation/javascript/overlays#CustomOverlays
+    // https://developers.google.com/maps/documentation/javascript/reference#OverlayView
+    export class ToolsOverlay extends google.maps.OverlayView {
 
         position: gm.ControlPosition; // which google maps control position to render the tools in
         elementId: string; // id of the element wrapping the tools DOM markup (excludes #)
         element: Element; // reference to actual element with elementId
         $element: JQuery; // jQuery wrapper for the element
-        markerLatLng: gm.LatLng; // position of the marker
+        markerLatLng: KnockoutObservableGoogleMapsLatLng = ko.observable(); // position of the marker
 
         constructor (map: gm.Map,
             options?: ToolsOverlayOptions = new ToolsOverlayOptions()) {
@@ -32,8 +33,7 @@ module App.GoogleMaps {
             this.$element = $('#' + this.elementId);
             this.element = this.$element[0];
 
-            this.markerLatLng = options.markerLatLng;
-            this.updateMarkerLatLng(this.markerLatLng);
+            this.markerLatLng(options.markerLatLng);
             this.$markerAddButton = this.$element.find('.marker img.add-button');
             this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
 
@@ -46,11 +46,11 @@ module App.GoogleMaps {
             this.getMap().controls[this.position].push(this.element);
 
             // display the correct marker button
-            if (this.markerLatLng) this.$markerAddButton.hide();
+            if (this.markerLatLng()) this.$markerAddButton.hide();
             else this.$markerRemoveButton.hide();
 
             // place marker if it already exists
-            if (this.markerLatLng) this.placeMarker(this.markerLatLng);
+            if (this.markerLatLng()) this.placeMarker(this.markerLatLng());
 
             // add click handlers to the marker buttons
             this.$markerAddButton.on('click', this,
@@ -70,8 +70,6 @@ module App.GoogleMaps {
         }
 
         private marker: gm.Marker;
-        markerLat: KnockoutObservableNumber = ko.observable();
-        markerLng: KnockoutObservableNumber = ko.observable();
         private $markerAddButton: JQuery;
         private $markerRemoveButton: JQuery;
         private $destroyMarkerConfirmDialog;
@@ -79,16 +77,8 @@ module App.GoogleMaps {
         private markerDropListener: gm.MapsEventListener;
 
         private updateMarkerLatLng(latLng: gm.LatLng): void {
-            if (latLng) {
-                this.markerLat(latLng.lat());
-                this.markerLng(latLng.lng());
-                this.markerLatLng = new gm.LatLng(this.markerLat(), this.markerLng());
-            }
-            else {
-                this.markerLat(null);
-                this.markerLng(null);
-                this.markerLatLng = null;
-            }
+            var newLatLng = latLng ? new gm.LatLng(latLng.lat(), latLng.lng()) : null;
+            this.markerLatLng(newLatLng);
         }
 
         private getCreatedMarkerLatLng(): gm.LatLng {
