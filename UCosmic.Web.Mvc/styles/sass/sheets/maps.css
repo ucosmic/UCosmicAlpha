@@ -7,7 +7,7 @@
 .map-tools {
   display: none;
   margin-top: 7px; }
-  .map-tools .marker img.ready-icon, .map-tools .marker img.pushed-icon {
+  .map-tools .marker img.add-button, .map-tools .marker img.remove-button {
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;

@@ -11,7 +11,10 @@
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
 
+
 module ViewModels.Establishments {
+
+    import gm = google.maps
 
     export class Item {
 
@@ -91,6 +94,12 @@ module ViewModels.Establishments {
             //#endregion
             //#region Location
 
+            this.toolsMarkerLat = ko.computed((): number => {
+                return this.mapToolsObservable() ? this.mapTools.markerLat() : null;
+            });
+            this.toolsMarkerLng = ko.computed((): number => {
+                return this.mapToolsObservable() ? this.mapTools.markerLng() : null;
+            });
 
             //#endregion
         }
@@ -170,13 +179,14 @@ module ViewModels.Establishments {
 
         map: google.maps.Map;
         mapTools: App.GoogleMaps.ToolsOverlay;
-        toolsMarkerLat: KnockoutObservableNumber = ko.observable();
-        toolsMarkerLng: KnockoutObservableNumber = ko.observable();
+        toolsMarkerLat: KnockoutComputed;
+        toolsMarkerLng: KnockoutComputed;
+        private mapToolsObservable: KnockoutObservableAny = ko.observable();
 
         initMap(elementId: string): void {
-            var center = new google.maps.LatLng(0, 0);
-            var mapType = google.maps.MapTypeId.ROADMAP;
-            var mapOptions: google.maps.MapOptions = {
+            var center = new gm.LatLng(0, 0);
+            var mapType = gm.MapTypeId.ROADMAP;
+            var mapOptions: gm.MapOptions = {
                 mapTypeId: mapType,
                 center: center,
                 zoom: 1,
@@ -186,26 +196,24 @@ module ViewModels.Establishments {
                     opened: false
                 }
             };
-            this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
+            this.map = new gm.Map(document.getElementById(elementId), mapOptions);
 
             var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
-            toolsOptions.markerLatObservable = this.toolsMarkerLat;
-            toolsOptions.markerLngObservable = this.toolsMarkerLng;
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
                     if (response.center.hasValue)
-                        toolsOptions.markerLatLng = new google.maps.LatLng(
+                        toolsOptions.markerLatLng = new gm.LatLng(
                             response.center.latitude, response.center.longitude);
-                    google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
+                    gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         if (response.googleMapZoomLevel) {
                             this.map.setZoom(response.googleMapZoomLevel);
                         }
                         else if (response.box.hasValue) {
-                            var ne = new google.maps.LatLng(response.box.northEast.latitude,
+                            var ne = new gm.LatLng(response.box.northEast.latitude,
                                 response.box.northEast.longitude);
-                            var sw = new google.maps.LatLng(response.box.southWest.latitude,
+                            var sw = new gm.LatLng(response.box.southWest.latitude,
                                 response.box.southWest.longitude);
-                            this.map.fitBounds(new google.maps.LatLngBounds(sw, ne));
+                            this.map.fitBounds(new gm.LatLngBounds(sw, ne));
                         }
                         if (response.center.hasValue) {
                             this.map.setCenter(toolsOptions.markerLatLng);
@@ -216,8 +224,9 @@ module ViewModels.Establishments {
                     toolsOptions.markerLatLng = undefined;
                 })
                 .always(() => {
-                    google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
+                    gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         this.mapTools = new App.GoogleMaps.ToolsOverlay(this.map, toolsOptions);
+                        this.mapToolsObservable(this.mapTools);
                     });
                 });
 

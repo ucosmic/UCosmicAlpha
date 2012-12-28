@@ -1,6 +1,7 @@
 var ViewModels;
 (function (ViewModels) {
     (function (Establishments) {
+        var gm = google.maps;
         var Item = (function () {
             function Item(id) {
                 var _this = this;
@@ -13,8 +14,7 @@ var ViewModels;
                 this.editingName = ko.observable(0);
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
-                this.toolsMarkerLat = ko.observable();
-                this.toolsMarkerLng = ko.observable();
+                this.mapToolsObservable = ko.observable();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -64,6 +64,12 @@ var ViewModels;
                     }
                 }).extend({
                     throttle: 1
+                });
+                this.toolsMarkerLat = ko.computed(function () {
+                    return _this.mapToolsObservable() ? _this.mapTools.markerLat() : null;
+                });
+                this.toolsMarkerLng = ko.computed(function () {
+                    return _this.mapToolsObservable() ? _this.mapTools.markerLng() : null;
                 });
             }
             Item.prototype.requestNames = function (callback) {
@@ -118,8 +124,8 @@ var ViewModels;
             };
             Item.prototype.initMap = function (elementId) {
                 var _this = this;
-                var center = new google.maps.LatLng(0, 0);
-                var mapType = google.maps.MapTypeId.ROADMAP;
+                var center = new gm.LatLng(0, 0);
+                var mapType = gm.MapTypeId.ROADMAP;
                 var mapOptions = {
                     mapTypeId: mapType,
                     center: center,
@@ -130,22 +136,20 @@ var ViewModels;
                         opened: false
                     }
                 };
-                this.map = new google.maps.Map(document.getElementById(elementId), mapOptions);
+                this.map = new gm.Map(document.getElementById(elementId), mapOptions);
                 var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
-                toolsOptions.markerLatObservable = this.toolsMarkerLat;
-                toolsOptions.markerLngObservable = this.toolsMarkerLng;
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {
                     if(response.center.hasValue) {
-                        toolsOptions.markerLatLng = new google.maps.LatLng(response.center.latitude, response.center.longitude);
+                        toolsOptions.markerLatLng = new gm.LatLng(response.center.latitude, response.center.longitude);
                     }
-                    google.maps.event.addListenerOnce(_this.map, 'idle', function () {
+                    gm.event.addListenerOnce(_this.map, 'idle', function () {
                         if(response.googleMapZoomLevel) {
                             _this.map.setZoom(response.googleMapZoomLevel);
                         } else {
                             if(response.box.hasValue) {
-                                var ne = new google.maps.LatLng(response.box.northEast.latitude, response.box.northEast.longitude);
-                                var sw = new google.maps.LatLng(response.box.southWest.latitude, response.box.southWest.longitude);
-                                _this.map.fitBounds(new google.maps.LatLngBounds(sw, ne));
+                                var ne = new gm.LatLng(response.box.northEast.latitude, response.box.northEast.longitude);
+                                var sw = new gm.LatLng(response.box.southWest.latitude, response.box.southWest.longitude);
+                                _this.map.fitBounds(new gm.LatLngBounds(sw, ne));
                             }
                         }
                         if(response.center.hasValue) {
@@ -155,8 +159,9 @@ var ViewModels;
                 }).fail(function () {
                     toolsOptions.markerLatLng = undefined;
                 }).always(function () {
-                    google.maps.event.addListenerOnce(_this.map, 'idle', function () {
+                    gm.event.addListenerOnce(_this.map, 'idle', function () {
                         _this.mapTools = new App.GoogleMaps.ToolsOverlay(_this.map, toolsOptions);
+                        _this.mapToolsObservable(_this.mapTools);
                     });
                 });
             };

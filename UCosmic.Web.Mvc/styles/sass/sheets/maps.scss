@@ -1,4 +1,4 @@
-@import '../../sass/bootstrap';
+@import '../_bootstrap';
 
 .map-canvas-w100-h500 {
     width: 100%;
@@ -8,7 +8,7 @@
     display: none;
     margin-top: 7px;
     .marker {
-        img.ready-icon, img.pushed-icon {
+        img.add-button, img.remove-button {
             @include unselectable;
         }
     }
