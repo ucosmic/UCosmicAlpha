@@ -10,23 +10,14 @@
                     </h2>
                 </header>
                 <div>
-                    Lat: <input type="text" data-bind="value: toolsMarkerLat" />
-                    Lng: <input type="text" data-bind="value: toolsMarkerLng" />
-                    <div id="map_canvas" class="map-canvas-w100-h500"></div>
-                    <div id="map_tools" class="map-tools">
-                        <div class="marker">
-                            <img src="~/styles/icons/maps/tools-marker-add.png" alt="Add a placemarker" title="Add a placemarker" class="add-button" />
-                            <img src="~/styles/icons/maps/tools-marker-remove.png" alt="Remove placemarker" title="Remove placemarker" class="remove-button" />
-                            <img src="~/styles/icons/maps/tools-marker-drag.png" class="drag-icon" data-anchor="10,10" data-offset="0,43" />
-                            <div class="confirm-destroy-marker-dialog" title="Please confirm your intent" style="display: none;">
-                                <div>
-                                    <p>
-                                        Are you sure you want to remove this placemark?
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                    <div style="display: none;">
+                        Lat:
+                        <input type="text" data-bind="value: toolsMarkerLat" />
+                        Lng:
+                        <input type="text" data-bind="value: toolsMarkerLng" />
                     </div>
+                    <div id="map_canvas" class="map-canvas-w100-h500"></div>
+                    @Html.Partial(MVC.Shared.Views._GoogleMapsToolsOverlay)
                 </div>
             </section>
             <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">

@@ -36,6 +36,7 @@ namespace T4MVC
             public class _ViewNamesClass
             {
                 public readonly string _GoogleMapsScript = "_GoogleMapsScript";
+                public readonly string _GoogleMapsToolsOverlay = "_GoogleMapsToolsOverlay";
                 public readonly string _Layout = "_Layout";
                 public readonly string _LayoutCss = "_LayoutCss";
                 public readonly string _SampleSidebarNav = "_SampleSidebarNav";
@@ -46,6 +47,7 @@ namespace T4MVC
                 public readonly string Error = "Error";
             }
             public readonly string _GoogleMapsScript = "~/Views/Shared/_GoogleMapsScript.cshtml";
+            public readonly string _GoogleMapsToolsOverlay = "~/Views/Shared/_GoogleMapsToolsOverlay.cshtml";
             public readonly string _Layout = "~/Views/Shared/_Layout.cshtml";
             public readonly string _LayoutCss = "~/Views/Shared/_LayoutCss.cshtml";
             public readonly string _SampleSidebarNav = "~/Views/Shared/_SampleSidebarNav.cshtml";

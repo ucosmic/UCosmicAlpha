@@ -669,6 +669,7 @@
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <Content Include="styles\sass\sheets\maps.scss" />
+    <Content Include="Views\Shared\_GoogleMapsToolsOverlay.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
