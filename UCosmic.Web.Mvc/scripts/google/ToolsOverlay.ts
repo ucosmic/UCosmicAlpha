@@ -20,27 +20,37 @@ module App.GoogleMaps {
 
         position: gm.ControlPosition; // which google maps control position to render the tools in
         elementId: string; // id of the element wrapping the tools DOM markup (excludes #)
-        element: Element; // reference to actual element with elementId
-        $element: JQuery; // jQuery wrapper for the element
         markerLatLng: KnockoutObservableGoogleMapsLatLng = ko.observable(); // position of the marker
+
+        private element: Element; // reference to actual element with elementId
+        private $element: JQuery; // jQuery wrapper for the element
+        private marker: gm.Marker;
+        private $markerAddButton: JQuery;
+        private $markerRemoveButton: JQuery;
+        private $destroyMarkerConfirmDialog;
+        private markerMoveListener: gm.MapsEventListener;
+        private markerDropListener: gm.MapsEventListener;
+
 
         constructor (map: gm.Map,
             options?: ToolsOverlayOptions = new ToolsOverlayOptions()) {
             super();
 
+            // apply options
             this.position = options.position;
             this.elementId = options.elementId;
+            this.markerLatLng(options.markerLatLng);
+
+            // initialize jQuery fields
             this.$element = $('#' + this.elementId);
             this.element = this.$element[0];
-
-            this.markerLatLng(options.markerLatLng);
             this.$markerAddButton = this.$element.find('.marker img.add-button');
             this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
 
             this.setMap(map); // invokes onAdd() then draw()
         }
 
-        private onAdd(): void {
+        private onAdd(): void { // initialize the map tools overlay
 
             // render the tools element on the map canvas
             this.getMap().controls[this.position].push(this.element);
@@ -69,24 +79,10 @@ module App.GoogleMaps {
             // NOTE: this method is invoked each time the map is panned or zoomed
         }
 
-        private marker: gm.Marker;
-        private $markerAddButton: JQuery;
-        private $markerRemoveButton: JQuery;
-        private $destroyMarkerConfirmDialog;
-        private markerMoveListener: gm.MapsEventListener;
-        private markerDropListener: gm.MapsEventListener;
-
         private updateMarkerLatLng(latLng: gm.LatLng): void {
+            // certain events may change the exposed lat & lng of this tools instance
             var newLatLng = latLng ? new gm.LatLng(latLng.lat(), latLng.lng()) : null;
             this.markerLatLng(newLatLng);
-        }
-
-        private getCreatedMarkerLatLng(): gm.LatLng {
-            var pointX = this.$element.position().left + (this.$element.outerWidth() / 2);
-            var pointY = this.$element.outerHeight();
-            var point = new gm.Point(pointX, pointY);
-            var projection = this.getProjection();
-            return projection.fromContainerPixelToLatLng(point);
         }
 
         private placeMarker(latLng: gm.LatLng): void {
@@ -112,32 +108,61 @@ module App.GoogleMaps {
         }
 
         private createMarker(e: JQueryEventObject): void {
-            this.$markerAddButton.hide();
-            this.$markerRemoveButton.show();
             this.getMap().setOptions({ draggableCursor: 'pointer' });
+
+            // compute initial position of new marker image
+            var pointX = this.$element.position().left + this.$markerAddButton.position().left
+                + (this.$markerAddButton.outerWidth() / 2);
+            var pointY = this.$markerAddButton.outerHeight();
+
+            // get info about marker drag image
+            var $dragIcon: JQuery = this.$element.find('.marker img.drag-icon');
+            var dragAnchor = new gm.Point(0, 0); // position in icon that sticks to mouse pointer
+            var dragAnchorData: string = $dragIcon.data('anchor');
+            if (dragAnchorData && dragAnchorData.indexOf(','))
+                dragAnchor = new gm.Point(parseInt(dragAnchorData.split(',')[0]),
+                    parseInt(dragAnchorData.split(',')[1]));
+            var dragOrigin = new gm.Point(0, 0); // used if the icon is in a sprite file
+            var dragOriginData: string = $dragIcon.data('origin');
+            if (dragOriginData && dragOriginData.indexOf(','))
+                dragOrigin = new gm.Point(parseInt(dragOriginData.split(',')[0]),
+                    parseInt(dragOriginData.split(',')[1]));
+
             this.marker = new gm.Marker({
                 map: this.getMap(),
-                position: this.getCreatedMarkerLatLng(),
+                position: this.getProjection().fromContainerPixelToLatLng(new gm.Point(pointX, pointY)),
                 cursor: 'pointer',
                 clickable: false,
-                icon: new gm.MarkerImage('/styles/icons/maps/tools-marker-new.png',
-                    new gm.Size(52, 61),
-                    new gm.Point(0, 0), // origin
-                    new gm.Point(10, 10) // anchor
+                icon: new gm.MarkerImage($dragIcon.attr('src'),
+                    new gm.Size($dragIcon.width(), $dragIcon.height()),
+                    dragOrigin, // origin
+                    dragAnchor // anchor
                 )
             });
+            this.$markerAddButton.hide(); // hide the add button
+            this.$markerRemoveButton.show(); // show the remove button
             this.markerMoveListener = gm.event.addListener(this.getMap(), 'mousemove', (e: gm.MouseEvent): void => {
-                this.marker.setPosition(e.latLng);
+                this.marker.setPosition(e.latLng); // move the marker icon along with the mouse
             });
-            this.markerDropListener = gm.event.addListenerOnce(this.getMap(), 'click', (e: gm.MouseEvent): void => {
+            this.markerDropListener = gm.event.addListenerOnce(this.getMap(), 'mouseup', (e: gm.MouseEvent): void => {
                 gm.event.removeListener(this.markerMoveListener);
+                gm.event.removeListener(this.markerDropListener);
                 this.getMap().setOptions({ draggableCursor: undefined });
                 this.marker.setMap(null);
                 var overlayView = new gm.OverlayView();
                 overlayView.draw = function () { };
                 overlayView.setMap(this.getMap());
                 var pixels = overlayView.getProjection().fromLatLngToContainerPixel(e.latLng);
-                pixels.y += 43; // Y offset
+
+                // difference between drag marker anchor and position when dropped
+                var dragOffset = new gm.Point(0, 0);
+                var dragOffsetData: string = $dragIcon.data('offset');
+                if (dragOffsetData && dragOffsetData.indexOf(','))
+                    dragOffset = new gm.Point(parseInt(dragOffsetData.split(',')[0]),
+                        parseInt(dragOffsetData.split(',')[1]));
+
+                pixels.y += dragOffset.y; // Y offset
+                pixels.x += dragOffset.x; // X offset
                 e.latLng = overlayView.getProjection().fromContainerPixelToLatLng(pixels);
                 this.placeMarker(e.latLng);
                 $(this.getMap().getDiv()).trigger('marker_created', this);

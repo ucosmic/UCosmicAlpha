@@ -11,5 +11,8 @@
         img.add-button, img.remove-button {
             @include unselectable;
         }
+        img.drag-icon {
+            display: none;
+        }
     }
 }

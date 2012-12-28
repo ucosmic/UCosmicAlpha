@@ -24,9 +24,9 @@ var App;
                 this.markerLatLng = ko.observable();
                 this.position = options.position;
                 this.elementId = options.elementId;
+                this.markerLatLng(options.markerLatLng);
                 this.$element = $('#' + this.elementId);
                 this.element = this.$element[0];
-                this.markerLatLng(options.markerLatLng);
                 this.$markerAddButton = this.$element.find('.marker img.add-button');
                 this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
                 this.setMap(map);
@@ -59,13 +59,6 @@ var App;
                 var newLatLng = latLng ? new gm.LatLng(latLng.lat(), latLng.lng()) : null;
                 this.markerLatLng(newLatLng);
             };
-            ToolsOverlay.prototype.getCreatedMarkerLatLng = function () {
-                var pointX = this.$element.position().left + (this.$element.outerWidth() / 2);
-                var pointY = this.$element.outerHeight();
-                var point = new gm.Point(pointX, pointY);
-                var projection = this.getProjection();
-                return projection.fromContainerPixelToLatLng(point);
-            };
             ToolsOverlay.prototype.placeMarker = function (latLng) {
                 var _this = this;
                 this.marker = new gm.Marker({
@@ -89,23 +82,37 @@ var App;
             };
             ToolsOverlay.prototype.createMarker = function (e) {
                 var _this = this;
-                this.$markerAddButton.hide();
-                this.$markerRemoveButton.show();
                 this.getMap().setOptions({
                     draggableCursor: 'pointer'
                 });
+                var pointX = this.$element.position().left + this.$markerAddButton.position().left + (this.$markerAddButton.outerWidth() / 2);
+                var pointY = this.$markerAddButton.outerHeight();
+                var $dragIcon = this.$element.find('.marker img.drag-icon');
+                var dragAnchor = new gm.Point(0, 0);
+                var dragAnchorData = $dragIcon.data('anchor');
+                if(dragAnchorData && dragAnchorData.indexOf(',')) {
+                    dragAnchor = new gm.Point(parseInt(dragAnchorData.split(',')[0]), parseInt(dragAnchorData.split(',')[1]));
+                }
+                var dragOrigin = new gm.Point(0, 0);
+                var dragOriginData = $dragIcon.data('origin');
+                if(dragOriginData && dragOriginData.indexOf(',')) {
+                    dragOrigin = new gm.Point(parseInt(dragOriginData.split(',')[0]), parseInt(dragOriginData.split(',')[1]));
+                }
                 this.marker = new gm.Marker({
                     map: this.getMap(),
-                    position: this.getCreatedMarkerLatLng(),
+                    position: this.getProjection().fromContainerPixelToLatLng(new gm.Point(pointX, pointY)),
                     cursor: 'pointer',
                     clickable: false,
-                    icon: new gm.MarkerImage('/styles/icons/maps/tools-marker-new.png', new gm.Size(52, 61), new gm.Point(0, 0), new gm.Point(10, 10))
+                    icon: new gm.MarkerImage($dragIcon.attr('src'), new gm.Size($dragIcon.width(), $dragIcon.height()), dragOrigin, dragAnchor)
                 });
+                this.$markerAddButton.hide();
+                this.$markerRemoveButton.show();
                 this.markerMoveListener = gm.event.addListener(this.getMap(), 'mousemove', function (e) {
                     _this.marker.setPosition(e.latLng);
                 });
-                this.markerDropListener = gm.event.addListenerOnce(this.getMap(), 'click', function (e) {
+                this.markerDropListener = gm.event.addListenerOnce(this.getMap(), 'mouseup', function (e) {
                     gm.event.removeListener(_this.markerMoveListener);
+                    gm.event.removeListener(_this.markerDropListener);
                     _this.getMap().setOptions({
                         draggableCursor: undefined
                     });
@@ -115,7 +122,13 @@ var App;
                     };
                     overlayView.setMap(_this.getMap());
                     var pixels = overlayView.getProjection().fromLatLngToContainerPixel(e.latLng);
-                    pixels.y += 43;
+                    var dragOffset = new gm.Point(0, 0);
+                    var dragOffsetData = $dragIcon.data('offset');
+                    if(dragOffsetData && dragOffsetData.indexOf(',')) {
+                        dragOffset = new gm.Point(parseInt(dragOffsetData.split(',')[0]), parseInt(dragOffsetData.split(',')[1]));
+                    }
+                    pixels.y += dragOffset.y;
+                    pixels.x += dragOffset.x;
                     e.latLng = overlayView.getProjection().fromContainerPixelToLatLng(pixels);
                     _this.placeMarker(e.latLng);
                     $(_this.getMap().getDiv()).trigger('marker_created', _this);

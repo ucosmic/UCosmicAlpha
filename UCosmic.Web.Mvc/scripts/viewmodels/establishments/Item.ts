@@ -1,4 +1,4 @@
-/// <reference path="../../jquery/jquery-1.8.d.ts" />
+﻿/// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../google/google.maps.d.ts" />
@@ -185,17 +185,12 @@ module ViewModels.Establishments {
         toolsMarkerLng: KnockoutComputed;
 
         initMap(elementId: string): void {
-            var center = new gm.LatLng(0, 0);
-            var mapType = gm.MapTypeId.ROADMAP;
             var mapOptions: gm.MapOptions = {
-                mapTypeId: mapType,
-                center: center,
+                mapTypeId: gm.MapTypeId.ROADMAP,
+                center: new gm.LatLng(0, 0),
                 zoom: 1,
-                scrollwheel: false,
-                overviewMapControl: true,
-                overviewMapControlOptions: {
-                    opened: false
-                }
+                draggable: true,
+                scrollwheel: false
             };
             this.map = new gm.Map(document.getElementById(elementId), mapOptions);
 

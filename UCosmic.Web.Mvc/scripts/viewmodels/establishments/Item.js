@@ -124,17 +124,12 @@ var ViewModels;
             };
             Item.prototype.initMap = function (elementId) {
                 var _this = this;
-                var center = new gm.LatLng(0, 0);
-                var mapType = gm.MapTypeId.ROADMAP;
                 var mapOptions = {
-                    mapTypeId: mapType,
-                    center: center,
+                    mapTypeId: gm.MapTypeId.ROADMAP,
+                    center: new gm.LatLng(0, 0),
                     zoom: 1,
-                    scrollwheel: false,
-                    overviewMapControl: true,
-                    overviewMapControlOptions: {
-                        opened: false
-                    }
+                    draggable: true,
+                    scrollwheel: false
                 };
                 this.map = new gm.Map(document.getElementById(elementId), mapOptions);
                 var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();

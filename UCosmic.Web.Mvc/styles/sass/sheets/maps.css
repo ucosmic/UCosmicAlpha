@@ -12,4 +12,6 @@
     -khtml-user-select: none;
     -webkit-user-select: none;
     user-select: none; }
+  .map-tools .marker img.drag-icon {
+    display: none; }
 
