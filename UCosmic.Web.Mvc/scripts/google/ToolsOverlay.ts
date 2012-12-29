@@ -71,7 +71,7 @@ module App.GoogleMaps {
             this.$element.show(); // unhide the tools element
         }
 
-        private onRemove(): void {
+        private onRemove(): void { // detach the tools element from the DOM
             this.element.parentNode.removeChild(this.element);
         }
 
@@ -86,13 +86,14 @@ module App.GoogleMaps {
         }
 
         private placeMarker(latLng: gm.LatLng): void {
-            this.marker = new gm.Marker({
+            this.marker = new gm.Marker({ // set a draggable marker at the coordinates
                 map: this.getMap(),
                 position: latLng,
                 draggable: true
             });
             this.updateMarkerLatLng(latLng);
 
+            // add event listeners to update lat/lng observables when dragged
             gm.event.addListener(this.marker, 'dragstart', (e: gm.MouseEvent): void => {
                 this.updateMarkerLatLng(e.latLng);
                 $(this.getMap().getDiv()).trigger('marker_dragstart', this);
@@ -128,7 +129,7 @@ module App.GoogleMaps {
                 dragOrigin = new gm.Point(parseInt(dragOriginData.split(',')[0]),
                     parseInt(dragOriginData.split(',')[1]));
 
-            this.marker = new gm.Marker({
+            this.marker = new gm.Marker({ // set the marker
                 map: this.getMap(),
                 position: this.getProjection().fromContainerPixelToLatLng(new gm.Point(pointX, pointY)),
                 cursor: 'pointer',
@@ -148,7 +149,9 @@ module App.GoogleMaps {
                 gm.event.removeListener(this.markerMoveListener);
                 gm.event.removeListener(this.markerDropListener);
                 this.getMap().setOptions({ draggableCursor: undefined });
-                this.marker.setMap(null);
+                this.marker.setMap(null); // remove old marker
+
+                // compute position to drop the marker onto
                 var overlayView = new gm.OverlayView();
                 overlayView.draw = function () { };
                 overlayView.setMap(this.getMap());
@@ -169,7 +172,7 @@ module App.GoogleMaps {
             });
         }
 
-        private removeMarker(e: JQueryEventObject) {
+        private removeMarker(e: JQueryEventObject) { // require confirmation to remove marker
             if (!this.$destroyMarkerConfirmDialog)
                 this.$destroyMarkerConfirmDialog = this.$element.find('.confirm-destroy-marker-dialog');
             if (this.$destroyMarkerConfirmDialog.length) {
@@ -203,7 +206,7 @@ module App.GoogleMaps {
 
         private destroyMarker(): void {
             this.getMap().setOptions({ draggableCursor: undefined });
-            if (this.markerMoveListener) {
+            if (this.markerMoveListener) { // remove all previous listeners
                 gm.event.removeListener(this.markerMoveListener);
                 this.markerMoveListener = undefined;
             }
@@ -212,9 +215,9 @@ module App.GoogleMaps {
                 this.markerDropListener = undefined;
             }
             gm.event.clearInstanceListeners(this.marker);
-            this.marker.setMap(null);
+            this.marker.setMap(null); // destroy the marker
             this.marker = undefined;
-            this.updateMarkerLatLng(null);
+            this.updateMarkerLatLng(null); // nullify coordinates
             this.$markerRemoveButton.hide(); // hide remove button
             this.$markerAddButton.show(); // show add button
             $(this.getMap().getDiv()).trigger('marker_destroyed', this);
