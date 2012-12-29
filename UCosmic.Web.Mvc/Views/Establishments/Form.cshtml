@@ -13,7 +13,6 @@
 
     <script type="text/javascript">
         var establishmentItemViewModel = new ViewModels.Establishments.Item(@ViewBag.Id);
-        establishmentItemViewModel.initMap('map_canvas');
         ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
     </script>
 

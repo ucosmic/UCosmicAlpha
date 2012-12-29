@@ -4,6 +4,7 @@
 interface KnockoutBindingHandlers {
     element: KnockoutBindingHandler;
     jqElement: KnockoutBindingHandler;
+    jqObservableElement: KnockoutBindingHandler;
     slideDownVisible: KnockoutBindingHandler;
 }
 
@@ -20,6 +21,14 @@ ko.bindingHandlers.jqElement = {
         allBindingsAccessor: () => any, viewModel: any): void {
         var name = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name] = $(element);
+    }
+};
+
+ko.bindingHandlers.jqObservableElement = {
+    update: function (element: Element, valueAccessor: () => any,
+        allBindingsAccessor: () => any, viewModel: any): void {
+        var name = ko.utils.unwrapObservable(valueAccessor());
+        viewModel[name]($(element));
     }
 };
 

@@ -16,7 +16,7 @@
                         Lng:
                         <input type="text" data-bind="value: toolsMarkerLng" />
                     </div>
-                    <div id="map_canvas" class="map-canvas-w100-h500"></div>
+                    <div id="map_canvas" class="map-canvas-w100-h500" data-bind="jqObservableElement: '$mapCanvas'"></div>
                     @Html.Partial(MVC.Shared.Views._GoogleMapsToolsOverlay)
                 </div>
             </section>

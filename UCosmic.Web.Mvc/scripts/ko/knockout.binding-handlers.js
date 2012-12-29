@@ -10,6 +10,12 @@ ko.bindingHandlers.jqElement = {
         viewModel[name] = $(element);
     }
 };
+ko.bindingHandlers.jqObservableElement = {
+    update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        var name = ko.utils.unwrapObservable(valueAccessor());
+        viewModel[name]($(element));
+    }
+};
 ko.bindingHandlers.slideDownVisible = {
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());

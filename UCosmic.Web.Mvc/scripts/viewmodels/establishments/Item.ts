@@ -1,6 +1,7 @@
 ﻿/// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../jquery/jquery-knockout.extensions.d.ts" />
 /// <reference path="../../google/google.maps.d.ts" />
 /// <reference path="../../google/ToolsOverlay.ts" />
 /// <reference path="../../app/App.ts" />
@@ -102,6 +103,9 @@ module ViewModels.Establishments {
                 return this.mapTools() && this.mapTools().markerLatLng()
                     ? this.mapTools().markerLatLng().lng() : null;
             });
+            this.$mapCanvas.subscribe((newValue: JQuery): void => {
+                if (!this.map) this.initMap();
+            });
 
             //#endregion
         }
@@ -183,8 +187,9 @@ module ViewModels.Establishments {
         mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
+        $mapCanvas: KnockoutObservableJQuery = ko.observable();
 
-        initMap(elementId: string): void {
+        initMap(): void {
             var mapOptions: gm.MapOptions = {
                 mapTypeId: gm.MapTypeId.ROADMAP,
                 center: new gm.LatLng(0, 0),
@@ -192,14 +197,13 @@ module ViewModels.Establishments {
                 draggable: true,
                 scrollwheel: false
             };
-            this.map = new gm.Map(document.getElementById(elementId), mapOptions);
+            this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
+            gm.event.addListenerOnce(this.map, 'idle', (): void => {
+                this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));
+            });
 
-            var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
-                    if (response.center.hasValue)
-                        toolsOptions.markerLatLng = new gm.LatLng(
-                            response.center.latitude, response.center.longitude);
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         if (response.googleMapZoomLevel) {
                             this.map.setZoom(response.googleMapZoomLevel);
@@ -212,19 +216,13 @@ module ViewModels.Establishments {
                             this.map.fitBounds(new gm.LatLngBounds(sw, ne));
                         }
                         if (response.center.hasValue) {
-                            this.map.setCenter(toolsOptions.markerLatLng);
+                            var latLng = new gm.LatLng(response.center.latitude,
+                                response.center.longitude)
+                            this.mapTools().placeMarker(latLng);
+                            this.map.setCenter(latLng);
                         }
                     });
                 })
-                .fail(() => {
-                    toolsOptions.markerLatLng = undefined;
-                })
-                .always(() => {
-                    gm.event.addListenerOnce(this.map, 'idle', (): void => {
-                        this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map, toolsOptions));
-                    });
-                });
-
         }
 
         //#endregion

@@ -11,7 +11,6 @@ var App;
             function ToolsOverlayOptions() {
                 this.position = gm.ControlPosition.TOP_LEFT;
                 this.elementId = 'map_tools';
-                this.markerLatLng = undefined;
             }
             return ToolsOverlayOptions;
         })();
@@ -24,7 +23,6 @@ var App;
                 this.markerLatLng = ko.observable();
                 this.position = options.position;
                 this.elementId = options.elementId;
-                this.markerLatLng(options.markerLatLng);
                 this.$element = $('#' + this.elementId);
                 this.element = this.$element[0];
                 this.$markerAddButton = this.$element.find('.marker img.add-button');
@@ -38,9 +36,6 @@ var App;
                     this.$markerAddButton.hide();
                 } else {
                     this.$markerRemoveButton.hide();
-                }
-                if(this.markerLatLng()) {
-                    this.placeMarker(this.markerLatLng());
                 }
                 this.$markerAddButton.on('click', this, function (e) {
                     _this.createMarker(e);

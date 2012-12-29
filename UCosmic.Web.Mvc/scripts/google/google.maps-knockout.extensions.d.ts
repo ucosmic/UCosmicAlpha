@@ -10,7 +10,6 @@ interface KnockoutObservableGoogleMapsLatLng extends KnockoutObservableBase {
     notifySubscribers(valueToWrite: google.maps.LatLng, topic?: string);
 }
 
-
 interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObservableBase {
     (): App.GoogleMaps.ToolsOverlay;
     (value: App.GoogleMaps.ToolsOverlay): void;

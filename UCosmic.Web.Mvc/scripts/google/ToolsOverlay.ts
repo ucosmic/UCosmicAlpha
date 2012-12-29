@@ -11,7 +11,6 @@ module App.GoogleMaps {
     export class ToolsOverlayOptions {
         position: gm.ControlPosition = gm.ControlPosition.TOP_LEFT;
         elementId: string = 'map_tools';
-        markerLatLng: gm.LatLng = undefined;
     }
 
     // https://developers.google.com/maps/documentation/javascript/overlays#CustomOverlays
@@ -39,7 +38,6 @@ module App.GoogleMaps {
             // apply options
             this.position = options.position;
             this.elementId = options.elementId;
-            this.markerLatLng(options.markerLatLng);
 
             // initialize jQuery fields
             this.$element = $('#' + this.elementId);
@@ -58,9 +56,6 @@ module App.GoogleMaps {
             // display the correct marker button
             if (this.markerLatLng()) this.$markerAddButton.hide();
             else this.$markerRemoveButton.hide();
-
-            // place marker if it already exists
-            if (this.markerLatLng()) this.placeMarker(this.markerLatLng());
 
             // add click handlers to the marker buttons
             this.$markerAddButton.on('click', this,
@@ -85,7 +80,7 @@ module App.GoogleMaps {
             this.markerLatLng(newLatLng);
         }
 
-        private placeMarker(latLng: gm.LatLng): void {
+        placeMarker(latLng: gm.LatLng): void {
             this.marker = new gm.Marker({ // set a draggable marker at the coordinates
                 map: this.getMap(),
                 position: latLng,

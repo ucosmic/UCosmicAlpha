@@ -15,6 +15,7 @@ var ViewModels;
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
                 this.mapTools = ko.observable();
+                this.$mapCanvas = ko.observable();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -71,6 +72,11 @@ var ViewModels;
                 this.toolsMarkerLng = ko.computed(function () {
                     return _this.mapTools() && _this.mapTools().markerLatLng() ? _this.mapTools().markerLatLng().lng() : null;
                 });
+                this.$mapCanvas.subscribe(function (newValue) {
+                    if(!_this.map) {
+                        _this.initMap();
+                    }
+                });
             }
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
@@ -122,7 +128,7 @@ var ViewModels;
                 newUrl.showEditor();
                 App.Obtruder.obtrude(document);
             };
-            Item.prototype.initMap = function (elementId) {
+            Item.prototype.initMap = function () {
                 var _this = this;
                 var mapOptions = {
                     mapTypeId: gm.MapTypeId.ROADMAP,
@@ -131,12 +137,11 @@ var ViewModels;
                     draggable: true,
                     scrollwheel: false
                 };
-                this.map = new gm.Map(document.getElementById(elementId), mapOptions);
-                var toolsOptions = new App.GoogleMaps.ToolsOverlayOptions();
+                this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
+                gm.event.addListenerOnce(this.map, 'idle', function () {
+                    _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
+                });
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {
-                    if(response.center.hasValue) {
-                        toolsOptions.markerLatLng = new gm.LatLng(response.center.latitude, response.center.longitude);
-                    }
                     gm.event.addListenerOnce(_this.map, 'idle', function () {
                         if(response.googleMapZoomLevel) {
                             _this.map.setZoom(response.googleMapZoomLevel);
@@ -148,14 +153,10 @@ var ViewModels;
                             }
                         }
                         if(response.center.hasValue) {
-                            _this.map.setCenter(toolsOptions.markerLatLng);
+                            var latLng = new gm.LatLng(response.center.latitude, response.center.longitude);
+                            _this.mapTools().placeMarker(latLng);
+                            _this.map.setCenter(latLng);
                         }
-                    });
-                }).fail(function () {
-                    toolsOptions.markerLatLng = undefined;
-                }).always(function () {
-                    gm.event.addListenerOnce(_this.map, 'idle', function () {
-                        _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map, toolsOptions));
                     });
                 });
             };

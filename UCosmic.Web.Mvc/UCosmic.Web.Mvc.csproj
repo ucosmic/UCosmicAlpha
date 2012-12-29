@@ -441,6 +441,7 @@
     <Content Include="scripts\google\ToolsOverlay.min.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
+    <None Include="scripts\jquery\jquery-knockout.extensions.d.ts" />
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
