@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
+using AutoMapper;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
@@ -9,26 +12,29 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [DefaultApiHttpRouteConvention]
     public class CountriesController : ApiController
     {
-        private readonly IQueryEntities _queryEntities;
+        private readonly IProcessQueries _queryProcessor;
 
-        public CountriesController(IQueryEntities queryEntities)
+        public CountriesController(IProcessQueries queryProcessor)
         {
-            _queryEntities = queryEntities;
+            _queryProcessor = queryProcessor;
         }
 
         [CacheHttpGet(Duration = 3600)]
         public IEnumerable<CountryApiModel> GetAll()
         {
-            var countries = _queryEntities
-                .Query<Place>()
-                .Where(p => p.IsCountry)
-                .OrderBy(p => p.OfficialName)
-            ;
-            var items = countries.Select(c => new CountryApiModel
+            var entities = _queryProcessor.Execute(new Countries()
             {
-                Name = c.OfficialName,
-                Code = c.GeoPlanetPlace.Country.Code,
+                EagerLoad = new Expression<Func<Place, object>>[]
+                {
+                    x => x.GeoPlanetPlace, // this is where the country code comes from
+                },
+                OrderBy = new Dictionary<Expression<Func<Place, object>>, OrderByDirection>
+                {
+                    { x => x.OfficialName, OrderByDirection.Ascending },
+                }
             });
+
+            var items = Mapper.Map<CountryApiModel[]>(entities);
             return items.ToArray();
         } 
     }
