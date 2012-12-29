@@ -7,6 +7,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public string Name { get; set; }
         public string Code { get; set; }
+        public MapBoxModel Box { get; set; }
     }
 
     public static class CountryApiProfiler
@@ -18,6 +19,7 @@ namespace UCosmic.Web.Mvc.Models
                 Mapper.CreateMap<Place, CountryApiModel>()
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.OfficialName))
                     .ForMember(d => d.Code, o => o.MapFrom(s => s.GeoPlanetPlace.Country.Code))
+                    .ForMember(d => d.Box, o => o.MapFrom(s => s.BoundingBox))
                 ;
             }
         }

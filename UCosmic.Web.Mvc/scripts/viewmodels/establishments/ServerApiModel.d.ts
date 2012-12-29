@@ -1,4 +1,21 @@
+/// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
+
+interface KnockoutObservableEstablishmentNameModelArray extends KnockoutObservableArrayFunctions {
+    (): ViewModels.Establishments.IServerNameApiModel[];
+    (value: ViewModels.Establishments.IServerNameApiModel[]): void;
+
+    subscribe(callback: (newValue: ViewModels.Establishments.IServerNameApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: ViewModels.Establishments.IServerNameApiModel[], topic?: string);
+}
+
+interface KnockoutObservableEstablishmentUrlModelArray extends KnockoutObservableArrayFunctions {
+    (): ViewModels.Establishments.IServerUrlApiModel[];
+    (value: ViewModels.Establishments.IServerUrlApiModel[]): void;
+
+    subscribe(callback: (newValue: ViewModels.Establishments.IServerUrlApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: ViewModels.Establishments.IServerUrlApiModel[], topic?: string);
+}
 
 module ViewModels.Establishments {
 

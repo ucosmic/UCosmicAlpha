@@ -1,6 +1,7 @@
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
@@ -116,7 +117,7 @@ module ViewModels.Establishments {
         }
 
         // filtering
-        countries: KnockoutObservableArray = ko.observableArray();
+        countries: KnockoutObservableCountryModelArray = ko.observableArray();
         countryCode: KnockoutObservableString = ko.observable();
 
         // lensing
@@ -137,7 +138,7 @@ module ViewModels.Establishments {
             speed: 'fast',
             root: '#search'
         });
-        trail: KnockoutObservableArray = ko.observableArray([]);
+        trail: KnockoutObservableStringArray = ko.observableArray([]);
         lockAnimation(): void {
             this.nextForceDisabled(true);
             this.prevForceDisabled(true);

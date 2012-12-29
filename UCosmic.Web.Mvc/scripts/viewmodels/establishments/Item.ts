@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
-/// <reference path="../../jquery/jquery-knockout.extensions.d.ts" />
+/// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../google/google.maps.d.ts" />
 /// <reference path="../../google/ToolsOverlay.ts" />
 /// <reference path="../../app/App.ts" />
@@ -123,8 +123,8 @@ module ViewModels.Establishments {
         //#region Names
 
         // observables, computeds, & variables
-        languages: KnockoutObservableArray = ko.observableArray(); // select options
-        names: KnockoutObservableArray = ko.observableArray();
+        languages: KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
+        names: KnockoutObservableEstablishmentNameModelArray = ko.observableArray();
         editingName: KnockoutObservableNumber = ko.observable(0);
         canAddName: KnockoutComputed;
         namesMapping: any;
@@ -159,7 +159,7 @@ module ViewModels.Establishments {
         //#region URLs
 
         // observables, computeds, & variables
-        urls: KnockoutObservableArray = ko.observableArray();
+        urls: KnockoutObservableEstablishmentUrlModelArray = ko.observableArray();
         editingUrl: KnockoutObservableNumber = ko.observable(0);
         canAddUrl: KnockoutComputed;
         urlsMapping: any;
@@ -198,7 +198,7 @@ module ViewModels.Establishments {
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
-        countries: KnockoutObservableArray = ko.observableArray();
+        countries: KnockoutObservableCountryModelArray = ko.observableArray();
         countryCode: KnockoutObservableString = ko.observable();
 
         initMap(): void {

@@ -434,14 +434,13 @@
     </Content>
     <None Include="scripts\google\google.maps.d.ts" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
-    <None Include="scripts\google\google.maps-knockout.extensions.d.ts" />
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
     <Content Include="scripts\google\ToolsOverlay.min.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
-    <None Include="scripts\jquery\jquery-knockout.extensions.d.ts" />
+    <Content Include="scripts\ko\knockout.extensions.d.ts" />
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>

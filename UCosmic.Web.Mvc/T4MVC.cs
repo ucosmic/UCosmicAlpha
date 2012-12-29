@@ -155,7 +155,6 @@ namespace Links
             private const string URLPATH = "~/scripts/google";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string google_maps_knockout_extensions_d_ts = Url("google.maps-knockout.extensions.d.ts");
             public static readonly string google_maps_d_ts = Url("google.maps.d.ts");
             public static readonly string ToolsOverlay_ts = Url("ToolsOverlay.ts");
             public static readonly string ToolsOverlay_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ToolsOverlay.min.js") ? Url("ToolsOverlay.min.js") : Url("ToolsOverlay.js");
@@ -174,7 +173,6 @@ namespace Links
                           
             public static readonly string jquery_1_8_3_min_js = Url("jquery-1.8.3.min.js");
             public static readonly string jquery_1_8_d_ts = Url("jquery-1.8.d.ts");
-            public static readonly string jquery_knockout_extensions_d_ts = Url("jquery-knockout.extensions.d.ts");
             public static readonly string jquery_ui_1_9_2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-ui-1.9.2.min.js") ? Url("jquery-ui-1.9.2.min.js") : Url("jquery-ui-1.9.2.js");
                           
             public static readonly string jquery_ui_1_9_2_min_js = Url("jquery-ui-1.9.2.min.js");
@@ -195,6 +193,7 @@ namespace Links
             public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
                           
             public static readonly string knockout_binding_handlers_min_js = Url("knockout.binding-handlers.min.js");
+            public static readonly string knockout_extensions_d_ts = Url("knockout.extensions.d.ts");
             public static readonly string knockout_mapping_2_0_d_ts = Url("knockout.mapping-2.0.d.ts");
             public static readonly string knockout_mapping_latest_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.mapping-latest.debug.min.js") ? Url("knockout.mapping-latest.debug.min.js") : Url("knockout.mapping-latest.debug.js");
                           
