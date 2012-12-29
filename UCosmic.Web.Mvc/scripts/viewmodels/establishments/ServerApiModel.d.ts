@@ -1,4 +1,4 @@
-/// <reference path="../places/ServerApiModel.d.ts" />
+/// <reference path="../places/ServerApiModel.ts" />
 
 module ViewModels.Establishments {
 

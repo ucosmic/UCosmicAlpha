@@ -16,6 +16,8 @@ var ViewModels;
                 this.editingUrl = ko.observable(0);
                 this.mapTools = ko.observable();
                 this.$mapCanvas = ko.observable();
+                this.countries = ko.observableArray();
+                this.countryCode = ko.observable();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -76,6 +78,13 @@ var ViewModels;
                     if(!_this.map) {
                         _this.initMap();
                     }
+                });
+                ko.computed(function () {
+                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                        _this.countries(response);
+                    });
+                }).extend({
+                    throttle: 1
                 });
             }
             Item.prototype.requestNames = function (callback) {

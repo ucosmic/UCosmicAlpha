@@ -61,7 +61,7 @@ var ViewModels;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
-                        var emptyValue = new ViewModels.Countries.ServerApiModel('-1', '[Without country]');
+                        var emptyValue = new ViewModels.Places.ServerCountryApiModel('-1', '[Without country]');
                         response.splice(response.length, 0, emptyValue);
                         _this.countries(response);
                         if(lastCountryCode && lastCountryCode !== _this.countryCode()) {

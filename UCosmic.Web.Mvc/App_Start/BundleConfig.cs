@@ -54,7 +54,7 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
                 "~/scripts/viewmodels/Spinner.js",
                 "~/scripts/viewmodels/PagedSearch.js",
-                "~/scripts/viewmodels/countries/ServerApiModel.js",
+                "~/scripts/viewmodels/places/ServerApiModel.js",
                 "~/scripts/viewmodels/establishments/SearchResult.js",
                 "~/scripts/viewmodels/establishments/Search.js"));
 
@@ -63,6 +63,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/google/ToolsOverlay.js",
                 "~/scripts/viewmodels/Spinner.js",
                 "~/scripts/viewmodels/languages/ServerApiModel.js",
+                "~/scripts/viewmodels/places/ServerApiModel.js",
                 "~/scripts/viewmodels/establishments/Name.js",
                 "~/scripts/viewmodels/establishments/Url.js",
                 "~/scripts/viewmodels/establishments/Item.js"));

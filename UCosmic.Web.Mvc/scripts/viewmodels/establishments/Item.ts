@@ -7,6 +7,7 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
+/// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="../languages/ServerApiModel.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="Name.ts" />
@@ -107,6 +108,15 @@ module ViewModels.Establishments {
                 if (!this.map) this.initMap();
             });
 
+            // countries dropdown
+            ko.computed((): void => {
+                $.get(App.Routes.WebApi.Countries.get())
+                .done((response: Places.IServerCountryApiModel[]): void => {
+                    this.countries(response);
+                });
+            })
+            .extend({ throttle: 1 });
+
             //#endregion
         }
 
@@ -188,6 +198,8 @@ module ViewModels.Establishments {
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
+        countries: KnockoutObservableArray = ko.observableArray();
+        countryCode: KnockoutObservableString = ko.observable();
 
         initMap(): void {
             var mapOptions: gm.MapOptions = {

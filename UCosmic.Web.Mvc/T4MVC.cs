@@ -174,6 +174,7 @@ namespace Links
                           
             public static readonly string jquery_1_8_3_min_js = Url("jquery-1.8.3.min.js");
             public static readonly string jquery_1_8_d_ts = Url("jquery-1.8.d.ts");
+            public static readonly string jquery_knockout_extensions_d_ts = Url("jquery-knockout.extensions.d.ts");
             public static readonly string jquery_ui_1_9_2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-ui-1.9.2.min.js") ? Url("jquery-ui-1.9.2.min.js") : Url("jquery-ui-1.9.2.js");
                           
             public static readonly string jquery_ui_1_9_2_min_js = Url("jquery-ui-1.9.2.min.js");
@@ -289,17 +290,6 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class countries {
-                private const string URLPATH = "~/scripts/viewmodels/countries";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string ServerApiModel_ts = Url("ServerApiModel.ts");
-                public static readonly string ServerApiModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.min.js") ? Url("ServerApiModel.min.js") : Url("ServerApiModel.js");
-                              
-                public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
-            }
-        
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class establishments {
                 private const string URLPATH = "~/scripts/viewmodels/establishments";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -351,7 +341,10 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/places";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
+                public static readonly string ServerApiModel_ts = Url("ServerApiModel.ts");
+                public static readonly string ServerApiModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.min.js") ? Url("ServerApiModel.min.js") : Url("ServerApiModel.js");
+                              
+                public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
             }
         
             public static readonly string Spinner_ts = Url("Spinner.ts");

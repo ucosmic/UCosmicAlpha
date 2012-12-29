@@ -6,7 +6,7 @@
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../PagedSearch.ts" />
-/// <reference path="../countries/ServerApiModel.ts" />
+/// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="SearchResult.ts" />
 
@@ -26,8 +26,8 @@ module ViewModels.Establishments {
             ko.computed((): void => {
                 var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
                 $.get(App.Routes.WebApi.Countries.get())
-                .done((response: Countries.IServerApiModel[]): void => {
-                    var emptyValue = new Countries.ServerApiModel('-1', '[Without country]');
+                .done((response: Places.IServerCountryApiModel[]): void => {
+                    var emptyValue = new Places.ServerCountryApiModel('-1', '[Without country]');
                     response.splice(response.length, 0, emptyValue);
                     this.countries(response);
                     if (lastCountryCode && lastCountryCode !== this.countryCode())

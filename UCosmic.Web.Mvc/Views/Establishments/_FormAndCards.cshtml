@@ -10,6 +10,11 @@
                     </h2>
                 </header>
                 <div>
+                    <div>
+                        <select data-bind="options: countries, optionsCaption: '[Unspecified]', optionsText: 'name', optionsValue: 'code', value: countryCode">
+                            <option>[Loading...]</option>
+                        </select>
+                    </div>
                     <div style="display: none;">
                         Lat:
                         <input type="text" data-bind="value: toolsMarkerLat" />
