@@ -162,28 +162,30 @@ var ViewModels;
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
                 });
-                $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {
-                    gm.event.addListenerOnce(_this.map, 'idle', function () {
-                        if(response.googleMapZoomLevel) {
-                            _this.map.setZoom(response.googleMapZoomLevel);
-                        } else {
-                            if(response.box.hasValue) {
-                                var ne = new gm.LatLng(response.box.northEast.latitude, response.box.northEast.longitude);
-                                var sw = new gm.LatLng(response.box.southWest.latitude, response.box.southWest.longitude);
-                                _this.map.fitBounds(new gm.LatLngBounds(sw, ne));
+                if(this.id) {
+                    $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {
+                        gm.event.addListenerOnce(_this.map, 'idle', function () {
+                            if(response.googleMapZoomLevel) {
+                                _this.map.setZoom(response.googleMapZoomLevel);
+                            } else {
+                                if(response.box.hasValue) {
+                                    var ne = new gm.LatLng(response.box.northEast.latitude, response.box.northEast.longitude);
+                                    var sw = new gm.LatLng(response.box.southWest.latitude, response.box.southWest.longitude);
+                                    _this.map.fitBounds(new gm.LatLngBounds(sw, ne));
+                                }
                             }
-                        }
-                        if(response.center.hasValue) {
-                            var latLng = new gm.LatLng(response.center.latitude, response.center.longitude);
-                            _this.mapTools().placeMarker(latLng);
-                            _this.map.setCenter(latLng);
+                            if(response.center.hasValue) {
+                                var latLng = new gm.LatLng(response.center.latitude, response.center.longitude);
+                                _this.mapTools().placeMarker(latLng);
+                                _this.map.setCenter(latLng);
+                            }
+                        });
+                        var country = ViewModels.Places.Utils.getCountry(response.places);
+                        if(country) {
+                            _this.countryCode(country.countryCode);
                         }
                     });
-                    var country = ViewModels.Places.Utils.getCountry(response.places);
-                    if(country) {
-                        _this.countryCode(country.countryCode);
-                    }
-                });
+                }
             };
             return Item;
         })();

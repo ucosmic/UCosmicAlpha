@@ -225,7 +225,8 @@ module ViewModels.Establishments {
                 this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));
             });
 
-            $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
+            if (this.id)
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         if (response.googleMapZoomLevel) {

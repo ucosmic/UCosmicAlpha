@@ -242,6 +242,56 @@ form {
     line-height: 14px;
     height: auto; }
 
+.field-table {
+  margin: 16px 0; }
+  .field-table .field-row {
+    content: "";
+    clear: both;
+    display: table;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 16px; }
+    .field-table .field-row .field-label {
+      float: left;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 9px 10px 0 0; }
+      .field-table .field-row .field-label label {
+        font-weight: bold; }
+        .field-table .field-row .field-label label:after {
+          content: ':'; }
+    .field-table .field-row .field-value {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      float: left; }
+      .field-table .field-row .field-value select {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin-left: 0; }
+  .field-table.w690-l230-v460 .field-label {
+    width: 230px; }
+  .field-table.w690-l230-v460 .field-value {
+    width: 460px; }
+    .field-table.w690-l230-v460 .field-value select {
+      max-width: 460px; }
+  .field-table.w690-l200-v490 .field-label {
+    width: 200px; }
+  .field-table.w690-l200-v490 .field-value {
+    width: 490px; }
+    .field-table.w690-l200-v490 .field-value select {
+      max-width: 490px; }
+  .field-table.w690-l190-v500 .field-label {
+    width: 190px; }
+  .field-table.w690-l190-v500 .field-value {
+    width: 500px; }
+    .field-table.w690-l190-v500 .field-value select {
+      max-width: 500px; }
+
 .typed-item {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

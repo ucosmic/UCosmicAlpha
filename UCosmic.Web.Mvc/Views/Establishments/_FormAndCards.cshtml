@@ -10,10 +10,18 @@
                     </h2>
                 </header>
                 <div>
-                    <div>
-                        <select data-bind="options: countries, optionsCaption: '[Unspecified]', optionsText: 'name', optionsValue: 'code', value: countryCode">
-                            <option>[Loading...]</option>
-                        </select>
+                    <div class="field-table w690-l190-v500">
+                        <div class="field-row">
+                            <div class="field-label">
+                                <label for="establishment_location_country_menu">Country</label>
+                            </div>
+                            <div class="field-value">
+                                <select data-bind="options: countries, optionsCaption: '[Unspecified]', optionsText: 'name', optionsValue: 'code', value: countryCode"
+                                    id="establishment_location_country_menu">
+                                    <option>[Loading...]</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div style="display: none;">
                         Lat:

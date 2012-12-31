@@ -215,6 +215,55 @@ form {
     }
 }
 
+.field-table {
+    margin: 16px 0;
+    .field-row {
+        @include group;
+        @include border-box;
+        width: 100%;
+        margin-bottom: 16px;
+        .field-label {
+            float: left;
+            @include border-box;
+            padding: 9px 10px 0 0;
+            label {
+                font-weight: bold;
+                &:after {
+                    content: ':';
+                }
+            }
+        }
+        .field-value {
+            @include border-box;
+            float: left;
+            select {
+                @include border-box;
+                margin-left: 0;
+            }
+        }
+    }
+    @mixin field-column-split($lWidth, $vWidth) {
+        .field-label {
+            width: $lWidth;
+        }
+        .field-value {
+            width: $vWidth;
+            select {
+                max-width: $vWidth;
+            }
+        }
+    }
+    &.w690-l230-v460 {
+        @include field-column-split(230px, 460px);
+    }
+    &.w690-l200-v490 {
+        @include field-column-split(200px, 490px);
+    }
+    &.w690-l190-v500 {
+        @include field-column-split(190px, 500px);
+    }
+}
+
 .typed-item {
     @include border-box;
     margin-bottom: 16px;
