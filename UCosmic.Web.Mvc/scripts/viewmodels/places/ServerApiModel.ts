@@ -1,4 +1,5 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../google/google.maps.d.ts" />
 
 interface KnockoutObservableCountryModelArray extends KnockoutObservableArrayFunctions {
     (): ViewModels.Places.IServerCountryApiModel[];
@@ -59,6 +60,8 @@ module ViewModels.Places {
 
     export module Utils {
 
+        import gm = google.maps
+
         export function getCountry(places: IServerApiModel[]): IServerApiModel {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
@@ -67,6 +70,15 @@ module ViewModels.Places {
                 }
             }
             return null;
+        }
+
+        export function convertToLatLng(point: IServerPointModel): gm.LatLng {
+            return new gm.LatLng(point.latitude, point.longitude);
+        }
+
+        export function convertToLatLngBounds(box: IServerBoxModel): gm.LatLngBounds {
+            return new gm.LatLngBounds(convertToLatLng(box.southWest),
+                convertToLatLng(box.northEast));
         }
     }
 }

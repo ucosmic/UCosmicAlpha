@@ -82,10 +82,18 @@ var ViewModels;
                 this.countryCode.subscribe(function (newValue) {
                     if(newValue && _this.countries().length == 0) {
                         _this._countryCode = newValue;
-                    } else {
-                        if(newValue && _this.countries().length > 0) {
-                            _this._countryCode = undefined;
+                    }
+                    if(newValue && _this.countries().length > 0 && !_this._countryCode) {
+                        var country;
+                        for(var i = 0; i < _this.countries().length; i++) {
+                            if(_this.countries()[i].code == newValue) {
+                                country = _this.countries()[i];
+                            }
                         }
+                        _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
+                    }
+                    if(newValue && _this.countries().length > 0) {
+                        _this._countryCode = undefined;
                     }
                 });
                 ko.computed(function () {
@@ -169,13 +177,11 @@ var ViewModels;
                                 _this.map.setZoom(response.googleMapZoomLevel);
                             } else {
                                 if(response.box.hasValue) {
-                                    var ne = new gm.LatLng(response.box.northEast.latitude, response.box.northEast.longitude);
-                                    var sw = new gm.LatLng(response.box.southWest.latitude, response.box.southWest.longitude);
-                                    _this.map.fitBounds(new gm.LatLngBounds(sw, ne));
+                                    _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
                                 }
                             }
                             if(response.center.hasValue) {
-                                var latLng = new gm.LatLng(response.center.latitude, response.center.longitude);
+                                var latLng = ViewModels.Places.Utils.convertToLatLng(response.center);
                                 _this.mapTools().placeMarker(latLng);
                                 _this.map.setCenter(latLng);
                             }

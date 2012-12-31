@@ -114,7 +114,17 @@ module ViewModels.Establishments {
                 // it will be reset to undefined.
                 if (newValue && this.countries().length == 0)
                     this._countryCode = newValue; // stash the value to set it after menu loads
-                else if (newValue && this.countries().length > 0)
+
+                // scope the menu to the selected country
+                if (newValue && this.countries().length > 0 && !this._countryCode) {
+                    var country: Places.IServerCountryApiModel;
+                    for (var i = 0; i < this.countries().length; i++) {
+                        if (this.countries()[i].code == newValue) country = this.countries()[i];
+                    }
+                    this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
+                }
+
+                if (newValue && this.countries().length > 0)
                     this._countryCode = undefined; // unstash the value when the menu has reloaded
             });
             ko.computed((): void => {
@@ -229,19 +239,16 @@ module ViewModels.Establishments {
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
-                        if (response.googleMapZoomLevel) {
+
+                        // zoom map to reveal location
+                        if (response.googleMapZoomLevel)
                             this.map.setZoom(response.googleMapZoomLevel);
-                        }
-                        else if (response.box.hasValue) {
-                            var ne = new gm.LatLng(response.box.northEast.latitude,
-                                response.box.northEast.longitude);
-                            var sw = new gm.LatLng(response.box.southWest.latitude,
-                                response.box.southWest.longitude);
-                            this.map.fitBounds(new gm.LatLngBounds(sw, ne));
-                        }
+                        else if (response.box.hasValue)
+                            this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
+
+                        // place marker and set map center
                         if (response.center.hasValue) {
-                            var latLng = new gm.LatLng(response.center.latitude,
-                                response.center.longitude)
+                            var latLng = Places.Utils.convertToLatLng(response.center);
                             this.mapTools().placeMarker(latLng);
                             this.map.setCenter(latLng);
                         }
