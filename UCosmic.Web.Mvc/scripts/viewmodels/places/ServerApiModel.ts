@@ -8,6 +8,13 @@ interface KnockoutObservableCountryModelArray extends KnockoutObservableArrayFun
     notifySubscribers(valueToWrite: ViewModels.Places.IServerCountryApiModel[], topic?: string);
 }
 
+interface KnockoutObservablePlaceModelArray extends KnockoutObservableArrayFunctions {
+    (): ViewModels.Places.IServerApiModel[];
+    (value: ViewModels.Places.IServerApiModel[]): void;
+
+    subscribe(callback: (newValue: ViewModels.Places.IServerApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: ViewModels.Places.IServerApiModel[], topic?: string);
+}
 
 module ViewModels.Places {
 
@@ -23,6 +30,21 @@ module ViewModels.Places {
         hasValue: bool;
     }
 
+    export interface IServerApiModel {
+        id: number;
+        officialName: string;
+        center: IServerPointModel;
+        box: IServerBoxModel;
+        isEarth: bool;
+        isContinent: bool;
+        isCountry: bool;
+        isAdmin1: bool;
+        isAdmin2: bool;
+        isAdmin3: bool;
+        countryCode: string;
+        placeTypeEnglishName: string;
+    }
+
     export interface IServerCountryApiModel {
         code: string;
         name: string;
@@ -32,6 +54,19 @@ module ViewModels.Places {
     export class ServerCountryApiModel implements IServerCountryApiModel {
 
         constructor (public code: string, public name: string) {
+        }
+    }
+
+    export module Utils {
+
+        export function getCountry(places: IServerApiModel[]): IServerApiModel {
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (place.isCountry) return place;
+                }
+            }
+            return null;
         }
     }
 }

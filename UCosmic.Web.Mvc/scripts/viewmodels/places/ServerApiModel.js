@@ -9,6 +9,22 @@ var ViewModels;
             return ServerCountryApiModel;
         })();
         Places.ServerCountryApiModel = ServerCountryApiModel;        
+        (function (Utils) {
+            function getCountry(places) {
+                if(places && places.length > 0) {
+                    for(var i = 0; i < places.length; i++) {
+                        var place = places[i];
+                        if(place.isCountry) {
+                            return place;
+                        }
+                    }
+                }
+                return null;
+            }
+            Utils.getCountry = getCountry;
+        })(Places.Utils || (Places.Utils = {}));
+        var Utils = Places.Utils;
+
     })(ViewModels.Places || (ViewModels.Places = {}));
     var Places = ViewModels.Places;
 

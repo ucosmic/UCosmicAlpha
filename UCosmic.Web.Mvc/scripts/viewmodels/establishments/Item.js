@@ -79,9 +79,21 @@ var ViewModels;
                         _this.initMap();
                     }
                 });
+                this.countryCode.subscribe(function (newValue) {
+                    if(newValue && _this.countries().length == 0) {
+                        _this._countryCode = newValue;
+                    } else {
+                        if(newValue && _this.countries().length > 0) {
+                            _this._countryCode = undefined;
+                        }
+                    }
+                });
                 ko.computed(function () {
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
                         _this.countries(response);
+                        if(_this._countryCode) {
+                            _this.countryCode(_this._countryCode);
+                        }
                     });
                 }).extend({
                     throttle: 1
@@ -167,6 +179,10 @@ var ViewModels;
                             _this.map.setCenter(latLng);
                         }
                     });
+                    var country = ViewModels.Places.Utils.getCountry(response.places);
+                    if(country) {
+                        _this.countryCode(country.countryCode);
+                    }
                 });
             };
             return Item;

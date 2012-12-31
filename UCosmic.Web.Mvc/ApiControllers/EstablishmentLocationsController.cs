@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
@@ -28,7 +29,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 EagerLoad = new Expression<Func<Establishment, object>>[]
                 {
-                    x => x.Location,
+                    x => x.Location.Places.Select(y => y.Ancestors),
                 }
             });
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);

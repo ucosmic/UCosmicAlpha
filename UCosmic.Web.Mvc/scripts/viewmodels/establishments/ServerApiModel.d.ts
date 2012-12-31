@@ -55,5 +55,6 @@ module ViewModels.Establishments {
         center: Places.IServerPointModel;
         box: Places.IServerBoxModel;
         googleMapZoomLevel?: number;
+        places: Places.IServerApiModel[];
     }
 }
