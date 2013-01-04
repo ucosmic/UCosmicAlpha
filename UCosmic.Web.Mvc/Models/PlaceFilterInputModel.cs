@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using AutoMapper;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
@@ -19,7 +22,12 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<PlaceFilterInputModel, FilteredPlaces>()
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
-                    .ForMember(d => d.OrderBy, o => o.Ignore())
+                    .ForMember(d => d.OrderBy, o => o.UseValue(
+                        new Dictionary<Expression<Func<Place, object>>, OrderByDirection>
+                        {
+                            { x => x.OfficialName, OrderByDirection.Ascending },
+                        }
+                    ))
                 ;
             }
         }

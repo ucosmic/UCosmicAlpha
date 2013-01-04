@@ -62,6 +62,26 @@ module ViewModels.Places {
 
         import gm = google.maps
 
+        export function getPlaceById(places: IServerApiModel[], id: number): IServerApiModel {
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (place.id == id) return place;
+                }
+            }
+            return null;
+        }
+
+        export function getContinent(places: IServerApiModel[]): IServerApiModel {
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (place.isContinent) return place;
+                }
+            }
+            return null;
+        }
+
         export function getCountry(places: IServerApiModel[]): IServerApiModel {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {

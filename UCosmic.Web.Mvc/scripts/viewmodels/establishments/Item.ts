@@ -108,25 +108,34 @@ module ViewModels.Establishments {
                 if (!this.map) this.initMap();
             });
 
-            // countries dropdown
-            this.countryId.subscribe((newValue: number) => {
-                // when this value is set before the countries menu is loaded,
+            // continents dropdown
+            ko.computed((): void => {
+                $.get(App.Routes.WebApi.Places.get({ isContinent: true }))
+                .done((response: Places.IServerApiModel[]): void => {
+                    this.continents(response);
+                    if (this._continentId)
+                        this.continentId(this._continentId);
+                });
+            })
+            .extend({ throttle: 1 });
+            this.continentId.subscribe((newValue: number) => {
+                // when this value is set before the continents menu is loaded,
                 // it will be reset to undefined.
-                if (newValue && this.countries().length == 0)
-                    this._countryId = newValue; // stash the value to set it after menu loads
+                if (newValue && this.continents().length == 0)
+                    this._continentId = newValue; // stash the value to set it after menu loads
 
-                // scope the menu to the selected country
-                if (newValue && this.countries().length > 0 && !this._countryId) {
-                    var country: Places.IServerApiModel;
-                    for (var i = 0; i < this.countries().length; i++) {
-                        if (this.countries()[i].id == newValue) country = this.countries()[i];
-                    }
-                    this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
+                // scope the menu to the selected continent
+                if (newValue && this.continents().length > 0 && !this._continentId) {
+                    var continent: Places.IServerApiModel = Places.Utils
+                        .getPlaceById(this.continents(), newValue);
+                    if (continent) this.map.fitBounds(Places.Utils.convertToLatLngBounds(continent.box));
                 }
 
-                if (newValue && this.countries().length > 0)
-                    this._countryId = undefined; // unstash the value when the menu has reloaded
+                if (newValue && this.continents().length > 0)
+                    this._continentId = undefined; // unstash the value when the menu has reloaded
             });
+
+            // countries dropdown
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get({ isCountry: true }))
                 .done((response: Places.IServerApiModel[]): void => {
@@ -136,17 +145,21 @@ module ViewModels.Establishments {
                 });
             })
             .extend({ throttle: 1 });
+            this.countryId.subscribe((newValue: number) => {
+                // when this value is set before the countries menu is loaded,
+                // it will be reset to undefined.
+                if (newValue && this.countries().length == 0)
+                    this._countryId = newValue; // stash the value to set it after menu loads
 
-            this.displayPlaces = ko.computed((): Places.IServerApiModel[]=> {
-                var displayPlaces = new Array();
-                for (var i = 0; i < this.places().length; i++) {
-                    var place = this.places()[i];
-                    if (!place.isEarth) displayPlaces[displayPlaces.length] = place;
+                // scope the menu to the selected country
+                if (newValue && this.countries().length > 0 && !this._countryId) {
+                    var country: Places.IServerApiModel = Places.Utils
+                        .getPlaceById(this.countries(), newValue);
+                    if (country) this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
                 }
-                return displayPlaces;
-            });
-            this.hasPlaces = ko.computed((): bool => {
-                return this.displayPlaces() && this.displayPlaces().length > 0;
+
+                if (newValue && this.countries().length > 0)
+                    this._countryId = undefined; // unstash the value when the menu has reloaded
             });
 
             //#endregion
@@ -230,6 +243,9 @@ module ViewModels.Establishments {
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
+        continents: KnockoutObservablePlaceModelArray = ko.observableArray();
+        continentId: KnockoutObservableNumber = ko.observable();
+        private _continentId: number;
         countries: KnockoutObservablePlaceModelArray = ko.observableArray();
         countryId: KnockoutObservableNumber = ko.observable();
         private _countryId: number;
@@ -271,6 +287,10 @@ module ViewModels.Establishments {
 
                     // make places array observable
                     this.places(response.places);
+
+                    // populate continent menu
+                    var continent: Places.IServerApiModel = Places.Utils.getContinent(response.places);
+                    if (continent) this.continentId(continent.id);
 
                     // populate country menu
                     var country: Places.IServerApiModel = Places.Utils.getCountry(response.places);

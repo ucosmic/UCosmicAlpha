@@ -11,6 +11,30 @@ var ViewModels;
         Places.ServerCountryApiModel = ServerCountryApiModel;        
         (function (Utils) {
             var gm = google.maps;
+            function getPlaceById(places, id) {
+                if(places && places.length > 0) {
+                    for(var i = 0; i < places.length; i++) {
+                        var place = places[i];
+                        if(place.id == id) {
+                            return place;
+                        }
+                    }
+                }
+                return null;
+            }
+            Utils.getPlaceById = getPlaceById;
+            function getContinent(places) {
+                if(places && places.length > 0) {
+                    for(var i = 0; i < places.length; i++) {
+                        var place = places[i];
+                        if(place.isContinent) {
+                            return place;
+                        }
+                    }
+                }
+                return null;
+            }
+            Utils.getContinent = getContinent;
             function getCountry(places) {
                 if(places && places.length > 0) {
                     for(var i = 0; i < places.length; i++) {
