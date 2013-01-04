@@ -45,7 +45,25 @@ var App;
             var Countries = WebApi.Countries;
             (function (Places) {
                 function get(args) {
-                    return makeUrl('places');
+                    var url = makeUrl('places');
+                    url = url.substr(0, url.length - 1);
+                    url += '?';
+                    if(args.parentId) {
+                        url += 'parentId=' + args.parentId + '&';
+                    }
+                    if(args.isContinent) {
+                        url += 'isContinent=' + args.isContinent + '&';
+                    }
+                    if(args.isCountry) {
+                        url += 'isCountry=' + args.isCountry + '&';
+                    }
+                    if(args.isAdmin1) {
+                        url += 'isAdmin1=' + args.isAdmin1 + '&';
+                    }
+                    if(url.lastIndexOf('&') === url.length - 1) {
+                        url = url.substr(0, url.length - 1);
+                    }
+                    return url;
                 }
                 Places.get = get;
             })(WebApi.Places || (WebApi.Places = {}));

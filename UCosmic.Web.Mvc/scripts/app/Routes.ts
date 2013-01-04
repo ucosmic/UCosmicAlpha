@@ -53,7 +53,16 @@ module App.Routes {
             }
 
             export function get(args: IFilterPlaces): string {
-                return makeUrl('places');
+                var url = makeUrl('places');
+                url = url.substr(0, url.length - 1); // strip trailing slash
+                url += '?';
+                if (args.parentId) url += 'parentId=' + args.parentId + '&';
+                if (args.isContinent) url += 'isContinent=' + args.isContinent + '&';
+                if (args.isCountry) url += 'isCountry=' + args.isCountry + '&';
+                if (args.isAdmin1) url += 'isAdmin1=' + args.isAdmin1 + '&';
+                if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
+                    url = url.substr(0, url.length - 1);
+                return url;
             }
         }
 
