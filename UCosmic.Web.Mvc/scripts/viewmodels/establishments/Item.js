@@ -18,6 +18,7 @@ var ViewModels;
                 this.$mapCanvas = ko.observable();
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
+                this.places = ko.observableArray();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -106,6 +107,19 @@ var ViewModels;
                 }).extend({
                     throttle: 1
                 });
+                this.displayPlaces = ko.computed(function () {
+                    var displayPlaces = new Array();
+                    for(var i = 0; i < _this.places().length; i++) {
+                        var place = _this.places()[i];
+                        if(!place.isEarth) {
+                            displayPlaces[displayPlaces.length] = place;
+                        }
+                    }
+                    return displayPlaces;
+                });
+                this.hasPlaces = ko.computed(function () {
+                    return _this.displayPlaces() && _this.displayPlaces().length > 0;
+                });
             }
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
@@ -186,6 +200,7 @@ var ViewModels;
                                 _this.map.setCenter(latLng);
                             }
                         });
+                        _this.places(response.places);
                         var country = ViewModels.Places.Utils.getCountry(response.places);
                         if(country) {
                             _this.countryCode(country.countryCode);

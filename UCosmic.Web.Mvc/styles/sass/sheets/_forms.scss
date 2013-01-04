@@ -233,7 +233,7 @@ form {
                 }
             }
         }
-        .field-value {
+        .field-input {
             @include border-box;
             float: left;
             select {
@@ -241,16 +241,24 @@ form {
                 margin-left: 0;
             }
         }
+        .field-value {
+            @include border-box;
+            float: left;
+            padding: 9px 0;
+        }
     }
     @mixin field-column-split($lWidth, $vWidth) {
         .field-label {
             width: $lWidth;
         }
-        .field-value {
+        .field-input {
             width: $vWidth;
             select {
                 max-width: $vWidth;
             }
+        }
+        .field-value {
+            width: $vWidth;
         }
     }
     &.w690-l230-v460 {

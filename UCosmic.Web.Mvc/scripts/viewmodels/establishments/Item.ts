@@ -137,6 +137,18 @@ module ViewModels.Establishments {
             })
             .extend({ throttle: 1 });
 
+            this.displayPlaces = ko.computed((): Places.IServerApiModel[]=> {
+                var displayPlaces = new Array();
+                for (var i = 0; i < this.places().length; i++) {
+                    var place = this.places()[i];
+                    if (!place.isEarth) displayPlaces[displayPlaces.length] = place;
+                }
+                return displayPlaces;
+            });
+            this.hasPlaces = ko.computed((): bool => {
+                return this.displayPlaces() && this.displayPlaces().length > 0;
+            });
+
             //#endregion
         }
 
@@ -221,6 +233,9 @@ module ViewModels.Establishments {
         countries: KnockoutObservableCountryModelArray = ko.observableArray();
         countryCode: KnockoutObservableString = ko.observable();
         private _countryCode: string;
+        places: KnockoutObservablePlaceModelArray = ko.observableArray();
+        hasPlaces: KnockoutComputed;
+        displayPlaces: KnockoutComputed;
 
         initMap(): void {
             var mapOptions: gm.MapOptions = {
@@ -253,6 +268,9 @@ module ViewModels.Establishments {
                             this.map.setCenter(latLng);
                         }
                     });
+
+                    // make places array observable
+                    this.places(response.places);
 
                     // populate country menu
                     var country: Places.IServerApiModel = Places.Utils.getCountry(response.places);
