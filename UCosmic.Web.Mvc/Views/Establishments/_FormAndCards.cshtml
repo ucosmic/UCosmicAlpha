@@ -16,7 +16,7 @@
                                 <label for="establishment_location_country_menu">Country</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: countries, optionsCaption: '[Unspecified]', optionsText: 'name', optionsValue: 'code', value: countryCode"
+                                <select data-bind="options: countries, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: countryId"
                                     id="establishment_location_country_menu">
                                     <option>[Loading...]</option>
                                 </select>
@@ -29,7 +29,7 @@
                                 <label data-bind="text: placeTypeEnglishName"></label>
                             </div>
                             <div class="field-input" data-bind="visible: isCountry">
-                                <select data-bind="options: $parent.countries, optionsCaption: '[Unspecified]', optionsText: 'name', optionsValue: 'code', value: $parent.countryCode">
+                                <select data-bind="options: $parent.countries, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: $parent.countryId">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>

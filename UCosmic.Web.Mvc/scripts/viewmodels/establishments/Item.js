@@ -17,7 +17,7 @@ var ViewModels;
                 this.mapTools = ko.observable();
                 this.$mapCanvas = ko.observable();
                 this.countries = ko.observableArray();
-                this.countryCode = ko.observable();
+                this.countryId = ko.observable();
                 this.places = ko.observableArray();
                 this.id = id || 0;
                 ko.computed(function () {
@@ -80,28 +80,30 @@ var ViewModels;
                         _this.initMap();
                     }
                 });
-                this.countryCode.subscribe(function (newValue) {
+                this.countryId.subscribe(function (newValue) {
                     if(newValue && _this.countries().length == 0) {
-                        _this._countryCode = newValue;
+                        _this._countryId = newValue;
                     }
-                    if(newValue && _this.countries().length > 0 && !_this._countryCode) {
+                    if(newValue && _this.countries().length > 0 && !_this._countryId) {
                         var country;
                         for(var i = 0; i < _this.countries().length; i++) {
-                            if(_this.countries()[i].code == newValue) {
+                            if(_this.countries()[i].id == newValue) {
                                 country = _this.countries()[i];
                             }
                         }
                         _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
                     }
                     if(newValue && _this.countries().length > 0) {
-                        _this._countryCode = undefined;
+                        _this._countryId = undefined;
                     }
                 });
                 ko.computed(function () {
-                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                    $.get(App.Routes.WebApi.Places.get({
+                        isCountry: true
+                    })).done(function (response) {
                         _this.countries(response);
-                        if(_this._countryCode) {
-                            _this.countryCode(_this._countryCode);
+                        if(_this._countryId) {
+                            _this.countryId(_this._countryId);
                         }
                     });
                 }).extend({
@@ -203,7 +205,7 @@ var ViewModels;
                         _this.places(response.places);
                         var country = ViewModels.Places.Utils.getCountry(response.places);
                         if(country) {
-                            _this.countryCode(country.countryCode);
+                            _this.countryId(country.id);
                         }
                     });
                 }
