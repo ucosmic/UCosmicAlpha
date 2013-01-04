@@ -21,7 +21,7 @@ namespace UCosmic.Web.Mvc.Models
         public int PageNumber { get; set; }
     }
 
-    public static class EstablishmentSearchInputModelProfiler
+    public static class EstablishmentSearchInputProfiler
     {
         public class ModelToQueryProfile : Profile
         {

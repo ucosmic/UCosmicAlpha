@@ -43,6 +43,14 @@ var App;
                 Countries.get = get;
             })(WebApi.Countries || (WebApi.Countries = {}));
             var Countries = WebApi.Countries;
+            (function (Places) {
+                function get(args) {
+                    return makeUrl('places');
+                }
+                Places.get = get;
+            })(WebApi.Places || (WebApi.Places = {}));
+            var Places = WebApi.Places;
+
             (function (Establishments) {
                 function get(establishmentId) {
                     var url = 'establishments';

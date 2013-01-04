@@ -43,6 +43,20 @@ module App.Routes {
             }
         }
 
+        export module Places {
+
+            export interface IFilterPlaces {
+                parentId?: number;
+                isContinent?: bool;
+                isCountry?: bool;
+                isAdmin1?: bool;
+            }
+
+            export function get(args: IFilterPlaces): string {
+                return makeUrl('places');
+            }
+        }
+
         export module Establishments {
 
             export function get(establishmentId?: number): string {
