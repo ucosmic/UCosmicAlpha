@@ -108,38 +108,19 @@ module ViewModels.Establishments {
                 if (!this.map) this.initMap();
             });
 
-            // continents dropdown
+            // continents section
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get({ isContinent: true }))
                 .done((response: Places.IServerApiModel[]): void => {
                     this.continents(response);
-                    if (this._continentId)
-                        this.continentId(this._continentId);
                 });
             })
             .extend({ throttle: 1 });
-            this.continentId.subscribe((newValue: number) => {
-                // when this value is set before the continents menu is loaded,
-                // it will be reset to undefined.
-                if (newValue && this.continents().length == 0)
-                    this._continentId = newValue; // stash the value to set it after menu loads
-
-                // make sure the selected country matches new continent
-                if (this.countryId()) {
-                    var country = Places.Utils.getPlaceById(this.countries(), this.countryId());
-                    if (country && country.parentId !== newValue)
-                        this.countryId(null);
-                }
-
-                // scope the menu to the selected continent
-                if (newValue && this.continents().length > 0 && !this._continentId && !this.countryId()) {
-                    var continent: Places.IServerApiModel = Places.Utils
-                        .getPlaceById(this.continents(), newValue);
-                    if (continent) this.map.fitBounds(Places.Utils.convertToLatLngBounds(continent.box));
-                }
-
-                if (newValue && this.continents().length > 0)
-                    this._continentId = undefined; // unstash the value when the menu has reloaded
+            this.continentName = ko.computed((): string => {
+                var continentId = this.continentId();
+                if (!continentId) return '[Unspecified]';
+                var continent = Places.Utils.getPlaceById(this.continents(), continentId);
+                return continent ? continent.officialName : '[Unknown]';
             });
 
             // countries dropdown
@@ -162,10 +143,19 @@ module ViewModels.Establishments {
                 if (newValue && this.countries().length > 0 && !this._countryId) {
                     var country: Places.IServerApiModel = Places.Utils
                         .getPlaceById(this.countries(), newValue);
-                    if (country) this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
+                    if (country) {
+                        this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
 
-                    // cascade the continent
-                    this.continentId(country.parentId);
+                        // cascade the continent
+                        this.continentId(country.parentId);
+                    }
+
+                }
+                else if (!newValue && this.countries().length > 0 && !this._countryId) {
+                    // when changing to unspecified, zoom out menu
+                    this.map.setCenter(new gm.LatLng(0, 0));
+                    this.map.setZoom(1);
+                    this.continentId(null);
                 }
 
                 if (newValue && this.countries().length > 0)
@@ -255,7 +245,7 @@ module ViewModels.Establishments {
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
         continents: KnockoutObservablePlaceModelArray = ko.observableArray();
         continentId: KnockoutObservableNumber = ko.observable();
-        private _continentId: number;
+        continentName: KnockoutComputed;
         countries: KnockoutObservablePlaceModelArray = ko.observableArray();
         countryId: KnockoutObservableNumber = ko.observable();
         private _countryId: number;

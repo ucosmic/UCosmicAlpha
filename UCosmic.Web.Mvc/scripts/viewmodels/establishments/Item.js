@@ -87,32 +87,17 @@ var ViewModels;
                         isContinent: true
                     })).done(function (response) {
                         _this.continents(response);
-                        if(_this._continentId) {
-                            _this.continentId(_this._continentId);
-                        }
                     });
                 }).extend({
                     throttle: 1
                 });
-                this.continentId.subscribe(function (newValue) {
-                    if(newValue && _this.continents().length == 0) {
-                        _this._continentId = newValue;
+                this.continentName = ko.computed(function () {
+                    var continentId = _this.continentId();
+                    if(!continentId) {
+                        return '[Unspecified]';
                     }
-                    if(_this.countryId()) {
-                        var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), _this.countryId());
-                        if(country && country.parentId !== newValue) {
-                            _this.countryId(null);
-                        }
-                    }
-                    if(newValue && _this.continents().length > 0 && !_this._continentId && !_this.countryId()) {
-                        var continent = ViewModels.Places.Utils.getPlaceById(_this.continents(), newValue);
-                        if(continent) {
-                            _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(continent.box));
-                        }
-                    }
-                    if(newValue && _this.continents().length > 0) {
-                        _this._continentId = undefined;
-                    }
+                    var continent = ViewModels.Places.Utils.getPlaceById(_this.continents(), continentId);
+                    return continent ? continent.officialName : '[Unknown]';
                 });
                 ko.computed(function () {
                     $.get(App.Routes.WebApi.Places.get({
@@ -134,8 +119,14 @@ var ViewModels;
                         var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), newValue);
                         if(country) {
                             _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
+                            _this.continentId(country.parentId);
                         }
-                        _this.continentId(country.parentId);
+                    } else {
+                        if(!newValue && _this.countries().length > 0 && !_this._countryId) {
+                            _this.map.setCenter(new gm.LatLng(0, 0));
+                            _this.map.setZoom(1);
+                            _this.continentId(null);
+                        }
                     }
                     if(newValue && _this.countries().length > 0) {
                         _this._countryId = undefined;

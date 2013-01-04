@@ -13,13 +13,10 @@
                     <div class="field-table w690-l190-v500">
                         <div class="field-row">
                             <div class="field-label">
-                                <label for="establishment_location_continent_menu">Continent</label>
+                                <label>Continent</label>
                             </div>
-                            <div class="field-input">
-                                <select data-bind="options: continents, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: continentId"
-                                    id="establishment_location_continent_menu">
-                                    <option>[Loading...]</option>
-                                </select>
+                            <div class="field-value">
+                                <span data-bind="text: continentName"></span>
                             </div>
                         </div>
                         <div class="field-row">
@@ -34,21 +31,6 @@
                             </div>
                         </div>
                     </div>
-                    @*<div class="field-table w690-l190-v500" data-bind="visible: hasPlaces, foreach: displayPlaces" style="display: none;">
-                        <div class="field-row">
-                            <div class="field-label">
-                                <label data-bind="text: placeTypeEnglishName"></label>
-                            </div>
-                            <div class="field-input" data-bind="visible: isCountry">
-                                <select data-bind="options: $parent.countries, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: $parent.countryId">
-                                    <option>[Loading...]</option>
-                                </select>
-                            </div>
-                            <div class="field-value" data-bind="visible: !isCountry">
-                                <span data-bind="text: officialName"></span>
-                            </div>
-                        </div>
-                    </div>*@
                     <div style="display: none;">
                         Lat:
                         <input type="text" data-bind="value: toolsMarkerLat" />

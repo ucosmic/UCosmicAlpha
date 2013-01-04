@@ -16,6 +16,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
+        [CacheHttpGet(Duration = 3600)]
         public IEnumerable<PlaceApiModel> GetFiltered([FromUri] PlaceFilterInputModel input)
         {
             //System.Threading.Thread.Sleep(2000);
