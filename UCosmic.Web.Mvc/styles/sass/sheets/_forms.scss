@@ -254,7 +254,8 @@ form {
         .field-input {
             width: $vWidth;
             select {
-                max-width: $vWidth;
+                /*max-width: $vWidth;*/
+                width: $vWidth;
             }
         }
         .field-value {

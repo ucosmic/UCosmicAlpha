@@ -98,7 +98,13 @@ var ViewModels;
                     if(newValue && _this.continents().length == 0) {
                         _this._continentId = newValue;
                     }
-                    if(newValue && _this.continents().length > 0 && !_this._continentId) {
+                    if(_this.countryId()) {
+                        var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), _this.countryId());
+                        if(country && country.parentId !== newValue) {
+                            _this.countryId(null);
+                        }
+                    }
+                    if(newValue && _this.continents().length > 0 && !_this._continentId && !_this.countryId()) {
                         var continent = ViewModels.Places.Utils.getPlaceById(_this.continents(), newValue);
                         if(continent) {
                             _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(continent.box));
@@ -129,6 +135,7 @@ var ViewModels;
                         if(country) {
                             _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
                         }
+                        _this.continentId(country.parentId);
                     }
                     if(newValue && _this.countries().length > 0) {
                         _this._countryId = undefined;

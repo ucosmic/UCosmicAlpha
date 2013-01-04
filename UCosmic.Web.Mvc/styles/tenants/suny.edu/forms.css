@@ -283,7 +283,8 @@ form {
   .field-table.w690-l230-v460 .field-input {
     width: 460px; }
     .field-table.w690-l230-v460 .field-input select {
-      max-width: 460px; }
+      /*max-width: $vWidth;*/
+      width: 460px; }
   .field-table.w690-l230-v460 .field-value {
     width: 460px; }
   .field-table.w690-l200-v490 .field-label {
@@ -291,7 +292,8 @@ form {
   .field-table.w690-l200-v490 .field-input {
     width: 490px; }
     .field-table.w690-l200-v490 .field-input select {
-      max-width: 490px; }
+      /*max-width: $vWidth;*/
+      width: 490px; }
   .field-table.w690-l200-v490 .field-value {
     width: 490px; }
   .field-table.w690-l190-v500 .field-label {
@@ -299,7 +301,8 @@ form {
   .field-table.w690-l190-v500 .field-input {
     width: 500px; }
     .field-table.w690-l190-v500 .field-input select {
-      max-width: 500px; }
+      /*max-width: $vWidth;*/
+      width: 500px; }
   .field-table.w690-l190-v500 .field-value {
     width: 500px; }
 

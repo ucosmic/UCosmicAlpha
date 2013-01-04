@@ -33,6 +33,7 @@ module ViewModels.Places {
 
     export interface IServerApiModel {
         id: number;
+        parentId?: number;
         officialName: string;
         center: IServerPointModel;
         box: IServerBoxModel;

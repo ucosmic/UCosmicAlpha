@@ -124,8 +124,15 @@ module ViewModels.Establishments {
                 if (newValue && this.continents().length == 0)
                     this._continentId = newValue; // stash the value to set it after menu loads
 
+                // make sure the selected country matches new continent
+                if (this.countryId()) {
+                    var country = Places.Utils.getPlaceById(this.countries(), this.countryId());
+                    if (country && country.parentId !== newValue)
+                        this.countryId(null);
+                }
+
                 // scope the menu to the selected continent
-                if (newValue && this.continents().length > 0 && !this._continentId) {
+                if (newValue && this.continents().length > 0 && !this._continentId && !this.countryId()) {
                     var continent: Places.IServerApiModel = Places.Utils
                         .getPlaceById(this.continents(), newValue);
                     if (continent) this.map.fitBounds(Places.Utils.convertToLatLngBounds(continent.box));
@@ -156,6 +163,9 @@ module ViewModels.Establishments {
                     var country: Places.IServerApiModel = Places.Utils
                         .getPlaceById(this.countries(), newValue);
                     if (country) this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
+
+                    // cascade the continent
+                    this.continentId(country.parentId);
                 }
 
                 if (newValue && this.countries().length > 0)

@@ -6,6 +6,7 @@ namespace UCosmic.Web.Mvc.Models
     public class PlaceApiModel
     {
         public int Id { get; set; }
+        public int? ParentId { get; set; }
         public string OfficialName { get; set; }
         public MapPointModel Center { get; set; }
         public MapBoxModel Box { get; set; }
@@ -28,6 +29,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<Place, PlaceApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.ParentId, o => o.ResolveUsing(s => s.Parent != null ? s.Parent.RevisionId : (int?)null))
                     .ForMember(d => d.Box, o => o.MapFrom(s => s.BoundingBox))
                     .ForMember(d => d.CountryCode, o => o.MapFrom(s => s.GeoPlanetPlace.Country.Code))
                     .ForMember(d => d.PlaceTypeEnglishName, o => o.MapFrom(s => s.GeoPlanetPlace.Type.EnglishName))
