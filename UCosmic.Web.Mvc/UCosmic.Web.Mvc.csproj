@@ -479,10 +479,10 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Item.ts" />
     <Content Include="scripts\viewmodels\establishments\Item.js">
       <DependentUpon>Item.ts</DependentUpon>
+	</Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.ts" />
     <Content Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.js">
       <DependentUpon>EmployeePersonalInfoViewModel.ts</DependentUpon>
-    </Content>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
