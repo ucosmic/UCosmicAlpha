@@ -29,7 +29,6 @@ var App;
                 Identity.signOut = signOut;
             })(WebApi.Identity || (WebApi.Identity = {}));
             var Identity = WebApi.Identity;
-
             (function (Languages) {
                 function get() {
                     return makeUrl('languages');
@@ -37,7 +36,6 @@ var App;
                 Languages.get = get;
             })(WebApi.Languages || (WebApi.Languages = {}));
             var Languages = WebApi.Languages;
-
             (function (Countries) {
                 function get() {
                     return makeUrl('countries');
@@ -45,7 +43,6 @@ var App;
                 Countries.get = get;
             })(WebApi.Countries || (WebApi.Countries = {}));
             var Countries = WebApi.Countries;
-
             (function (Establishments) {
                 function get(establishmentId) {
                     var url = 'establishments';
@@ -114,7 +111,6 @@ var App;
                 Establishments.Locations = Locations;                
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
-
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
     })(App.Routes || (App.Routes = {}));

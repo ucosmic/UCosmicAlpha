@@ -2,7 +2,7 @@ var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
-}
+};
 var App;
 (function (App) {
     (function (GoogleMaps) {
@@ -111,7 +111,8 @@ var App;
                     _this.getMap().setOptions({
                         draggableCursor: undefined
                     });
-                    _this.marker.setMap(null);
+                    var nullMap = null;
+                    _this.marker.setMap(nullMap);
                     var overlayView = new gm.OverlayView();
                     overlayView.draw = function () {
                     };
@@ -176,7 +177,8 @@ var App;
                     this.markerDropListener = undefined;
                 }
                 gm.event.clearInstanceListeners(this.marker);
-                this.marker.setMap(null);
+                var nullMap = null;
+                this.marker.setMap(nullMap);
                 this.marker = undefined;
                 this.updateMarkerLatLng(null);
                 this.$markerRemoveButton.hide();
@@ -188,6 +190,5 @@ var App;
         GoogleMaps.ToolsOverlay = ToolsOverlay;        
     })(App.GoogleMaps || (App.GoogleMaps = {}));
     var GoogleMaps = App.GoogleMaps;
-
 })(App || (App = {}));
-
+//@ sourceMappingURL=ToolsOverlay.js.map

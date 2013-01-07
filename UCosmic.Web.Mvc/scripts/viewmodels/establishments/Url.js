@@ -280,6 +280,5 @@ var ViewModels;
         Establishments.Url = Url;        
     })(ViewModels.Establishments || (ViewModels.Establishments = {}));
     var Establishments = ViewModels.Establishments;
-
 })(ViewModels || (ViewModels = {}));
-
+//@ sourceMappingURL=Url.js.map
