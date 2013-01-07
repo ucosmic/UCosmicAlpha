@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,6 +32,7 @@ namespace UCosmic.SeedData
             var startupDirectory = mvcDirectory.EnumerateDirectories().Single(d => d.Name == "startup");
             var sqlDirectory = startupDirectory.EnumerateDirectories().Single(d => d.Name == "sql");
             var files = sqlDirectory.EnumerateFiles().ToList();
+            ((IObjectContextAdapter)_dbContext).ObjectContext.CommandTimeout = 300;
             foreach (var sqlScript in Files)
             {
                 var file = files.SingleOrDefault(f => f.Name == sqlScript);

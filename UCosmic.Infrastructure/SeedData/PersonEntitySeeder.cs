@@ -43,6 +43,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Male
             });
 
             Seed(suny.RevisionId, new CreatePerson
@@ -60,6 +61,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Female
             });
 
             Seed(uc.RevisionId, new CreatePerson
@@ -92,6 +94,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Male
             });
 
             Seed(uc.RevisionId, new CreatePerson
@@ -124,6 +127,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Female
             });
 
             Seed(lehigh.RevisionId, new CreatePerson
@@ -146,6 +150,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Female
             });
 
             Seed(lehigh.RevisionId, new CreatePerson
@@ -168,6 +173,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Male
             });
 
             Seed(lehigh.RevisionId, new CreatePerson
@@ -190,6 +196,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Male
             });
 
             Seed(usil.RevisionId, new CreatePerson
@@ -207,6 +214,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Female
             });
 
             Seed(collegeBoard.RevisionId, new CreatePerson
@@ -224,6 +232,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Male
             });
 
             Seed(terraDotta.RevisionId, new CreatePerson
@@ -241,6 +250,7 @@ namespace UCosmic.SeedData
                         IsConfirmed = true,
                     },
                 },
+                Gender = PersonGender.Male
             });
         }
 

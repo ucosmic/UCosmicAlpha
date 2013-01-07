@@ -40,7 +40,7 @@ module App {
         flasher.tickCount(ticks); // update the viewmodel tick count
     }
 
-    class FlasherViewModel {
+    export class FlasherViewModel {
 
         constructor () {
             ko.computed(() => { init(this); });

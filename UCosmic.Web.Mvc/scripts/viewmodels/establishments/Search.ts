@@ -18,6 +18,7 @@ interface Lens {
 
 module ViewModels.Establishments {
 
+  // comment
     export class Search extends ViewModels.PagedSearch {
 
         constructor () {

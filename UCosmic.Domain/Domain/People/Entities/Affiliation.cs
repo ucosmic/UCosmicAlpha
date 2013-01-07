@@ -1,4 +1,7 @@
-﻿using UCosmic.Domain.Establishments;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.People
 {
@@ -13,8 +16,12 @@ namespace UCosmic.Domain.People
 
         public int EstablishmentId { get; protected internal set; }
         public virtual Establishment Establishment { get; protected internal set; }
+        public virtual EstablishmentCampus Campus { get; protected internal set; }
+        public EstablishmentCollege College { get; protected internal set; }
+        public EstablishmentDepartment Department { get; protected internal set; }
 
         public string JobTitles { get; protected internal set; }
+        public EstablishmentFacultyRank FacultyRank { get; protected internal set; }
 
         public bool IsDefault { get; protected internal set; }
 

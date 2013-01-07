@@ -30,15 +30,8 @@ var App;
         function SidebarFixedScroller() { }
         SidebarFixedScroller.init = function init() {
             $('[data-fixed-scroll=root]').each(function () {
-                var $window = $(window);
-                var $root = $(this);
-                var $content = $root.find('[data-fixed-scroll=content]');
-                var $anchor = $root.find('[data-fixed-scroll=anchor]');
-                var contentWidth = $content.width();
-                var update = function () {
-                    var windowScrollTop = $window.scrollTop();
-                    var anchorOffsetTop = $anchor.offset().top;
-
+                var $window = $(window), $root = $(this), $content = $root.find('[data-fixed-scroll=content]'), $anchor = $root.find('[data-fixed-scroll=anchor]'), contentWidth = $content.width(), update = function () {
+                    var windowScrollTop = $window.scrollTop(), anchorOffsetTop = $anchor.offset().top;
                     if(windowScrollTop > anchorOffsetTop) {
                         $content.css({
                             position: 'fixed',
@@ -65,7 +58,6 @@ var App;
                         }
                     }
                 };
-
                 $window.scroll(update).resize(update);
                 update();
             });
@@ -106,7 +98,6 @@ var App;
         Obtruders.bibNav = bibNav;
     })(App.Obtruders || (App.Obtruders = {}));
     var Obtruders = App.Obtruders;
-
     var Obtruder = (function () {
         function Obtruder() { }
         Obtruder.obtrude = function obtrude(selector, obtruders) {
@@ -130,4 +121,4 @@ var App;
         App.Obtruder.obtrude(document);
     });
 })(App || (App = {}));
-
+//@ sourceMappingURL=App.js.map

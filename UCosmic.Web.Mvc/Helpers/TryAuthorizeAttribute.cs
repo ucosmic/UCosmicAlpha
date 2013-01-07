@@ -8,7 +8,8 @@ namespace UCosmic.Web.Mvc
         {
             if (!string.IsNullOrWhiteSpace(filterContext.HttpContext.User.Identity.Name))
             {
-                filterContext.HttpContext.Response.StatusCode = 403;
+                // Is this correct?
+                //filterContext.HttpContext.Response.StatusCode = 403;
             }
             else
             {

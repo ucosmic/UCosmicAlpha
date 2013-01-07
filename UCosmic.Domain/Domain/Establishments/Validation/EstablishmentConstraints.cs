@@ -9,4 +9,24 @@
     {
         public const int ValueMaxLength = 200;
     }
+
+    public static class EstablishmentFacultyRankConstraints
+    {
+        public const int RankMaxLength = 128;
+    }
+
+    public static class EstablishmentCampusConstraints
+    {
+        public const int NameMaxLength = 128;
+    }
+    
+    public static class EstablishmentCollegeConstraints
+    {
+        public const int NameMaxLength = 128;
+    }
+
+    public static class EstablishmentDepartmentConstraints
+    {
+        public const int NameMaxLength = 128;
+    }
 }

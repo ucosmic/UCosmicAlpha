@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Languages;
 
@@ -1477,20 +1478,92 @@ namespace UCosmic.SeedData
 
     public class EstablishmentUsfEntitySeeder : BaseEstablishmentEntitySeeder
     {
-        private readonly IProcessQueries _queryProcessor;
+      private readonly IProcessQueries _queryProcessor;
 
-        public EstablishmentUsfEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
-            , IUnitOfWork unitOfWork
-        )
-            : base(queryProcessor, createEstablishment, unitOfWork)
-        {
-            _queryProcessor = queryProcessor;
-        }
+      public EstablishmentUsfEntitySeeder(IProcessQueries queryProcessor
+          , IHandleCommands<CreateEstablishment> createEstablishment
+          , IUnitOfWork unitOfWork
+      )
+          : base(queryProcessor, createEstablishment, unitOfWork)
+      {
+          _queryProcessor = queryProcessor;
+      }
 
-        public override void Seed()
-        {
-            Seed(new CreateEstablishment
+      public override void Seed()
+      {
+        var campuses = new Collection<EstablishmentCampus>
+          {
+            new EstablishmentCampus
+            {
+              Name = "Tampa",
+              Colleges = {  new EstablishmentCollege
+                            {
+                              Name = "Arts & Sciences",
+                              Departments = { new EstablishmentDepartment { Name = "Africana Studies" },
+                                              new EstablishmentDepartment { Name = "Anthropology" },
+                                              new EstablishmentDepartment { Name = "Cell Biology, Microbiology and Molecular Biology" },
+                                              new EstablishmentDepartment { Name = "Chemistry" }
+                                              /* TODO: Add the departments */
+                                            }
+                            },
+
+                            new EstablishmentCollege
+                              {
+                                Name = "Behavioral and Community Sciences",
+                                Departments = { new EstablishmentDepartment { Name = "Child & Family Studies" },
+                                                new EstablishmentDepartment { Name = "Communication Sciences & Disorders" },
+                                                new EstablishmentDepartment { Name = "Criminology" }
+                                                /* TODO: Add the departments */
+                                              }
+                              },
+
+                            new EstablishmentCollege
+                              {
+                                Name = "School of Accountancy",
+                                Departments = { new EstablishmentDepartment { Name = "Finance" },
+                                                new EstablishmentDepartment { Name = "Information Systems / Decision Sciences" },
+                                                new EstablishmentDepartment { Name = "Management & Organization" },
+                                                new EstablishmentDepartment { Name = "Marketing" }
+                                              }
+                              }
+
+                            // TODO: Add the other colleges
+
+                         } // Colleges
+            } // Tampa
+
+            /* TODO: Add the other campuses */
+
+            //new EstablishmentCampus
+            //{
+            //  Name = "St. Petersburg",
+            //  Colleges = { }
+            //}
+
+            //new EstablishmentCampus
+            //{
+            //  Name = "Sarasote-Manatee",
+            //  Colleges = { }
+            //}
+
+            //new EstablishmentCampus
+            //{
+            //  Name = "Lakeland",
+            //  Colleges = { }
+            //}
+
+          };
+
+        var ranks = new Collection<EstablishmentFacultyRank>
+          {
+            new EstablishmentFacultyRank { Rank = "Adjunct Instructor" },
+            new EstablishmentFacultyRank { Rank = "Assistant Professor" },
+            new EstablishmentFacultyRank { Rank = "Associate Professor" },
+            new EstablishmentFacultyRank { Rank = "Professor" },
+            new EstablishmentFacultyRank { Rank = "Distinquished Professor" }
+          };
+
+          Seed(new CreateEstablishment
             {
                 OfficialName = "University of South Florida",
                 IsMember = true,
@@ -1501,6 +1574,9 @@ namespace UCosmic.SeedData
                 FindPlacesByCoordinates = true,
                 CenterLatitude = 28.061680,
                 CenterLongitude = -82.414803,
+
+                Campuses = campuses,
+                FacultyRanks = ranks
             });
         }
     }
@@ -2723,5 +2799,64 @@ namespace UCosmic.SeedData
             }
             _unitOfWork.SaveChanges();
         }
+    }
+
+    /* -------------------------------------------------------------------------------- */
+    ///
+    /* -------------------------------------------------------------------------------- */
+    public class EstablishmentCollegeSeeder
+    {
+        private readonly IHandleCommands<CreateEstablishmentCollege> _createCommand;
+
+        public EstablishmentCollegeSeeder(IHandleCommands<CreateEstablishmentCollege> inCreateEstablishmentCollege)
+        {
+            _createCommand = inCreateEstablishmentCollege;
+        }
+
+        public EstablishmentCollege Seed(CreateEstablishmentCollege command)
+          {
+              _createCommand.Handle(command);
+              return command.Created;
+          }
+    }
+
+    /* -------------------------------------------------------------------------------- */
+    ///
+    /* -------------------------------------------------------------------------------- */
+    public class EstablishmentDepartmentSeeder
+    {
+        private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<CreateEstablishmentDepartment> _createCommand;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public EstablishmentDepartmentSeeder(IHandleCommands<CreateEstablishmentDepartment> inCreateEstablishmentCollege)
+        {
+            _createCommand = inCreateEstablishmentCollege;
+        }
+
+        public EstablishmentDepartment Seed(CreateEstablishmentDepartment command)
+          {
+              _createCommand.Handle(command);
+              return command.Created;
+          }
+    }
+
+    /* -------------------------------------------------------------------------------- */
+    ///
+    /* -------------------------------------------------------------------------------- */
+    public class EstablishmentFacultyRankSeeder
+    {
+        private readonly IHandleCommands<CreateEstablishmentFacultyRank> _createCommand;
+
+        public EstablishmentFacultyRankSeeder(IHandleCommands<CreateEstablishmentFacultyRank> inCreateEstablishmentCollege)
+        {
+            _createCommand = inCreateEstablishmentCollege;
+        }
+
+        public EstablishmentFacultyRank Seed(CreateEstablishmentFacultyRank command)
+          {
+              _createCommand.Handle(command);
+              return command.Created;
+          }
     }
 }

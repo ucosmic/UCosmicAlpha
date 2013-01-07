@@ -16,11 +16,7 @@ var App;
             }
         }
         SideSwiper.prototype.next = function (distance, callback) {
-            var $deck = this.$root.find('[data-side-swiper=deck]:first');
-            var $currentFrame = $deck.children(currentFrameSelector);
-            var $nextFrame = $currentFrame.next(otherFrameSelector);
-            var negativeFrameWidth = (this.settings.frameWidth * -1);
-
+            var $deck = this.$root.find('[data-side-swiper=deck]:first'), $currentFrame = $deck.children(currentFrameSelector), $nextFrame = $currentFrame.next(otherFrameSelector), negativeFrameWidth = (this.settings.frameWidth * -1);
             distance = distance || 1;
             for(var i = distance; i > 1; i--) {
                 $nextFrame.hide();
@@ -50,11 +46,7 @@ var App;
             });
         };
         SideSwiper.prototype.prev = function (distance, callback) {
-            var $deck = this.$root.find('[data-side-swiper=deck]:first');
-            var $currentFrame = $deck.children(currentFrameSelector);
-            var $prevFrame = $currentFrame.prev(otherFrameSelector);
-            var negativeFrameWidth = (this.settings.frameWidth * -1);
-
+            var $deck = this.$root.find('[data-side-swiper=deck]:first'), $currentFrame = $deck.children(currentFrameSelector), $prevFrame = $currentFrame.prev(otherFrameSelector), negativeFrameWidth = (this.settings.frameWidth * -1);
             distance = distance || 1;
             for(var i = distance; i > 1; i--) {
                 $prevFrame.hide();
@@ -87,4 +79,4 @@ var App;
     })();
     App.SideSwiper = SideSwiper;    
 })(App || (App = {}));
-
+//@ sourceMappingURL=SideSwiper.js.map

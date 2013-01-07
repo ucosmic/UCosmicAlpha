@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UCosmic.Domain.Languages;
 using UCosmic.Domain.Places;
@@ -7,6 +9,12 @@ namespace UCosmic.Domain.Establishments
 {
     public class CreateEstablishment
     {
+        public CreateEstablishment()
+        {
+          Campuses = new Collection<EstablishmentCampus>();
+          FacultyRanks = new Collection<EstablishmentFacultyRank>();
+        }
+
         public string OfficialName { get; set; }
         public bool IsMember { get; set; }
         public int? ParentId { get; set; }
@@ -21,6 +29,10 @@ namespace UCosmic.Domain.Establishments
         public NonOfficialUrl[] NonOfficialUrls { get; set; }
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
+
+        public Collection<EstablishmentCampus> Campuses { get; set; }
+        public Collection<EstablishmentFacultyRank> FacultyRanks { get; set; }
+
         public Establishment CreatedEstablishment { get; internal set; }
 
         public class NonOfficialName
@@ -173,6 +185,24 @@ namespace UCosmic.Domain.Establishments
             // apply CEEB / UCosmic code
             if (!string.IsNullOrWhiteSpace(command.UCosmicCode))
                 entity.UCosmicCode = command.UCosmicCode;
+
+            /* Add Campuses */
+            if (command.Campuses != null)
+            {
+              foreach (var campus in command.Campuses)
+              {
+                entity.Campuses.Add(campus);
+              }
+            }
+
+            /* Add Faculty Ranks */
+            if (command.FacultyRanks != null)
+            {
+              foreach (var rank in command.FacultyRanks)
+              {
+                entity.FacultyRanks.Add(rank);
+              }
+            }
 
             _entities.Create(entity);
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(entity));

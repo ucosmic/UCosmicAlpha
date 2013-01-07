@@ -14,6 +14,7 @@ namespace UCosmic.Domain.People
         public bool UserIsRegistered { get; set; }
         public EmailAddress[] EmailAddresses { get; set; }
         public Person CreatedPerson { get; internal set; }
+        public int Gender { get; set; }
 
         public class EmailAddress
         {
@@ -63,6 +64,7 @@ namespace UCosmic.Domain.People
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 DisplayName = command.DisplayName,
+                Gender = command.Gender
             };
 
             // attach email addresses

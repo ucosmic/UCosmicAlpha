@@ -36,9 +36,7 @@ var ViewModels;
                 });
             }
             SearchResult.prototype.clickAction = function (viewModel, e) {
-                var href;
-                var $target = $(e.target);
-
+                var href, $target = $(e.target);
                 while($target.length && !$target.attr('href') && !$target.attr('data-href')) {
                     $target = $target.parent();
                 }
@@ -56,6 +54,5 @@ var ViewModels;
         Establishments.SearchResult = SearchResult;        
     })(ViewModels.Establishments || (ViewModels.Establishments = {}));
     var Establishments = ViewModels.Establishments;
-
 })(ViewModels || (ViewModels = {}));
-
+//@ sourceMappingURL=SearchResult.js.map

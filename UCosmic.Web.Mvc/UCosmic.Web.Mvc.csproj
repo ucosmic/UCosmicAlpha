@@ -284,6 +284,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
+    <Compile Include="Controllers\EmployeePersonalInfoController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\EstablishmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -315,6 +316,7 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
+    <Compile Include="Models\PersonInfoApiModel.cs" />
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
@@ -477,6 +479,10 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Item.ts" />
     <Content Include="scripts\viewmodels\establishments\Item.js">
       <DependentUpon>Item.ts</DependentUpon>
+    <TypeScriptCompile Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.ts" />
+    <Content Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.js">
+      <DependentUpon>EmployeePersonalInfoViewModel.ts</DependentUpon>
+    </Content>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
@@ -666,6 +672,7 @@
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Establishments\Form.cshtml" />
+    <Content Include="Views\EmployeePersonalInfo\Index.cshtml" />
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <Content Include="styles\sass\sheets\maps.scss" />
@@ -872,9 +879,14 @@
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptSourceMap> --sourcemap</TypeScriptSourceMap>
+  </PropertyGroup>
   <Target Name="BeforeBuild">
-  </Target>
+    <Message Text="Compiling TypeScript files" />
+    <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />  </Target>
   <Target Name="AfterBuild">
-  </Target> -->
+  </Target>
 </Project>

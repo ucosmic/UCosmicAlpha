@@ -110,11 +110,18 @@
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCategory.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCollege.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishmentDepartment.cs" />
+    <Compile Include="Domain\Establishments\Commands\CreateEstablishmentFacultyRank.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchies.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentCampus.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentCollege.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentDepartment.cs" />
+    <Compile Include="Domain\Establishments\Entities\EstablishmentFacultyRank.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategoryByCode.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentTypeByEnglishName.cs" />
@@ -153,6 +160,7 @@
     <Compile Include="Domain\InstitutionalAgreements\Commands\UpdateInstitutionalAgreementHierarchy.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\MyInstitutionalAgreementSettings.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\QueryInstitutionalAgreements.cs" />
+    <Compile Include="Domain\People\Entities\PersonGender.cs" />
     <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />

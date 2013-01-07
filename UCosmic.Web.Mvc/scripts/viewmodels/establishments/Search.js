@@ -2,7 +2,7 @@ var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
-}
+};
 var ViewModels;
 (function (ViewModels) {
     (function (Establishments) {
@@ -89,9 +89,7 @@ var ViewModels;
                     return true;
                 });
                 this.sammy.get('#/page/:pageNumber/', function () {
-                    var trail = self.trail();
-                    var clone;
-
+                    var trail = self.trail(), clone;
                     if(trail.length > 0 && trail[trail.length - 1] === this.path) {
                         return;
                     }
@@ -188,6 +186,5 @@ var ViewModels;
         Establishments.Search = Search;        
     })(ViewModels.Establishments || (ViewModels.Establishments = {}));
     var Establishments = ViewModels.Establishments;
-
 })(ViewModels || (ViewModels = {}));
-
+//@ sourceMappingURL=Search.js.map

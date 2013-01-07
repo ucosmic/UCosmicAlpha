@@ -18,7 +18,7 @@
                     @if (Request.IsAuthenticated)
                     {
                         <a href="#/me" class="email">@User.Identity.Name</a>
-                        <a href="#/account" class="my">My International</a>
+                        <a href="my/info" class="my">My International</a>
                         <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }
                     else
