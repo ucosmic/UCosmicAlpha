@@ -522,9 +522,9 @@
     <Content Include="scripts\viewmodels\places\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\_deprecated\EstablishmentNameViewModel.js" />
-    <Content Include="scripts\viewmodels\_deprecated\EstablishmentUrlViewModel.js" />
-    <Content Include="scripts\viewmodels\_deprecated\EstablishmentItemViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentNameViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentUrlViewModel.js" />
+    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentItemViewModel.js" />
     <Content Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
     <None Include="startup\disableTimeout.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

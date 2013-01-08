@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public IEnumerable<CountryApiModel> GetAll()
         {
             //System.Threading.Thread.Sleep(2000);
-            var entities = _queryProcessor.Execute(new Countries()
+            var entities = _queryProcessor.Execute(new Countries
             {
                 EagerLoad = new Expression<Func<Place, object>>[]
                 {

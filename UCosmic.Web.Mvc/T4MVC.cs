@@ -328,10 +328,10 @@ namespace Links
                 public static readonly string Url_min_js = Url("Url.min.js");
             }
         
-            public static readonly string FlasherViewModel_ts = Url("FlasherViewModel.ts");
-            public static readonly string FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FlasherViewModel.min.js") ? Url("FlasherViewModel.min.js") : Url("FlasherViewModel.js");
+            public static readonly string Flasher_ts = Url("Flasher.ts");
+            public static readonly string Flasher_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Flasher.min.js") ? Url("Flasher.min.js") : Url("Flasher.js");
                           
-            public static readonly string FlasherViewModel_min_js = Url("FlasherViewModel.min.js");
+            public static readonly string Flasher_min_js = Url("Flasher.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class languages {
                 private const string URLPATH = "~/scripts/viewmodels/languages";
