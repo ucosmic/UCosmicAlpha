@@ -37,6 +37,7 @@ module App.GoogleMaps {
         private $destroyMarkerConfirmDialog;
         private markerMoveListener: gm.MapsEventListener;
         private markerDropListener: gm.MapsEventListener;
+        private static nullMap: gm.Map = null;
 
 
         constructor (map: gm.Map,

@@ -29,6 +29,7 @@ var App;
                 this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
                 this.setMap(map);
             }
+            ToolsOverlay.nullMap = null;
             ToolsOverlay.prototype.onAdd = function () {
                 var _this = this;
                 this.getMap().controls[this.position].push(this.element);
@@ -111,7 +112,7 @@ var App;
                     _this.getMap().setOptions({
                         draggableCursor: undefined
                     });
-                    _this.marker.setMap(null);
+                    _this.marker.setMap(ToolsOverlay.nullMap);
                     var overlayView = new gm.OverlayView();
                     overlayView.draw = function () {
                     };
@@ -176,7 +177,7 @@ var App;
                     this.markerDropListener = undefined;
                 }
                 gm.event.clearInstanceListeners(this.marker);
-                this.marker.setMap(null);
+                this.marker.setMap(ToolsOverlay.nullMap);
                 this.marker = undefined;
                 this.updateMarkerLatLng(null);
                 this.$markerRemoveButton.hide();
