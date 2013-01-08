@@ -68,7 +68,6 @@ var App;
                 Places.get = get;
             })(WebApi.Places || (WebApi.Places = {}));
             var Places = WebApi.Places;
-
             (function (Establishments) {
                 function get(establishmentId) {
                     var url = 'establishments';
