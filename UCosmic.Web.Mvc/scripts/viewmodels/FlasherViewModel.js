@@ -30,8 +30,8 @@ var App;
         }
         flasher.tickCount(ticks);
     }
-    var FlasherViewModel = (function () {
-        function FlasherViewModel() {
+    var Flasher = (function () {
+        function Flasher() {
             var _this = this;
             this.text = ko.observable();
             this.tickCount = ko.observable(9);
@@ -40,21 +40,20 @@ var App;
                 init(_this);
             });
         }
-        FlasherViewModel.prototype.flash = function (text) {
+        Flasher.prototype.flash = function (text) {
             this.text(undefined);
             if(text) {
                 this.text(text);
             }
         };
-        FlasherViewModel.prototype.dismiss = function () {
+        Flasher.prototype.dismiss = function () {
             var _this = this;
             this.$element.fadeOut('slow', function () {
                 _this.text('');
                 _this.$element.addClass('hide');
             });
         };
-        return FlasherViewModel;
+        return Flasher;
     })();
-    App.FlasherViewModel = FlasherViewModel;    
-    App.flasher = new FlasherViewModel();
+    App.flasher = new Flasher();
 })(App || (App = {}));

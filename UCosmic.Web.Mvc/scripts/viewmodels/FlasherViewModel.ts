@@ -8,7 +8,7 @@ module App {
     var tickInterval: number;
 
     //private methods
-    function init(flasher: FlasherViewModel): void {
+    function init(flasher: IFlasher): void {
         // executes once each time the flasher text changes
         if (flasher.text()) { // when there is flasher text
             window.clearInterval(tickInterval); // clear the tick interval
@@ -27,7 +27,7 @@ module App {
         }
     }
 
-    function tick(flasher: FlasherViewModel): void {
+    function tick(flasher: IFlasher): void {
         // executes once each second until tick interval is cleared
         if (ticks <= 0) { // if ticks is zero or lower,
             ticks = 0; // reset ticks to zero
@@ -40,7 +40,16 @@ module App {
         flasher.tickCount(ticks); // update the viewmodel tick count
     }
 
-    export class FlasherViewModel {
+    export interface IFlasher {
+        text: KnockoutObservableString;
+        tickCount: KnockoutObservableNumber;
+        $element: JQuery;
+        flash(text: string): void;
+        dismiss(): void;
+    }
+
+    // keep class private but implement exported interface
+    class Flasher implements IFlasher {
 
         constructor () {
             ko.computed(() => { init(this); });
@@ -70,5 +79,5 @@ module App {
         }
     }
 
-    export var flasher = new FlasherViewModel(); // implement flasher as singleton instance
+    export var flasher: IFlasher = new Flasher(); // implement flasher as singleton instance
 }
