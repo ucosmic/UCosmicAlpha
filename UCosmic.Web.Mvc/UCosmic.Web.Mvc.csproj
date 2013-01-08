@@ -411,7 +411,7 @@
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\ui-bg_flat_black_40x100.png" />
-    <TypeScriptCompile Include="scripts\viewmodels\FlasherViewModel.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
@@ -480,6 +480,12 @@
     <Content Include="scripts\viewmodels\establishments\Url.min.js">
       <DependentUpon>Url.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\Flasher.js">
+      <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\Flasher.min.js">
+      <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\languages\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
@@ -509,12 +515,6 @@
     </Content>
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
-    <Content Include="scripts\viewmodels\FlasherViewModel.js">
-      <DependentUpon>FlasherViewModel.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\FlasherViewModel.min.js">
-      <DependentUpon>FlasherViewModel.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\places\ServerApiModel.ts" />
     <Content Include="scripts\viewmodels\places\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
