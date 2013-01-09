@@ -137,6 +137,7 @@
     <Compile Include="EntityFramework\DropCreateDbOnModelChange.cs" />
     <Compile Include="EntityFramework\Fluent\Activities.cs" />
     <Compile Include="EntityFramework\Fluent\Audits.cs" />
+    <Compile Include="EntityFramework\Fluent\Employees.cs" />
     <Compile Include="EntityFramework\Fluent\Files.cs" />
     <Compile Include="EntityFramework\Fluent\Identity.cs" />
     <Compile Include="EntityFramework\Fluent\InstitutionalAgreements.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Saml\SimpleInjectorSamlRegistration.cs" />
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
+    <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />

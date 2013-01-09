@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Establishments
@@ -22,8 +23,6 @@ namespace UCosmic.Domain.Establishments
             Ancestors = new Collection<EstablishmentNode>();
             Children = new Collection<Establishment>();
             Offspring = new Collection<EstablishmentNode>();
-            Campuses = new Collection<EstablishmentCampus>();
-            FacultyRanks = new Collection<EstablishmentFacultyRank>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -52,9 +51,6 @@ namespace UCosmic.Domain.Establishments
 
         public string WebsiteUrl { get; protected internal set; }
         public virtual ICollection<EstablishmentUrl> Urls { get; protected set; }
-
-        public virtual ICollection<EstablishmentCampus> Campuses { get; protected set; }  // TODO: Location?
-        public virtual ICollection<EstablishmentFacultyRank> FacultyRanks { get; protected set; }
 
         public virtual Establishment Parent { get; protected internal set; }
         public virtual ICollection<EstablishmentNode> Ancestors { get; protected set; }

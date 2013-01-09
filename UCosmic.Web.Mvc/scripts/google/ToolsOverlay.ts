@@ -152,8 +152,7 @@ module App.GoogleMaps {
                 gm.event.removeListener(this.markerMoveListener);
                 gm.event.removeListener(this.markerDropListener);
                 this.getMap().setOptions({ draggableCursor: undefined });
-                var nullMap: gm.Map = null;
-                this.marker.setMap(nullMap); // remove old marker
+                this.marker.setMap(<gm.Map>null); // remove old marker
 
                 // compute position to drop the marker onto
                 var overlayView = new gm.OverlayView();
@@ -219,8 +218,7 @@ module App.GoogleMaps {
                 this.markerDropListener = undefined;
             }
             gm.event.clearInstanceListeners(this.marker);
-            var nullMap: gm.Map = null;
-            this.marker.setMap(nullMap); // destroy the marker
+            this.marker.setMap(<gm.Map>null); // destroy the marker
             this.marker = undefined;
             this.updateMarkerLatLng(null); // nullify coordinates
             this.$markerRemoveButton.hide(); // hide remove button

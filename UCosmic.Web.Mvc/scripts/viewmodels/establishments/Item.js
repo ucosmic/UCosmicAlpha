@@ -199,4 +199,3 @@ var ViewModels;
     })(ViewModels.Establishments || (ViewModels.Establishments = {}));
     var Establishments = ViewModels.Establishments;
 })(ViewModels || (ViewModels = {}));
-//@ sourceMappingURL=Item.js.map

@@ -111,8 +111,7 @@ var App;
                     _this.getMap().setOptions({
                         draggableCursor: undefined
                     });
-                    var nullMap = null;
-                    _this.marker.setMap(nullMap);
+                    _this.marker.setMap(null);
                     var overlayView = new gm.OverlayView();
                     overlayView.draw = function () {
                     };
@@ -177,8 +176,7 @@ var App;
                     this.markerDropListener = undefined;
                 }
                 gm.event.clearInstanceListeners(this.marker);
-                var nullMap = null;
-                this.marker.setMap(nullMap);
+                this.marker.setMap(null);
                 this.marker = undefined;
                 this.updateMarkerLatLng(null);
                 this.$markerRemoveButton.hide();
@@ -191,4 +189,3 @@ var App;
     })(App.GoogleMaps || (App.GoogleMaps = {}));
     var GoogleMaps = App.GoogleMaps;
 })(App || (App = {}));
-//@ sourceMappingURL=ToolsOverlay.js.map

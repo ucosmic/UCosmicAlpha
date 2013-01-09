@@ -7,10 +7,10 @@ using AttributeRouting.Web.Mvc;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public class EmployeePersonalInfoController : Controller
+    public partial class EmployeePersonalInfoController : Controller
     {
         [GET("my/info")]
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return View();
         }
@@ -18,7 +18,7 @@ namespace UCosmic.Web.Mvc.Controllers
         //
         // GET: /EmployeePersonalInfo/Details/5
 
-        public ActionResult Details(int id)
+        public virtual ActionResult Details(int id)
         {
             return View();
         }
@@ -26,7 +26,7 @@ namespace UCosmic.Web.Mvc.Controllers
         //
         // GET: /EmployeePersonalInfo/Create
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             return View();
         }
@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.Controllers
         // POST: /EmployeePersonalInfo/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public virtual ActionResult Create(FormCollection collection)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace UCosmic.Web.Mvc.Controllers
         //
         // GET: /EmployeePersonalInfo/Edit/5
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             return View();
         }
@@ -61,7 +61,7 @@ namespace UCosmic.Web.Mvc.Controllers
         // POST: /EmployeePersonalInfo/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public virtual ActionResult Edit(int id, FormCollection collection)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace UCosmic.Web.Mvc.Controllers
         //
         // GET: /EmployeePersonalInfo/Delete/5
 
-        public ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id)
         {
             return View();
         }
@@ -87,7 +87,7 @@ namespace UCosmic.Web.Mvc.Controllers
         // POST: /EmployeePersonalInfo/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public virtual ActionResult Delete(int id, FormCollection collection)
         {
             try
             {

@@ -79,4 +79,3 @@ var App;
     })();
     App.SideSwiper = SideSwiper;    
 })(App || (App = {}));
-//@ sourceMappingURL=SideSwiper.js.map

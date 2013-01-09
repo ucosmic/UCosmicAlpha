@@ -12,4 +12,3 @@ var ViewModels;
     })(ViewModels.Languages || (ViewModels.Languages = {}));
     var Languages = ViewModels.Languages;
 })(ViewModels || (ViewModels = {}));
-//@ sourceMappingURL=ServerApiModel.js.map

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 
@@ -14,10 +15,7 @@ namespace UCosmic.Domain.People
             Affiliations = new List<Affiliation>();
             Emails = new List<EmailAddress>();
             Messages = new List<EmailMessage>();
-            Gender = PersonGender.Unknown;
-            NotifyAdminOnUpdate = false;
-            NotifyAdmin = null;
-            Picture = null;
+            Gender = null;
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -28,13 +26,8 @@ namespace UCosmic.Domain.People
         public string MiddleName { get; protected internal set; }
         public string LastName { get; protected internal set; }
         public string Suffix { get; protected internal set; }
-        public int Gender { get; protected internal set; }
-
-        public string AdministrativeAppointments { get; protected internal set; }
-
-        public bool NotifyAdminOnUpdate { get; protected internal set; }
-        public Person NotifyAdmin { get; protected internal set; }
-
+        public string Gender { get; protected internal set; }
+        public EmployeeFacultyRank FacultyRank { get; protected internal set; }
         public byte[] Picture { get; protected internal set; }
 
         public virtual User User { get; protected internal set; }

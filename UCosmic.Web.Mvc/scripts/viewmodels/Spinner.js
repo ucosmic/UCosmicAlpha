@@ -41,4 +41,3 @@ var ViewModels;
     })();
     ViewModels.Spinner = Spinner;    
 })(ViewModels || (ViewModels = {}));
-//@ sourceMappingURL=Spinner.js.map

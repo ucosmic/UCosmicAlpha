@@ -290,6 +290,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
+    <Compile Include="EmployeePersonalInfoController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="ErrorsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -479,10 +482,10 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Item.ts" />
     <Content Include="scripts\viewmodels\establishments\Item.js">
       <DependentUpon>Item.ts</DependentUpon>
-	</Content>
-    <TypeScriptCompile Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.ts" />
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\employees\PersonalInfo.ts" />
     <Content Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.js">
-      <DependentUpon>EmployeePersonalInfoViewModel.ts</DependentUpon>
+      <DependentUpon>PersonalInfo.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
@@ -881,12 +884,14 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptSourceMap> --sourcemap</TypeScriptSourceMap>
+	<!-- If you uncomment the following line, replace the [dash][dash] with actual dashes -->
+    <!-- <TypeScriptSourceMap> [dash][dash]sourcemap</TypeScriptSourceMap> -->
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <Message Text="Compiling TypeScript files" />
     <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
-    <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />  </Target>
+    <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+  </Target>
   <Target Name="AfterBuild">
   </Target>
 </Project>

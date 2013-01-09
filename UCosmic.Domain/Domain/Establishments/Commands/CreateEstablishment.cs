@@ -11,8 +11,6 @@ namespace UCosmic.Domain.Establishments
     {
         public CreateEstablishment()
         {
-          Campuses = new Collection<EstablishmentCampus>();
-          FacultyRanks = new Collection<EstablishmentFacultyRank>();
         }
 
         public string OfficialName { get; set; }
@@ -29,9 +27,6 @@ namespace UCosmic.Domain.Establishments
         public NonOfficialUrl[] NonOfficialUrls { get; set; }
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
-
-        public Collection<EstablishmentCampus> Campuses { get; set; }
-        public Collection<EstablishmentFacultyRank> FacultyRanks { get; set; }
 
         public Establishment CreatedEstablishment { get; internal set; }
 
@@ -186,23 +181,6 @@ namespace UCosmic.Domain.Establishments
             if (!string.IsNullOrWhiteSpace(command.UCosmicCode))
                 entity.UCosmicCode = command.UCosmicCode;
 
-            /* Add Campuses */
-            if (command.Campuses != null)
-            {
-              foreach (var campus in command.Campuses)
-              {
-                entity.Campuses.Add(campus);
-              }
-            }
-
-            /* Add Faculty Ranks */
-            if (command.FacultyRanks != null)
-            {
-              foreach (var rank in command.FacultyRanks)
-              {
-                entity.FacultyRanks.Add(rank);
-              }
-            }
 
             _entities.Create(entity);
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(entity));

@@ -15,6 +15,7 @@
         private readonly MemberEntitySeeder _memberEntitySeeder;
         private readonly InstitutionalAgreementEntitySeeder _institutionalAgreementEntitySeeder;
         private readonly InstitutionalAgreementSettingsEntitySeeder _institutionalAgreementSettingsEntitySeeder;
+        private readonly EmployeeEntitySeeder _employeeEntitySeeder;
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
@@ -29,6 +30,7 @@
             , MemberEntitySeeder memberEntitySeeder
             , InstitutionalAgreementEntitySeeder institutionalAgreementEntitySeeder
             , InstitutionalAgreementSettingsEntitySeeder institutionalAgreementSettingsEntitySeeder
+            , EmployeeEntitySeeder employeeEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -44,6 +46,7 @@
             _memberEntitySeeder = memberEntitySeeder;
             _institutionalAgreementEntitySeeder = institutionalAgreementEntitySeeder;
             _institutionalAgreementSettingsEntitySeeder = institutionalAgreementSettingsEntitySeeder;
+            _employeeEntitySeeder = employeeEntitySeeder;
         }
 
         public void Seed()
@@ -61,6 +64,7 @@
             _memberEntitySeeder.Seed();
             _institutionalAgreementEntitySeeder.Seed();
             _institutionalAgreementSettingsEntitySeeder.Seed();
+            _employeeEntitySeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }

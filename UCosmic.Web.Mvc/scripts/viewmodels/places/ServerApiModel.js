@@ -36,4 +36,3 @@ var ViewModels;
     })(ViewModels.Places || (ViewModels.Places = {}));
     var Places = ViewModels.Places;
 })(ViewModels || (ViewModels = {}));
-//@ sourceMappingURL=ServerApiModel.js.map

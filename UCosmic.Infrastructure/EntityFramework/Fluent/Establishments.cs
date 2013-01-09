@@ -45,12 +45,6 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.EstablishmentId)
                 .WillCascadeOnDelete(true);
 
-            /* Establishment:Colleges 1:0..* */
-            HasMany(p => p.Campuses);
-
-            /* Establishment:FacultyRanks 1:0..* */
-            HasMany(p => p.FacultyRanks);
-
             // has many ancestors
             HasMany(p => p.Ancestors)
                 .WithRequired(d => d.Offspring)
@@ -246,47 +240,4 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class EstablishmentFacultyRankOrm : EntityTypeConfiguration<EstablishmentFacultyRank>
-    {
-        public EstablishmentFacultyRankOrm()
-        {
-            ToTable(typeof(EstablishmentFacultyRank).Name, DbSchemaName.Establishments);
-
-            Property(p => p.Rank).IsRequired().HasMaxLength(EstablishmentFacultyRankConstraints.RankMaxLength);
-        }
-    }
-
-    public class EstablishmentCampusOrm : EntityTypeConfiguration<EstablishmentCampus>
-    {
-        public EstablishmentCampusOrm()
-        {
-            ToTable(typeof(EstablishmentCampus).Name, DbSchemaName.Establishments);
-
-            HasMany(p => p.Colleges);
-
-            Property(p => p.Name).IsRequired().HasMaxLength(EstablishmentCampusConstraints.NameMaxLength);
-        }
-    }
-    
-    public class EstablishmentCollegeOrm : EntityTypeConfiguration<EstablishmentCollege>
-    {
-        public EstablishmentCollegeOrm()
-        {
-            ToTable(typeof(EstablishmentCollege).Name, DbSchemaName.Establishments);
-
-            HasMany(p => p.Departments);
-
-            Property(p => p.Name).IsRequired().HasMaxLength(EstablishmentCollegeConstraints.NameMaxLength);
-        }
-    }
-
-    public class EstablishmentDepartmentOrm : EntityTypeConfiguration<EstablishmentDepartment>
-    {
-        public EstablishmentDepartmentOrm()
-        {
-            ToTable(typeof(EstablishmentDepartment).Name, DbSchemaName.Establishments);
-
-            Property(p => p.Name).IsRequired().HasMaxLength(EstablishmentDepartmentConstraints.NameMaxLength);
-        }
-    }
 }

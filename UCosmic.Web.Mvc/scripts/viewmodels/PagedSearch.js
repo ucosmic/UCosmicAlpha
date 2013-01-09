@@ -79,4 +79,3 @@ var ViewModels;
     })();
     ViewModels.PagedSearch = PagedSearch;    
 })(ViewModels || (ViewModels = {}));
-//@ sourceMappingURL=PagedSearch.js.map

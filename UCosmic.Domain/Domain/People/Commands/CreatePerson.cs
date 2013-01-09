@@ -14,7 +14,7 @@ namespace UCosmic.Domain.People
         public bool UserIsRegistered { get; set; }
         public EmailAddress[] EmailAddresses { get; set; }
         public Person CreatedPerson { get; internal set; }
-        public int Gender { get; set; }
+        public string Gender { get; set; }
 
         public class EmailAddress
         {

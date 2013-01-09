@@ -16,14 +16,15 @@ namespace UCosmic.Domain.People
 
         public int EstablishmentId { get; protected internal set; }
         public virtual Establishment Establishment { get; protected internal set; }
-        public virtual EstablishmentCampus Campus { get; protected internal set; }
-        public EstablishmentCollege College { get; protected internal set; }
-        public EstablishmentDepartment Department { get; protected internal set; }
 
+        /* If IsPrimary is true, JobTitles is considered Working Title. */
         public string JobTitles { get; protected internal set; }
-        public EstablishmentFacultyRank FacultyRank { get; protected internal set; }
 
+        /* Default affiliation should be linked to a University type Establishment. */
         public bool IsDefault { get; protected internal set; }
+
+        /* Primary affiliation is the Department (or College) the employee is primarily associated with. */
+        public bool IsPrimary { get; protected internal set; }
 
         public bool IsAcknowledged { get; protected internal set; }
         public bool IsClaimingStudent { get; protected internal set; }

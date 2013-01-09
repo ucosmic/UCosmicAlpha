@@ -33,8 +33,10 @@ namespace UCosmic.EntityFramework
             HasMany(p => p.Affiliations)
                 .WithRequired(d => d.Person)
                 .HasForeignKey(d => d.PersonId)
-                .WillCascadeOnDelete(true)
-            ;
+                .WillCascadeOnDelete(true);
+
+            // might have FacultyRank assigned
+            HasOptional(p => p.FacultyRank);
 
             Property(p => p.DisplayName).IsRequired().HasMaxLength(200);
             Property(p => p.Salutation).HasMaxLength(50);
@@ -42,6 +44,7 @@ namespace UCosmic.EntityFramework
             Property(p => p.MiddleName).HasMaxLength(100);
             Property(p => p.LastName).HasMaxLength(100);
             Property(p => p.Suffix).HasMaxLength(50);
+            Property(p => p.Gender).HasMaxLength(1).IsFixedLength().IsUnicode(false).IsOptional();
         }
     }
 

@@ -121,4 +121,3 @@ var App;
         App.Obtruder.obtrude(document);
     });
 })(App || (App = {}));
-//@ sourceMappingURL=App.js.map

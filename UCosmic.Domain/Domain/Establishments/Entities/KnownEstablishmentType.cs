@@ -11,6 +11,7 @@ namespace UCosmic.Domain.Establishments
         GovernmentAdministration,
         BusinessOrCorporation,
         RecruitmentAgency,
-        Association
+        Association,
+        Department
     }
 }

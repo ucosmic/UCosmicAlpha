@@ -10,5 +10,6 @@
         public const string Establishments = "Establishments";
         public const string InstitutionalAgreements = "InstitutionalAgreements";
         public const string Activities = "Activities";
+        public const string Employees = "Employees";
     }
 }

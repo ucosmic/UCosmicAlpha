@@ -58,4 +58,3 @@ var App;
     App.FlasherViewModel = FlasherViewModel;    
     App.flasher = new FlasherViewModel();
 })(App || (App = {}));
-//@ sourceMappingURL=FlasherViewModel.js.map
