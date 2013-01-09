@@ -213,7 +213,6 @@ module ViewModels.Establishments {
                             });
                     }
                 }
-
             });
 
             // admin2 dropdown
@@ -224,10 +223,45 @@ module ViewModels.Establishments {
                 return this.admin1Id() && (this.admin2s().length > 0 || this.admin2sLoading());
             });
             this.admin2Id.subscribe((newValue: number): void => {
-                // when this value is set before the admin1 menu is loaded,
+                // when this value is set before the admin2 menu is loaded,
                 // it will be reset to undefined.
                 if (newValue && this.admin2s().length == 0)
                     this._admin2Id = newValue; // stash the value to set it after menu loads
+
+                if (newValue && this.admin2s().length > 0) {
+                    var admin2: Places.IServerApiModel = Places.Utils
+                        .getPlaceById(this.admin2s(), newValue);
+                    if (admin2) {
+                        // load admin3 options
+                        this.admin3s([]);
+                        var admin3Url = App.Routes.WebApi.Places.get({ isAdmin3: true, parentId: admin2.id });
+                        this.admin3sLoading(true);
+                        $.get(admin3Url)
+                            .done((results: Places.IServerApiModel[]) => {
+                                this.admin3s(results);
+                                if (this._admin3Id) {
+                                    var admin3Id = this._admin3Id;
+                                    this._admin3Id = undefined;
+                                    this.admin3Id(admin3Id);
+                                }
+                                this.admin3sLoading(false);
+                            });
+                    }
+                }
+            });
+
+            // admin3 dropdown
+            this.admin3OptionsCaption = ko.computed((): string => {
+                return !this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
+            }).extend({ throttle: 400 });
+            this.showAdmin3Input = ko.computed((): bool => {
+                return this.admin2Id() && (this.admin3s().length > 0 || this.admin3sLoading());
+            });
+            this.admin3Id.subscribe((newValue: number): void => {
+                // when this value is set before the admin3 menu is loaded,
+                // it will be reset to undefined.
+                if (newValue && this.admin3s().length == 0)
+                    this._admin3Id = newValue; // stash the value to set it after menu loads
             });
 
             //#endregion
@@ -330,6 +364,12 @@ module ViewModels.Establishments {
         admin2sLoading: KnockoutObservableBool = ko.observable(false);
         private _admin2Id: number;
         showAdmin2Input: KnockoutComputed;
+        admin3s: KnockoutObservablePlaceModelArray = ko.observableArray();
+        admin3Id: KnockoutObservableNumber = ko.observable();
+        admin3OptionsCaption: KnockoutComputed;
+        admin3sLoading: KnockoutObservableBool = ko.observable(false);
+        private _admin3Id: number;
+        showAdmin3Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();
 
         initMap(): void {
@@ -382,6 +422,10 @@ module ViewModels.Establishments {
                     // populate admin2 menu
                     var admin2: Places.IServerApiModel = Places.Utils.getAdmin2(response.places);
                     if (admin2) this.admin2Id(admin2.id);
+
+                    // populate admin3 menu
+                    var admin3: Places.IServerApiModel = Places.Utils.getAdmin3(response.places);
+                    if (admin3) this.admin3Id(admin3.id);
                 })
         }
 

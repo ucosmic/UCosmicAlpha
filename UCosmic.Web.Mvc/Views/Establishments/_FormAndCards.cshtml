@@ -52,6 +52,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="field-row" data-bind="visible: showAdmin3Input">
+                            <div class="field-label">
+                                <label for="establishment_location_admin3_menu">Admin #3</label>
+                            </div>
+                            <div class="field-input">
+                                <select data-bind="options: admin3s, optionsCaption: admin3OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin3Id"
+                                    id="establishment_location_admin3_menu">
+                                    <option>[Loading...]</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div style="display: none;">
                         Lat:
