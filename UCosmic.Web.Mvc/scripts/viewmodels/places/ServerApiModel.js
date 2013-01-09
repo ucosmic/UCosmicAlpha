@@ -59,6 +59,30 @@ var ViewModels;
                 return null;
             }
             Utils.getAdmin1 = getAdmin1;
+            function getAdmin2(places) {
+                if(places && places.length > 0) {
+                    for(var i = 0; i < places.length; i++) {
+                        var place = places[i];
+                        if(place.isAdmin2) {
+                            return place;
+                        }
+                    }
+                }
+                return null;
+            }
+            Utils.getAdmin2 = getAdmin2;
+            function getAdmin3(places) {
+                if(places && places.length > 0) {
+                    for(var i = 0; i < places.length; i++) {
+                        var place = places[i];
+                        if(place.isAdmin3) {
+                            return place;
+                        }
+                    }
+                }
+                return null;
+            }
+            Utils.getAdmin3 = getAdmin3;
             function convertToLatLng(point) {
                 return new gm.LatLng(point.latitude, point.longitude);
             }

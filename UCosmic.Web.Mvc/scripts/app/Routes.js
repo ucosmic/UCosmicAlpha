@@ -60,6 +60,12 @@ var App;
                     if(args.isAdmin1) {
                         url += 'isAdmin1=' + args.isAdmin1 + '&';
                     }
+                    if(args.isAdmin2) {
+                        url += 'isAdmin2=' + args.isAdmin2 + '&';
+                    }
+                    if(args.isAdmin3) {
+                        url += 'isAdmin3=' + args.isAdmin3 + '&';
+                    }
                     if(url.lastIndexOf('&') === url.length - 1) {
                         url = url.substr(0, url.length - 1);
                     }

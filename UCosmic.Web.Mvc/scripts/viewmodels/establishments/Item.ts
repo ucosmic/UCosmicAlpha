@@ -192,6 +192,42 @@ module ViewModels.Establishments {
                 // it will be reset to undefined.
                 if (newValue && this.admin1s().length == 0)
                     this._admin1Id = newValue; // stash the value to set it after menu loads
+
+                if (newValue && this.admin1s().length > 0) {
+                    var admin1: Places.IServerApiModel = Places.Utils
+                        .getPlaceById(this.admin1s(), newValue);
+                    if (admin1) {
+                        // load admin2 options
+                        this.admin2s([]);
+                        var admin2Url = App.Routes.WebApi.Places.get({ isAdmin2: true, parentId: admin1.id });
+                        this.admin2sLoading(true);
+                        $.get(admin2Url)
+                            .done((results: Places.IServerApiModel[]) => {
+                                this.admin2s(results);
+                                if (this._admin2Id) {
+                                    var admin2Id = this._admin2Id;
+                                    this._admin2Id = undefined;
+                                    this.admin2Id(admin2Id);
+                                }
+                                this.admin2sLoading(false);
+                            });
+                    }
+                }
+
+            });
+
+            // admin2 dropdown
+            this.admin2OptionsCaption = ko.computed((): string => {
+                return !this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
+            }).extend({ throttle: 400 });
+            this.showAdmin2Input = ko.computed((): bool => {
+                return this.admin1Id() && (this.admin2s().length > 0 || this.admin2sLoading());
+            });
+            this.admin2Id.subscribe((newValue: number): void => {
+                // when this value is set before the admin1 menu is loaded,
+                // it will be reset to undefined.
+                if (newValue && this.admin2s().length == 0)
+                    this._admin2Id = newValue; // stash the value to set it after menu loads
             });
 
             //#endregion
@@ -288,6 +324,12 @@ module ViewModels.Establishments {
         admin1sLoading: KnockoutObservableBool = ko.observable(false);
         private _admin1Id: number;
         showAdmin1Input: KnockoutComputed;
+        admin2s: KnockoutObservablePlaceModelArray = ko.observableArray();
+        admin2Id: KnockoutObservableNumber = ko.observable();
+        admin2OptionsCaption: KnockoutComputed;
+        admin2sLoading: KnockoutObservableBool = ko.observable(false);
+        private _admin2Id: number;
+        showAdmin2Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();
 
         initMap(): void {
@@ -336,6 +378,10 @@ module ViewModels.Establishments {
                     // populate admin1 menu
                     var admin1: Places.IServerApiModel = Places.Utils.getAdmin1(response.places);
                     if (admin1) this.admin1Id(admin1.id);
+
+                    // populate admin2 menu
+                    var admin2: Places.IServerApiModel = Places.Utils.getAdmin2(response.places);
+                    if (admin2) this.admin2Id(admin2.id);
                 })
         }
 

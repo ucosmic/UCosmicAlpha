@@ -9,6 +9,8 @@ namespace UCosmic.Domain.Places
         public bool? IsCountry { get; set; }
         public bool? IsContinent { get; set; }
         public bool? IsAdmin1 { get; set; }
+        public bool? IsAdmin2 { get; set; }
+        public bool? IsAdmin3 { get; set; }
     }
 
     public class HandleFilteredPlacesQuery : IHandleQueries<FilteredPlaces, Place[]>
@@ -39,6 +41,12 @@ namespace UCosmic.Domain.Places
 
             if (query.IsAdmin1.HasValue)
                 results = results.Where(x => x.IsAdmin1 == query.IsAdmin1.Value);
+
+            if (query.IsAdmin2.HasValue)
+                results = results.Where(x => x.IsAdmin2 == query.IsAdmin2.Value);
+
+            if (query.IsAdmin3.HasValue)
+                results = results.Where(x => x.IsAdmin3 == query.IsAdmin3.Value);
 
             results = results.OrderBy(query.OrderBy);
 

@@ -23,6 +23,9 @@ var ViewModels;
                 this.admin1s = ko.observableArray();
                 this.admin1Id = ko.observable();
                 this.admin1sLoading = ko.observable(false);
+                this.admin2s = ko.observableArray();
+                this.admin2Id = ko.observable();
+                this.admin2sLoading = ko.observable(false);
                 this.places = ko.observableArray();
                 this.id = id || 0;
                 ko.computed(function () {
@@ -164,6 +167,39 @@ var ViewModels;
                     if(newValue && _this.admin1s().length == 0) {
                         _this._admin1Id = newValue;
                     }
+                    if(newValue && _this.admin1s().length > 0) {
+                        var admin1 = ViewModels.Places.Utils.getPlaceById(_this.admin1s(), newValue);
+                        if(admin1) {
+                            _this.admin2s([]);
+                            var admin2Url = App.Routes.WebApi.Places.get({
+                                isAdmin2: true,
+                                parentId: admin1.id
+                            });
+                            _this.admin2sLoading(true);
+                            $.get(admin2Url).done(function (results) {
+                                _this.admin2s(results);
+                                if(_this._admin2Id) {
+                                    var admin2Id = _this._admin2Id;
+                                    _this._admin2Id = undefined;
+                                    _this.admin2Id(admin2Id);
+                                }
+                                _this.admin2sLoading(false);
+                            });
+                        }
+                    }
+                });
+                this.admin2OptionsCaption = ko.computed(function () {
+                    return !_this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
+                }).extend({
+                    throttle: 400
+                });
+                this.showAdmin2Input = ko.computed(function () {
+                    return _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
+                });
+                this.admin2Id.subscribe(function (newValue) {
+                    if(newValue && _this.admin2s().length == 0) {
+                        _this._admin2Id = newValue;
+                    }
                 });
             }
             Item.prototype.requestNames = function (callback) {
@@ -257,6 +293,10 @@ var ViewModels;
                         var admin1 = ViewModels.Places.Utils.getAdmin1(response.places);
                         if(admin1) {
                             _this.admin1Id(admin1.id);
+                        }
+                        var admin2 = ViewModels.Places.Utils.getAdmin2(response.places);
+                        if(admin2) {
+                            _this.admin2Id(admin2.id);
                         }
                     });
                 }

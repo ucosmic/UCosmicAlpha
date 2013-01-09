@@ -103,6 +103,26 @@ module ViewModels.Places {
             return null;
         }
 
+        export function getAdmin2(places: IServerApiModel[]): IServerApiModel {
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (place.isAdmin2) return place;
+                }
+            }
+            return null;
+        }
+
+        export function getAdmin3(places: IServerApiModel[]): IServerApiModel {
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (place.isAdmin3) return place;
+                }
+            }
+            return null;
+        }
+
         export function convertToLatLng(point: IServerPointModel): gm.LatLng {
             return new gm.LatLng(point.latitude, point.longitude);
         }
