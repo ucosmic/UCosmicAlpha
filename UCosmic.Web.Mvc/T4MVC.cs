@@ -268,15 +268,15 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/_deprecated";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _EstablishmentItemViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_EstablishmentItemViewModel.min.js") ? Url("_EstablishmentItemViewModel.min.js") : Url("_EstablishmentItemViewModel.js");
+                              
+                public static readonly string _EstablishmentNameViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_EstablishmentNameViewModel.min.js") ? Url("_EstablishmentNameViewModel.min.js") : Url("_EstablishmentNameViewModel.js");
+                              
                 public static readonly string _EstablishmentSearchViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_EstablishmentSearchViewModel.min.js") ? Url("_EstablishmentSearchViewModel.min.js") : Url("_EstablishmentSearchViewModel.js");
                               
+                public static readonly string _EstablishmentUrlViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_EstablishmentUrlViewModel.min.js") ? Url("_EstablishmentUrlViewModel.min.js") : Url("_EstablishmentUrlViewModel.js");
+                              
                 public static readonly string _FlasherViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_FlasherViewModel.min.js") ? Url("_FlasherViewModel.min.js") : Url("_FlasherViewModel.js");
-                              
-                public static readonly string EstablishmentItemViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentItemViewModel.min.js") ? Url("EstablishmentItemViewModel.min.js") : Url("EstablishmentItemViewModel.js");
-                              
-                public static readonly string EstablishmentNameViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentNameViewModel.min.js") ? Url("EstablishmentNameViewModel.min.js") : Url("EstablishmentNameViewModel.js");
-                              
-                public static readonly string EstablishmentUrlViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentUrlViewModel.min.js") ? Url("EstablishmentUrlViewModel.min.js") : Url("EstablishmentUrlViewModel.js");
                               
             }
         

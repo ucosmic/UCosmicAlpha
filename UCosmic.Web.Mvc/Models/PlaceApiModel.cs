@@ -19,6 +19,11 @@ namespace UCosmic.Web.Mvc.Models
         public string CountryCode { get; set; }
 
         public string PlaceTypeEnglishName { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} ({1})", OfficialName, PlaceTypeEnglishName);
+        }
     }
 
     public static class PlaceApiProfiler

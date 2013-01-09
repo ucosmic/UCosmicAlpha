@@ -171,6 +171,7 @@
     <Compile Include="Domain\People\Validation\MustNotBeClaimingStudentAffiliationForNonInstitutions.cs" />
     <Compile Include="Domain\People\Validation\ValidateAffiliation.cs" />
     <Compile Include="Domain\People\Validation\ValidatePerson.cs" />
+    <Compile Include="Domain\Places\Queries\PlaceById.cs" />
     <Compile Include="Domain\Places\Queries\FilteredPlaces.cs" />
     <Compile Include="Domain\Places\Queries\Countries.cs" />
     <Compile Include="Domain\Places\Queries\WoeIdByCoordinates.cs" />

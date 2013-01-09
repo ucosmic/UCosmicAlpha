@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
+using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
@@ -21,8 +25,39 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             //System.Threading.Thread.Sleep(2000);
             var query = Mapper.Map<FilteredPlaces>(input);
+            query.EagerLoad = new Expression<Func<Place, object>>[]
+            {
+                x => x.Parent,
+                x => x.GeoPlanetPlace,
+            };
             var entities = _queryProcessor.Execute(query);
             var models = Mapper.Map<PlaceApiModel[]>(entities);
+            return models;
+        }
+
+        [GET("{placeId}")]
+        //[CacheHttpGet(Duration = 3600)]
+        public PlaceApiModel GetById(int placeId)
+        {
+            var query = new PlaceById(placeId);
+            var entity = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PlaceApiModel>(entity);
+            return model;
+        }
+
+        [GET("{placeId}/children")]
+        //[CacheHttpGet(Duration = 3600)]
+        public IEnumerable<PlaceApiModel> GetChildren(int placeId)
+        {
+            var query = new PlaceById(placeId)
+            {
+                EagerLoad = new Expression<Func<Place, object>>[]
+                {
+                    x => x.Children.Select(y => y.GeoPlanetPlace),
+                }
+            };
+            var entity = _queryProcessor.Execute(query);
+            var models = Mapper.Map<PlaceApiModel[]>(entity.Children);
             return models;
         }
     }
