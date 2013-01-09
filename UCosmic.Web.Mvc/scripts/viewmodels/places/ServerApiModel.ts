@@ -93,6 +93,16 @@ module ViewModels.Places {
             return null;
         }
 
+        export function getAdmin1(places: IServerApiModel[]): IServerApiModel {
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (place.isAdmin1) return place;
+                }
+            }
+            return null;
+        }
+
         export function convertToLatLng(point: IServerPointModel): gm.LatLng {
             return new gm.LatLng(point.latitude, point.longitude);
         }

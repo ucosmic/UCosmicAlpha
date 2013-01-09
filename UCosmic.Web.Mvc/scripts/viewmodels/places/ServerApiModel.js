@@ -47,6 +47,18 @@ var ViewModels;
                 return null;
             }
             Utils.getCountry = getCountry;
+            function getAdmin1(places) {
+                if(places && places.length > 0) {
+                    for(var i = 0; i < places.length; i++) {
+                        var place = places[i];
+                        if(place.isAdmin1) {
+                            return place;
+                        }
+                    }
+                }
+                return null;
+            }
+            Utils.getAdmin1 = getAdmin1;
             function convertToLatLng(point) {
                 return new gm.LatLng(point.latitude, point.longitude);
             }

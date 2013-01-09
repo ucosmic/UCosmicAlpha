@@ -30,6 +30,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="field-row" data-bind="visible: showAdmin1Input">
+                            <div class="field-label">
+                                <label for="establishment_location_admin1_menu">Admin #1</label>
+                            </div>
+                            <div class="field-input">
+                                <select data-bind="options: admin1s, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: admin1Id"
+                                    id="establishment_location_admin1_menu">
+                                    <option>[Loading...]</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div style="display: none;">
                         Lat:

@@ -20,6 +20,8 @@ var ViewModels;
                 this.continentId = ko.observable();
                 this.countries = ko.observableArray();
                 this.countryId = ko.observable();
+                this.admin1s = ko.observableArray();
+                this.admin1Id = ko.observable();
                 this.places = ko.observableArray();
                 this.id = id || 0;
                 ko.computed(function () {
@@ -105,7 +107,9 @@ var ViewModels;
                     })).done(function (response) {
                         _this.countries(response);
                         if(_this._countryId) {
-                            _this.countryId(_this._countryId);
+                            var countryId = _this._countryId;
+                            _this._countryId = undefined;
+                            _this.countryId(countryId);
                         }
                     });
                 }).extend({
@@ -115,21 +119,38 @@ var ViewModels;
                     if(newValue && _this.countries().length == 0) {
                         _this._countryId = newValue;
                     }
-                    if(newValue && _this.countries().length > 0 && !_this._countryId) {
+                    if(newValue && _this.countries().length > 0) {
                         var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), newValue);
                         if(country) {
                             _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
                             _this.continentId(country.parentId);
+                            var admin1Url = App.Routes.WebApi.Places.get({
+                                isAdmin1: true,
+                                parentId: country.id
+                            });
+                            $.get(admin1Url).done(function (results) {
+                                _this.admin1s(results);
+                                if(_this._admin1Id) {
+                                    var admin1Id = _this._admin1Id;
+                                    _this._admin1Id = undefined;
+                                    _this.admin1Id(admin1Id);
+                                }
+                            });
                         }
                     } else {
-                        if(!newValue && _this.countries().length > 0 && !_this._countryId) {
+                        if(!newValue && _this.countries().length > 0) {
                             _this.map.setCenter(new gm.LatLng(0, 0));
                             _this.map.setZoom(1);
                             _this.continentId(null);
                         }
                     }
-                    if(newValue && _this.countries().length > 0) {
-                        _this._countryId = undefined;
+                });
+                this.showAdmin1Input = ko.computed(function () {
+                    return _this.countryId() && _this.admin1s().length > 0;
+                });
+                this.admin1Id.subscribe(function (newValue) {
+                    if(newValue && _this.admin1s().length == 0) {
+                        _this._admin1Id = newValue;
                     }
                 });
             }
@@ -220,6 +241,10 @@ var ViewModels;
                         var country = ViewModels.Places.Utils.getCountry(response.places);
                         if(country) {
                             _this.countryId(country.id);
+                        }
+                        var admin1 = ViewModels.Places.Utils.getAdmin1(response.places);
+                        if(admin1) {
+                            _this.admin1Id(admin1.id);
                         }
                     });
                 }

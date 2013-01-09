@@ -28,7 +28,7 @@ module ViewModels.Establishments {
         id: number = 0;
         $genericAlertDialog: JQuery = undefined;
 
-        constructor (id?: number) {
+        constructor(id?: number) {
 
             // initialize the aggregate id
             this.id = id || 0;
@@ -128,19 +128,22 @@ module ViewModels.Establishments {
                 $.get(App.Routes.WebApi.Places.get({ isCountry: true }))
                 .done((response: Places.IServerApiModel[]): void => {
                     this.countries(response);
-                    if (this._countryId)
-                        this.countryId(this._countryId);
+                    if (this._countryId) {
+                        var countryId = this._countryId;
+                        this._countryId = undefined;
+                        this.countryId(countryId);
+                    }
                 });
             })
             .extend({ throttle: 1 });
-            this.countryId.subscribe((newValue: number) => {
+            this.countryId.subscribe((newValue: number): void => {
                 // when this value is set before the countries menu is loaded,
                 // it will be reset to undefined.
                 if (newValue && this.countries().length == 0)
                     this._countryId = newValue; // stash the value to set it after menu loads
 
                 // scope the menu to the selected country
-                if (newValue && this.countries().length > 0 && !this._countryId) {
+                if (newValue && this.countries().length > 0) {
                     var country: Places.IServerApiModel = Places.Utils
                         .getPlaceById(this.countries(), newValue);
                     if (country) {
@@ -148,18 +151,38 @@ module ViewModels.Establishments {
 
                         // cascade the continent
                         this.continentId(country.parentId);
+
+                        // load admin1 options
+                        var admin1Url = App.Routes.WebApi.Places.get({ isAdmin1: true, parentId: country.id });
+                        $.get(admin1Url)
+                            .done((results: Places.IServerApiModel[]) => {
+                                this.admin1s(results);
+                                if (this._admin1Id) {
+                                    var admin1Id = this._admin1Id;
+                                    this._admin1Id = undefined;
+                                    this.admin1Id(admin1Id);
+                                }
+                            });
                     }
 
                 }
-                else if (!newValue && this.countries().length > 0 && !this._countryId) {
+                else if (!newValue && this.countries().length > 0) {
                     // when changing to unspecified, zoom out menu
                     this.map.setCenter(new gm.LatLng(0, 0));
                     this.map.setZoom(1);
                     this.continentId(null);
                 }
+            });
 
-                if (newValue && this.countries().length > 0)
-                    this._countryId = undefined; // unstash the value when the menu has reloaded
+            // admin1 dropdown
+            this.showAdmin1Input = ko.computed((): bool => {
+                return this.countryId() && this.admin1s().length > 0;
+            });
+            this.admin1Id.subscribe((newValue: number): void => {
+                // when this value is set before the admin1 menu is loaded,
+                // it will be reset to undefined.
+                if (newValue && this.admin1s().length == 0)
+                    this._admin1Id = newValue; // stash the value to set it after menu loads
             });
 
             //#endregion
@@ -249,9 +272,11 @@ module ViewModels.Establishments {
         countries: KnockoutObservablePlaceModelArray = ko.observableArray();
         countryId: KnockoutObservableNumber = ko.observable();
         private _countryId: number;
+        admin1s: KnockoutObservablePlaceModelArray = ko.observableArray();
+        admin1Id: KnockoutObservableNumber = ko.observable();
+        private _admin1Id: number;
+        showAdmin1Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();
-        hasPlaces: KnockoutComputed;
-        displayPlaces: KnockoutComputed;
 
         initMap(): void {
             var mapOptions: gm.MapOptions = {
@@ -295,6 +320,10 @@ module ViewModels.Establishments {
                     // populate country menu
                     var country: Places.IServerApiModel = Places.Utils.getCountry(response.places);
                     if (country) this.countryId(country.id);
+
+                    // populate admin1 menu
+                    var admin1: Places.IServerApiModel = Places.Utils.getAdmin1(response.places);
+                    if (admin1) this.admin1Id(admin1.id);
                 })
         }
 
