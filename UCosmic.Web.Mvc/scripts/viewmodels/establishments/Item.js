@@ -22,6 +22,7 @@ var ViewModels;
                 this.countryId = ko.observable();
                 this.admin1s = ko.observableArray();
                 this.admin1Id = ko.observable();
+                this.admin1sLoading = ko.observable(false);
                 this.places = ko.observableArray();
                 this.id = id || 0;
                 ko.computed(function () {
@@ -101,6 +102,9 @@ var ViewModels;
                     var continent = ViewModels.Places.Utils.getPlaceById(_this.continents(), continentId);
                     return continent ? continent.officialName : '[Unknown]';
                 });
+                this.countryOptionsCaption = ko.computed(function () {
+                    return _this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
+                });
                 ko.computed(function () {
                     $.get(App.Routes.WebApi.Places.get({
                         isCountry: true
@@ -124,10 +128,12 @@ var ViewModels;
                         if(country) {
                             _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
                             _this.continentId(country.parentId);
+                            _this.admin1s([]);
                             var admin1Url = App.Routes.WebApi.Places.get({
                                 isAdmin1: true,
                                 parentId: country.id
                             });
+                            _this.admin1sLoading(true);
                             $.get(admin1Url).done(function (results) {
                                 _this.admin1s(results);
                                 if(_this._admin1Id) {
@@ -135,6 +141,7 @@ var ViewModels;
                                     _this._admin1Id = undefined;
                                     _this.admin1Id(admin1Id);
                                 }
+                                _this.admin1sLoading(false);
                             });
                         }
                     } else {
@@ -145,8 +152,13 @@ var ViewModels;
                         }
                     }
                 });
+                this.admin1OptionsCaption = ko.computed(function () {
+                    return !_this.admin1sLoading() ? '[Unspecified]' : '[Loading...]';
+                }).extend({
+                    throttle: 400
+                });
                 this.showAdmin1Input = ko.computed(function () {
-                    return _this.countryId() && _this.admin1s().length > 0;
+                    return _this.countryId() && (_this.admin1s().length > 0 || _this.admin1sLoading());
                 });
                 this.admin1Id.subscribe(function (newValue) {
                     if(newValue && _this.admin1s().length == 0) {

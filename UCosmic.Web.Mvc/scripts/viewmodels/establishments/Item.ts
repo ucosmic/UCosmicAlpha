@@ -124,6 +124,9 @@ module ViewModels.Establishments {
             });
 
             // countries dropdown
+            this.countryOptionsCaption = ko.computed((): string => {
+                return this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
+            });
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get({ isCountry: true }))
                 .done((response: Places.IServerApiModel[]): void => {
@@ -153,7 +156,9 @@ module ViewModels.Establishments {
                         this.continentId(country.parentId);
 
                         // load admin1 options
+                        this.admin1s([]);
                         var admin1Url = App.Routes.WebApi.Places.get({ isAdmin1: true, parentId: country.id });
+                        this.admin1sLoading(true);
                         $.get(admin1Url)
                             .done((results: Places.IServerApiModel[]) => {
                                 this.admin1s(results);
@@ -162,6 +167,7 @@ module ViewModels.Establishments {
                                     this._admin1Id = undefined;
                                     this.admin1Id(admin1Id);
                                 }
+                                this.admin1sLoading(false);
                             });
                     }
 
@@ -175,8 +181,11 @@ module ViewModels.Establishments {
             });
 
             // admin1 dropdown
+            this.admin1OptionsCaption = ko.computed((): string => {
+                return !this.admin1sLoading() ? '[Unspecified]' : '[Loading...]';
+            }).extend({ throttle: 400 });
             this.showAdmin1Input = ko.computed((): bool => {
-                return this.countryId() && this.admin1s().length > 0;
+                return this.countryId() && (this.admin1s().length > 0 || this.admin1sLoading());
             });
             this.admin1Id.subscribe((newValue: number): void => {
                 // when this value is set before the admin1 menu is loaded,
@@ -271,9 +280,12 @@ module ViewModels.Establishments {
         continentName: KnockoutComputed;
         countries: KnockoutObservablePlaceModelArray = ko.observableArray();
         countryId: KnockoutObservableNumber = ko.observable();
+        countryOptionsCaption: KnockoutComputed;
         private _countryId: number;
         admin1s: KnockoutObservablePlaceModelArray = ko.observableArray();
         admin1Id: KnockoutObservableNumber = ko.observable();
+        admin1OptionsCaption: KnockoutComputed;
+        admin1sLoading: KnockoutObservableBool = ko.observable(false);
         private _admin1Id: number;
         showAdmin1Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();

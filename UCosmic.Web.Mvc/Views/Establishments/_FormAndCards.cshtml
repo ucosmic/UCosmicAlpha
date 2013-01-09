@@ -24,7 +24,7 @@
                                 <label for="establishment_location_country_menu">Country</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: countries, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: countryId"
+                                <select data-bind="options: countries, optionsCaption: countryOptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: countryId"
                                     id="establishment_location_country_menu">
                                     <option>[Loading...]</option>
                                 </select>
@@ -35,7 +35,7 @@
                                 <label for="establishment_location_admin1_menu">Admin #1</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: admin1s, optionsCaption: '[Unspecified]', optionsText: 'officialName', optionsValue: 'id', value: admin1Id"
+                                <select data-bind="options: admin1s, optionsCaption: admin1OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin1Id"
                                     id="establishment_location_admin1_menu">
                                     <option>[Loading...]</option>
                                 </select>
