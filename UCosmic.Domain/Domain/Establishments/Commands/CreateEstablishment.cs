@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UCosmic.Domain.Languages;
 using UCosmic.Domain.Places;
@@ -9,10 +7,6 @@ namespace UCosmic.Domain.Establishments
 {
     public class CreateEstablishment
     {
-        public CreateEstablishment()
-        {
-        }
-
         public string OfficialName { get; set; }
         public bool IsMember { get; set; }
         public int? ParentId { get; set; }

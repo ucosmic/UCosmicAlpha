@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace UCosmic.Domain.Employees
+﻿namespace UCosmic.Domain.Employees
 {
     public class EmployeeFacultyRank : Entity
     {

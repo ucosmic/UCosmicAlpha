@@ -1,7 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Security.Principal;
-using UCosmic.Domain.Employees;
-using UCosmic.Domain.Identity;
+﻿using UCosmic.Domain.Employees;
 
 namespace UCosmic.SeedData
 {
