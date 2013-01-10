@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -20,7 +16,8 @@ namespace UCosmic.Web.Mvc.Controllers
 
         public virtual ActionResult Details(int id)
         {
-            return View();
+            //return View();
+            return null;
         }
 
         //
@@ -28,7 +25,8 @@ namespace UCosmic.Web.Mvc.Controllers
 
         public virtual ActionResult Create()
         {
-            return View();
+            //return View();
+            return null;
         }
 
         //
@@ -45,7 +43,8 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             catch
             {
-                return View();
+                //return View();
+                return null;
             }
         }
 
@@ -54,7 +53,8 @@ namespace UCosmic.Web.Mvc.Controllers
 
         public virtual ActionResult Edit(int id)
         {
-            return View();
+            //return View();
+            return null;
         }
 
         //
@@ -71,7 +71,8 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             catch
             {
-                return View();
+                //return View();
+                return null;
             }
         }
 
@@ -80,7 +81,8 @@ namespace UCosmic.Web.Mvc.Controllers
 
         public virtual ActionResult Delete(int id)
         {
-            return View();
+            //return View();
+            return null;
         }
 
         //
@@ -97,7 +99,8 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             catch
             {
-                return View();
+                //return View();
+                return null;
             }
         }
     }

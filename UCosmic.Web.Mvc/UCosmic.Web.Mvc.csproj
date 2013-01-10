@@ -460,6 +460,12 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\employees\PersonalInfo.js">
+      <DependentUpon>PersonalInfo.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\PersonalInfo.min.js">
+      <DependentUpon>PersonalInfo.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
     </Content>
@@ -484,9 +490,6 @@
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\PersonalInfo.ts" />
-    <Content Include="scripts\viewmodels\employees\EmployeePersonalInfoViewModel.js">
-      <DependentUpon>PersonalInfo.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
@@ -884,7 +887,7 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-	<!-- If you uncomment the following line, replace the [dash][dash] with actual dashes -->
+    <!-- If you uncomment the following line, replace the [dash][dash] with actual dashes -->
     <!-- <TypeScriptSourceMap> [dash][dash]sourcemap</TypeScriptSourceMap> -->
   </PropertyGroup>
   <Target Name="BeforeBuild">

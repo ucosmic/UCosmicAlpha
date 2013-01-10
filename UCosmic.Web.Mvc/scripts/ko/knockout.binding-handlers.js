@@ -28,4 +28,3 @@ ko.bindingHandlers.slideDownVisible = {
         }
     }
 };
-//@ sourceMappingURL=knockout.binding-handlers.js.map

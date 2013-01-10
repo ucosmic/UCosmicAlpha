@@ -295,8 +295,9 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string PersonalInfo_ts = Url("PersonalInfo.ts");
-                public static readonly string EmployeePersonalInfoViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EmployeePersonalInfoViewModel.min.js") ? Url("EmployeePersonalInfoViewModel.min.js") : Url("EmployeePersonalInfoViewModel.js");
+                public static readonly string PersonalInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo.min.js") ? Url("PersonalInfo.min.js") : Url("PersonalInfo.js");
                               
+                public static readonly string PersonalInfo_min_js = Url("PersonalInfo.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
