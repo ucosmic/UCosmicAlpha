@@ -9,15 +9,18 @@ namespace UCosmic.SeedData
     public class PersonEntitySeeder : BasePersonEntitySeeder
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly ICommandEntities _entities;
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
             , IHandleCommands<CreateAffiliation> createAffiliation
+            , ICommandEntities entities
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createPerson, createAffiliation, unitOfWork)
         {
             _queryProcessor = queryProcessor;
+            _entities = entities;
         }
 
         public override void Seed()
@@ -28,7 +31,6 @@ namespace UCosmic.SeedData
             var usil = _queryProcessor.Execute(new EstablishmentByUrl("www.usil.edu.pe"));
             var collegeBoard = _queryProcessor.Execute(new EstablishmentByUrl("www.collegeboard.org"));
             var terraDotta = _queryProcessor.Execute(new EstablishmentByUrl("www.terradotta.com"));
-            var usf = _queryProcessor.Execute(new EstablishmentByUrl("www.usf.edu"));
 
             Seed(suny.RevisionId, new CreatePerson
             {
@@ -255,48 +257,58 @@ namespace UCosmic.SeedData
                 Gender = PersonGender.Male
             });
 
-            Seed(usf.RevisionId, new CreatePerson
+            /* USF People */
             {
-                FirstName = "Margaret",
-                LastName = "Kusenbach",
-                UserName = "mkusenba@usf.edu",
-                Gender = PersonGender.Female,
-                FacultyRank = _queryProcessor.Execute(new EmployeeFacultyRankByName("Associate Professor")),
-                UserIsRegistered = true,
-                EmailAddresses = new[]
-                    {
-                        new CreatePerson.EmailAddress
+                var usf = _queryProcessor.Execute(new EstablishmentByUrl("www.usf.edu"));
+                if (usf == null) throw new Exception("USF Establishment not found.");
+
+                var usfEmployeeModuleSettings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(s => s.ForEstablishment.OfficialName == "University of South Florida");
+                if (usfEmployeeModuleSettings == null) throw new Exception("USF EmployeeModuleSettings not found.");
+                if (usfEmployeeModuleSettings.FacultyRanks == null) throw new Exception("USF FacultyRanks not found.");
+
+                var associateProfessorRank = usfEmployeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Associate Professor");
+                if (associateProfessorRank == null) throw new Exception("USF Associate Professor Rank not found.");
+
+                Seed(usf.RevisionId, new CreatePerson
+                {
+                    FirstName = "Margaret",
+                    LastName = "Kusenbach",
+                    UserName = "mkusenba@usf.edu",
+                    Gender = PersonGender.Female,
+                    FacultyRank = associateProfessorRank,
+                    UserIsRegistered = true,
+                    EmailAddresses = new[]
+                        {
+                            new CreatePerson.EmailAddress
                             {
                                 Value = "mkusenba@usf.edu",
                                 IsDefault = true,
                                 IsConfirmed = true,
                             },
-                    },
-                AdministrativeAppointments = "Director of Sociology Graduate Program",
-                Picture = PeopleImages.BlueGradient128X128Jpeg,
-            });
-            /* Affiliations set below. */
+                        },
+                    AdministrativeAppointments = "Director of Sociology Graduate Program",
+                    Picture = PeopleImages.BlueGradient128X128Jpeg,
+                }); /* Affiliations set below. */
 
-            Seed(usf.RevisionId, new CreatePerson
-            {
-                FirstName = "William",
-                LastName = "Hogarth",
-                UserName = "billhogarth@usfsp.edu",
-                Gender = PersonGender.Male,
-                UserIsRegistered = true,
-                EmailAddresses = new[]
-                    {
-                        new CreatePerson.EmailAddress
-                            {
-                                Value = "billhogarth@usfsp.edu",
-                                IsDefault = true,
-                                IsConfirmed = true,
-                            },
-                    },
-                Picture = PeopleImages.BlueGradient128X128Jpeg,
-            });
-            /* Affiliations set below. */
-
+                Seed(usf.RevisionId, new CreatePerson
+                {
+                    FirstName = "William",
+                    LastName = "Hogarth",
+                    UserName = "billhogarth@usfsp.edu",
+                    Gender = PersonGender.Male,
+                    UserIsRegistered = true,
+                    EmailAddresses = new[]
+                        {
+                            new CreatePerson.EmailAddress
+                                {
+                                    Value = "billhogarth@usfsp.edu",
+                                    IsDefault = true,
+                                    IsConfirmed = true,
+                                },
+                        },
+                    Picture = PeopleImages.BlueGradient128X128Jpeg,
+                }); /* Affiliations set below. */
+            } /* USF People */
 
         }
     }
@@ -376,11 +388,17 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            Person person = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
-            if (person == null) throw new Exception("Person is null");
-            Establishment establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "USF College of Arts & Sciences Department of Sociology");
-            if (establishment == null) throw new Exception("Establishment is null");
-            Seed(new CreateAffiliation
+            /* USF Affiliations */
+            {
+                var person = _entities.Get<Person>()
+                    .SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
+                if (person == null) throw new Exception("Person is null");
+
+                var establishment = _entities.Get<Establishment>()
+                    .SingleOrDefault(x => x.OfficialName == "USF College of Arts & Sciences Department of Sociology");
+                if (establishment == null) throw new Exception("Establishment is null");
+
+                Seed(new CreateAffiliation
                 {
                     Person = person,
                     PersonId = person.RevisionId,
@@ -392,21 +410,27 @@ namespace UCosmic.SeedData
                     IsClaimingStudent = false,
                 });
 
-            person = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "William" && x.LastName == "Hogarth");
-            if (person == null) throw new Exception("Person is null");
-            establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "USF St. Petersburg Campus");
-            if (establishment == null) throw new Exception("Establishment is null");
-            Seed(new CreateAffiliation
-            {
-                Person = person,
-                PersonId = person.RevisionId,
-                Establishment = establishment,
-                EstablishmentId = establishment.RevisionId,
-                JobTitles = "Regional Chancellor",
-                IsPrimary = true,
-                IsClaimingEmployee = true,
-                IsClaimingStudent = false,
-            });
+                person = _entities.Get<Person>()
+                    .SingleOrDefault(x => x.FirstName == "William" && x.LastName == "Hogarth");
+                if (person == null) throw new Exception("Person is null");
+
+                establishment = _entities.Get<Establishment>()
+                    .SingleOrDefault(x => x.OfficialName == "USF St. Petersburg Campus");
+
+                if (establishment == null) throw new Exception("Establishment is null");
+
+                Seed(new CreateAffiliation
+                {
+                    Person = person,
+                    PersonId = person.RevisionId,
+                    Establishment = establishment,
+                    EstablishmentId = establishment.RevisionId,
+                    JobTitles = "Regional Chancellor",
+                    IsPrimary = true,
+                    IsClaimingEmployee = true,
+                    IsClaimingStudent = false,
+                });
+            }
         }
     }
 

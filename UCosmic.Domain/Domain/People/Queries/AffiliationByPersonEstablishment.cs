@@ -11,6 +11,9 @@ namespace UCosmic.Domain.People
 
         public AffiliationByPersonEstablishment(Person person, Establishment establishment)
         {
+            if (person == null) throw new ArgumentNullException("person");
+            if (establishment == null) throw new ArgumentNullException("establishment");
+
             Person = person;
             Establishment = establishment;
         }

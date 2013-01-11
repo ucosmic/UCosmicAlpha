@@ -9,8 +9,11 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(EmployeeModuleSettings).Name, DbSchemaName.Employees);
 
-            HasMany(p => p.FacultyRanks);
-            HasRequired(p => p.NotifyAdmin);
+            HasMany(p => p.FacultyRanks)
+                .WithRequired()
+                .Map(m => m.MapKey("ForSettingsId"));
+
+            HasOptional(p => p.NotifyAdmin);
             HasRequired(p => p.ForEstablishment);
 
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);

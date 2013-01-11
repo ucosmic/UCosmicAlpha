@@ -1,4 +1,3 @@
-﻿
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -45,22 +44,20 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var admin = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Dan" && x.LastName == "Ludwig");
-            if (admin == null) throw new Exception("Person is null");
             var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of Cincinnati");
             if (establishment == null) throw new Exception("Establishment is null");
             Seed(new CreateEmployeeModuleSettings
             {
                 FacultyRanks = new Collection<EmployeeFacultyRank>()
                         {
+                            /* TODO: Need actual UC ranks here. */
                             new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
                             new EmployeeFacultyRank {Rank = "Assistant Professor"},
                             new EmployeeFacultyRank {Rank = "Associate Professor"},
                             new EmployeeFacultyRank {Rank = "Professor"},
                             new EmployeeFacultyRank {Rank = "Distinquished Professor"},                     
                         },
-                NotifyAdminOnUpdate = true,
-                NotifyAdmin = admin,
+                NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My International",
                 ForEstablishment = establishment,
             });
@@ -82,8 +79,6 @@ namespace UCosmic.SeedData
         
         public override void Seed()
         {
-            var admin = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
-            if (admin == null) throw new Exception("Person is null");
             var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
             if (establishment == null) throw new Exception("Establishment is null");
             Seed( new CreateEmployeeModuleSettings
@@ -96,8 +91,7 @@ namespace UCosmic.SeedData
                             new EmployeeFacultyRank {Rank = "Professor"},
                             new EmployeeFacultyRank {Rank = "Distinquished Professor"},                     
                         },
-                    NotifyAdminOnUpdate = true,
-                    NotifyAdmin = admin,
+                    NotifyAdminOnUpdate = false,
                     PersonalInfoAnchorText = "My USF World Profile",
                     ForEstablishment = establishment,       
                 });

@@ -10,6 +10,8 @@ namespace UCosmic.Domain.Employees
 
         public EmployeeModuleSettingsByEstablishment(Establishment establishment)
         {
+            if (establishment == null) throw new ArgumentNullException("establishment");
+
             Establishment = establishment;
         }
     }

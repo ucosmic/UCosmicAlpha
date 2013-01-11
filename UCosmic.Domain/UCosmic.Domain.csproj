@@ -111,7 +111,6 @@
     <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
-    <Compile Include="Domain\Employees\Queries\EmployeeFacultyRankByName.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishment.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />

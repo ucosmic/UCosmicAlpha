@@ -42,13 +42,13 @@
             //_placeByGeoPlanetEntitySeeder = placeByGeoPlanetEntitySeeder;
             _roleEntitySeeder = roleEntitySeeder;
             _establishmentEntitySeeder = establishmentEntitySeeder;
+            _employeeEntitySeeder = employeeEntitySeeder; 
             _emailTemplateEntitySeeder = emailTemplateEntitySeeder;
             _personEntitySeeder = personEntitySeeder;
             _userEntitySeeder = userEntitySeeder;
             _memberEntitySeeder = memberEntitySeeder;
             _institutionalAgreementEntitySeeder = institutionalAgreementEntitySeeder;
             _institutionalAgreementSettingsEntitySeeder = institutionalAgreementSettingsEntitySeeder;
-            _employeeEntitySeeder = employeeEntitySeeder;
             _affiliationEntitySeeder = affiliationEntitySeeder;
         }
 
@@ -62,13 +62,17 @@
             /* Note these lines are order dependent. */
             _roleEntitySeeder.Seed();
             _establishmentEntitySeeder.Seed();
+
+            /* This needs to be here in order to seed the FacultyRanks so that Persons will get
+                created with a FacultyRank.  We may need to move this in the future if any
+                Employee domain entity requires references to Users, Persons or Members. */
+            _employeeEntitySeeder.Seed();
             _emailTemplateEntitySeeder.Seed();
             _personEntitySeeder.Seed();
             _userEntitySeeder.Seed();
             _memberEntitySeeder.Seed();
             _institutionalAgreementEntitySeeder.Seed();
             _institutionalAgreementSettingsEntitySeeder.Seed();
-            _employeeEntitySeeder.Seed();
             _affiliationEntitySeeder.Seed();
 
             _unitOfWork.SaveChanges();
