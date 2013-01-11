@@ -35,6 +35,11 @@ namespace UCosmic.Domain.People
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
         public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
 
+        public virtual ICollection<EmailMessage> Messages { get; protected internal set; }
+        public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
+        public string AdministrativeAppointments { get; protected internal set; }
+
+
         public EmailAddress GetEmail(string value)
         {
             if (Emails == null || !Emails.Any()) return null;
@@ -63,9 +68,7 @@ namespace UCosmic.Domain.People
             return email;
         }
 
-        public virtual ICollection<EmailMessage> Messages { get; protected internal set; }
-        public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
-
+        /* Deprecated */
         public Affiliation AffiliateWith(Establishment establishment)
         {
             var currentAffiliations = Affiliations.ToList();
@@ -91,7 +94,7 @@ namespace UCosmic.Domain.People
             Affiliations.Add(affiliation);
             return affiliation;
         }
-
+        
         public Affiliation DefaultAffiliation
         {
             get
@@ -105,6 +108,7 @@ namespace UCosmic.Domain.People
             }
         }
 
+        /* Deprecated */
         public bool IsAffiliatedWith(Establishment establishment)
         {
             if (Affiliations != null)

@@ -20,7 +20,7 @@ namespace UCosmic.Domain.People
         /* Default affiliation should be linked to a University type Establishment. */
         public bool IsDefault { get; protected internal set; }
 
-        /* Primary affiliation is the Department (or College) the employee is primarily associated with. */
+        /* Primary affiliation is the Department, College or Campus the employee is primarily associated with. */
         public bool IsPrimary { get; protected internal set; }
 
         public bool IsAcknowledged { get; protected internal set; }

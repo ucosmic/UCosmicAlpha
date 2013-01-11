@@ -45,6 +45,7 @@ namespace UCosmic.EntityFramework
             Property(p => p.LastName).HasMaxLength(100);
             Property(p => p.Suffix).HasMaxLength(50);
             Property(p => p.Gender).HasMaxLength(1).IsFixedLength().IsUnicode(false).IsOptional();
+            Property(p => p.AdministrativeAppointments).HasMaxLength(1000).IsOptional();
         }
     }
 
@@ -108,6 +109,8 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(Affiliation).Name, DbSchemaName.People);
 
             HasKey(p => new { p.PersonId, p.EstablishmentId });
+
+            HasRequired(p => p.Establishment);
 
             Property(p => p.JobTitles).HasMaxLength(500);
         }

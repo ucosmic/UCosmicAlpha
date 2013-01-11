@@ -1505,7 +1505,7 @@ namespace UCosmic.SeedData
 
                 var campus = Seed(new CreateEstablishment
                     {
-                        OfficialName = "Tampa",
+                        OfficialName = "USF Tampa Campus",
                         IsMember = true,
                         ParentId = university.RevisionId,
                         TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1514,7 +1514,7 @@ namespace UCosmic.SeedData
 
                     var college = Seed(new CreateEstablishment
                     {
-                        OfficialName = "Arts & Sciences",
+                        OfficialName = "USF College of Arts & Sciences",
                         IsMember = true,
                         ParentId = campus.RevisionId,
                         TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1524,7 +1524,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Africana Studies",
+                            OfficialName = "USF College of Arts & Sciences Department of Africana Studies",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1534,7 +1534,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Anthropology",
+                            OfficialName = "USF College of Arts & Sciences Department of Anthropology",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1544,7 +1544,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Cell Biology, Microbiology and Molecular Biology",
+                            OfficialName = "USF College of Arts & Sciences Department of Cell Biology, Microbiology and Molecular Biology",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1554,7 +1554,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Chemistry",
+                            OfficialName = "USF College of Arts & Sciences Department of Chemistry",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1562,11 +1562,21 @@ namespace UCosmic.SeedData
                             OfficialWebsiteUrl = "chemistry.usf.edu",
                         });
 
-                        /* TODO: Seed the other departments */
+                        Seed(new CreateEstablishment
+                        {
+                            OfficialName = "USF College of Arts & Sciences Department of Sociology",
+                            IsMember = true,
+                            ParentId = college.RevisionId,
+                            TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
+                            OfficialWebsiteUrl = "sociology.usf.edu",
+                        });
+            
+                    /* TODO: Seed the other departments */
 
                     college = Seed(new CreateEstablishment
                     {
-                        OfficialName = "Behavioral and Community Sciences",
+                        OfficialName = "USF College of Behavioral and Community Sciences",
                         IsMember = true,
                         ParentId = campus.RevisionId,
                         TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1576,7 +1586,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Child & Family Studies",
+                            OfficialName = "USF College of Behavioral and Community Sciences Department of Child & Family Studies",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1586,7 +1596,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Communication Sciences & Disorders",
+                            OfficialName = "USF College of Behavioral and Community Sciences Department of Communication Sciences & Disorders",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1596,7 +1606,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Criminology",
+                            OfficialName = "USF College of Behavioral and Community Sciences Department of Criminology",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1608,7 +1618,7 @@ namespace UCosmic.SeedData
 
                     college = Seed(new CreateEstablishment
                     {
-                        OfficialName = "School of Accountancy",
+                        OfficialName = "USF College of School of Accountancy",
                         IsMember = true,
                         ParentId = campus.RevisionId,
                         TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1618,7 +1628,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Finance",
+                            OfficialName = "USF College of School of Accountancy Department of Finance",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1628,7 +1638,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Information Systems / Decision Sciences",
+                            OfficialName = "USF College of School of Accountancy Department of Information Systems / Decision Sciences",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1638,7 +1648,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Management & Organization",
+                            OfficialName = "USF College of School of Accountancy Department of Management & Organization",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1648,7 +1658,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateEstablishment
                         {
-                            OfficialName = "Marketing",
+                            OfficialName = "USF College of School of Accountancy Department of Marketing",
                             IsMember = true,
                             ParentId = college.RevisionId,
                             TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -1657,6 +1667,17 @@ namespace UCosmic.SeedData
                         });
                     
                     /* TODO: Seed other colleges */
+
+                campus = Seed(new CreateEstablishment
+                {
+                    OfficialName = "USF St. Petersburg Campus",
+                    OfficialWebsiteUrl = "www.usfsp.edu",
+                    EmailDomains = new[] { "@usfsp.edu" },
+                    IsMember = true,
+                    ParentId = university.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                        KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                });
 
                 /* TODO: Seed other campuses */
         }

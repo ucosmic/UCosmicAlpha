@@ -9,9 +9,15 @@ namespace UCosmic.Domain.People
     public class CreateAffiliation
     {
         public int PersonId { get; set; }
+        public Person Person { get; set; }
         public int EstablishmentId { get; set; }
+        public Establishment Establishment { get; set; }
+        public string JobTitles { get; set; }
+        public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
+
+        public Affiliation CreatedAffiliation { get; set; }
     }
 
     public class ValidateCreateAffiliationCommand : AbstractValidator<CreateAffiliation>
@@ -95,15 +101,23 @@ namespace UCosmic.Domain.People
             // construct the affiliation
             var affiliation = new Affiliation
             {
+                PersonId = command.PersonId,
+                Person = command.Person,
                 EstablishmentId = command.EstablishmentId,
+                Establishment = command.Establishment,
                 IsClaimingStudent = command.IsClaimingStudent,
                 IsClaimingEmployee = command.IsClaimingEmployee,
                 IsDefault = !person.Affiliations.Any(a => a.IsDefault),
+                IsPrimary = command.IsPrimary,
+                JobTitles = command.JobTitles,
             };
             person.Affiliations.Add(affiliation);
 
             // store
             _entities.Create(affiliation);
+
+            // return
+            command.CreatedAffiliation = affiliation;
         }
     }
 }

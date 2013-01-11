@@ -46,12 +46,12 @@ namespace UCosmic.SeedData
                     "ludwigd@ucmail.uc.edu",
                     "Daniel.Ludwig@ucmail.uc.edu",
                 },
-                "Dan", "Ludwig", "www.uc.edu", developerRoles);
-            Seed("ganesh_c@uc.edu", "Ganesh", "Chitrothu", "www.uc.edu", developerRoles);
-            Seed("corarito@usf.edu", "Douglas", "Corarito", "www.usf.edu", developerRoles);
+                "Dan", "Ludwig", PersonGender.Male, "www.uc.edu", developerRoles);
+            Seed("ganesh_c@uc.edu", "Ganesh", "Chitrothu", PersonGender.Male, "www.uc.edu", developerRoles);
+            Seed("corarito@usf.edu", "Douglas", "Corarito", PersonGender.Male, "www.usf.edu", developerRoles);
 
             // seed example non-academic users
-            Seed("test@terradotta.com", "Terradotta", "Test", "www.terradotta.com");
+            Seed("test@terradotta.com", "Terradotta", "Test", PersonGender.NonDisclosed, "www.terradotta.com");
 
             var testEstablishments = new Dictionary<string, string>
             {
@@ -74,14 +74,41 @@ namespace UCosmic.SeedData
 
             foreach (var testEstablishment in testEstablishments)
             {
-                Seed(string.Format("any1{0}", testEstablishment.Value), "Any", "One", testEstablishment.Key);
-                Seed(string.Format("manager1{0}", testEstablishment.Value), "Manager", "One", testEstablishment.Key, managerRoles);
-                Seed(string.Format("supervisor1{0}", testEstablishment.Value), "Supervisor", "One", testEstablishment.Key, supervisorRoles);
-                Seed(string.Format("agent1{0}", testEstablishment.Value), "Agent", "One", testEstablishment.Key, agentRoles);
+                Seed(string.Format("any1{0}", testEstablishment.Value)
+                    , "Any"
+                    , "One"
+                    , PersonGender.NonDisclosed
+                    , testEstablishment.Key);
+
+                Seed(string.Format("manager1{0}", testEstablishment.Value)
+                    , "Manager"
+                    , "One"
+                    , PersonGender.NonDisclosed
+                    , testEstablishment.Key
+                    , managerRoles);
+
+                Seed(string.Format("supervisor1{0}", testEstablishment.Value)
+                    , "Supervisor"
+                    , "One"
+                    , PersonGender.NonDisclosed
+                    , testEstablishment.Key
+                    , supervisorRoles);
+
+                Seed(string.Format("agent1{0}", testEstablishment.Value)
+                    , "Agent"
+                    , "One"
+                    , PersonGender.NonDisclosed
+                    , testEstablishment.Key
+                    , agentRoles);
             }
         }
 
-        protected void Seed(string[] emails, string firstName, string lastName, string establishmentUrl, string[] roles = null)
+        protected void Seed(string[] emails
+            , string firstName
+            , string lastName
+            , string gender
+            , string establishmentUrl
+            , string[] roles = null)
         {
             // make sure establishment exists
             var establishment = _queryProcessor.Execute(new EstablishmentByUrl(establishmentUrl));
@@ -103,6 +130,7 @@ namespace UCosmic.SeedData
                         IsDefault = e == emails.First(),
                     })
                     .ToArray(),
+                Gender = gender,
             });
 
             if (roles != null && roles.Any())
@@ -120,9 +148,14 @@ namespace UCosmic.SeedData
             _unitOfWork.SaveChanges();
         }
 
-        protected void Seed(string userName, string firstName, string lastName, string establishmentUrl, string[] roles = null)
+        protected void Seed(string userName
+            , string firstName
+            , string lastName
+            , string gender
+            , string establishmentUrl
+            , string[] roles = null)
         {
-            Seed(new[] { userName }, firstName, lastName, establishmentUrl, roles);
+            Seed(new[] { userName }, firstName, lastName, gender, establishmentUrl, roles);
         }
     }
 }

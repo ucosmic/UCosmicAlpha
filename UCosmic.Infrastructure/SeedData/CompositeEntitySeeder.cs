@@ -16,6 +16,7 @@
         private readonly InstitutionalAgreementEntitySeeder _institutionalAgreementEntitySeeder;
         private readonly InstitutionalAgreementSettingsEntitySeeder _institutionalAgreementSettingsEntitySeeder;
         private readonly EmployeeEntitySeeder _employeeEntitySeeder;
+        private readonly AffiliationEntitySeeder _affiliationEntitySeeder;
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
@@ -31,6 +32,7 @@
             , InstitutionalAgreementEntitySeeder institutionalAgreementEntitySeeder
             , InstitutionalAgreementSettingsEntitySeeder institutionalAgreementSettingsEntitySeeder
             , EmployeeEntitySeeder employeeEntitySeeder
+            , AffiliationEntitySeeder affiliationEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -47,6 +49,7 @@
             _institutionalAgreementEntitySeeder = institutionalAgreementEntitySeeder;
             _institutionalAgreementSettingsEntitySeeder = institutionalAgreementSettingsEntitySeeder;
             _employeeEntitySeeder = employeeEntitySeeder;
+            _affiliationEntitySeeder = affiliationEntitySeeder;
         }
 
         public void Seed()
@@ -56,6 +59,7 @@
             //_placeByGeoPlanetEntitySeeder.Seed();
             _coreSqlSeeder.Seed();
 
+            /* Note these lines are order dependent. */
             _roleEntitySeeder.Seed();
             _establishmentEntitySeeder.Seed();
             _emailTemplateEntitySeeder.Seed();
@@ -65,6 +69,7 @@
             _institutionalAgreementEntitySeeder.Seed();
             _institutionalAgreementSettingsEntitySeeder.Seed();
             _employeeEntitySeeder.Seed();
+            _affiliationEntitySeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }

@@ -108,8 +108,11 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
+    <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeFacultyRankByName.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishment.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
@@ -158,6 +161,7 @@
     <Compile Include="Domain\InstitutionalAgreements\Queries\MyInstitutionalAgreementSettings.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\QueryInstitutionalAgreements.cs" />
     <Compile Include="Domain\People\Entities\PersonGender.cs" />
+    <Compile Include="Domain\People\Queries\AffiliationByPersonEstablishment.cs" />
     <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />

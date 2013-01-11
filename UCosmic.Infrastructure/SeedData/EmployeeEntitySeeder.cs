@@ -1,71 +1,139 @@
-﻿using UCosmic.Domain.Employees;
+﻿
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using UCosmic.Domain.Employees;
+using UCosmic.Domain.Establishments;
+using UCosmic.Domain.People;
+
 
 namespace UCosmic.SeedData
 {
     public class EmployeeEntitySeeder : ISeedData
     {
-        private readonly EmployeeFacultyRankSeeder _employeeFacultyRankSeeder;
-        private readonly EmployeeModuleSettingsSeeder _employeeModuleSettingsSeeder;
+        private readonly UcEmployeeModuleSettingsSeeder _ucEmployeeModuleSettingsSeeder;
+        private readonly UsfEmployeeModuleSettingsSeeder _usfEmployeeModuleSettingsSeeder;
 
-        public EmployeeEntitySeeder(EmployeeFacultyRankSeeder inEmployeeFacultyRankSeeder
-            , EmployeeModuleSettingsSeeder inEmployeeModuleSettingsSeeder
+        public EmployeeEntitySeeder(UcEmployeeModuleSettingsSeeder ucEmployeeModuleSettingsSeeder
+            , UsfEmployeeModuleSettingsSeeder usfEmployeeModuleSettingsSeeder
         )
         {
-            _employeeFacultyRankSeeder = inEmployeeFacultyRankSeeder;
-            _employeeModuleSettingsSeeder = inEmployeeModuleSettingsSeeder;
+            _ucEmployeeModuleSettingsSeeder = ucEmployeeModuleSettingsSeeder;
+            _usfEmployeeModuleSettingsSeeder = usfEmployeeModuleSettingsSeeder;
         }
 
         public void Seed()
         {
-            _employeeFacultyRankSeeder.Seed();
-            _employeeModuleSettingsSeeder.Seed();
+            _ucEmployeeModuleSettingsSeeder.Seed();
+            _usfEmployeeModuleSettingsSeeder.Seed();
         }
     }
 
-    public class EmployeeFacultyRankSeeder : ISeedData
+    public class UcEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICommandEntities _commandEntities;
+        private readonly ICommandEntities _entities;
 
-        public EmployeeFacultyRankSeeder(IUnitOfWork inUnitOfWork
-            , ICommandEntities inCommandEntities )
+        public UcEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
+            , ICommandEntities entities
+            , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
+            , IUnitOfWork unitOfWork
+            )
+            : base(queryProcessor, createEmployeeModuleSettings, unitOfWork)
         {
-            _unitOfWork = inUnitOfWork;
-            _commandEntities = inCommandEntities;
+            _entities = entities;
         }
 
-        public void Seed()
+        public override void Seed()
         {
-            var entity = new EmployeeFacultyRank {Rank = "Adjunct Instructor"};
-            _commandEntities.Create(entity);
-            entity = new EmployeeFacultyRank {Rank = "Assistant Professor"};
-            _commandEntities.Create(entity);
-            entity = new EmployeeFacultyRank {Rank = "Associate Professor"};
-            _commandEntities.Create(entity);
-            entity = new EmployeeFacultyRank {Rank = "Professor"};
-            _commandEntities.Create(entity);
-            entity = new EmployeeFacultyRank {Rank = "Distinquished Professor"};
-            _commandEntities.Create(entity);
-
-            _unitOfWork.SaveChanges();
+            var admin = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Dan" && x.LastName == "Ludwig");
+            if (admin == null) throw new Exception("Person is null");
+            var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of Cincinnati");
+            if (establishment == null) throw new Exception("Establishment is null");
+            Seed(new CreateEmployeeModuleSettings
+            {
+                FacultyRanks = new Collection<EmployeeFacultyRank>()
+                        {
+                            new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
+                            new EmployeeFacultyRank {Rank = "Assistant Professor"},
+                            new EmployeeFacultyRank {Rank = "Associate Professor"},
+                            new EmployeeFacultyRank {Rank = "Professor"},
+                            new EmployeeFacultyRank {Rank = "Distinquished Professor"},                     
+                        },
+                NotifyAdminOnUpdate = true,
+                NotifyAdmin = admin,
+                PersonalInfoAnchorText = "My International",
+                ForEstablishment = establishment,
+            });
         }
     }
 
-    public class EmployeeModuleSettingsSeeder : ISeedData
+    public class UsfEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICommandEntities _commandEntities;
+        private readonly ICommandEntities _entities;
 
-        public EmployeeModuleSettingsSeeder(IUnitOfWork inUnitOfWork
-            , ICommandEntities inCommandEntities )
+        public UsfEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
+            , ICommandEntities entities
+            , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
+            , IUnitOfWork unitOfWork
+            ) : base(queryProcessor,createEmployeeModuleSettings,unitOfWork)
         {
-            _unitOfWork = inUnitOfWork;
-            _commandEntities = inCommandEntities;
+            _entities = entities;
         }
         
-        public void Seed()
+        public override void Seed()
         {
-            /*  TODO */
+            var admin = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
+            if (admin == null) throw new Exception("Person is null");
+            var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
+            if (establishment == null) throw new Exception("Establishment is null");
+            Seed( new CreateEmployeeModuleSettings
+                {
+                    FacultyRanks = new Collection<EmployeeFacultyRank>()
+                        {
+                            new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
+                            new EmployeeFacultyRank {Rank = "Assistant Professor"},
+                            new EmployeeFacultyRank {Rank = "Associate Professor"},
+                            new EmployeeFacultyRank {Rank = "Professor"},
+                            new EmployeeFacultyRank {Rank = "Distinquished Professor"},                     
+                        },
+                    NotifyAdminOnUpdate = true,
+                    NotifyAdmin = admin,
+                    PersonalInfoAnchorText = "My USF World Profile",
+                    ForEstablishment = establishment,       
+                });
+        }
+    }
+
+    public abstract class BaseEmployeeModuleSettingsSeeder : ISeedData
+    {
+        private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<CreateEmployeeModuleSettings> _createEmployeeModuleSettings;
+        private readonly IUnitOfWork _unitOfWork;
+
+        protected BaseEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
+            , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModule
+            , IUnitOfWork unitOfWork)
+        {
+            _queryProcessor = queryProcessor;
+            _createEmployeeModuleSettings = createEmployeeModule;
+            _unitOfWork = unitOfWork;
+        }
+
+        public abstract void Seed();
+
+        protected EmployeeModuleSettings Seed(CreateEmployeeModuleSettings command)
+        {
+            // make sure entity does not already exist
+            var employeeModuleSettings = _queryProcessor.Execute(
+                new EmployeeModuleSettingsByEstablishment(command.ForEstablishment));
+
+            if (employeeModuleSettings != null) return employeeModuleSettings;
+
+            _createEmployeeModuleSettings.Handle(command);
+
+            _unitOfWork.SaveChanges();
+
+            return command.CreatedEmployeeModuleSettings;
         }
     }
 
