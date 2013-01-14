@@ -14,7 +14,7 @@ namespace UCosmic.Domain.Employees
         }
 
         public int EmployeeModuleSettingsId { get; set; }
-        public ICollection<EmployeeFacultyRank> FacultyRanks { get; protected internal set; }
+        public virtual ICollection<EmployeeFacultyRank> FacultyRanks { get; protected internal set; }
         public bool NotifyAdminOnUpdate { get; protected internal set; }
         public Person NotifyAdmin { get; protected internal set; }
         public string PersonalInfoAnchorText { get; protected internal set; }
