@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.People;
 
 
 namespace UCosmic.SeedData

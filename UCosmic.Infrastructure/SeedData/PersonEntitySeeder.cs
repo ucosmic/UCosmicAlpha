@@ -264,7 +264,6 @@ namespace UCosmic.SeedData
 
                 var usfEmployeeModuleSettings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(s => s.ForEstablishment.OfficialName == "University of South Florida");
                 if (usfEmployeeModuleSettings == null) throw new Exception("USF EmployeeModuleSettings not found.");
-                if (usfEmployeeModuleSettings.FacultyRanks == null) throw new Exception("USF FacultyRanks not found.");
 
                 var associateProfessorRank = usfEmployeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Associate Professor");
                 if (associateProfessorRank == null) throw new Exception("USF Associate Professor Rank not found.");
