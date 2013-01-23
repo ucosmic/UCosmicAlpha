@@ -1,18 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq;
 using UCosmic.Domain;
 
 namespace UCosmic
 {
-    public interface IQueryEntities
+    public interface IQueryEntities : IEagerLoad
     {
         IQueryable<TEntity> Query<TEntity>() where TEntity : Entity;
-
-        TEntity FindByPrimaryKey<TEntity>(params object[] primaryKeyValues)
-            where TEntity : Entity;
-
-        IQueryable<TEntity> EagerLoad<TEntity>(IQueryable<TEntity> query, Expression<Func<TEntity, object>> expression)
-            where TEntity : Entity;
     }
 }

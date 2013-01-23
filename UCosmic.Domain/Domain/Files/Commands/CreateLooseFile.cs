@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace UCosmic.Domain.Files
 {
@@ -8,7 +7,7 @@ namespace UCosmic.Domain.Files
         public byte[] Content { get; set; }
         public string Name { get; set; }
         public string MimeType { get; set; }
-        public LooseFile CreatedLooseFile { get; internal set; }
+        public Guid CreatedLooseFileGuid { get; internal set; }
     }
 
     public class HandleCreateLooseFileCommand : IHandleCommands<CreateLooseFile>
@@ -36,8 +35,7 @@ namespace UCosmic.Domain.Files
 
             _entities.Create(entity);
             _unitOfWork.SaveChanges();
-            command.CreatedLooseFile = _entities.Query<LooseFile>()
-                .SingleOrDefault(x => x.EntityId == entity.EntityId);
+            command.CreatedLooseFileGuid = entity.EntityId;
         }
     }
 }

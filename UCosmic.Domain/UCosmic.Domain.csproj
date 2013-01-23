@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Commands\IHandleCommands.cs" />
+    <Compile Include="Api\Data\IEagerLoad.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Queries\StringMatchStrategy.cs" />
     <Compile Include="Api\Saml\IParseSaml2Metadata.cs" />

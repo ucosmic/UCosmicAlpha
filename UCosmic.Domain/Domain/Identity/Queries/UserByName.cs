@@ -10,9 +10,9 @@ namespace UCosmic.Domain.Identity
 
     public class HandleUserByNameQuery : IHandleQueries<UserByName, User>
     {
-        private readonly ICommandEntities _entities;
+        private readonly IQueryEntities _entities;
 
-        public HandleUserByNameQuery(ICommandEntities entities)
+        public HandleUserByNameQuery(IQueryEntities entities)
         {
             _entities = entities;
         }

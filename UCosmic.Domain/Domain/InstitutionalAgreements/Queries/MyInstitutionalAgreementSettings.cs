@@ -28,11 +28,13 @@ namespace UCosmic.Domain.InstitutionalAgreements
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
+        private readonly IQueryEntities _detachedEntities;
 
-        public HandleMyInstitutionalAgreementSettingsQuery(IProcessQueries queryProcessor, ICommandEntities entities)
+        public HandleMyInstitutionalAgreementSettingsQuery(IProcessQueries queryProcessor, ICommandEntities entities, IQueryEntities detachedEntities)
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
+            _detachedEntities = detachedEntities;
         }
 
         public InstitutionalAgreementConfiguration Handle(MyInstitutionalAgreementSettings query)
@@ -57,7 +59,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
             // from person's default affiliation, determine establishment
             var configurations = (query.IsWritable)
                 ? _entities.Get<InstitutionalAgreementConfiguration>()
-                : _entities.Query<InstitutionalAgreementConfiguration>();
+                : _detachedEntities.Query<InstitutionalAgreementConfiguration>();
             configurations = configurations.EagerLoad(_entities, query.EagerLoad)
                 .Where(c =>
                     c.ForEstablishment != null &&

@@ -10,7 +10,7 @@ using UCosmic.Domain;
 
 namespace UCosmic.EntityFramework
 {
-    public class UCosmicContext : DbContext, IUnitOfWork, ICommandEntities
+    public class UCosmicContext : DbContext, IQueryEntities, ICommandEntities, IUnitOfWork
     {
         private IDatabaseInitializer<UCosmicContext> _initializer;
 
