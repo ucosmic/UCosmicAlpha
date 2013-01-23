@@ -112,6 +112,7 @@
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishment.cs" />
+    <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
@@ -159,7 +160,10 @@
     <Compile Include="Domain\InstitutionalAgreements\Commands\UpdateInstitutionalAgreementHierarchy.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\MyInstitutionalAgreementSettings.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\QueryInstitutionalAgreements.cs" />
+    <Compile Include="Domain\People\Commands\UpdatePerson.cs" />
     <Compile Include="Domain\People\Entities\PersonGender.cs" />
+    <Compile Include="Domain\People\Entities\PersonSalutation.cs" />
+    <Compile Include="Domain\People\Events\PersonChanged.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByPersonEstablishment.cs" />
     <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />
@@ -169,6 +173,7 @@
     <Compile Include="Domain\People\Commands\CreateAffiliation.cs" />
     <Compile Include="Domain\People\Commands\CreatePerson.cs" />
     <Compile Include="Domain\People\Queries\PersonByEmail.cs" />
+    <Compile Include="Domain\People\Queries\PersonById.cs" />
     <Compile Include="Domain\People\Queries\QueryPeople.cs" />
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithEstablishment.cs" />
     <Compile Include="Domain\People\Validation\MustFindPersonById.cs" />

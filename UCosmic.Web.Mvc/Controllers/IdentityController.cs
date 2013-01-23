@@ -1,5 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
+using System.Web.Providers.Entities;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Employees;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -8,13 +11,17 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         private readonly ISignUsers _userSigner;
         private readonly IStorePasswords _passwords;
+        private readonly IProcessQueries _queryProcessor;
+
 
         public IdentityController(ISignUsers userSigner
             , IStorePasswords passwords
+            , IProcessQueries queryProcessor
         )
         {
             _userSigner = userSigner;
             _passwords = passwords;
+            _queryProcessor = queryProcessor;
         }
 
         [GET("sign-in")]
@@ -30,6 +37,15 @@ namespace UCosmic.Web.Mvc.Controllers
             if (_passwords.Validate(model.UserName, model.Password))
             {
                 _userSigner.SignOn(model.UserName, model.RememberMe);
+
+                /* Set the anchor link text to the employee personal info controller. */
+                {
+                    EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
+                        new RootEmployeeModuleSettingsByUserName(model.UserName));
+
+                    Session["PersonalInfoAnchorText"] = employeeModuleSettings.PersonalInfoAnchorText;
+                }
+
                 TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", model.UserName));
                 return Redirect(model.ReturnUrl ?? _userSigner.DefaultSignedOnUrl);
             }

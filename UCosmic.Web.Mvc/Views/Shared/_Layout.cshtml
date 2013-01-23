@@ -18,16 +18,11 @@
                     @if (Request.IsAuthenticated)
                     {
                         <a href="#/me" class="email">@User.Identity.Name</a>
-                        /* TODO: Get domain, get University entity, get EmployeeModuleSettings */
-                        if (true)
-                        {
-                            /* TODO: If EmployeeModuleSettings exists, get PersonalInfoAchorText and use it here. */
-                            <a href="@Url.Action(MVC.EmployeePersonalInfo.Index())">My International</a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action(MVC.EmployeePersonalInfo.Index())">My International</a>
-                        }
+                        
+                        var anchor = (string)Session["PersonalInfoAnchorText"];
+                        if ( String.IsNullOrEmpty(anchor) ) { anchor = "My International"; }
+                        <a href="@Url.Action(MVC.Person.Index())">@anchor</a>
+
                         <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }
                     else

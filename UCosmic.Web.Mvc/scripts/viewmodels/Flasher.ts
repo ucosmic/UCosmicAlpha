@@ -49,7 +49,7 @@ module App {
     }
 
     // keep class private but implement exported interface
-    class Flasher implements IFlasher {
+    export class Flasher implements IFlasher {
 
         constructor () {
             ko.computed(() => { init(this); });

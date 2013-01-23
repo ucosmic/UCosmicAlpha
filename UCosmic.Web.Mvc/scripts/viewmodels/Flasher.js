@@ -54,6 +54,7 @@ var App;
             });
         };
         return Flasher;
-    })();    
+    })();
+    App.Flasher = Flasher;    
     App.flasher = new Flasher();
 })(App || (App = {}));

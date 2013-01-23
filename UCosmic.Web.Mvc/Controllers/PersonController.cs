@@ -1,14 +1,24 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class EmployeePersonalInfoController : Controller
+    public partial class PersonController : Controller
     {
+        private readonly IProcessQueries _queryProcessor;
+
+        public PersonController(IProcessQueries queryProcessor)
+        {
+            _queryProcessor = queryProcessor;
+        }
+
         [GET("my/info")]
         public virtual ActionResult Index()
         {
-            return View();
+            Person person = _queryProcessor.Execute(new MyPerson(User));
+            return View(person.RevisionId);
         }
 
         //

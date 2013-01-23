@@ -1,0 +1,114 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Personal Info";
+}
+
+<style>
+    td.table-column-label {
+        text-align: right;
+    }
+    td.table-column-value {
+        text-align: left;
+    }
+</style>
+
+<section id="employeePersonalInfo" class="fixed content">
+    <header>
+        <h1>Profile Information</h1>
+        <br/>
+    </header>
+    <form data-bind="submit: SaveForm">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 300px"></th>
+                    <th style="width: 400px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="table-column-label"><input type="checkbox" data-bind="checked: IsActive" /></td>
+                    <td class="table-column-value">Active?</td>
+                </tr>
+                <tr>
+                    <td class="table-column-label"><input type="checkbox" data-bind="checked: IsActive" /></td>
+                    <td class="table-column-value">Is Display Name Derived?</td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Display name:</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: DisplayName"/></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Salutation:</td>
+                    <td class="table-column-value"><select style="width: 100px" data-bind="options: Salutations, value: Salutation"></select></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">First name:</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: FirstName"/></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Middle name:</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: MiddleName"/></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Last name:</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: LastName"/></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Suffix:</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: Suffix"/></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Faculty rank:</td>
+                    <td class="table-column-value"><select style="width: 200px" data-bind="options: FacultyRanks, optionsText: 'rank', value: FacultyRank"></select></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Working title:</td>
+                    <td class="table-column-value">TBD</td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Gender:</td>
+                    <td class="table-column-value">
+                        <input type="radio" name="genderGroup" value="M" data-bind="checked: Gender" /> Male
+                        <input type="radio" name="genderGroup" value="F" data-bind="checked: Gender" /> Female
+                        <input type="radio" name="genderGroup" value="P" data-bind="checked: Gender" /> Non-Disclosed
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Administrative Appointments:</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: AdministrativeAppointments"/></td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Emails:</td>
+                    <td class="table-column-value">TBD</td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Affiliations:</td>
+                    <td class="table-column-value">TBD</td>
+                </tr>
+                <tr>
+                    <td class="table-column-label">Picture:</td>
+                    <td class="table-column-value">TBD</td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <input type="submit" value="Save" />
+            <input type="button" value="Cancel" class="link" />
+        </div>
+    </form>
+</section>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/employees/personalinfo")
+
+    <script type="text/javascript">
+        
+        $(function () {
+            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model));
+        });
+
+    </script>
+}

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using UCosmic.Domain;
+using UCosmic.Domain.Employees;
 
 namespace UCosmic.Web.Mvc
 {
@@ -24,6 +25,20 @@ namespace UCosmic.Web.Mvc
 
             AutoMapperConfig.RegisterProfiles();
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
+        }
+
+        protected void Session_Start()
+        {
+            /* Set the anchor link text to the employee personal info controller. */
+            if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                var queryProcessor = DependencyResolver.Current.GetService<IProcessQueries>();
+
+                EmployeeModuleSettings employeeModuleSettings = queryProcessor.Execute(
+                    new RootEmployeeModuleSettingsByUserName(User.Identity.Name));
+
+                Session["PersonalInfoAnchorText"] = employeeModuleSettings.PersonalInfoAnchorText;                
+            }
         }
     }
 }

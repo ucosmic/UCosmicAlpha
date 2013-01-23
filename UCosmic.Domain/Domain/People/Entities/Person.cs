@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
@@ -12,13 +15,14 @@ namespace UCosmic.Domain.People
         protected internal Person()
         {
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            Affiliations = new List<Affiliation>();
-            Emails = new List<EmailAddress>();
+            IsActive = true;
+            Affiliations = new Collection<Affiliation>();
+            Emails = new Collection<EmailAddress>();
             Messages = new List<EmailMessage>();
-            Gender = null;
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
+        public bool IsActive { get; protected internal set; }
         public bool IsDisplayNameDerived { get; protected internal set; }
         public string DisplayName { get; protected internal set; }
         public string Salutation { get; protected internal set; }
@@ -29,16 +33,14 @@ namespace UCosmic.Domain.People
         public string Gender { get; protected internal set; }
         public EmployeeFacultyRank FacultyRank { get; protected internal set; }
         public byte[] Picture { get; protected internal set; }
-
-        public virtual User User { get; protected internal set; }
-
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
-        public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
-
-        public virtual ICollection<EmailMessage> Messages { get; protected internal set; }
         public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
         public string AdministrativeAppointments { get; protected internal set; }
+    
+        public virtual User User { get; protected internal set; }
+        public virtual ICollection<EmailMessage> Messages { get; protected internal set; }
 
+        public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
 
         public EmailAddress GetEmail(string value)
         {
@@ -138,6 +140,32 @@ namespace UCosmic.Domain.People
         public override string ToString()
         {
             return DisplayName;
+        }
+    }
+
+    internal static class PersonSerializer
+    {
+        internal static string ToJsonAudit(this Person person)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = person.RevisionId,
+                IsActive = person.IsActive,
+                IsDisplayNameDerived = person.IsDisplayNameDerived,
+                DisplayName = person.DisplayName,
+                Salutation = person.Salutation,
+                FirstName = person.FirstName,
+                MiddleName = person.MiddleName,
+                LastName = person.LastName,
+                Suffix = person.Suffix,
+                Gender = person.Gender,
+                FacultyRank = (person.FacultyRank != null) ? person.FacultyRank.Rank : null,
+                //Picture = person.Picture,
+                //Emails = person.Emails,
+                //Affiliations = person.Affiliations,
+                AdministrativeAppointments = person.AdministrativeAppointments,
+            });
+            return state;
         }
     }
 }

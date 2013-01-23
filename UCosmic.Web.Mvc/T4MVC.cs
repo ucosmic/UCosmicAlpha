@@ -26,11 +26,11 @@ public static class MVC
 {
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
-    public static UCosmic.Web.Mvc.Controllers.EmployeePersonalInfoController EmployeePersonalInfo = new UCosmic.Web.Mvc.Controllers.T4MVC_EmployeePersonalInfoController();
     public static UCosmic.Web.Mvc.Controllers.ErrorsController Errors = new UCosmic.Web.Mvc.Controllers.T4MVC_ErrorsController();
     public static UCosmic.Web.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Web.Mvc.Controllers.T4MVC_EstablishmentsController();
     public static UCosmic.Web.Mvc.Controllers.HomeController Home = new UCosmic.Web.Mvc.Controllers.T4MVC_HomeController();
     public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
+    public static UCosmic.Web.Mvc.Controllers.PersonController Person = new UCosmic.Web.Mvc.Controllers.T4MVC_PersonController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
@@ -149,6 +149,22 @@ namespace Links
             public static readonly string SideSwiper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SideSwiper.min.js") ? Url("SideSwiper.min.js") : Url("SideSwiper.js");
                           
             public static readonly string SideSwiper_min_js = Url("SideSwiper.min.js");
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class datacontext {
+            private const string URLPATH = "~/scripts/datacontext";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string employeemockservice_ts = Url("employeemockservice.ts");
+            public static readonly string employeemockservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/employeemockservice.min.js") ? Url("employeemockservice.min.js") : Url("employeemockservice.js");
+                          
+            public static readonly string employeewebservice_ts = Url("employeewebservice.ts");
+            public static readonly string employeewebservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/employeewebservice.min.js") ? Url("employeewebservice.min.js") : Url("employeewebservice.js");
+                          
+            public static readonly string iemployee_ts = Url("iemployee.ts");
+            public static readonly string iemployee_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/iemployee.min.js") ? Url("iemployee.min.js") : Url("iemployee.js");
+                          
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

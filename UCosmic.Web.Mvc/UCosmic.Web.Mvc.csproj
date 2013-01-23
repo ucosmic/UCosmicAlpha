@@ -265,6 +265,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\EstablishmentLocationsController.cs" />
     <Compile Include="ApiControllers\EstablishmentUrlsController.cs" />
     <Compile Include="ApiControllers\IdentityController.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="ApiControllers\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
+    <Compile Include="ApiControllers\PersonController.cs" />
     <Compile Include="ApiControllers\PlacesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
@@ -285,15 +287,12 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
-    <Compile Include="Controllers\EmployeePersonalInfoController.cs" />
+    <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\EstablishmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\TenancyController.cs" />
-    <Compile Include="EmployeePersonalInfoController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
     <Compile Include="ErrorsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -319,8 +318,9 @@
     <Compile Include="IdentityController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmployeeModuleSettingsModel.cs" />
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
-    <Compile Include="Models\PersonInfoApiModel.cs" />
+    <Compile Include="Models\PersonApiModel.cs" />
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
@@ -336,6 +336,9 @@
     <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Models\UserVoiceLinkModel.cs" />
+    <Compile Include="PersonController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -442,6 +445,18 @@
     </Content>
     <None Include="scripts\google\google.maps.d.ts" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
+    <TypeScriptCompile Include="scripts\datacontext\employeewebservice.ts" />
+    <TypeScriptCompile Include="scripts\datacontext\employeemockservice.ts" />
+    <Content Include="scripts\datacontext\employeemockservice.js">
+      <DependentUpon>employeemockservice.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\datacontext\employeewebservice.js">
+      <DependentUpon>employeewebservice.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\datacontext\iemployee.ts" />
+    <Content Include="scripts\datacontext\iemployee.js">
+      <DependentUpon>iemployee.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
@@ -680,7 +695,7 @@
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Establishments\Form.cshtml" />
-    <Content Include="Views\EmployeePersonalInfo\Index.cshtml" />
+    <Content Include="Views\Person\Index.cshtml" />
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <Content Include="styles\sass\sheets\maps.scss" />
@@ -895,7 +910,7 @@
   <Target Name="BeforeBuild">
     <Message Text="Compiling TypeScript files" />
     <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
-    <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'--target ES5 &quot;%(fullpath)&quot;', ' ')" />
   </Target>
   <Target Name="AfterBuild">
   </Target>

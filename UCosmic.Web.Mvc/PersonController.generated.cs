@@ -22,13 +22,10 @@ using System.Web.Routing;
 using T4MVC;
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class EmployeePersonalInfoController
+    public partial class PersonController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public EmployeePersonalInfoController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected EmployeePersonalInfoController(Dummy d) { }
+        protected PersonController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -64,13 +61,13 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public EmployeePersonalInfoController Actions { get { return MVC.EmployeePersonalInfo; } }
+        public PersonController Actions { get { return MVC.Person; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "EmployeePersonalInfo";
+        public readonly string Name = "Person";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "EmployeePersonalInfo";
+        public const string NameConst = "Person";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -142,14 +139,14 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string Index = "Index";
             }
-            public readonly string Index = "~/Views/EmployeePersonalInfo/Index.cshtml";
+            public readonly string Index = "~/Views/Person/Index.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_EmployeePersonalInfoController : UCosmic.Web.Mvc.Controllers.EmployeePersonalInfoController
+    public class T4MVC_PersonController : UCosmic.Web.Mvc.Controllers.PersonController
     {
-        public T4MVC_EmployeePersonalInfoController() : base(Dummy.Instance) { }
+        public T4MVC_PersonController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.ActionResult Index()
         {

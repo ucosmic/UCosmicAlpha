@@ -69,7 +69,11 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Item.js"));
 
             // employee personal info page
-            bundles.Add(new ScriptBundle("~/bundles/employees").Include(
+            bundles.Add(new ScriptBundle("~/bundles/employees/personalinfo").Include(
+                "~/scripts/require/require.js",
+                "~/scripts/datacontext/iemployee.js",
+                "~/scripts/datacontext/employeewebservice.js",
+                //"~/scripts/datacontext/employeemockservice.js",
                 "~/scripts/viewmodels/employees/PersonalInfo.js"));
 
             // bootstrap css bundles
