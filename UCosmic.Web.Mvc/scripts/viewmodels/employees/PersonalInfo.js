@@ -200,18 +200,16 @@ var ViewModels;
             };
             PersonalInfo.prototype.ToViewModel = function (inSelf, data) {
                 var me = inSelf;
-                debugger;
-
                 me.RevisionId = data.revisionId;
                 me.IsActive = ko.observable(data.isActive);
                 me.IsDisplayNameDerived = ko.observable(data.isDisplayNameDerived);
-                me.DisplayName = ko.observable(data.displayName);
-                me.Salutation = ko.observable(data.salutation);
-                me.FirstName = ko.observable(data.firstName);
-                me.MiddleName = ko.observable(data.middleName);
-                me.LastName = ko.observable(data.lastName);
-                me.Suffix = ko.observable(data.suffix);
-                me.WorkingTitle = ko.observable(data.workingTitle);
+                me.DisplayName = (ko.observable(data.displayName) != null) ? ko.observable(data.displayName) : ko.observable("");
+                me.Salutation = (data.salutation != null) ? ko.observable(data.salutation) : ko.observable("");
+                me.FirstName = (data.firstName != null) ? ko.observable(data.firstName) : ko.observable("");
+                me.MiddleName = (data.middleName != null) ? ko.observable(data.middleName) : ko.observable("");
+                me.LastName = (data.lastName != null) ? ko.observable(data.lastName) : ko.observable("");
+                me.Suffix = (data.suffix != null) ? ko.observable(data.suffix) : ko.observable("");
+                me.WorkingTitle = (data.workingTitle != null) ? ko.observable(data.workingTitle) : ko.observable("");
                 me.Gender = ko.observable(data.gender);
                 if(data.facultyRank != null) {
                     me.FacultyRank = ko.observable({
@@ -219,18 +217,16 @@ var ViewModels;
                         rank: data.facultyRank.rank
                     });
                 }
-                me.AdministrativeAppointments = ko.observable(data.administrativeAppointments);
+                me.AdministrativeAppointments = (data.administrativeAppointments != null) ? ko.observable(data.administrativeAppointments) : ko.observable("");
                 me.Picture = ko.observable(data.picture);
             };
             PersonalInfo.prototype.FromViewModel = function (inSelf) {
                 var me = inSelf;
-                debugger;
-
                 return {
                     revisionId: me.RevisionId,
                     isActive: me.IsActive,
                     isDisplayNameDerived: me.IsDisplayNameDerived,
-                    displayName: me.DisplayName,
+                    displayName: (me.DisplayName().length > 0) ? me.DisplayName : null,
                     salutation: me.Salutation,
                     firstName: me.FirstName,
                     middleName: me.MiddleName,

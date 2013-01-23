@@ -137,9 +137,9 @@ namespace UCosmic.Domain.People
                  ((person.FacultyRank != null) && (person.FacultyRank.EmployeeFacultyRankId != command.FacultyRank.EmployeeFacultyRankId)) )
             {
                 person.FacultyRank =
-                  _entities.Query<EmployeeFacultyRank>()
+                  _entities.Get<EmployeeFacultyRank>()
                             .SingleOrDefault(x => x.EmployeeFacultyRankId == command.FacultyRank.EmployeeFacultyRankId);
-                changed |= true;
+              changed |= true;
             }
             else
             {
