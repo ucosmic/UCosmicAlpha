@@ -24,7 +24,7 @@ namespace UCosmic.SeedData
 
         public void Seed()
         {
-            if (_entities.Query<Place>().Any()) return;
+            if (_entities.Get<Place>().Any()) return;
 
             var earth = _queryProcessor.Execute(new PlaceByWoeId { WoeId = GeoPlanetPlace.EarthWoeId });
             Debug.Assert(earth != null);

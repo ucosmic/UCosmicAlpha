@@ -14,9 +14,9 @@ namespace UCosmic.Domain.Places
 
     public class HandleSingleGeoNamesFeatureClassQuery : IHandleQueries<SingleGeoNamesFeatureClass, GeoNamesFeatureClass>
     {
-        private readonly IQueryEntities _entities;
+        private readonly ICommandEntities _entities;
 
-        public HandleSingleGeoNamesFeatureClassQuery(IQueryEntities entities)
+        public HandleSingleGeoNamesFeatureClassQuery(ICommandEntities entities)
         {
             _entities = entities;
         }

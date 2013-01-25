@@ -16,14 +16,14 @@ namespace UCosmic.Domain
 
         private static IQueryable<TEntity> EagerLoad<TEntity>(this IQueryable<TEntity> queryable,
             Expression<Func<TEntity, object>> expression,
-            IQueryEntities entities)
+            IEagerLoad entities)
             where TEntity : Entity
         {
             return entities.EagerLoad(queryable, expression);
         }
 
         internal static IQueryable<TEntity> EagerLoad<TEntity>(this IQueryable<TEntity> queryable,
-            IQueryEntities entities,
+            IEagerLoad entities,
             IEnumerable<Expression<Func<TEntity, object>>> expressions)
             where TEntity : Entity
         {

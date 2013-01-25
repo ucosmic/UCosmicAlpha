@@ -305,7 +305,7 @@ namespace UCosmic.SeedData
             };
             _fileHandler.Handle(fileCommand);
             _unitOfWork.SaveChanges();
-            return fileCommand.CreatedLooseFile.EntityId;
+            return fileCommand.CreatedLooseFileGuid;
         }
 
         private static string GetFile1Content()

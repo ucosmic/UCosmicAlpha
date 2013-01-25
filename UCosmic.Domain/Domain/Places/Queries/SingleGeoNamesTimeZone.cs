@@ -14,9 +14,9 @@ namespace UCosmic.Domain.Places
 
     public class HandleSingleGeoNamesTimeZoneQuery : IHandleQueries<SingleGeoNamesTimeZone, GeoNamesTimeZone>
     {
-        private readonly IQueryEntities _entities;
+        private readonly ICommandEntities _entities;
 
-        public HandleSingleGeoNamesTimeZoneQuery(IQueryEntities entities)
+        public HandleSingleGeoNamesTimeZoneQuery(ICommandEntities entities)
         {
             _entities = entities;
         }
