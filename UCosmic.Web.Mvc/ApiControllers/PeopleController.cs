@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -29,6 +30,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             Person person = _queryProcessor.Execute(new PersonById(id));
             PersonApiModel model = Mapper.Map<Person, PersonApiModel>(person);
+
+            model.WorkingTitle = null;
+            Affiliation primateAffiliation = person.Affiliations.SingleOrDefault(x => x.IsPrimary);
+            if (primateAffiliation != null)
+            {
+                if (!string.IsNullOrEmpty(primateAffiliation.JobTitles))
+                {
+                    string[] jobTitles = primateAffiliation.JobTitles.Split(new char[] {','});
+                    model.WorkingTitle = jobTitles[0];
+                }
+            }
+
             return model;
         }
 

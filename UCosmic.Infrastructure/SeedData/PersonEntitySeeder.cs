@@ -357,6 +357,7 @@ namespace UCosmic.SeedData
                 {
                     EstablishmentId = establishmentId.Value,
                     PersonId = person.RevisionId,
+                    IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                 });
@@ -389,11 +390,33 @@ namespace UCosmic.SeedData
         {
             /* USF Affiliations */
             {
+                /* ------------------------------------------------------------------------ */
                 var person = _entities.Get<Person>()
-                    .SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
+                    .SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
                 if (person == null) throw new Exception("Person is null");
 
                 var establishment = _entities.Get<Establishment>()
+                    .SingleOrDefault(x => x.OfficialName == "University of South Florida");
+                if (establishment == null) throw new Exception("Establishment is null");
+
+                Seed(new CreateAffiliation
+                {
+                    Person = person,
+                    PersonId = person.RevisionId,
+                    Establishment = establishment,
+                    EstablishmentId = establishment.RevisionId,
+                    JobTitles = "Software Developer",
+                    IsPrimary = true,
+                    IsClaimingEmployee = true,
+                    IsClaimingStudent = false,
+                });
+                
+                /* ------------------------------------------------------------------------ */
+                person = _entities.Get<Person>()
+                    .SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
+                if (person == null) throw new Exception("Person is null");
+
+                establishment = _entities.Get<Establishment>()
                     .SingleOrDefault(x => x.OfficialName == "USF College of Arts & Sciences Department of Sociology");
                 if (establishment == null) throw new Exception("Establishment is null");
 
@@ -409,6 +432,7 @@ namespace UCosmic.SeedData
                     IsClaimingStudent = false,
                 });
 
+                /* ------------------------------------------------------------------------ */
                 person = _entities.Get<Person>()
                     .SingleOrDefault(x => x.FirstName == "William" && x.LastName == "Hogarth");
                 if (person == null) throw new Exception("Person is null");

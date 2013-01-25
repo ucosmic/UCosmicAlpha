@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -130,6 +132,29 @@ namespace UCosmic.Domain.People
                 { person.Suffix = command.Suffix; changed = true; }
             if (person.Gender != command.Gender)
                 { person.Gender = command.Gender; changed = true; }
+
+            {
+                Affiliation primaryAffiliation = person.Affiliations.SingleOrDefault(x => x.IsPrimary);
+                if (primaryAffiliation != null)
+                {
+                    string workingTitle = command.WorkingTitle.Trim();
+
+                    if (!String.IsNullOrEmpty(primaryAffiliation.JobTitles))
+                    {
+                        string[] jobTitles = primaryAffiliation.JobTitles.Split(new char[] { ',' });
+                        List<string> jobTitlesList =  new List<string>(jobTitles);
+                        /* TODO: Is there a language match problem here? */
+                        int index = jobTitlesList.IndexOf(workingTitle);
+                        if (index == -1) { jobTitlesList.Add(workingTitle); }
+                        primaryAffiliation.JobTitles = String.Join(",", jobTitlesList);
+                    }
+                    else
+                    {
+                        primaryAffiliation.JobTitles = workingTitle;
+                    }
+                }
+            }
+
             if (command.EmployeeFacultyRankId == 0)
             {
                 person.EmployeeFacultyRank = null;

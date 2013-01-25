@@ -18,6 +18,12 @@
         <h1>Profile Information</h1>
         <br/>
     </header>
+    <aside class="on-right from-top" data-fixed-scroll="root">
+        <div data-fixed-scroll="anchor"></div>
+        <div data-fixed-scroll="content">
+            @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+        </div>
+    </aside>
     <form data-bind="submit: SaveForm">
         <table>
             <thead>
@@ -65,7 +71,7 @@
                 </tr>
                 <tr>
                     <td class="table-column-label">Working title:</td>
-                    <td class="table-column-value">TBD</td>
+                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: WorkingTitle"/></td>
                 </tr>
                 <tr>
                     <td class="table-column-label">Gender:</td>

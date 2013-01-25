@@ -120,6 +120,7 @@
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishment.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishmentId.cs" />
+    <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByPersonId.cs" />
     <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
