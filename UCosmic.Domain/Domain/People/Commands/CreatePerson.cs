@@ -77,7 +77,7 @@ namespace UCosmic.Domain.People
                 LastName = command.LastName,
                 DisplayName = command.DisplayName,
                 Gender = command.Gender,
-                FacultyRank = command.FacultyRank,
+                EmployeeFacultyRank = command.FacultyRank,
                 Affiliations = command.Affiliations,
                 AdministrativeAppointments = command.AdministrativeAppointments,
                 Picture = command.Picture,

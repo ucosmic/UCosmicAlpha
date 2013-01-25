@@ -41,7 +41,7 @@
                 </tr>
                 <tr>
                     <td class="table-column-label">Salutation:</td>
-                    <td class="table-column-value"><select style="width: 100px" data-bind="options: Salutations, value: Salutation"></select></td>
+                    <td class="table-column-value"><select id="salutationSelector" style="width: 100px" data-bind="options: Salutations, value: Salutation"></select></td>
                 </tr>
                 <tr>
                     <td class="table-column-label">First name:</td>
@@ -61,7 +61,7 @@
                 </tr>
                 <tr>
                     <td class="table-column-label">Faculty rank:</td>
-                    <td class="table-column-value"><select style="width: 200px" data-bind="options: FacultyRanks, optionsText: 'rank', value: FacultyRank"></select></td>
+                    <td class="table-column-value"><select id="facultyRankSelector" style="width: 300px" data-bind="options: FacultyRanks, optionsText: 'rank', value: FacultyRank, optionsCaption: 'Select...'"></select></td>
                 </tr>
                 <tr>
                     <td class="table-column-label">Working title:</td>

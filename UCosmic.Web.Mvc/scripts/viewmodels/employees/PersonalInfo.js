@@ -183,19 +183,27 @@ var ViewModels;
             });
             PersonalInfo.prototype._initialize = function (inDocumentElementId) {
                 var me = this;
-                this._dataContext.GetSalutations(me, function (self, salutations) {
+                var getSalutationsPact = me._dataContext.GetSalutations();
+                getSalutationsPact.then(function (salutations) {
                     for(var i = 0; i < salutations.length; i += 1) {
                         me.Salutations.push(salutations[i]);
                     }
+                }, function (error) {
                 });
-                this._dataContext.GetFacultyRanks(me, function (self, facultyRanks) {
+                var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
+                getFacultyRanksPact.then(function (facultyRanks) {
                     for(var i = 0; i < facultyRanks.length; i += 1) {
                         me.FacultyRanks.push(facultyRanks[i]);
                     }
+                }, function (error) {
                 });
-                this._dataContext.Get(me, function (self, data) {
-                    me.ToViewModel(me, data);
-                    ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
+                $.when(getSalutationsPact, getFacultyRanksPact).then(function (data) {
+                    me._dataContext.Get().then(function (data) {
+                        me.ToViewModel(me, data);
+                        ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
+                    }, function (data) {
+                    });
+                }, function (data) {
                 });
             };
             PersonalInfo.prototype.ToViewModel = function (inSelf, data) {
@@ -211,11 +219,16 @@ var ViewModels;
                 me.Suffix = (data.suffix != null) ? ko.observable(data.suffix) : ko.observable("");
                 me.WorkingTitle = (data.workingTitle != null) ? ko.observable(data.workingTitle) : ko.observable("");
                 me.Gender = ko.observable(data.gender);
-                if(data.facultyRank != null) {
-                    me.FacultyRank = ko.observable({
-                        employeeFacultyRankId: data.facultyRank.employeeFacultyRankId,
-                        rank: data.facultyRank.rank
-                    });
+                if(data.employeeFacultyRank != null) {
+                    var i = 0;
+                    while((i < me.FacultyRanks().length) && (me.FacultyRanks()[i].id != data.employeeFacultyRank.id)) {
+                        i += 1;
+                    }
+                    if(i < me.FacultyRanks().length) {
+                        me.FacultyRank = ko.observable(me.FacultyRanks()[i]);
+                    }
+                } else {
+                    me.FacultyRank = ko.observable();
                 }
                 me.AdministrativeAppointments = (data.administrativeAppointments != null) ? ko.observable(data.administrativeAppointments) : ko.observable("");
                 me.Picture = ko.observable(data.picture);
@@ -227,23 +240,25 @@ var ViewModels;
                     isActive: me.IsActive,
                     isDisplayNameDerived: me.IsDisplayNameDerived,
                     displayName: (me.DisplayName().length > 0) ? me.DisplayName : null,
-                    salutation: me.Salutation,
-                    firstName: me.FirstName,
-                    middleName: me.MiddleName,
-                    lastName: me.LastName,
-                    suffix: me.Suffix,
+                    salutation: (me.Salutation().length > 0) ? me.Salutation : null,
+                    firstName: (me.FirstName().length > 0) ? me.FirstName : null,
+                    middleName: (me.MiddleName().length > 0) ? me.MiddleName : null,
+                    lastName: (me.LastName().length > 0) ? me.LastName : null,
+                    suffix: (me.Suffix().length > 0) ? me.Suffix : null,
                     workingTitle: me.WorkingTitle,
                     gender: me.Gender,
-                    facultyRank: (me.FacultyRank() != null) ? {
-                        employeeFacultyRankId: me.FacultyRank().employeeFacultyRankId,
+                    employeeFacultyRank: (me.FacultyRank() != null) ? {
+                        id: me.FacultyRank().id,
                         rank: me.FacultyRank().rank
                     } : null,
-                    administrativeAppointments: me.AdministrativeAppointments,
+                    administrativeAppointments: (me.AdministrativeAppointments().length > 0) ? me.AdministrativeAppointments : null,
                     picture: me.Picture
                 };
             };
             PersonalInfo.prototype.SaveForm = function (formElement) {
-                this._dataContext.Put(this, this.FromViewModel);
+                this._dataContext.Put(this.FromViewModel(this)).then(function (data) {
+                }, function (errorThrown) {
+                });
             };
             return PersonalInfo;
         })();

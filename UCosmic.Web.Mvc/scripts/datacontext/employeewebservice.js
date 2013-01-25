@@ -10,31 +10,41 @@ var DataContext;
         function EmployeeWebService(inId) {
                 _super.call(this, inId);
         }
-        EmployeeWebService.prototype.Get = function (inObj, callback) {
-            $.getJSON(this.BaseUrl + "/" + this.Id.toString(), function (data) {
-                callback(inObj, data);
+        EmployeeWebService.prototype.Get = function () {
+            var deferred = $.Deferred();
+            $.getJSON(this.BaseUrl + "/" + this.Id.toString(), function (data, textStatus, jqXHR) {
+                deferred.resolve(data);
             });
+            return deferred;
         };
-        EmployeeWebService.prototype.Post = function (inObj, callback) {
-        };
-        EmployeeWebService.prototype.Put = function (inObj, callback) {
+        EmployeeWebService.prototype.Put = function (dataOut) {
+            var deferred = $.Deferred();
             $.ajax({
-                data: callback(inObj),
+                data: dataOut,
                 type: "PUT",
+                success: function (data, textStatus, jqXHR) {
+                    deferred.resolve(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    deferred.reject(errorThrown);
+                },
                 url: this.BaseUrl + "/" + this.Id.toString()
             });
+            return deferred;
         };
-        EmployeeWebService.prototype.Delete = function () {
-        };
-        EmployeeWebService.prototype.GetSalutations = function (inObj, callback) {
-            $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/salutations/", function (data) {
-                callback(inObj, data);
+        EmployeeWebService.prototype.GetSalutations = function () {
+            var deferred = $.Deferred();
+            $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/salutations/", function (data, textStatus, jqXHR) {
+                deferred.resolve(data);
             });
+            return deferred;
         };
-        EmployeeWebService.prototype.GetFacultyRanks = function (inObj, callback) {
-            $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/facultyranks/", function (data) {
-                callback(inObj, data);
+        EmployeeWebService.prototype.GetFacultyRanks = function () {
+            var deferred = $.Deferred();
+            $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/facultyranks/", function (data, textStatus, jqXHR) {
+                deferred.resolve(data);
             });
+            return deferred;
         };
         return EmployeeWebService;
     })(DataContext.IEmployee);

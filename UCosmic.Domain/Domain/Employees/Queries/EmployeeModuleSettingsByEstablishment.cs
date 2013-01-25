@@ -16,15 +16,6 @@ namespace UCosmic.Domain.Employees
         }
     }
 
-    internal static class QueryAffiliation
-    {
-        internal static EmployeeModuleSettings ByEstablishment(this IQueryable<EmployeeModuleSettings> queryable
-            , Establishment establishment)
-        {
-            return queryable.SingleOrDefault(p => p.ForEstablishment.RevisionId == establishment.RevisionId);
-        }
-    }
-
     public class HandleEmployeeModuleSettingsByEstablishmentQuery : IHandleQueries<EmployeeModuleSettingsByEstablishment, EmployeeModuleSettings>
     {
         private readonly IQueryEntities _entities;
@@ -40,8 +31,7 @@ namespace UCosmic.Domain.Employees
 
             return _entities.Query<EmployeeModuleSettings>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .ByEstablishment(query.Establishment)
-            ;
+                .SingleOrDefault(p => p.Establishment.RevisionId == query.Establishment.RevisionId);
         }
     }
 }

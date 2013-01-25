@@ -47,7 +47,7 @@ namespace UCosmic.SeedData
             if (establishment == null) throw new Exception("Establishment is null");
             Seed(new CreateEmployeeModuleSettings
             {
-                FacultyRanks = new Collection<EmployeeFacultyRank>()
+                EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>()
                         {
                             /* TODO: Need actual UC ranks here. */
                             new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
@@ -58,7 +58,7 @@ namespace UCosmic.SeedData
                         },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My International",
-                ForEstablishment = establishment,
+                ForEstablishmentId = establishment.RevisionId,
             });
         }
     }
@@ -82,7 +82,7 @@ namespace UCosmic.SeedData
             if (establishment == null) throw new Exception("Establishment is null");
             Seed( new CreateEmployeeModuleSettings
                 {
-                    FacultyRanks = new Collection<EmployeeFacultyRank>()
+                    EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>()
                         {
                             new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
                             new EmployeeFacultyRank {Rank = "Assistant Professor"},
@@ -92,7 +92,7 @@ namespace UCosmic.SeedData
                         },
                     NotifyAdminOnUpdate = false,
                     PersonalInfoAnchorText = "My USF World Profile",
-                    ForEstablishment = establishment,       
+                    ForEstablishmentId = establishment.RevisionId,       
                 });
         }
     }
@@ -118,7 +118,7 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             var employeeModuleSettings = _queryProcessor.Execute(
-                new EmployeeModuleSettingsByEstablishment(command.ForEstablishment));
+                new EmployeeModuleSettingsByEstablishmentId(command.ForEstablishmentId));
 
             if (employeeModuleSettings != null) return employeeModuleSettings;
 

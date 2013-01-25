@@ -6,17 +6,5 @@ module DataContext {
 			constructor( inId: number ) {
 				super(inId);
 			}
-
-		  /*override*/ GetFacultyRanks(): string[] {
-			var facultyRanks: string[] = new string[];
-
-			facultyRanks.push("Alpha");
-			facultyRanks.push("Beta");
-			facultyRanks.push("Gamma");
-			facultyRanks.push("Delta");
-
-			return facultyRanks;
 		}
-
-	}
 }

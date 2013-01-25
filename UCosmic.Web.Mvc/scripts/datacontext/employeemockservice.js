@@ -10,14 +10,6 @@ var DataContext;
         function EmployeeMockService(inId) {
                 _super.call(this, inId);
         }
-        EmployeeMockService.prototype.GetFacultyRanks = function () {
-            var facultyRanks = new Array();
-            facultyRanks.push("Alpha");
-            facultyRanks.push("Beta");
-            facultyRanks.push("Gamma");
-            facultyRanks.push("Delta");
-            return facultyRanks;
-        };
         return EmployeeMockService;
     })(DataContext.IEmployee);
     DataContext.EmployeeMockService = EmployeeMockService;    

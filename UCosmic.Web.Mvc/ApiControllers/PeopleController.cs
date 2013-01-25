@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -12,12 +12,12 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [DefaultApiHttpRouteConvention]
-    public class PersonController : ApiController
+    public class PeopleController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdatePerson> _updateHandler;
 
-        public PersonController(IProcessQueries queryProcessor
+        public PeopleController(IProcessQueries queryProcessor
                                 , IHandleCommands<UpdatePerson> updateHandler )
         {
             _queryProcessor = queryProcessor;
@@ -41,17 +41,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         
         /* TODO: This needs to be moved to EmployeeModuleSettingsApiController */
         [GET("{id}/facultyranks")]
-        public EmployeeFacultyRank[] GetFacultyRanks(int id)
+        public ICollection<EmployeeFacultyRank> GetFacultyRanks(int id)
         {
             Person person = _queryProcessor.Execute(new PersonById(id));
             /* TODO: RootEmployeeModuleSettingsById */
             EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(new RootEmployeeModuleSettingsByUserName(person.User.Name));
-            EmployeeFacultyRank[] facultyRanks = new EmployeeFacultyRank[employeeModuleSettings.FacultyRanks.Count];
-            for(int i = 0; i < employeeModuleSettings.FacultyRanks.Count; i +=1 )
-            {
-                facultyRanks[i] = employeeModuleSettings.FacultyRanks.ElementAt(i);
-            }
-            return facultyRanks;
+            return employeeModuleSettings.FacultyRanks;
         }
 
         [PUT("{id}")]

@@ -35,8 +35,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.PersonId)
                 .WillCascadeOnDelete(true);
 
-            // might have FacultyRank assigned
-            HasOptional(p => p.FacultyRank);
+            HasOptional(p => p.EmployeeFacultyRank);
 
             Property(p => p.DisplayName).IsRequired().HasMaxLength(200);
             Property(p => p.Salutation).HasMaxLength(50);

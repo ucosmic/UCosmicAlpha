@@ -8,38 +8,42 @@ module DataContext {
 			super(inId);
 		}
 
-		/*override*/ Get(inObj: any, callback: (cbParmObj: any, cbParmData: any) => void ): void {
+		/*override*/ Get(): JQueryDeferred {
+			var deferred: JQueryDeferred = $.Deferred();
 			$.getJSON(this.BaseUrl + "/" + this.Id.toString(),
-				 function (data) {
-				 	callback(inObj, data);
+				 function (data, textStatus, jqXHR) {
+				 	deferred.resolve(data);
 				 });
+			return deferred;
 		}
 
-		/*override*/ Post(inObj: Object, callback: (cbParmObj: Object) => any): void { }
-
-		/*override*/ Put(inObj: Object, callback: (cbParmObj: Object) => any): void {
-			$.ajax({
-				data: callback( inObj ),
-				type: "PUT",
-				url: this.BaseUrl + "/" + this.Id.toString()
-			});
+		/*override*/ Put(dataOut: any): JQueryDeferred {
+            var deferred: JQueryDeferred = $.Deferred();
+			$.ajax({ data: dataOut,
+                     type: "PUT",
+                     success: function (data, textStatus, jqXHR) { deferred.resolve(data) },
+                     error: function (jqXHR, textStatus, errorThrown) { deferred.reject(errorThrown) },
+                     url: this.BaseUrl + "/" + this.Id.toString() });
+			return deferred;
 		}
 
-		/*override*/ Delete() { }
+		/*override*/ GetSalutations(): JQueryDeferred {
+			var deferred: JQueryDeferred = $.Deferred();
+			$.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/salutations/",
+				 function (data, textStatus, jqXHR) {
+						deferred.resolve(data);
+				 } );
+			return deferred;
+		}
 
-		/*override*/ GetSalutations( inObj: Object, callback: (cbParmObj: Object, cbParmSalutations: string[]) => void ) : void {
-		    	$.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/salutations/",
-		    		 function (data) {
-		    		 	callback(inObj, data);
-		    		 });
-		    }
-			
-		/*override*/ GetFacultyRanks( inObj: Object, callback: (cbParmObj: Object, cbParmFacultyRanks: EmployeeFacultyRank[]) => void ) : void {
-		    	$.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/facultyranks/",
-		    		 function (data) {
-		    		 	callback(inObj, data);
-		    		 });
-		    }
+		/*override*/ GetFacultyRanks(): JQueryDeferred {
+			var deferred: JQueryDeferred = $.Deferred();
+		  $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/facultyranks/",
+		    	function (data, textStatus, jqXHR) {
+		    	deferred.resolve(data);
+		    	});
+			return deferred;
+		}
 
 	}
 }

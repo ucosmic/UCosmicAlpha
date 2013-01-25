@@ -88,29 +88,51 @@ module ViewModels.Employee {
 		private _initialize(inDocumentElementId: String) {
 			var me = this;
 
-			/* Populate the salutations selector. */
-			this._dataContext.GetSalutations(me, function (self: Object, salutations: string[]) {
+			/* We are going to start two asynch processes. One to load salutations and the other
+			 * to load the faculty ranks.  We will then wait for both before continuing.
+			 */
+			var getSalutationsPact: JQueryPromise = me._dataContext.GetSalutations();
+			getSalutationsPact.then(
+			/* Success */
+			function (salutations: any): void {
 				for (var i = 0; i < salutations.length; i += 1) {
 					me.Salutations.push(salutations[i]);
 				}
-			});
+			},
+			/* Fail */
+			function (error: any) : void  {
+			} );
 
-			/* Populate the faculty ranks selector. */
-			this._dataContext.GetFacultyRanks(me, function (self: Object, facultyRanks: Object[]) {
+			var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
+			getFacultyRanksPact.then(
+			/* Success */
+			function (facultyRanks: any) : void {
 				for (var i = 0; i < facultyRanks.length; i += 1) {
-					me.FacultyRanks.push(facultyRanks[i]);
-				}
-			});
+					me.FacultyRanks.push(facultyRanks[i]); }
+			},
+			/* Fail */
+			function (error: any) : void  {
+			} );
 
-			/* Load up the model */
-			this._dataContext.Get(me, function (self: any, data: any) {
-
-				me.ToViewModel(me, data);
-
-				/* TODO: Not the best place for this, but we are assured properties are populated. */
-				ko.applyBindings(me, $("#"+inDocumentElementId).get(0));
-			});
-
+			// Wait for all loading of selector options before continuing.
+			$.when( getSalutationsPact, getFacultyRanksPact )
+					.then( /* Continue once selector data has been loaded */
+							/* Success (selector data)*/
+							function (data: any): void {
+								me._dataContext.Get()
+									.then( /* Load the viewmodel and apply bindings. */
+										/* Success (load viewmodel data)*/
+										function (data: any): void {
+											me.ToViewModel(me, data);
+											ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
+										},
+										/* Fail (load viewmodel data)*/
+										function (data): void {
+										});
+							},
+								/* Fail (selector data)*/
+							function (data: any): void { }
+						);
 		}
 
 		// --------------------------------------------------------------------------------
@@ -143,9 +165,18 @@ module ViewModels.Employee {
 			me.Gender = ko.observable(data.gender);
 			//me.PrimaryEmail = ko.observable(data.PrimaryEmail);
 			//me.AlternateEmail = ko.observable(data.AlternateEmail);
-			if (data.facultyRank != null) {
-				me.FacultyRank = ko.observable({ employeeFacultyRankId: data.facultyRank.employeeFacultyRankId,
-																				 rank: data.facultyRank.rank });
+			if (data.employeeFacultyRank != null) {
+				var i: number = 0;
+				while ((i < me.FacultyRanks().length) &&
+					   (me.FacultyRanks()[i].id != data.employeeFacultyRank.id))
+				{ i += 1; }
+
+				if (i < me.FacultyRanks().length) {
+					me.FacultyRank = ko.observable(me.FacultyRanks()[i]);
+				}
+			}
+			else {
+				me.FacultyRank = ko.observable();
 			}
 			me.AdministrativeAppointments = (data.administrativeAppointments != null) ? ko.observable(data.administrativeAppointments) : ko.observable("");
 			me.Picture = ko.observable(data.picture);
@@ -164,19 +195,19 @@ module ViewModels.Employee {
 				isActive: me.IsActive,
 				isDisplayNameDerived: me.IsDisplayNameDerived,
 				displayName: (me.DisplayName().length > 0) ? me.DisplayName : null,
-				salutation: me.Salutation,
-				firstName: me.FirstName,
-				middleName: me.MiddleName,
-				lastName: me.LastName,
-				suffix: me.Suffix,
+				salutation: (me.Salutation().length > 0) ? me.Salutation : null,
+				firstName: (me.FirstName().length > 0) ? me.FirstName : null,
+				middleName: (me.MiddleName().length > 0) ? me.MiddleName : null,
+				lastName: (me.LastName().length > 0) ? me.LastName : null,
+				suffix: (me.Suffix().length > 0) ? me.Suffix : null,
 				workingTitle: me.WorkingTitle,
 				gender: me.Gender,
 				//primaryEmail: me.PrimaryEmail,
 				//alternateEmail: me.AlternateEmail,
-				facultyRank: (me.FacultyRank() != null ) ?
-					{ employeeFacultyRankId: me.FacultyRank().employeeFacultyRankId, rank: me.FacultyRank().rank } :
+				employeeFacultyRank: (me.FacultyRank() != null ) ?
+					{ id: me.FacultyRank().id, rank: me.FacultyRank().rank } :
 					null,
-				administrativeAppointments: me.AdministrativeAppointments,
+				administrativeAppointments: (me.AdministrativeAppointments().length > 0) ? me.AdministrativeAppointments : null,
 				picture: me.Picture
 			};
 		}
@@ -185,8 +216,15 @@ module ViewModels.Employee {
 		/*
 		*/
 		// --------------------------------------------------------------------------------
-		SaveForm(formElement: HTMLFormElement) : void {
-			this._dataContext.Put(this, this.FromViewModel);
+		SaveForm(formElement: HTMLFormElement): void {
+		    this._dataContext.Put(this.FromViewModel(this))
+                .then(  /* Success */
+                        function (data: any): void {
+                        },
+                        /* Fail */
+                        function (errorThrown: string): void {
+                        }
+                    );
 		}
 
 	} // class PersonalInfo

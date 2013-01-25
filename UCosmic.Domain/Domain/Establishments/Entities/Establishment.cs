@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Establishments
@@ -75,6 +76,8 @@ namespace UCosmic.Domain.Establishments
         public string UCosmicCode { get; protected internal set; }
         public EstablishmentContactInfo PublicContactInfo { get; protected internal set; }
         public EstablishmentContactInfo PartnerContactInfo { get; protected internal set; }
+
+        public virtual EmployeeModuleSettings EmployeeModuleSettings { get; set; }
 
         public override string ToString()
         {

@@ -36,6 +36,9 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
@@ -52,7 +55,11 @@
       <HintPath>..\packages\Pluralizer.0.3.0.1\lib\net40\Pluralize.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -112,6 +119,7 @@
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishment.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishmentId.cs" />
     <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
@@ -307,7 +315,9 @@
     <None Include="Domain\Places\PlaceAggregates.cd" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

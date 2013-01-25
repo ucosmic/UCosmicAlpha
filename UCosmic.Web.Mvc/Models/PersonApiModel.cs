@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using AutoMapper;
-using UCosmic.Domain.People;
-using System.Linq;
-using System;
+﻿using AutoMapper;
 using UCosmic.Domain.Employees;
+using UCosmic.Domain.People;
 
 
 namespace UCosmic.Web.Mvc.Models
@@ -21,7 +17,7 @@ namespace UCosmic.Web.Mvc.Models
     public string LastName { get; set; }
     public string Suffix { get; set; }
     public string Gender { get; set; }
-    public EmployeeFacultyRank FacultyRank { get; set; }
+    public EmployeeFacultyRank EmployeeFacultyRank { get; set; }
     public string WorkingTitle { get; set; }
     //public string PrimaryEmail { get; set; }
     //public string AlternateEmail { get; set; }

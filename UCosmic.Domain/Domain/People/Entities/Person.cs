@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -31,7 +30,7 @@ namespace UCosmic.Domain.People
         public string LastName { get; protected internal set; }
         public string Suffix { get; protected internal set; }
         public string Gender { get; protected internal set; }
-        public virtual EmployeeFacultyRank FacultyRank { get; protected internal set; }
+        public virtual EmployeeFacultyRank EmployeeFacultyRank { get; protected internal set; }
         public byte[] Picture { get; protected internal set; }
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
         public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
@@ -159,7 +158,7 @@ namespace UCosmic.Domain.People
                 LastName = person.LastName,
                 Suffix = person.Suffix,
                 Gender = person.Gender,
-                FacultyRank = (person.FacultyRank != null) ? person.FacultyRank.Rank : null,
+                FacultyRank = (person.EmployeeFacultyRank != null) ? person.EmployeeFacultyRank.Rank : null,
                 //Picture = person.Picture,
                 //Emails = person.Emails,
                 //Affiliations = person.Affiliations,

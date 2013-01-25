@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using FluentValidation;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
@@ -10,11 +9,11 @@ namespace UCosmic.Domain.Employees
 {
     public class CreateEmployeeModuleSettings
     {
-        public ICollection<EmployeeFacultyRank> FacultyRanks { get; set; }
+        public ICollection<EmployeeFacultyRank> EmployeeFacultyRanks { get; set; }
         public bool NotifyAdminOnUpdate { get; set; }
-        public Person NotifyAdmin { get; set; }
+        public int NotifyAdminPersonId { get; set; }
         public string PersonalInfoAnchorText { get; set; }
-        public Establishment ForEstablishment { get; set; }
+        public int ForEstablishmentId { get; set; }
 
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; set; }
     }
@@ -42,11 +41,11 @@ namespace UCosmic.Domain.Employees
 
             var employeeModuleSettings = new EmployeeModuleSettings()
             {
-                FacultyRanks = command.FacultyRanks,
+                FacultyRanks = command.EmployeeFacultyRanks,
                 NotifyAdminOnUpdate = command.NotifyAdminOnUpdate,
-                NotifyAdmin = command.NotifyAdmin,
+                NotifyAdmin = _entities.Get<Person>().SingleOrDefault(x => x.RevisionId == command.NotifyAdminPersonId),
                 PersonalInfoAnchorText = command.PersonalInfoAnchorText,
-                ForEstablishment = command.ForEstablishment,
+                Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.ForEstablishmentId)
             };
 
             _entities.Create(employeeModuleSettings);

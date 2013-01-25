@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
 {
@@ -20,26 +15,25 @@ namespace UCosmic.Domain.People
             RevisionId = revisionId;
             IsActive = true;
             //Emails = new Collection<EmailAddress>();
-            FacultyRank = new EmployeeFacultyRank();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
-        public int RevisionId { get ; protected internal set ; }
-        public bool IsActive { get; protected internal set; }
-        public bool IsDisplayNameDerived { get; protected internal set; }
-        public string DisplayName { get; protected internal set; }
-        public string Salutation { get; protected internal set; }
-        public string FirstName { get; protected internal set; }
-        public string MiddleName { get; protected internal set; }
-        public string LastName { get; protected internal set; }
-        public string Suffix { get; protected internal set; }
-        public string Gender { get; protected internal set; }
-        public EmployeeFacultyRank FacultyRank { get; protected internal set; }
-        public string WorkingTitle { get; protected internal set; }
-        //public byte[] Picture { get; protected internal set; }
-        //public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
-        //public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
-        public string AdministrativeAppointments { get; protected internal set; }
+        public int RevisionId { get ; set ; }
+        public bool IsActive { get; set; }
+        public bool IsDisplayNameDerived { get; set; }
+        public string DisplayName { get; set; }
+        public string Salutation { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string Suffix { get; set; }
+        public string Gender { get; set; }
+        public int EmployeeFacultyRankId { get; set; }
+        public string WorkingTitle { get; set; }
+        //public byte[] Picture { get; set; }
+        //public virtual ICollection<EmailAddress> Emails { get; set; }
+        //public virtual ICollection<Affiliation> Affiliations { get; set; }
+        public string AdministrativeAppointments { get; set; }
     }
 
     public class ValidateUpdatePersonCommand : AbstractValidator<UpdatePerson>
@@ -87,6 +81,9 @@ namespace UCosmic.Domain.People
                 .SingleOrDefault(p => p.RevisionId == command.RevisionId);
             if (person == null) { return; }
 
+            var facultyRank = _entities.Get<EmployeeFacultyRank>()
+                .SingleOrDefault(p => p.Id == command.EmployeeFacultyRankId);
+
             // log audit
             var audit = new CommandEvent
             {
@@ -104,7 +101,7 @@ namespace UCosmic.Domain.People
                     command.LastName,
                     command.Suffix,
                     command.Gender,
-                    FacultyRank = command.FacultyRank.Rank,
+                    EmployeeFacultyRank = (facultyRank != null) ? facultyRank.Rank : null,
                     //command.Picture,
                     //command.Emails,
                     //command.Affiliations,
@@ -116,34 +113,34 @@ namespace UCosmic.Domain.People
             bool changed = false;
 
             if (person.IsActive != command.IsActive)
-                { person.IsActive = command.IsActive; changed |= true; }
+                { person.IsActive = command.IsActive; changed = true; }
             if (person.IsDisplayNameDerived != command.IsDisplayNameDerived)
-                { person.IsDisplayNameDerived = command.IsDisplayNameDerived; changed |= true; }
+                { person.IsDisplayNameDerived = command.IsDisplayNameDerived; changed = true; }
             if (person.DisplayName != command.DisplayName)
-                { person.DisplayName = command.DisplayName; changed |= true; }
+                { person.DisplayName = command.DisplayName; changed = true; }
             if (person.Salutation != command.Salutation)
-                { person.Salutation = command.Salutation; changed |= true; }
+                { person.Salutation = command.Salutation; changed = true; }
             if (person.FirstName != command.FirstName)
-                { person.FirstName = command.FirstName; changed |= true; }
+                { person.FirstName = command.FirstName; changed = true; }
             if (person.MiddleName != command.MiddleName)
-                { person.MiddleName = command.MiddleName; changed |= true; }
+                { person.MiddleName = command.MiddleName; changed = true; }
             if (person.LastName != command.LastName)
-                { person.LastName = command.LastName; changed |= true; }
+                { person.LastName = command.LastName; changed = true; }
             if (person.Suffix != command.Suffix)
-                { person.Suffix = command.Suffix; changed |= true; }
+                { person.Suffix = command.Suffix; changed = true; }
             if (person.Gender != command.Gender)
-                { person.Gender = command.Gender; changed |= true; }
-            if ( ((person.FacultyRank == null) && (command.FacultyRank != null)) ||
-                 ((person.FacultyRank != null) && (person.FacultyRank.EmployeeFacultyRankId != command.FacultyRank.EmployeeFacultyRankId)) )
+                { person.Gender = command.Gender; changed = true; }
+            if (command.EmployeeFacultyRankId == 0)
             {
-                person.FacultyRank =
-                  _entities.Get<EmployeeFacultyRank>()
-                            .SingleOrDefault(x => x.EmployeeFacultyRankId == command.FacultyRank.EmployeeFacultyRankId);
-              changed |= true;
+                person.EmployeeFacultyRank = null;
+                changed = true;
             }
-            else
+            else if ((person.EmployeeFacultyRank == null) ||
+                    ((person.EmployeeFacultyRank != null) && (person.EmployeeFacultyRank.Id != command.EmployeeFacultyRankId)))
             {
-                person.FacultyRank = null;
+                person.EmployeeFacultyRank = _entities.Get<EmployeeFacultyRank>()
+                                                .SingleOrDefault(x => x.Id == command.EmployeeFacultyRankId);
+                changed = true;
             }
             /* TODO: Handle these properties. Maybe as separate command? */
             //person.Picture = command.Picture;
@@ -174,7 +171,7 @@ namespace UCosmic.Domain.People
             //}
 
             if (person.AdministrativeAppointments != command.AdministrativeAppointments)
-                { person.AdministrativeAppointments = command.AdministrativeAppointments; changed |= true; }
+                { person.AdministrativeAppointments = command.AdministrativeAppointments; changed = true; }
 
             // update
             if (changed)

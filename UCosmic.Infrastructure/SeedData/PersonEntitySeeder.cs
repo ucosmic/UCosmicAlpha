@@ -262,7 +262,7 @@ namespace UCosmic.SeedData
                 var usf = _queryProcessor.Execute(new EstablishmentByUrl("www.usf.edu"));
                 if (usf == null) throw new Exception("USF Establishment not found.");
 
-                var usfEmployeeModuleSettings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(s => s.ForEstablishment.OfficialName == "University of South Florida");
+                var usfEmployeeModuleSettings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(s => s.Establishment.OfficialName == "University of South Florida");
                 if (usfEmployeeModuleSettings == null) throw new Exception("USF EmployeeModuleSettings not found.");
 
                 var associateProfessorRank = usfEmployeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Associate Professor");

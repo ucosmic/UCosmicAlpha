@@ -21,7 +21,7 @@
                         
                         var anchor = (string)Session["PersonalInfoAnchorText"];
                         if ( String.IsNullOrEmpty(anchor) ) { anchor = "My International"; }
-                        <a href="@Url.Action(MVC.Person.Index())">@anchor</a>
+                        <a href="@Url.Action(MVC.People.Index())">@anchor</a>
 
                         <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }

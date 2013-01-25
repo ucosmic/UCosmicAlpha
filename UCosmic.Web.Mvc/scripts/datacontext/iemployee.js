@@ -8,7 +8,7 @@ var DataContext;
     ; ;
     var IEmployee = (function () {
         function IEmployee(inId) {
-            this._baseUrl = "/api/person";
+            this._baseUrl = "/api/people";
             this.Id = inId;
         }
         Object.defineProperty(IEmployee.prototype, "Id", {
@@ -28,17 +28,23 @@ var DataContext;
             enumerable: true,
             configurable: true
         });
-        IEmployee.prototype.Get = function (inObj, callback) {
+        IEmployee.prototype.Get = function () {
+            return null;
         };
-        IEmployee.prototype.Post = function (inObj, callback) {
+        IEmployee.prototype.Post = function (dataOut) {
+            return null;
         };
-        IEmployee.prototype.Put = function (inObj, callback) {
+        IEmployee.prototype.Put = function (dataOut) {
+            return null;
         };
         IEmployee.prototype.Delete = function () {
+            return null;
         };
-        IEmployee.prototype.GetSalutations = function (obj, callback) {
+        IEmployee.prototype.GetSalutations = function () {
+            return null;
         };
-        IEmployee.prototype.GetFacultyRanks = function (obj, callback) {
+        IEmployee.prototype.GetFacultyRanks = function () {
+            return null;
         };
         return IEmployee;
     })();

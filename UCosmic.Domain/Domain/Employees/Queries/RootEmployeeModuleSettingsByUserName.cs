@@ -36,7 +36,7 @@ namespace UCosmic.Domain.Employees
                                     .FirstOrDefault(x => x.EmailDomains.Any(e => e.Value == domain) && x.Parent == null);
 
             return _entities.Query<EmployeeModuleSettings>()
-                    .SingleOrDefault(x => x.ForEstablishment.RevisionId == establishment.RevisionId);
+                    .SingleOrDefault(x => x.Establishment.RevisionId == establishment.RevisionId);
         }
     }
 }

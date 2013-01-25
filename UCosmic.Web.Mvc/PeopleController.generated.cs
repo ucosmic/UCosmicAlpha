@@ -22,10 +22,10 @@ using System.Web.Routing;
 using T4MVC;
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class PersonController
+    public partial class PeopleController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected PersonController(Dummy d) { }
+        protected PeopleController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -61,13 +61,13 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public PersonController Actions { get { return MVC.Person; } }
+        public PeopleController Actions { get { return MVC.People; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "Person";
+        public readonly string Name = "People";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "Person";
+        public const string NameConst = "People";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -139,14 +139,14 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string Index = "Index";
             }
-            public readonly string Index = "~/Views/Person/Index.cshtml";
+            public readonly string Index = "~/Views/People/Index.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_PersonController : UCosmic.Web.Mvc.Controllers.PersonController
+    public class T4MVC_PeopleController : UCosmic.Web.Mvc.Controllers.PeopleController
     {
-        public T4MVC_PersonController() : base(Dummy.Instance) { }
+        public T4MVC_PeopleController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.ActionResult Index()
         {

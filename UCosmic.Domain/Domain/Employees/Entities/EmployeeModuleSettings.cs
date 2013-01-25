@@ -13,12 +13,12 @@ namespace UCosmic.Domain.Employees
             NotifyAdminOnUpdate = false;
         }
 
-        public int EmployeeModuleSettingsId { get; set; }
+        public int Id { get; set; }
         public virtual ICollection<EmployeeFacultyRank> FacultyRanks { get; protected internal set; }
         public bool NotifyAdminOnUpdate { get; protected internal set; }
-        public Person NotifyAdmin { get; protected internal set; }
+        public virtual Person NotifyAdmin { get; protected internal set; }
         public string PersonalInfoAnchorText { get; protected internal set; }
 
-        public virtual Establishment ForEstablishment { get; protected internal set; }
+        public virtual Establishment Establishment { get; protected internal set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class EmployeeFacultyRank : Entity
     {
-        public int EmployeeFacultyRankId { get; set; }
+        public int Id { get; set; }
         public string Rank { get; set; }
     }
 }

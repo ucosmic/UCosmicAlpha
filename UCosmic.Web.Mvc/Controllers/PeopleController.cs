@@ -1,15 +1,14 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class PersonController : Controller
+    public partial class PeopleController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
 
-        public PersonController(IProcessQueries queryProcessor)
+        public PeopleController(IProcessQueries queryProcessor)
         {
             _queryProcessor = queryProcessor;
         }
