@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 
@@ -27,13 +28,28 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class PersonApiProfiler
     {
+        public class WorkingTitleResolver : ValueResolver<Person, string>
+        {
+            protected override string ResolveCore(Person person)
+            {
+                string workingTitle = null;
+
+                Affiliation primaryAffiliation = person.Affiliations.SingleOrDefault(x => x.IsPrimary);
+                if (primaryAffiliation != null)
+                {
+                   workingTitle = primaryAffiliation.JobTitles;
+                }
+
+                return workingTitle;
+            }
+        }
+
         public class PersonToPersonApiModelProfile : Profile
         {
             protected override void Configure()
             {
                 Mapper.CreateMap<Person, PersonApiModel>()
-                    .ForMember(dst => dst.WorkingTitle, opt => opt.Ignore());
-                    /* TODO: Working title is actually default affiliation JobTitle */
+                    .ForMember(dst => dst.WorkingTitle, opt => opt.ResolveUsing<WorkingTitleResolver>());
 
                 Mapper.CreateMap<PersonApiModel, UpdatePerson>();
             }

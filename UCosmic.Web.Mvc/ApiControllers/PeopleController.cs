@@ -24,28 +24,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
             _updateHandler = updateHandler;
         }
-
+        
         [GET("{id}")]
         public PersonApiModel Get(int id)
         {
             Person person = _queryProcessor.Execute(new PersonById(id));
             PersonApiModel model = Mapper.Map<Person, PersonApiModel>(person);
 
-            model.WorkingTitle = null;
-            Affiliation primateAffiliation = person.Affiliations.SingleOrDefault(x => x.IsPrimary);
-            if (primateAffiliation != null)
-            {
-                if (!string.IsNullOrEmpty(primateAffiliation.JobTitles))
-                {
-                    string[] jobTitles = primateAffiliation.JobTitles.Split(new char[] {','});
-                    model.WorkingTitle = jobTitles[0];
-                }
-            }
-
             return model;
         }
 
-        /* TODO: When I didn't provide the {id}, router did not find this. Why? */
         [GET("{id}/salutations")]
         public string[] GetSalutations(int id)
         {
