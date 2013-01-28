@@ -1,4 +1,5 @@
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
+/// <reference path="../../jquery/jqueryui-1.9.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../datacontext/iemployee.ts" />
@@ -100,22 +101,23 @@ module ViewModels.Employee {
 				}
 			},
 			/* Fail */
-			function (error: any) : void  {
-			} );
+			function (error: any): void {
+			});
 
 			var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
 			getFacultyRanksPact.then(
 			/* Success */
-			function (facultyRanks: any) : void {
+			function (facultyRanks: any): void {
 				for (var i = 0; i < facultyRanks.length; i += 1) {
-					me.FacultyRanks.push(facultyRanks[i]); }
+					me.FacultyRanks.push(facultyRanks[i]);
+				}
 			},
 			/* Fail */
-			function (error: any) : void  {
-			} );
+			function (error: any): void {
+			});
 
 			// Wait for all loading of selector options before continuing.
-			$.when( getSalutationsPact, getFacultyRanksPact )
+			$.when(getSalutationsPact, getFacultyRanksPact)
 					.then( /* Continue once selector data has been loaded */
 							/* Success (selector data)*/
 							function (data: any): void {
@@ -153,33 +155,33 @@ module ViewModels.Employee {
 			var me: PersonalInfo = inSelf;
 
 			me.RevisionId = data.revisionId;
-			me.IsActive = ko.observable(data.isActive);
-			me.IsDisplayNameDerived = ko.observable(data.isDisplayNameDerived);
-			me.DisplayName = (ko.observable(data.displayName) != null) ? ko.observable(data.displayName) : ko.observable("");
-			me.Salutation = (data.salutation != null) ? ko.observable(data.salutation) : ko.observable("");
-			me.FirstName = (data.firstName != null) ? ko.observable(data.firstName) : ko.observable("");
-			me.MiddleName = (data.middleName != null) ? ko.observable(data.middleName) : ko.observable("");
-			me.LastName = (data.lastName != null) ? ko.observable(data.lastName) : ko.observable("");
-			me.Suffix = (data.suffix != null) ? ko.observable(data.suffix) : ko.observable("");
-			me.WorkingTitle = (data.workingTitle != null) ? ko.observable(data.workingTitle) : ko.observable("");
-			me.Gender = ko.observable(data.gender);
-			//me.PrimaryEmail = ko.observable(data.PrimaryEmail);
-			//me.AlternateEmail = ko.observable(data.AlternateEmail);
+			me.IsActive(data.isActive);
+			me.IsDisplayNameDerived(data.isDisplayNameDerived);
+			me.DisplayName((data.displayName != null) ? data.displayName : "");
+			me.Salutation((data.salutation != null) ? data.salutation : "");
+			me.FirstName((data.firstName != null) ? data.firstName : "");
+			me.MiddleName((data.middleName != null) ? data.middleName : "");
+			me.LastName((data.lastName != null) ? data.lastName : "");
+			me.Suffix((data.suffix != null) ? data.suffix : "");
+			me.WorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
+			me.Gender(data.gender);
+			//me.PrimaryEmail(data.PrimaryEmail);
+			//me.AlternateEmail(data.AlternateEmail);
 			if (data.employeeFacultyRank != null) {
 				var i: number = 0;
 				while ((i < me.FacultyRanks().length) &&
-					   (me.FacultyRanks()[i].id != data.employeeFacultyRank.id))
+						 (me.FacultyRanks()[i].id != data.employeeFacultyRank.id))
 				{ i += 1; }
 
 				if (i < me.FacultyRanks().length) {
-					me.FacultyRank = ko.observable(me.FacultyRanks()[i]);
+					me.FacultyRank(me.FacultyRanks()[i]);
 				}
 			}
 			else {
-				me.FacultyRank = ko.observable();
+				me.FacultyRank(null);
 			}
-			me.AdministrativeAppointments = (data.administrativeAppointments != null) ? ko.observable(data.administrativeAppointments) : ko.observable("");
-			me.Picture = ko.observable(data.picture);
+			me.AdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
+			me.Picture(data.picture);
 		}
 
 		// --------------------------------------------------------------------------------
@@ -204,7 +206,7 @@ module ViewModels.Employee {
 				gender: me.Gender,
 				//primaryEmail: me.PrimaryEmail,
 				//alternateEmail: me.AlternateEmail,
-				employeeFacultyRank: (me.FacultyRank() != null ) ?
+				employeeFacultyRank: (me.FacultyRank() != null) ?
 					{ id: me.FacultyRank().id, rank: me.FacultyRank().rank } :
 					null,
 				administrativeAppointments: (me.AdministrativeAppointments().length > 0) ? me.AdministrativeAppointments : null,
@@ -216,16 +218,39 @@ module ViewModels.Employee {
 		/*
 		*/
 		// --------------------------------------------------------------------------------
-		SaveForm(formElement: HTMLFormElement): void {
-		    this._dataContext.Put(this.FromViewModel(this))
-                .then(  /* Success */
-                        function (data: any): void {
-                        },
-                        /* Fail */
-                        function (errorThrown: string): void {
-                        }
-                    );
+		saveInfo(formElement: HTMLFormElement): void {
+			this._dataContext.Put(this.FromViewModel(this))
+					.then(  /* Success */ function (data: any): void { },
+									/* Fail */ function (errorThrown: string): void { });
+
+			$("#accordion").accordion('activate', 1);	// Open next panel
 		}
+
+		// --------------------------------------------------------------------------------
+		/*
+		*/
+		// --------------------------------------------------------------------------------
+		saveEmails(formElement: HTMLFormElement): void {
+			$("#accordion").accordion('activate', 2);	// Open next panel
+		}
+
+		// --------------------------------------------------------------------------------
+		/*
+		*/
+		// --------------------------------------------------------------------------------
+		saveAffiliations(formElement: HTMLFormElement): void {
+			$("#accordion").accordion('activate', 3);	// Open next panel
+		}
+
+
+		// --------------------------------------------------------------------------------
+		/*
+		*/
+		// --------------------------------------------------------------------------------
+		savePicture(formElement: HTMLFormElement): void {
+			$("#accordion").accordion('activate', 0);	// Open next panel
+		}
+
 
 	} // class PersonalInfo
 

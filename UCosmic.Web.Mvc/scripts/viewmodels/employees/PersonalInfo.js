@@ -209,29 +209,29 @@ var ViewModels;
             PersonalInfo.prototype.ToViewModel = function (inSelf, data) {
                 var me = inSelf;
                 me.RevisionId = data.revisionId;
-                me.IsActive = ko.observable(data.isActive);
-                me.IsDisplayNameDerived = ko.observable(data.isDisplayNameDerived);
-                me.DisplayName = (ko.observable(data.displayName) != null) ? ko.observable(data.displayName) : ko.observable("");
-                me.Salutation = (data.salutation != null) ? ko.observable(data.salutation) : ko.observable("");
-                me.FirstName = (data.firstName != null) ? ko.observable(data.firstName) : ko.observable("");
-                me.MiddleName = (data.middleName != null) ? ko.observable(data.middleName) : ko.observable("");
-                me.LastName = (data.lastName != null) ? ko.observable(data.lastName) : ko.observable("");
-                me.Suffix = (data.suffix != null) ? ko.observable(data.suffix) : ko.observable("");
-                me.WorkingTitle = (data.workingTitle != null) ? ko.observable(data.workingTitle) : ko.observable("");
-                me.Gender = ko.observable(data.gender);
+                me.IsActive(data.isActive);
+                me.IsDisplayNameDerived(data.isDisplayNameDerived);
+                me.DisplayName((data.displayName != null) ? data.displayName : "");
+                me.Salutation((data.salutation != null) ? data.salutation : "");
+                me.FirstName((data.firstName != null) ? data.firstName : "");
+                me.MiddleName((data.middleName != null) ? data.middleName : "");
+                me.LastName((data.lastName != null) ? data.lastName : "");
+                me.Suffix((data.suffix != null) ? data.suffix : "");
+                me.WorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
+                me.Gender(data.gender);
                 if(data.employeeFacultyRank != null) {
                     var i = 0;
                     while((i < me.FacultyRanks().length) && (me.FacultyRanks()[i].id != data.employeeFacultyRank.id)) {
                         i += 1;
                     }
                     if(i < me.FacultyRanks().length) {
-                        me.FacultyRank = ko.observable(me.FacultyRanks()[i]);
+                        me.FacultyRank(me.FacultyRanks()[i]);
                     }
                 } else {
-                    me.FacultyRank = ko.observable();
+                    me.FacultyRank(null);
                 }
-                me.AdministrativeAppointments = (data.administrativeAppointments != null) ? ko.observable(data.administrativeAppointments) : ko.observable("");
-                me.Picture = ko.observable(data.picture);
+                me.AdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
+                me.Picture(data.picture);
             };
             PersonalInfo.prototype.FromViewModel = function (inSelf) {
                 var me = inSelf;
@@ -255,10 +255,20 @@ var ViewModels;
                     picture: me.Picture
                 };
             };
-            PersonalInfo.prototype.SaveForm = function (formElement) {
+            PersonalInfo.prototype.saveInfo = function (formElement) {
                 this._dataContext.Put(this.FromViewModel(this)).then(function (data) {
                 }, function (errorThrown) {
                 });
+                $("#accordion").accordion('activate', 1);
+            };
+            PersonalInfo.prototype.saveEmails = function (formElement) {
+                $("#accordion").accordion('activate', 2);
+            };
+            PersonalInfo.prototype.saveAffiliations = function (formElement) {
+                $("#accordion").accordion('activate', 3);
+            };
+            PersonalInfo.prototype.savePicture = function (formElement) {
+                $("#accordion").accordion('activate', 0);
             };
             return PersonalInfo;
         })();

@@ -695,11 +695,12 @@
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Establishments\Form.cshtml" />
-    <Content Include="Views\People\Index.cshtml" />
+    <Content Include="Views\People\Index_old.cshtml" />
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <Content Include="styles\sass\sheets\maps.scss" />
     <Content Include="Views\Shared\_GoogleMapsToolsOverlay.cshtml" />
+    <Content Include="Views\People\index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

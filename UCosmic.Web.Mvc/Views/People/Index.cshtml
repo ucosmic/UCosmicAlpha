@@ -1,120 +1,192 @@
 ﻿@model int
 
-@{
-    ViewBag.Title = "Personal Info";
-}
+@{ ViewBag.Title = "Personal Profile"; }
+
 
 <style>
+    table {
+        font-style: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        border-collapse: separate;
+        border-spacing: 5px;
+    }
+
     td.table-column-label {
         text-align: right;
     }
+
     td.table-column-value {
         text-align: left;
     }
 </style>
 
-<section id="employeePersonalInfo" class="fixed content">
-    <header>
-        <h1>Profile Information</h1>
-        <br/>
-    </header>
-    <aside class="on-right from-top" data-fixed-scroll="root">
-        <div data-fixed-scroll="anchor"></div>
-        <div data-fixed-scroll="content">
-            @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+@section bib
+{
+    <nav class="bib hide" data-current-bib="people">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}
+
+<div id="employeePersonalInfo" class="content fixed to-top" data-current-module="people">
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div data-side-swiper="on">
+                <div class="group">
+                    <div class="on-left from-top">
+                        <header>
+                            <h1>@ViewBag.Title</h1>
+                        </header>
+                        <div data-side-swiper="root" id="search">
+                            <div data-side-swiper="deck">
+                                <div data-side-swiper="on" class="left">
+                                    <div id="accordion">
+                                        <h2>My Information</h2>
+                                        <div class="fieldset">
+                                            <form data-bind="submit: saveInfo">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 300px"></th>
+                                                            <th style="width: 400px"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="table-column-label">
+                                                                <input type="checkbox" data-bind="checked: IsActive" />
+                                                            </td>
+                                                            <td class="table-column-value">Active?</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">
+                                                                <input type="checkbox" data-bind="checked: IsDisplayNameDerived" />
+                                                            </td>
+                                                            <td class="table-column-value">Is Display Name Derived?</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Display name:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: DisplayName" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Salutation:</td>
+                                                            <td class="table-column-value">
+                                                                <select id="salutationSelector" style="width: 100px" data-bind="options: Salutations, value: Salutation"></select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">First name:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: FirstName" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Middle name:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: MiddleName" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Last name:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: LastName" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Suffix:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: Suffix" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Faculty rank:</td>
+                                                            <td class="table-column-value">
+                                                                <select id="facultyRankSelector" style="width: 300px" data-bind="options: FacultyRanks, optionsText: 'rank', value: FacultyRank, optionsCaption: 'Select...'"></select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Working title:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: WorkingTitle" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Gender:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="radio" name="genderGroup" value="M" data-bind="checked: Gender" />
+                                                                <span>Male</span>
+                                                                <input type="radio" name="genderGroup" value="F" data-bind="checked: Gender" />
+                                                                <span>Female</span>
+                                                                <input type="radio" name="genderGroup" value="P" data-bind="checked: Gender" />
+                                                                <span>Non-Disclosed</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">Administrative Appointments:</td>
+                                                            <td class="table-column-value">
+                                                                <input type="text" style="width: 300px" data-bind="value: AdministrativeAppointments" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div>
+                                                    <input type="submit" value="Save" />
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <h2>My Email Addresses</h2>
+                                        <div class="fieldset">
+                                            <form data-bind="submit: saveEmails">
+                                                <div>
+                                                    <input type="submit" value="Save" />
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <h2>My Affiliations</h2>
+                                        <div class="fieldset">
+                                            <form data-bind="submit: saveAffiliations">
+                                                <div>
+                                                    <input type="submit" value="Save" />
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <h2>My Picture</h2>
+                                        <div class="fieldset">
+                                            <form data-bind="submit: savePicture">
+                                                <div>
+                                                    <input type="submit" value="Save" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </aside>
-    <form data-bind="submit: SaveForm">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 300px"></th>
-                    <th style="width: 400px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="table-column-label"><input type="checkbox" data-bind="checked: IsActive" /></td>
-                    <td class="table-column-value">Active?</td>
-                </tr>
-                <tr>
-                    <td class="table-column-label"><input type="checkbox" data-bind="checked: IsDisplayNameDerived" /></td>
-                    <td class="table-column-value">Is Display Name Derived?</td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Display name:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: DisplayName"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Salutation:</td>
-                    <td class="table-column-value"><select id="salutationSelector" style="width: 100px" data-bind="options: Salutations, value: Salutation"></select></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">First name:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: FirstName"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Middle name:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: MiddleName"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Last name:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: LastName"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Suffix:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: Suffix"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Faculty rank:</td>
-                    <td class="table-column-value"><select id="facultyRankSelector" style="width: 300px" data-bind="options: FacultyRanks, optionsText: 'rank', value: FacultyRank, optionsCaption: 'Select...'"></select></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Working title:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: WorkingTitle"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Gender:</td>
-                    <td class="table-column-value">
-                        <input type="radio" name="genderGroup" value="M" data-bind="checked: Gender" /> Male
-                        <input type="radio" name="genderGroup" value="F" data-bind="checked: Gender" /> Female
-                        <input type="radio" name="genderGroup" value="P" data-bind="checked: Gender" /> Non-Disclosed
-                    </td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Administrative Appointments:</td>
-                    <td class="table-column-value"><input type="text" style="width: 300px" data-bind="value: AdministrativeAppointments"/></td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Emails:</td>
-                    <td class="table-column-value">TBD</td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Affiliations:</td>
-                    <td class="table-column-value">TBD</td>
-                </tr>
-                <tr>
-                    <td class="table-column-label">Picture:</td>
-                    <td class="table-column-value">TBD</td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <input type="submit" value="Save" />
-            <input type="button" value="Cancel" class="link" />
-        </div>
-    </form>
-</section>
+    </div>
+</div>
+
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/employees/personalinfo")
+    @Scripts.Render("~/bundles/employees/people")
 
     <script type="text/javascript">
-        
+
         $(function () {
             var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model));
+            $("#accordion").accordion();
+            $("#accordion").removeClass('ui-widget'); /* TODO: Explore how to do using CSS, maybe table > * > */
         });
 
     </script>
+
 }
