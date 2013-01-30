@@ -7,6 +7,7 @@ module DataContext {
 		rank: string;
 	};
 
+    // since this is a class, why prefix with I?
 	export class IEmployee{
 
 		private _id: number;
@@ -20,6 +21,7 @@ module DataContext {
 			this.Id = inId;
 		}
 
+        // use standard js conventions: camelCase for properties and functions.
 		Get(): JQueryDeferred { return null; }
 		Post(dataOut: any): JQueryDeferred { return null; }
 		Put(dataOut: any): JQueryDeferred { return null; }

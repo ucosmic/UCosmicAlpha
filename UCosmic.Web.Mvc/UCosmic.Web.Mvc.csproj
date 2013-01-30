@@ -457,6 +457,9 @@
     <Content Include="scripts\datacontext\iemployee.js">
       <DependentUpon>iemployee.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\datacontext\iemployee.min.js">
+      <DependentUpon>iemployee.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
