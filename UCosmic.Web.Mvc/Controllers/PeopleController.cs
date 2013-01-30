@@ -13,10 +13,11 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
+        [Authorize] // only signed-on users should be able to access this page
         [GET("my/info")]
         public virtual ActionResult Index()
         {
-            Person person = _queryProcessor.Execute(new MyPerson(User));
+            var person = _queryProcessor.Execute(new MyPerson(User)); // implicit type declaration
             return View(person.RevisionId);
         }
 
