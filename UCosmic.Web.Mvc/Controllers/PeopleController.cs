@@ -17,7 +17,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/info")]
         public virtual ActionResult Index()
         {
-            var person = _queryProcessor.Execute(new MyPerson(User)); // implicit type declaration
+            Person person = _queryProcessor.Execute(new MyPerson(User));
             return View(person.RevisionId);
         }
 
