@@ -17,8 +17,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdatePerson> _updateHandler;
 
+        // reformatted: makes it easier to add additional constructor args if needed
+        // (for example additional command handlers or command validators)
         public PeopleController(IProcessQueries queryProcessor
-                                , IHandleCommands<UpdatePerson> updateHandler )
+            , IHandleCommands<UpdatePerson> updateHandler
+        )
         {
             _queryProcessor = queryProcessor;
             _updateHandler = updateHandler;
@@ -27,25 +30,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{id}")]
         public PersonApiModel Get(int id)
         {
-            Person person = _queryProcessor.Execute(new PersonById(id));
-            PersonApiModel model = Mapper.Map<Person, PersonApiModel>(person);
+            // use var implicit type declarations
+            var person = _queryProcessor.Execute(new PersonById(id));
 
+            // throw 404 if route does not match existing record
+            if (person == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var model = Mapper.Map<Person, PersonApiModel>(person);
             return model;
         }
 
         [GET("{id}/salutations")]
-        public string[] GetSalutations(int id)
+        public IEnumerable<string> GetSalutations(int id) // made return type IEnumerable<T> for consistency
         {
             return PersonSalutation.Values;
         }
         
         /* TODO: This needs to be moved to EmployeeModuleSettingsApiController */
         [GET("{id}/facultyranks")]
-        public ICollection<EmployeeFacultyRank> GetFacultyRanks(int id)
+        public IEnumerable<EmployeeFacultyRank> GetFacultyRanks(int id) // made return type IEnumerable<T> for consistency
         {
-            Person person = _queryProcessor.Execute(new PersonById(id));
+            // use var implicit type declarations
+            var person = _queryProcessor.Execute(new PersonById(id));
             /* TODO: RootEmployeeModuleSettingsById */
-            EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(new RootEmployeeModuleSettingsByUserName(person.User.Name));
+            var employeeModuleSettings = _queryProcessor.Execute(new RootEmployeeModuleSettingsByUserName(person.User.Name));
             return employeeModuleSettings.FacultyRanks;
         }
 
