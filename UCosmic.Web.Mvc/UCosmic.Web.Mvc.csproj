@@ -695,7 +695,6 @@
       <LastGenOutput>T4MVC.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Establishments\Form.cshtml" />
-    <Content Include="Views\People\Index_old.cshtml" />
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <Content Include="styles\sass\sheets\maps.scss" />

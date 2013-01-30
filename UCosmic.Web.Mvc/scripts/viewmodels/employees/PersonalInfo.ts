@@ -15,72 +15,65 @@ module ViewModels.Employee {
 		set RevisionId(inValue: number) { this._revisionId = inValue; }
 
 		private _isActive: KnockoutObservableBool = ko.observable();
-		get IsActive() { return this._isActive; }
-		set IsActive(inValue: KnockoutObservableBool) { this._isActive = inValue; }
+		get IsActive() { return this._isActive(); }
+		set IsActive(inValue: bool) { this._isActive(inValue); }
 
 		private _isDisplayNameDerived: KnockoutObservableBool = ko.observable();
-		get IsDisplayNameDerived() { return this._isDisplayNameDerived; }
-		set IsDisplayNameDerived(inValue: KnockoutObservableBool) { this._isDisplayNameDerived = inValue; }
+		get IsDisplayNameDerived() { return this._isDisplayNameDerived(); }
+		set IsDisplayNameDerived(inValue: bool) { this._isDisplayNameDerived(inValue); }
 
 		private _displayName: KnockoutObservableString = ko.observable();
-		get DisplayName() { return this._displayName; }
-		set DisplayName(inValue: KnockoutObservableString) { this._displayName = inValue; }
+		get DisplayName() { return this._displayName(); }
+		set DisplayName(inValue: string) { this._displayName(inValue); }
 
 		private _salutations: KnockoutObservableArray = ko.observableArray();
-		get Salutations() { return this._salutations; }
-		set Salutations(inValue: KnockoutObservableArray) { this._salutations = inValue; }
+		get Salutations() { return this._salutations(); }
+		set Salutations(inValue: any[]) { this._salutations(inValue); }
 
 		private _salutation: KnockoutObservableString = ko.observable();
-		get Salutation() { return this._salutation; }
-		set Salutation(inValue: KnockoutObservableString) { this._salutation = inValue; }
+		get Salutation() { return this._salutation(); }
+		set Salutation(inValue: string) { this._salutation(inValue); }
 
 		private _firstName: KnockoutObservableString = ko.observable();
-		get FirstName() { return this._firstName; }
-		set FirstName(inValue: KnockoutObservableString) { this._firstName = inValue; }
+		get FirstName() { return this._firstName(); }
+		set FirstName(inValue: string) { this._firstName(inValue); }
 
 		private _middleName: KnockoutObservableString = ko.observable();
-		get MiddleName() { return this._middleName; }
-		set MiddleName(inValue: KnockoutObservableString) { this._middleName = inValue; }
+		get MiddleName() { return this._middleName(); }
+		set MiddleName(inValue: string) { this._middleName(inValue); }
 
 		private _lastName: KnockoutObservableString = ko.observable();
-		get LastName() { return this._lastName; }
-		set LastName(inValue: KnockoutObservableString) { this._lastName = inValue; }
+		get LastName() { return this._lastName(); }
+		set LastName(inValue: string) { this._lastName(inValue); }
 
 		private _suffix: KnockoutObservableString = ko.observable();
-		get Suffix() { return this._suffix; }
-		set Suffix(inValue: KnockoutObservableString) { this._suffix = inValue; }
+		get Suffix() { return this._suffix(); }
+		set Suffix(inValue: string) { this._suffix(inValue); }
 
 		private _workingTitle: KnockoutObservableString = ko.observable();
-		get WorkingTitle() { return this._workingTitle; }
-		set WorkingTitle(inValue: KnockoutObservableString) { this._workingTitle = inValue; }
+		get WorkingTitle() { return this._workingTitle(); }
+		set WorkingTitle(inValue: string) { this._workingTitle(inValue); }
 
 		private _gender: KnockoutObservableString = ko.observable();
-		get Gender() { return this._gender; }
-		set Gender(inValue: KnockoutObservableString) { this._gender = inValue; }
-
-		//private _primaryEmail: KnockoutObservableString = ko.observable();
-		//get PrimaryEmail() { return this._primaryEmail; }
-		//set PrimaryEmail(inValue: KnockoutObservableString) { this._primaryEmail = inValue; }
-
-		//private _alternateEmail: KnockoutObservableString = ko.observable();
-		//get AlternateEmail() { return this._alternateEmail; }
-		//set AlternateEmail(inValue: KnockoutObservableString) { this._alternateEmail = inValue; }
+		get Gender() { return this._gender(); }
+		set Gender(inValue: string) { this._gender(inValue); }
 
 		private _facultyRanks: KnockoutObservableArray = ko.observableArray();
-		get FacultyRanks() { return this._facultyRanks; }
-		set FacultyRanks(inValue: KnockoutObservableArray) { this._facultyRanks = inValue; }
+		get FacultyRanks() { return this._facultyRanks(); }
+		set FacultyRanks(inValue: any[]) { this._facultyRanks(inValue); }
+		FacultyRanks_Add(inRank: any): void { this._facultyRanks.push(inRank); }
 
 		private _facultyRank: KnockoutObservableAny = ko.observable();
-		get FacultyRank() { return this._facultyRank; }
-		set FacultyRank(inValue: any) { this._facultyRank = inValue; }
+		get FacultyRank() { return this._facultyRank(); }
+		set FacultyRank(inValue: any) { this._facultyRank(inValue); }
 
 		private _administrativeAppointments: KnockoutObservableString = ko.observable();
-		get AdministrativeAppointments() { return this._administrativeAppointments; }
-		set AdministrativeAppointments(inValue: KnockoutObservableString) { this._administrativeAppointments = inValue; }
+		get AdministrativeAppointments() { return this._administrativeAppointments(); }
+		set AdministrativeAppointments(inValue: string) { this._administrativeAppointments(inValue); }
 
 		private _picture: KnockoutObservableAny = ko.observable();
-		get Picture() { return this._picture; }
-		set Picture(inValue: KnockoutObservableAny) { this._picture = inValue; }
+		get Picture() { return this._picture(); }
+		set Picture(inValue: any) { this._picture(inValue); }
 
 		// --------------------------------------------------------------------------------
 		/*
@@ -109,7 +102,7 @@ module ViewModels.Employee {
 			/* Success */
 			function (facultyRanks: any): void {
 				for (var i = 0; i < facultyRanks.length; i += 1) {
-					me.FacultyRanks.push(facultyRanks[i]);
+					me.FacultyRanks_Add(facultyRanks[i]);
 				}
 			},
 			/* Fail */
@@ -155,33 +148,31 @@ module ViewModels.Employee {
 			var me: PersonalInfo = inSelf;
 
 			me.RevisionId = data.revisionId;
-			me.IsActive(data.isActive);
-			me.IsDisplayNameDerived(data.isDisplayNameDerived);
-			me.DisplayName((data.displayName != null) ? data.displayName : "");
-			me.Salutation((data.salutation != null) ? data.salutation : "");
-			me.FirstName((data.firstName != null) ? data.firstName : "");
-			me.MiddleName((data.middleName != null) ? data.middleName : "");
-			me.LastName((data.lastName != null) ? data.lastName : "");
-			me.Suffix((data.suffix != null) ? data.suffix : "");
-			me.WorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
-			me.Gender(data.gender);
-			//me.PrimaryEmail(data.PrimaryEmail);
-			//me.AlternateEmail(data.AlternateEmail);
+			me.IsActive = data.isActive;
+			me.IsDisplayNameDerived = data.isDisplayNameDerived;
+			me.DisplayName = (data.displayName != null) ? data.displayName : "";
+			me.Salutation = (data.salutation != null) ? data.salutation : "";
+			me.FirstName = (data.firstName != null) ? data.firstName : "";
+			me.MiddleName = (data.middleName != null) ? data.middleName : "";
+			me.LastName = (data.lastName != null) ? data.lastName : "";
+			me.Suffix = (data.suffix != null) ? data.suffix : "";
+			me.WorkingTitle = (data.workingTitle != null) ? data.workingTitle : "";
+			me.Gender = data.gender;
 			if (data.employeeFacultyRank != null) {
 				var i: number = 0;
-				while ((i < me.FacultyRanks().length) &&
-						 (me.FacultyRanks()[i].id != data.employeeFacultyRank.id))
+				while ((i < me.FacultyRanks.length) &&
+						 (me.FacultyRanks[i].id != data.employeeFacultyRank.id))
 				{ i += 1; }
 
-				if (i < me.FacultyRanks().length) {
-					me.FacultyRank(me.FacultyRanks()[i]);
+				if (i < me.FacultyRanks.length) {
+					me.FacultyRank = me.FacultyRanks[i];
 				}
 			}
 			else {
-				me.FacultyRank(null);
+				me.FacultyRank = null;
 			}
-			me.AdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
-			me.Picture(data.picture);
+			me.AdministrativeAppointments = (data.administrativeAppointments != null) ? data.administrativeAppointments : "";
+			me.Picture = data.picture;
 		}
 
 		// --------------------------------------------------------------------------------
@@ -196,20 +187,18 @@ module ViewModels.Employee {
 				revisionId: me.RevisionId,
 				isActive: me.IsActive,
 				isDisplayNameDerived: me.IsDisplayNameDerived,
-				displayName: (me.DisplayName().length > 0) ? me.DisplayName : null,
-				salutation: (me.Salutation().length > 0) ? me.Salutation : null,
-				firstName: (me.FirstName().length > 0) ? me.FirstName : null,
-				middleName: (me.MiddleName().length > 0) ? me.MiddleName : null,
-				lastName: (me.LastName().length > 0) ? me.LastName : null,
-				suffix: (me.Suffix().length > 0) ? me.Suffix : null,
+				displayName: (me.DisplayName.length > 0) ? me.DisplayName : null,
+				salutation: (me.Salutation.length > 0) ? me.Salutation : null,
+				firstName: (me.FirstName.length > 0) ? me.FirstName : null,
+				middleName: (me.MiddleName.length > 0) ? me.MiddleName : null,
+				lastName: (me.LastName.length > 0) ? me.LastName : null,
+				suffix: (me.Suffix.length > 0) ? me.Suffix : null,
 				workingTitle: me.WorkingTitle,
 				gender: me.Gender,
-				//primaryEmail: me.PrimaryEmail,
-				//alternateEmail: me.AlternateEmail,
-				employeeFacultyRank: (me.FacultyRank() != null) ?
-					{ id: me.FacultyRank().id, rank: me.FacultyRank().rank } :
+				employeeFacultyRank: (me.FacultyRank != null) ?
+					{ id: me.FacultyRank.id, rank: me.FacultyRank.rank } :
 					null,
-				administrativeAppointments: (me.AdministrativeAppointments().length > 0) ? me.AdministrativeAppointments : null,
+				administrativeAppointments: (me.AdministrativeAppointments.length > 0) ? me.AdministrativeAppointments : null,
 				picture: me.Picture
 			};
 		}

@@ -33,150 +33,153 @@ var ViewModels;
             });
             Object.defineProperty(PersonalInfo.prototype, "IsActive", {
                 get: function () {
-                    return this._isActive;
+                    return this._isActive();
                 },
                 set: function (inValue) {
-                    this._isActive = inValue;
+                    this._isActive(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "IsDisplayNameDerived", {
                 get: function () {
-                    return this._isDisplayNameDerived;
+                    return this._isDisplayNameDerived();
                 },
                 set: function (inValue) {
-                    this._isDisplayNameDerived = inValue;
+                    this._isDisplayNameDerived(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "DisplayName", {
                 get: function () {
-                    return this._displayName;
+                    return this._displayName();
                 },
                 set: function (inValue) {
-                    this._displayName = inValue;
+                    this._displayName(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "Salutations", {
                 get: function () {
-                    return this._salutations;
+                    return this._salutations();
                 },
                 set: function (inValue) {
-                    this._salutations = inValue;
+                    this._salutations(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "Salutation", {
                 get: function () {
-                    return this._salutation;
+                    return this._salutation();
                 },
                 set: function (inValue) {
-                    this._salutation = inValue;
+                    this._salutation(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "FirstName", {
                 get: function () {
-                    return this._firstName;
+                    return this._firstName();
                 },
                 set: function (inValue) {
-                    this._firstName = inValue;
+                    this._firstName(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "MiddleName", {
                 get: function () {
-                    return this._middleName;
+                    return this._middleName();
                 },
                 set: function (inValue) {
-                    this._middleName = inValue;
+                    this._middleName(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "LastName", {
                 get: function () {
-                    return this._lastName;
+                    return this._lastName();
                 },
                 set: function (inValue) {
-                    this._lastName = inValue;
+                    this._lastName(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "Suffix", {
                 get: function () {
-                    return this._suffix;
+                    return this._suffix();
                 },
                 set: function (inValue) {
-                    this._suffix = inValue;
+                    this._suffix(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "WorkingTitle", {
                 get: function () {
-                    return this._workingTitle;
+                    return this._workingTitle();
                 },
                 set: function (inValue) {
-                    this._workingTitle = inValue;
+                    this._workingTitle(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "Gender", {
                 get: function () {
-                    return this._gender;
+                    return this._gender();
                 },
                 set: function (inValue) {
-                    this._gender = inValue;
+                    this._gender(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "FacultyRanks", {
                 get: function () {
-                    return this._facultyRanks;
+                    return this._facultyRanks();
                 },
                 set: function (inValue) {
-                    this._facultyRanks = inValue;
+                    this._facultyRanks(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
+            PersonalInfo.prototype.FacultyRanks_Add = function (inRank) {
+                this._facultyRanks.push(inRank);
+            };
             Object.defineProperty(PersonalInfo.prototype, "FacultyRank", {
                 get: function () {
-                    return this._facultyRank;
+                    return this._facultyRank();
                 },
                 set: function (inValue) {
-                    this._facultyRank = inValue;
+                    this._facultyRank(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "AdministrativeAppointments", {
                 get: function () {
-                    return this._administrativeAppointments;
+                    return this._administrativeAppointments();
                 },
                 set: function (inValue) {
-                    this._administrativeAppointments = inValue;
+                    this._administrativeAppointments(inValue);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(PersonalInfo.prototype, "Picture", {
                 get: function () {
-                    return this._picture;
+                    return this._picture();
                 },
                 set: function (inValue) {
-                    this._picture = inValue;
+                    this._picture(inValue);
                 },
                 enumerable: true,
                 configurable: true
@@ -193,7 +196,7 @@ var ViewModels;
                 var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
                 getFacultyRanksPact.then(function (facultyRanks) {
                     for(var i = 0; i < facultyRanks.length; i += 1) {
-                        me.FacultyRanks.push(facultyRanks[i]);
+                        me.FacultyRanks_Add(facultyRanks[i]);
                     }
                 }, function (error) {
                 });
@@ -209,29 +212,29 @@ var ViewModels;
             PersonalInfo.prototype.ToViewModel = function (inSelf, data) {
                 var me = inSelf;
                 me.RevisionId = data.revisionId;
-                me.IsActive(data.isActive);
-                me.IsDisplayNameDerived(data.isDisplayNameDerived);
-                me.DisplayName((data.displayName != null) ? data.displayName : "");
-                me.Salutation((data.salutation != null) ? data.salutation : "");
-                me.FirstName((data.firstName != null) ? data.firstName : "");
-                me.MiddleName((data.middleName != null) ? data.middleName : "");
-                me.LastName((data.lastName != null) ? data.lastName : "");
-                me.Suffix((data.suffix != null) ? data.suffix : "");
-                me.WorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
-                me.Gender(data.gender);
+                me.IsActive = data.isActive;
+                me.IsDisplayNameDerived = data.isDisplayNameDerived;
+                me.DisplayName = (data.displayName != null) ? data.displayName : "";
+                me.Salutation = (data.salutation != null) ? data.salutation : "";
+                me.FirstName = (data.firstName != null) ? data.firstName : "";
+                me.MiddleName = (data.middleName != null) ? data.middleName : "";
+                me.LastName = (data.lastName != null) ? data.lastName : "";
+                me.Suffix = (data.suffix != null) ? data.suffix : "";
+                me.WorkingTitle = (data.workingTitle != null) ? data.workingTitle : "";
+                me.Gender = data.gender;
                 if(data.employeeFacultyRank != null) {
                     var i = 0;
-                    while((i < me.FacultyRanks().length) && (me.FacultyRanks()[i].id != data.employeeFacultyRank.id)) {
+                    while((i < me.FacultyRanks.length) && (me.FacultyRanks[i].id != data.employeeFacultyRank.id)) {
                         i += 1;
                     }
-                    if(i < me.FacultyRanks().length) {
-                        me.FacultyRank(me.FacultyRanks()[i]);
+                    if(i < me.FacultyRanks.length) {
+                        me.FacultyRank = me.FacultyRanks[i];
                     }
                 } else {
-                    me.FacultyRank(null);
+                    me.FacultyRank = null;
                 }
-                me.AdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
-                me.Picture(data.picture);
+                me.AdministrativeAppointments = (data.administrativeAppointments != null) ? data.administrativeAppointments : "";
+                me.Picture = data.picture;
             };
             PersonalInfo.prototype.FromViewModel = function (inSelf) {
                 var me = inSelf;
@@ -239,19 +242,19 @@ var ViewModels;
                     revisionId: me.RevisionId,
                     isActive: me.IsActive,
                     isDisplayNameDerived: me.IsDisplayNameDerived,
-                    displayName: (me.DisplayName().length > 0) ? me.DisplayName : null,
-                    salutation: (me.Salutation().length > 0) ? me.Salutation : null,
-                    firstName: (me.FirstName().length > 0) ? me.FirstName : null,
-                    middleName: (me.MiddleName().length > 0) ? me.MiddleName : null,
-                    lastName: (me.LastName().length > 0) ? me.LastName : null,
-                    suffix: (me.Suffix().length > 0) ? me.Suffix : null,
+                    displayName: (me.DisplayName.length > 0) ? me.DisplayName : null,
+                    salutation: (me.Salutation.length > 0) ? me.Salutation : null,
+                    firstName: (me.FirstName.length > 0) ? me.FirstName : null,
+                    middleName: (me.MiddleName.length > 0) ? me.MiddleName : null,
+                    lastName: (me.LastName.length > 0) ? me.LastName : null,
+                    suffix: (me.Suffix.length > 0) ? me.Suffix : null,
                     workingTitle: me.WorkingTitle,
                     gender: me.Gender,
-                    employeeFacultyRank: (me.FacultyRank() != null) ? {
-                        id: me.FacultyRank().id,
-                        rank: me.FacultyRank().rank
+                    employeeFacultyRank: (me.FacultyRank != null) ? {
+                        id: me.FacultyRank.id,
+                        rank: me.FacultyRank.rank
                     } : null,
-                    administrativeAppointments: (me.AdministrativeAppointments().length > 0) ? me.AdministrativeAppointments : null,
+                    administrativeAppointments: (me.AdministrativeAppointments.length > 0) ? me.AdministrativeAppointments : null,
                     picture: me.Picture
                 };
             };

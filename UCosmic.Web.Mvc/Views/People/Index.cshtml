@@ -73,7 +73,7 @@
                                                         <tr>
                                                             <td class="table-column-label">Salutation:</td>
                                                             <td class="table-column-value">
-                                                                <select id="salutationSelector" style="width: 100px" data-bind="options: Salutations, value: Salutation"></select>
+                                                                <select id="salutationSelector" style="width: 100px" data-bind="options: _salutations, value: _salutation"></select>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -103,7 +103,7 @@
                                                         <tr>
                                                             <td class="table-column-label">Faculty rank:</td>
                                                             <td class="table-column-value">
-                                                                <select id="facultyRankSelector" style="width: 300px" data-bind="options: FacultyRanks, optionsText: 'rank', value: FacultyRank, optionsCaption: 'Select...'"></select>
+                                                                <select id="facultyRankSelector" style="width: 300px" data-bind="options: _facultyRanks, optionsText: 'rank', value: _facultyRank, optionsCaption: 'Select...'"></select>
                                                             </td>
                                                         </tr>
                                                         <tr>
