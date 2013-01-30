@@ -115,12 +115,21 @@
                                                         <tr>
                                                             <td class="table-column-label">Gender:</td>
                                                             <td class="table-column-value">
-                                                                <input type="radio" name="genderGroup" value="M" data-bind="checked: Gender" />
-                                                                <span>Male</span>
-                                                                <input type="radio" name="genderGroup" value="F" data-bind="checked: Gender" />
-                                                                <span>Female</span>
-                                                                <input type="radio" name="genderGroup" value="P" data-bind="checked: Gender" />
-                                                                <span>Non-Disclosed</span>
+                                                                @* wrap radio groups in labels for easier UI *@
+                                                                <label>
+                                                                    <input type="radio" name="genderGroup" value="M" data-bind="checked: Gender" />
+                                                                    <span>Male</span>
+                                                                </label>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="genderGroup" value="F" data-bind="checked: Gender" />
+                                                                    <span>Female</span>
+                                                                </label>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="genderGroup" value="P" data-bind="checked: Gender" />
+                                                                    <span>Undisclosed</span>
+                                                                </label>
                                                             </td>
                                                         </tr>
                                                         <tr>
