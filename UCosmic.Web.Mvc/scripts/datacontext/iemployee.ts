@@ -5,7 +5,7 @@ module DataContext {
 	export class EmployeeFacultyRank {
 		id: number;
 		rank: string;
-	};
+	} // semi-colon not necessary
 
     // since this is a class, why prefix with I?
 	export class IEmployee{

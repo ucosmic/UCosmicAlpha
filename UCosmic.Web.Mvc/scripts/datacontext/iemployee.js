@@ -5,7 +5,6 @@ var DataContext;
         return EmployeeFacultyRank;
     })();
     DataContext.EmployeeFacultyRank = EmployeeFacultyRank;    
-    ; ;
     var IEmployee = (function () {
         function IEmployee(inId) {
             this._baseUrl = "/api/people";
