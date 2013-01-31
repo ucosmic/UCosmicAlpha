@@ -10,7 +10,7 @@ module DataContext {
 
 		/*override*/ Get(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
-			$.getJSON(this.BaseUrl + "/" + this.Id.toString(),
+			$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString(),
 				 function (data, textStatus, jqXHR) {
 				 	deferred.resolve(data);
 				 });
@@ -23,13 +23,13 @@ module DataContext {
                      type: "PUT",
                      success: function (data, textStatus, jqXHR) { deferred.resolve(data) },
                      error: function (jqXHR, textStatus, errorThrown) { deferred.reject(errorThrown) },
-                     url: this.BaseUrl + "/" + this.Id.toString() });
+                     url: this.GetBaseUrl() + "/" + this.GetId().toString() });
 			return deferred;
 		}
 
 		/*override*/ GetSalutations(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
-			$.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/salutations/",
+			$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/salutations/",
 				 function (data, textStatus, jqXHR) {
 						deferred.resolve(data);
 				 } );
@@ -38,7 +38,7 @@ module DataContext {
 
 		/*override*/ GetFacultyRanks(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
-		  $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/facultyranks/",
+		  $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/",
 		    	function (data, textStatus, jqXHR) {
 		    	deferred.resolve(data);
 		    	});

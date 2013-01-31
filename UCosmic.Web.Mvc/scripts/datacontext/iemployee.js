@@ -8,25 +8,17 @@ var DataContext;
     var IEmployee = (function () {
         function IEmployee(inId) {
             this._baseUrl = "/api/people";
-            this.Id = inId;
+            this.SetId(inId);
         }
-        Object.defineProperty(IEmployee.prototype, "Id", {
-            get: function () {
-                return this._id;
-            },
-            set: function (inValue) {
-                this._id = inValue;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(IEmployee.prototype, "BaseUrl", {
-            get: function () {
-                return this._baseUrl;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        IEmployee.prototype.GetId = function () {
+            return this._id;
+        };
+        IEmployee.prototype.SetId = function (inValue) {
+            this._id = inValue;
+        };
+        IEmployee.prototype.GetBaseUrl = function () {
+            return this._baseUrl;
+        };
         IEmployee.prototype.Get = function () {
             return null;
         };

@@ -12,7 +12,7 @@ var DataContext;
         }
         EmployeeWebService.prototype.Get = function () {
             var deferred = $.Deferred();
-            $.getJSON(this.BaseUrl + "/" + this.Id.toString(), function (data, textStatus, jqXHR) {
+            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString(), function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             });
             return deferred;
@@ -28,20 +28,20 @@ var DataContext;
                 error: function (jqXHR, textStatus, errorThrown) {
                     deferred.reject(errorThrown);
                 },
-                url: this.BaseUrl + "/" + this.Id.toString()
+                url: this.GetBaseUrl() + "/" + this.GetId().toString()
             });
             return deferred;
         };
         EmployeeWebService.prototype.GetSalutations = function () {
             var deferred = $.Deferred();
-            $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/salutations/", function (data, textStatus, jqXHR) {
+            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/salutations/", function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             });
             return deferred;
         };
         EmployeeWebService.prototype.GetFacultyRanks = function () {
             var deferred = $.Deferred();
-            $.getJSON(this.BaseUrl + "/" + this.Id.toString() + "/facultyranks/", function (data, textStatus, jqXHR) {
+            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/", function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             });
             return deferred;

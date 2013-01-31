@@ -54,20 +54,20 @@
                                                     <tbody>
                                                         <tr>
                                                             <td class="table-column-label">
-                                                                <input type="checkbox" data-bind="checked: IsActive" />
+                                                                <input type="checkbox" data-bind="checked: _isActive" />
                                                             </td>
                                                             <td class="table-column-value">Active?</td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">
-                                                                <input type="checkbox" data-bind="checked: IsDisplayNameDerived" />
+                                                                <input type="checkbox" data-bind="checked: _isDisplayNameDerived" />
                                                             </td>
                                                             <td class="table-column-value">Is Display Name Derived?</td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Display name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: DisplayName" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _displayName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -79,25 +79,25 @@
                                                         <tr>
                                                             <td class="table-column-label">First name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: FirstName" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _firstName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Middle name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: MiddleName" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _middleName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Last name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: LastName" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _lastName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Suffix:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: Suffix" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _suffix" />
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -109,7 +109,7 @@
                                                         <tr>
                                                             <td class="table-column-label">Working title:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: WorkingTitle" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _workingTitle" />
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -117,17 +117,17 @@
                                                             <td class="table-column-value">
                                                                 @* wrap radio groups in labels for easier UI *@
                                                                 <label>
-                                                                    <input type="radio" name="genderGroup" value="M" data-bind="checked: Gender" />
+                                                                    <input type="radio" name="genderGroup" value="M" data-bind="checked: _gender" />
                                                                     <span>Male</span>
                                                                 </label>
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 <label>
-                                                                    <input type="radio" name="genderGroup" value="F" data-bind="checked: Gender" />
+                                                                    <input type="radio" name="genderGroup" value="F" data-bind="checked: _gender" />
                                                                     <span>Female</span>
                                                                 </label>
                                                                 &nbsp;&nbsp;&nbsp;
                                                                 <label>
-                                                                    <input type="radio" name="genderGroup" value="P" data-bind="checked: Gender" />
+                                                                    <input type="radio" name="genderGroup" value="P" data-bind="checked: _gender" />
                                                                     <span>Undisclosed</span>
                                                                 </label>
                                                             </td>
@@ -135,7 +135,7 @@
                                                         <tr>
                                                             <td class="table-column-label">Administrative Appointments:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: AdministrativeAppointments" />
+                                                                <input type="text" style="width: 300px" data-bind="value: _administrativeAppointments" />
                                                             </td>
                                                         </tr>
                                                     </tbody>

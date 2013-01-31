@@ -15,6 +15,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [Authorize] // only signed-on users should be able to access this page
         [GET("my/info")]
+				[Authorize]
         public virtual ActionResult Index()
         {
             Person person = _queryProcessor.Execute(new MyPerson(User));

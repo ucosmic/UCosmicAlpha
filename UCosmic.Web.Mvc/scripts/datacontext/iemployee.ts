@@ -11,14 +11,14 @@ module DataContext {
 	export class IEmployee{
 
 		private _id: number;
-		get Id() { return this._id; }
-		set Id(inValue: number) { this._id = inValue; }
+		GetId(): number { return this._id; }
+		SetId(inValue: number): void { this._id = inValue; }
 
 		private _baseUrl: string = "/api/people";
-		get BaseUrl() { return this._baseUrl; }
+		GetBaseUrl(): string { return this._baseUrl; }
 
 		constructor(inId: number) {
-			this.Id = inId;
+			this.SetId(inId);
 		}
 
         // use standard js conventions: camelCase for properties and functions.
