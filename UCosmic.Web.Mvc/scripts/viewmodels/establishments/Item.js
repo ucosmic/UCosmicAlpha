@@ -198,7 +198,7 @@ var ViewModels;
                     throttle: 400
                 });
                 this.showAdmin2Input = ko.computed(function () {
-                    return _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
+                    return _this.countryId() && _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
                 });
                 this.admin2Id.subscribe(function (newValue) {
                     if(newValue && _this.admin2s().length == 0) {
@@ -231,7 +231,7 @@ var ViewModels;
                     throttle: 400
                 });
                 this.showAdmin3Input = ko.computed(function () {
-                    return _this.admin2Id() && (_this.admin3s().length > 0 || _this.admin3sLoading());
+                    return _this.countryId() && _this.admin1Id() && _this.admin2Id() && (_this.admin3s().length > 0 || _this.admin3sLoading());
                 });
                 this.admin3Id.subscribe(function (newValue) {
                     if(newValue && _this.admin3s().length == 0) {
@@ -301,6 +301,10 @@ var ViewModels;
                 this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
+                });
+                this.$mapCanvas().on('marker_destroyed', function () {
+                    _this.countryId(undefined);
+                    _this.subAdmins([]);
                 });
                 if(this.id) {
                     $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {

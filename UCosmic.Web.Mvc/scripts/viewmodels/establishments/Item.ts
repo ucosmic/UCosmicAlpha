@@ -157,7 +157,8 @@ module ViewModels.Establishments {
 
                         // load admin1 options
                         this.admin1s([]);
-                        var admin1Url = App.Routes.WebApi.Places.get({ isAdmin1: true, parentId: country.id });
+                        var admin1Url = App.Routes.WebApi.Places
+                            .get({ isAdmin1: true, parentId: country.id });
                         this.admin1sLoading(true);
                         $.get(admin1Url)
                             .done((results: Places.IServerApiModel[]) => {
@@ -199,7 +200,8 @@ module ViewModels.Establishments {
                     if (admin1) {
                         // load admin2 options
                         this.admin2s([]);
-                        var admin2Url = App.Routes.WebApi.Places.get({ isAdmin2: true, parentId: admin1.id });
+                        var admin2Url = App.Routes.WebApi.Places
+                            .get({ isAdmin2: true, parentId: admin1.id });
                         this.admin2sLoading(true);
                         $.get(admin2Url)
                             .done((results: Places.IServerApiModel[]) => {
@@ -220,7 +222,8 @@ module ViewModels.Establishments {
                 return !this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
             }).extend({ throttle: 400 });
             this.showAdmin2Input = ko.computed((): bool => {
-                return this.admin1Id() && (this.admin2s().length > 0 || this.admin2sLoading());
+                return this.countryId() && this.admin1Id()
+                    && (this.admin2s().length > 0 || this.admin2sLoading());
             });
             this.admin2Id.subscribe((newValue: number): void => {
                 // when this value is set before the admin2 menu is loaded,
@@ -234,7 +237,8 @@ module ViewModels.Establishments {
                     if (admin2) {
                         // load admin3 options
                         this.admin3s([]);
-                        var admin3Url = App.Routes.WebApi.Places.get({ isAdmin3: true, parentId: admin2.id });
+                        var admin3Url = App.Routes.WebApi.Places
+                            .get({ isAdmin3: true, parentId: admin2.id });
                         this.admin3sLoading(true);
                         $.get(admin3Url)
                             .done((results: Places.IServerApiModel[]) => {
@@ -255,7 +259,8 @@ module ViewModels.Establishments {
                 return !this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
             }).extend({ throttle: 400 });
             this.showAdmin3Input = ko.computed((): bool => {
-                return this.admin2Id() && (this.admin3s().length > 0 || this.admin3sLoading());
+                return this.countryId() && this.admin1Id() && this.admin2Id()
+                    && (this.admin3s().length > 0 || this.admin3sLoading());
             });
             this.admin3Id.subscribe((newValue: number): void => {
                 // when this value is set before the admin3 menu is loaded,
@@ -386,6 +391,13 @@ module ViewModels.Establishments {
                 this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));
             });
 
+            // tools overlay marker
+            this.$mapCanvas().on('marker_destroyed', (): void => {
+                this.countryId(undefined);
+                this.subAdmins([]);
+            });
+
+
             if (this.id)
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
                 .done((response: IServerLocationApiModel): void => {
@@ -428,7 +440,8 @@ module ViewModels.Establishments {
                     var admin3: Places.IServerApiModel = Places.Utils.getAdmin3(response.places);
                     if (admin3) this.admin3Id(admin3.id);
 
-                    var subAdmins: Places.IServerApiModel[] = Places.Utils.getSubAdmins(response.places);
+                    var subAdmins: Places.IServerApiModel[] = Places.Utils
+                        .getSubAdmins(response.places);
                     if (subAdmins && subAdmins.length) this.subAdmins(subAdmins);
                 })
         }
