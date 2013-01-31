@@ -371,6 +371,7 @@ module ViewModels.Establishments {
         private _admin3Id: number;
         showAdmin3Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();
+        subAdmins: KnockoutObservablePlaceModelArray = ko.observableArray();
 
         initMap(): void {
             var mapOptions: gm.MapOptions = {
@@ -426,7 +427,14 @@ module ViewModels.Establishments {
                     // populate admin3 menu
                     var admin3: Places.IServerApiModel = Places.Utils.getAdmin3(response.places);
                     if (admin3) this.admin3Id(admin3.id);
+
+                    var subAdmins: Places.IServerApiModel[] = Places.Utils.getSubAdmins(response.places);
+                    if (subAdmins && subAdmins.length) this.subAdmins(subAdmins);
                 })
+        }
+
+        changePlaceInLocation(): void {
+            this.subAdmins([]);
         }
 
         //#endregion

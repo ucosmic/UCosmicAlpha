@@ -24,8 +24,8 @@
                                 <label for="establishment_location_country_menu">Country</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: countries, optionsCaption: countryOptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: countryId"
-                                    id="establishment_location_country_menu">
+                                <select data-bind="options: countries, optionsCaption: countryOptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: countryId,
+                                    event: { change: changePlaceInLocation }" id="establishment_location_country_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -35,8 +35,8 @@
                                 <label for="establishment_location_admin1_menu">Admin #1</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: admin1s, optionsCaption: admin1OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin1Id"
-                                    id="establishment_location_admin1_menu">
+                                <select data-bind="options: admin1s, optionsCaption: admin1OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin1Id,
+                                    event: { change: changePlaceInLocation }" id="establishment_location_admin1_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -46,8 +46,8 @@
                                 <label for="establishment_location_admin2_menu">Admin #2</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: admin2s, optionsCaption: admin2OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin2Id"
-                                    id="establishment_location_admin2_menu">
+                                <select data-bind="options: admin2s, optionsCaption: admin2OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin2Id,
+                                    event: { change: changePlaceInLocation }" id="establishment_location_admin2_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -57,10 +57,20 @@
                                 <label for="establishment_location_admin3_menu">Admin #3</label>
                             </div>
                             <div class="field-input">
-                                <select data-bind="options: admin3s, optionsCaption: admin3OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin3Id"
-                                    id="establishment_location_admin3_menu">
+                                <select data-bind="options: admin3s, optionsCaption: admin3OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin3Id,
+                                    event: { change: changePlaceInLocation }" id="establishment_location_admin3_menu">
                                     <option>[Loading...]</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div data-bind="foreach: subAdmins, visible: subAdmins().length">
+                            <div class="field-row">
+                                <div class="field-label">
+                                    <label data-bind="text: placeTypeEnglishName"></label>
+                                </div>
+                                <div class="field-value">
+                                    <span data-bind="text: officialName"></span>
+                                </div>
                             </div>
                         </div>
                     </div>

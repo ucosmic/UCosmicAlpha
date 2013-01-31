@@ -123,6 +123,19 @@ module ViewModels.Places {
             return null;
         }
 
+        export function getSubAdmins(places: IServerApiModel[]): IServerApiModel[] {
+            var subAdmins: IServerApiModel[] = [];
+            if (places && places.length > 0) {
+                for (var i = 0; i < places.length; i++) {
+                    var place = places[i];
+                    if (!place.isEarth && !place.isContinent && !place.isCountry &&
+                        !place.isAdmin1 && !place.isAdmin2 && !place.isAdmin3)
+                        subAdmins[subAdmins.length] = place;
+                }
+            }
+            return subAdmins;
+        }
+
         export function convertToLatLng(point: IServerPointModel): gm.LatLng {
             return new gm.LatLng(point.latitude, point.longitude);
         }

@@ -30,6 +30,7 @@ var ViewModels;
                 this.admin3Id = ko.observable();
                 this.admin3sLoading = ko.observable(false);
                 this.places = ko.observableArray();
+                this.subAdmins = ko.observableArray();
                 this.id = id || 0;
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
@@ -338,8 +339,15 @@ var ViewModels;
                         if(admin3) {
                             _this.admin3Id(admin3.id);
                         }
+                        var subAdmins = ViewModels.Places.Utils.getSubAdmins(response.places);
+                        if(subAdmins && subAdmins.length) {
+                            _this.subAdmins(subAdmins);
+                        }
                     });
                 }
+            };
+            Item.prototype.changePlaceInLocation = function () {
+                this.subAdmins([]);
             };
             return Item;
         })();
