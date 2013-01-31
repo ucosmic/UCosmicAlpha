@@ -31,14 +31,14 @@ module App.Routes {
 
         export module Languages {
 
-            export function get(): string {
+            export function get (): string {
                 return makeUrl('languages');
             }
         }
 
         export module Countries {
 
-            export function get(): string {
+            export function get (): string {
                 return makeUrl('countries');
             }
         }
@@ -54,7 +54,7 @@ module App.Routes {
                 isAdmin3?: bool;
             }
 
-            export function get(args: IFilterPlaces): string {
+            function getByFilterArgs(args: IFilterPlaces): string {
                 var url = makeUrl('places');
                 url = url.substr(0, url.length - 1); // strip trailing slash
                 url += '?';
@@ -68,11 +68,25 @@ module App.Routes {
                     url = url.substr(0, url.length - 1);
                 return url;
             }
+
+            function getByLatLng(latitude: number, longitude: number): string {
+                var url = 'places/by-coordinates/' + latitude + '/' + longitude;
+                return makeUrl(url);
+            }
+
+            export function get (args: IFilterPlaces): string;
+            export function get (latitude: number, longitude: number): string;
+            export function get (arg1: any, arg2?: number): string {
+                if (!arg2 || typeof arg2 !== 'number')
+                    return getByFilterArgs(arg1);
+                else
+                    return getByLatLng(arg1, arg2);
+            }
         }
 
         export module Establishments {
 
-            export function get(establishmentId?: number): string {
+            export function get (establishmentId?: number): string {
                 var url = 'establishments';
                 if (establishmentId)
                     url += '/' + establishmentId;
@@ -81,7 +95,7 @@ module App.Routes {
 
             export class Names {
 
-                static get(establishmentId: number, establishmentNameId?: number): string {
+                static get (establishmentId: number, establishmentNameId?: number): string {
                     var url = 'establishments/' + establishmentId + '/names';
                     if (establishmentNameId)
                         url += '/' + establishmentNameId;
@@ -109,11 +123,11 @@ module App.Routes {
 
             export class Urls {
 
-                static get(establishmentId: number, establishmentUrlId?: number): string {
-                var url = 'establishments/' + establishmentId + '/urls';
-                if (establishmentUrlId)
-                    url += '/' + establishmentUrlId;
-                return makeUrl(url);
+                static get (establishmentId: number, establishmentUrlId?: number): string {
+                    var url = 'establishments/' + establishmentId + '/urls';
+                    if (establishmentUrlId)
+                        url += '/' + establishmentUrlId;
+                    return makeUrl(url);
                 }
 
                 static post(establishmentId: number): string {
@@ -137,7 +151,7 @@ module App.Routes {
 
             export class Locations {
 
-                static get(establishmentId: number): string {
+                static get (establishmentId: number): string {
                     var url = 'establishments/' + establishmentId + '/location';
                     return makeUrl(url);
                 }

@@ -165,6 +165,7 @@ namespace Links
             public static readonly string iemployee_ts = Url("iemployee.ts");
             public static readonly string iemployee_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/iemployee.min.js") ? Url("iemployee.min.js") : Url("iemployee.js");
                           
+            public static readonly string iemployee_min_js = Url("iemployee.min.js");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

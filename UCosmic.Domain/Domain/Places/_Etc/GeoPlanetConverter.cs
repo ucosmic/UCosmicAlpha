@@ -4,6 +4,8 @@ namespace UCosmic.Domain.Places
 {
     internal static class GeoPlanetConverter
     {
+        private static bool _isConfigured = false;
+
         static GeoPlanetConverter()
         {
             Configure();
@@ -11,6 +13,8 @@ namespace UCosmic.Domain.Places
 
         internal static void Configure()
         {
+            if (_isConfigured) return;
+
             #region Yahoo Place to GeoPlanetPlace Entity
 
             Mapper.CreateMap<NGeo.Yahoo.GeoPlanet.Place, GeoPlanetPlace>()
@@ -87,20 +91,25 @@ namespace UCosmic.Domain.Places
             ;
 
             #endregion
+
+            _isConfigured = true;
         }
 
         internal static GeoPlanetPlace ToEntity(this NGeo.Yahoo.GeoPlanet.Place geoPlanetPlace)
         {
+            Configure();
             return (geoPlanetPlace != null) ? Mapper.Map<GeoPlanetPlace>(geoPlanetPlace) : null;
         }
 
         internal static GeoPlanetPlaceType ToEntity(this NGeo.Yahoo.GeoPlanet.PlaceType geoPlanetPlaceType)
         {
+            Configure();
             return (geoPlanetPlaceType != null) ? Mapper.Map<GeoPlanetPlaceType>(geoPlanetPlaceType) : null;
         }
 
         internal static Place ToPlace(this GeoPlanetPlace geoPlanetPlace)
         {
+            Configure();
             if (geoPlanetPlace == null) return null;
 
             var place = Mapper.Map<Place>(geoPlanetPlace);

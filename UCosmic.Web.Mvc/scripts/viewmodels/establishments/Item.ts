@@ -156,22 +156,8 @@ module ViewModels.Establishments {
                         this.continentId(country.parentId);
 
                         // load admin1 options
-                        this.admin1s([]);
-                        var admin1Url = App.Routes.WebApi.Places
-                            .get({ isAdmin1: true, parentId: country.id });
-                        this.admin1sLoading(true);
-                        $.get(admin1Url)
-                            .done((results: Places.IServerApiModel[]) => {
-                                this.admin1s(results);
-                                if (this._admin1Id) {
-                                    var admin1Id = this._admin1Id;
-                                    this._admin1Id = undefined;
-                                    this.admin1Id(admin1Id);
-                                }
-                                this.admin1sLoading(false);
-                            });
+                        this.loadAdmin1s(country.id);
                     }
-
                 }
                 else if (!newValue && this.countries().length > 0) {
                     // when changing to unspecified, zoom out menu
@@ -199,20 +185,11 @@ module ViewModels.Establishments {
                         .getPlaceById(this.admin1s(), newValue);
                     if (admin1) {
                         // load admin2 options
-                        this.admin2s([]);
-                        var admin2Url = App.Routes.WebApi.Places
-                            .get({ isAdmin2: true, parentId: admin1.id });
-                        this.admin2sLoading(true);
-                        $.get(admin2Url)
-                            .done((results: Places.IServerApiModel[]) => {
-                                this.admin2s(results);
-                                if (this._admin2Id) {
-                                    var admin2Id = this._admin2Id;
-                                    this._admin2Id = undefined;
-                                    this.admin2Id(admin2Id);
-                                }
-                                this.admin2sLoading(false);
-                            });
+                        this.loadAdmin2s(admin1.id);
+                    }
+                    else {
+                        this._admin1Id = newValue;
+                        this.loadAdmin1s(this.countryId() || this._countryId);
                     }
                 }
             });
@@ -236,20 +213,11 @@ module ViewModels.Establishments {
                         .getPlaceById(this.admin2s(), newValue);
                     if (admin2) {
                         // load admin3 options
-                        this.admin3s([]);
-                        var admin3Url = App.Routes.WebApi.Places
-                            .get({ isAdmin3: true, parentId: admin2.id });
-                        this.admin3sLoading(true);
-                        $.get(admin3Url)
-                            .done((results: Places.IServerApiModel[]) => {
-                                this.admin3s(results);
-                                if (this._admin3Id) {
-                                    var admin3Id = this._admin3Id;
-                                    this._admin3Id = undefined;
-                                    this.admin3Id(admin3Id);
-                                }
-                                this.admin3sLoading(false);
-                            });
+                        this.loadAdmin3s(admin2.id);
+                    }
+                    else {
+                        this._admin2Id = newValue;
+                        this.loadAdmin2s(this.admin1Id() || this._admin1Id);
                     }
                 }
             });
@@ -267,6 +235,15 @@ module ViewModels.Establishments {
                 // it will be reset to undefined.
                 if (newValue && this.admin3s().length == 0)
                     this._admin3Id = newValue; // stash the value to set it after menu loads
+
+                if (newValue && this.admin3s().length > 0) {
+                    var admin3: Places.IServerApiModel = Places.Utils
+                        .getPlaceById(this.admin3s(), newValue);
+                    if (!admin3) {
+                        this._admin3Id = newValue;
+                        this.loadAdmin3s(this.admin2Id() || this._admin2Id);
+                    }
+                }
             });
 
             //#endregion
@@ -397,6 +374,15 @@ module ViewModels.Establishments {
                 this.subAdmins([]);
             });
 
+            this.$mapCanvas().on('marker_dragend marker_created', (): void => {
+                var latLng = this.mapTools().markerLatLng();
+                var route = App.Routes.WebApi.Places.get(latLng.lat(), latLng.lng());
+                $.get(route, (response: Places.IServerApiModel[]): void => {
+                    if (response && response.length) {
+                        this.fillPlacesHierarchy(response);
+                    }
+                });
+            });
 
             if (this.id)
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.id))
@@ -417,33 +403,93 @@ module ViewModels.Establishments {
                         }
                     });
 
-                    // make places array observable
-                    this.places(response.places);
-
-                    // populate continent menu
-                    var continent: Places.IServerApiModel = Places.Utils.getContinent(response.places);
-                    if (continent) this.continentId(continent.id);
-
-                    // populate country menu
-                    var country: Places.IServerApiModel = Places.Utils.getCountry(response.places);
-                    if (country) this.countryId(country.id);
-
-                    // populate admin1 menu
-                    var admin1: Places.IServerApiModel = Places.Utils.getAdmin1(response.places);
-                    if (admin1) this.admin1Id(admin1.id);
-
-                    // populate admin2 menu
-                    var admin2: Places.IServerApiModel = Places.Utils.getAdmin2(response.places);
-                    if (admin2) this.admin2Id(admin2.id);
-
-                    // populate admin3 menu
-                    var admin3: Places.IServerApiModel = Places.Utils.getAdmin3(response.places);
-                    if (admin3) this.admin3Id(admin3.id);
-
-                    var subAdmins: Places.IServerApiModel[] = Places.Utils
-                        .getSubAdmins(response.places);
-                    if (subAdmins && subAdmins.length) this.subAdmins(subAdmins);
+                    this.fillPlacesHierarchy(response.places);
                 })
+        }
+
+        private fillPlacesHierarchy(places: Places.IServerApiModel[]): void {
+            // make places array observable
+            this.places(places);
+
+            // populate continent menu
+            var continent: Places.IServerApiModel = Places.Utils.getContinent(places);
+            if (continent) this.continentId(continent.id);
+
+            // populate country menu
+            var country: Places.IServerApiModel = Places.Utils.getCountry(places);
+            if (country) this.countryId(country.id);
+            else this.countryId(undefined);
+
+            // populate admin1 menu
+            var admin1: Places.IServerApiModel = Places.Utils.getAdmin1(places);
+            if (admin1) this.admin1Id(admin1.id);
+            else this.admin1Id(undefined);
+
+            // populate admin2 menu
+            var admin2: Places.IServerApiModel = Places.Utils.getAdmin2(places);
+            if (admin2) this.admin2Id(admin2.id);
+            else this.admin2Id(undefined);
+
+            // populate admin3 menu
+            var admin3: Places.IServerApiModel = Places.Utils.getAdmin3(places);
+            if (admin3) this.admin3Id(admin3.id);
+            else this.admin3Id(undefined);
+
+            var subAdmins: Places.IServerApiModel[] = Places.Utils
+                .getSubAdmins(places);
+            if (subAdmins && subAdmins.length) this.subAdmins(subAdmins);
+            else this.subAdmins([]);
+        }
+
+        private loadAdmin1s(countryId: number): void {
+            this.admin1s([]);
+            var admin1Url = App.Routes.WebApi.Places
+                .get({ isAdmin1: true, parentId: countryId });
+            this.admin1sLoading(true);
+            $.ajax({
+                type: 'GET',
+                url: admin1Url,
+                cache: false
+            }).done((results: Places.IServerApiModel[]) => {
+                this.admin1s(results);
+                if (this._admin1Id)
+                    this.admin1Id(this._admin1Id);
+                this.admin1sLoading(false);
+            });
+        }
+
+        private loadAdmin2s(admin1Id: number): void {
+            this.admin2s([]);
+            var admin2Url = App.Routes.WebApi.Places
+                .get({ isAdmin2: true, parentId: admin1Id });
+            this.admin2sLoading(true);
+            $.ajax({
+                type: 'GET',
+                url: admin2Url,
+                cache: false,
+            }).done((results: Places.IServerApiModel[]) => {
+                this.admin2s(results);
+                if (this._admin2Id)
+                    this.admin2Id(this._admin2Id);
+                this.admin2sLoading(false);
+            });
+        }
+
+        private loadAdmin3s(admin2Id: number): void {
+            this.admin3s([]);
+            var admin3Url = App.Routes.WebApi.Places
+                .get({ isAdmin3: true, parentId: admin2Id });
+            this.admin3sLoading(true);
+            $.ajax({
+                type: 'GET',
+                url: admin3Url,
+                cache: false
+            }).done((results: Places.IServerApiModel[]) => {
+                this.admin3s(results);
+                if (this._admin3Id)
+                    this.admin3Id(this._admin3Id);
+                this.admin3sLoading(false);
+            });
         }
 
         changePlaceInLocation(): void {

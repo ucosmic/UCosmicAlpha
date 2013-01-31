@@ -44,7 +44,7 @@ var App;
             })(WebApi.Countries || (WebApi.Countries = {}));
             var Countries = WebApi.Countries;
             (function (Places) {
-                function get(args) {
+                function getByFilterArgs(args) {
                     var url = makeUrl('places');
                     url = url.substr(0, url.length - 1);
                     url += '?';
@@ -70,6 +70,17 @@ var App;
                         url = url.substr(0, url.length - 1);
                     }
                     return url;
+                }
+                function getByLatLng(latitude, longitude) {
+                    var url = 'places/by-coordinates/' + latitude + '/' + longitude;
+                    return makeUrl(url);
+                }
+                                                function get(arg1, arg2) {
+                    if(!arg2 || typeof arg2 !== 'number') {
+                        return getByFilterArgs(arg1);
+                    } else {
+                        return getByLatLng(arg1, arg2);
+                    }
                 }
                 Places.get = get;
             })(WebApi.Places || (WebApi.Places = {}));

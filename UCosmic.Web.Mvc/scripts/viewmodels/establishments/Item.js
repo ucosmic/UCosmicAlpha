@@ -135,21 +135,7 @@ var ViewModels;
                         if(country) {
                             _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
                             _this.continentId(country.parentId);
-                            _this.admin1s([]);
-                            var admin1Url = App.Routes.WebApi.Places.get({
-                                isAdmin1: true,
-                                parentId: country.id
-                            });
-                            _this.admin1sLoading(true);
-                            $.get(admin1Url).done(function (results) {
-                                _this.admin1s(results);
-                                if(_this._admin1Id) {
-                                    var admin1Id = _this._admin1Id;
-                                    _this._admin1Id = undefined;
-                                    _this.admin1Id(admin1Id);
-                                }
-                                _this.admin1sLoading(false);
-                            });
+                            _this.loadAdmin1s(country.id);
                         }
                     } else {
                         if(!newValue && _this.countries().length > 0) {
@@ -174,21 +160,10 @@ var ViewModels;
                     if(newValue && _this.admin1s().length > 0) {
                         var admin1 = ViewModels.Places.Utils.getPlaceById(_this.admin1s(), newValue);
                         if(admin1) {
-                            _this.admin2s([]);
-                            var admin2Url = App.Routes.WebApi.Places.get({
-                                isAdmin2: true,
-                                parentId: admin1.id
-                            });
-                            _this.admin2sLoading(true);
-                            $.get(admin2Url).done(function (results) {
-                                _this.admin2s(results);
-                                if(_this._admin2Id) {
-                                    var admin2Id = _this._admin2Id;
-                                    _this._admin2Id = undefined;
-                                    _this.admin2Id(admin2Id);
-                                }
-                                _this.admin2sLoading(false);
-                            });
+                            _this.loadAdmin2s(admin1.id);
+                        } else {
+                            _this._admin1Id = newValue;
+                            _this.loadAdmin1s(_this.countryId() || _this._countryId);
                         }
                     }
                 });
@@ -207,21 +182,10 @@ var ViewModels;
                     if(newValue && _this.admin2s().length > 0) {
                         var admin2 = ViewModels.Places.Utils.getPlaceById(_this.admin2s(), newValue);
                         if(admin2) {
-                            _this.admin3s([]);
-                            var admin3Url = App.Routes.WebApi.Places.get({
-                                isAdmin3: true,
-                                parentId: admin2.id
-                            });
-                            _this.admin3sLoading(true);
-                            $.get(admin3Url).done(function (results) {
-                                _this.admin3s(results);
-                                if(_this._admin3Id) {
-                                    var admin3Id = _this._admin3Id;
-                                    _this._admin3Id = undefined;
-                                    _this.admin3Id(admin3Id);
-                                }
-                                _this.admin3sLoading(false);
-                            });
+                            _this.loadAdmin3s(admin2.id);
+                        } else {
+                            _this._admin2Id = newValue;
+                            _this.loadAdmin2s(_this.admin1Id() || _this._admin1Id);
                         }
                     }
                 });
@@ -236,6 +200,13 @@ var ViewModels;
                 this.admin3Id.subscribe(function (newValue) {
                     if(newValue && _this.admin3s().length == 0) {
                         _this._admin3Id = newValue;
+                    }
+                    if(newValue && _this.admin3s().length > 0) {
+                        var admin3 = ViewModels.Places.Utils.getPlaceById(_this.admin3s(), newValue);
+                        if(!admin3) {
+                            _this._admin3Id = newValue;
+                            _this.loadAdmin3s(_this.admin2Id() || _this._admin2Id);
+                        }
                     }
                 });
             }
@@ -306,6 +277,15 @@ var ViewModels;
                     _this.countryId(undefined);
                     _this.subAdmins([]);
                 });
+                this.$mapCanvas().on('marker_dragend marker_created', function () {
+                    var latLng = _this.mapTools().markerLatLng();
+                    var route = App.Routes.WebApi.Places.get(latLng.lat(), latLng.lng());
+                    $.get(route, function (response) {
+                        if(response && response.length) {
+                            _this.fillPlacesHierarchy(response);
+                        }
+                    });
+                });
                 if(this.id) {
                     $.get(App.Routes.WebApi.Establishments.Locations.get(this.id)).done(function (response) {
                         gm.event.addListenerOnce(_this.map, 'idle', function () {
@@ -322,33 +302,106 @@ var ViewModels;
                                 _this.map.setCenter(latLng);
                             }
                         });
-                        _this.places(response.places);
-                        var continent = ViewModels.Places.Utils.getContinent(response.places);
-                        if(continent) {
-                            _this.continentId(continent.id);
-                        }
-                        var country = ViewModels.Places.Utils.getCountry(response.places);
-                        if(country) {
-                            _this.countryId(country.id);
-                        }
-                        var admin1 = ViewModels.Places.Utils.getAdmin1(response.places);
-                        if(admin1) {
-                            _this.admin1Id(admin1.id);
-                        }
-                        var admin2 = ViewModels.Places.Utils.getAdmin2(response.places);
-                        if(admin2) {
-                            _this.admin2Id(admin2.id);
-                        }
-                        var admin3 = ViewModels.Places.Utils.getAdmin3(response.places);
-                        if(admin3) {
-                            _this.admin3Id(admin3.id);
-                        }
-                        var subAdmins = ViewModels.Places.Utils.getSubAdmins(response.places);
-                        if(subAdmins && subAdmins.length) {
-                            _this.subAdmins(subAdmins);
-                        }
+                        _this.fillPlacesHierarchy(response.places);
                     });
                 }
+            };
+            Item.prototype.fillPlacesHierarchy = function (places) {
+                this.places(places);
+                var continent = ViewModels.Places.Utils.getContinent(places);
+                if(continent) {
+                    this.continentId(continent.id);
+                }
+                var country = ViewModels.Places.Utils.getCountry(places);
+                if(country) {
+                    this.countryId(country.id);
+                } else {
+                    this.countryId(undefined);
+                }
+                var admin1 = ViewModels.Places.Utils.getAdmin1(places);
+                if(admin1) {
+                    this.admin1Id(admin1.id);
+                } else {
+                    this.admin1Id(undefined);
+                }
+                var admin2 = ViewModels.Places.Utils.getAdmin2(places);
+                if(admin2) {
+                    this.admin2Id(admin2.id);
+                } else {
+                    this.admin2Id(undefined);
+                }
+                var admin3 = ViewModels.Places.Utils.getAdmin3(places);
+                if(admin3) {
+                    this.admin3Id(admin3.id);
+                } else {
+                    this.admin3Id(undefined);
+                }
+                var subAdmins = ViewModels.Places.Utils.getSubAdmins(places);
+                if(subAdmins && subAdmins.length) {
+                    this.subAdmins(subAdmins);
+                } else {
+                    this.subAdmins([]);
+                }
+            };
+            Item.prototype.loadAdmin1s = function (countryId) {
+                var _this = this;
+                this.admin1s([]);
+                var admin1Url = App.Routes.WebApi.Places.get({
+                    isAdmin1: true,
+                    parentId: countryId
+                });
+                this.admin1sLoading(true);
+                $.ajax({
+                    type: 'GET',
+                    url: admin1Url,
+                    cache: false
+                }).done(function (results) {
+                    _this.admin1s(results);
+                    if(_this._admin1Id) {
+                        _this.admin1Id(_this._admin1Id);
+                    }
+                    _this.admin1sLoading(false);
+                });
+            };
+            Item.prototype.loadAdmin2s = function (admin1Id) {
+                var _this = this;
+                this.admin2s([]);
+                var admin2Url = App.Routes.WebApi.Places.get({
+                    isAdmin2: true,
+                    parentId: admin1Id
+                });
+                this.admin2sLoading(true);
+                $.ajax({
+                    type: 'GET',
+                    url: admin2Url,
+                    cache: false
+                }).done(function (results) {
+                    _this.admin2s(results);
+                    if(_this._admin2Id) {
+                        _this.admin2Id(_this._admin2Id);
+                    }
+                    _this.admin2sLoading(false);
+                });
+            };
+            Item.prototype.loadAdmin3s = function (admin2Id) {
+                var _this = this;
+                this.admin3s([]);
+                var admin3Url = App.Routes.WebApi.Places.get({
+                    isAdmin3: true,
+                    parentId: admin2Id
+                });
+                this.admin3sLoading(true);
+                $.ajax({
+                    type: 'GET',
+                    url: admin3Url,
+                    cache: false
+                }).done(function (results) {
+                    _this.admin3s(results);
+                    if(_this._admin3Id) {
+                        _this.admin3Id(_this._admin3Id);
+                    }
+                    _this.admin3sLoading(false);
+                });
             };
             Item.prototype.changePlaceInLocation = function () {
                 this.subAdmins([]);
