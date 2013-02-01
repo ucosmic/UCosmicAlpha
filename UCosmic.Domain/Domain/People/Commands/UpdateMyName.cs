@@ -83,8 +83,8 @@ namespace UCosmic.Domain.People
 
             if (user.Person.DisplayName != command.DisplayName) command.ChangeCount++;
             user.Person.DisplayName = command.IsDisplayNameDerived
-                ? new GenerateDisplayNameHandler().Handle(
-                    new GenerateDisplayNameQuery
+                ? new HandleGenerateDisplayNameQuery().Handle(
+                    new GenerateDisplayName
                     {
                         Salutation = command.Salutation,
                         FirstName = command.FirstName,

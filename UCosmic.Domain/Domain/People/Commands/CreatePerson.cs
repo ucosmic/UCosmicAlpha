@@ -45,7 +45,7 @@ namespace UCosmic.Domain.People
             RuleFor(x => x.DisplayName)
                 // display name cannot be empty
                 .NotEmpty()
-                    .WithMessage(ValidatePerson.FailedBecauseDisplayNameWasEmpty)
+                    .WithMessage(MustNotHaveEmptyDisplayName.FailMessage)
             ;
 
             RuleFor(x => x.UserName)
