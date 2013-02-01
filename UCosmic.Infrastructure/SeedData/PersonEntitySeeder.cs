@@ -401,9 +401,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateAffiliation
                 {
-                    Person = person,
                     PersonId = person.RevisionId,
-                    Establishment = establishment,
                     EstablishmentId = establishment.RevisionId,
                     JobTitles = "Software Developer",
                     IsPrimary = true,
@@ -422,9 +420,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateAffiliation
                 {
-                    Person = person,
                     PersonId = person.RevisionId,
-                    Establishment = establishment,
                     EstablishmentId = establishment.RevisionId,
                     JobTitles = "Associate Professor",
                     IsPrimary = true,
@@ -444,9 +440,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateAffiliation
                 {
-                    Person = person,
                     PersonId = person.RevisionId,
-                    Establishment = establishment,
                     EstablishmentId = establishment.RevisionId,
                     JobTitles = "Regional Chancellor",
                     IsPrimary = true,
@@ -478,7 +472,7 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             Affiliation affiliation = _queryProcessor.Execute(
-                new AffiliationByPersonEstablishment(command.Person, command.Establishment));
+                new AffiliationByPrimaryKey(command.PersonId, command.EstablishmentId));
 
             if (affiliation != null) return affiliation;
 

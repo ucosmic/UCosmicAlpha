@@ -9,9 +9,7 @@ namespace UCosmic.Domain.People
     public class CreateAffiliation
     {
         public int PersonId { get; set; }
-        public Person Person { get; set; }
         public int EstablishmentId { get; set; }
-        public Establishment Establishment { get; set; }
         public string JobTitles { get; set; }
         public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
@@ -26,51 +24,26 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            //Person person = null;
-            //Establishment establishment = null;
-
-            //var establishmentLoad = new Expression<Func<Establishment, object>>[]
-            //{
-            //    e => e.Type.Category,
-            //};
-            //var personLoad = new Expression<Func<Person, object>>[]
-            //{
-            //   x => x.Affiliations.Select(y => y.Establishment)
-            //};
-
             RuleFor(x => x.EstablishmentId)
                 // establishment id must exist in database
                 .MustFindEstablishmentById(entities)
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId)
-                //.Must(p => ValidateEstablishment.IdMatchesEntity(p, entities, establishmentLoad, out establishment))
-                //    .WithMessage(ValidateEstablishment.FailedBecauseIdMatchedNoEntity,
-                //        p => p.EstablishmentId)
-
             ;
 
             RuleFor(x => x.IsClaimingStudent)
                 // cannot claim student unless affiliation establishment is an academic institution
                 .MustNotBeClaimingStudentAffiliationForNonInstitutions(entities, x => x.EstablishmentId)
                     .WithMessage(MustNotBeClaimingStudentAffiliationForNonInstitutions<object>.FailMessageFormat, x => x.EstablishmentId)
-                //.Must(p => ValidateAffiliation.EstablishmentIsInstitutionWhenIsClaimingStudent(p, establishment))
-                //    //.When(p => establishment != null)
-                //    .WithMessage(ValidateAffiliation.FailedBecauseIsClaimingStudentButEstablishmentIsNotInstitution,
-                //        p => p.EstablishmentId)
             ;
 
             RuleFor(x => x.PersonId)
                 // person id must exist in database
                 .MustFindPersonById(entities)
                     .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
-                //.Must(p => ValidatePerson.IdMatchesEntity(p, entities, personLoad, out person))
-                //    .WithMessage(ValidatePerson.FailedBecauseIdMatchedNoEntity,
-                //        p => p.PersonId)
+
                 // cannot create a duplicate affiliation
                 .MustNotBePersonAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
                     .WithMessage(MustNotBePersonAffiliatedWithEstablishment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
-                //.Must((o, p) => ValidatePerson.IsNotAlreadyAffiliatedWithEstablishment(person, o.EstablishmentId))
-                //    .WithMessage(ValidatePerson.FailedBecausePersonIsAlreadyAffiliatedWithEstablishment,
-                //        p => p.PersonId, p => p.EstablishmentId)
             ;
         }
     }
@@ -101,10 +74,7 @@ namespace UCosmic.Domain.People
             // construct the affiliation
             var affiliation = new Affiliation
             {
-                PersonId = command.PersonId,
-                Person = command.Person,
                 EstablishmentId = command.EstablishmentId,
-                Establishment = command.Establishment,
                 IsClaimingStudent = command.IsClaimingStudent,
                 IsClaimingEmployee = command.IsClaimingEmployee,
                 IsDefault = !person.Affiliations.Any(a => a.IsDefault),

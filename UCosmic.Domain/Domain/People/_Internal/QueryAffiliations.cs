@@ -13,5 +13,10 @@ namespace UCosmic.Domain.People
                 a.Person.User != null && a.Person.User.Name.Equals(userName,
                     StringComparison.OrdinalIgnoreCase));
         }
+
+        internal static Affiliation ByPersonIdAndEstablishmentId(this IQueryable<Affiliation> queryable, int personId, int establishmentId)
+        {
+            return queryable.SingleOrDefault(x => x.PersonId == personId && x.EstablishmentId == establishmentId);
+        }
     }
 }
