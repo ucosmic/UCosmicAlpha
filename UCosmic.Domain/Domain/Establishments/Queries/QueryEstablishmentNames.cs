@@ -5,9 +5,9 @@ using LinqKit;
 
 namespace UCosmic.Domain.Establishments
 {
-    public static class QueryEstablishmentNames
+    internal static class QueryEstablishmentNames
     {
-        public static Expression<Func<EstablishmentName, bool>> SearchTermMatches(string term, StringMatchStrategy matchStrategy, StringComparison? stringComparison = null)
+        internal static Expression<Func<EstablishmentName, bool>> SearchTermMatches(string term, StringMatchStrategy matchStrategy, StringComparison? stringComparison = null)
         {
             var textOrAsciiMatches =
                 TextMatches(term, matchStrategy, stringComparison)
