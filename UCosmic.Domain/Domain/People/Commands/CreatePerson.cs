@@ -42,13 +42,13 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(p => p.DisplayName)
+            RuleFor(x => x.DisplayName)
                 // display name cannot be empty
                 .NotEmpty()
                     .WithMessage(ValidatePerson.FailedBecauseDisplayNameWasEmpty)
             ;
 
-            RuleFor(p => p.UserName)
+            RuleFor(x => x.UserName)
                 // if username is present, validate that it is not attached to another person
                 .Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
                     .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,

@@ -48,7 +48,7 @@ namespace UCosmic.Domain.People
 
             ;
 
-            RuleFor(p => p.IsClaimingStudent)
+            RuleFor(x => x.IsClaimingStudent)
                 // cannot claim student unless affiliation establishment is an academic institution
                 .MustNotBeClaimingStudentAffiliationForNonInstitutions(entities, x => x.EstablishmentId)
                     .WithMessage(MustNotBeClaimingStudentAffiliationForNonInstitutions<object>.FailMessageFormat, x => x.EstablishmentId)
@@ -58,7 +58,7 @@ namespace UCosmic.Domain.People
                 //        p => p.EstablishmentId)
             ;
 
-            RuleFor(p => p.PersonId)
+            RuleFor(x => x.PersonId)
                 // person id must exist in database
                 .MustFindPersonById(entities)
                     .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)

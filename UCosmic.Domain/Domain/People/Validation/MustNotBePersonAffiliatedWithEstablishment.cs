@@ -34,14 +34,17 @@ namespace UCosmic.Domain.People
             context.MessageFormatter.AppendArgument("PropertyValue", personId);
             context.MessageFormatter.AppendArgument("EstablishmentId", establishmentId);
 
-            var entity = _entities.Query<Person>()
-                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
-                {
-                    x => x.Affiliations.Select(y => y.Establishment),
-                })
-                .Single(x => x.RevisionId == personId);
+            //var entity = _entities.Query<Person>()
+            //    .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+            //    {
+            //        x => x.Affiliations.Select(y => y.Establishment),
+            //    })
+            //    .SingleOrDefault(x => x.RevisionId == personId);
 
-            return entity != null && entity.GetAffiliation(establishmentId) == null;
+            //return entity != null && entity.GetAffiliation(establishmentId) == null;
+            var entity = _entities.Query<Affiliation>().SingleOrDefault(x =>
+                x.PersonId == personId && x.EstablishmentId == establishmentId);
+            return entity == null;
         }
     }
 
