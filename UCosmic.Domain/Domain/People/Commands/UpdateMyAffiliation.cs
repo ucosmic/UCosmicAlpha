@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Establishments;
@@ -28,43 +27,30 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            //var eagerLoad = new Expression<Func<Establishment, object>>[]
-            //{
-            //    e => e.Type.Category,
-            //};
-
-            RuleFor(x => x.Principal)
-                // principal cannot be null
-                .NotEmpty()
-                    //.WithMessage(ValidatePrincipal.FailedBecausePrincipalWasNull)
-                    .WithMessage(MustNotHaveEmptyPrincipal.FailMessage)
-
-                // principal.identity.name cannot be null, empty, or whitespace
-                //.Must(ValidatePrincipal.IdentityNameIsNotEmpty)
-                //    .WithMessage(ValidatePrincipal.FailedBecauseIdentityNameWasEmpty)
-                .MustNotHaveEmptyPrincipalIdentityName()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
-
-                // principal.identity.name must match User.Name entity property
-                //.Must(p => ValidatePrincipal.IdentityNameMatchesUser(p, entities))
-                //    .WithMessage(ValidatePrincipal.FailedBecauseIdentityNameMatchedNoUser,
-                //        p => p.Principal.Identity.Name)
-                .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByPrincipal.FailMessageFormat, x => x.Principal.Identity.Name)
-            ;
-
             RuleFor(x => x.EstablishmentId)
                 // establishment id must exist in database
-                //.Must(p => ValidateEstablishment.IdMatchesEntity(p, entities, eagerLoad))
-                //    .WithMessage(ValidateEstablishment.FailedBecauseIdMatchedNoEntity,
-                //        p => p.EstablishmentId)
                 .MustFindEstablishmentById(entities)
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId)
             ;
 
+            RuleFor(x => x.Principal)
+                // principal cannot be null
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+            ;
+
             RuleFor(x => x.Principal.Identity.Name)
+                // principal.identity.name cannot be null or empty
+                .NotEmpty()
+                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
+
+                // principal.identity.name must match User.Name entity property
+                .MustFindUserByName(entities)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
+
+                // must find affiliation for principal and establishment id
                 .MustBeUserAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
-                    .WithMessage(MustBeUserAffiliatedWithEstablishment<object>.FailMessageFormat, 
+                    .WithMessage(MustBeUserAffiliatedWithEstablishment<object>.FailMessageFormat,
                         x => x.Principal.Identity.Name, x => x.EstablishmentId)
             ;
         }
@@ -84,12 +70,8 @@ namespace UCosmic.Domain.People
             if (command == null) throw new ArgumentNullException("command");
 
             // get the affiliation
-            //var affiliation = _entities.Get<Affiliation>().ByUserNameAndEstablishmentId(
-            //    command.Principal.Identity.Name, command.EstablishmentId);
-            var affiliation = _entities.Get<Affiliation>().SingleOrDefault(x => 
-                x.EstablishmentId == command.EstablishmentId &&
-                x.Person.User != null && x.Person.User.Name.Equals(
-                    command.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase));
+            var affiliation = _entities.Get<Affiliation>().ByUserNameAndEstablishmentId(
+                command.Principal.Identity.Name, command.EstablishmentId);
 
             if (affiliation == null)
                 throw new InvalidOperationException(string.Format(

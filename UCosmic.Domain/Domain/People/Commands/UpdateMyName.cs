@@ -29,28 +29,23 @@ namespace UCosmic.Domain.People
             RuleFor(x => x.DisplayName)
                 // display name cannot be empty
                 .NotEmpty()
-                    //.WithMessage(ValidatePerson.FailedBecauseDisplayNameWasEmpty)
                     .WithMessage(MustNotHaveEmptyDisplayName.FailMessage)
             ;
 
             RuleFor(x => x.Principal)
                 // principal cannot be null
                 .NotEmpty()
-                    //.WithMessage(ValidatePrincipal.FailedBecausePrincipalWasNull)
-                    .WithMessage(MustNotHaveEmptyPrincipal.FailMessage)
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+            ;
 
+            RuleFor(x => x.Principal.Identity.Name)
                 // principal identity name cannot be null or whitespace
-                //.Must(ValidatePrincipal.IdentityNameIsNotEmpty)
-                //    .WithMessage(ValidatePrincipal.FailedBecauseIdentityNameWasEmpty)
-                .MustNotHaveEmptyPrincipalIdentityName()
+                .NotEmpty()
                     .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
 
                 // principal identity name must match User.Name entity property
-                //.Must(p => ValidatePrincipal.IdentityNameMatchesUser(p, entities))
-                    //.WithMessage(ValidatePrincipal.FailedBecauseIdentityNameMatchedNoUser,
-                    //    p => p.Principal.Identity.Name)
-                .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByPrincipal.FailMessageFormat, x => x.Principal.Identity.Name)
+                .MustFindUserByName(entities)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
         }
     }

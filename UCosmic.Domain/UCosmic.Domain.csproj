@@ -157,8 +157,8 @@
     <Compile Include="Domain\Identity\Commands\GrantRoleToUser.cs" />
     <Compile Include="Domain\Identity\Commands\RevokeRoleFromUser.cs" />
     <Compile Include="Domain\Identity\Commands\UpdateRole.cs" />
-    <Compile Include="Domain\Identity\Validation\MustFindUserByPrincipal.cs" />
-    <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyPrincipal.cs" />
+    <Compile Include="Domain\Identity\Validation\MustFindUserByName.cs" />
+    <Compile Include="Domain\Identity\Validation\MustNotHaveNullPrincipal.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyPrincipalIdentityName.cs" />
     <Compile Include="Domain\Identity\Validation\ValidateUser.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Commands\AddContactToAgreement.cs" />

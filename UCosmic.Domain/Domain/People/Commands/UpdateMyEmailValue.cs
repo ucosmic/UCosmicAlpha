@@ -19,34 +19,24 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            //EmailAddress email = null;
-
             RuleFor(x => x.Principal)
                 // principal cannot be null
-                .NotEmpty()
-                    //.WithMessage(ValidatePrincipal.FailedBecausePrincipalWasNull)
-                    .WithMessage(MustNotHaveEmptyPrincipal.FailMessage)
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+            ;
 
+            RuleFor(x => x.Principal.Identity.Name)
                 // principal identity name cannot be null or whitespace
-                //.Must(ValidatePrincipal.IdentityNameIsNotEmpty)
-                //    .WithMessage(ValidatePrincipal.FailedBecauseIdentityNameWasEmpty)
-                .MustNotHaveEmptyPrincipalIdentityName()
+                .NotEmpty()
                     .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
 
                 // principal identity name must match User.Name entity property
-                //.Must(p => ValidatePrincipal.IdentityNameMatchesUser(p, entities))
-                //    .WithMessage(ValidatePrincipal.FailedBecauseIdentityNameMatchedNoUser,
-                //        p => p.Principal.Identity.Name)
-                .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByPrincipal.FailMessageFormat, x => x.Principal.Identity.Name)
+                .MustFindUserByName(entities)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 
             RuleFor(x => x.Number)
                 // number must match email for user
-                //.Must((o, p) => ValidateEmailAddress.NumberAndPrincipalMatchesEntity(p, o.Principal, entities, out email))
-                //    .When(p => p.Principal != null && p.Principal.Identity.Name != null)
-                //    .WithMessage(ValidateEmailAddress.FailedBecauseNumberAndPrincipalMatchedNoEntity,
-                //        p => p.Number, p => p.Principal.Identity.Name)
                 .MustFindEmailByNumberAndUserName(entities, x => x.Principal.Identity.Name)
                     .WithMessage(MustFindEmailByNumberAndUserName<object>.FailMessageFormat, 
                         x => x.Number, x => x.Principal.Identity.Name)
@@ -55,13 +45,10 @@ namespace UCosmic.Domain.People
             RuleFor(x => x.NewValue)
                 // new email address cannot be empty
                 .NotEmpty()
-                    //.WithMessage(ValidateEmailAddress.FailedBecauseValueWasEmpty)
                     .WithMessage(MustNotHaveEmptyEmailAddress.FailMessage)
 
                 // must be valid against email address regular expression
                 .EmailAddress()
-                    //.WithMessage(ValidateEmailAddress.FailedBecauseValueWasNotValidEmailAddress,
-                    //    p => p.NewValue)
                     .WithMessage(MustBeValidEmailAddressFormat.FailMessageFormat, x => x.NewValue)
 
                 // must match previous spelling case insensitively
@@ -69,14 +56,6 @@ namespace UCosmic.Domain.People
                     .WithMessage(MustEqualEmailValueCaseInsensitively<object>.FailMessageFormat, x => x.NewValue)
 
             ;
-
-            //RuleFor(x => x.NewValue)
-            //    // must match previous spelling case insensitively
-            //    .Must(p => ValidateEmailAddress.NewValueMatchesCurrentValueCaseInsensitively(p, email))
-            //    .When(p => email != null)
-            //        .WithMessage(ValidateEmailAddress.FailedBecauseNewValueDidNotMatchCurrentValueCaseInvsensitively,
-            //            p => p.NewValue)
-            //;
         }
     }
 

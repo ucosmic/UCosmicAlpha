@@ -38,7 +38,7 @@ namespace UCosmic.Domain.People
 
     public class ValidateCreatePersonCommand : AbstractValidator<CreatePerson>
     {
-        public ValidateCreatePersonCommand(IProcessQueries queryProcessor)
+        public ValidateCreatePersonCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -50,9 +50,11 @@ namespace UCosmic.Domain.People
 
             RuleFor(x => x.UserName)
                 // if username is present, validate that it is not attached to another person
-                .Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
-                    .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,
-                        p => p.UserName)
+                //.Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
+                //    .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,
+                //        p => p.UserName)
+                .MustNotFindUserByName(entities)
+                    .WithMessage(MustNotFindUserByName.FailMessageFormat, x => x.UserName)
             ;
         }
     }
