@@ -1,4 +1,5 @@
-﻿//namespace UCosmic.Domain.People
+﻿// DEPRECATED
+//namespace UCosmic.Domain.People
 //{
 //    public static class ValidatePerson
 //    {
