@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using AutoAutoMapper;
 using AutoMapper;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc
 {
@@ -10,6 +11,7 @@ namespace UCosmic.Web.Mvc
         {
             var assemblies = new[]
             {
+                Assembly.GetAssembly(typeof(GeoPlanetProfiler)),
                 Assembly.GetAssembly(typeof(WebApiApplication)),
             };
 
