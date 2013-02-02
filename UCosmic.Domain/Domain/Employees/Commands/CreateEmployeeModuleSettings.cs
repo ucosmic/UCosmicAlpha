@@ -39,7 +39,7 @@ namespace UCosmic.Domain.Employees
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var employeeModuleSettings = new EmployeeModuleSettings()
+            var employeeModuleSettings = new EmployeeModuleSettings
             {
                 FacultyRanks = command.EmployeeFacultyRanks,
                 NotifyAdminOnUpdate = command.NotifyAdminOnUpdate,

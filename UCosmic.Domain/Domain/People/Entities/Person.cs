@@ -149,20 +149,20 @@ namespace UCosmic.Domain.People
             var state = JsonConvert.SerializeObject(new
             {
                 Id = person.RevisionId,
-                IsActive = person.IsActive,
-                IsDisplayNameDerived = person.IsDisplayNameDerived,
-                DisplayName = person.DisplayName,
-                Salutation = person.Salutation,
-                FirstName = person.FirstName,
-                MiddleName = person.MiddleName,
-                LastName = person.LastName,
-                Suffix = person.Suffix,
-                Gender = person.Gender,
+                person.IsActive,
+                person.IsDisplayNameDerived,
+                person.DisplayName,
+                person.Salutation,
+                person.FirstName,
+                person.MiddleName,
+                person.LastName,
+                person.Suffix,
+                person.Gender,
                 FacultyRank = (person.EmployeeFacultyRank != null) ? person.EmployeeFacultyRank.Rank : null,
                 //Picture = person.Picture,
                 //Emails = person.Emails,
                 //Affiliations = person.Affiliations,
-                AdministrativeAppointments = person.AdministrativeAppointments,
+                person.AdministrativeAppointments,
             });
             return state;
         }

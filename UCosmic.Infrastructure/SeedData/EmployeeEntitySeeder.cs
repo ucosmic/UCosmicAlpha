@@ -47,15 +47,15 @@ namespace UCosmic.SeedData
             if (establishment == null) throw new Exception("Establishment is null");
             Seed(new CreateEmployeeModuleSettings
             {
-                EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>()
-                        {
-                            /* TODO: Need actual UC ranks here. */
-                            new EmployeeFacultyRank {Rank = "Assistant Professor"},
-                            new EmployeeFacultyRank {Rank = "Associate Professor"},
-                            new EmployeeFacultyRank {Rank = "Professor"},
+                EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
+                {
+                    /* TODO: Need actual UC ranks here. */
+                    new EmployeeFacultyRank {Rank = "Assistant Professor"},
+                    new EmployeeFacultyRank {Rank = "Associate Professor"},
+                    new EmployeeFacultyRank {Rank = "Professor"},
                             new EmployeeFacultyRank {Rank = "Distinquished Professor"},
                             new EmployeeFacultyRank {Rank = "Other"},
-                        },
+                },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My International",
                 ForEstablishmentId = establishment.RevisionId,
@@ -71,29 +71,30 @@ namespace UCosmic.SeedData
             , ICommandEntities entities
             , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
             , IUnitOfWork unitOfWork
-            ) : base(queryProcessor,createEmployeeModuleSettings,unitOfWork)
+            )
+            : base(queryProcessor, createEmployeeModuleSettings, unitOfWork)
         {
             _entities = entities;
         }
-        
+
         public override void Seed()
         {
             var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
             if (establishment == null) throw new Exception("Establishment is null");
-            Seed( new CreateEmployeeModuleSettings
+            Seed(new CreateEmployeeModuleSettings
+            {
+                EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
                 {
-                    EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>()
-                        {
-                            new EmployeeFacultyRank {Rank = "Assistant Professor"},
-                            new EmployeeFacultyRank {Rank = "Associate Professor"},
-                            new EmployeeFacultyRank {Rank = "Professor"},
+                    new EmployeeFacultyRank {Rank = "Assistant Professor"},
+                    new EmployeeFacultyRank {Rank = "Associate Professor"},
+                    new EmployeeFacultyRank {Rank = "Professor"},
                             new EmployeeFacultyRank {Rank = "Distinquished Professor"},
                             new EmployeeFacultyRank {Rank = "Other"},
-                        },
-                    NotifyAdminOnUpdate = false,
-                    PersonalInfoAnchorText = "My USF World Profile",
-                    ForEstablishmentId = establishment.RevisionId,       
-                });
+                },
+                NotifyAdminOnUpdate = false,
+                PersonalInfoAnchorText = "My USF World Profile",
+                ForEstablishmentId = establishment.RevisionId,
+            });
         }
     }
 

@@ -8,7 +8,7 @@ namespace UCosmic.Domain.Employees
 {
     public class RootEmployeeModuleSettingsByPersonId : BaseEntityQuery<EmployeeModuleSettings>, IDefineQuery<EmployeeModuleSettings>
     {
-        public int PersonId { get; set; }
+        public int PersonId { get; private set; }
 
         public RootEmployeeModuleSettingsByPersonId(int personId)
         {
@@ -33,6 +33,7 @@ namespace UCosmic.Domain.Employees
 
             var user = _entities.Query<User>()
                         .SingleOrDefault(x => x.Person.RevisionId == query.PersonId);
+            if (user == null) return null;
 
             var domain = user.Name.GetEmailDomain();
 

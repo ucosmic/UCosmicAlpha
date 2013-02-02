@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -62,16 +61,16 @@ namespace UCosmic.Domain.People
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        //private readonly IProcessEvents _eventProcessor;
 
         public HandleUpdatePersonCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            //, IProcessEvents eventProcessor
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            //_eventProcessor = eventProcessor;
         }
 
         public void Handle(UpdatePerson command)

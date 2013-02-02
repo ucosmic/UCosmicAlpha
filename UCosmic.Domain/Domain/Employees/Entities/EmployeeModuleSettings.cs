@@ -9,7 +9,9 @@ namespace UCosmic.Domain.Employees
     {
         protected internal EmployeeModuleSettings()
         {
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
             FacultyRanks = new Collection<EmployeeFacultyRank>();
+            // ReSharper restore DoNotCallOverridableMethodsInConstructor
             NotifyAdminOnUpdate = false;
         }
 

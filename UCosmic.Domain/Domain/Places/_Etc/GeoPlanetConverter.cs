@@ -4,7 +4,7 @@ namespace UCosmic.Domain.Places
 {
     internal static class GeoPlanetConverter
     {
-        private static bool _isConfigured = false;
+        private static bool _isConfigured;
 
         static GeoPlanetConverter()
         {
