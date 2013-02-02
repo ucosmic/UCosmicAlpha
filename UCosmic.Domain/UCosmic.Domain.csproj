@@ -183,6 +183,8 @@
     <Compile Include="Domain\People\Entities\PersonSuffixes.cs" />
     <Compile Include="Domain\People\Events\PersonChanged.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByPrimaryKey.cs" />
+    <Compile Include="Domain\People\Queries\ComposeEmailMessage.cs" />
+    <Compile Include="Domain\People\Queries\ComposeMailMessage.cs" />
     <Compile Include="Domain\People\Queries\GenerateDisplayName.cs" />
     <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace UCosmic
 {
@@ -43,6 +45,23 @@ namespace UCosmic
                     "The string '{0}' has more than one '{1}' characters.", email, at));
 
             return email.Substring(email.LastIndexOf(at));
+        }
+
+        public static string FormatTemplate(this string template, IEnumerable<KeyValuePair<string, string>> replacements)
+        {
+            if (string.IsNullOrWhiteSpace(template))
+                return template;
+
+            var content = new StringBuilder(template);
+            if (replacements != null)
+            {
+                foreach (var replacement in replacements)
+                {
+                    content.Replace(replacement.Key, replacement.Value);
+                }
+            }
+
+            return content.ToString();
         }
     }
 }
