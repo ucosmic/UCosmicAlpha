@@ -2,6 +2,8 @@
 {
     public enum AppSettingsKey
     {
+        DeployedTo,
+
         GeoNamesUserName,
         GeoPlanetAppId,
 
@@ -9,6 +11,8 @@
         SamlRealCertificateThumbprint,
         SamlTestServiceProviderEntityId,
         SamlTestCertificateThumbprint,
+
+        ConfirmEmailUrlFormat,
 
         DefaultMailFromAddress,
         DefaultMailFromDisplayName,

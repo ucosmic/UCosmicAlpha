@@ -185,6 +185,16 @@
     <Compile Include="Domain\People\Queries\AffiliationByPrimaryKey.cs" />
     <Compile Include="Domain\People\Queries\ComposeEmailMessage.cs" />
     <Compile Include="Domain\People\Queries\ComposeMailMessage.cs" />
+    <Compile Include="Domain\People\Queries\DistinctSalutations.cs" />
+    <Compile Include="Domain\People\Queries\DistinctSuffixes.cs" />
+    <Compile Include="Domain\People\Queries\ConfirmEmailFormatters.cs" />
+    <Compile Include="Domain\People\Queries\EmailConfirmationByToken.cs" />
+    <Compile Include="Domain\People\Queries\MyAffiliationByEstablishmentId.cs" />
+    <Compile Include="Domain\People\Queries\MyEmailAddressByNumber.cs" />
+    <Compile Include="Domain\People\Queries\PersonByGuid.cs" />
+    <Compile Include="Domain\People\Queries\PeopleWithEmail.cs" />
+    <Compile Include="Domain\People\Queries\PeopleWithFirstName.cs" />
+    <Compile Include="Domain\People\Queries\PeopleWithLastName.cs" />
     <Compile Include="Domain\People\Queries\GenerateDisplayName.cs" />
     <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />

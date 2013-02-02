@@ -5,10 +5,14 @@ namespace UCosmic.Configuration
 {
     public class DotNetConfigurationManager : IManageConfigurations
     {
+        public string DeployedTo { get { return GetString(AppSettingsKey.DeployedTo); } }
+
         public string SamlRealServiceProviderEntityId { get { return GetString(AppSettingsKey.SamlRealServiceProviderEntityId); } }
         public string SamlRealCertificateThumbprint { get { return GetString(AppSettingsKey.SamlRealCertificateThumbprint); } }
         public string SamlTestServiceProviderEntityId { get { return GetString(AppSettingsKey.SamlTestServiceProviderEntityId); } }
         public string SamlTestCertificateThumbprint { get { return GetString(AppSettingsKey.SamlTestCertificateThumbprint); } }
+
+        public string ConfirmEmailUrlFormat { get { return GetString(AppSettingsKey.ConfirmEmailUrlFormat); } }
 
         public string DefaultMailFromAddress { get { return GetString(AppSettingsKey.DefaultMailFromAddress); } }
         public string DefaultMailFromDisplayName { get { return GetString(AppSettingsKey.DefaultMailFromDisplayName); } }
