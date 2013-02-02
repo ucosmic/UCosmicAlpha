@@ -43,7 +43,7 @@ namespace UCosmic.Domain.Employees
             {
                 FacultyRanks = command.EmployeeFacultyRanks,
                 NotifyAdminOnUpdate = command.NotifyAdminOnUpdate,
-                NotifyAdmin = _entities.Get<Person>().SingleOrDefault(x => x.RevisionId == command.NotifyAdminPersonId),
+                NotifyAdmins = new[] { _entities.Get<Person>().SingleOrDefault(x => x.RevisionId == command.NotifyAdminPersonId) },
                 PersonalInfoAnchorText = command.PersonalInfoAnchorText,
                 Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.ForEstablishmentId)
             };

@@ -20,7 +20,10 @@ namespace UCosmic.EntityFramework
                 .Map(m => m.MapKey("EmployeeModuleSettingsId"))
                 .WillCascadeOnDelete(false);
 
-            HasOptional(p => p.NotifyAdmin);
+            HasMany(p => p.NotifyAdmins)
+                .WithMany()
+                .Map(m => m.ToTable("EmployeeModuleSettingsNotifyingAdmins", DbSchemaName.Employees)
+                    .MapLeftKey("EmployeeModuleSettingsId").MapRightKey("PersonId"));
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
         }
