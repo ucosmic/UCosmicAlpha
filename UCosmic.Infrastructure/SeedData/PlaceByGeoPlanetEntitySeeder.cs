@@ -26,7 +26,7 @@ namespace UCosmic.SeedData
         {
             if (_entities.Get<Place>().Any()) return;
 
-            var earth = _queryProcessor.Execute(new PlaceByWoeId { WoeId = GeoPlanetPlace.EarthWoeId });
+            var earth = _queryProcessor.Execute(new PlaceByWoeId(GeoPlanetPlace.EarthWoeId));
             Debug.Assert(earth != null);
 
             var geoPlanetContinents = _geoPlanet.Continents()
@@ -35,7 +35,7 @@ namespace UCosmic.SeedData
             ;
             foreach (var geoPlanetContinent in geoPlanetContinents)
             {
-                var continent = _queryProcessor.Execute(new PlaceByWoeId { WoeId = geoPlanetContinent.WoeId });
+                var continent = _queryProcessor.Execute(new PlaceByWoeId(geoPlanetContinent.WoeId));
                 Debug.Assert(continent != null);
             }
 
@@ -54,7 +54,7 @@ namespace UCosmic.SeedData
             ;
             foreach (var geoPlanetCountry in geoPlanetCountries)
             {
-                var country = _queryProcessor.Execute(new PlaceByWoeId { WoeId = geoPlanetCountry.WoeId });
+                var country = _queryProcessor.Execute(new PlaceByWoeId(geoPlanetCountry.WoeId));
                 Debug.Assert(country != null);
             }
 
@@ -68,7 +68,7 @@ namespace UCosmic.SeedData
                 if (!geoPlanetStates.Any()) continue;
                 foreach (var geoPlanetState in geoPlanetStates)
                 {
-                    var state = _queryProcessor.Execute(new PlaceByWoeId { WoeId = geoPlanetState.WoeId });
+                    var state = _queryProcessor.Execute(new PlaceByWoeId(geoPlanetState.WoeId));
                     Debug.Assert(state != null);
                 }
             }

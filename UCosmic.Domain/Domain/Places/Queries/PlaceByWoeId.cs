@@ -5,7 +5,12 @@ namespace UCosmic.Domain.Places
 {
     public class PlaceByWoeId : BaseEntityQuery<Place>, IDefineQuery<Place>
     {
-        public int WoeId { get; set; }
+        public PlaceByWoeId(int woeId)
+        {
+            WoeId = woeId;
+        }
+
+        public int WoeId { get; private set; }
     }
 
     public class HandlePlaceByWoeIdQuery : IHandleQueries<PlaceByWoeId, Place>
@@ -72,11 +77,7 @@ namespace UCosmic.Domain.Places
                 if (woe.Parent != null)
                 {
                     //place.Parent = FromWoeId(woe.Parent.WoeId);
-                    place.Parent = Handle(
-                        new PlaceByWoeId
-                        {
-                            WoeId = woe.Parent.WoeId,
-                        });
+                    place.Parent = Handle(new PlaceByWoeId(woe.Parent.WoeId));
                 }
 
                 // when no parent exists, map country to continent
@@ -104,11 +105,7 @@ namespace UCosmic.Domain.Places
                         if (geoPlanetContinent != null)
                         {
                             //place.Parent = FromWoeId(geoPlanetContinent.WoeId);
-                            place.Parent = Handle(
-                                new PlaceByWoeId
-                                {
-                                    WoeId = geoPlanetContinent.WoeId,
-                                });
+                            place.Parent = Handle(new PlaceByWoeId(geoPlanetContinent.WoeId));
                         }
                     }
                 }
@@ -117,12 +114,7 @@ namespace UCosmic.Domain.Places
                 else if (woe.IsContinent)
                 {
                     //place.Parent = FromWoeId(GeoPlanetPlace.EarthWoeId);
-                    place.Parent = Handle(
-                        new PlaceByWoeId
-                        {
-                            WoeId = GeoPlanetPlace.EarthWoeId,
-                        }
-                    );
+                    place.Parent = Handle(new PlaceByWoeId(GeoPlanetPlace.EarthWoeId));
                 }
 
                 // map ancestors

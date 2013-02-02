@@ -7,7 +7,7 @@ namespace UCosmic.Domain.Employees
 {
     public class RootEmployeeModuleSettingsByUserName : BaseEntityQuery<EmployeeModuleSettings>, IDefineQuery<EmployeeModuleSettings>
     {
-        public string UserName { get; set; }
+        public string UserName { get; private set; }
 
         public RootEmployeeModuleSettingsByUserName(string userName)
         {

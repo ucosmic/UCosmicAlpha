@@ -5,7 +5,13 @@ namespace UCosmic.Domain.Identity
 {
     public class UserByName : BaseEntityQuery<User>, IDefineQuery<User>
     {
-        public string Name { get; set; }
+        public UserByName(string name)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+            Name = name;
+        }
+
+        public string Name { get; private set; }
     }
 
     public class HandleUserByNameQuery : IHandleQueries<UserByName, User>

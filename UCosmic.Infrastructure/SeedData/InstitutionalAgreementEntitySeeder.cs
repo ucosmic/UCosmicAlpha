@@ -52,7 +52,7 @@ namespace UCosmic.SeedData
                     new AddContactToAgreement(principal)
                     {
                         ContactType = "Seeded Contact",
-                        PersonEntityId = _queryProcessor.Execute(new PersonByEmail { Email = "ludwigd@uc.edu" }).EntityId,
+                        PersonEntityId = _queryProcessor.Execute(new PersonByEmail("ludwigd@uc.edu")).EntityId,
                     },
                 },
             });
@@ -78,7 +78,7 @@ namespace UCosmic.SeedData
                     new AddContactToAgreement(principal)
                     {
                         ContactType = "Seeded Contact",
-                        PersonEntityId = _queryProcessor.Execute(new PersonByEmail { Email = "ludwigd@uc.edu" }).EntityId,
+                        PersonEntityId = _queryProcessor.Execute(new PersonByEmail("ludwigd@uc.edu")).EntityId,
                     },
                 },
             });

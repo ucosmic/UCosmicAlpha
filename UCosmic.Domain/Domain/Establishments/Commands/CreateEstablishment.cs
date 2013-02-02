@@ -137,8 +137,7 @@ namespace UCosmic.Domain.Establishments
             {
                 var woeId = _queryProcessor.Execute(new WoeIdByCoordinates(
                         command.CenterLatitude.Value, command.CenterLongitude.Value));
-                var place = _queryProcessor.Execute(
-                    new PlaceByWoeId { WoeId = woeId });
+                var place = _queryProcessor.Execute(new PlaceByWoeId(woeId));
                 var places = place.Ancestors.OrderByDescending(n => n.Separation)
                     .Select(a => a.Ancestor).ToList();
                 places.Add(place);

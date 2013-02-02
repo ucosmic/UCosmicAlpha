@@ -5,16 +5,12 @@ namespace UCosmic.Domain.People
 {
     public class PersonById : BaseEntityQuery<Person>, IDefineQuery<Person>
     {
-        public PersonById()
-        {
-        }
-
         public PersonById(int id)
         {
             Id = id;
         }
 
-        public int Id { get; protected set; }
+        public int Id { get; private set; }
     }
 
     public class HandlePersonByIdQuery : IHandleQueries<PersonById, Person>

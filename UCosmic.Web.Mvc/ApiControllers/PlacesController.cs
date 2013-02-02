@@ -59,9 +59,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 .FirstOrDefault(x => x.WoeId.HasValue);
             if (foundPlace != null && foundPlace.WoeId.HasValue)
             {
-                var place = _queryProcessor.Execute(new PlaceByWoeId
+                var place = _queryProcessor.Execute(new PlaceByWoeId(foundPlace.WoeId.Value)
                 {
-                    WoeId = foundPlace.WoeId.Value,
                     EagerLoad = new Expression<Func<Place, object>>[]
                     {
                         x => x.Ancestors.Select(y => y.Ancestor),

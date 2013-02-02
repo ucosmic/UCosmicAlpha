@@ -5,7 +5,7 @@ namespace UCosmic.Domain.Employees
 {
     public class EmployeeModuleSettingsByEstablishmentId : BaseEntityQuery<EmployeeModuleSettings>, IDefineQuery<EmployeeModuleSettings>
     {
-        public int EstablishmentId { get; set; }
+        public int EstablishmentId { get; private set; }
 
         public EmployeeModuleSettingsByEstablishmentId(int establishmentId)
         {

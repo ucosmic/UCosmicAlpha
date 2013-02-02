@@ -1,9 +1,18 @@
-﻿namespace UCosmic.Domain.Establishments
+﻿using System;
+
+namespace UCosmic.Domain.Establishments
 {
     public class EmailTemplateByName : IDefineQuery<EmailTemplate>
     {
-        public string Name { get; set; }
-        public int? EstablishmentId { get; set; }
+        public EmailTemplateByName(string name, int? establishmentId = null)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+            Name = name;
+            EstablishmentId = establishmentId;
+        }
+
+        public string Name { get; private set; }
+        public int? EstablishmentId { get; private set; }
     }
 
     public class HandleEmailTemplateByNameQuery : IHandleQueries<EmailTemplateByName, EmailTemplate>

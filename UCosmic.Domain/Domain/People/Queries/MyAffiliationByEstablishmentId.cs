@@ -6,8 +6,15 @@ namespace UCosmic.Domain.People
 {
     public class MyAffiliationByEstablishmentId : IDefineQuery<Affiliation>
     {
-        public IPrincipal Principal { get; set; }
-        public int EstablishmentId { get; set; }
+        public MyAffiliationByEstablishmentId(IPrincipal principal, int establishmentId)
+        {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
+            EstablishmentId = establishmentId;
+        }
+
+        public IPrincipal Principal { get; private set; }
+        public int EstablishmentId { get; private set; }
     }
 
     public class HandleMyAffiliationByEstablishmentIdQuery : IHandleQueries<MyAffiliationByEstablishmentId, Affiliation>

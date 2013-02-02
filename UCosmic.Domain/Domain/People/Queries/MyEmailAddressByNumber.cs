@@ -5,8 +5,15 @@ namespace UCosmic.Domain.People
 {
     public class MyEmailAddressByNumber : IDefineQuery<EmailAddress>
     {
-        public IPrincipal Principal { get; set; }
-        public int Number { get; set; }
+        public MyEmailAddressByNumber(IPrincipal principal, int number)
+        {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
+            Number = number;
+        }
+
+        public IPrincipal Principal { get; private set; }
+        public int Number { get; private set; }
     }
 
     public class HandleMyEmailAddressByNumberQuery : IHandleQueries<MyEmailAddressByNumber, EmailAddress>

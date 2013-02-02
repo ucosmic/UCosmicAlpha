@@ -336,10 +336,7 @@ namespace UCosmic.SeedData
         protected Person Seed(int? establishmentId, CreatePerson command)
         {
             // make sure entity does not already exist
-            var person = _queryProcessor.Execute(new PersonByEmail
-            {
-                Email = command.EmailAddresses.First().Value,
-            });
+            var person = _queryProcessor.Execute(new PersonByEmail(command.EmailAddresses.First().Value));
             if (person != null) return person;
 
             if (string.IsNullOrWhiteSpace(command.DisplayName))

@@ -94,11 +94,8 @@ The UCosmic Team",
         protected void Seed(CreateEmailTemplate command)
         {
             // make sure email template does not already exist
-            var template = _queryProcessor.Execute(new EmailTemplateByName
-            {
-                Name = command.Name,
-                EstablishmentId = command.EstablishmentId,
-            });
+            var template = _queryProcessor.Execute(
+                new EmailTemplateByName(command.Name, command.EstablishmentId));
             if (template != null) return;
             _createEntity.Handle(command);
             _unitOfWork.SaveChanges();
