@@ -15,5 +15,15 @@ namespace UCosmic.Domain.Identity
         {
             return queryable.ByName(principal.Identity.Name);
         }
+
+        internal static User ByEduPersonTargetedId(this IQueryable<User> queryable, string eduPersonTargetedId)
+        {
+            return queryable.SingleOrDefault
+            (
+                u =>
+                u.EduPersonTargetedId != null &&
+                u.EduPersonTargetedId.Equals(eduPersonTargetedId)
+            );
+        }
     }
 }
