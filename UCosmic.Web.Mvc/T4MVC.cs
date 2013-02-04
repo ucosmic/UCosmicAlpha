@@ -44,6 +44,7 @@ namespace T4MVC
     {
         public readonly string Name = "IdentityDeprecated";
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.MyHomeController MyHome = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_MyHomeController();
+        public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateAffiliationController UpdateAffiliation = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateAffiliationController();
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateEmailValueController UpdateEmailValue = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateEmailValueController();
         public T4MVC.IdentityDeprecated.SharedController Shared = new T4MVC.IdentityDeprecated.SharedController();
     }

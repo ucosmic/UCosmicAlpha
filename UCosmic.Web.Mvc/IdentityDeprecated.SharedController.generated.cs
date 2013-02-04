@@ -36,9 +36,11 @@ namespace T4MVC.IdentityDeprecated
             public class _ViewNamesClass
             {
                 public readonly string my_home = "my-home";
+                public readonly string update_affiliation = "update-affiliation";
                 public readonly string update_email_value = "update-email-value";
             }
             public readonly string my_home = "~/Areas/IdentityDeprecated/Views/Shared/my-home.cshtml";
+            public readonly string update_affiliation = "~/Areas/IdentityDeprecated/Views/Shared/update-affiliation.cshtml";
             public readonly string update_email_value = "~/Areas/IdentityDeprecated/Views/Shared/update-email-value.cshtml";
             static readonly _DisplayTemplatesClass s_DisplayTemplates = new _DisplayTemplatesClass();
             public _DisplayTemplatesClass DisplayTemplates { get { return s_DisplayTemplates; } }

@@ -285,10 +285,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateAffiliationController.cs" />
     <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateEmailValueController.cs" />
     <Compile Include="Areas\IdentityDeprecated\IdentityDeprecatedAreaRegistration.cs" />
     <Compile Include="Areas\IdentityDeprecated\Controllers\MyHomeController.cs" />
     <Compile Include="Areas\IdentityDeprecated\Models\MyHomeInfo.cs" />
+    <Compile Include="Areas\IdentityDeprecated\Models\UpdateAffiliationForm.cs" />
     <Compile Include="Areas\IdentityDeprecated\Models\UpdateEmailValueForm.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
@@ -317,6 +319,8 @@
     <Compile Include="Helpers\UserVoiceForumAttribute.cs" />
     <Compile Include="Helpers\ValidateSigningReturnUrlAttribute.cs" />
     <Compile Include="Helpers\WebRole.cs" />
+    <Compile Include="Helpers\_Deprecated\ExtensionMethods.cs" />
+    <Compile Include="Helpers\_Deprecated\NullDisplayCssClassHtml.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -327,6 +331,9 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="IdentityDeprecated.SharedController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IdentityDeprecated.UpdateAffiliationController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="IdentityDeprecated.UpdateEmailValueController.generated.cs">
@@ -437,6 +444,7 @@
     <Content Include="Areas\IdentityDeprecated\Views\Shared\DisplayTemplates\MyEmailAddress.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\Web.config" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\update-email-value.cshtml" />
+    <Content Include="Areas\IdentityDeprecated\Views\Shared\update-affiliation.cshtml" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
