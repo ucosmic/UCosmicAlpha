@@ -63,5 +63,24 @@ namespace UCosmic
 
             return content.ToString();
         }
+
+        public static IEnumerable<string> Explode(this string imploded, string delimiter)
+        {
+            if (imploded != null)
+            {
+                var exploded = new List<string>();
+                if (imploded.Contains(delimiter))
+                {
+                    var split = imploded.Split(new[] { delimiter }, StringSplitOptions.RemoveEmptyEntries);
+                    exploded.AddRange(split);
+                }
+                else
+                {
+                    exploded.Add(imploded);
+                }
+                return exploded;
+            }
+            return null;
+        }
     }
 }

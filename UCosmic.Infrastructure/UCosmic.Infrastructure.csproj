@@ -160,6 +160,8 @@
     <Compile Include="EntityFramework\RevisableEntityTypeConfiguration.cs" />
     <Compile Include="EntityFramework\UCosmicContext.cs" />
     <Compile Include="FluentValidation\UnspecifiedValidator.cs" />
+    <Compile Include="Mail\SimpleInjectorConfigurationManagerRegistration.cs" />
+    <Compile Include="Mail\SmtpMailSender.cs" />
     <Compile Include="Saml\ComponentSpaceSaml2MetadataParser.cs" />
     <Compile Include="Saml\ComponentSpaceSaml2Response.cs" />
     <Compile Include="Saml\ComponentSpaceSaml2ServiceProvider.cs" />

@@ -10,6 +10,7 @@ using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
 using UCosmic.FluentValidation;
 using UCosmic.Logging;
+using UCosmic.Mail;
 using UCosmic.Saml;
 using UCosmic.Security;
 using UCosmic.SeedData;
@@ -49,6 +50,7 @@ namespace UCosmic.Web.Mvc
             container.RegisterMemberAuthentication();
             container.RegisterSaml();
             container.RegisterConfigurationManager();
+            container.RegisterMailSender();
             container.RegisterHttpConsumer();
             container.RegisterNGeo(ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()],
                 ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()]);

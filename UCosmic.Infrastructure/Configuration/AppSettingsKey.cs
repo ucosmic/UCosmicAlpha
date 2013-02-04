@@ -21,6 +21,9 @@
         DefaultMailReplyToDisplayName,
 
         EmergencyMailAddresses,
-        MailInterceptAddress,
+        MailInterceptAddresses,
+
+        TestMailServer,
+        TestMailInbox,
     }
 }

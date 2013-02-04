@@ -18,6 +18,9 @@
         string DefaultMailReplyToDisplayName { get; }
 
         string[] EmergencyMailAddresses { get; }
-        string MailInterceptAddress { get; }
+        string MailInterceptAddresses { get; }
+
+        string TestMailServer { get; }
+        string TestMailInbox { get; }
     }
 }

@@ -21,7 +21,11 @@ namespace UCosmic.Configuration
         public string DefaultMailReplyToDisplayName { get { return GetString(AppSettingsKey.DefaultMailReplyToDisplayName); } }
 
         public string[] EmergencyMailAddresses { get { return GetStrings(AppSettingsKey.EmergencyMailAddresses, ';'); } }
-        public string MailInterceptAddress { get { return GetString(AppSettingsKey.MailInterceptAddress); } }
+        public string MailInterceptAddresses { get { return GetString(AppSettingsKey.MailInterceptAddresses); } }
+
+        public string TestMailServer { get { return GetString(AppSettingsKey.TestMailServer); } }
+        public string TestMailInbox { get { return GetString(AppSettingsKey.TestMailInbox); } }
+
         private static string GetString(AppSettingsKey key)
         {
             return ConfigurationManager.AppSettings[key.ToString()];
