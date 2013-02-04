@@ -51,6 +51,27 @@ namespace UCosmic.EntityFramework
         }
     }
 
+    public class PreferenceOrm : EntityTypeConfiguration<Preference>
+    {
+        public PreferenceOrm()
+        {
+            ToTable(typeof(Preference).Name, DbSchemaName.Identity);
+
+            HasKey(p => new { p.Owner, p.Category, p.Key });
+
+            Property(p => p.Owner).IsRequired().HasMaxLength(100);
+            Property(p => p.AnonymousId).HasMaxLength(100);
+            Property(p => p.Category).IsRequired().HasMaxLength(100);
+            Property(p => p.Key).IsRequired().HasMaxLength(100);
+
+            // has one user
+            HasOptional(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .WillCascadeOnDelete(true);
+        }
+    }
+
     public class SubjectNameIdentifierOrm : EntityTypeConfiguration<SubjectNameIdentifier>
     {
         public SubjectNameIdentifierOrm()

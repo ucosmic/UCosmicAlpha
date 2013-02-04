@@ -162,7 +162,11 @@
     <Compile Include="Domain\Identity\Commands\SendConfirmEmailMessage.cs" />
     <Compile Include="Domain\Identity\Commands\SendEmailMessage.cs" />
     <Compile Include="Domain\Identity\Commands\SendSignUpMessage.cs" />
+    <Compile Include="Domain\Identity\Commands\UpdateMyPreference.cs" />
+    <Compile Include="Domain\Identity\Entities\Preference.cs" />
     <Compile Include="Domain\Identity\Queries\GenerateRandomSecret.cs" />
+    <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
+    <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeRegisteredUser.cs" />
     <Compile Include="Domain\Identity\Validation\MustHaveLocalMembershipAccount.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveLocalMembershipAccount.cs" />
