@@ -46,6 +46,7 @@ namespace T4MVC
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.MyHomeController MyHome = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_MyHomeController();
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateAffiliationController UpdateAffiliation = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateAffiliationController();
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateEmailValueController UpdateEmailValue = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateEmailValueController();
+        public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateNameController UpdateName = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateNameController();
         public T4MVC.IdentityDeprecated.SharedController Shared = new T4MVC.IdentityDeprecated.SharedController();
     }
 }
@@ -601,6 +602,20 @@ namespace Links
             private const string URLPATH = "~/styles/_deprecated";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class @default {
+                private const string URLPATH = "~/styles/_deprecated/default";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string button_gradient_active_gif = Url("button-gradient-active.gif");
+                public static readonly string button_gradient_hover_gif = Url("button-gradient-hover.gif");
+                public static readonly string button_gradient_gif = Url("button-gradient.gif");
+                public static readonly string drop_arrow_button_sized_png = Url("drop-arrow-button-sized.png");
+                public static readonly string drop_arrow_png = Url("drop-arrow.png");
+                public static readonly string head_logo_png = Url("head-logo.png");
+                public static readonly string head_row_shadow_png = Url("head-row-shadow.png");
+            }
+        
             public static readonly string screen_ie8_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/screen-ie8.min.css") ? Url("screen-ie8.min.css") : Url("screen-ie8.css");
                  
             public static readonly string screen_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/screen.min.css") ? Url("screen.min.css") : Url("screen.css");
@@ -811,6 +826,7 @@ namespace Links
                 public static readonly string checkmark_green_16_png = Url("checkmark-green-16.png");
             }
         
+            public static readonly string transparent_png = Url("transparent.png");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class users {
                 private const string URLPATH = "~/images/_deprecated/users";

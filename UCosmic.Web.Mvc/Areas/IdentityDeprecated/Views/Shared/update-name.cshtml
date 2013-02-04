@@ -1,0 +1,23 @@
+﻿@model UCosmic.Web.Mvc.Areas.IdentityDeprecated.Models.UpdateNameForm
+@{
+    ViewBag.Title = "Update my name";
+}
+@using (Html.BeginForm(
+    MVC.IdentityDeprecated.UpdateName.ActionNames.Put,
+    MVC.IdentityDeprecated.UpdateName.Name,
+    new
+    {
+        area = MVC.Identity.Name,
+        httpMethod = "POST",
+    }
+))
+{
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <fieldset>
+        <legend>My Name</legend>
+        <p>
+            Use the form below to update your name.
+        </p>
+        @Html.EditorForModel()
+    </fieldset>
+}

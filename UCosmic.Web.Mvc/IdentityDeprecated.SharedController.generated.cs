@@ -38,10 +38,12 @@ namespace T4MVC.IdentityDeprecated
                 public readonly string my_home = "my-home";
                 public readonly string update_affiliation = "update-affiliation";
                 public readonly string update_email_value = "update-email-value";
+                public readonly string update_name = "update-name";
             }
             public readonly string my_home = "~/Areas/IdentityDeprecated/Views/Shared/my-home.cshtml";
             public readonly string update_affiliation = "~/Areas/IdentityDeprecated/Views/Shared/update-affiliation.cshtml";
             public readonly string update_email_value = "~/Areas/IdentityDeprecated/Views/Shared/update-email-value.cshtml";
+            public readonly string update_name = "~/Areas/IdentityDeprecated/Views/Shared/update-name.cshtml";
             static readonly _DisplayTemplatesClass s_DisplayTemplates = new _DisplayTemplatesClass();
             public _DisplayTemplatesClass DisplayTemplates { get { return s_DisplayTemplates; } }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -50,6 +52,13 @@ namespace T4MVC.IdentityDeprecated
                 public readonly string EmailAddressField = "EmailAddressField";
                 public readonly string MyAffiliation = "MyAffiliation";
                 public readonly string MyEmailAddress = "MyEmailAddress";
+            }
+            static readonly _EditorTemplatesClass s_EditorTemplates = new _EditorTemplatesClass();
+            public _EditorTemplatesClass EditorTemplates { get { return s_EditorTemplates; } }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public partial class _EditorTemplatesClass
+            {
+                public readonly string UpdateNameForm = "UpdateNameForm";
             }
         }
     }
