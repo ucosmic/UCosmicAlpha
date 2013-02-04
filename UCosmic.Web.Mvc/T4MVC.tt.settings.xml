@@ -46,6 +46,8 @@ See http://mvccontrib.codeplex.com/workitem/7163 for potential issues with this 
     <FileFolder>scripts</FileFolder>
     <FileFolder>content</FileFolder>
     <FileFolder>viewmodels</FileFolder>
+    <FileFolder>styles</FileFolder>
+    <FileFolder>images</FileFolder>
   </StaticFilesFolders>
   <!--Static files to exclude from the generated links-->
   <ExcludedStaticFileExtensions>
