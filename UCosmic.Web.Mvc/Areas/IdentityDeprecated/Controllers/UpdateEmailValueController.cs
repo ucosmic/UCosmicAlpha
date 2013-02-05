@@ -33,8 +33,8 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
 
         [HttpGet]
         //[OpenTopTab(TopTabName.Home)]
-        [ActionName("update-email-value")]
-        //[ReturnUrlReferrer(MyHomeRouter.GetRoute.UrlConstant)]
+        //[ActionName("update-email-value")]
+        [ReturnUrlReferrer("dv/my/home")]
         public virtual ActionResult Get(int number)
         {
             // get the email address
@@ -46,9 +46,9 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
         }
 
         [HttpPut]
-        //[UnitOfWork]
+        [UnitOfWork]
         //[OpenTopTab(TopTabName.Home)]
-        [ActionName("update-email-value")]
+        //[ActionName("update-email-value")]
         public virtual ActionResult Put(UpdateEmailValueForm model)
         {
             // make sure user owns this email address
@@ -56,7 +56,7 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
                 return HttpNotFound();
 
             // make sure model state is valid
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View(MVC.IdentityDeprecated.Shared.Views.update_affiliation, model);
 
             // execute command, set feedback message, and redirect
             var command = Mapper.Map<UpdateMyEmailValue>(model);

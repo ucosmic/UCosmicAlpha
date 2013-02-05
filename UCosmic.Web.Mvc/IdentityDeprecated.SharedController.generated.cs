@@ -58,6 +58,8 @@ namespace T4MVC.IdentityDeprecated
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public partial class _EditorTemplatesClass
             {
+                public readonly string EmployeeOrStudentAffiliation = "EmployeeOrStudentAffiliation";
+                public readonly string UpdateAffiliationForm = "UpdateAffiliationForm";
                 public readonly string UpdateNameForm = "UpdateNameForm";
             }
         }

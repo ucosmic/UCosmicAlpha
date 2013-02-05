@@ -63,15 +63,15 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string Get = "update-name";
-            public readonly string Put = "update-name";
+            public readonly string Get = "Get";
+            public readonly string Put = "Put";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string Get = "update-name";
-            public const string Put = "update-name";
+            public const string Get = "Get";
+            public const string Put = "Put";
         }
 
 

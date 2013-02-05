@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
 
         [HttpGet]
         //[NullLayoutOnChildAction]
-        [ActionName("update-name")]
+        //[ActionName("update-name")]
         //[OpenTopTab(TopTabName.Home)]
         public virtual ActionResult Get()
         {
@@ -53,21 +53,21 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
 
             var model = Mapper.Map<UpdateNameForm>(user.Person);
 
-            if (ControllerContext.IsChildAction) return PartialView(model);
-            return View(model);
+            if (ControllerContext.IsChildAction) return PartialView(MVC.IdentityDeprecated.Shared.Views.update_name, model);
+            return View(MVC.IdentityDeprecated.Shared.Views.update_name, model);
         }
 
         [HttpPut]
-        //[UnitOfWork]
+        [UnitOfWork]
         //[OpenTopTab(TopTabName.Home)]
-        [ActionName("update-name")]
+        //[ActionName("update-name")]
         public virtual ActionResult Put(UpdateNameForm model)
         {
             // make sure model is not null
             if (model == null) return HttpNotFound();
 
             // make sure model state is valid
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View(MVC.IdentityDeprecated.Shared.Views.update_name, model);
 
             // execute command, set feedback message, and redirect
             var command = Mapper.Map<UpdateMyName>(model);

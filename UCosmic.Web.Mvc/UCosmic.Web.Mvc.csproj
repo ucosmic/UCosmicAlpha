@@ -70,9 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoAutoMapper.0.2.0.0\lib\net40\AutoAutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=2.0.0.232, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper, Version=2.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.2.2.0\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -328,6 +328,8 @@
     <Compile Include="Helpers\WebRole.cs" />
     <Compile Include="Helpers\_Deprecated\ExtensionMethods.cs" />
     <Compile Include="Helpers\_Deprecated\NullDisplayCssClassHtml.cs" />
+    <Compile Include="Helpers\_Deprecated\ReturnUrlReferrerAttribute.cs" />
+    <Compile Include="Helpers\_Deprecated\UnitOfWorkAttribute.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -467,6 +469,8 @@
     <Content Include="Areas\IdentityDeprecated\Views\Shared\update-name.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateNameForm.cshtml" />
     <Content Include="Areas\PeopleDeprecated\Views\Web.config" />
+    <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateAffiliationForm.cshtml" />
+    <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\EmployeeOrStudentAffiliation.cshtml" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />

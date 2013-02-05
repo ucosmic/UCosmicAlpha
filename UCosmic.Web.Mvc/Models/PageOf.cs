@@ -11,7 +11,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public PageOf()
         {
-            Items = Enumerable.Empty<TModel>();
+            Items = new List<TModel>();
         }
 
         [DataMember]

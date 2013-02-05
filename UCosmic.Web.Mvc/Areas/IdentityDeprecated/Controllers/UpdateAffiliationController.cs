@@ -32,8 +32,8 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
 
         [HttpGet]
         //[OpenTopTab(TopTabName.Home)]
-        [ActionName("update-affiliation")]
-        //[ReturnUrlReferrer(MyHomeRouter.GetRoute.UrlConstant)]
+        //[ActionName("update-affiliation")]
+        [ReturnUrlReferrer("dv/my/home")]
         public virtual ActionResult Get(int establishmentId)
         {
             // get the affiliation
@@ -41,21 +41,21 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
                 new MyAffiliationByEstablishmentId(User, establishmentId));
 
             if (affiliation == null) return HttpNotFound();
-            return View(MVC.IdentityDeprecated.Shared.Views.update_affiliation,
-                Mapper.Map<UpdateAffiliationForm>(affiliation));
+            var model = Mapper.Map<UpdateAffiliationForm>(affiliation);
+            return View(MVC.IdentityDeprecated.Shared.Views.update_affiliation, model);
         }
 
         [HttpPut]
-        //[UnitOfWork]
+        [UnitOfWork]
         //[OpenTopTab(TopTabName.Home)]
-        [ActionName("update-affiliation")]
+        //[ActionName("update-affiliation")]
         public virtual ActionResult Put(UpdateAffiliationForm model)
         {
             // make sure model is not null
             if (model == null) return HttpNotFound();
 
             // make sure model state is valid
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View(MVC.IdentityDeprecated.Shared.Views.update_affiliation, model);
 
             // execute command, set feedback message, and redirect
             var command = Mapper.Map<UpdateMyAffiliation>(model);
