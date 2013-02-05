@@ -50,11 +50,11 @@ namespace UCosmic.SeedData
                 EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>()
                         {
                             /* TODO: Need actual UC ranks here. */
-                            new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
                             new EmployeeFacultyRank {Rank = "Assistant Professor"},
                             new EmployeeFacultyRank {Rank = "Associate Professor"},
                             new EmployeeFacultyRank {Rank = "Professor"},
-                            new EmployeeFacultyRank {Rank = "Distinquished Professor"},                     
+                            new EmployeeFacultyRank {Rank = "Distinquished Professor"},
+                            new EmployeeFacultyRank {Rank = "Other"},
                         },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My International",
@@ -84,11 +84,11 @@ namespace UCosmic.SeedData
                 {
                     EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>()
                         {
-                            new EmployeeFacultyRank {Rank = "Adjunct Instructor"},
                             new EmployeeFacultyRank {Rank = "Assistant Professor"},
                             new EmployeeFacultyRank {Rank = "Associate Professor"},
                             new EmployeeFacultyRank {Rank = "Professor"},
-                            new EmployeeFacultyRank {Rank = "Distinquished Professor"},                     
+                            new EmployeeFacultyRank {Rank = "Distinquished Professor"},
+                            new EmployeeFacultyRank {Rank = "Other"},
                         },
                     NotifyAdminOnUpdate = false,
                     PersonalInfoAnchorText = "My USF World Profile",

@@ -20,10 +20,6 @@ namespace UCosmic.Web.Mvc.Models
     public string Gender { get; set; }
     public EmployeeFacultyRank EmployeeFacultyRank { get; set; }
     public string WorkingTitle { get; set; }
-    //public string PrimaryEmail { get; set; }
-    //public string AlternateEmail { get; set; }
-    //public byte[] Picture { get; set; }on
-    //public ICollection<Affiliation> Affiliations { get; set; }
     public string AdministrativeAppointments { get; set; }
 
     public static class PersonApiProfiler

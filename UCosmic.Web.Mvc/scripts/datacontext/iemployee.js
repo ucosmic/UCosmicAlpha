@@ -34,6 +34,9 @@ var DataContext;
         IEmployee.prototype.GetSalutations = function () {
             return null;
         };
+        IEmployee.prototype.GetSuffixes = function () {
+            return null;
+        };
         IEmployee.prototype.GetFacultyRanks = function () {
             return null;
         };

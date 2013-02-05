@@ -447,6 +447,7 @@
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <TypeScriptCompile Include="scripts\datacontext\employeewebservice.ts" />
     <TypeScriptCompile Include="scripts\datacontext\employeemockservice.ts" />
+    <Content Include="scripts\combobox.js" />
     <Content Include="scripts\datacontext\employeemockservice.js">
       <DependentUpon>employeemockservice.ts</DependentUpon>
     </Content>
@@ -454,6 +455,9 @@
       <DependentUpon>employeewebservice.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\datacontext\iemployee.ts" />
+    <Content Include="scripts\datacontext\employeewebservice.min.js">
+      <DependentUpon>employeewebservice.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\datacontext\iemployee.js">
       <DependentUpon>iemployee.ts</DependentUpon>
     </Content>
@@ -530,6 +534,9 @@
     </Content>
     <Content Include="scripts\viewmodels\establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\PersonalInfo.min.js.map">
+      <DependentUpon>PersonalInfo.js</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />

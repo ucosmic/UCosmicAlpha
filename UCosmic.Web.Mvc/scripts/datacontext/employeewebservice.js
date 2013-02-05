@@ -39,6 +39,13 @@ var DataContext;
             });
             return deferred;
         };
+        EmployeeWebService.prototype.GetSuffixes = function () {
+            var deferred = $.Deferred();
+            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/suffixes/", function (data, textStatus, jqXHR) {
+                deferred.resolve(data);
+            });
+            return deferred;
+        };
         EmployeeWebService.prototype.GetFacultyRanks = function () {
             var deferred = $.Deferred();
             $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/", function (data, textStatus, jqXHR) {

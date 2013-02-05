@@ -36,6 +36,15 @@ module DataContext {
 			return deferred;
 		}
 
+		/*override*/ GetSuffixes(): JQueryDeferred {
+			var deferred: JQueryDeferred = $.Deferred();
+			$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/suffixes/",
+				 function (data, textStatus, jqXHR) {
+						deferred.resolve(data);
+				 } );
+			return deferred;
+		}
+		
 		/*override*/ GetFacultyRanks(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
 		  $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/",

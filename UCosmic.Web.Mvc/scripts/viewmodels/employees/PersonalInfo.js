@@ -9,8 +9,11 @@ var ViewModels;
                 this._salutations = ko.observableArray();
                 this._salutation = ko.observable();
                 this._firstName = ko.observable();
+                this._firstNameSubscription = null;
                 this._middleName = ko.observable();
                 this._lastName = ko.observable();
+                this._lastNameSubscription = null;
+                this._suffixes = ko.observableArray();
                 this._suffix = ko.observable();
                 this._workingTitle = ko.observable();
                 this._gender = ko.observable();
@@ -78,6 +81,15 @@ var ViewModels;
             PersonalInfo.prototype.SetLastName = function (inValue) {
                 this._lastName(inValue);
             };
+            PersonalInfo.prototype.GetSuffixes = function () {
+                return this._suffixes();
+            };
+            PersonalInfo.prototype.SetSuffixes = function (inValue) {
+                this._suffixes(inValue);
+            };
+            PersonalInfo.prototype.Suffixes_Add = function (inSuffix) {
+                this._suffixes.push(inSuffix);
+            };
             PersonalInfo.prototype.GetSuffix = function () {
                 return this._suffix();
             };
@@ -132,6 +144,13 @@ var ViewModels;
                     }
                 }, function (error) {
                 });
+                var getSuffixesPact = me._dataContext.GetSuffixes();
+                getSuffixesPact.then(function (suffixes) {
+                    for(var i = 0; i < suffixes.length; i += 1) {
+                        me.Suffixes_Add(suffixes[i]);
+                    }
+                }, function (error) {
+                });
                 var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
                 getFacultyRanksPact.then(function (facultyRanks) {
                     for(var i = 0; i < facultyRanks.length; i += 1) {
@@ -139,7 +158,7 @@ var ViewModels;
                     }
                 }, function (error) {
                 });
-                $.when(getSalutationsPact, getFacultyRanksPact).then(function (data) {
+                $.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact).then(function (data) {
                     me._dataContext.Get().then(function (data) {
                         me.ToViewModel(me, data);
                         ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
@@ -198,6 +217,7 @@ var ViewModels;
                 };
             };
             PersonalInfo.prototype.saveInfo = function (formElement) {
+                this.DeriveDisplayName();
                 this._dataContext.Put(this.FromViewModel(this)).then(function (data) {
                 }, function (errorThrown) {
                 });
@@ -211,6 +231,27 @@ var ViewModels;
             };
             PersonalInfo.prototype.savePicture = function (formElement) {
                 $("#accordion").accordion('activate', 0);
+            };
+            PersonalInfo.prototype.derivedNameClickHandler = function (model, event) {
+                if(model.GetIsDisplayNameDerived()) {
+                    $("#displayName").attr("disabled", "disabled");
+                    model._firstNameSubscription = model._firstName.subscribe(function (inValue) {
+                        model.DeriveDisplayName(model);
+                    });
+                    model._lastNameSubscription = model._lastName.subscribe(function (inValue) {
+                        model.DeriveDisplayName(model);
+                    });
+                    model.DeriveDisplayName(model);
+                } else {
+                    $("#displayName").removeAttr("disabled");
+                    model._firstNameSubscription.dispose();
+                    model._lastNameSubscription.dispose();
+                }
+                return true;
+            };
+            PersonalInfo.prototype.DeriveDisplayName = function (inModel) {
+                var me = (inModel != null) ? inModel : this;
+                me.SetDisplayName(me.GetFirstName() + " " + me.GetLastName());
             };
             return PersonalInfo;
         })();

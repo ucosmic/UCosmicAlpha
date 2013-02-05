@@ -1,4 +1,4 @@
-﻿@model int
+﻿@model UCosmic.Domain.People.Person
 
 @{ ViewBag.Title = "Personal Profile"; }
 
@@ -13,11 +13,16 @@
     }
 
     td.table-column-label {
+        vertical-align: top;
         text-align: right;
     }
 
     td.table-column-value {
         text-align: left;
+    }
+
+    tr.table-row-admin {
+        background: #dedede;
     }
 </style>
 
@@ -53,91 +58,105 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td class="table-column-label">
-                                                                <input type="checkbox" data-bind="checked: _isActive" />
-                                                            </td>
-                                                            <td class="table-column-value">Active?</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="table-column-label">
-                                                                <input type="checkbox" data-bind="checked: _isDisplayNameDerived" />
-                                                            </td>
-                                                            <td class="table-column-value">Is Display Name Derived?</td>
-                                                        </tr>
-                                                        <tr>
                                                             <td class="table-column-label">Display name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _displayName" />
+                                                                <input id="displayName" type="text" style="width: 350px" data-bind="value: _displayName" />
                                                             </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="table-column-label">
+                                                                <input type="checkbox" data-bind="checked: _isDisplayNameDerived, click: derivedNameClickHandler" />
+                                                            </td>
+                                                            <td class="table-column-value">Automatically generate my display name based on the fields below.</td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Salutation:</td>
                                                             <td class="table-column-value">
-                                                                <select id="salutationSelector" style="width: 100px" data-bind="options: _salutations, value: _salutation"></select>
+                                                                <div>
+                                                                    <!-- TODO: Really poor 'combobox' until we figure out a solution. See combobox.js -->
+                                                                    <input id="salutationTextbox" type="text" style="width: 200px" data-bind="value: _salutation" />
+                                                                    <select id="salutationSelector"
+                                                                        style="width: 80px"
+                                                                        data-bind="options: _salutations, optionsCaption: ' '"
+                                                                        onchange="updateTextbox(this,'salutationTextbox')" ></select>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">First name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _firstName" />
+                                                                <input type="text" style="width: 350px" data-bind="value: _firstName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Middle name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _middleName" />
+                                                                <input type="text" style="width: 350px" data-bind="value: _middleName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Last name:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _lastName" />
+                                                                <input type="text" style="width: 350px" data-bind="value: _lastName" />
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Suffix:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _suffix" />
+                                                                <!-- TODO: Really poor 'combobox' until we figure out a solution. See combobox.js -->
+                                                                <input id="suffixTextbox" type="text" style="width: 200px" data-bind="value: _suffix" />
+                                                                <select id="suffixSelector"
+                                                                    style="width: 80px"
+                                                                    data-bind="options: _suffixes, optionsCaption: ' '"
+                                                                    onchange="updateTextbox(this,'suffixTextbox')" ></select>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Faculty rank:</td>
                                                             <td class="table-column-value">
-                                                                <select id="facultyRankSelector" style="width: 300px" data-bind="options: _facultyRanks, optionsText: 'rank', value: _facultyRank, optionsCaption: 'Select...'"></select>
+                                                                <select id="facultyRankSelector" style="width: 350px" data-bind="options: _facultyRanks, optionsText: 'rank', value: _facultyRank, optionsCaption: 'Select...'"></select>
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td class="table-column-label">Working title:</td>
+                                                            <td class="table-column-label">My Preferred Title is:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _workingTitle" />
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="table-column-label">Gender:</td>
-                                                            <td class="table-column-value">
-                                                                @* wrap radio groups in labels for easier UI *@
-                                                                <label>
-                                                                    <input type="radio" name="genderGroup" value="M" data-bind="checked: _gender" />
-                                                                    <span>Male</span>
-                                                                </label>
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="genderGroup" value="F" data-bind="checked: _gender" />
-                                                                    <span>Female</span>
-                                                                </label>
-                                                                &nbsp;&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="genderGroup" value="P" data-bind="checked: _gender" />
-                                                                    <span>Undisclosed</span>
-                                                                </label>
+                                                                <textarea cols="100" rows="2" style="overflow: hidden" data-bind="value: _workingTitle"></textarea>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="table-column-label">Administrative Appointments:</td>
                                                             <td class="table-column-value">
-                                                                <input type="text" style="width: 300px" data-bind="value: _administrativeAppointments" />
+                                                                <textarea cols="100" rows="2" style="overflow: hidden" data-bind="value: _administrativeAppointments"></textarea>
                                                             </td>
                                                         </tr>
+                                                        @if (@Model.User.IsInRole("Establishment Administrator"))
+                                                        {
+                                                            <tr class="table-row-admin">
+                                                                <td class="table-column-label">&nbsp;Active?</td>
+                                                                <td class="table-column-value">
+                                                                    <input type="checkbox" data-bind="checked: _isActive" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="table-row-admin">
+                                                                <td class="table-column-label">Gender:&nbsp;</td>
+                                                                <td class="table-column-value">
+                                                                    <label>
+                                                                        <input type="radio" name="genderGroup" value="M" data-bind="checked: _gender" />
+                                                                        <span>Male</span>
+                                                                    </label>
+                                                                    &nbsp;&nbsp;&nbsp;
+                                                                    <label>
+                                                                        <input type="radio" name="genderGroup" value="F" data-bind="checked: _gender" />
+                                                                        <span>Female</span>
+                                                                    </label>
+                                                                    &nbsp;&nbsp;&nbsp;
+                                                                    <label>
+                                                                        <input type="radio" name="genderGroup" value="P" data-bind="checked: _gender" />
+                                                                        <span>Undisclosed</span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
+                                                        }
                                                     </tbody>
                                                 </table>
                                                 <div>
@@ -188,12 +207,13 @@
 {
     @Scripts.Render("~/bundles/employees/people")
 
+    <script type="text/javascript" src="~/scripts/combobox.js"></script>
     <script type="text/javascript">
 
         $(function () {
-            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model));
+            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model.RevisionId));
             $("#accordion").accordion();
-            $("#accordion").removeClass('ui-widget'); /* TODO: Explore how to do using CSS, maybe table > * > */
+            $("#accordion").removeClass("ui-widget");
         });
 
     </script>

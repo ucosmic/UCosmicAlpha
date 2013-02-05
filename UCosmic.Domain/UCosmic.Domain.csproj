@@ -179,6 +179,7 @@
     <Compile Include="Domain\People\Commands\UpdatePerson.cs" />
     <Compile Include="Domain\People\Entities\PersonGender.cs" />
     <Compile Include="Domain\People\Entities\PersonSalutation.cs" />
+    <Compile Include="Domain\People\Entities\PersonSuffixes.cs" />
     <Compile Include="Domain\People\Events\PersonChanged.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByPersonEstablishment.cs" />
     <Compile Include="Domain\People\Queries\GenerateDisplayName.cs" />

@@ -28,6 +28,7 @@ module DataContext {
 		Delete(): JQueryDeferred { return null; }
 
 		GetSalutations(): JQueryDeferred { return null; }
+		GetSuffixes(): JQueryDeferred { return null; }
 		GetFacultyRanks(): JQueryDeferred { return null; }
 	}
 

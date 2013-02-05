@@ -39,6 +39,8 @@ module ViewModels.Employee {
 		GetFirstName(): string { return this._firstName(); }
 		SetFirstName(inValue: string): void { this._firstName(inValue); }
 
+		private _firstNameSubscription: KnockoutSubscription = null;
+
 		private _middleName: KnockoutObservableString = ko.observable();
 		GetMiddleName(): string { return this._middleName(); }
 		SetMiddleName(inValue: string): void { this._middleName(inValue); }
@@ -46,6 +48,13 @@ module ViewModels.Employee {
 		private _lastName: KnockoutObservableString = ko.observable();
 		GetLastName(): string { return this._lastName(); }
 		SetLastName(inValue: string): void { this._lastName(inValue); }
+
+		private _lastNameSubscription: KnockoutSubscription = null;
+
+		private _suffixes: KnockoutObservableArray = ko.observableArray();
+		GetSuffixes(): any[] { return this._suffixes(); }
+		SetSuffixes(inValue: any[]): void { this._suffixes(inValue); }
+		Suffixes_Add(inSuffix: string): void { this._suffixes.push(inSuffix); }
 
 		private _suffix: KnockoutObservableString = ko.observable();
 		GetSuffix(): string { return this._suffix(); }
@@ -86,6 +95,7 @@ module ViewModels.Employee {
 			/* We are going to start two asynch processes. One to load salutations and the other
 			 * to load the faculty ranks.  We will then wait for both before continuing.
 			 */
+
 			var getSalutationsPact: JQueryPromise = me._dataContext.GetSalutations();
 			getSalutationsPact.then(
 			/* Success */
@@ -98,6 +108,18 @@ module ViewModels.Employee {
 			function (error: any): void {
 			});
 
+			var getSuffixesPact: JQueryPromise = me._dataContext.GetSuffixes();
+			getSuffixesPact.then(
+			/* Success */
+			function (suffixes: any): void {
+				for (var i = 0; i < suffixes.length; i += 1) {
+					me.Suffixes_Add(<string>suffixes[i]);
+				}
+			},
+			/* Fail */
+			function (error: any): void {
+			});
+			
 			var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
 			getFacultyRanksPact.then(
 			/* Success */
@@ -111,7 +133,7 @@ module ViewModels.Employee {
 			});
 
 			// Wait for all loading of selector options before continuing.
-			$.when(getSalutationsPact, getFacultyRanksPact)
+			$.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact)
 					.then( /* Continue once selector data has been loaded */
 							/* Success (selector data)*/
 							function (data: any): void {
@@ -208,6 +230,7 @@ module ViewModels.Employee {
 		*/
 		// --------------------------------------------------------------------------------
 		saveInfo(formElement: HTMLFormElement): void {
+			this.DeriveDisplayName();
 			this._dataContext.Put(this.FromViewModel(this))
 					.then(  /* Success */ function (data: any): void { },
 									/* Fail */ function (errorThrown: string): void { });
@@ -240,6 +263,34 @@ module ViewModels.Employee {
 			$("#accordion").accordion('activate', 0);	// Open next panel
 		}
 
+		// --------------------------------------------------------------------------------
+		/*
+		*/
+		// --------------------------------------------------------------------------------
+		derivedNameClickHandler(model: PersonalInfo, event: any): bool {
+			if (model.GetIsDisplayNameDerived()) {
+				$("#displayName").attr("disabled", "disabled");
+				model._firstNameSubscription = model._firstName.subscribe(function (inValue: any): void { model.DeriveDisplayName(model); });
+				model._lastNameSubscription = model._lastName.subscribe(function (inValue: any): void { model.DeriveDisplayName(model); });
+				model.DeriveDisplayName(model);
+			}
+			else {
+				$("#displayName").removeAttr("disabled");
+				model._firstNameSubscription.dispose();
+				model._lastNameSubscription.dispose();
+			}
+
+			return true; // let default click action proceed
+		}
+
+		// --------------------------------------------------------------------------------
+		/*
+		*/
+		// --------------------------------------------------------------------------------
+		DeriveDisplayName(inModel?: PersonalInfo): void {
+			var me = (inModel != null) ? inModel : this;
+			me.SetDisplayName(me.GetFirstName() + " " + me.GetLastName());
+		}
 
 	} // class PersonalInfo
 

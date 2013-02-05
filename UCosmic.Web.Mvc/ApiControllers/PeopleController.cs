@@ -46,7 +46,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             return PersonSalutation.Values;
         }
-        
+
+        [GET("{id}/suffixes")]
+        public IEnumerable<string> GetSuffixes(int id) // made return type IEnumerable<T> for consistency
+        {
+            return PersonSuffixes.Values;
+        }
+
         /* TODO: This needs to be moved to EmployeeModuleSettingsApiController */
         [GET("{id}/facultyranks")]
         public IEnumerable<EmployeeFacultyRank> GetFacultyRanks(int id) // made return type IEnumerable<T> for consistency
