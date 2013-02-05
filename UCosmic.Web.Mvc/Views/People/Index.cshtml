@@ -2,29 +2,51 @@
 
 @{ ViewBag.Title = "Personal Profile"; }
 
+@section styles
+{
+    <style>
+        table {
+            font-style: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            border-collapse: separate;
+            border-spacing: 5px;
+        }
 
-<style>
-    table {
-        font-style: inherit;
-        font-family: inherit;
-        font-size: inherit;
-        border-collapse: separate;
-        border-spacing: 5px;
-    }
+        td.table-column-label {
+            vertical-align: top;
+            text-align: right;
+        }
 
-    td.table-column-label {
-        vertical-align: top;
-        text-align: right;
-    }
+        td.table-column-value {
+            text-align: left;
+        }
 
-    td.table-column-value {
-        text-align: left;
-    }
+        tr.table-row-admin {
+            background: #dedede;
+        }
+    </style>
+}
 
-    tr.table-row-admin {
-        background: #dedede;
-    }
-</style>
+@section scripts
+{
+    @Scripts.Render("~/bundles/employees/people")
+
+    <script type="text/javascript" src="~/scripts/combobox.js"></script>
+    <script type="text/javascript" src="~/scripts/kendo/2012.3.1114/kendo.web.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model.RevisionId));
+            $("#accordion").accordion();
+            $("#accordion").removeClass("ui-widget");
+        });
+
+    </script>
+
+}
+
 
 @section bib
 {
@@ -78,7 +100,8 @@
                                                                     <select id="salutationSelector"
                                                                         style="width: 80px"
                                                                         data-bind="options: _salutations, optionsCaption: ' '"
-                                                                        onchange="updateTextbox(this,'salutationTextbox')" ></select>
+                                                                        onchange="updateTextbox(this,'salutationTextbox')">
+                                                                    </select>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -108,7 +131,8 @@
                                                                 <select id="suffixSelector"
                                                                     style="width: 80px"
                                                                     data-bind="options: _suffixes, optionsCaption: ' '"
-                                                                    onchange="updateTextbox(this,'suffixTextbox')" ></select>
+                                                                    onchange="updateTextbox(this,'suffixTextbox')">
+                                                                </select>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -203,19 +227,3 @@
 </div>
 
 
-@section scripts
-{
-    @Scripts.Render("~/bundles/employees/people")
-
-    <script type="text/javascript" src="~/scripts/combobox.js"></script>
-    <script type="text/javascript">
-
-        $(function () {
-            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model.RevisionId));
-            $("#accordion").accordion();
-            $("#accordion").removeClass("ui-widget");
-        });
-
-    </script>
-
-}

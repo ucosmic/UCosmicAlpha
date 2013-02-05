@@ -137,9 +137,9 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
-                public readonly string index = "index";
+                public readonly string Index = "Index";
             }
-            public readonly string index = "~/Views/People/index.cshtml";
+            public readonly string Index = "~/Views/People/Index.cshtml";
         }
     }
 

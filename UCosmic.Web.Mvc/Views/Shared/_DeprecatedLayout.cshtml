@@ -57,28 +57,29 @@
             </div>
         </div>
     </div>
+
+    <script src="@Links.scripts.jquery.jquery_1_8_3_js" type="text/javascript"></script>
+
+    <script src="@Links.scripts.jquery.jquery_ui_1_9_2_js" type="text/javascript"></script>
+
+    <script src="@Links.scripts._deprecated.jquery_validate_js" type="text/javascript"></script>
+
+    <script src="@Links.scripts._deprecated.jquery_validate_unobtrusive_js" type="text/javascript"></script>
+
+    <script src="@Links.scripts.ko.knockout_2_2_0_js" type="text/javascript"></script>
+
+    <script src="@Links.scripts.ko.knockout_mapping_latest_js" type="text/javascript"></script>
+
+    @*<script src="@Links.scripts.T4MvcJs.T4MvcJs_js" type="text/javascript"></script>*@
+
+    @*@Html.Partial(MVC.Shared.Views.google_maps_api_script)*@
+
+    <script src="@Links.scripts._deprecated.ucosmic_js" type="text/javascript"></script>
+
+    @if (IsSectionDefined("Scripts"))
+    {
+        @RenderSection("Scripts")
+    }
 </body>
 </html>
 
-<script src="@Links.scripts.jquery.jquery_1_8_3_js" type="text/javascript"></script>
-
-<script src="@Links.scripts.jquery.jquery_ui_1_9_2_js" type="text/javascript"></script>
-
-<script src="@Links.scripts._deprecated.jquery_validate_js" type="text/javascript"></script>
-
-<script src="@Links.scripts._deprecated.jquery_validate_unobtrusive_js" type="text/javascript"></script>
-
-<script src="@Links.scripts.ko.knockout_2_2_0_js" type="text/javascript"></script>
-
-<script src="@Links.scripts.ko.knockout_mapping_latest_js" type="text/javascript"></script>
-
-@*<script src="@Links.scripts.T4MvcJs.T4MvcJs_js" type="text/javascript"></script>*@
-
-@*@Html.Partial(MVC.Shared.Views.google_maps_api_script)*@
-
-<script src="@Links.scripts._deprecated.ucosmic_js" type="text/javascript"></script>
-
-@if (IsSectionDefined("Scripts"))
-{
-    @RenderSection("Scripts")
-}
