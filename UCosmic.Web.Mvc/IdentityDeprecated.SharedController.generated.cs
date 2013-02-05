@@ -60,6 +60,7 @@ namespace T4MVC.IdentityDeprecated
             {
                 public readonly string EmployeeOrStudentAffiliation = "EmployeeOrStudentAffiliation";
                 public readonly string UpdateAffiliationForm = "UpdateAffiliationForm";
+                public readonly string UpdateEmailValueForm = "UpdateEmailValueForm";
                 public readonly string UpdateNameForm = "UpdateNameForm";
             }
         }

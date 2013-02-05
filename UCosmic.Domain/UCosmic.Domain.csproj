@@ -110,12 +110,21 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\UpdateMyActivity.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityMode.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTag.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
+    <Compile Include="Domain\Activities\Queries\MyActivities.cs" />
+    <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityByEntityId.cs" />
+    <Compile Include="Domain\Activities\Queries\MyActivityByNumber.cs" />
+    <Compile Include="Domain\Activities\_Internal\QueryActivities.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
@@ -137,6 +146,7 @@
     <Compile Include="Domain\Establishments\Queries\EstablishmentByUrl.cs" />
     <Compile Include="Domain\Establishments\Queries\EmailTemplateByName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByEmail.cs" />
+    <Compile Include="Domain\Establishments\Queries\FindEstablishmentsWithName.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotHaveSamlIntegration.cs" />
     <Compile Include="Domain\Establishments\Validation\MustBeMemberEstablishment.cs" />
     <Compile Include="Domain\Establishments\Validation\MustFindEstablishmentByEmail.cs" />
@@ -260,6 +270,7 @@
     <Compile Include="Domain\People\Validation\MustNotHaveEmptyDisplayName.cs" />
     <Compile Include="Domain\People\_Deprecated\ValidateAffiliation.cs" />
     <Compile Include="Domain\People\_Deprecated\ValidatePerson.cs" />
+    <Compile Include="Domain\Places\Queries\PlacesWithName.cs" />
     <Compile Include="Domain\Places\Queries\PlaceById.cs" />
     <Compile Include="Domain\Places\Queries\FilteredPlaces.cs" />
     <Compile Include="Domain\Places\Queries\Countries.cs" />
@@ -390,6 +401,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,30 @@
+﻿@using UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers
+@model UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Models.ActivitiesPage
+<fieldset>
+    <legend>My Recently Edited Activities</legend>
+    @if (!Model.Items.Any())
+    {
+        <p class="pull-bottom">
+            You have not yet added any activities.<br />
+            <a href="@Url.Action(MVC.ActivitiesDeprecated.ActivityForm.New())">Click here to add your first
+                one</a>.
+        </p>
+    }
+    else
+    {
+        <ol style="margin: 1em 0; padding: 0; list-style: none;">
+            @foreach (var item in Model.Items)
+            {
+                <li>@item.Mode: <strong style="font-size: 1.2em;"><a href="@Url.Action(MVC.ActivitiesDeprecated.ActivityForm.Get(item.Number))">@item.Title</a></strong></li>
+            }
+        </ol>
+        <div style="font-size: 1.1em;">
+            <a href="@Url.Action(MVC.ActivitiesDeprecated.ActivityForm.New())">Create a new activity</a>
+            @if (Model.Items.Count() == ActivityListController.ShortListLength && Model.ItemTotal > ActivityListController.ShortListLength)
+            {
+                <span>|</span> <a href="@Url.Action(MVC.ActivitiesDeprecated.ActivityList.Page())">Show all (@(Model.ItemTotal - ActivityListController.ShortListLength)
+                    more)</a>
+            }
+        </div>
+    }
+</fieldset>

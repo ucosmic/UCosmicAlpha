@@ -1,0 +1,30 @@
+﻿@model IEnumerable<UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Models.TagMenuItem>
+<ol>
+    @foreach (var item in Model)
+    {
+        <li data-ucosmic-domain-type="@item.DomainType" data-ucosmic-domain-key="@item.DomainKey">
+            <a style="font-family: Arial;"><span class="label"><strong>@item.Text</strong></span>
+                @if (!string.IsNullOrWhiteSpace(item.MatchingText))
+                {
+                    <span style="font-size: 0.9em;">(@item.MatchingText)</span>
+                }
+                @if (item.PlaceHierarchy != null && item.PlaceHierarchy.Any())
+                {
+                    <br />
+                    foreach (var place in item.PlaceHierarchy)
+                    {
+                    <span style="font-size: 0.9em;">@place</span>
+                    <span style="font-size: 10px;">&gt;&gt; </span>
+                    }
+                }
+                <br />
+                @foreach (var ancestor in item.TaggedHierarchy)
+                {
+                    <span style="font-size: 0.9em;">
+                        @ancestor
+                    </span>
+                    <span style="font-size: 10px;">&gt;&gt; </span>
+                }
+                <em style="font-size: 0.9em;">@item.TaggedType</em></a> </li>
+    }
+</ol>

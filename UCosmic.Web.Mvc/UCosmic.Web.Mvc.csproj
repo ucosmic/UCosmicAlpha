@@ -259,6 +259,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivitiesDeprecated.ActivityFormController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.ActivityIndexController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.ActivityInfoController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.ActivityListController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.ActivitySearchController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.SharedController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.TagListController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivitiesDeprecated.TagMenuController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="AdminController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -285,6 +309,45 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\ActivitiesDeprecated\ActivitiesDeprecatedAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\ActivityFormController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\ActivityIndexController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\ActivityInfoController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\ActivityListController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\ActivitySearchController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\TagListController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Controllers\TagMenuController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Models\ActivitiesPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Models\ActivityForm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Models\ActivityInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Models\ActivityResults.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ActivitiesDeprecated\Models\TagMenuItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateAffiliationController.cs" />
     <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateEmailValueController.cs" />
     <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateNameController.cs" />
@@ -370,6 +433,8 @@
     <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Models\UserVoiceLinkModel.cs" />
+    <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
+    <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
     <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -396,6 +461,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\activities-page.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\activity-delete.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\activity-form.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\activity-info.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\activity-results.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\EditorTemplates\Tag.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\EditorTemplates\TinyMceContent.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\_activity-info.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\_short-list.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\_tag-list.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Shared\_tag-menu.cshtml" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\Web.config" />
+    <Content Include="Areas\ActivitiesDeprecated\Views\_ViewStart.cshtml" />
     <Content Include="content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -472,6 +550,7 @@
     <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateAffiliationForm.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\EmployeeOrStudentAffiliation.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateEmailValueForm.cshtml" />
+    <Content Include="Areas\PeopleDeprecated\Views\_ViewStart.cshtml" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
