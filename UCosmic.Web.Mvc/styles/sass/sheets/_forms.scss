@@ -93,6 +93,26 @@ select.inline {
     @include font-height(14px, 1);
 }
 
+/* Kendo ComboBox overrides */
+.k-dropdown-wrap, .k-dropdown-wrap.k-state-border-down {
+    @include border-radius(0);
+    .k-input {
+        @include border-radius(0);
+        border: solid 1px #aaa;
+        border-right-color: #ddd;
+        border-bottom-color: #ddd;
+        padding: 5px 8px 5px 5px;
+        height: 38px;
+        @include font-height(16px, 20px);
+        text-indent: 0;
+        @include font-arial;
+        color: #000;
+    }
+}
+.k-combobox .k-icon {
+    margin-top: 10px;
+}
+
 a.button {
     @include border-box;
     height: 38px;

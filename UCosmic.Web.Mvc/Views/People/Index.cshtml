@@ -41,6 +41,29 @@
             var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@Model.RevisionId));
             $("#accordion").accordion();
             $("#accordion").removeClass("ui-widget");
+
+            $('#salutationTextbox').kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: '/api/person-name-salutations/'
+                        }
+                    }
+                })
+            });
+            $('#suffixTextbox').kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: '/api/person-name-suffixes/'
+                        }
+                    }
+                })
+            });
         });
 
     </script>
@@ -96,12 +119,12 @@
                                                             <td class="table-column-value">
                                                                 <div>
                                                                     <!-- TODO: Really poor 'combobox' until we figure out a solution. See combobox.js -->
-                                                                    <input id="salutationTextbox" type="text" style="width: 200px" data-bind="value: _salutation" />
-                                                                    <select id="salutationSelector"
+                                                                    <input id="salutationTextbox" type="text" style="width: 350px" data-bind="value: _salutation" />
+                                                                    @*<select id="salutationSelector"
                                                                         style="width: 80px"
                                                                         data-bind="options: _salutations, optionsCaption: ' '"
                                                                         onchange="updateTextbox(this,'salutationTextbox')">
-                                                                    </select>
+                                                                    </select>*@
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -127,12 +150,12 @@
                                                             <td class="table-column-label">Suffix:</td>
                                                             <td class="table-column-value">
                                                                 <!-- TODO: Really poor 'combobox' until we figure out a solution. See combobox.js -->
-                                                                <input id="suffixTextbox" type="text" style="width: 200px" data-bind="value: _suffix" />
-                                                                <select id="suffixSelector"
+                                                                <input id="suffixTextbox" type="text" style="width: 350px" data-bind="value: _suffix" />
+                                                                @*<select id="suffixSelector"
                                                                     style="width: 80px"
                                                                     data-bind="options: _suffixes, optionsCaption: ' '"
                                                                     onchange="updateTextbox(this,'suffixTextbox')">
-                                                                </select>
+                                                                </select>*@
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -153,7 +176,7 @@
                                                                 <textarea cols="100" rows="2" style="overflow: hidden" data-bind="value: _administrativeAppointments"></textarea>
                                                             </td>
                                                         </tr>
-                                                        @if (@Model.User.IsInRole("Establishment Administrator"))
+                                                        @if (User.IsInRole("Establishment Administrator"))
                                                         {
                                                             <tr class="table-row-admin">
                                                                 <td class="table-column-label">&nbsp;Active?</td>

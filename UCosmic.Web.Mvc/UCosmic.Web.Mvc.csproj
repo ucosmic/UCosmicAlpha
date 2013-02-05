@@ -301,6 +301,7 @@
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
+    <Compile Include="ApiControllers\PersonSalutationsController.cs" />
     <Compile Include="ApiControllers\PlacesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
@@ -435,6 +436,7 @@
     <Compile Include="Models\SignInApiModel.cs" />
     <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
+    <Compile Include="Models\TextValuePair.cs" />
     <Compile Include="Models\UserVoiceLinkModel.cs" />
     <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
     <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
