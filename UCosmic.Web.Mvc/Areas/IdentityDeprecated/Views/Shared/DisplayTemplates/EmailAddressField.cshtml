@@ -3,7 +3,7 @@
 @*<div class="field" data-ucosmic-val="css">
     <span class="label" data-ucosmic-val-hide="error" data-ucosmic-val-show="valid" data-ucosmic-focused-class="focused">
         <label style="display:inline-block;">@ModelMetadata.FromLambdaExpression(m => m, ViewData).DisplayName</label>
-        <a href="@Url.Action(MVC.Identity.SignDown.Get(Request.QueryString[ValidateSigningReturnUrlAttribute.ReturnUrlParamName]))">This is not my email address</a>
+        <a href="@Url.Action(MVC.IdentityDeprecated.SignDown.Get(Request.QueryString[ValidateSigningReturnUrlAttribute.ReturnUrlParamName]))">This is not my email address</a>
     </span>
     <div class="messages" data-ucosmic-focused-class="focused">
         <span class="validation">@Html.ValidationMessageFor(m => m)</span>

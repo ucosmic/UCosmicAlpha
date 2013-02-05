@@ -294,6 +294,11 @@
     <Compile Include="Areas\IdentityDeprecated\Models\UpdateAffiliationForm.cs" />
     <Compile Include="Areas\IdentityDeprecated\Models\UpdateEmailValueForm.cs" />
     <Compile Include="Areas\IdentityDeprecated\Models\UpdateNameForm.cs" />
+    <Compile Include="Areas\PeopleDeprecated\Controllers\PersonInfoController.cs" />
+    <Compile Include="Areas\PeopleDeprecated\Controllers\PersonNameController.cs" />
+    <Compile Include="Areas\PeopleDeprecated\Models\GenerateDisplayNameForm.cs" />
+    <Compile Include="Areas\PeopleDeprecated\Models\PersonInfoModel.cs" />
+    <Compile Include="Areas\PeopleDeprecated\PeopleDeprecatedAreaRegistration.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
@@ -364,6 +369,15 @@
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Models\UserVoiceLinkModel.cs" />
     <Compile Include="PeopleController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PeopleDeprecated.PersonInfoController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PeopleDeprecated.PersonNameController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PeopleDeprecated.SharedController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -452,6 +466,7 @@
     <Content Include="Areas\IdentityDeprecated\Views\Shared\update-affiliation.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\update-name.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateNameForm.cshtml" />
+    <Content Include="Areas\PeopleDeprecated\Views\Web.config" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
@@ -927,6 +942,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\mail\" />
+    <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>

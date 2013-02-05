@@ -11,7 +11,7 @@
              data-ucosmic-person-derive-display-name="true"
              data-ucosmic-person-derive-display-name-checkbox="@Html.IdFor(m => m.IsDisplayNameDerived)"
              data-ucosmic-person-derive-display-name-textbox="@Html.IdFor(m => m.DisplayName)"
-             @*data-ucosmic-person-derive-display-name-url="@Url.Action(MVC.People.PersonName.GenerateDisplayName())"*@
+             data-ucosmic-person-derive-display-name-url="@Url.Action(MVC.PeopleDeprecated.PersonName.GenerateDisplayName())"
         >
             <div class="text-box input"
                  data-ucosmic-watermark="true"
@@ -45,8 +45,7 @@
         </span>
         <div class="input">
             <div class="combobox" data-ucosmic-autocomplete="true"
-                 @*data-ucosmic-autocomplete-url="@Url.Action(MVC.People.PersonName.AutoCompleteSalutations())"*@
-                >
+                data-ucosmic-autocomplete-url="@Url.Action(MVC.PeopleDeprecated.PersonName.AutoCompleteSalutations())">
                 <div class="text-box input" data-ucosmic-watermark="true"
                  data-ucosmic-watermark-text="@(ModelMetadata.FromLambdaExpression(m => Model.Salutation, ViewData).NullDisplayText)"
                  data-ucosmic-watermark-class="watermark" data-ucosmic-watermark-focused-class="focused"
@@ -108,8 +107,7 @@
         </span>
         <div class="input">
             <div class="combobox" data-ucosmic-autocomplete="true"
-                 @*data-ucosmic-autocomplete-url="@Url.Action(MVC.People.PersonName.AutoCompleteSuffixes())"*@
-                >
+                data-ucosmic-autocomplete-url="@Url.Action(MVC.PeopleDeprecated.PersonName.AutoCompleteSuffixes())">
                 <div class="text-box input" data-ucosmic-watermark="true"
                  data-ucosmic-watermark-text="@(ModelMetadata.FromLambdaExpression(m => Model.Suffix, ViewData).NullDisplayText)"
                  data-ucosmic-watermark-class="watermark" data-ucosmic-watermark-focused-class="focused"

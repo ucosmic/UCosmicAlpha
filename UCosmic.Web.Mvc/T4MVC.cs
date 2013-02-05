@@ -26,6 +26,8 @@ public static class MVC
 {
     static readonly IdentityDeprecatedClass s_IdentityDeprecated = new IdentityDeprecatedClass();
     public static IdentityDeprecatedClass IdentityDeprecated { get { return s_IdentityDeprecated; } }
+    static readonly PeopleDeprecatedClass s_PeopleDeprecated = new PeopleDeprecatedClass();
+    public static PeopleDeprecatedClass PeopleDeprecated { get { return s_PeopleDeprecated; } }
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ErrorsController Errors = new UCosmic.Web.Mvc.Controllers.T4MVC_ErrorsController();
@@ -48,6 +50,14 @@ namespace T4MVC
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateEmailValueController UpdateEmailValue = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateEmailValueController();
         public UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.UpdateNameController UpdateName = new UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.T4MVC_UpdateNameController();
         public T4MVC.IdentityDeprecated.SharedController Shared = new T4MVC.IdentityDeprecated.SharedController();
+    }
+    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+    public class PeopleDeprecatedClass
+    {
+        public readonly string Name = "PeopleDeprecated";
+        public UCosmic.Web.Mvc.Areas.PeopleDeprecated.Controllers.PersonInfoController PersonInfo = new UCosmic.Web.Mvc.Areas.PeopleDeprecated.Controllers.T4MVC_PersonInfoController();
+        public UCosmic.Web.Mvc.Areas.PeopleDeprecated.Controllers.PersonNameController PersonName = new UCosmic.Web.Mvc.Areas.PeopleDeprecated.Controllers.T4MVC_PersonNameController();
+        public T4MVC.PeopleDeprecated.SharedController Shared = new T4MVC.PeopleDeprecated.SharedController();
     }
 }
 
@@ -106,6 +116,19 @@ public class T4MVC_System_Web_Mvc_RedirectResult : System.Web.Mvc.RedirectResult
 public class T4MVC_System_Web_Mvc_PartialViewResult : System.Web.Mvc.PartialViewResult, IT4MVCActionResult
 {
     public T4MVC_System_Web_Mvc_PartialViewResult(string area, string controller, string action, string protocol = null): base()
+    {
+        this.InitMVCT4Result(area, controller, action, protocol);
+    }
+    
+    public string Controller { get; set; }
+    public string Action { get; set; }
+    public string Protocol { get; set; }
+    public RouteValueDictionary RouteValueDictionary { get; set; }
+}
+[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+public class T4MVC_System_Web_Mvc_JsonResult : System.Web.Mvc.JsonResult, IT4MVCActionResult
+{
+    public T4MVC_System_Web_Mvc_JsonResult(string area, string controller, string action, string protocol = null): base()
     {
         this.InitMVCT4Result(area, controller, action, protocol);
     }
