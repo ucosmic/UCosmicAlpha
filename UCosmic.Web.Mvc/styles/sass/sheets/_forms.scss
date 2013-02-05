@@ -94,23 +94,32 @@ select.inline {
 }
 
 /* Kendo ComboBox overrides */
-.k-dropdown-wrap, .k-dropdown-wrap.k-state-border-down {
-    @include border-radius(0);
-    .k-input {
+.k-widget, k.combobox {
+    .k-dropdown-wrap, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
         @include border-radius(0);
         border: solid 1px #aaa;
         border-right-color: #ddd;
         border-bottom-color: #ddd;
-        padding: 5px 8px 5px 5px;
-        height: 38px;
-        @include font-height(16px, 20px);
-        text-indent: 0;
-        @include font-arial;
-        color: #000;
+        padding: 0 22px 0 0;
+        @include inset-box-shadow(0, 0, 0, 0);
+        input.k-input {
+            @include
+            border-radius(0);
+            border: 0;
+            border-right: solid 1px #ddd;
+            padding: 8px 0 8px 8px;
+            height: 36px;
+            @include
+            font-height(16px, 20px);
+            text-indent: 0;
+            @include font-arial;
+            @include inset-box-shadow(0, 0, 0, 0);
+            color: #000;
+        }
+        .k-icon{
+            margin-top: 8px;
+        }
     }
-}
-.k-combobox .k-icon {
-    margin-top: 10px;
 }
 
 a.button {

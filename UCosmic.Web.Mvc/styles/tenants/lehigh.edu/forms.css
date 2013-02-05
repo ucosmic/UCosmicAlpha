@@ -111,27 +111,35 @@ select.inline {
   line-height: 1; }
 
 /* Kendo ComboBox overrides */
-.k-dropdown-wrap, .k-dropdown-wrap.k-state-border-down {
+.k-widget .k-dropdown-wrap, .k-widget .k-dropdown-wrap.k-state-border-down, .k-widget .k-dropdown-wrap.k-state-hover, .k-widget .k-dropdown-wrap.k-state-focused, k.combobox .k-dropdown-wrap, k.combobox .k-dropdown-wrap.k-state-border-down, k.combobox .k-dropdown-wrap.k-state-hover, k.combobox .k-dropdown-wrap.k-state-focused {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  border-radius: 0; }
-  .k-dropdown-wrap .k-input, .k-dropdown-wrap.k-state-border-down .k-input {
+  border-radius: 0;
+  border: solid 1px #aaa;
+  border-right-color: #ddd;
+  border-bottom-color: #ddd;
+  padding: 0 22px 0 0;
+  -moz-box-shadow: inset 0 0 0 0 black;
+  -webkit-box-shadow: inset 0 0 0 0 black;
+  box-shadow: inset 0 0 0 0 black; }
+  .k-widget .k-dropdown-wrap input.k-input, .k-widget .k-dropdown-wrap.k-state-border-down input.k-input, .k-widget .k-dropdown-wrap.k-state-hover input.k-input, .k-widget .k-dropdown-wrap.k-state-focused input.k-input, k.combobox .k-dropdown-wrap input.k-input, k.combobox .k-dropdown-wrap.k-state-border-down input.k-input, k.combobox .k-dropdown-wrap.k-state-hover input.k-input, k.combobox .k-dropdown-wrap.k-state-focused input.k-input {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
-    border: solid 1px #aaa;
-    border-right-color: #ddd;
-    border-bottom-color: #ddd;
-    padding: 5px 8px 5px 5px;
-    height: 38px;
+    border: 0;
+    border-right: solid 1px #ddd;
+    padding: 8px 0 8px 8px;
+    height: 36px;
     font-size: 16px;
     line-height: 20px;
     text-indent: 0;
     font-family: Arial, Helvetica, sans-serif;
+    -moz-box-shadow: inset 0 0 0 0 black;
+    -webkit-box-shadow: inset 0 0 0 0 black;
+    box-shadow: inset 0 0 0 0 black;
     color: #000; }
-
-.k-combobox .k-icon {
-  margin-top: 10px; }
+  .k-widget .k-dropdown-wrap .k-icon, .k-widget .k-dropdown-wrap.k-state-border-down .k-icon, .k-widget .k-dropdown-wrap.k-state-hover .k-icon, .k-widget .k-dropdown-wrap.k-state-focused .k-icon, k.combobox .k-dropdown-wrap .k-icon, k.combobox .k-dropdown-wrap.k-state-border-down .k-icon, k.combobox .k-dropdown-wrap.k-state-hover .k-icon, k.combobox .k-dropdown-wrap.k-state-focused .k-icon {
+    margin-top: 8px; }
 
 a.button {
   -webkit-box-sizing: border-box;

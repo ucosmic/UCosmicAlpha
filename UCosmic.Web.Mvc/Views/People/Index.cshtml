@@ -64,6 +64,14 @@
                     }
                 })
             });
+            //// can do this to make comboboxes and dropdownlist UI appearance consistent.
+            //// however it only works after ko binds the actual options.
+            //// if we had applyBindings in this file, could do it here, but we don't.
+            //// where can this happen? we can do an element binding on the select and then
+            //// invoke kendoDropDownList in the viewmodel..... other ideas?
+            //setTimeout(function () {
+            //    $('#facultyRankSelector').kendoDropDownList();
+            //}, 1000);
         });
 
     </script>
