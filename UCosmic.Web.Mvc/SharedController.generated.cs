@@ -58,6 +58,15 @@ namespace T4MVC
             public readonly string _UserVoiceLink = "~/Views/Shared/_UserVoiceLink.cshtml";
             public readonly string _UserVoiceScript = "~/Views/Shared/_UserVoiceScript.cshtml";
             public readonly string Error = "~/Views/Shared/Error.cshtml";
+            static readonly _EditorTemplatesClass s_EditorTemplates = new _EditorTemplatesClass();
+            public _EditorTemplatesClass EditorTemplates { get { return s_EditorTemplates; } }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public partial class _EditorTemplatesClass
+            {
+                public readonly string Collection = "Collection";
+                public readonly string tinymce_full = "tinymce_full";
+                public readonly string tinymce_full_compressed = "tinymce_full_compressed";
+            }
         }
     }
 
