@@ -169,33 +169,33 @@ var ViewModels;
                 this._picture(inValue);
             };
             PersonalInfo.prototype._initialize = function (inDocumentElementId) {
-                var me = this;
-                var getSalutationsPact = me._dataContext.GetSalutations();
+                var _this = this;
+                var getSalutationsPact = this._dataContext.GetSalutations();
                 getSalutationsPact.then(function (salutations) {
                     for(var i = 0; i < salutations.length; i += 1) {
-                        me.Salutations_Add(salutations[i]);
+                        _this.Salutations_Add(salutations[i]);
                     }
                 }, function (error) {
                 });
-                var getSuffixesPact = me._dataContext.GetSuffixes();
+                var getSuffixesPact = this._dataContext.GetSuffixes();
                 getSuffixesPact.then(function (suffixes) {
                     for(var i = 0; i < suffixes.length; i += 1) {
-                        me.Suffixes_Add(suffixes[i]);
+                        _this.Suffixes_Add(suffixes[i]);
                     }
                 }, function (error) {
                 });
-                var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
+                var getFacultyRanksPact = this._dataContext.GetFacultyRanks();
                 getFacultyRanksPact.then(function (facultyRanks) {
                     for(var i = 0; i < facultyRanks.length; i += 1) {
-                        me.FacultyRanks_Add(facultyRanks[i]);
+                        _this.FacultyRanks_Add(facultyRanks[i]);
                     }
                 }, function (error) {
                 });
                 $.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact).then(function (data) {
-                    me._dataContext.Get().then(function (data) {
-                        me.ToViewModel(me, data);
-                        ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
-                        me.$facultyRanks().kendoDropDownList();
+                    _this._dataContext.Get().then(function (data) {
+                        _this.ToViewModel(_this, data);
+                        ko.applyBindings(_this, $("#" + inDocumentElementId).get(0));
+                        _this.$facultyRanks().kendoDropDownList();
                     }, function (data) {
                     });
                 }, function (data) {

@@ -723,7 +723,6 @@
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <TypeScriptCompile Include="scripts\datacontext\employeewebservice.ts" />
     <TypeScriptCompile Include="scripts\datacontext\employeemockservice.ts" />
-    <Content Include="scripts\combobox.js" />
     <Content Include="scripts\datacontext\employeemockservice.js">
       <DependentUpon>employeemockservice.ts</DependentUpon>
     </Content>

@@ -96,67 +96,67 @@ module ViewModels.Employee {
 		*/
 		// --------------------------------------------------------------------------------
 		private _initialize(inDocumentElementId: String) {
-			var me = this;
+			//var me = this; // not necessary if you use arrow functions
 
 			/* We are going to start two asynch processes. One to load salutations and the other
 			 * to load the faculty ranks.  We will then wait for both before continuing.
 			 */
 
-			var getSalutationsPact: JQueryPromise = me._dataContext.GetSalutations();
+			var getSalutationsPact: JQueryPromise = this._dataContext.GetSalutations();
 			getSalutationsPact.then(
 			/* Success */
-			function (salutations: any): void {
+			(salutations: any): void => {
 				for (var i = 0; i < salutations.length; i += 1) {
-					me.Salutations_Add(<string>salutations[i]);
+					this.Salutations_Add(<string>salutations[i]);
 				}
 			},
 			/* Fail */
-			function (error: any): void {
+			(error: any): void => {
 			});
 
-			var getSuffixesPact: JQueryPromise = me._dataContext.GetSuffixes();
+			var getSuffixesPact: JQueryPromise = this._dataContext.GetSuffixes();
 			getSuffixesPact.then(
 			/* Success */
-			function (suffixes: any): void {
+			(suffixes: any): void => {
 				for (var i = 0; i < suffixes.length; i += 1) {
-					me.Suffixes_Add(<string>suffixes[i]);
+					this.Suffixes_Add(<string>suffixes[i]);
 				}
 			},
 			/* Fail */
-			function (error: any): void {
+			(error: any): void => {
 			});
 			
-			var getFacultyRanksPact = me._dataContext.GetFacultyRanks();
+			var getFacultyRanksPact = this._dataContext.GetFacultyRanks();
 			getFacultyRanksPact.then(
 			/* Success */
-			function (facultyRanks: any): void {
+			(facultyRanks: any): void => {
 				for (var i = 0; i < facultyRanks.length; i += 1) {
-					me.FacultyRanks_Add(facultyRanks[i]);
+					this.FacultyRanks_Add(facultyRanks[i]);
 				}
 			},
 			/* Fail */
-			function (error: any): void {
+			(error: any): void => {
 			});
 
 			// Wait for all loading of selector options before continuing.
 			$.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact)
 					.then( /* Continue once selector data has been loaded */
 							/* Success (selector data)*/
-							function (data: any): void {
-								me._dataContext.Get()
+							(data: any): void => {
+								this._dataContext.Get()
 									.then( /* Load the viewmodel and apply bindings. */
 										/* Success (load viewmodel data)*/
-										function (data: any): void {
-											me.ToViewModel(me, data);
-											ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
+										(data: any): void => {
+											this.ToViewModel(this, data);
+											ko.applyBindings(this, $("#" + inDocumentElementId).get(0));
 
                                             // turn faculty ranks dropdown into kendoui widget
                                             // can only happen after applyBindings AND
                                             // options are downloaded from server
-			                                me.$facultyRanks().kendoDropDownList();
+			                                this.$facultyRanks().kendoDropDownList();
 										},
 										/* Fail (load viewmodel data)*/
-										function (data): void {
+										(data: any): void => {
 										});
 							},
 								/* Fail (selector data)*/
