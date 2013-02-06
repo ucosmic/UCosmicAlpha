@@ -91,7 +91,7 @@ textarea {
         cursor: default; }
 
 /* Kendo ComboBox overrides */
-.k-widget .k-dropdown-wrap, .k-widget .k-dropdown-wrap.k-state-border-down, .k-widget .k-dropdown-wrap.k-state-hover, .k-widget .k-dropdown-wrap.k-state-focused, k.combobox .k-dropdown-wrap, k.combobox .k-dropdown-wrap.k-state-border-down, k.combobox .k-dropdown-wrap.k-state-hover, k.combobox .k-dropdown-wrap.k-state-focused {
+.k-widget .k-dropdown-wrap, .k-widget .k-dropdown-wrap.k-state-default, .k-widget .k-dropdown-wrap.k-state-border-down, .k-widget .k-dropdown-wrap.k-state-hover, .k-widget .k-dropdown-wrap.k-state-focused, k.combobox .k-dropdown-wrap, k.combobox .k-dropdown-wrap.k-state-default, k.combobox .k-dropdown-wrap.k-state-border-down, k.combobox .k-dropdown-wrap.k-state-hover, k.combobox .k-dropdown-wrap.k-state-focused {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -102,7 +102,7 @@ textarea {
   -moz-box-shadow: inset 0 0 0 0 black;
   -webkit-box-shadow: inset 0 0 0 0 black;
   box-shadow: inset 0 0 0 0 black; }
-  .k-widget .k-dropdown-wrap input.k-input, .k-widget .k-dropdown-wrap.k-state-border-down input.k-input, .k-widget .k-dropdown-wrap.k-state-hover input.k-input, .k-widget .k-dropdown-wrap.k-state-focused input.k-input, k.combobox .k-dropdown-wrap input.k-input, k.combobox .k-dropdown-wrap.k-state-border-down input.k-input, k.combobox .k-dropdown-wrap.k-state-hover input.k-input, k.combobox .k-dropdown-wrap.k-state-focused input.k-input {
+  .k-widget .k-dropdown-wrap input.k-input, .k-widget .k-dropdown-wrap.k-state-default input.k-input, .k-widget .k-dropdown-wrap.k-state-border-down input.k-input, .k-widget .k-dropdown-wrap.k-state-hover input.k-input, .k-widget .k-dropdown-wrap.k-state-focused input.k-input, k.combobox .k-dropdown-wrap input.k-input, k.combobox .k-dropdown-wrap.k-state-default input.k-input, k.combobox .k-dropdown-wrap.k-state-border-down input.k-input, k.combobox .k-dropdown-wrap.k-state-hover input.k-input, k.combobox .k-dropdown-wrap.k-state-focused input.k-input {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
@@ -118,7 +118,7 @@ textarea {
     -webkit-box-shadow: inset 0 0 0 0 black;
     box-shadow: inset 0 0 0 0 black;
     color: #000; }
-  .k-widget .k-dropdown-wrap .k-icon, .k-widget .k-dropdown-wrap.k-state-border-down .k-icon, .k-widget .k-dropdown-wrap.k-state-hover .k-icon, .k-widget .k-dropdown-wrap.k-state-focused .k-icon, k.combobox .k-dropdown-wrap .k-icon, k.combobox .k-dropdown-wrap.k-state-border-down .k-icon, k.combobox .k-dropdown-wrap.k-state-hover .k-icon, k.combobox .k-dropdown-wrap.k-state-focused .k-icon {
+  .k-widget .k-dropdown-wrap .k-icon, .k-widget .k-dropdown-wrap.k-state-default .k-icon, .k-widget .k-dropdown-wrap.k-state-border-down .k-icon, .k-widget .k-dropdown-wrap.k-state-hover .k-icon, .k-widget .k-dropdown-wrap.k-state-focused .k-icon, k.combobox .k-dropdown-wrap .k-icon, k.combobox .k-dropdown-wrap.k-state-default .k-icon, k.combobox .k-dropdown-wrap.k-state-border-down .k-icon, k.combobox .k-dropdown-wrap.k-state-hover .k-icon, k.combobox .k-dropdown-wrap.k-state-focused .k-icon {
     margin-top: 8px; }
 
 select {
@@ -142,19 +142,31 @@ select.inline {
 /* Kendo ComboBox overrides */
 .k-dropdown * {
   cursor: pointer; }
-.k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 0;
-  border-right: solid 1px #ddd;
-  padding: 8px 0 8px 8px;
-  height: 36px;
-  text-indent: 0;
-  font-size: 16px;
-  line-height: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #000; }
+.k-dropdown .k-dropdown-wrap, .k-dropdown .k-dropdown-wrap.k-state-default, .k-dropdown .k-dropdown-wrap.k-state-border-down, .k-dropdown .k-dropdown-wrap.k-state-hover, .k-dropdown .k-dropdown-wrap.k-state-focused {
+  xbackground-image: none; }
+  .k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-input, .k-dropdown .k-dropdown-wrap.k-state-hover .k-input, .k-dropdown .k-dropdown-wrap.k-state-focused .k-input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border: 0;
+    border-right: solid 1px #ddd;
+    padding: 8px 0 8px 8px;
+    height: 36px;
+    text-indent: 0;
+    font-size: 16px;
+    line-height: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #fff;
+    color: #000; }
+
+.k-list > .k-state-focused {
+  background-image: -webkit-linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
+  background-image: -moz-linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
+  background-image: linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dbdbdb', EndColorStr='#f2f2f2'); }
 
 a.button {
   -webkit-box-sizing: border-box;

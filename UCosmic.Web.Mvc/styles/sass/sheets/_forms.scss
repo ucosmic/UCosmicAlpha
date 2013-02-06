@@ -79,7 +79,7 @@ textarea {
 
 /* Kendo ComboBox overrides */
 .k-widget, k.combobox {
-    .k-dropdown-wrap, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
+    .k-dropdown-wrap, .k-dropdown-wrap.k-state-default, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
         @include border-radius(0);
         border: solid 1px #aaa;
         border-right-color: #ddd;
@@ -125,9 +125,11 @@ select.inline {
     * {
         cursor: pointer;
     }
-    .k-dropdown-wrap, .k-dropdown-wrap.k-state-default {
+    .k-dropdown-wrap, .k-dropdown-wrap.k-state-default, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
+        xbackground-image: none;
         .k-input {
             @include border-box;
+            @include border-radius(0);
             border: 0;
             border-right: solid 1px #ddd;
             padding: 8px 0 8px 8px;
@@ -135,8 +137,15 @@ select.inline {
             text-indent: 0;
             @include font-height(16px, 20px);
             @include font-arial;
+            background-color: #fff;
             color: #000;
         }
+    }
+}
+
+.k-list {
+    > .k-state-focused {
+        @include linear-bg-gradient(270deg, rgb(219, 219, 219), 0%, rgb(242, 242, 242), 100%)
     }
 }
 
