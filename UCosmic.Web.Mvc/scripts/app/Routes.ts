@@ -158,6 +158,19 @@ module App.Routes {
             }
 
         }
+
+        export module People {
+            export class NameSalutations {
+                static get (): string {
+                    return makeUrl('person-name-salutations');
+                }
+            }
+            export class NameSuffixes {
+                static get (): string {
+                    return makeUrl('person-name-suffixes');
+                }
+            }
+        }
     }
 }
 

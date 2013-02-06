@@ -5,6 +5,7 @@
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../datacontext/iemployee.ts" />
+/// <reference path="../../app/Routes.ts" />
 
 module ViewModels.Employee {
 
@@ -181,7 +182,7 @@ module ViewModels.Employee {
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: '/api/person-name-salutations/'
+                                    url: App.Routes.WebApi.People.NameSalutations.get()
                                 }
                             }
                         })
@@ -195,7 +196,7 @@ module ViewModels.Employee {
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: '/api/person-name-suffixes/'
+                                    url: App.Routes.WebApi.People.NameSuffixes.get()
                                 }
                             }
                         })

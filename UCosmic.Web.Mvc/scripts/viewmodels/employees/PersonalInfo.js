@@ -34,7 +34,7 @@ var ViewModels;
                             dataSource: new kendo.data.DataSource({
                                 transport: {
                                     read: {
-                                        url: '/api/person-name-salutations/'
+                                        url: App.Routes.WebApi.People.NameSalutations.get()
                                     }
                                 }
                             })
@@ -49,7 +49,7 @@ var ViewModels;
                             dataSource: new kendo.data.DataSource({
                                 transport: {
                                     read: {
-                                        url: '/api/person-name-suffixes/'
+                                        url: App.Routes.WebApi.People.NameSuffixes.get()
                                     }
                                 }
                             })

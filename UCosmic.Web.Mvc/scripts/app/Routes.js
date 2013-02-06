@@ -153,6 +153,25 @@ var App;
                 Establishments.Locations = Locations;                
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
+            (function (People) {
+                var NameSalutations = (function () {
+                    function NameSalutations() { }
+                    NameSalutations.get = function get() {
+                        return makeUrl('person-name-salutations');
+                    }
+                    return NameSalutations;
+                })();
+                People.NameSalutations = NameSalutations;                
+                var NameSuffixes = (function () {
+                    function NameSuffixes() { }
+                    NameSuffixes.get = function get() {
+                        return makeUrl('person-name-suffixes');
+                    }
+                    return NameSuffixes;
+                })();
+                People.NameSuffixes = NameSuffixes;                
+            })(WebApi.People || (WebApi.People = {}));
+            var People = WebApi.People;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
     })(App.Routes || (App.Routes = {}));

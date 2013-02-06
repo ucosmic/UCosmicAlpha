@@ -1,5 +1,6 @@
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 /// <reference path="iemployee.ts" />
+/// <reference path="../app/Routes.ts" />
 
 module DataContext {
 	export class EmployeeWebService extends IEmployee {
@@ -30,7 +31,7 @@ module DataContext {
 		/*override*/ GetSalutations(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
 			//$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/salutations/",
-			$.getJSON("/api/person-name-salutations/",
+			$.getJSON(App.Routes.WebApi.People.NameSalutations.get(),
 				 function (data, textStatus, jqXHR) {
 						deferred.resolve(data);
 				 } );
@@ -40,7 +41,7 @@ module DataContext {
 		/*override*/ GetSuffixes(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
 			//$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/suffixes/",
-			$.getJSON("/api/person-name-suffixes/",
+			$.getJSON(App.Routes.WebApi.People.NameSuffixes.get(),
 				 function (data, textStatus, jqXHR) {
 						deferred.resolve(data);
 				 } );
