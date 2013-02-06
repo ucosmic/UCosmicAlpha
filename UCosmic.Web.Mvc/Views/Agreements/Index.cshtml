@@ -38,7 +38,7 @@
                                     @{
                                         // HACK ALERT this is only temporary
                                         var tenancy = Request.Tenancy() != null
-                                            ? Request.Tenancy().Domain
+                                            ? Request.Tenancy().StyleDomain
                                             : "default";
                                     }
                                     <input type="hidden" value="@tenancy" id="tenancy_domain" />

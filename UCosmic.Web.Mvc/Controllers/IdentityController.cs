@@ -1,6 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Linq.Expressions;
+using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using AutoMapper;
 using UCosmic.Domain.Employees;
+using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -36,13 +40,24 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 _userSigner.SignOn(model.UserName, model.RememberMe);
 
-                /* Set the anchor link text to the employee personal info controller. */
+                // get tenancy cookie info
+                var user = _queryProcessor.Execute(new UserByName(model.UserName)
                 {
-                    EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
-                        new RootEmployeeModuleSettingsByUserName(model.UserName));
+                    EagerLoad = new Expression<Func<User, object>>[]
+                    {
+                        x => x.Person.Affiliations,
+                    },
+                });
+                var tenancy = Mapper.Map<Tenancy>(user);
 
-                    Session["PersonalInfoAnchorText"] = employeeModuleSettings.PersonalInfoAnchorText;
-                }
+                /* Set the anchor link text to the employee personal info controller. */
+                EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
+                    new RootEmployeeModuleSettingsByUserName(model.UserName));
+                if (employeeModuleSettings != null)
+                    Mapper.Map(employeeModuleSettings, tenancy);
+
+                // set tenancy
+                Response.Tenancy(tenancy);
 
                 TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", model.UserName));
                 return Redirect(model.ReturnUrl ?? _userSigner.DefaultSignedOnUrl);
@@ -59,6 +74,13 @@ namespace UCosmic.Web.Mvc.Controllers
             if (!string.IsNullOrWhiteSpace(User.Identity.Name))
             {
                 _userSigner.SignOff();
+
+                // reset tenancy cookie
+                var oldTenancy = Request.Tenancy();
+                var newTenancy = new Tenancy();
+                if (oldTenancy != null) newTenancy.StyleDomain = oldTenancy.StyleDomain;
+                Response.Tenancy(newTenancy);
+
                 TempData.Flash("You have successfully been signed out of UCosmic.");
                 return RedirectToAction(MVC.Identity.SignOut(returnUrl));
             }

@@ -47,6 +47,15 @@ namespace UCosmic
             return email.Substring(email.LastIndexOf(at));
         }
 
+        public static string GetUrlDomain(this string url)
+        {
+            if (url == null) throw new ArgumentNullException("url");
+
+            if (url.StartsWith("www."))
+                url = url.Substring(4);
+            return url;
+        }
+
         public static string FormatTemplate(this string template, IEnumerable<KeyValuePair<string, string>> replacements)
         {
             if (string.IsNullOrWhiteSpace(template))

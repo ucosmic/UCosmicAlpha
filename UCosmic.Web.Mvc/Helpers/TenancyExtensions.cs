@@ -9,18 +9,8 @@ namespace UCosmic.Web.Mvc
     {
         private const string CookieName = "Tenancy";
 
-        public static void Tenancy(this HttpResponseBase response, string domain, int? tenantId = null, int? personId = null, int? userId = null, string userName = null)
+        public static void Tenancy(this HttpResponseBase response, Tenancy tenancy)
         {
-            // create tenancy model object
-            var tenancy = new Tenancy
-           {
-               Domain = domain,
-               TenantId = tenantId,
-               PersonId = personId,
-               UserId = userId,
-               UserName = userName,
-           };
-
             // serialize model to json
             var json = JsonConvert.SerializeObject(tenancy);
 

@@ -57,7 +57,7 @@ namespace UCosmic.SeedData
                     new EmployeeFacultyRank {Rank = "Other"},
                 },
                 NotifyAdminOnUpdate = false,
-                PersonalInfoAnchorText = "My International",
+                PersonalInfoAnchorText = null, //"My International",
                 ForEstablishmentId = establishment.RevisionId,
             });
         }

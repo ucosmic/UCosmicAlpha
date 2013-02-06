@@ -20,10 +20,11 @@
                     @if (Request.IsAuthenticated)
                     {
                         <a href="#/me" class="email">@User.Identity.Name</a>
-                        
-                        var anchor = (string)Session["PersonalInfoAnchorText"];
-                        if ( String.IsNullOrEmpty(anchor) ) { anchor = "My International"; }
-                        <a href="@Url.Action(MVC.People.Index())">@anchor</a>
+
+                        var tenancy = Request.Tenancy();
+                        var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle)) 
+                            ? tenancy.CustomProfileTitle : "My UCosmic Profile";
+                        <a href="@Url.Action(MVC.People.Index())">@customProfileTitle</a>
 
                         <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }

@@ -1,6 +1,14 @@
 ﻿@model UCosmic.Domain.People.Person
 
-@{ ViewBag.Title = "Personal Profile"; }
+@{
+    var customProfileTitle = "My UCosmic Profile";
+    var tenancy = Request.Tenancy();
+    if (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
+    {
+        customProfileTitle = tenancy.CustomProfileTitle;
+    }
+    ViewBag.Title = customProfileTitle;
+}
 
 @section styles
 {
