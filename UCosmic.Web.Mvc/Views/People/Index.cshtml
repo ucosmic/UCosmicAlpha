@@ -42,33 +42,33 @@
             $("#accordion").accordion();
             $("#accordion").removeClass("ui-widget");
 
-            $('#salutationTextbox').kendoComboBox({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: new kendo.data.DataSource({
-                    transport: {
-                        read: {
-                            url: '/api/person-name-salutations/'
-                        }
-                    }
-                })
-            });
-            $('#suffixTextbox').kendoComboBox({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: new kendo.data.DataSource({
-                    transport: {
-                        read: {
-                            url: '/api/person-name-suffixes/'
-                        }
-                    }
-                })
-            });
-            //// can do this to make comboboxes and dropdownlist UI appearance consistent.
-            //// however it only works after ko binds the actual options.
-            //// if we had applyBindings in this file, could do it here, but we don't.
-            //// where can this happen? we can do an element binding on the select and then
-            //// invoke kendoDropDownList in the viewmodel..... other ideas?
+            //$('#salutationTextbox').kendoComboBox({
+            //    dataTextField: "text",
+            //    dataValueField: "value",
+            //    dataSource: new kendo.data.DataSource({
+            //        transport: {
+            //            read: {
+            //                url: '/api/person-name-salutations/'
+            //            }
+            //        }
+            //    })
+            //});
+            //$('#suffixTextbox').kendoComboBox({
+            //    dataTextField: "text",
+            //    dataValueField: "value",
+            //    dataSource: new kendo.data.DataSource({
+            //        transport: {
+            //            read: {
+            //                url: '/api/person-name-suffixes/'
+            //            }
+            //        }
+            //    })
+            //});
+            // can do this to make comboboxes and dropdownlist UI appearance consistent.
+            // however it only works after ko binds the actual options.
+            // if we had applyBindings in this file, could do it here, but we don't.
+            // where can this happen? we can do an element binding on the select and then
+            // invoke kendoDropDownList in the viewmodel..... other ideas?
             //setTimeout(function () {
             //    $('#facultyRankSelector').kendoDropDownList();
             //}, 1000);
@@ -127,7 +127,7 @@
                                                             <td class="table-column-value">
                                                                 <div>
                                                                     <!-- TODO: Really poor 'combobox' until we figure out a solution. See combobox.js -->
-                                                                    <input id="salutationTextbox" type="text" style="width: 350px" data-bind="value: _salutation" />
+                                                                    <input id="salutationTextbox" type="text" style="width: 350px" data-bind="value: _salutation, jqObservableElement: '$nameSalutation'" />
                                                                     @*<select id="salutationSelector"
                                                                         style="width: 80px"
                                                                         data-bind="options: _salutations, optionsCaption: ' '"
@@ -158,7 +158,7 @@
                                                             <td class="table-column-label">Suffix:</td>
                                                             <td class="table-column-value">
                                                                 <!-- TODO: Really poor 'combobox' until we figure out a solution. See combobox.js -->
-                                                                <input id="suffixTextbox" type="text" style="width: 350px" data-bind="value: _suffix" />
+                                                                <input id="suffixTextbox" type="text" style="width: 350px" data-bind="value: _suffix, jqObservableElement: '$nameSuffix'" />
                                                                 @*<select id="suffixSelector"
                                                                     style="width: 80px"
                                                                     data-bind="options: _suffixes, optionsCaption: ' '"
@@ -169,7 +169,8 @@
                                                         <tr>
                                                             <td class="table-column-label">Faculty rank:</td>
                                                             <td class="table-column-value">
-                                                                <select id="facultyRankSelector" style="width: 350px" data-bind="options: _facultyRanks, optionsText: 'rank', value: _facultyRank, optionsCaption: 'Select...'"></select>
+                                                                <select id="facultyRankSelector" style="width: 350px"
+                                                                    data-bind="options: _facultyRanks, optionsText: 'rank', value: _facultyRank, optionsCaption: 'Select...', jqObservableElement: '$facultyRanks'"></select>
                                                             </td>
                                                         </tr>
                                                         <tr>

@@ -21,8 +21,41 @@ var ViewModels;
                 this._facultyRank = ko.observable();
                 this._administrativeAppointments = ko.observable();
                 this._picture = ko.observable();
+                this.$facultyRanks = ko.observable();
+                this.$nameSalutation = ko.observable();
+                this.$nameSuffix = ko.observable();
                 this._dataContext = inDataContext;
                 this._initialize(inDocumentElementId);
+                this.$nameSalutation.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoComboBox({
+                            dataTextField: "text",
+                            dataValueField: "value",
+                            dataSource: new kendo.data.DataSource({
+                                transport: {
+                                    read: {
+                                        url: '/api/person-name-salutations/'
+                                    }
+                                }
+                            })
+                        });
+                    }
+                });
+                this.$nameSuffix.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoComboBox({
+                            dataTextField: "text",
+                            dataValueField: "value",
+                            dataSource: new kendo.data.DataSource({
+                                transport: {
+                                    read: {
+                                        url: '/api/person-name-suffixes/'
+                                    }
+                                }
+                            })
+                        });
+                    }
+                });
             }
             PersonalInfo.prototype.GetRevisionId = function () {
                 return this._revisionId;
@@ -162,6 +195,7 @@ var ViewModels;
                     me._dataContext.Get().then(function (data) {
                         me.ToViewModel(me, data);
                         ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
+                        me.$facultyRanks().kendoDropDownList();
                     }, function (data) {
                     });
                 }, function (data) {

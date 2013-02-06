@@ -90,24 +90,6 @@ textarea {
       .text-box.when-hovered.force-unhoverable * {
         cursor: default; }
 
-select {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 38px;
-  border: solid 1px #aaa;
-  border-right-color: #ddd;
-  border-bottom-color: #ddd;
-  padding: 8px;
-  font-size: 16px;
-  line-height: 20px; }
-
-select.inline {
-  padding: 0;
-  height: auto;
-  font-size: 14px;
-  line-height: 1; }
-
 /* Kendo ComboBox overrides */
 .k-widget .k-dropdown-wrap, .k-widget .k-dropdown-wrap.k-state-border-down, .k-widget .k-dropdown-wrap.k-state-hover, .k-widget .k-dropdown-wrap.k-state-focused, k.combobox .k-dropdown-wrap, k.combobox .k-dropdown-wrap.k-state-border-down, k.combobox .k-dropdown-wrap.k-state-hover, k.combobox .k-dropdown-wrap.k-state-focused {
   -moz-border-radius: 0;
@@ -128,9 +110,9 @@ select.inline {
     border-right: solid 1px #ddd;
     padding: 8px 0 8px 8px;
     height: 36px;
+    text-indent: 0;
     font-size: 16px;
     line-height: 20px;
-    text-indent: 0;
     font-family: Arial, Helvetica, sans-serif;
     -moz-box-shadow: inset 0 0 0 0 black;
     -webkit-box-shadow: inset 0 0 0 0 black;
@@ -138,6 +120,41 @@ select.inline {
     color: #000; }
   .k-widget .k-dropdown-wrap .k-icon, .k-widget .k-dropdown-wrap.k-state-border-down .k-icon, .k-widget .k-dropdown-wrap.k-state-hover .k-icon, .k-widget .k-dropdown-wrap.k-state-focused .k-icon, k.combobox .k-dropdown-wrap .k-icon, k.combobox .k-dropdown-wrap.k-state-border-down .k-icon, k.combobox .k-dropdown-wrap.k-state-hover .k-icon, k.combobox .k-dropdown-wrap.k-state-focused .k-icon {
     margin-top: 8px; }
+
+select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 38px;
+  border: solid 1px #aaa;
+  border-right-color: #ddd;
+  border-bottom-color: #ddd;
+  padding: 8px;
+  font-size: 16px;
+  line-height: 20px; }
+
+select.inline {
+  padding: 0;
+  height: auto;
+  font-size: 14px;
+  line-height: 1; }
+
+/* Kendo ComboBox overrides */
+.k-dropdown * {
+  cursor: pointer; }
+.k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 0;
+  border-right: solid 1px #ddd;
+  padding: 8px 0 8px 8px;
+  height: 36px;
+  text-indent: 0;
+  font-size: 16px;
+  line-height: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000; }
 
 a.button {
   -webkit-box-sizing: border-box;

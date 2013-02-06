@@ -2,6 +2,8 @@
 /// <reference path="../../jquery/jqueryui-1.9.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../ko/knockout.extensions.d.ts" />
+/// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../datacontext/iemployee.ts" />
 
 module ViewModels.Employee {
@@ -85,6 +87,10 @@ module ViewModels.Employee {
 		GetPicture(): any { return this._picture(); }
 		SetPicture(inValue: any): void { this._picture(inValue); }
 
+		$facultyRanks: KnockoutObservableJQuery = ko.observable();
+		$nameSalutation: KnockoutObservableJQuery = ko.observable();
+		$nameSuffix: KnockoutObservableJQuery = ko.observable();
+
 		// --------------------------------------------------------------------------------
 		/*
 		*/
@@ -143,6 +149,11 @@ module ViewModels.Employee {
 										function (data: any): void {
 											me.ToViewModel(me, data);
 											ko.applyBindings(me, $("#" + inDocumentElementId).get(0));
+
+                                            // turn faculty ranks dropdown into kendoui widget
+                                            // can only happen after applyBindings AND
+                                            // options are downloaded from server
+			                                me.$facultyRanks().kendoDropDownList();
 										},
 										/* Fail (load viewmodel data)*/
 										function (data): void {
@@ -160,6 +171,36 @@ module ViewModels.Employee {
 		constructor(inDocumentElementId: String, inDataContext: DataContext.IEmployee) {
 			this._dataContext = inDataContext;
 			this._initialize(inDocumentElementId);
+
+            // comboboxes for salutation & suffix
+			this.$nameSalutation.subscribe((newValue: JQuery): void => {
+			    if (newValue && newValue.length)
+			        newValue.kendoComboBox({
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    url: '/api/person-name-salutations/'
+                                }
+                            }
+                        })
+                    });
+            });
+			this.$nameSuffix.subscribe((newValue: JQuery): void => {
+			    if (newValue && newValue.length)
+			        newValue.kendoComboBox({
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    url: '/api/person-name-suffixes/'
+                                }
+                            }
+                        })
+                    });
+            });
 		}
 
 		// --------------------------------------------------------------------------------

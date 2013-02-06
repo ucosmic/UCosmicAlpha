@@ -1188,6 +1188,7 @@
     <Content Include="scripts\kendo\2012.3.1114\kendo.web.min.js" />
     <Content Include="scripts\kendo\2012.3.1114\kendo.window.js" />
     <Content Include="scripts\kendo\2012.3.1114\kendo.window.min.js" />
+    <Content Include="scripts\kendo\kendouiweb.d.ts" />
     <Content Include="scripts\ko\knockout.extensions.d.ts" />
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
@@ -1505,9 +1506,6 @@
     </Content>
     <Content Include="scripts\viewmodels\establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\employees\PersonalInfo.min.js.map">
-      <DependentUpon>PersonalInfo.js</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
