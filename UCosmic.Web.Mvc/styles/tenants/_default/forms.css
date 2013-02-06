@@ -91,35 +91,40 @@ textarea {
         cursor: default; }
 
 /* Kendo ComboBox overrides */
-.k-widget .k-dropdown-wrap, .k-widget .k-dropdown-wrap.k-state-default, .k-widget .k-dropdown-wrap.k-state-border-down, .k-widget .k-dropdown-wrap.k-state-hover, .k-widget .k-dropdown-wrap.k-state-focused, k.combobox .k-dropdown-wrap, k.combobox .k-dropdown-wrap.k-state-default, k.combobox .k-dropdown-wrap.k-state-border-down, k.combobox .k-dropdown-wrap.k-state-hover, k.combobox .k-dropdown-wrap.k-state-focused {
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-  border: solid 1px #aaa;
-  border-right-color: #ddd;
-  border-bottom-color: #ddd;
-  padding: 0 22px 0 0;
-  -moz-box-shadow: inset 0 0 0 0 black;
-  -webkit-box-shadow: inset 0 0 0 0 black;
-  box-shadow: inset 0 0 0 0 black; }
-  .k-widget .k-dropdown-wrap input.k-input, .k-widget .k-dropdown-wrap.k-state-default input.k-input, .k-widget .k-dropdown-wrap.k-state-border-down input.k-input, .k-widget .k-dropdown-wrap.k-state-hover input.k-input, .k-widget .k-dropdown-wrap.k-state-focused input.k-input, k.combobox .k-dropdown-wrap input.k-input, k.combobox .k-dropdown-wrap.k-state-default input.k-input, k.combobox .k-dropdown-wrap.k-state-border-down input.k-input, k.combobox .k-dropdown-wrap.k-state-hover input.k-input, k.combobox .k-dropdown-wrap.k-state-focused input.k-input {
+.k-combobox {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%; }
+  .k-combobox .k-dropdown-wrap, .k-combobox .k-dropdown-wrap.k-state-default, .k-combobox .k-dropdown-wrap.k-state-border-down, .k-combobox .k-dropdown-wrap.k-state-hover, .k-combobox .k-dropdown-wrap.k-state-focused {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
-    border: 0;
-    border-right: solid 1px #ddd;
-    padding: 8px 0 8px 8px;
-    height: 36px;
-    text-indent: 0;
-    font-size: 16px;
-    line-height: 20px;
-    font-family: Arial, Helvetica, sans-serif;
+    border: solid 1px #aaa;
+    border-right-color: #ddd;
+    border-bottom-color: #ddd;
+    padding: 0 22px 0 0;
     -moz-box-shadow: inset 0 0 0 0 black;
     -webkit-box-shadow: inset 0 0 0 0 black;
-    box-shadow: inset 0 0 0 0 black;
-    color: #000; }
-  .k-widget .k-dropdown-wrap .k-icon, .k-widget .k-dropdown-wrap.k-state-default .k-icon, .k-widget .k-dropdown-wrap.k-state-border-down .k-icon, .k-widget .k-dropdown-wrap.k-state-hover .k-icon, .k-widget .k-dropdown-wrap.k-state-focused .k-icon, k.combobox .k-dropdown-wrap .k-icon, k.combobox .k-dropdown-wrap.k-state-default .k-icon, k.combobox .k-dropdown-wrap.k-state-border-down .k-icon, k.combobox .k-dropdown-wrap.k-state-hover .k-icon, k.combobox .k-dropdown-wrap.k-state-focused .k-icon {
-    margin-top: 8px; }
+    box-shadow: inset 0 0 0 0 black; }
+    .k-combobox .k-dropdown-wrap input.k-input, .k-combobox .k-dropdown-wrap.k-state-default input.k-input, .k-combobox .k-dropdown-wrap.k-state-border-down input.k-input, .k-combobox .k-dropdown-wrap.k-state-hover input.k-input, .k-combobox .k-dropdown-wrap.k-state-focused input.k-input {
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+      border-radius: 0;
+      border: 0;
+      border-right: solid 1px #ddd;
+      padding: 8px 0 8px 8px;
+      height: 36px;
+      text-indent: 0;
+      font-size: 16px;
+      line-height: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      -moz-box-shadow: inset 0 0 0 0 black;
+      -webkit-box-shadow: inset 0 0 0 0 black;
+      box-shadow: inset 0 0 0 0 black;
+      color: #000; }
+    .k-combobox .k-dropdown-wrap .k-icon, .k-combobox .k-dropdown-wrap.k-state-default .k-icon, .k-combobox .k-dropdown-wrap.k-state-border-down .k-icon, .k-combobox .k-dropdown-wrap.k-state-hover .k-icon, .k-combobox .k-dropdown-wrap.k-state-focused .k-icon {
+      margin-top: 8px; }
 
 select {
   -webkit-box-sizing: border-box;
@@ -139,30 +144,43 @@ select.inline {
   font-size: 14px;
   line-height: 1; }
 
-/* Kendo ComboBox overrides */
-.k-dropdown * {
-  cursor: pointer; }
-.k-dropdown .k-dropdown-wrap, .k-dropdown .k-dropdown-wrap.k-state-default, .k-dropdown .k-dropdown-wrap.k-state-border-down, .k-dropdown .k-dropdown-wrap.k-state-hover, .k-dropdown .k-dropdown-wrap.k-state-focused {
-  xbackground-image: none; }
-  .k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-input, .k-dropdown .k-dropdown-wrap.k-state-hover .k-input, .k-dropdown .k-dropdown-wrap.k-state-focused .k-input {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+/* Kendo DropDownList overrides */
+.k-dropdown {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%; }
+  .k-dropdown * {
+    cursor: pointer; }
+  .k-dropdown .k-dropdown-wrap, .k-dropdown .k-dropdown-wrap.k-state-default, .k-dropdown .k-dropdown-wrap.k-state-border-down, .k-dropdown .k-dropdown-wrap.k-state-hover, .k-dropdown .k-dropdown-wrap.k-state-focused {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
-    border: 0;
-    border-right: solid 1px #ddd;
-    padding: 8px 0 8px 8px;
-    height: 36px;
-    text-indent: 0;
-    font-size: 16px;
-    line-height: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #fff;
-    color: #000; }
+    border: solid 1px #aaa;
+    border-right-color: #ddd;
+    border-bottom-color: #ddd;
+    padding: 0 22px 0 0; }
+    .k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-input, .k-dropdown .k-dropdown-wrap.k-state-hover .k-input, .k-dropdown .k-dropdown-wrap.k-state-focused .k-input {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+      border-radius: 0;
+      border: 0;
+      border-right: solid 1px #ddd;
+      padding: 8px 0 8px 8px;
+      height: 36px;
+      text-indent: 0;
+      font-size: 16px;
+      line-height: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #fff;
+      color: #000; }
+    .k-dropdown .k-dropdown-wrap .k-icon, .k-dropdown .k-dropdown-wrap.k-state-default .k-icon, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-icon, .k-dropdown .k-dropdown-wrap.k-state-hover .k-icon, .k-dropdown .k-dropdown-wrap.k-state-focused .k-icon {
+      margin-top: 8px; }
 
-.k-list > .k-state-focused {
+.k-list-container .k-list > .k-state-focused {
   background-image: -webkit-linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
   background-image: -moz-linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
   background-image: linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
@@ -311,6 +329,8 @@ form {
     box-sizing: border-box;
     width: 100%;
     margin-bottom: 16px; }
+    .field-table .field-row.above-unlabeled-row {
+      margin-bottom: 5px; }
     .field-table .field-row .field-label {
       float: left;
       -webkit-box-sizing: border-box;
@@ -331,12 +351,39 @@ form {
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         margin-left: 0; }
+      .field-table .field-row .field-input.for-checkables {
+        display: inline-block;
+        padding: 9px 0; }
     .field-table .field-row .field-value {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       float: left;
       padding: 9px 0; }
+    .field-table .field-row .field-input .field-addendum, .field-table .field-row .field-value .field-addendum {
+      padding: 5px 0; }
+  .field-table.w690-l290-v400 .field-label {
+    width: 290px; }
+  .field-table.w690-l290-v400 .field-input {
+    width: 400px; }
+    .field-table.w690-l290-v400 .field-input select {
+      /*max-width: $vWidth;*/
+      width: 400px; }
+  .field-table.w690-l290-v400 .field-value {
+    width: 400px; }
+  .field-table.w690-l290-v400 .field-unlabeled-input, .field-table.w690-l290-v400 .field-unlabeled-value {
+    width: 690px; }
+  .field-table.w690-l250-v440 .field-label {
+    width: 250px; }
+  .field-table.w690-l250-v440 .field-input {
+    width: 440px; }
+    .field-table.w690-l250-v440 .field-input select {
+      /*max-width: $vWidth;*/
+      width: 440px; }
+  .field-table.w690-l250-v440 .field-value {
+    width: 440px; }
+  .field-table.w690-l250-v440 .field-unlabeled-input, .field-table.w690-l250-v440 .field-unlabeled-value {
+    width: 690px; }
   .field-table.w690-l230-v460 .field-label {
     width: 230px; }
   .field-table.w690-l230-v460 .field-input {
@@ -346,6 +393,8 @@ form {
       width: 460px; }
   .field-table.w690-l230-v460 .field-value {
     width: 460px; }
+  .field-table.w690-l230-v460 .field-unlabeled-input, .field-table.w690-l230-v460 .field-unlabeled-value {
+    width: 690px; }
   .field-table.w690-l200-v490 .field-label {
     width: 200px; }
   .field-table.w690-l200-v490 .field-input {
@@ -355,6 +404,8 @@ form {
       width: 490px; }
   .field-table.w690-l200-v490 .field-value {
     width: 490px; }
+  .field-table.w690-l200-v490 .field-unlabeled-input, .field-table.w690-l200-v490 .field-unlabeled-value {
+    width: 690px; }
   .field-table.w690-l190-v500 .field-label {
     width: 190px; }
   .field-table.w690-l190-v500 .field-input {
@@ -364,6 +415,8 @@ form {
       width: 500px; }
   .field-table.w690-l190-v500 .field-value {
     width: 500px; }
+  .field-table.w690-l190-v500 .field-unlabeled-input, .field-table.w690-l190-v500 .field-unlabeled-value {
+    width: 690px; }
 
 .typed-item {
   -webkit-box-sizing: border-box;

@@ -78,7 +78,9 @@ textarea {
 }
 
 /* Kendo ComboBox overrides */
-.k-widget, k.combobox {
+.k-combobox {
+    @include border-box;
+    width: 100%;
     .k-dropdown-wrap, .k-dropdown-wrap.k-state-default, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
         @include border-radius(0);
         border: solid 1px #aaa;
@@ -120,13 +122,19 @@ select.inline {
     @include font-height(14px, 1);
 }
 
-/* Kendo ComboBox overrides */
+/* Kendo DropDownList overrides */
 .k-dropdown {
+    @include border-box;
+    width: 100%;
     * {
         cursor: pointer;
     }
     .k-dropdown-wrap, .k-dropdown-wrap.k-state-default, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
-        xbackground-image: none;
+        @include border-radius(0);
+        border: solid 1px #aaa;
+        border-right-color: #ddd;
+        border-bottom-color: #ddd;
+        padding: 0 22px 0 0;
         .k-input {
             @include border-box;
             @include border-radius(0);
@@ -140,12 +148,17 @@ select.inline {
             background-color: #fff;
             color: #000;
         }
+        .k-icon{
+            margin-top: 8px;
+        }
     }
 }
 
-.k-list {
-    > .k-state-focused {
-        @include linear-bg-gradient(270deg, rgb(219, 219, 219), 0%, rgb(242, 242, 242), 100%)
+.k-list-container {
+    .k-list {
+        > .k-state-focused {
+            @include linear-bg-gradient(270deg, rgb(219, 219, 219), 0%, rgb(242, 242, 242), 100%)
+        }
     }
 }
 
@@ -278,6 +291,9 @@ form {
         @include border-box;
         width: 100%;
         margin-bottom: 16px;
+        &.above-unlabeled-row {
+            margin-bottom: 5px;
+        }
         .field-label {
             float: left;
             @include border-box;
@@ -296,11 +312,20 @@ form {
                 @include border-box;
                 margin-left: 0;
             }
+            &.for-checkables {
+                display: inline-block;
+                padding: 9px 0;
+            }
         }
         .field-value {
             @include border-box;
             float: left;
             padding: 9px 0;
+        }
+        .field-input, .field-value {
+            .field-addendum {
+                padding: 5px 0;
+            }
         }
     }
     @mixin field-column-split($lWidth, $vWidth) {
@@ -317,6 +342,15 @@ form {
         .field-value {
             width: $vWidth;
         }
+        .field-unlabeled-input, .field-unlabeled-value {
+            width: $vWidth + $lWidth;
+        }
+    }
+    &.w690-l290-v400 {
+        @include field-column-split(290px, 400px);
+    }
+    &.w690-l250-v440 {
+        @include field-column-split(250px, 440px);
     }
     &.w690-l230-v460 {
         @include field-column-split(230px, 460px);

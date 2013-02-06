@@ -36,6 +36,7 @@ namespace UCosmic.SeedData
                 RoleName.ElmahViewer,
                 RoleName.InstitutionalAgreementManager,
                 RoleName.InstitutionalAgreementSupervisor,
+                RoleName.EmployeeProfileManager,
             };
 
             // seed developers

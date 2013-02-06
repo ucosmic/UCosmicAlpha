@@ -13,6 +13,8 @@ namespace UCosmic
         public const string InstitutionalAgreementManager = "Institutional Agreement Manager";
         public const string InstitutionalAgreementManagers = "Institutional Agreement Supervisor,Institutional Agreement Manager";
 
+        public const string EmployeeProfileManager = "Employee Profile Manager";
+
         public const string EstablishmentLocationAgent = "Establishment Location Agent";
 
         public const string ElmahViewer = "Elmah Viewer";

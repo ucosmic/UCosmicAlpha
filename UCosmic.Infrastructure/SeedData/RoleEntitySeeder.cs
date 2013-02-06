@@ -39,6 +39,9 @@ namespace UCosmic.SeedData
             Seed(RoleName.ElmahViewer,
                 "Elmah Viewers can view the ELMAH error logs."
             );
+            Seed(RoleName.EmployeeProfileManager,
+                "Employee Profile Managers can view private information about employees."
+            );
         }
     }
 
