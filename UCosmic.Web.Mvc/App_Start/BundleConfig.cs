@@ -91,6 +91,7 @@ namespace UCosmic.Web.Mvc
                     "~/styles/reset.css",
                     "~/styles/sass/sheets/maps.css",
                     string.Format("~/styles/tenants/{0}/layout.css", tenant),
+                    string.Format("~/styles/tenants/{0}/designs.css", tenant),
                     string.Format("~/styles/tenants/{0}/forms.css", tenant)));
 
                 bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/ie8", tenant)).Include(

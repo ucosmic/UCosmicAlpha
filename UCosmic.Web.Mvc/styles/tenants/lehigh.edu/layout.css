@@ -1,9 +1,9 @@
-/* lehigh.edu layout importer */
+/* lehigh layout importer */
 /* main sass bootstrap */
 /* suny.edu brand values */
 /* default variable values */
-/* lehigh.edu brand values */
-/* lehigh.edu variable values */
+/* lehigh brand values */
+/* lehigh variable values */
 /* main layout stylesheet */
 html {
   -webkit-box-sizing: border-box;
@@ -529,72 +529,6 @@ body #main {
         font-weight: bold; }
         body #main > .content header h2 a {
           color: #333; }
-    body #main > .content table.data {
-      width: 100%;
-      margin: 16px 0; }
-      body #main > .content table.data th {
-        border: solid 1px #fff;
-        padding: 4px 8px;
-        vertical-align: text-top;
-        text-align: left;
-        background-color: #502d0e;
-        color: #eeeeee;
-        font-weight: bold; }
-      body #main > .content table.data td {
-        border: solid 1px #fff;
-        padding: 4px;
-        vertical-align: text-top; }
-      body #main > .content table.data tbody tr:nth-child(even) td {
-        background-color: #dddddd; }
-      body #main > .content table.data tbody tr.hover-hilite:hover * {
-        cursor: pointer; }
-      body #main > .content table.data tbody tr.hover-hilite:hover td {
-        background-color: #ffffaa; }
-    body #main > .content ul.data > li.hover-hilite:hover, body #main > .content ol.data > li.hover-hilite:hover {
-      background-color: #ffffaa; }
-      body #main > .content ul.data > li.hover-hilite:hover *, body #main > .content ol.data > li.hover-hilite:hover * {
-        cursor: pointer; }
-    body #main > .content ul.data > li > div, body #main > .content ol.data > li > div {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      margin-bottom: 1em;
-      border: solid 1px #555;
-      padding: 16px;
-      -moz-border-radius: 8px;
-      -webkit-border-radius: 8px;
-      border-radius: 8px; }
-      body #main > .content ul.data > li > div > .on-right, body #main > .content ol.data > li > div > .on-right {
-        margin-left: 5px; }
-    body #main > .content ul.data-items > li, body #main > .content ol.data-items > li {
-      margin-bottom: 4px; }
-    body #main > .content .badge {
-      display: inline-block;
-      font-size: 12px;
-      line-height: 16px;
-      margin: 0 0 0 4px;
-      -moz-border-radius: 4px;
-      -webkit-border-radius: 4px;
-      border-radius: 4px;
-      padding: 2px 6px;
-      text-transform: uppercase;
-      vertical-align: top;
-      -webkit-text-shadow: 1px 1px 0 black;
-      text-shadow: 1px 1px 0 black; }
-      body #main > .content .badge.green {
-        background-color: #090;
-        color: #fff; }
-      body #main > .content .badge.red {
-        background-color: #c00;
-        color: #fff; }
-      body #main > .content .badge.blue {
-        background-color: #33f;
-        color: #fff !important; }
-      body #main > .content .badge.link {
-        -webkit-text-shadow: 0 0 0 black;
-        text-shadow: 0 0 0 black;
-        background-color: #fff;
-        border: solid 1px #4e75bb; }
 body .ui-dialog {
   border: 0;
   padding: 0;

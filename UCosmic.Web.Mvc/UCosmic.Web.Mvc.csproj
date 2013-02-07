@@ -695,6 +695,9 @@
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
+    <Content Include="images\icons\user\unisex-a-128.png" />
+    <Content Include="images\icons\user\unisex-a-256.png" />
+    <Content Include="images\samples\sample-photo-128.jpg" />
     <Content Include="images\_deprecated\cancels\cancel-disabled-hover-16.png" />
     <Content Include="images\_deprecated\cancels\cancel-disabled-hover-24.png" />
     <Content Include="images\_deprecated\cancels\cancel-disabled-opaque-16.png" />
@@ -1616,6 +1619,9 @@
       <DependentUpon>maps.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\lehigh.edu\banner-logo.png" />
+    <Content Include="styles\tenants\lehigh.edu\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\lehigh.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
@@ -1625,15 +1631,27 @@
     <Content Include="styles\tenants\lehigh.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\suny.edu\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\suny.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uc.edu\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\uc.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\uc.edu\ingot-32-9.gif" />
+    <Content Include="styles\tenants\umn.edu\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\umn.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\usf.edu\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\usf.edu\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
@@ -1643,6 +1661,9 @@
     </Content>
     <Content Include="styles\tenants\usf.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\_default\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\_default\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
@@ -1711,6 +1732,13 @@
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
     <Content Include="Views\People\Index.cshtml" />
+    <Content Include="styles\sass\sheets\_designs.scss" />
+    <Content Include="styles\tenants\_default\designs.scss" />
+    <Content Include="styles\tenants\lehigh.edu\designs.scss" />
+    <Content Include="styles\tenants\suny.edu\designs.scss" />
+    <Content Include="styles\tenants\uc.edu\designs.scss" />
+    <Content Include="styles\tenants\umn.edu\designs.scss" />
+    <Content Include="styles\tenants\usf.edu\designs.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
