@@ -5,6 +5,7 @@ interface KnockoutBindingHandlers {
     element: KnockoutBindingHandler;
     jqElement: KnockoutBindingHandler;
     jqObservableElement: KnockoutBindingHandler;
+    multilineText: KnockoutBindingHandler;
     slideDownVisible: KnockoutBindingHandler;
 }
 
@@ -29,6 +30,19 @@ ko.bindingHandlers.jqObservableElement = {
         allBindingsAccessor: () => any, viewModel: any): void {
         var name = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name]($(element));
+    }
+};
+
+ko.bindingHandlers.multilineText = {
+    init: function () {
+        return { 'controlsDescendantBindings': true };
+    },
+    update: function (element: Element, valueAccessor: () => any,
+        allBindingsAccessor: () => any, viewModel: any): void {
+        var text: string = ko.utils.unwrapObservable(valueAccessor());
+        text = text.replace('\r\n', '<br />').replace('\n\r', '<br />')
+            .replace('\n', '<br />').replace('\r', '<br />');
+        ko.utils.setHtml(element, text);
     }
 };
 

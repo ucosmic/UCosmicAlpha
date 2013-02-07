@@ -16,6 +16,18 @@ ko.bindingHandlers.jqObservableElement = {
         viewModel[name]($(element));
     }
 };
+ko.bindingHandlers.multilineText = {
+    init: function () {
+        return {
+            'controlsDescendantBindings': true
+        };
+    },
+    update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        var text = ko.utils.unwrapObservable(valueAccessor());
+        text = text.replace('\r\n', '<br />').replace('\n\r', '<br />').replace('\n', '<br />').replace('\r', '<br />');
+        ko.utils.setHtml(element, text);
+    }
+};
 ko.bindingHandlers.slideDownVisible = {
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());

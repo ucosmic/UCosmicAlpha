@@ -19,7 +19,8 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Index()
         {
             Person person = _queryProcessor.Execute(new MyPerson(User));
-            return View(person);
+            ViewBag.PersonId = person.RevisionId;
+            return View();
         }
 
         //
