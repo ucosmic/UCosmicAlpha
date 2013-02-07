@@ -383,7 +383,7 @@ body {
                 .ui-icon {
                     width: 24px;
                     height: 24px;
-                    background-image: url('../../icons/closer-24-dark.png');
+                    background-image: url('../../../images/icons/closer/closer-24-dark.png');
                     background-position: 0 0;
                 }
                 &.ui-state-hover {
@@ -434,7 +434,7 @@ body {
         }
     }
     .ui-widget-overlay {
-        background: #000 url('../../../images/ui-bg_flat_black_40x100.png') 50% 50% repeat-x;
+        background: #000 url('../../../images/bg/ui-bg_flat_black_40x100.png') 50% 50% repeat-x;
         @include opacity(.6);
     }
     .inline-block {

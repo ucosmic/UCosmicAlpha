@@ -1,5 +1,4 @@
-﻿@using UCosmic.Web.Mvc
-@if (Request.IsAuthenticated)
+﻿@if (Request.IsAuthenticated)
 {
     var scriptId = ViewData[UserVoiceForumAttribute.ForumId] ?? UserVoiceForumAttribute.DefaultForumId;
     <script type="text/javascript">

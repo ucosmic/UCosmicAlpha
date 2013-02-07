@@ -623,7 +623,7 @@ body .ui-dialog {
       body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon {
         width: 24px;
         height: 24px;
-        background-image: url("../../icons/closer-24-dark.png");
+        background-image: url("../../../images/icons/closer/closer-24-dark.png");
         background-position: 0 0; }
       body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close.ui-state-hover {
         border: 0;
@@ -669,7 +669,7 @@ body .ui-dialog {
           padding: 0;
           line-height: normal; }
 body .ui-widget-overlay {
-  background: black url("../../../images/ui-bg_flat_black_40x100.png") 50% 50% repeat-x;
+  background: black url("../../../images/bg/ui-bg_flat_black_40x100.png") 50% 50% repeat-x;
   -moz-opacity: 0.6;
   opacity: 0.6;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";

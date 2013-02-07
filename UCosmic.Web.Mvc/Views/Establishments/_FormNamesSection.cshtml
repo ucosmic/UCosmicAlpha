@@ -4,9 +4,9 @@
             <span data-bind="visible: id">Name(s)</span>
             <span data-bind="visible: id === 0">Official Name</span>
             <a href="#" title="Add a new name" data-bind="visible: canAddName, click: addName">
-                <img src="~/styles/icons/plus-24-green.png" alt="Add a new name" />
+                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new name" />
             </a>
-            <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" />
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" />
         </h2>
     </header>
     <ul class="data-items" data-bind="foreach: names">
@@ -21,8 +21,8 @@
                     </div>
                     <div class="on-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
                         <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this name">
-                            <img src="~/styles/icons/minus-20-red.png" alt="" class="align-top" /></a>
-                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
+                            <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
                     </div>
                 </div>
             </div>
@@ -53,9 +53,9 @@
                         <input type="submit" value="Save" data-bind="enable: !saveSpinner.isVisible()" />
                         <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
                         &nbsp;
-                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: textValidationSpinner.isVisible" />
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: textValidationSpinner.isVisible" />
                         <strong data-bind="visible: textValidationSpinner.isVisible">Validating...</strong>
-                        <img src="~/styles/icons/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
                         <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
                     </div>
                 </form>

@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using UCosmic.Domain;
-using UCosmic.Domain.Employees;
 
 namespace UCosmic.Web.Mvc
 {

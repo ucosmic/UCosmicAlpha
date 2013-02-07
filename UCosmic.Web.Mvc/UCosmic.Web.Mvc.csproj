@@ -659,7 +659,7 @@
     <Content Include="content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
-    <Content Include="images\ui-bg_flat_black_40x100.png" />
+    <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
     <Content Include="Areas\IdentityDeprecated\Views\Shared\my-home.cshtml" />
     <Content Include="Areas\IdentityDeprecated\Views\_ViewStart.cshtml" />
@@ -695,9 +695,19 @@
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
+    <Content Include="images\_deprecated\cancels\cancel-disabled-hover-16.png" />
+    <Content Include="images\_deprecated\cancels\cancel-disabled-hover-24.png" />
+    <Content Include="images\_deprecated\cancels\cancel-disabled-opaque-16.png" />
+    <Content Include="images\_deprecated\cancels\cancel-disabled-opaque-24.png" />
+    <Content Include="images\_deprecated\cancels\cancel-hot-12.png" />
+    <Content Include="images\_deprecated\cancels\cancel-hot-16.png" />
+    <Content Include="images\_deprecated\cancels\cancel-hot-24.png" />
     <Content Include="images\_deprecated\checkmarks\checkmark-green-16.png" />
+    <Content Include="images\_deprecated\deletes\delete-hot-12.png" />
+    <Content Include="images\_deprecated\deletes\delete-hot-16.png" />
     <Content Include="images\_deprecated\transparent.png" />
     <Content Include="images\_deprecated\users\user-black-16.png" />
+    <Content Include="images\_deprecated\warning\warning-16.png" />
     <Content Include="scripts\app\App.js">
       <DependentUpon>App.ts</DependentUpon>
     </Content>
@@ -1202,6 +1212,7 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
+    <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
     <Content Include="scripts\tinymce\license.txt" />
     <Content Include="scripts\tinymce\plugins\advhr\css\advhr.css" />
@@ -1583,23 +1594,23 @@
     <Content Include="scripts\_deprecated\jquery.validate.unobtrusive.js" />
     <Content Include="scripts\_deprecated\jquery.validate.unobtrusive.min.js" />
     <Content Include="scripts\_deprecated\ucosmic.js" />
-    <Content Include="styles\icons\closer-16-red-disc.png" />
-    <Content Include="styles\icons\closer-20-red-disc.png" />
-    <Content Include="styles\icons\closer-24-dark.png" />
-    <Content Include="styles\icons\closer-24-light.png" />
-    <Content Include="styles\icons\closer-24-red-disc.png" />
-    <Content Include="styles\icons\closer-24-red.png" />
-    <Content Include="styles\icons\maps\tools-marker-drag.png" />
-    <Content Include="styles\icons\maps\tools-marker-remove.png" />
-    <Content Include="styles\icons\maps\tools-marker-add.png" />
-    <Content Include="styles\icons\minus-20-red.png" />
-    <Content Include="styles\icons\minus-24-red.png" />
-    <Content Include="styles\icons\plus-16-green-disc.png" />
-    <Content Include="styles\icons\plus-20-green-disc.png" />
-    <Content Include="styles\icons\plus-24-green-disc.png" />
-    <Content Include="styles\icons\plus-24-green.png" />
-    <Content Include="styles\icons\spinner-20-blue.gif" />
-    <Content Include="styles\icons\user-voice-24-filled.png" />
+    <Content Include="images\icons\closer\closer-16-red-disc.png" />
+    <Content Include="images\icons\closer\closer-20-red-disc.png" />
+    <Content Include="images\icons\closer\closer-24-dark.png" />
+    <Content Include="images\icons\closer\closer-24-light.png" />
+    <Content Include="images\icons\closer\closer-24-red-disc.png" />
+    <Content Include="images\icons\closer\closer-24-red.png" />
+    <Content Include="images\icons\maps\tools-marker-drag.png" />
+    <Content Include="images\icons\maps\tools-marker-remove.png" />
+    <Content Include="images\icons\maps\tools-marker-add.png" />
+    <Content Include="images\icons\minus\minus-20-red.png" />
+    <Content Include="images\icons\minus\minus-24-red.png" />
+    <Content Include="images\icons\plus\plus-16-green-disc.png" />
+    <Content Include="images\icons\plus\plus-20-green-disc.png" />
+    <Content Include="images\icons\plus\plus-24-green-disc.png" />
+    <Content Include="images\icons\plus\plus-24-green.png" />
+    <Content Include="images\icons\spinner\spinner-20-blue.gif" />
+    <Content Include="images\icons\logo\user-voice-24-filled.png" />
     <Content Include="styles\reset.css" />
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
@@ -1703,17 +1714,17 @@
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="images\bullet.png" />
-    <Content Include="images\orderedList0.png" />
-    <Content Include="images\orderedList1.png" />
-    <Content Include="images\orderedList2.png" />
-    <Content Include="images\orderedList3.png" />
-    <Content Include="images\orderedList4.png" />
-    <Content Include="images\orderedList5.png" />
-    <Content Include="images\orderedList6.png" />
-    <Content Include="images\orderedList7.png" />
-    <Content Include="images\orderedList8.png" />
-    <Content Include="images\orderedList9.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\bullet.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList0.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList1.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList2.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList3.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList4.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList5.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList6.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList7.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList8.png" />
+    <Content Include="images\_deprecated\microsoft-defaults\orderedList9.png" />
     <None Include="scripts\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />

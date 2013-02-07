@@ -168,7 +168,7 @@ img {
     margin: 0;
     padding: 0;
     border: 0;
-    background: url('../icons/cancels/cancel-hot-24.png') 0 0;
+    background: url('/images/_deprecated/cancels/cancel-hot-24.png') 0 0;
     width: 24px;
     height: 24px;
     position: absolute;
@@ -355,10 +355,10 @@ img {
     border-radius: 0 5px 5px 0;
     -moz-border-radius: 0 5px 5px 0;
     cursor: pointer;
-    background: url('../icons/cancels/cancel-disabled-opaque-16.png') no-repeat transparent;
+    background: url('/images/_deprecated/cancels/cancel-disabled-opaque-16.png') no-repeat transparent;
 }
 .ucosmic .emptybox a.down-arrow:hover {
-    background-image: url('../icons/cancels/cancel-disabled-hover-16.png');
+    background-image: url('/images/_deprecated/cancels/cancel-disabled-hover-16.png');
 }
 .ucosmic .autocomplete-menu ul {
     z-index: 200 !important;
@@ -387,11 +387,11 @@ img {
 .ucosmic .button-sized .emptybox a.empty-icon {
     height: 31px;
     width: 29px;
-    background-image: url('../icons/cancels/cancel-disabled-opaque-24.png');
+    background-image: url('/images/_deprecated/cancels/cancel-disabled-opaque-24.png');
     background-position: 2px 4px;
 }
 .ucosmic .button-sized .emptybox a.empty-icon:hover {
-    background-image: url('../icons/cancels/cancel-disabled-hover-24.png');
+    background-image: url('/images/_deprecated/cancels/cancel-disabled-hover-24.png');
 }
 
 /* other input elements */
@@ -801,7 +801,7 @@ img {
     border: solid 1px #FFC345;
     color: #c00;
     font-weight: bold;
-    background: url('../icons/warning/warning-16.png') 6px 2px no-repeat #FFFD8B;
+    background: url('/images/_deprecated/warning/warning-16.png') 6px 2px no-repeat #FFFD8B;
 }
 .ucosmic .validation-summary-errors {
     color: #fff;
@@ -815,7 +815,7 @@ img {
     -moz-border-radius: 10px;
 }
 .ucosmic .validation-summary-errors ul {
-    list-style: url('../icons/warning/warning-16.png');
+    list-style: url('/images/_deprecated/warning/warning-16.png');
     padding: 0 0 0 25px;
 }
 .ucosmic .validation-summary-valid {

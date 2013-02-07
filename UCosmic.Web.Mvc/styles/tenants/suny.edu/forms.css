@@ -51,7 +51,7 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
     -moz-transition: background 0;
     -o-transition: background 0;
     transition: background 0;
-    background-image: url("../../icons/spinner-20-blue.gif");
+    background-image: url("../../../images/icons/spinner/spinner-20-blue.gif");
     background-position: right top;
     background-repeat: no-repeat;
     background-origin: content-box; }
@@ -182,9 +182,9 @@ select.inline {
       margin-top: 8px; }
 
 .k-list-container .k-list > .k-state-focused {
-  background-image: -webkit-linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
-  background-image: -moz-linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
-  background-image: linear-gradient(270deg, #dbdbdb 0%, #f2f2f2 100%);
+  background-image: -webkit-linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
+  background-image: -moz-linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
+  background-image: linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dbdbdb', EndColorStr='#f2f2f2'); }
 
 a.button {
@@ -228,14 +228,14 @@ a.button {
     width: 24px;
     height: 24px;
     margin: -2px 0 0 -2px;
-    background-image: url(../../icons/plus-24-green-disc.png); }
+    background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
   a.button > i.red.closer {
     display: inline-block;
     vertical-align: middle;
     width: 24px;
     height: 24px;
     margin: -2px 0 0 -2px;
-    background-image: url(../../icons/closer-24-red-disc.png); }
+    background-image: url(../../../images/icons/closer/closer-24-red-disc.png); }
 
 button, input[type=submit], input[type=reset], input[type=button] {
   margin: 0 12px 0 0;
@@ -293,7 +293,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
 i.red.minus {
   width: 24px;
   height: 24px;
-  background-image: url(../../icons/closer-24-red.png);
+  background-image: url(../../../images/icons/closer/closer-24-red.png);
   background-position: top left;
   background-repeat: no-repeat; }
   i.red.minus.on-right {

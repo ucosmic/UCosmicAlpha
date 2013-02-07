@@ -284,8 +284,6 @@ namespace Links
             public static readonly string SideSwiper_min_js = Url("SideSwiper.min.js");
         }
     
-        public static readonly string combobox_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/combobox.min.js") ? Url("combobox.min.js") : Url("combobox.js");
-                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class datacontext {
             private const string URLPATH = "~/scripts/datacontext";
@@ -833,6 +831,7 @@ namespace Links
                 public static readonly string kendo_window_min_js = Url("kendo.window.min.js");
             }
         
+            public static readonly string kendouiweb_d_ts = Url("kendouiweb.d.ts");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2115,7 +2114,6 @@ namespace Links
                 public static readonly string PersonalInfo_ts = Url("PersonalInfo.ts");
                 public static readonly string PersonalInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo.min.js") ? Url("PersonalInfo.min.js") : Url("PersonalInfo.js");
                               
-                public static readonly string PersonalInfo_min_js_map = Url("PersonalInfo.min.js.map");
                 public static readonly string PersonalInfo_min_js = Url("PersonalInfo.min.js");
             }
         
@@ -2579,37 +2577,6 @@ namespace Links
     
         public static readonly string _resharper_unused_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/_resharper-unused.min.css") ? Url("_resharper-unused.min.css") : Url("_resharper-unused.css");
              
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class icons {
-            private const string URLPATH = "~/styles/icons";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string closer_16_red_disc_png = Url("closer-16-red-disc.png");
-            public static readonly string closer_20_red_disc_png = Url("closer-20-red-disc.png");
-            public static readonly string closer_24_dark_png = Url("closer-24-dark.png");
-            public static readonly string closer_24_light_png = Url("closer-24-light.png");
-            public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
-            public static readonly string closer_24_red_png = Url("closer-24-red.png");
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class maps {
-                private const string URLPATH = "~/styles/icons/maps";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string tools_marker_add_png = Url("tools-marker-add.png");
-                public static readonly string tools_marker_drag_png = Url("tools-marker-drag.png");
-                public static readonly string tools_marker_remove_png = Url("tools-marker-remove.png");
-            }
-        
-            public static readonly string minus_20_red_png = Url("minus-20-red.png");
-            public static readonly string minus_24_red_png = Url("minus-24-red.png");
-            public static readonly string plus_16_green_disc_png = Url("plus-16-green-disc.png");
-            public static readonly string plus_20_green_disc_png = Url("plus-20-green-disc.png");
-            public static readonly string plus_24_green_disc_png = Url("plus-24-green-disc.png");
-            public static readonly string plus_24_green_png = Url("plus-24-green.png");
-            public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
-            public static readonly string user_voice_24_filled_png = Url("user-voice-24-filled.png");
-        }
-    
         public static readonly string reset_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/reset.min.css") ? Url("reset.min.css") : Url("reset.css");
              
         public static readonly string ruler_50_50_png = Url("ruler-50-50.png");
@@ -2774,11 +2741,52 @@ namespace Links
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class cancels {
+                private const string URLPATH = "~/images/_deprecated/cancels";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string cancel_disabled_hover_16_png = Url("cancel-disabled-hover-16.png");
+                public static readonly string cancel_disabled_hover_24_png = Url("cancel-disabled-hover-24.png");
+                public static readonly string cancel_disabled_opaque_16_png = Url("cancel-disabled-opaque-16.png");
+                public static readonly string cancel_disabled_opaque_24_png = Url("cancel-disabled-opaque-24.png");
+                public static readonly string cancel_hot_12_png = Url("cancel-hot-12.png");
+                public static readonly string cancel_hot_16_png = Url("cancel-hot-16.png");
+                public static readonly string cancel_hot_24_png = Url("cancel-hot-24.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class checkmarks {
                 private const string URLPATH = "~/images/_deprecated/checkmarks";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string checkmark_green_16_png = Url("checkmark-green-16.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class deletes {
+                private const string URLPATH = "~/images/_deprecated/deletes";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string delete_hot_12_png = Url("delete-hot-12.png");
+                public static readonly string delete_hot_16_png = Url("delete-hot-16.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class microsoft_defaults {
+                private const string URLPATH = "~/images/_deprecated/microsoft-defaults";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string bullet_png = Url("bullet.png");
+                public static readonly string orderedList0_png = Url("orderedList0.png");
+                public static readonly string orderedList1_png = Url("orderedList1.png");
+                public static readonly string orderedList2_png = Url("orderedList2.png");
+                public static readonly string orderedList3_png = Url("orderedList3.png");
+                public static readonly string orderedList4_png = Url("orderedList4.png");
+                public static readonly string orderedList5_png = Url("orderedList5.png");
+                public static readonly string orderedList6_png = Url("orderedList6.png");
+                public static readonly string orderedList7_png = Url("orderedList7.png");
+                public static readonly string orderedList8_png = Url("orderedList8.png");
+                public static readonly string orderedList9_png = Url("orderedList9.png");
             }
         
             public static readonly string transparent_png = Url("transparent.png");
@@ -2790,20 +2798,90 @@ namespace Links
                 public static readonly string user_black_16_png = Url("user-black-16.png");
             }
         
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class warning {
+                private const string URLPATH = "~/images/_deprecated/warning";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string warning_16_png = Url("warning-16.png");
+            }
+        
         }
     
-        public static readonly string bullet_png = Url("bullet.png");
-        public static readonly string orderedList0_png = Url("orderedList0.png");
-        public static readonly string orderedList1_png = Url("orderedList1.png");
-        public static readonly string orderedList2_png = Url("orderedList2.png");
-        public static readonly string orderedList3_png = Url("orderedList3.png");
-        public static readonly string orderedList4_png = Url("orderedList4.png");
-        public static readonly string orderedList5_png = Url("orderedList5.png");
-        public static readonly string orderedList6_png = Url("orderedList6.png");
-        public static readonly string orderedList7_png = Url("orderedList7.png");
-        public static readonly string orderedList8_png = Url("orderedList8.png");
-        public static readonly string orderedList9_png = Url("orderedList9.png");
-        public static readonly string ui_bg_flat_black_40x100_png = Url("ui-bg_flat_black_40x100.png");
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class bg {
+            private const string URLPATH = "~/images/bg";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string ui_bg_flat_black_40x100_png = Url("ui-bg_flat_black_40x100.png");
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class icons {
+            private const string URLPATH = "~/images/icons";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class closer {
+                private const string URLPATH = "~/images/icons/closer";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string closer_16_red_disc_png = Url("closer-16-red-disc.png");
+                public static readonly string closer_20_red_disc_png = Url("closer-20-red-disc.png");
+                public static readonly string closer_24_dark_png = Url("closer-24-dark.png");
+                public static readonly string closer_24_light_png = Url("closer-24-light.png");
+                public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
+                public static readonly string closer_24_red_png = Url("closer-24-red.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class logo {
+                private const string URLPATH = "~/images/icons/logo";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string user_voice_24_filled_png = Url("user-voice-24-filled.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class maps {
+                private const string URLPATH = "~/images/icons/maps";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string tools_marker_add_png = Url("tools-marker-add.png");
+                public static readonly string tools_marker_drag_png = Url("tools-marker-drag.png");
+                public static readonly string tools_marker_remove_png = Url("tools-marker-remove.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class minus {
+                private const string URLPATH = "~/images/icons/minus";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string minus_20_red_png = Url("minus-20-red.png");
+                public static readonly string minus_24_red_png = Url("minus-24-red.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class plus {
+                private const string URLPATH = "~/images/icons/plus";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string plus_16_green_disc_png = Url("plus-16-green-disc.png");
+                public static readonly string plus_20_green_disc_png = Url("plus-20-green-disc.png");
+                public static readonly string plus_24_green_disc_png = Url("plus-24-green-disc.png");
+                public static readonly string plus_24_green_png = Url("plus-24-green.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class spinner {
+                private const string URLPATH = "~/images/icons/spinner";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
+            }
+        
+        }
+    
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

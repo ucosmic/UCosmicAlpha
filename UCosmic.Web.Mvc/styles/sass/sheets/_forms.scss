@@ -30,7 +30,7 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
     }
     &.spinning {
         @include transition(background, 0);
-        background-image: url('../../icons/spinner-20-blue.gif');
+        background-image: url('../../../images/icons/spinner/spinner-20-blue.gif');
         background-position: right top;
         background-repeat: no-repeat;
         background-origin: content-box;
@@ -157,7 +157,7 @@ select.inline {
 .k-list-container {
     .k-list {
         > .k-state-focused {
-            @include linear-bg-gradient(270deg, rgb(219, 219, 219), 0%, rgb(242, 242, 242), 100%)
+            @include linear-bg-gradient(270deg, rgb(219, 219, 219), 0, rgb(242, 242, 242), 100%)
         }
     }
 }
@@ -192,7 +192,7 @@ a.button {
         width: 24px;
         height: 24px;
         margin: -2px 0 0 -2px;
-        background-image: url(../../icons/plus-24-green-disc.png);
+        background-image: url(../../../images/icons/plus/plus-24-green-disc.png);
     }
     > i.red.closer {
         display: inline-block;
@@ -200,7 +200,7 @@ a.button {
         width: 24px;
         height: 24px;
         margin: -2px 0 0 -2px;
-        background-image: url(../../icons/closer-24-red-disc.png);
+        background-image: url(../../../images/icons/closer/closer-24-red-disc.png);
     }
 }
 
@@ -253,7 +253,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
 i.red.minus {
     width: 24px;
     height: 24px;
-    background-image: url(../../icons/closer-24-red.png);
+    background-image: url(../../../images/icons/closer/closer-24-red.png);
     background-position: top left;
     background-repeat: no-repeat;
     &.on-right {
