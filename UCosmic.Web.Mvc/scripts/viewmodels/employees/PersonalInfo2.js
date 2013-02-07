@@ -3,7 +3,6 @@ var ViewModels;
     (function (Employee) {
         var PersonalInfo2 = (function () {
             function PersonalInfo2(inDocumentElementId, inDataContext) {
-                var _this = this;
                 this._isInitialized = false;
                 this._isActive = ko.observable();
                 this._isDisplayNameDerived = ko.observable();
@@ -29,66 +28,8 @@ var ViewModels;
                 this.$nameSuffix = ko.observable();
                 this._dataContext = inDataContext;
                 this._initialize(inDocumentElementId);
-                this.$nameSalutation.subscribe(function (newValue) {
-                    if(newValue && newValue.length) {
-                        newValue.kendoComboBox({
-                            dataTextField: "text",
-                            dataValueField: "value",
-                            dataSource: new kendo.data.DataSource({
-                                transport: {
-                                    read: {
-                                        url: App.Routes.WebApi.People.Names.Salutations.get()
-                                    }
-                                }
-                            })
-                        });
-                    }
-                });
-                this.$nameSuffix.subscribe(function (newValue) {
-                    if(newValue && newValue.length) {
-                        newValue.kendoComboBox({
-                            dataTextField: "text",
-                            dataValueField: "value",
-                            dataSource: new kendo.data.DataSource({
-                                transport: {
-                                    read: {
-                                        url: App.Routes.WebApi.People.Names.Suffixes.get()
-                                    }
-                                }
-                            })
-                        });
-                    }
-                });
-                this._displayName.subscribe(function (newValue) {
-                    if(!_this._isDisplayNameDerived()) {
-                        _this._userDisplayName = newValue;
-                    }
-                });
-                ko.computed(function () {
-                    if(_this._isDisplayNameDerived() && _this._isInitialized) {
-                        var data = {
-                            salutation: _this._salutation(),
-                            firstName: _this._firstName(),
-                            middleName: _this._middleName(),
-                            lastName: _this._lastName(),
-                            salutation: _this._salutation()
-                        };
-                        $.ajax({
-                            url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
-                            type: 'GET',
-                            cache: false,
-                            data: data
-                        }).done(function (result) {
-                            _this._displayName(result);
-                        });
-                    } else {
-                        if(_this._isInitialized) {
-                            _this._displayName(_this._userDisplayName);
-                        }
-                    }
-                }).extend({
-                    throttle: 400
-                });
+                this._setupKendoComboBoxes();
+                this._setupDisplayNameDerivation();
             }
             PersonalInfo2.prototype.GetRevisionId = function () {
                 return this._revisionId;
@@ -292,6 +233,71 @@ var ViewModels;
             };
             PersonalInfo2.prototype.savePicture = function (formElement) {
                 $("#accordion").accordion('activate', 0);
+            };
+            PersonalInfo2.prototype._setupKendoComboBoxes = function () {
+                this.$nameSalutation.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoComboBox({
+                            dataTextField: "text",
+                            dataValueField: "value",
+                            dataSource: new kendo.data.DataSource({
+                                transport: {
+                                    read: {
+                                        url: App.Routes.WebApi.People.Names.Salutations.get()
+                                    }
+                                }
+                            })
+                        });
+                    }
+                });
+                this.$nameSuffix.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoComboBox({
+                            dataTextField: "text",
+                            dataValueField: "value",
+                            dataSource: new kendo.data.DataSource({
+                                transport: {
+                                    read: {
+                                        url: App.Routes.WebApi.People.Names.Suffixes.get()
+                                    }
+                                }
+                            })
+                        });
+                    }
+                });
+            };
+            PersonalInfo2.prototype._setupDisplayNameDerivation = function () {
+                var _this = this;
+                this._displayName.subscribe(function (newValue) {
+                    if(!_this._isDisplayNameDerived()) {
+                        _this._userDisplayName = newValue;
+                    }
+                });
+                ko.computed(function () {
+                    if(_this._isDisplayNameDerived() && _this._isInitialized) {
+                        var data = {
+                            salutation: _this._salutation(),
+                            firstName: _this._firstName(),
+                            middleName: _this._middleName(),
+                            lastName: _this._lastName(),
+                            salutation: _this._salutation()
+                        };
+                        $.ajax({
+                            url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
+                            type: 'GET',
+                            cache: false,
+                            data: data
+                        }).done(function (result) {
+                            _this._displayName(result);
+                        });
+                    } else {
+                        if(_this._isInitialized) {
+                            _this._displayName(_this._userDisplayName);
+                        }
+                    }
+                }).extend({
+                    throttle: 400
+                });
             };
             return PersonalInfo2;
         })();

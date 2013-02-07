@@ -175,75 +175,8 @@ module ViewModels.Employee {
             this._dataContext = inDataContext;
             this._initialize(inDocumentElementId);
 
-            //#region Kendo ComboBoxes
-
-            // comboboxes for salutation & suffix
-            this.$nameSalutation.subscribe((newValue: JQuery): void => {
-                if (newValue && newValue.length)
-                    newValue.kendoComboBox({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.People.Names.Salutations.get()
-                                }
-                            }
-                        })
-                    });
-            });
-            this.$nameSuffix.subscribe((newValue: JQuery): void => {
-                if (newValue && newValue.length)
-                    newValue.kendoComboBox({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.People.Names.Suffixes.get()
-                                }
-                            }
-                        })
-                    });
-            });
-
-            //#endregion
-            //#region DisplayName derivation
-
-            this._displayName.subscribe((newValue: string): void => {
-                if (!this._isDisplayNameDerived()) {
-                    // stash user-entered display name only when it is not derived
-                    this._userDisplayName = newValue;
-                }
-            });
-
-            ko.computed((): void => {
-                // generate display name if it has been API-initialized
-                if (this._isDisplayNameDerived() && this._isInitialized) {
-                    var data = {
-                        salutation: this._salutation(),
-                        firstName: this._firstName(),
-                        middleName: this._middleName(),
-                        lastName: this._lastName(),
-                        salutation: this._salutation(),
-                    };
-                    $.ajax({
-                        url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
-                        type: 'GET',
-                        cache: false,
-                        // TODO: ko.toJS
-                        data: data
-                    }).done((result: string): void => {
-                        this._displayName(result);
-                    });
-                }
-                else if (this._isInitialized) {
-                    // restore user-entered display name
-                    this._displayName(this._userDisplayName);
-                }
-            }).extend({ throttle: 400 }); // wait for observables to stop changing
-
-            //#endregion
+            this._setupKendoComboBoxes();
+            this._setupDisplayNameDerivation();
         }
 
         // --------------------------------------------------------------------------------
@@ -378,6 +311,74 @@ module ViewModels.Employee {
         //    me.SetDisplayName(me.GetFirstName() + " " + me.GetLastName());
         //}
 
+        // comboboxes for salutation & suffix
+        private _setupKendoComboBoxes(): void {
+            // when the $element observables are bound, they will have length
+            // use this opportinity to apply kendo extensions
+            this.$nameSalutation.subscribe((newValue: JQuery): void => {
+                if (newValue && newValue.length)
+                    newValue.kendoComboBox({
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    url: App.Routes.WebApi.People.Names.Salutations.get()
+                                }
+                            }
+                        })
+                    });
+            });
+            this.$nameSuffix.subscribe((newValue: JQuery): void => {
+                if (newValue && newValue.length)
+                    newValue.kendoComboBox({
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    url: App.Routes.WebApi.People.Names.Suffixes.get()
+                                }
+                            }
+                        })
+                    });
+            });
+        }
+
+        private _setupDisplayNameDerivation(): void {
+            this._displayName.subscribe((newValue: string): void => {
+                if (!this._isDisplayNameDerived()) {
+                    // stash user-entered display name only when it is not derived
+                    this._userDisplayName = newValue;
+                }
+            });
+
+            ko.computed((): void => {
+                // generate display name if it has been API-initialized
+                if (this._isDisplayNameDerived() && this._isInitialized) {
+                    var data = {
+                        salutation: this._salutation(),
+                        firstName: this._firstName(),
+                        middleName: this._middleName(),
+                        lastName: this._lastName(),
+                        salutation: this._salutation(),
+                    };
+                    $.ajax({
+                        url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
+                        type: 'GET',
+                        cache: false,
+                        // TODO: ko.toJS
+                        data: data
+                    }).done((result: string): void => {
+                        this._displayName(result);
+                    });
+                }
+                else if (this._isInitialized) {
+                    // restore user-entered display name
+                    this._displayName(this._userDisplayName);
+                }
+            }).extend({ throttle: 400 }); // wait for observables to stop changing
+        }
     }
 
 }
