@@ -31,10 +31,10 @@ module ViewModels.Employee {
         GetDisplayName(): string { return this._displayName(); }
         SetDisplayName(inValue: string): void { this._displayName(inValue); }
 
-        private _salutations: KnockoutObservableArray = ko.observableArray();
-        GetSalutations(): any[] { return this._salutations(); }
-        SetSalutations(inValue: any[]): void { this._salutations(inValue); }
-        Salutations_Add(inSalutation: string): void { this._salutations.push(inSalutation); }
+        //private _salutations: KnockoutObservableArray = ko.observableArray();
+        //GetSalutations(): any[] { return this._salutations(); }
+        //SetSalutations(inValue: any[]): void { this._salutations(inValue); }
+        //Salutations_Add(inSalutation: string): void { this._salutations.push(inSalutation); }
 
         private _salutation: KnockoutObservableString = ko.observable();
         GetSalutation(): string { return this._salutation(); }
@@ -56,10 +56,10 @@ module ViewModels.Employee {
 
         private _lastNameSubscription: KnockoutSubscription = null;
 
-        private _suffixes: KnockoutObservableArray = ko.observableArray();
-        GetSuffixes(): any[] { return this._suffixes(); }
-        SetSuffixes(inValue: any[]): void { this._suffixes(inValue); }
-        Suffixes_Add(inSuffix: string): void { this._suffixes.push(inSuffix); }
+        //private _suffixes: KnockoutObservableArray = ko.observableArray();
+        //GetSuffixes(): any[] { return this._suffixes(); }
+        //SetSuffixes(inValue: any[]): void { this._suffixes(inValue); }
+        //Suffixes_Add(inSuffix: string): void { this._suffixes.push(inSuffix); }
 
         private _suffix: KnockoutObservableString = ko.observable();
         GetSuffix(): string { return this._suffix(); }
@@ -105,29 +105,29 @@ module ViewModels.Employee {
 			 * to load the faculty ranks.  We will then wait for both before continuing.
 			 */
 
-            var getSalutationsPact: JQueryPromise = this._dataContext.GetSalutations();
-            getSalutationsPact.then(
-			/* Success */
-			(salutations: any): void => {
-			    for (var i = 0; i < salutations.length; i += 1) {
-			        this.Salutations_Add(<string>salutations[i]);
-			    }
-			},
-			/* Fail */
-			(error: any): void => {
-			});
+            //var getSalutationsPact: JQueryPromise = this._dataContext.GetSalutations();
+            //getSalutationsPact.then(
+			///* Success */
+			//(salutations: any): void => {
+			//    for (var i = 0; i < salutations.length; i += 1) {
+			//        this.Salutations_Add(<string>salutations[i]);
+			//    }
+			//},
+			///* Fail */
+			//(error: any): void => {
+			//});
 
-            var getSuffixesPact: JQueryPromise = this._dataContext.GetSuffixes();
-            getSuffixesPact.then(
-			/* Success */
-			(suffixes: any): void => {
-			    for (var i = 0; i < suffixes.length; i += 1) {
-			        this.Suffixes_Add(<string>suffixes[i]);
-			    }
-			},
-			/* Fail */
-			(error: any): void => {
-			});
+            //var getSuffixesPact: JQueryPromise = this._dataContext.GetSuffixes();
+            //getSuffixesPact.then(
+			///* Success */
+			//(suffixes: any): void => {
+			//    for (var i = 0; i < suffixes.length; i += 1) {
+			//        this.Suffixes_Add(<string>suffixes[i]);
+			//    }
+			//},
+			///* Fail */
+			//(error: any): void => {
+			//});
 
             var getFacultyRanksPact = this._dataContext.GetFacultyRanks();
             getFacultyRanksPact.then(
@@ -142,7 +142,7 @@ module ViewModels.Employee {
 			});
 
             // Wait for all loading of selector options before continuing.
-            $.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact)
+            $.when(getFacultyRanksPact)
 					.then( /* Continue once selector data has been loaded */
 							/* Success (selector data)*/
 							(data: any): void => {
@@ -282,35 +282,6 @@ module ViewModels.Employee {
             $("#accordion").accordion('activate', 0);	// Open next panel
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-		*/
-        // --------------------------------------------------------------------------------
-        //derivedNameClickHandler(model: PersonalInfo2, event: any): bool {
-        //    if (model.GetIsDisplayNameDerived()) {
-        //        $("#displayName").attr("disabled", "disabled");
-        //        model._firstNameSubscription = model._firstName.subscribe(function (inValue: any): void { model.DeriveDisplayName(model); });
-        //        model._lastNameSubscription = model._lastName.subscribe(function (inValue: any): void { model.DeriveDisplayName(model); });
-        //        model.DeriveDisplayName(model);
-        //    }
-        //    else {
-        //        $("#displayName").removeAttr("disabled");
-        //        model._firstNameSubscription.dispose();
-        //        model._lastNameSubscription.dispose();
-        //    }
-        //
-        //    return true; // let default click action proceed
-        //}
-
-        // --------------------------------------------------------------------------------
-        /*
-		*/
-        // --------------------------------------------------------------------------------
-        //DeriveDisplayName(inModel?: PersonalInfo2): void {
-        //    var me = (inModel != null) ? inModel : this;
-        //    me.SetDisplayName(me.GetFirstName() + " " + me.GetLastName());
-        //}
-
         // comboboxes for salutation & suffix
         private _setupKendoComboBoxes(): void {
             // when the $element observables are bound, they will have length
@@ -345,6 +316,7 @@ module ViewModels.Employee {
             });
         }
 
+        // logic to derive display name
         private _setupDisplayNameDerivation(): void {
             this._displayName.subscribe((newValue: string): void => {
                 if (!this._isDisplayNameDerived()) {
@@ -361,13 +333,12 @@ module ViewModels.Employee {
                         firstName: this._firstName(),
                         middleName: this._middleName(),
                         lastName: this._lastName(),
-                        salutation: this._salutation(),
+                        suffix: this._suffix(),
                     };
                     $.ajax({
                         url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
                         type: 'GET',
                         cache: false,
-                        // TODO: ko.toJS
                         data: data
                     }).done((result: string): void => {
                         this._displayName(result);

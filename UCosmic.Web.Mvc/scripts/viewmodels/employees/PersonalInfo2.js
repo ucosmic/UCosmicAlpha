@@ -8,14 +8,12 @@ var ViewModels;
                 this._isDisplayNameDerived = ko.observable();
                 this._displayName = ko.observable();
                 this._userDisplayName = '';
-                this._salutations = ko.observableArray();
                 this._salutation = ko.observable();
                 this._firstName = ko.observable();
                 this._firstNameSubscription = null;
                 this._middleName = ko.observable();
                 this._lastName = ko.observable();
                 this._lastNameSubscription = null;
-                this._suffixes = ko.observableArray();
                 this._suffix = ko.observable();
                 this._workingTitle = ko.observable();
                 this._gender = ko.observable();
@@ -55,15 +53,6 @@ var ViewModels;
             PersonalInfo2.prototype.SetDisplayName = function (inValue) {
                 this._displayName(inValue);
             };
-            PersonalInfo2.prototype.GetSalutations = function () {
-                return this._salutations();
-            };
-            PersonalInfo2.prototype.SetSalutations = function (inValue) {
-                this._salutations(inValue);
-            };
-            PersonalInfo2.prototype.Salutations_Add = function (inSalutation) {
-                this._salutations.push(inSalutation);
-            };
             PersonalInfo2.prototype.GetSalutation = function () {
                 return this._salutation();
             };
@@ -87,15 +76,6 @@ var ViewModels;
             };
             PersonalInfo2.prototype.SetLastName = function (inValue) {
                 this._lastName(inValue);
-            };
-            PersonalInfo2.prototype.GetSuffixes = function () {
-                return this._suffixes();
-            };
-            PersonalInfo2.prototype.SetSuffixes = function (inValue) {
-                this._suffixes(inValue);
-            };
-            PersonalInfo2.prototype.Suffixes_Add = function (inSuffix) {
-                this._suffixes.push(inSuffix);
             };
             PersonalInfo2.prototype.GetSuffix = function () {
                 return this._suffix();
@@ -144,20 +124,6 @@ var ViewModels;
             };
             PersonalInfo2.prototype._initialize = function (inDocumentElementId) {
                 var _this = this;
-                var getSalutationsPact = this._dataContext.GetSalutations();
-                getSalutationsPact.then(function (salutations) {
-                    for(var i = 0; i < salutations.length; i += 1) {
-                        _this.Salutations_Add(salutations[i]);
-                    }
-                }, function (error) {
-                });
-                var getSuffixesPact = this._dataContext.GetSuffixes();
-                getSuffixesPact.then(function (suffixes) {
-                    for(var i = 0; i < suffixes.length; i += 1) {
-                        _this.Suffixes_Add(suffixes[i]);
-                    }
-                }, function (error) {
-                });
                 var getFacultyRanksPact = this._dataContext.GetFacultyRanks();
                 getFacultyRanksPact.then(function (facultyRanks) {
                     for(var i = 0; i < facultyRanks.length; i += 1) {
@@ -165,7 +131,7 @@ var ViewModels;
                     }
                 }, function (error) {
                 });
-                $.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact).then(function (data) {
+                $.when(getFacultyRanksPact).then(function (data) {
                     _this._dataContext.Get().then(function (data) {
                         _this.ToViewModel(_this, data);
                         ko.applyBindings(_this, $("#" + inDocumentElementId).get(0));
@@ -280,7 +246,7 @@ var ViewModels;
                             firstName: _this._firstName(),
                             middleName: _this._middleName(),
                             lastName: _this._lastName(),
-                            salutation: _this._salutation()
+                            suffix: _this._suffix()
                         };
                         $.ajax({
                             url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
