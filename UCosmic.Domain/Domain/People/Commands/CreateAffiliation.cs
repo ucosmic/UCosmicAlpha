@@ -10,7 +10,6 @@ namespace UCosmic.Domain.People
     {
         public int PersonId { get; set; }
         public int EstablishmentId { get; set; }
-        public string JobTitles { get; set; }
         public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
@@ -79,7 +78,6 @@ namespace UCosmic.Domain.People
                 IsClaimingEmployee = command.IsClaimingEmployee,
                 IsDefault = !person.Affiliations.Any(a => a.IsDefault),
                 IsPrimary = command.IsPrimary,
-                JobTitles = command.JobTitles,
             };
             person.Affiliations.Add(affiliation);
 

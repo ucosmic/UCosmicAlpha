@@ -30,13 +30,12 @@ namespace UCosmic.Domain.People
         public string LastName { get; protected internal set; }
         public string Suffix { get; protected internal set; }
         public string Gender { get; protected internal set; }
-        public virtual EmployeeFacultyRank EmployeeFacultyRank { get; protected internal set; }
         public byte[] Picture { get; protected internal set; }
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
         public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
-        public string AdministrativeAppointments { get; protected internal set; }
     
         public virtual User User { get; protected internal set; }
+        public virtual Employee Employee { get; protected internal set; }
         public virtual ICollection<EmailMessage> Messages { get; protected internal set; }
 
         public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
@@ -158,11 +157,7 @@ namespace UCosmic.Domain.People
                 person.LastName,
                 person.Suffix,
                 person.Gender,
-                FacultyRank = (person.EmployeeFacultyRank != null) ? person.EmployeeFacultyRank.Rank : null,
-                //Picture = person.Picture,
-                //Emails = person.Emails,
-                //Affiliations = person.Affiliations,
-                person.AdministrativeAppointments,
+
             });
             return state;
         }

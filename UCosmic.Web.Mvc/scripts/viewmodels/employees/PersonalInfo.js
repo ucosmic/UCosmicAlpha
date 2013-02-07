@@ -15,12 +15,12 @@ var ViewModels;
                 this._lastNameSubscription = null;
                 this._suffixes = ko.observableArray();
                 this._suffix = ko.observable();
-                this._workingTitle = ko.observable();
                 this._gender = ko.observable();
+                this._picture = ko.observable();
+                this._jobTitles = ko.observable();
                 this._facultyRanks = ko.observableArray();
                 this._facultyRank = ko.observable();
                 this._administrativeAppointments = ko.observable();
-                this._picture = ko.observable();
                 this.$facultyRanks = ko.observable();
                 this.$nameSalutation = ko.observable();
                 this.$nameSuffix = ko.observable();
@@ -57,12 +57,6 @@ var ViewModels;
                     }
                 });
             }
-            PersonalInfo.prototype.GetRevisionId = function () {
-                return this._revisionId;
-            };
-            PersonalInfo.prototype.SetRevisionId = function (inValue) {
-                this._revisionId = inValue;
-            };
             PersonalInfo.prototype.GetIsActive = function () {
                 return this._isActive();
             };
@@ -129,17 +123,23 @@ var ViewModels;
             PersonalInfo.prototype.SetSuffix = function (inValue) {
                 this._suffix(inValue);
             };
-            PersonalInfo.prototype.GetWorkingTitle = function () {
-                return this._workingTitle();
-            };
-            PersonalInfo.prototype.SetWorkingTitle = function (inValue) {
-                this._workingTitle(inValue);
-            };
             PersonalInfo.prototype.GetGender = function () {
                 return this._gender();
             };
             PersonalInfo.prototype.SetGender = function (inValue) {
                 this._gender(inValue);
+            };
+            PersonalInfo.prototype.GetPicture = function () {
+                return this._picture();
+            };
+            PersonalInfo.prototype.SetPicture = function (inValue) {
+                this._picture(inValue);
+            };
+            PersonalInfo.prototype.GetJobTitles = function () {
+                return this._jobTitles();
+            };
+            PersonalInfo.prototype.SetJobTitles = function (inValue) {
+                this._jobTitles(inValue);
             };
             PersonalInfo.prototype.GetFacultyRanks = function () {
                 return this._facultyRanks();
@@ -161,12 +161,6 @@ var ViewModels;
             };
             PersonalInfo.prototype.SetAdministrativeAppointments = function (inValue) {
                 this._administrativeAppointments(inValue);
-            };
-            PersonalInfo.prototype.GetPicture = function () {
-                return this._picture();
-            };
-            PersonalInfo.prototype.SetPicture = function (inValue) {
-                this._picture(inValue);
             };
             PersonalInfo.prototype._initialize = function (inDocumentElementId) {
                 var _this = this;
@@ -203,7 +197,7 @@ var ViewModels;
             };
             PersonalInfo.prototype.ToViewModel = function (inSelf, data) {
                 var me = inSelf;
-                me.SetRevisionId(data.revisionId);
+                me._personId = data.revisionId;
                 me.SetIsActive(data.isActive);
                 me.SetIsDisplayNameDerived(data.isDisplayNameDerived);
                 me.SetDisplayName((data.displayName != null) ? data.displayName : "");
@@ -212,8 +206,9 @@ var ViewModels;
                 me.SetMiddleName((data.middleName != null) ? data.middleName : "");
                 me.SetLastName((data.lastName != null) ? data.lastName : "");
                 me.SetSuffix((data.suffix != null) ? data.suffix : "");
-                me.SetWorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
+                me.SetJobTitles((data.employeeJobTitles != null) ? data.employeeJobTitles : "");
                 me.SetGender(data.gender);
+                me._employeeId = data.employeeId;
                 if(data.employeeFacultyRank != null) {
                     var i = 0;
                     while((i < me.GetFacultyRanks().length) && (me.GetFacultyRanks()[i].id != data.employeeFacultyRank.id)) {
@@ -225,13 +220,13 @@ var ViewModels;
                 } else {
                     me.SetFacultyRank(null);
                 }
-                me.SetAdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
+                me.SetAdministrativeAppointments((data.employeeAdministrativeAppointments != null) ? data.employeeAdministrativeAppointments : "");
                 me.SetPicture(data.picture);
             };
             PersonalInfo.prototype.FromViewModel = function (inSelf) {
                 var me = inSelf;
                 return {
-                    revisionId: me.GetRevisionId(),
+                    revisionId: me._personId,
                     isActive: me.GetIsActive(),
                     isDisplayNameDerived: me.GetIsDisplayNameDerived(),
                     displayName: (me.GetDisplayName().length > 0) ? me.GetDisplayName() : null,
@@ -240,13 +235,14 @@ var ViewModels;
                     middleName: (me.GetMiddleName().length > 0) ? me.GetMiddleName() : null,
                     lastName: (me.GetLastName().length > 0) ? me.GetLastName() : null,
                     suffix: (me.GetSuffix().length > 0) ? me.GetSuffix() : null,
-                    workingTitle: me.GetWorkingTitle(),
+                    employeeJobTitles: me.GetJobTitles(),
                     gender: me.GetGender(),
+                    employeeId: me._employeeId,
                     employeeFacultyRank: (me.GetFacultyRank() != null) ? {
                         id: me.GetFacultyRank().id,
                         rank: me.GetFacultyRank().rank
                     } : null,
-                    administrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
+                    employeeAdministrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
                     picture: me.GetPicture()
                 };
             };

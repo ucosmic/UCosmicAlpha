@@ -13,9 +13,7 @@ module ViewModels.Employee {
 
 		private _dataContext: DataContext.IEmployee;
 
-		private _revisionId: number;
-		GetRevisionId(): number { return this._revisionId; }
-		SetRevisionId(inValue: number): void { this._revisionId = inValue; }
+		private _personId: number;
 
 		private _isActive: KnockoutObservableBool = ko.observable();
 		GetIsActive(): bool { return this._isActive(); }
@@ -63,13 +61,19 @@ module ViewModels.Employee {
 		GetSuffix(): string { return this._suffix(); }
 		SetSuffix(inValue: string): void { this._suffix(inValue); }
 
-		private _workingTitle: KnockoutObservableString = ko.observable();
-		GetWorkingTitle(): string { return this._workingTitle(); }
-		SetWorkingTitle(inValue: string): void { this._workingTitle(inValue); }
-
 		private _gender: KnockoutObservableString = ko.observable();
 		GetGender(): string { return this._gender(); }
 		SetGender(inValue: string): void { this._gender(inValue); }
+
+		private _picture: KnockoutObservableAny = ko.observable();
+		GetPicture(): any { return this._picture(); }
+		SetPicture(inValue: any): void { this._picture(inValue); }
+
+		private _employeeId: number;
+
+		private _jobTitles: KnockoutObservableString = ko.observable();
+		GetJobTitles(): string { return this._jobTitles(); }
+		SetJobTitles(inValue: string): void { this._jobTitles(inValue); }
 
 		private _facultyRanks: KnockoutObservableArray = ko.observableArray();
 		GetFacultyRanks(): any[] { return this._facultyRanks(); }
@@ -84,9 +88,6 @@ module ViewModels.Employee {
 		GetAdministrativeAppointments(): string { return this._administrativeAppointments(); }
 		SetAdministrativeAppointments(inValue: string): void { this._administrativeAppointments(inValue); }
 
-		private _picture: KnockoutObservableAny = ko.observable();
-		GetPicture(): any { return this._picture(); }
-		SetPicture(inValue: any): void { this._picture(inValue); }
 
 		$facultyRanks: KnockoutObservableJQuery = ko.observable();
 		$nameSalutation: KnockoutObservableJQuery = ko.observable();
@@ -212,7 +213,7 @@ module ViewModels.Employee {
 		ToViewModel(inSelf: any, data: any): void {
 			var me: PersonalInfo = inSelf;
 
-			me.SetRevisionId(data.revisionId);
+			me._personId = data.revisionId;
 			me.SetIsActive(<bool>data.isActive);
 			me.SetIsDisplayNameDerived(<bool>data.isDisplayNameDerived);
 			me.SetDisplayName((data.displayName != null) ? data.displayName : "");
@@ -221,8 +222,9 @@ module ViewModels.Employee {
 			me.SetMiddleName((data.middleName != null) ? data.middleName : "");
 			me.SetLastName((data.lastName != null) ? data.lastName : "");
 			me.SetSuffix((data.suffix != null) ? data.suffix : "");
-			me.SetWorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
+			me.SetJobTitles((data.employeeJobTitles != null) ? data.employeeJobTitles : "");
 			me.SetGender(data.gender);
+			me._employeeId = data.employeeId;
 			if (data.employeeFacultyRank != null) {
 				var i: number = 0;
 				while ((i < me.GetFacultyRanks().length) && (me.GetFacultyRanks()[i].id != data.employeeFacultyRank.id))
@@ -235,7 +237,7 @@ module ViewModels.Employee {
 			else {
 				me.SetFacultyRank(null);
 			}
-			me.SetAdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
+			me.SetAdministrativeAppointments((data.employeeAdministrativeAppointments != null) ? data.employeeAdministrativeAppointments : "");
 			me.SetPicture(data.picture);
 		}
 
@@ -248,7 +250,7 @@ module ViewModels.Employee {
 			var me: PersonalInfo = inSelf;
 
 			return {
-				revisionId: me.GetRevisionId(),
+				revisionId: me._personId,
 				isActive: me.GetIsActive(),
 				isDisplayNameDerived: me.GetIsDisplayNameDerived(),
 				displayName: (me.GetDisplayName().length > 0) ? me.GetDisplayName() : null,
@@ -257,12 +259,13 @@ module ViewModels.Employee {
 				middleName: (me.GetMiddleName().length > 0) ? me.GetMiddleName() : null,
 				lastName: (me.GetLastName().length > 0) ? me.GetLastName() : null,
 				suffix: (me.GetSuffix().length > 0) ? me.GetSuffix() : null,
-				workingTitle: me.GetWorkingTitle(),
+				employeeJobTitles: me.GetJobTitles(),
 				gender: me.GetGender(),
+				employeeId: me._employeeId,
 				employeeFacultyRank: (me.GetFacultyRank() != null) ?
 					{ id: me.GetFacultyRank().id, rank: me.GetFacultyRank().rank } :
 					null,
-				administrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
+				employeeAdministrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
 				picture: me.GetPicture()
 			};
 		}

@@ -386,6 +386,7 @@
     <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
     <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
     <Compile Include="Helpers\EnforceHttpsAttribute.cs" />
+    <Compile Include="Helpers\EntityMapper.cs" />
     <Compile Include="Helpers\RequireHttpsMessageHandler.cs" />
     <Compile Include="Helpers\TempDataExtensions.cs" />
     <Compile Include="Helpers\TenancyExtensions.cs" />

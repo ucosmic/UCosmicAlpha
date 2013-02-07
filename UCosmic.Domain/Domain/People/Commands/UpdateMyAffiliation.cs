@@ -82,8 +82,8 @@ namespace UCosmic.Domain.People
             if (!affiliation.IsAcknowledged) command.ChangeCount++;
             affiliation.IsAcknowledged = true;
 
-            if (affiliation.JobTitles != command.JobTitles) command.ChangeCount++;
-            affiliation.JobTitles = command.JobTitles;
+            //if (affiliation.JobTitles != command.JobTitles) command.ChangeCount++;
+            //affiliation.JobTitles = command.JobTitles;
 
             if (affiliation.IsClaimingStudent != command.IsClaimingStudent) command.ChangeCount++;
             affiliation.IsClaimingStudent = command.IsClaimingStudent;

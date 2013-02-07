@@ -274,7 +274,6 @@ namespace UCosmic.SeedData
                     LastName = "Kusenbach",
                     UserName = "mkusenba@usf.edu",
                     Gender = PersonGender.Female,
-                    FacultyRank = associateProfessorRank,
                     UserIsRegistered = true,
                     EmailAddresses = new[]
                         {
@@ -285,9 +284,9 @@ namespace UCosmic.SeedData
                                 IsConfirmed = true,
                             },
                         },
-                    AdministrativeAppointments = "Director of Sociology Graduate Program",
                     Picture = PeopleImages.BlueGradient128X128Jpeg,
-                }); /* Affiliations set below. */
+                });
+                /* Affiliations set below. */
 
                 Seed(usf.RevisionId, new CreatePerson
                 {
@@ -306,7 +305,8 @@ namespace UCosmic.SeedData
                                 },
                         },
                     Picture = PeopleImages.BlueGradient128X128Jpeg,
-                }); /* Affiliations set below. */
+                });
+                /* Affiliations set below. */
             } /* USF People */
 
         }
@@ -400,7 +400,6 @@ namespace UCosmic.SeedData
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    JobTitles = "Software Developer",
                     IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -419,7 +418,6 @@ namespace UCosmic.SeedData
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    JobTitles = "Associate Professor",
                     IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -439,7 +437,6 @@ namespace UCosmic.SeedData
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    JobTitles = "Regional Chancellor",
                     IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,

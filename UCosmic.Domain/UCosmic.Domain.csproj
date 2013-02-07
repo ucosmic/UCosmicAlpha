@@ -123,13 +123,17 @@
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
     <Compile Include="Domain\Activities\Queries\MyActivities.cs" />
+    <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEntityId.cs" />
     <Compile Include="Domain\Activities\Queries\MyActivityByNumber.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivities.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
+    <Compile Include="Domain\Employees\Commands\UpdateEmployee.cs" />
+    <Compile Include="Domain\Employees\Entities\Employee.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeFromPersonId.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishmentId.cs" />
     <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByPersonId.cs" />
     <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByUserName.cs" />

@@ -38,6 +38,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             // only need the destination type int he Map generic argument.
             // the source type is implicit based on the method argument.
             PersonApiModel model = Mapper.Map<PersonApiModel>(person);
+
             return model;
         }
 

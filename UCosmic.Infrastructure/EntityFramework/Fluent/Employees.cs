@@ -1,8 +1,28 @@
 ﻿using System.Data.Entity.ModelConfiguration;
 using UCosmic.Domain.Employees;
+using UCosmic.Domain.People;
 
 namespace UCosmic.EntityFramework
 {
+    public class EmployeeOrm : EntityTypeConfiguration<Employee>
+    {
+        public EmployeeOrm()
+        {
+            ToTable(typeof(Employee).Name, DbSchemaName.Employees);
+
+            HasRequired(p => p.Person)
+                .WithOptional(d => d.Employee)
+                .Map(m => m.MapKey("PersonId"))
+                .WillCascadeOnDelete(true)
+            ;
+
+            HasOptional(p => p.FacultyRank);
+
+            Property(p => p.AdministrativeAppointments).HasMaxLength(500).IsOptional();
+            Property(p => p.JobTitles).HasMaxLength(500).IsOptional();
+        }
+    }
+  
     public class EmployeeModuleSettingsOrm : EntityTypeConfiguration<EmployeeModuleSettings>
     {
         public EmployeeModuleSettingsOrm()

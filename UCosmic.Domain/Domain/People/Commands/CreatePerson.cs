@@ -23,9 +23,7 @@ namespace UCosmic.Domain.People
         public EmailAddress[] EmailAddresses { get; set; }
         public Person CreatedPerson { get; internal set; }
         public string Gender { get; set; }
-        public EmployeeFacultyRank FacultyRank { get; set; }
         public ICollection<Affiliation> Affiliations { get; set; }
-        public string AdministrativeAppointments { get; set; }
         public byte[] Picture { get; set; }
 
         public class EmailAddress
@@ -79,9 +77,7 @@ namespace UCosmic.Domain.People
                 LastName = command.LastName,
                 DisplayName = command.DisplayName,
                 Gender = command.Gender,
-                EmployeeFacultyRank = command.FacultyRank,
                 Affiliations = command.Affiliations,
-                AdministrativeAppointments = command.AdministrativeAppointments,
                 Picture = command.Picture,
             };
 

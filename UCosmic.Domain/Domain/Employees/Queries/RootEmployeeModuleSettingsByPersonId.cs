@@ -35,10 +35,23 @@ namespace UCosmic.Domain.Employees
                         .SingleOrDefault(x => x.Person.RevisionId == query.PersonId);
             if (user == null) return null;
 
+            if (user == null) { throw new Exception("Uable to find person with id " + query.PersonId); }
+
             var domain = user.Name.GetEmailDomain();
 
             var establishment = _entities.Query<Establishment>()
-                                    .FirstOrDefault(x => x.EmailDomains.Any(e => e.Value == domain) && x.Parent == null);
+                                    .FirstOrDefault(x => x.EmailDomains.Any(e => e.Value == domain));
+
+            if (establishment == null) { throw new Exception("Uable to find establishment with domain " + domain); }
+
+            /* If this is not root, head up the tree until we hit it. */
+            while ((establishment != null) && (establishment.Parent != null))
+            {
+                establishment = _entities.Query<Establishment>()
+                                        .FirstOrDefault(x => x.RevisionId == establishment.Parent.RevisionId);
+            }
+
+            if (establishment == null) { throw new Exception("Uable to find root establishment"); }
 
             return _entities.Query<EmployeeModuleSettings>()
                     .SingleOrDefault(x => x.Establishment.RevisionId == establishment.RevisionId);

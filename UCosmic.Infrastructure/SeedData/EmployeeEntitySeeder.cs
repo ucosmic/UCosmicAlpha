@@ -3,16 +3,17 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.People;
 
 
 namespace UCosmic.SeedData
 {
-    public class EmployeeEntitySeeder : ISeedData
+    public class EmployeeModuleSettingsEntitySeeder : ISeedData
     {
         private readonly UcEmployeeModuleSettingsSeeder _ucEmployeeModuleSettingsSeeder;
         private readonly UsfEmployeeModuleSettingsSeeder _usfEmployeeModuleSettingsSeeder;
 
-        public EmployeeEntitySeeder(UcEmployeeModuleSettingsSeeder ucEmployeeModuleSettingsSeeder
+        public EmployeeModuleSettingsEntitySeeder(UcEmployeeModuleSettingsSeeder ucEmployeeModuleSettingsSeeder
             , UsfEmployeeModuleSettingsSeeder usfEmployeeModuleSettingsSeeder
         )
         {
@@ -30,6 +31,7 @@ namespace UCosmic.SeedData
     public class UcEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
         private readonly ICommandEntities _entities;
+        public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; private set; }
 
         public UcEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
@@ -45,7 +47,7 @@ namespace UCosmic.SeedData
         {
             var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of Cincinnati");
             if (establishment == null) throw new Exception("Establishment is null");
-            Seed(new CreateEmployeeModuleSettings
+            CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {
                 EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
                 {
@@ -66,6 +68,7 @@ namespace UCosmic.SeedData
     public class UsfEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
         private readonly ICommandEntities _entities;
+        public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; private set; }
 
         public UsfEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
@@ -81,7 +84,7 @@ namespace UCosmic.SeedData
         {
             var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
             if (establishment == null) throw new Exception("Establishment is null");
-            Seed(new CreateEmployeeModuleSettings
+            CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {
                 EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
                 {
@@ -128,6 +131,168 @@ namespace UCosmic.SeedData
             _unitOfWork.SaveChanges();
 
             return command.CreatedEmployeeModuleSettings;
+        }
+    }
+
+    public class EmployeeEntitySeeder : ISeedData
+    {
+        private readonly UcEmployeeSeeder _ucEmployeeSeeder;
+        private readonly UsfEmployeeSeeder _usfEmployeeSeeder;
+
+        public EmployeeEntitySeeder(UcEmployeeSeeder ucEmployeeSeeder
+            , UsfEmployeeSeeder usfEmployeeSeeder
+        )
+        {
+            _ucEmployeeSeeder = ucEmployeeSeeder;
+            _usfEmployeeSeeder = usfEmployeeSeeder;
+        }
+
+        public void Seed()
+        {
+            _ucEmployeeSeeder.Seed();
+            _usfEmployeeSeeder.Seed();
+        }
+    }
+    
+    
+    public class UcEmployeeSeeder : BaseEmployeeSeeder
+    {
+        public UcEmployeeSeeder(IProcessQueries queryProcessor
+            , IHandleCommands<CreateEmployee> createEmployee
+            , IUnitOfWork unitOfWork
+            , ICommandEntities entities
+            )
+            : base(queryProcessor, createEmployee, unitOfWork, entities)
+        {
+        }
+
+        public override void Seed()
+        {
+            {
+                Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Dan" && x.LastName == "Ludwig");
+                if (person == null) throw new Exception("UC person not found.");
+
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for UC.");
+
+                EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
+                if (facultyRank == null) throw new Exception("UC Professor rank not found.");
+
+                Seed(new CreateEmployee
+                {
+                    FacultyRank = facultyRank,
+                    AdministrativeAppointments = "UCosmic CTO",
+                    JobTitles = "Software Architect",
+                    ForPersonId = person.RevisionId
+                });
+            }
+
+            /* More employees ... */
+        }
+    }
+
+    public class UsfEmployeeSeeder : BaseEmployeeSeeder
+    {
+        public UsfEmployeeSeeder(IProcessQueries queryProcessor
+            , IHandleCommands<CreateEmployee> createEmployee
+            , IUnitOfWork unitOfWork
+            , ICommandEntities entities
+            )
+            : base(queryProcessor, createEmployee, unitOfWork, entities)
+        {
+        }
+
+        public override void Seed()
+        {
+            {
+                Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
+                if (person == null) throw new Exception("USF person not found");
+
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
+
+                EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
+                if (facultyRank == null) throw new Exception("USF Professor rank not found.");
+
+                Seed(new CreateEmployee
+                {
+                    FacultyRank = facultyRank,
+                    AdministrativeAppointments = "USF World UCosmic Developer",
+                    JobTitles = "Software Developer",
+                    ForPersonId = person.RevisionId
+                });
+            }
+            
+            {
+                Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
+                if (person == null) throw new Exception("USF person not found");
+
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
+
+                EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Associate Professor");
+                if (facultyRank == null) throw new Exception("USF Associate Professor rank not found.");
+
+                Seed(new CreateEmployee
+                {
+                    FacultyRank = facultyRank,
+                    AdministrativeAppointments = "Director of Sociology Graduate Program",
+                    JobTitles = "Director",
+                    ForPersonId = person.RevisionId
+                });
+            }
+
+            {
+                Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "William" && x.LastName == "Hogarth");
+                if (person == null) throw new Exception("USF person not found");
+
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
+
+                Seed(new CreateEmployee
+                {
+                    JobTitles = "Regional Chancellor",
+                    ForPersonId = person.RevisionId
+                });
+            }
+            
+            /* More employees ... */
+        }
+    }
+
+    public abstract class BaseEmployeeSeeder : ISeedData
+    {
+        protected IProcessQueries QueryProcessor { get; set; }
+        private readonly IHandleCommands<CreateEmployee> _createEmployee;
+        private readonly IUnitOfWork _unitOfWork;
+        protected ICommandEntities Entities { get; set; }
+
+        protected BaseEmployeeSeeder(IProcessQueries queryProcessor
+            , IHandleCommands<CreateEmployee> createEmployee
+            , IUnitOfWork unitOfWork
+            , ICommandEntities entities
+            )
+        {
+            QueryProcessor = queryProcessor;
+            _createEmployee = createEmployee;
+            _unitOfWork = unitOfWork;
+            Entities = entities;
+        }
+
+        public abstract void Seed();
+
+        protected Employee Seed(CreateEmployee command)
+        {
+            // make sure entity does not already exist
+            var employee = QueryProcessor.Execute(new EmployeeByPersonId(command.ForPersonId));
+
+            if (employee != null) return employee;
+
+            _createEmployee.Handle(command);
+
+            _unitOfWork.SaveChanges();
+
+            return command.CreatedEmployee;
         }
     }
 

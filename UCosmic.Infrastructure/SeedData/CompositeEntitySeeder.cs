@@ -15,6 +15,7 @@
         private readonly MemberEntitySeeder _memberEntitySeeder;
         private readonly InstitutionalAgreementEntitySeeder _institutionalAgreementEntitySeeder;
         private readonly InstitutionalAgreementSettingsEntitySeeder _institutionalAgreementSettingsEntitySeeder;
+        private readonly EmployeeModuleSettingsEntitySeeder _employeeModuleSettingsEntitySeeder;
         private readonly EmployeeEntitySeeder _employeeEntitySeeder;
         private readonly AffiliationEntitySeeder _affiliationEntitySeeder;
 
@@ -31,8 +32,9 @@
             , MemberEntitySeeder memberEntitySeeder
             , InstitutionalAgreementEntitySeeder institutionalAgreementEntitySeeder
             , InstitutionalAgreementSettingsEntitySeeder institutionalAgreementSettingsEntitySeeder
-            , EmployeeEntitySeeder employeeEntitySeeder
+            , EmployeeModuleSettingsEntitySeeder employeeModuleSettingsEntitySeeder
             , AffiliationEntitySeeder affiliationEntitySeeder
+            , EmployeeEntitySeeder employeeEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -42,6 +44,7 @@
             //_placeByGeoPlanetEntitySeeder = placeByGeoPlanetEntitySeeder;
             _roleEntitySeeder = roleEntitySeeder;
             _establishmentEntitySeeder = establishmentEntitySeeder;
+            _employeeModuleSettingsEntitySeeder = employeeModuleSettingsEntitySeeder;
             _employeeEntitySeeder = employeeEntitySeeder; 
             _emailTemplateEntitySeeder = emailTemplateEntitySeeder;
             _personEntitySeeder = personEntitySeeder;
@@ -63,17 +66,15 @@
             _roleEntitySeeder.Seed();
             _establishmentEntitySeeder.Seed();
 
-            /* This needs to be here in order to seed the FacultyRanks so that Persons will get
-                created with a FacultyRank.  We may need to move this in the future if any
-                Employee domain entity requires references to Users, Persons or Members. */
-            _employeeEntitySeeder.Seed();
             _emailTemplateEntitySeeder.Seed();
+            _employeeModuleSettingsEntitySeeder.Seed();
             _personEntitySeeder.Seed();
             _userEntitySeeder.Seed();
             _memberEntitySeeder.Seed();
             _institutionalAgreementEntitySeeder.Seed();
             _institutionalAgreementSettingsEntitySeeder.Seed();
             _affiliationEntitySeeder.Seed();
+            _employeeEntitySeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }
