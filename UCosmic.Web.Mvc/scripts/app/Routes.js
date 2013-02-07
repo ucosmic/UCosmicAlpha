@@ -154,22 +154,33 @@ var App;
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
             (function (People) {
-                var NameSalutations = (function () {
-                    function NameSalutations() { }
-                    NameSalutations.get = function get() {
-                        return makeUrl('person-name-salutations');
-                    }
-                    return NameSalutations;
-                })();
-                People.NameSalutations = NameSalutations;                
-                var NameSuffixes = (function () {
-                    function NameSuffixes() { }
-                    NameSuffixes.get = function get() {
-                        return makeUrl('person-name-suffixes');
-                    }
-                    return NameSuffixes;
-                })();
-                People.NameSuffixes = NameSuffixes;                
+                (function (Names) {
+                    var Salutations = (function () {
+                        function Salutations() { }
+                        Salutations.get = function get() {
+                            return makeUrl('person-names/salutations');
+                        }
+                        return Salutations;
+                    })();
+                    Names.Salutations = Salutations;                    
+                    var Suffixes = (function () {
+                        function Suffixes() { }
+                        Suffixes.get = function get() {
+                            return makeUrl('person-names/suffixes');
+                        }
+                        return Suffixes;
+                    })();
+                    Names.Suffixes = Suffixes;                    
+                    var DeriveDisplayName = (function () {
+                        function DeriveDisplayName() { }
+                        DeriveDisplayName.get = function get() {
+                            return makeUrl('person-names/derive-display-name');
+                        }
+                        return DeriveDisplayName;
+                    })();
+                    Names.DeriveDisplayName = DeriveDisplayName;                    
+                })(People.Names || (People.Names = {}));
+                var Names = People.Names;
             })(WebApi.People || (WebApi.People = {}));
             var People = WebApi.People;
         })(Routes.WebApi || (Routes.WebApi = {}));

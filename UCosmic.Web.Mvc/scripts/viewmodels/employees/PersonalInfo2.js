@@ -1,11 +1,14 @@
 var ViewModels;
 (function (ViewModels) {
     (function (Employee) {
-        var PersonalInfo = (function () {
-            function PersonalInfo(inDocumentElementId, inDataContext) {
+        var PersonalInfo2 = (function () {
+            function PersonalInfo2(inDocumentElementId, inDataContext) {
+                var _this = this;
+                this._isInitialized = false;
                 this._isActive = ko.observable();
                 this._isDisplayNameDerived = ko.observable();
                 this._displayName = ko.observable();
+                this._userDisplayName = '';
                 this._salutations = ko.observableArray();
                 this._salutation = ko.observable();
                 this._firstName = ko.observable();
@@ -56,119 +59,149 @@ var ViewModels;
                         });
                     }
                 });
+                this._displayName.subscribe(function (newValue) {
+                    if(!_this._isDisplayNameDerived()) {
+                        _this._userDisplayName = newValue;
+                    }
+                });
+                ko.computed(function () {
+                    if(_this._isDisplayNameDerived() && _this._isInitialized) {
+                        var data = {
+                            salutation: _this._salutation(),
+                            firstName: _this._firstName(),
+                            middleName: _this._middleName(),
+                            lastName: _this._lastName(),
+                            salutation: _this._salutation()
+                        };
+                        $.ajax({
+                            url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
+                            type: 'GET',
+                            cache: false,
+                            data: data
+                        }).done(function (result) {
+                            _this._displayName(result);
+                        });
+                    } else {
+                        if(_this._isInitialized) {
+                            _this._displayName(_this._userDisplayName);
+                        }
+                    }
+                }).extend({
+                    throttle: 400
+                });
             }
-            PersonalInfo.prototype.GetRevisionId = function () {
+            PersonalInfo2.prototype.GetRevisionId = function () {
                 return this._revisionId;
             };
-            PersonalInfo.prototype.SetRevisionId = function (inValue) {
+            PersonalInfo2.prototype.SetRevisionId = function (inValue) {
                 this._revisionId = inValue;
             };
-            PersonalInfo.prototype.GetIsActive = function () {
+            PersonalInfo2.prototype.GetIsActive = function () {
                 return this._isActive();
             };
-            PersonalInfo.prototype.SetIsActive = function (inValue) {
+            PersonalInfo2.prototype.SetIsActive = function (inValue) {
                 this._isActive(inValue);
             };
-            PersonalInfo.prototype.GetIsDisplayNameDerived = function () {
+            PersonalInfo2.prototype.GetIsDisplayNameDerived = function () {
                 return this._isDisplayNameDerived();
             };
-            PersonalInfo.prototype.SetIsDisplayNameDerived = function (inValue) {
+            PersonalInfo2.prototype.SetIsDisplayNameDerived = function (inValue) {
                 this._isDisplayNameDerived(inValue);
             };
-            PersonalInfo.prototype.GetDisplayName = function () {
+            PersonalInfo2.prototype.GetDisplayName = function () {
                 return this._displayName();
             };
-            PersonalInfo.prototype.SetDisplayName = function (inValue) {
+            PersonalInfo2.prototype.SetDisplayName = function (inValue) {
                 this._displayName(inValue);
             };
-            PersonalInfo.prototype.GetSalutations = function () {
+            PersonalInfo2.prototype.GetSalutations = function () {
                 return this._salutations();
             };
-            PersonalInfo.prototype.SetSalutations = function (inValue) {
+            PersonalInfo2.prototype.SetSalutations = function (inValue) {
                 this._salutations(inValue);
             };
-            PersonalInfo.prototype.Salutations_Add = function (inSalutation) {
+            PersonalInfo2.prototype.Salutations_Add = function (inSalutation) {
                 this._salutations.push(inSalutation);
             };
-            PersonalInfo.prototype.GetSalutation = function () {
+            PersonalInfo2.prototype.GetSalutation = function () {
                 return this._salutation();
             };
-            PersonalInfo.prototype.SetSalutation = function (inValue) {
+            PersonalInfo2.prototype.SetSalutation = function (inValue) {
                 this._salutation(inValue);
             };
-            PersonalInfo.prototype.GetFirstName = function () {
+            PersonalInfo2.prototype.GetFirstName = function () {
                 return this._firstName();
             };
-            PersonalInfo.prototype.SetFirstName = function (inValue) {
+            PersonalInfo2.prototype.SetFirstName = function (inValue) {
                 this._firstName(inValue);
             };
-            PersonalInfo.prototype.GetMiddleName = function () {
+            PersonalInfo2.prototype.GetMiddleName = function () {
                 return this._middleName();
             };
-            PersonalInfo.prototype.SetMiddleName = function (inValue) {
+            PersonalInfo2.prototype.SetMiddleName = function (inValue) {
                 this._middleName(inValue);
             };
-            PersonalInfo.prototype.GetLastName = function () {
+            PersonalInfo2.prototype.GetLastName = function () {
                 return this._lastName();
             };
-            PersonalInfo.prototype.SetLastName = function (inValue) {
+            PersonalInfo2.prototype.SetLastName = function (inValue) {
                 this._lastName(inValue);
             };
-            PersonalInfo.prototype.GetSuffixes = function () {
+            PersonalInfo2.prototype.GetSuffixes = function () {
                 return this._suffixes();
             };
-            PersonalInfo.prototype.SetSuffixes = function (inValue) {
+            PersonalInfo2.prototype.SetSuffixes = function (inValue) {
                 this._suffixes(inValue);
             };
-            PersonalInfo.prototype.Suffixes_Add = function (inSuffix) {
+            PersonalInfo2.prototype.Suffixes_Add = function (inSuffix) {
                 this._suffixes.push(inSuffix);
             };
-            PersonalInfo.prototype.GetSuffix = function () {
+            PersonalInfo2.prototype.GetSuffix = function () {
                 return this._suffix();
             };
-            PersonalInfo.prototype.SetSuffix = function (inValue) {
+            PersonalInfo2.prototype.SetSuffix = function (inValue) {
                 this._suffix(inValue);
             };
-            PersonalInfo.prototype.GetWorkingTitle = function () {
+            PersonalInfo2.prototype.GetWorkingTitle = function () {
                 return this._workingTitle();
             };
-            PersonalInfo.prototype.SetWorkingTitle = function (inValue) {
+            PersonalInfo2.prototype.SetWorkingTitle = function (inValue) {
                 this._workingTitle(inValue);
             };
-            PersonalInfo.prototype.GetGender = function () {
+            PersonalInfo2.prototype.GetGender = function () {
                 return this._gender();
             };
-            PersonalInfo.prototype.SetGender = function (inValue) {
+            PersonalInfo2.prototype.SetGender = function (inValue) {
                 this._gender(inValue);
             };
-            PersonalInfo.prototype.GetFacultyRanks = function () {
+            PersonalInfo2.prototype.GetFacultyRanks = function () {
                 return this._facultyRanks();
             };
-            PersonalInfo.prototype.SetFacultyRanks = function (inValue) {
+            PersonalInfo2.prototype.SetFacultyRanks = function (inValue) {
                 this._facultyRanks(inValue);
             };
-            PersonalInfo.prototype.FacultyRanks_Add = function (inRank) {
+            PersonalInfo2.prototype.FacultyRanks_Add = function (inRank) {
                 this._facultyRanks.push(inRank);
             };
-            PersonalInfo.prototype.GetFacultyRank = function () {
+            PersonalInfo2.prototype.GetFacultyRank = function () {
                 return this._facultyRank();
             };
-            PersonalInfo.prototype.SetFacultyRank = function (inValue) {
+            PersonalInfo2.prototype.SetFacultyRank = function (inValue) {
                 this._facultyRank(inValue);
             };
-            PersonalInfo.prototype.GetAdministrativeAppointments = function () {
+            PersonalInfo2.prototype.GetAdministrativeAppointments = function () {
                 return this._administrativeAppointments();
             };
-            PersonalInfo.prototype.SetAdministrativeAppointments = function (inValue) {
+            PersonalInfo2.prototype.SetAdministrativeAppointments = function (inValue) {
                 this._administrativeAppointments(inValue);
             };
-            PersonalInfo.prototype.GetPicture = function () {
+            PersonalInfo2.prototype.GetPicture = function () {
                 return this._picture();
             };
-            PersonalInfo.prototype.SetPicture = function (inValue) {
+            PersonalInfo2.prototype.SetPicture = function (inValue) {
                 this._picture(inValue);
             };
-            PersonalInfo.prototype._initialize = function (inDocumentElementId) {
+            PersonalInfo2.prototype._initialize = function (inDocumentElementId) {
                 var _this = this;
                 var getSalutationsPact = this._dataContext.GetSalutations();
                 getSalutationsPact.then(function (salutations) {
@@ -195,13 +228,14 @@ var ViewModels;
                     _this._dataContext.Get().then(function (data) {
                         _this.ToViewModel(_this, data);
                         ko.applyBindings(_this, $("#" + inDocumentElementId).get(0));
+                        _this._isInitialized = true;
                         _this.$facultyRanks().kendoDropDownList();
                     }, function (data) {
                     });
                 }, function (data) {
                 });
             };
-            PersonalInfo.prototype.ToViewModel = function (inSelf, data) {
+            PersonalInfo2.prototype.ToViewModel = function (inSelf, data) {
                 var me = inSelf;
                 me.SetRevisionId(data.revisionId);
                 me.SetIsActive(data.isActive);
@@ -228,7 +262,7 @@ var ViewModels;
                 me.SetAdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
                 me.SetPicture(data.picture);
             };
-            PersonalInfo.prototype.FromViewModel = function (inSelf) {
+            PersonalInfo2.prototype.FromViewModel = function (inSelf) {
                 var me = inSelf;
                 return {
                     revisionId: me.GetRevisionId(),
@@ -250,46 +284,18 @@ var ViewModels;
                     picture: me.GetPicture()
                 };
             };
-            PersonalInfo.prototype.saveInfo = function (formElement) {
-                this.DeriveDisplayName();
+            PersonalInfo2.prototype.saveInfo = function (formElement) {
                 this._dataContext.Put(this.FromViewModel(this)).then(function (data) {
                 }, function (errorThrown) {
                 });
                 $("#accordion").accordion('activate', 1);
             };
-            PersonalInfo.prototype.saveEmails = function (formElement) {
-                $("#accordion").accordion('activate', 2);
-            };
-            PersonalInfo.prototype.saveAffiliations = function (formElement) {
-                $("#accordion").accordion('activate', 3);
-            };
-            PersonalInfo.prototype.savePicture = function (formElement) {
+            PersonalInfo2.prototype.savePicture = function (formElement) {
                 $("#accordion").accordion('activate', 0);
             };
-            PersonalInfo.prototype.derivedNameClickHandler = function (model, event) {
-                if(model.GetIsDisplayNameDerived()) {
-                    $("#displayName").attr("disabled", "disabled");
-                    model._firstNameSubscription = model._firstName.subscribe(function (inValue) {
-                        model.DeriveDisplayName(model);
-                    });
-                    model._lastNameSubscription = model._lastName.subscribe(function (inValue) {
-                        model.DeriveDisplayName(model);
-                    });
-                    model.DeriveDisplayName(model);
-                } else {
-                    $("#displayName").removeAttr("disabled");
-                    model._firstNameSubscription.dispose();
-                    model._lastNameSubscription.dispose();
-                }
-                return true;
-            };
-            PersonalInfo.prototype.DeriveDisplayName = function (inModel) {
-                var me = (inModel != null) ? inModel : this;
-                me.SetDisplayName(me.GetFirstName() + " " + me.GetLastName());
-            };
-            return PersonalInfo;
+            return PersonalInfo2;
         })();
-        Employee.PersonalInfo = PersonalInfo;        
+        Employee.PersonalInfo2 = PersonalInfo2;        
     })(ViewModels.Employee || (ViewModels.Employee = {}));
     var Employee = ViewModels.Employee;
 })(ViewModels || (ViewModels = {}));

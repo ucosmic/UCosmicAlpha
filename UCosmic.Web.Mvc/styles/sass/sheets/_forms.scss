@@ -35,6 +35,9 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
         background-repeat: no-repeat;
         background-origin: content-box;
     }
+    &[disabled], &[disabled=true] {
+        cursor: not-allowed;
+    }
 }
 
 textarea {
@@ -216,7 +219,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
         cursor: pointer;
         @include opacity(1);
     }
-    &[disabled] {
+    &[disabled], &[disabled=true] {
         cursor: default !important;
         @include opacity(.5);
     }
@@ -238,7 +241,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
     &:hover {
         text-decoration: none !important;
     }
-    &[disabled] {
+    &[disabled], &[disabled=true] {
         color: #555;
         text-decoration: none !important;
         cursor: default;

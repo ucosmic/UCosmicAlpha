@@ -56,6 +56,14 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
     background-position: right top;
     background-repeat: no-repeat;
     background-origin: content-box; }
+  input[type="email"][disabled], input[type="email"][disabled=true], input[type="number"][disabled], input[type="number"][disabled=true], input[type="password"][disabled], input[type="password"][disabled=true], input[type="search"][disabled], input[type="search"][disabled=true],
+  input[type="tel"][disabled],
+  input[type="tel"][disabled=true], input[type="text"][disabled], input[type="text"][disabled=true], input[type="url"][disabled], input[type="url"][disabled=true], input[type="color"][disabled], input[type="color"][disabled=true],
+  input[type="date"][disabled],
+  input[type="date"][disabled=true], input[type="datetime"][disabled], input[type="datetime"][disabled=true], input[type="datetime-local"][disabled], input[type="datetime-local"][disabled=true],
+  input[type="month"][disabled],
+  input[type="month"][disabled=true], input[type="time"][disabled], input[type="time"][disabled=true], input[type="week"][disabled], input[type="week"][disabled=true], textarea[disabled], textarea[disabled=true] {
+    cursor: not-allowed; }
 
 textarea {
   height: auto;
@@ -257,7 +265,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
-  button[disabled], input[type=submit][disabled], input[type=reset][disabled], input[type=button][disabled] {
+  button[disabled], button[disabled=true], input[type=submit][disabled], input[type=submit][disabled=true], input[type=reset][disabled], input[type=reset][disabled=true], input[type=button][disabled], input[type=button][disabled=true] {
     cursor: default !important;
     -moz-opacity: 0.5;
     opacity: 0.5;
@@ -282,7 +290,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
   button.link:hover, input[type=submit].link:hover, input[type=reset].link:hover, input[type=button].link:hover, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true]:hover {
     text-decoration: none !important; }
-  button.link[disabled], input[type=submit].link[disabled], input[type=reset].link[disabled], input[type=button].link[disabled], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled] {
+  button.link[disabled], button.link[disabled=true], input[type=submit].link[disabled], input[type=submit].link[disabled=true], input[type=reset].link[disabled], input[type=reset].link[disabled=true], input[type=button].link[disabled], input[type=button].link[disabled=true], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled=true] {
     color: #555;
     text-decoration: none !important;
     cursor: default; }

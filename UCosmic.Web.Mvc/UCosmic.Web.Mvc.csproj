@@ -1469,11 +1469,18 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
+    <TypeScriptCompile Include="scripts\viewmodels\employees\PersonalInfo2.ts" />
     <Content Include="scripts\viewmodels\employees\PersonalInfo.js">
       <DependentUpon>PersonalInfo.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\employees\PersonalInfo.min.js">
       <DependentUpon>PersonalInfo.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\PersonalInfo2.js">
+      <DependentUpon>PersonalInfo2.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\PersonalInfo2.min.js">
+      <DependentUpon>PersonalInfo2.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>

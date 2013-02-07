@@ -23,7 +23,7 @@
     <script type="text/javascript">
 
         $(function () {
-            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            var viewModel = new ViewModels.Employee.PersonalInfo2("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
             $("#accordion").accordion();
             $("#accordion").removeClass("ui-widget");
         });
@@ -92,13 +92,14 @@
                                                 <label>Display name</label>
                                             </div>
                                             <div class="field-input">
-                                                <input id="displayName" type="text" data-bind="value: _displayName" />
+                                                <input id="displayName" type="text" data-bind="value: _displayName, valueUpdate: 'afterkeydown', attr: { disabled: _isDisplayNameDerived }" />
                                             </div>
                                         </div>
                                         <div class="field-row">
                                             <div class="field-unlabeled-input">
                                                 <label>
-                                                    <input type="checkbox" data-bind="checked: isDisplayNameDerived, click: derivedNameClickHandler" />
+                                                    @*<input type="checkbox" data-bind="checked: _isDisplayNameDerived, click: derivedNameClickHandler" />*@
+                                                    <input type="checkbox" data-bind="checked: _isDisplayNameDerived" />
                                                     Automatically generate my display name based on the fields below.
                                                 </label>
                                             </div>
@@ -108,7 +109,7 @@
                                                 <label>Salutation</label>
                                             </div>
                                             <div class="field-input">
-                                                <input id="salutationTextbox" type="text" data-bind="value: _salutation, jqObservableElement: '$nameSalutation'" />
+                                                <input id="salutationTextbox" type="text" data-bind="value: _salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -116,7 +117,7 @@
                                                 <label>First name</label>
                                             </div>
                                             <div class="field-input">
-                                                <input type="text" data-bind="value: _firstName" />
+                                                <input type="text" data-bind="value: _firstName, valueUpdate: 'afterkeydown'" />
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -124,7 +125,7 @@
                                                 <label>Middle name</label>
                                             </div>
                                             <div class="field-input">
-                                                <input type="text" data-bind="value: _middleName" />
+                                                <input type="text" data-bind="value: _middleName, valueUpdate: 'afterkeydown'" />
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -132,7 +133,7 @@
                                                 <label>Last name</label>
                                             </div>
                                             <div class="field-input">
-                                                <input type="text" data-bind="value: _lastName" />
+                                                <input type="text" data-bind="value: _lastName, valueUpdate: 'afterkeydown'" />
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -140,7 +141,7 @@
                                                 <label>Suffix</label>
                                             </div>
                                             <div class="field-input">
-                                                <input id="suffixTextbox" type="text" data-bind="value: _suffix, jqObservableElement: '$nameSuffix'" />
+                                                <input id="suffixTextbox" type="text" data-bind="value: _suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -211,7 +212,7 @@
 
                             <h2>My Email Addresses</h2>
                             <div class="fieldset">
-                                <form data-bind="submit: saveEmails">
+                                <form data-xbind="submit: saveEmails">
                                     <div>
                                         <input type="submit" value="Save" />
                                     </div>
@@ -220,7 +221,7 @@
 
                             <h2>My Affiliations</h2>
                             <div class="fieldset">
-                                <form data-bind="submit: saveAffiliations">
+                                <form data-xbind="submit: saveAffiliations">
                                     <div>
                                         <input type="submit" value="Save" />
                                     </div>
@@ -229,7 +230,7 @@
 
                             <h2>My Picture</h2>
                             <div class="fieldset">
-                                <form data-bind="submit: savePicture">
+                                <form data-xbind="submit: savePicture">
                                     <div>
                                         <input type="submit" value="Save" />
                                     </div>

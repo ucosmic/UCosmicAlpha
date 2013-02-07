@@ -182,7 +182,7 @@ module ViewModels.Employee {
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.People.NameSalutations.get()
+                                    url: App.Routes.WebApi.People.Names.Salutations.get()
                                 }
                             }
                         })
@@ -196,7 +196,7 @@ module ViewModels.Employee {
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.People.NameSuffixes.get()
+                                    url: App.Routes.WebApi.People.Names.Suffixes.get()
                                 }
                             }
                         })

@@ -160,14 +160,21 @@ module App.Routes {
         }
 
         export module People {
-            export class NameSalutations {
-                static get (): string {
-                    return makeUrl('person-name-salutations');
+            export module Names {
+                export class Salutations {
+                    static get (): string {
+                        return makeUrl('person-names/salutations');
+                    }
                 }
-            }
-            export class NameSuffixes {
-                static get (): string {
-                    return makeUrl('person-name-suffixes');
+                export class Suffixes {
+                    static get (): string {
+                        return makeUrl('person-names/suffixes');
+                    }
+                }
+                export class DeriveDisplayName {
+                    static get (): string {
+                        return makeUrl('person-names/derive-display-name');
+                    }
                 }
             }
         }

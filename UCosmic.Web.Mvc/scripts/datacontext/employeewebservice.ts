@@ -31,7 +31,7 @@ module DataContext {
 		/*override*/ GetSalutations(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
 			//$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/salutations/",
-			$.getJSON(App.Routes.WebApi.People.NameSalutations.get(),
+			$.getJSON(App.Routes.WebApi.People.Names.Salutations.get(),
 				 function (data, textStatus, jqXHR) {
 						deferred.resolve(data);
 				 } );
@@ -41,7 +41,7 @@ module DataContext {
 		/*override*/ GetSuffixes(): JQueryDeferred {
 			var deferred: JQueryDeferred = $.Deferred();
 			//$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/suffixes/",
-			$.getJSON(App.Routes.WebApi.People.NameSuffixes.get(),
+			$.getJSON(App.Routes.WebApi.People.Names.Suffixes.get(),
 				 function (data, textStatus, jqXHR) {
 						deferred.resolve(data);
 				 } );

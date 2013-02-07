@@ -34,14 +34,14 @@ var DataContext;
         };
         EmployeeWebService.prototype.GetSalutations = function () {
             var deferred = $.Deferred();
-            $.getJSON(App.Routes.WebApi.People.NameSalutations.get(), function (data, textStatus, jqXHR) {
+            $.getJSON(App.Routes.WebApi.People.Names.Salutations.get(), function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             });
             return deferred;
         };
         EmployeeWebService.prototype.GetSuffixes = function () {
             var deferred = $.Deferred();
-            $.getJSON(App.Routes.WebApi.People.NameSuffixes.get(), function (data, textStatus, jqXHR) {
+            $.getJSON(App.Routes.WebApi.People.Names.Suffixes.get(), function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             });
             return deferred;

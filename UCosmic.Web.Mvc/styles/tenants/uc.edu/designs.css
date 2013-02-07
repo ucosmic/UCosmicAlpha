@@ -108,7 +108,7 @@ body {
           width: 128px;
           height: 128px; }
       body .person-profile > .card .name-and-title {
-        max-width: 410px; }
+        width: 410px; }
         body .person-profile > .card .name-and-title .display-name {
           font-size: 28px;
           line-height: 32px; }
@@ -118,9 +118,9 @@ body {
         body .person-profile > .card .name-and-title .admin-only {
           margin-top: 4px; }
       body .person-profile > .card .faculty {
-        margin-left: 20px;
+        margin-left: 4px;
         padding-top: 8px;
-        max-width: 390px; }
+        width: 390px; }
         body .person-profile > .card .faculty .appointments {
           padding: 4px 0 0 4px;
           font-size: 14px;

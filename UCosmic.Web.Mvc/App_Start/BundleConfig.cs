@@ -70,10 +70,10 @@ namespace UCosmic.Web.Mvc
 
             // employee personal profile page
             bundles.Add(new ScriptBundle("~/bundles/employees/people").Include(
-                "~/scripts/require/require.js",
                 "~/scripts/datacontext/iemployee.js",
                 "~/scripts/datacontext/employeewebservice.js",
-                "~/scripts/viewmodels/employees/PersonalInfo.js"));
+                "~/scripts/viewmodels/employees/PersonalInfo.js",
+                "~/scripts/viewmodels/employees/PersonalInfo2.js"));
 
             // bootstrap css bundles
             var tenants = new[]

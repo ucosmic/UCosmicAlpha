@@ -1,15 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
+using AutoMapper;
+using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("api")]
+    [RoutePrefix("api/person-names")]
     public class PersonNamesController : ApiController
     {
-        [GET("person-name-salutations")]
+        private readonly IProcessQueries _queryProcessor;
+
+        public PersonNamesController(IProcessQueries queryProcessor)
+        {
+            _queryProcessor = queryProcessor;
+        }
+
+        [GET("salutations")]
         public IEnumerable<TextValuePair> GetSalutations()
         {
             var values = new[]
@@ -24,7 +34,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return values;
         }
 
-        [GET("person-name-suffixes")]
+        [GET("suffixes")]
         public IEnumerable<TextValuePair> GetSuffixes()
         {
             var values = new[]
@@ -36,6 +46,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 new TextValuePair("Sr."),
             };
             return values;
+        }
+
+        [GET("derive-display-name")]
+        public string GetDeriveDisplayName([FromUri] PersonApiModel model)
+        {
+            if (model == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var query = Mapper.Map<GenerateDisplayName>(model);
+            var result = _queryProcessor.Execute(query);
+            return result;
         }
 
     }
