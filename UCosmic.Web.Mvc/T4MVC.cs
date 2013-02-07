@@ -2124,6 +2124,10 @@ namespace Links
                 public static readonly string PersonalInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo.min.js") ? Url("PersonalInfo.min.js") : Url("PersonalInfo.js");
                               
                 public static readonly string PersonalInfo_min_js = Url("PersonalInfo.min.js");
+                public static readonly string PersonalInfo2_ts = Url("PersonalInfo2.ts");
+                public static readonly string PersonalInfo2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo2.min.js") ? Url("PersonalInfo2.min.js") : Url("PersonalInfo2.js");
+                              
+                public static readonly string PersonalInfo2_min_js = Url("PersonalInfo2.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

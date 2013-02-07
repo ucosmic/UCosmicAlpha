@@ -87,6 +87,14 @@
                             <div class="fieldset">
                                 <form data-bind="submit: saveInfo">
                                     <div class="field-table w690-l250-v440">
+                                        <div class="field-row">
+                                            <div class="field-label" style="padding-top: 0;">
+                                                <img src="~/images/samples/sample-photo-128.jpg" alt="" />
+                                            </div>
+                                            <div class="field-input">
+                                                <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                                            </div>
+                                        </div>
                                         <div class="field-row above-unlabeled-row">
                                             <div class="field-label">
                                                 <label>Display name</label>

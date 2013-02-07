@@ -21,12 +21,13 @@ var ViewModels;
                 this._facultyRank = ko.observable();
                 this._administrativeAppointments = ko.observable();
                 this._picture = ko.observable();
+                this.$photo = ko.observable();
                 this.$facultyRanks = ko.observable();
                 this.$nameSalutation = ko.observable();
                 this.$nameSuffix = ko.observable();
                 this._dataContext = inDataContext;
                 this._initialize(inDocumentElementId);
-                this._setupKendoComboBoxes();
+                this._setupKendoWidgets();
                 this._setupDisplayNameDerivation();
             }
             PersonalInfo2.prototype.GetRevisionId = function () {
@@ -200,7 +201,7 @@ var ViewModels;
             PersonalInfo2.prototype.savePicture = function (formElement) {
                 $("#accordion").accordion('activate', 0);
             };
-            PersonalInfo2.prototype._setupKendoComboBoxes = function () {
+            PersonalInfo2.prototype._setupKendoWidgets = function () {
                 this.$nameSalutation.subscribe(function (newValue) {
                     if(newValue && newValue.length) {
                         newValue.kendoComboBox({
@@ -228,6 +229,16 @@ var ViewModels;
                                     }
                                 }
                             })
+                        });
+                    }
+                });
+                this.$photo.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoUpload({
+                            multiple: false,
+                            localization: {
+                                select: 'Choose a photo to upload...'
+                            }
                         });
                     }
                 });

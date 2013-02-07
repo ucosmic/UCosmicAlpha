@@ -90,6 +90,7 @@ module ViewModels.Employee {
         GetPicture(): any { return this._picture(); }
         SetPicture(inValue: any): void { this._picture(inValue); }
 
+        $photo: KnockoutObservableJQuery = ko.observable();
         $facultyRanks: KnockoutObservableJQuery = ko.observable();
         $nameSalutation: KnockoutObservableJQuery = ko.observable();
         $nameSuffix: KnockoutObservableJQuery = ko.observable();
@@ -175,7 +176,7 @@ module ViewModels.Employee {
             this._dataContext = inDataContext;
             this._initialize(inDocumentElementId);
 
-            this._setupKendoComboBoxes();
+            this._setupKendoWidgets();
             this._setupDisplayNameDerivation();
         }
 
@@ -283,7 +284,7 @@ module ViewModels.Employee {
         }
 
         // comboboxes for salutation & suffix
-        private _setupKendoComboBoxes(): void {
+        private _setupKendoWidgets(): void {
             // when the $element observables are bound, they will have length
             // use this opportinity to apply kendo extensions
             this.$nameSalutation.subscribe((newValue: JQuery): void => {
@@ -313,6 +314,21 @@ module ViewModels.Employee {
                             }
                         })
                     });
+            });
+
+            this.$photo.subscribe((newValue: JQuery): void => {
+                if (newValue && newValue.length) {
+                    newValue.kendoUpload({
+                        multiple: false,
+                        localization: {
+                            select: 'Choose a photo to upload...'
+                        }
+                        //async: {
+                        //    saveUrl: 'saveit',
+                        //    removeUrl: 'removeit'
+                        //}
+                    });
+                }
             });
         }
 
