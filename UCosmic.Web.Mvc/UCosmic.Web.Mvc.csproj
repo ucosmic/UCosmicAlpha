@@ -301,7 +301,7 @@
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
-    <Compile Include="ApiControllers\PersonSalutationsController.cs" />
+    <Compile Include="ApiControllers\PersonNamesController.cs" />
     <Compile Include="ApiControllers\PlacesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
