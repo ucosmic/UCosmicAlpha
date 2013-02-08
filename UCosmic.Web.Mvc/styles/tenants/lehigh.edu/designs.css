@@ -4,133 +4,126 @@
 /* default variable values */
 /* lehigh brand values */
 /* lehigh variable values */
-body {
-  /* #region data */
-  /* #endregion */
-  /* #region badging */
-  /* #endregion */
-  /* #region profile */
-  /* #endregion */ }
-  body table.data {
-    width: 100%;
-    margin: 16px 0; }
-    body table.data th {
-      border: solid 1px #fff;
-      padding: 4px 8px;
-      vertical-align: text-top;
-      text-align: left;
-      background-color: #502d0e;
-      color: #eeeeee;
-      font-weight: bold; }
-    body table.data td {
-      border: solid 1px #fff;
-      padding: 4px;
-      vertical-align: text-top; }
-    body table.data tbody tr:nth-child(even) td {
-      background-color: #dddddd; }
-    body table.data tbody tr.hover-hilite:hover * {
-      cursor: pointer; }
-    body table.data tbody tr.hover-hilite:hover td {
-      background-color: #ffffaa; }
-  body ul.data > li.hover-hilite:hover, body ol.data > li.hover-hilite:hover {
+body table.data {
+  width: 100%;
+  margin: 16px 0; }
+  body table.data th {
+    border: solid 1px #fff;
+    padding: 4px 8px;
+    vertical-align: text-top;
+    text-align: left;
+    background-color: #502d0e;
+    color: #eeeeee;
+    font-weight: bold; }
+  body table.data td {
+    border: solid 1px #fff;
+    padding: 4px;
+    vertical-align: text-top; }
+  body table.data tbody tr:nth-child(even) td {
+    background-color: #dddddd; }
+  body table.data tbody tr.hover-hilite:hover * {
+    cursor: pointer; }
+  body table.data tbody tr.hover-hilite:hover td {
     background-color: #ffffaa; }
-    body ul.data > li.hover-hilite:hover *, body ol.data > li.hover-hilite:hover * {
-      cursor: pointer; }
-  body ul.data > li > div, body ol.data > li > div {
+body ul.data > li.hover-hilite:hover, body ol.data > li.hover-hilite:hover {
+  background-color: #ffffaa; }
+  body ul.data > li.hover-hilite:hover *, body ol.data > li.hover-hilite:hover * {
+    cursor: pointer; }
+body ul.data > li > div, body ol.data > li > div {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 1em;
+  border: solid 1px #555;
+  padding: 16px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px; }
+  body ul.data > li > div > .on-right, body ol.data > li > div > .on-right {
+    margin-left: 5px; }
+body ul.data-items > li, body ol.data-items > li {
+  margin-bottom: 4px; }
+body .badge {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 0 0 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+  vertical-align: top;
+  -webkit-text-shadow: 1px 1px 0 black;
+  text-shadow: 1px 1px 0 black; }
+  body .badge.green {
+    background-color: #090;
+    color: #fff; }
+  body .badge.red {
+    background-color: #c00;
+    color: #fff; }
+  body .badge.blue {
+    background-color: #33f;
+    color: #fff !important; }
+  body .badge.link {
+    -webkit-text-shadow: 0 0 0 black;
+    text-shadow: 0 0 0 black;
+    background-color: #fff;
+    border: solid 1px #4e75bb; }
+  body .badge.branded-dark1 {
+    background-color: #3333ff;
+    color: white !important; }
+body .person-profile {
+  margin-bottom: 16px; }
+  body .person-profile.clickable:hover *:hover {
+    cursor: pointer; }
+  body .person-profile.clickable:hover > .card {
+    -moz-border-radius: 8px 8px 8px 0;
+    -webkit-border-radius: 8px 8px 8px 0;
+    border-radius: 8px 8px 8px 0;
+    border-color: #dddddd;
+    background-color: #dddddd; }
+  body .person-profile.clickable:hover > .action {
+    visibility: visible; }
+  body .person-profile > .card {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    margin-bottom: 1em;
-    border: solid 1px #555;
-    padding: 16px;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
-    border-radius: 8px; }
-    body ul.data > li > div > .on-right, body ol.data > li > div > .on-right {
-      margin-left: 5px; }
-  body ul.data-items > li, body ol.data-items > li {
-    margin-bottom: 4px; }
-  body .badge {
+    border-radius: 8px;
+    border: solid 1px transparent;
+    padding: 8px;
+    background-color: transparent; }
+    body .person-profile > .card .photo {
+      padding-right: 10px; }
+      body .person-profile > .card .photo img {
+        width: 128px;
+        height: 128px; }
+    body .person-profile > .card .name-and-title {
+      width: 410px; }
+      body .person-profile > .card .name-and-title .display-name {
+        font-size: 28px;
+        line-height: 32px; }
+      body .person-profile > .card .name-and-title .titles {
+        font-size: 18px;
+        line-height: 22px; }
+      body .person-profile > .card .name-and-title .admin-only {
+        margin-top: 4px; }
+    body .person-profile > .card .faculty {
+      margin-left: 4px;
+      padding-top: 8px;
+      width: 390px; }
+      body .person-profile > .card .faculty .appointments {
+        padding: 4px 0 0 4px;
+        font-size: 14px;
+        line-height: 16px; }
+  body .person-profile > .action {
     display: inline-block;
-    font-size: 12px;
-    line-height: 16px;
-    margin: 0 0 0 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    padding: 2px 6px;
-    text-transform: uppercase;
-    vertical-align: top;
-    -webkit-text-shadow: 1px 1px 0 black;
-    text-shadow: 1px 1px 0 black; }
-    body .badge.green {
-      background-color: #090;
-      color: #fff; }
-    body .badge.red {
-      background-color: #c00;
-      color: #fff; }
-    body .badge.blue {
-      background-color: #33f;
-      color: #fff !important; }
-    body .badge.link {
-      -webkit-text-shadow: 0 0 0 black;
-      text-shadow: 0 0 0 black;
-      background-color: #fff;
-      border: solid 1px #4e75bb; }
-    body .badge.branded-dark1 {
-      background-color: #3333ff;
-      color: white !important; }
-  body .person-profile {
-    margin-bottom: 16px; }
-    body .person-profile.clickable:hover *:hover {
-      cursor: pointer; }
-    body .person-profile.clickable:hover > .card {
-      -moz-border-radius: 8px 8px 8px 0;
-      -webkit-border-radius: 8px 8px 8px 0;
-      border-radius: 8px 8px 8px 0;
-      border-color: #dddddd;
-      background-color: #dddddd; }
-    body .person-profile.clickable:hover > .action {
-      visibility: visible; }
-    body .person-profile > .card {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      -moz-border-radius: 8px;
-      -webkit-border-radius: 8px;
-      border-radius: 8px;
-      border: solid 1px transparent;
-      padding: 8px;
-      background-color: transparent; }
-      body .person-profile > .card .photo {
-        padding-right: 10px; }
-        body .person-profile > .card .photo img {
-          width: 128px;
-          height: 128px; }
-      body .person-profile > .card .name-and-title {
-        width: 410px; }
-        body .person-profile > .card .name-and-title .display-name {
-          font-size: 28px;
-          line-height: 32px; }
-        body .person-profile > .card .name-and-title .titles {
-          font-size: 18px;
-          line-height: 22px; }
-        body .person-profile > .card .name-and-title .admin-only {
-          margin-top: 4px; }
-      body .person-profile > .card .faculty {
-        margin-left: 4px;
-        padding-top: 8px;
-        width: 390px; }
-        body .person-profile > .card .faculty .appointments {
-          padding: 4px 0 0 4px;
-          font-size: 14px;
-          line-height: 16px; }
-    body .person-profile > .action {
-      display: inline-block;
-      -moz-border-radius: 0 0 8px 8px;
-      -webkit-border-radius: 0 0 8px 8px;
-      border-radius: 0 0 8px 8px;
-      padding: 0 16px 8px 16px;
-      visibility: hidden;
-      background-color: #dddddd; }
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px;
+    padding: 0 16px 8px 16px;
+    visibility: hidden;
+    background-color: #dddddd; }
 

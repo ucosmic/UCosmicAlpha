@@ -10,13 +10,14 @@
     new
     {
         area = MVC.ActivitiesDeprecated.Name,
+        number = Model.Number,
         httpMethod = "PUT",
     },
     FormMethod.Post,
     new
     {
         @class = "activity",
-        data_ucosmic_draft_url = Url.Action(MVC.ActivitiesDeprecated.ActivityForm.Draft()),
+        data_ucosmic_draft_url = Url.Action(MVC.ActivitiesDeprecated.ActivityForm.Draft(Model.Number, null)),
     }
 ))
 {
@@ -576,7 +577,13 @@
                     var form = $('form.activity');
                     var url = form.data('ucosmic-draft-url');
                     tinyMCE.triggerSave();
-                    $.post(url, form.serialize());
+                    $.ajax({
+                        url: url,
+                        data: form.serialize(),
+                        type: 'PUT'
+                    }).fail(function(arg1, arg2, arg3) {
+                        alert('draft failed');
+                    });
                 }, 5000);
             }
 

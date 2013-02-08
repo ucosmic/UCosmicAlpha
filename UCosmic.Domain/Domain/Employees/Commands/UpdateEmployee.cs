@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
-using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Employees

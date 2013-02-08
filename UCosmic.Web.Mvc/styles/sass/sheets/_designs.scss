@@ -1,7 +1,5 @@
 body
 {
-    /* #region data */
-
     table.data {
         width: 100%;
         margin: 16px 0;
@@ -63,9 +61,6 @@ body
         }
     }
 
-    /* #endregion */
-    /* #region badging */
-
     .badge {
         display: inline-block;
         @include font-height(12px, 16px);
@@ -97,9 +92,6 @@ body
             color: $branded-badge-dark1-text-color !important;
         }
     }
-
-    /* #endregion */
-    /* #region profile */
 
     .person-profile {
         margin-bottom: 16px;
@@ -160,5 +152,4 @@ body
         }
     }
 
-    /* #endregion */
 }

@@ -180,7 +180,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateEmployee
                 {
-                    FacultyRank = facultyRank,
+                    FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "UCosmic CTO",
                     JobTitles = "Software Architect",
                     ForPersonId = person.RevisionId
@@ -216,7 +216,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateEmployee
                 {
-                    FacultyRank = facultyRank,
+                    FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "USF World UCosmic Developer",
                     JobTitles = "Software Developer",
                     ForPersonId = person.RevisionId
@@ -235,7 +235,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateEmployee
                 {
-                    FacultyRank = facultyRank,
+                    FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "Director of Sociology Graduate Program",
                     JobTitles = "Director",
                     ForPersonId = person.RevisionId

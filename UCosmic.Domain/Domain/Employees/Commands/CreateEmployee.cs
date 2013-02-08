@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using FluentValidation;
-using UCosmic.Domain.Employees;
-using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Employees
 {
     public class CreateEmployee
     {
-        public EmployeeFacultyRank FacultyRank { get; set; }
+        //public EmployeeFacultyRank FacultyRank { get; set; }
+        public int? FacultyRankId { get; set; }
         public string AdministrativeAppointments { get; set; }
         public string JobTitles { get; set; }
         public int ForPersonId { get; set; }
@@ -57,7 +54,7 @@ namespace UCosmic.Domain.Employees
             var employee = new Employee
             {
                 Person = _entities.Get<Person>().SingleOrDefault( p => p.RevisionId == command.ForPersonId ),
-                FacultyRank = command.FacultyRank,
+                FacultyRank = (command.FacultyRankId.HasValue) ? _entities.Get<EmployeeFacultyRank>().Single(x => x.Id == command.FacultyRankId) : null,
                 AdministrativeAppointments = command.AdministrativeAppointments,
                 JobTitles = command.JobTitles,
             };

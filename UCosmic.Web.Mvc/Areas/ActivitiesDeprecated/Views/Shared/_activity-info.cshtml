@@ -35,10 +35,10 @@
 @Html.DisplayFor(m => m.Content)
 <p>
     @Model.Person.DisplayName
-    @if (!string.IsNullOrWhiteSpace(Model.Person.DefaultAffiliationJobTitles))
+    @if (!string.IsNullOrWhiteSpace(Model.Person.EmployeeJobTitles))
     {
         <br />
-        @Html.Raw(Model.Person.DefaultAffiliationJobTitles.Replace("\r\n", "<br />"))
+        @Html.Raw(Model.Person.EmployeeJobTitles.Replace("\r\n", "<br />"))
     }
     else if (Model.Person.UserName.Equals(User.Identity.Name))
     {

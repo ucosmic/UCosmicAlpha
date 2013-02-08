@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity.ModelConfiguration;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.People;
 
 namespace UCosmic.EntityFramework
 {

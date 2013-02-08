@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using FluentValidation;
-using UCosmic.Domain.Employees;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People

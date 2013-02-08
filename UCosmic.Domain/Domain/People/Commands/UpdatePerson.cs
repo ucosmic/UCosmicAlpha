@@ -30,7 +30,8 @@ namespace UCosmic.Domain.People
         public string Gender { get; set; }
         /* Employee */
         public int? EmployeeId { get; set; }
-        public EmployeeFacultyRank EmployeeFacultyRank { get; set; }
+        //public EmployeeFacultyRank EmployeeFacultyRank { get; set; }
+        public int? EmployeeFacultyRankId { get; set; }
         public string EmployeeAdministrativeAppointments { get; set; }
         public string EmployeeJobTitles { get; set; }
 
@@ -187,7 +188,7 @@ namespace UCosmic.Domain.People
                     Value = JsonConvert.SerializeObject(new
                     {
                         Id = command.RevisionId,
-                        command.EmployeeFacultyRank,
+                        command.EmployeeFacultyRankId,
                         command.EmployeeAdministrativeAppointments,
                         command.EmployeeJobTitles
                     }),
@@ -198,8 +199,11 @@ namespace UCosmic.Domain.People
             bool employeeChanged = false;
 
             /* If all employee properties are null, remove entity */
+            EmployeeFacultyRank employeeFacultyRank = null;
+            if (command.EmployeeFacultyRankId.HasValue)
+                employeeFacultyRank = _entities.Get<EmployeeFacultyRank>().Single(x => x.Id == command.EmployeeFacultyRankId.Value);
             if ((employee != null) &&
-                ((command.EmployeeFacultyRank == null) || (command.EmployeeFacultyRank.Rank == null)) &&
+                ((employeeFacultyRank == null) || (employeeFacultyRank.Rank == null)) &&
                 (command.EmployeeAdministrativeAppointments == null) &&
                 (command.EmployeeJobTitles == null))
             {
@@ -214,9 +218,10 @@ namespace UCosmic.Domain.People
                 {
                     CreateEmployee createEmployeeCommand = new CreateEmployee
                     {
-                        FacultyRank = (command.EmployeeFacultyRank != null) ?
-                            _entities.Get<EmployeeFacultyRank>().SingleOrDefault(r => r.Id == command.EmployeeFacultyRank.Id) :
-                            null,
+                        //FacultyRank = (command.EmployeeFacultyRank != null) ?
+                        //    _entities.Get<EmployeeFacultyRank>().SingleOrDefault(r => r.Id == command.EmployeeFacultyRank.Id) :
+                        //    null,
+                        FacultyRankId = command.EmployeeFacultyRankId,
                         AdministrativeAppointments = command.EmployeeAdministrativeAppointments,
                         JobTitles = command.EmployeeJobTitles,
                         ForPersonId = person.RevisionId
@@ -227,11 +232,11 @@ namespace UCosmic.Domain.People
                 }
                 else
                 {
-                    if ((command.EmployeeFacultyRank != null) &&
-                       ((employee.FacultyRank == null) || (command.EmployeeFacultyRank.Id != employee.FacultyRank.Id)))
+                    if ((command.EmployeeFacultyRankId.HasValue) &&
+                       ((employee.FacultyRank == null) || (command.EmployeeFacultyRankId.Value != employee.FacultyRank.Id)))
                     {
                         employee.FacultyRank = _entities.Get<EmployeeFacultyRank>()
-                                                        .SingleOrDefault(r => r.Id == command.EmployeeFacultyRank.Id);
+                                                        .SingleOrDefault(r => r.Id == command.EmployeeFacultyRankId.Value);
                         employeeChanged = true;
                     }
 
