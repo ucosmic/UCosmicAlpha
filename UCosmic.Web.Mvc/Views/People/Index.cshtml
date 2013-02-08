@@ -23,7 +23,9 @@
     <script type="text/javascript">
 
         $(function () {
-            var viewModel = new ViewModels.Employee.PersonalInfo2("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            //var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            //var viewModel = new ViewModels.Employee.PersonalInfo2("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            var viewModel = new ViewModels.Employee.PersonalInfo3("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
             $("#accordion").accordion();
             $("#accordion").removeClass("ui-widget");
         });
@@ -58,7 +60,7 @@
                                     </div>
                                     <div class="on-left name-and-title">
                                         <div class="display-name" data-bind="text: _displayName"></div>
-                                        <div class="titles" data-bind="multilineText: _workingTitle"></div>
+                                        <div class="titles" data-bind="multilineText: _jobTitles"></div>
                                         @if (User.IsInRole(RoleName.EmployeeProfileManager))
                                         {
                                             <div class="admin-only">

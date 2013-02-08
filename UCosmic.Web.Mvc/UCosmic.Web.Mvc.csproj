@@ -1483,6 +1483,10 @@
     <Content Include="scripts\viewmodels\employees\PersonalInfo2.min.js">
       <DependentUpon>PersonalInfo2.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\employees\PersonalInfo3.ts" />
+    <Content Include="scripts\viewmodels\employees\PersonalInfo3.js">
+      <DependentUpon>PersonalInfo3.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
     </Content>
