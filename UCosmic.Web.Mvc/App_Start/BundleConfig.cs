@@ -70,9 +70,13 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Item.js"));
 
             // employee personal profile page
-            bundles.Add(new ScriptBundle("~/bundles/employees/people").Include(
-                "~/scripts/datacontext/iemployee.js",
-                "~/scripts/datacontext/employeewebservice.js",
+            bundles.Add(new ScriptBundle("~/bundles/people").Include(
+                "~/scripts/datacontext/people.js",
+                "~/scripts/datacontext/peoplewebservice.js",
+                //"~/scripts/viewmodels/people/PersonalInfo.js",
+                //"~/scripts/viewmodels/people/PersonalInfo2.js"),
+                "~/scripts/viewmodels/people/PersonalInfo3.js",
+                "~/scripts/viewmodels/people/EmailAddresses.js"));
                 "~/scripts/viewmodels/employees/PersonalInfo.js",
                 "~/scripts/viewmodels/employees/PersonalInfo2.js"));
 

@@ -222,7 +222,7 @@ namespace UCosmic.SeedData
                     PersonId = person.RevisionId
                 });
             }
-            
+
             {
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
                 if (person == null) throw new Exception("USF person not found");
@@ -255,7 +255,7 @@ namespace UCosmic.SeedData
                     PersonId = person.RevisionId
                 });
             }
-            
+
             /* More employees ... */
         }
     }

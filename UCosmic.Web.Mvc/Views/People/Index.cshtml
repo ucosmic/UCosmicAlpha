@@ -16,7 +16,7 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/employees/people")
+    @Scripts.Render("~/bundles/people")
 
     <script type="text/javascript">
 
@@ -24,6 +24,12 @@
             // Doug: I renamed your PersonalInfo3.ts to PersonalInfo.ts, since your new changes broke that file anyway.
             var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
             //var viewModel = new ViewModels.Employee.PersonalInfo2("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            var dataContext = new DataContext.PeopleWebService(@ViewBag.PersonId);
+            var personalInfoVM = new ViewModels.People.PersonalInfo3("peoplePersonalInfo", dataContext);
+            var emailAddressesVM = new ViewModels.People.EmailAddresses("peopleEmailAddresses", dataContext);
+            //var affiliationsVM = new ViewModels.People.Affiliations("peopleAffiliations", dataContext);
+            //var picturesVM = new ViewModels.People.Pictures("peoplePictures", dataContext);
+
             $("#accordion").accordion();
             $("#accordion").removeClass("ui-widget");
         });
@@ -40,7 +46,7 @@
     </nav>
 }
 
-<div id="employeePersonalInfo" class="content fixed to-top" data-current-module="home">
+<div id="peoplePersonalInfo" class="content fixed to-top" data-current-module="home">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
@@ -220,29 +226,17 @@
 
                             <h2>My Email Addresses</h2>
                             <div class="fieldset">
-                                <form data-xbind="submit: saveEmails">
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
+                                @Html.Partial(MVC.People.Views._EmailAddresses)
                             </div>
 
                             <h2>My Affiliations</h2>
                             <div class="fieldset">
-                                <form data-xbind="submit: saveAffiliations">
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
+                                @Html.Partial(MVC.People.Views._Affiliations)
                             </div>
 
                             <h2>My Picture</h2>
                             <div class="fieldset">
-                                <form data-xbind="submit: savePicture">
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
+                                @Html.Partial(MVC.People.Views._Pictures)
                             </div>
                         </div>
                     </div>

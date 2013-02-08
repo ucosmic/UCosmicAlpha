@@ -747,26 +747,22 @@
     </Content>
     <None Include="scripts\google\google.maps.d.ts" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
-    <TypeScriptCompile Include="scripts\datacontext\employeewebservice.ts" />
-    <TypeScriptCompile Include="scripts\datacontext\employeemockservice.ts" />
-    <Content Include="scripts\datacontext\employeemockservice.js">
-      <DependentUpon>employeemockservice.ts</DependentUpon>
-    </Content>
+    <TypeScriptCompile Include="scripts\datacontext\peoplewebservice.ts" />
+    <Content Include="scripts\datacontext\peoplewebservice.js">
+      <DependentUpon>peoplewebservice.ts</DependentUpon>
     <Content Include="scripts\datacontext\employeemockservice.min.js">
       <DependentUpon>employeemockservice.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\datacontext\employeewebservice.js">
-      <DependentUpon>employeewebservice.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\datacontext\iemployee.ts" />
-    <Content Include="scripts\datacontext\employeewebservice.min.js">
-      <DependentUpon>employeewebservice.ts</DependentUpon>
+    <TypeScriptCompile Include="scripts\datacontext\people.ts" />
+    <Content Include="scripts\datacontext\peoplewebservice.min.js">
+      <DependentUpon>peoplewebservice.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\datacontext\iemployee.js">
-      <DependentUpon>iemployee.ts</DependentUpon>
+    <Content Include="scripts\datacontext\people.js">
+      <DependentUpon>people.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\datacontext\iemployee.min.js">
-      <DependentUpon>iemployee.ts</DependentUpon>
+    <Content Include="scripts\datacontext\people.min.js">
+      <DependentUpon>people.ts</DependentUpon>
     </Content>
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
@@ -1485,18 +1481,26 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
-    <TypeScriptCompile Include="scripts\viewmodels\employees\PersonalInfo2.ts" />
-    <Content Include="scripts\viewmodels\employees\PersonalInfo.js">
+    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo2.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\people\EmailAddresses.ts" />
+    <Content Include="scripts\viewmodels\people\EmailAddresses.js">
+      <DependentUpon>EmailAddresses.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\PersonalInfo.js">
       <DependentUpon>PersonalInfo.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\employees\PersonalInfo.min.js">
+    <Content Include="scripts\viewmodels\people\PersonalInfo.min.js">
       <DependentUpon>PersonalInfo.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\employees\PersonalInfo2.js">
+    <Content Include="scripts\viewmodels\people\PersonalInfo2.js">
       <DependentUpon>PersonalInfo2.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\employees\PersonalInfo2.min.js">
+    <Content Include="scripts\viewmodels\people\PersonalInfo2.min.js">
       <DependentUpon>PersonalInfo2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo3.ts" />
+    <Content Include="scripts\viewmodels\people\PersonalInfo3.js">
+      <DependentUpon>PersonalInfo3.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
@@ -1527,7 +1531,7 @@
     <Content Include="scripts\viewmodels\establishments\Item.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\employees\PersonalInfo.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo.ts" />
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
@@ -1549,6 +1553,9 @@
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
     <Content Include="scripts\viewmodels\my\Profile.js">
       <DependentUpon>Profile.ts</DependentUpon>
+    <Content Include="scripts\viewmodels\people\PersonalInfo3.min.js">
+      <DependentUpon>PersonalInfo3.ts</DependentUpon>
+    </Content>
     </Content>
     <Content Include="scripts\viewmodels\my\Profile.min.js">
       <DependentUpon>Profile.ts</DependentUpon>
@@ -1771,6 +1778,9 @@
     <Content Include="styles\tenants\usf.edu\designs.scss" />
     <Content Include="Views\People\Index2.cshtml" />
     <Content Include="Views\MyProfile\Index.cshtml" />
+    <Content Include="Views\People\_EmailAddresses.cshtml" />
+    <Content Include="Views\People\_Affiliations.cshtml" />
+    <Content Include="Views\People\_Pictures.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

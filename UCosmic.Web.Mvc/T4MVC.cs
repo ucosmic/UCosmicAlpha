@@ -290,18 +290,15 @@ namespace Links
             private const string URLPATH = "~/scripts/datacontext";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string employeemockservice_ts = Url("employeemockservice.ts");
-            public static readonly string employeemockservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/employeemockservice.min.js") ? Url("employeemockservice.min.js") : Url("employeemockservice.js");
+            public static readonly string people_ts = Url("people.ts");
+            public static readonly string people_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/people.min.js") ? Url("people.min.js") : Url("people.js");
                           
             public static readonly string employeemockservice_min_js = Url("employeemockservice.min.js");
-            public static readonly string employeewebservice_ts = Url("employeewebservice.ts");
-            public static readonly string employeewebservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/employeewebservice.min.js") ? Url("employeewebservice.min.js") : Url("employeewebservice.js");
+            public static readonly string people_min_js = Url("people.min.js");
+            public static readonly string peoplewebservice_ts = Url("peoplewebservice.ts");
+            public static readonly string peoplewebservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/peoplewebservice.min.js") ? Url("peoplewebservice.min.js") : Url("peoplewebservice.js");
                           
-            public static readonly string employeewebservice_min_js = Url("employeewebservice.min.js");
-            public static readonly string iemployee_ts = Url("iemployee.ts");
-            public static readonly string iemployee_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/iemployee.min.js") ? Url("iemployee.min.js") : Url("iemployee.js");
-                          
-            public static readonly string iemployee_min_js = Url("iemployee.min.js");
+            public static readonly string peoplewebservice_min_js = Url("peoplewebservice.min.js");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2118,21 +2115,6 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class employees {
-                private const string URLPATH = "~/scripts/viewmodels/employees";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string PersonalInfo_ts = Url("PersonalInfo.ts");
-                public static readonly string PersonalInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo.min.js") ? Url("PersonalInfo.min.js") : Url("PersonalInfo.js");
-                              
-                public static readonly string PersonalInfo_min_js = Url("PersonalInfo.min.js");
-                public static readonly string PersonalInfo2_ts = Url("PersonalInfo2.ts");
-                public static readonly string PersonalInfo2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo2.min.js") ? Url("PersonalInfo2.min.js") : Url("PersonalInfo2.js");
-                              
-                public static readonly string PersonalInfo2_min_js = Url("PersonalInfo2.min.js");
-            }
-        
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class establishments {
                 private const string URLPATH = "~/scripts/viewmodels/establishments";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2190,6 +2172,28 @@ namespace Links
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class people {
+                private const string URLPATH = "~/scripts/viewmodels/people";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string EmailAddresses_ts = Url("EmailAddresses.ts");
+                public static readonly string EmailAddresses_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EmailAddresses.min.js") ? Url("EmailAddresses.min.js") : Url("EmailAddresses.js");
+                              
+                public static readonly string PersonalInfo_ts = Url("PersonalInfo.ts");
+                public static readonly string PersonalInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo.min.js") ? Url("PersonalInfo.min.js") : Url("PersonalInfo.js");
+                              
+                public static readonly string PersonalInfo_min_js = Url("PersonalInfo.min.js");
+                public static readonly string PersonalInfo2_ts = Url("PersonalInfo2.ts");
+                public static readonly string PersonalInfo2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo2.min.js") ? Url("PersonalInfo2.min.js") : Url("PersonalInfo2.js");
+                              
+                public static readonly string PersonalInfo2_min_js = Url("PersonalInfo2.min.js");
+                public static readonly string PersonalInfo3_ts = Url("PersonalInfo3.ts");
+                public static readonly string PersonalInfo3_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo3.min.js") ? Url("PersonalInfo3.min.js") : Url("PersonalInfo3.js");
+                              
+                public static readonly string PersonalInfo3_min_js = Url("PersonalInfo3.min.js");
+            }
+        
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class places {
                 private const string URLPATH = "~/scripts/viewmodels/places";
