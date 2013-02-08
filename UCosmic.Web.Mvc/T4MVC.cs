@@ -2193,6 +2193,10 @@ namespace Links
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                
+
+                
+        
             public static class places {
                 private const string URLPATH = "~/scripts/viewmodels/places";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
