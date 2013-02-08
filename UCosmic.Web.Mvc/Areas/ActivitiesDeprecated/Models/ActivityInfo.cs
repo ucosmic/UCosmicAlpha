@@ -30,7 +30,7 @@ namespace UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Models
         {
             public string DisplayName { get; set; }
             public string UserName { get; set; }
-            public string DefaultAffiliationJobTitles { get; set; }
+            //public string DefaultAffiliationJobTitles { get; set; }
             public int DefaultAffiliationEstablishmentId { get; set; }
             public string DefaultAffiliationEstablishmentOfficialName { get; set; }
         }

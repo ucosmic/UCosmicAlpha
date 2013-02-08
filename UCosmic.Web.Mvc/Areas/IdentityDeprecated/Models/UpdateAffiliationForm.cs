@@ -125,6 +125,7 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Models
                         return EmployeeOrStudentAffiliate.Neither;
                     }))
                     .ForMember(d => d.ReturnUrl, o => o.Ignore())
+                    .ForMember(d => d.JobTitles, o => o.Ignore())
                 ;
             }
         }
@@ -136,6 +137,7 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Models
                 CreateMap<UpdateAffiliationForm, UpdateMyAffiliation>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.ChangeCount, o => o.Ignore())
+                    .ForMember(d => d.JobTitles, o => o.Ignore())
                 ;
             }
         }

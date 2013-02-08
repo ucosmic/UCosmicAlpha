@@ -68,7 +68,8 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Models
 
                 CreateMap<EmailAddress, MyHomeInfo.MyEmailAddress>();
 
-                CreateMap<Affiliation, MyHomeInfo.MyAffiliation>();
+                CreateMap<Affiliation, MyHomeInfo.MyAffiliation>()
+                    .ForMember(d => d.JobTitles, o => o.Ignore());
 
                 CreateMap<Establishment, MyHomeInfo.MyAffiliation.EstablishmentModel>();
             }
