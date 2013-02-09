@@ -30,6 +30,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{id}")]
         public PersonApiModel GetPerson(int id)
         {
+            //throw new HttpResponseException(HttpStatusCode.BadRequest); // test API failure
+
             Person person = _queryProcessor.Execute(new PersonById(id));
 
             // throw 404 if route does not match existing record
@@ -46,6 +48,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{id}/facultyranks")]
         public IEnumerable<EmployeeFacultyRank> GetFacultyRanks(int id) // made return type IEnumerable<T> for consistency
         {
+            //throw new HttpResponseException(HttpStatusCode.BadRequest); // test API failure
+
             Person person = _queryProcessor.Execute(new PersonById(id));
             /* TODO: RootEmployeeModuleSettingsById */
             EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(new RootEmployeeModuleSettingsByUserName(person.User.Name));

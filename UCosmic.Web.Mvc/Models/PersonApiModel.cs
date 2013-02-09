@@ -20,7 +20,8 @@ namespace UCosmic.Web.Mvc.Models
         public string Gender { get; set; }
         /* From Employee */
         public int? EmployeeId { get; set; }
-        public EmployeeFacultyRank EmployeeFacultyRank { get; set; }
+        public EmployeeFacultyRank EmployeeFacultyRank { get; set; } // never have entity properties in a viewmodel, use scalar fk's
+        public int? EmployeeFacultyRankId { get; set; }
         public string EmployeeAdministrativeAppointments { get; set; }
         public string EmployeeJobTitles { get; set; }
 

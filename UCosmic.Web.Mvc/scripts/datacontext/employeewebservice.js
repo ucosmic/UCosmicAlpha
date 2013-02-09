@@ -10,10 +10,21 @@ var DataContext;
         function EmployeeWebService(inId) {
                 _super.call(this, inId);
         }
+        EmployeeWebService.prototype.GetFacultyRanks = function () {
+            var deferred = $.Deferred();
+            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/", function (data, textStatus, jqXHR) {
+                deferred.resolve(data);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                deferred.reject(jqXHR, textStatus, errorThrown);
+            });
+            return deferred;
+        };
         EmployeeWebService.prototype.Get = function () {
             var deferred = $.Deferred();
             $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString(), function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                deferred.reject(jqXHR, textStatus, errorThrown);
             });
             return deferred;
         };
@@ -26,30 +37,9 @@ var DataContext;
                     deferred.resolve(data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    deferred.reject(errorThrown);
+                    deferred.reject(jqXHR, textStatus, errorThrown);
                 },
                 url: this.GetBaseUrl() + "/" + this.GetId().toString()
-            });
-            return deferred;
-        };
-        EmployeeWebService.prototype.GetSalutations = function () {
-            var deferred = $.Deferred();
-            $.getJSON(App.Routes.WebApi.People.Names.Salutations.get(), function (data, textStatus, jqXHR) {
-                deferred.resolve(data);
-            });
-            return deferred;
-        };
-        EmployeeWebService.prototype.GetSuffixes = function () {
-            var deferred = $.Deferred();
-            $.getJSON(App.Routes.WebApi.People.Names.Suffixes.get(), function (data, textStatus, jqXHR) {
-                deferred.resolve(data);
-            });
-            return deferred;
-        };
-        EmployeeWebService.prototype.GetFacultyRanks = function () {
-            var deferred = $.Deferred();
-            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/", function (data, textStatus, jqXHR) {
-                deferred.resolve(data);
             });
             return deferred;
         };
