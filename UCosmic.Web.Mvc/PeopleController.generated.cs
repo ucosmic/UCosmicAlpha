@@ -76,6 +76,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string Index2 = "Index2";
             public readonly string Details = "Details";
             public readonly string Create = "Create";
             public readonly string Edit = "Edit";
@@ -86,6 +87,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string Index2 = "Index2";
             public const string Details = "Details";
             public const string Create = "Create";
             public const string Edit = "Edit";
@@ -138,8 +140,10 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string Index = "Index";
+                public readonly string Index2 = "Index2";
             }
             public readonly string Index = "~/Views/People/Index.cshtml";
+            public readonly string Index2 = "~/Views/People/Index2.cshtml";
         }
     }
 
@@ -151,6 +155,12 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Index2()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index2);
             return callInfo;
         }
 

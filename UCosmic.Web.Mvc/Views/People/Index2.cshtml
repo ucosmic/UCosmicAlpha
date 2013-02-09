@@ -23,9 +23,8 @@
     <script type="text/javascript">
 
         $(function () {
-            // Doug: I renamed your PersonalInfo3.ts to PersonalInfo.ts, since your new changes broke that file anyway.
-            var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
-            //var viewModel = new ViewModels.Employee.PersonalInfo2("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            //var viewModel = new ViewModels.Employee.PersonalInfo("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
+            var viewModel = new ViewModels.Employee.PersonalInfo2("employeePersonalInfo", new DataContext.EmployeeWebService(@ViewBag.PersonId));
             $("#accordion").accordion();
             $("#accordion").removeClass("ui-widget");
         });

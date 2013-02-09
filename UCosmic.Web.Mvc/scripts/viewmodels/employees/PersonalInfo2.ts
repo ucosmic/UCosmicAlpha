@@ -31,11 +31,6 @@ module ViewModels.Employee {
         GetDisplayName(): string { return this._displayName(); }
         SetDisplayName(inValue: string): void { this._displayName(inValue); }
 
-        //private _salutations: KnockoutObservableArray = ko.observableArray();
-        //GetSalutations(): any[] { return this._salutations(); }
-        //SetSalutations(inValue: any[]): void { this._salutations(inValue); }
-        //Salutations_Add(inSalutation: string): void { this._salutations.push(inSalutation); }
-
         private _salutation: KnockoutObservableString = ko.observable();
         GetSalutation(): string { return this._salutation(); }
         SetSalutation(inValue: string): void { this._salutation(inValue); }
@@ -56,18 +51,13 @@ module ViewModels.Employee {
 
         private _lastNameSubscription: KnockoutSubscription = null;
 
-        //private _suffixes: KnockoutObservableArray = ko.observableArray();
-        //GetSuffixes(): any[] { return this._suffixes(); }
-        //SetSuffixes(inValue: any[]): void { this._suffixes(inValue); }
-        //Suffixes_Add(inSuffix: string): void { this._suffixes.push(inSuffix); }
-
         private _suffix: KnockoutObservableString = ko.observable();
         GetSuffix(): string { return this._suffix(); }
         SetSuffix(inValue: string): void { this._suffix(inValue); }
 
-        private _workingTitle: KnockoutObservableString = ko.observable();
-        GetWorkingTitle(): string { return this._workingTitle(); }
-        SetWorkingTitle(inValue: string): void { this._workingTitle(inValue); }
+        private _jobTitles: KnockoutObservableString = ko.observable();
+        GetJobTitles(): string { return this._jobTitles(); }
+        SetJobTitles(inValue: string): void { this._jobTitles(inValue); }
 
         private _gender: KnockoutObservableString = ko.observable();
         GetGender(): string { return this._gender(); }
@@ -197,7 +187,7 @@ module ViewModels.Employee {
             me.SetMiddleName((data.middleName != null) ? data.middleName : "");
             me.SetLastName((data.lastName != null) ? data.lastName : "");
             me.SetSuffix((data.suffix != null) ? data.suffix : "");
-            me.SetWorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
+			me.SetJobTitles((data.employeeJobTitles != null) ? data.employeeJobTitles : "");
             me.SetGender(data.gender);
             if (data.employeeFacultyRank != null) {
                 var i: number = 0;
@@ -233,7 +223,7 @@ module ViewModels.Employee {
                 middleName: (me.GetMiddleName().length > 0) ? me.GetMiddleName() : null,
                 lastName: (me.GetLastName().length > 0) ? me.GetLastName() : null,
                 suffix: (me.GetSuffix().length > 0) ? me.GetSuffix() : null,
-                workingTitle: me.GetWorkingTitle(),
+				employeeJobTitles: me.GetJobTitles(),
                 gender: me.GetGender(),
                 employeeFacultyRank: (me.GetFacultyRank() != null) ?
 					{ id: me.GetFacultyRank().id, rank: me.GetFacultyRank().rank } :
@@ -256,29 +246,6 @@ module ViewModels.Employee {
             $("#accordion").accordion('activate', 1);	// Open next panel
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            Emails belong in a separate viewmodel
-		*/
-        // --------------------------------------------------------------------------------
-        //saveEmails(formElement: HTMLFormElement): void {
-        //	$("#accordion").accordion('activate', 2);	// Open next panel
-        //}
-
-        // --------------------------------------------------------------------------------
-        /*
-            Affiliations belong in a separate viewmodel
-		*/
-        // --------------------------------------------------------------------------------
-        //saveAffiliations(formElement: HTMLFormElement): void {
-        //	$("#accordion").accordion('activate', 3);	// Open next panel
-        //}
-
-
-        // --------------------------------------------------------------------------------
-        /*
-		*/
-        // --------------------------------------------------------------------------------
         savePicture(formElement: HTMLFormElement): void {
             $("#accordion").accordion('activate', 0);	// Open next panel
         }

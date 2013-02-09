@@ -72,9 +72,8 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/employees/people").Include(
                 "~/scripts/datacontext/iemployee.js",
                 "~/scripts/datacontext/employeewebservice.js",
-                //"~/scripts/viewmodels/employees/PersonalInfo.js",
-                //"~/scripts/viewmodels/employees/PersonalInfo2.js"),
-                "~/scripts/viewmodels/employees/PersonalInfo3.js"));
+                "~/scripts/viewmodels/employees/PersonalInfo.js",
+                "~/scripts/viewmodels/employees/PersonalInfo2.js"));
 
             // bootstrap css bundles
             var tenants = new[]

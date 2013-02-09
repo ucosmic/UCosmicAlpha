@@ -15,7 +15,7 @@ var ViewModels;
                 this._lastName = ko.observable();
                 this._lastNameSubscription = null;
                 this._suffix = ko.observable();
-                this._workingTitle = ko.observable();
+                this._jobTitles = ko.observable();
                 this._gender = ko.observable();
                 this._facultyRanks = ko.observableArray();
                 this._facultyRank = ko.observable();
@@ -84,11 +84,11 @@ var ViewModels;
             PersonalInfo2.prototype.SetSuffix = function (inValue) {
                 this._suffix(inValue);
             };
-            PersonalInfo2.prototype.GetWorkingTitle = function () {
-                return this._workingTitle();
+            PersonalInfo2.prototype.GetJobTitles = function () {
+                return this._jobTitles();
             };
-            PersonalInfo2.prototype.SetWorkingTitle = function (inValue) {
-                this._workingTitle(inValue);
+            PersonalInfo2.prototype.SetJobTitles = function (inValue) {
+                this._jobTitles(inValue);
             };
             PersonalInfo2.prototype.GetGender = function () {
                 return this._gender();
@@ -154,7 +154,7 @@ var ViewModels;
                 me.SetMiddleName((data.middleName != null) ? data.middleName : "");
                 me.SetLastName((data.lastName != null) ? data.lastName : "");
                 me.SetSuffix((data.suffix != null) ? data.suffix : "");
-                me.SetWorkingTitle((data.workingTitle != null) ? data.workingTitle : "");
+                me.SetJobTitles((data.employeeJobTitles != null) ? data.employeeJobTitles : "");
                 me.SetGender(data.gender);
                 if(data.employeeFacultyRank != null) {
                     var i = 0;
@@ -182,7 +182,7 @@ var ViewModels;
                     middleName: (me.GetMiddleName().length > 0) ? me.GetMiddleName() : null,
                     lastName: (me.GetLastName().length > 0) ? me.GetLastName() : null,
                     suffix: (me.GetSuffix().length > 0) ? me.GetSuffix() : null,
-                    workingTitle: me.GetWorkingTitle(),
+                    employeeJobTitles: me.GetJobTitles(),
                     gender: me.GetGender(),
                     employeeFacultyRank: (me.GetFacultyRank() != null) ? {
                         id: me.GetFacultyRank().id,

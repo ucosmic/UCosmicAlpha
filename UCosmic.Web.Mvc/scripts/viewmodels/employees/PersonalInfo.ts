@@ -9,9 +9,12 @@
 
 module ViewModels.Employee {
 
+    // Doug: I renamed your PersonalInfo3.ts to PersonalInfo.ts, 
+    // since your new changes broke that file anyway.
 	export class PersonalInfo {
 
 		private _dataContext: DataContext.IEmployee;
+		private _isInitialized: bool = false;
 
 		private _personId: number;
 
@@ -24,13 +27,9 @@ module ViewModels.Employee {
 		SetIsDisplayNameDerived(inValue: bool): void { this._isDisplayNameDerived(inValue); }
 
 		private _displayName: KnockoutObservableString = ko.observable();
+		private _userDisplayName: string = '';
 		GetDisplayName(): string { return this._displayName(); }
 		SetDisplayName(inValue: string): void { this._displayName(inValue); }
-
-		private _salutations: KnockoutObservableArray = ko.observableArray();
-		GetSalutations(): any[] { return this._salutations(); }
-		SetSalutations(inValue: any[]): void { this._salutations(inValue); }
-		Salutations_Add(inSalutation: string): void { this._salutations.push(inSalutation); }
 
 		private _salutation: KnockoutObservableString = ko.observable();
 		GetSalutation(): string { return this._salutation(); }
@@ -51,11 +50,6 @@ module ViewModels.Employee {
 		SetLastName(inValue: string): void { this._lastName(inValue); }
 
 		private _lastNameSubscription: KnockoutSubscription = null;
-
-		private _suffixes: KnockoutObservableArray = ko.observableArray();
-		GetSuffixes(): any[] { return this._suffixes(); }
-		SetSuffixes(inValue: any[]): void { this._suffixes(inValue); }
-		Suffixes_Add(inSuffix: string): void { this._suffixes.push(inSuffix); }
 
 		private _suffix: KnockoutObservableString = ko.observable();
 		GetSuffix(): string { return this._suffix(); }
@@ -89,6 +83,7 @@ module ViewModels.Employee {
 		SetAdministrativeAppointments(inValue: string): void { this._administrativeAppointments(inValue); }
 
 
+		$photo: KnockoutObservableJQuery = ko.observable();
 		$facultyRanks: KnockoutObservableJQuery = ko.observable();
 		$nameSalutation: KnockoutObservableJQuery = ko.observable();
 		$nameSuffix: KnockoutObservableJQuery = ko.observable();
@@ -104,30 +99,30 @@ module ViewModels.Employee {
 			 * to load the faculty ranks.  We will then wait for both before continuing.
 			 */
 
-			var getSalutationsPact: JQueryPromise = this._dataContext.GetSalutations();
-			getSalutationsPact.then(
-			/* Success */
-			(salutations: any): void => {
-				for (var i = 0; i < salutations.length; i += 1) {
-					this.Salutations_Add(<string>salutations[i]);
-				}
-			},
-			/* Fail */
-			(error: any): void => {
-			});
+			//var getSalutationsPact: JQueryPromise = this._dataContext.GetSalutations();
+			//getSalutationsPact.then(
+			///* Success */
+			//(salutations: any): void => {
+			//    for (var i = 0; i < salutations.length; i += 1) {
+			//        this.Salutations_Add(<string>salutations[i]);
+			//    }
+			//},
+			///* Fail */
+			//(error: any): void => {
+			//});
 
-			var getSuffixesPact: JQueryPromise = this._dataContext.GetSuffixes();
-			getSuffixesPact.then(
-			/* Success */
-			(suffixes: any): void => {
-				for (var i = 0; i < suffixes.length; i += 1) {
-					this.Suffixes_Add(<string>suffixes[i]);
-				}
-			},
-			/* Fail */
-			(error: any): void => {
-			});
-			
+			//var getSuffixesPact: JQueryPromise = this._dataContext.GetSuffixes();
+			//getSuffixesPact.then(
+			///* Success */
+			//(suffixes: any): void => {
+			//    for (var i = 0; i < suffixes.length; i += 1) {
+			//        this.Suffixes_Add(<string>suffixes[i]);
+			//    }
+			//},
+			///* Fail */
+			//(error: any): void => {
+			//});
+
 			var getFacultyRanksPact = this._dataContext.GetFacultyRanks();
 			getFacultyRanksPact.then(
 			/* Success */
@@ -141,29 +136,29 @@ module ViewModels.Employee {
 			});
 
 			// Wait for all loading of selector options before continuing.
-			$.when(getSalutationsPact, getSuffixesPact, getFacultyRanksPact)
-					.then( /* Continue once selector data has been loaded */
-							/* Success (selector data)*/
+			$.when(getFacultyRanksPact)
+		.then( /* Continue once selector data has been loaded */
+				/* Success (selector data)*/
+				(data: any): void => {
+					this._dataContext.Get()
+						.then( /* Load the viewmodel and apply bindings. */
+							/* Success (load viewmodel data)*/
 							(data: any): void => {
-								this._dataContext.Get()
-									.then( /* Load the viewmodel and apply bindings. */
-										/* Success (load viewmodel data)*/
-										(data: any): void => {
-											this.ToViewModel(this, data);
-											ko.applyBindings(this, $("#" + inDocumentElementId).get(0));
-
-                                            // turn faculty ranks dropdown into kendoui widget
-                                            // can only happen after applyBindings AND
-                                            // options are downloaded from server
-			                                this.$facultyRanks().kendoDropDownList();
-										},
-										/* Fail (load viewmodel data)*/
-										(data: any): void => {
-										});
+								this.ToViewModel(this, data);
+								ko.applyBindings(this, $("#" + inDocumentElementId).get(0));
+								this._isInitialized = true;
+								// turn faculty ranks dropdown into kendoui widget
+								// can only happen after applyBindings AND
+								// options are downloaded from server
+								this.$facultyRanks().kendoDropDownList();
 							},
-								/* Fail (selector data)*/
-							function (data: any): void { }
-						);
+							/* Fail (load viewmodel data)*/
+							(data: any): void => {
+							});
+				},
+					/* Fail (selector data)*/
+				function (data: any): void { }
+			);
 		}
 
 		// --------------------------------------------------------------------------------
@@ -174,35 +169,8 @@ module ViewModels.Employee {
 			this._dataContext = inDataContext;
 			this._initialize(inDocumentElementId);
 
-            // comboboxes for salutation & suffix
-			this.$nameSalutation.subscribe((newValue: JQuery): void => {
-			    if (newValue && newValue.length)
-			        newValue.kendoComboBox({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.People.Names.Salutations.get()
-                                }
-                            }
-                        })
-                    });
-            });
-			this.$nameSuffix.subscribe((newValue: JQuery): void => {
-			    if (newValue && newValue.length)
-			        newValue.kendoComboBox({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.People.Names.Suffixes.get()
-                                }
-                            }
-                        })
-                    });
-            });
+			this._setupKendoWidgets();
+			this._setupDisplayNameDerivation();
 		}
 
 		// --------------------------------------------------------------------------------
@@ -228,7 +196,7 @@ module ViewModels.Employee {
 			if (data.employeeFacultyRank != null) {
 				var i: number = 0;
 				while ((i < me.GetFacultyRanks().length) && (me.GetFacultyRanks()[i].id != data.employeeFacultyRank.id))
-					{ i += 1; }
+				{ i += 1; }
 
 				if (i < me.GetFacultyRanks().length) {
 					me.SetFacultyRank(me.GetFacultyRanks()[i]);
@@ -275,7 +243,7 @@ module ViewModels.Employee {
 		*/
 		// --------------------------------------------------------------------------------
 		saveInfo(formElement: HTMLFormElement): void {
-			this.DeriveDisplayName();
+			//this.DeriveDisplayName();
 			this._dataContext.Put(this.FromViewModel(this))
 					.then(  /* Success */ function (data: any): void { },
 									/* Fail */ function (errorThrown: string): void { });
@@ -285,19 +253,21 @@ module ViewModels.Employee {
 
 		// --------------------------------------------------------------------------------
 		/*
+            Emails belong in a separate viewmodel
 		*/
 		// --------------------------------------------------------------------------------
-		saveEmails(formElement: HTMLFormElement): void {
-			$("#accordion").accordion('activate', 2);	// Open next panel
-		}
+		//saveEmails(formElement: HTMLFormElement): void {
+		//	$("#accordion").accordion('activate', 2);	// Open next panel
+		//}
 
 		// --------------------------------------------------------------------------------
 		/*
+            Affiliations belong in a separate viewmodel
 		*/
 		// --------------------------------------------------------------------------------
-		saveAffiliations(formElement: HTMLFormElement): void {
-			$("#accordion").accordion('activate', 3);	// Open next panel
-		}
+		//saveAffiliations(formElement: HTMLFormElement): void {
+		//	$("#accordion").accordion('activate', 3);	// Open next panel
+		//}
 
 
 		// --------------------------------------------------------------------------------
@@ -308,36 +278,90 @@ module ViewModels.Employee {
 			$("#accordion").accordion('activate', 0);	// Open next panel
 		}
 
-		// --------------------------------------------------------------------------------
-		/*
-		*/
-		// --------------------------------------------------------------------------------
-		derivedNameClickHandler(model: PersonalInfo, event: any): bool {
-			if (model.GetIsDisplayNameDerived()) {
-				$("#displayName").attr("disabled", "disabled");
-				model._firstNameSubscription = model._firstName.subscribe(function (inValue: any): void { model.DeriveDisplayName(model); });
-				model._lastNameSubscription = model._lastName.subscribe(function (inValue: any): void { model.DeriveDisplayName(model); });
-				model.DeriveDisplayName(model);
-			}
-			else {
-				$("#displayName").removeAttr("disabled");
-				model._firstNameSubscription.dispose();
-				model._lastNameSubscription.dispose();
-			}
+		// comboboxes for salutation & suffix
+		private _setupKendoWidgets(): void {
+			// when the $element observables are bound, they will have length
+			// use this opportinity to apply kendo extensions
+			this.$nameSalutation.subscribe((newValue: JQuery): void => {
+				if (newValue && newValue.length)
+					newValue.kendoComboBox({
+						dataTextField: "text",
+						dataValueField: "value",
+						dataSource: new kendo.data.DataSource({
+							transport: {
+								read: {
+									url: App.Routes.WebApi.People.Names.Salutations.get()
+								}
+							}
+						})
+					});
+			});
+			this.$nameSuffix.subscribe((newValue: JQuery): void => {
+				if (newValue && newValue.length)
+					newValue.kendoComboBox({
+						dataTextField: "text",
+						dataValueField: "value",
+						dataSource: new kendo.data.DataSource({
+							transport: {
+								read: {
+									url: App.Routes.WebApi.People.Names.Suffixes.get()
+								}
+							}
+						})
+					});
+			});
 
-			return true; // let default click action proceed
+			this.$photo.subscribe((newValue: JQuery): void => {
+				if (newValue && newValue.length) {
+					newValue.kendoUpload({
+						multiple: false,
+						localization: {
+							select: 'Choose a photo to upload...'
+						}
+						//async: {
+						//    saveUrl: 'saveit',
+						//    removeUrl: 'removeit'
+						//}
+					});
+				}
+			});
 		}
 
-		// --------------------------------------------------------------------------------
-		/*
-		*/
-		// --------------------------------------------------------------------------------
-		DeriveDisplayName(inModel?: PersonalInfo): void {
-			var me = (inModel != null) ? inModel : this;
-			me.SetDisplayName(me.GetFirstName() + " " + me.GetLastName());
-		}
+		// logic to derive display name
+		private _setupDisplayNameDerivation(): void {
+			this._displayName.subscribe((newValue: string): void => {
+				if (!this._isDisplayNameDerived()) {
+					// stash user-entered display name only when it is not derived
+					this._userDisplayName = newValue;
+				}
+			});
 
-	} // class PersonalInfo
+			ko.computed((): void => {
+				// generate display name if it has been API-initialized
+				if (this._isDisplayNameDerived() && this._isInitialized) {
+					var data = {
+						salutation: this._salutation(),
+						firstName: this._firstName(),
+						middleName: this._middleName(),
+						lastName: this._lastName(),
+						suffix: this._suffix(),
+					};
+					$.ajax({
+						url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
+						type: 'GET',
+						cache: false,
+						data: data
+					}).done((result: string): void => {
+						this._displayName(result);
+					});
+				}
+				else if (this._isInitialized) {
+					// restore user-entered display name
+					this._displayName(this._userDisplayName);
+				}
+			}).extend({ throttle: 400 }); // wait for observables to stop changing
+		}
+	}
 
 }
 

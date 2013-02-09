@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -15,11 +14,18 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [Authorize] // only signed-on users should be able to access this page
         [GET("my/info")]
-        [Authorize]
         public virtual ActionResult Index()
         {
-            Person person = _queryProcessor.Execute(new MyPerson(User));
-            ViewBag.PersonId = person.RevisionId;
+            //Person person = _queryProcessor.Execute(new MyPerson(User));
+            ViewBag.PersonId = Request.Tenancy().PersonId;
+            return View();
+        }
+
+        [Authorize]
+        [GET("my/info2")]
+        public virtual ActionResult Index2()
+        {
+            ViewBag.PersonId = Request.Tenancy().PersonId;
             return View();
         }
 

@@ -7,7 +7,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class PersonApiModel
     {
-    /* From Person */
+        /* From Person */
         public int RevisionId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
