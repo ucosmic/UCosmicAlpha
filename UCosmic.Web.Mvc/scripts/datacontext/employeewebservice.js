@@ -12,7 +12,7 @@ var DataContext;
         }
         EmployeeWebService.prototype.GetFacultyRanks = function () {
             var deferred = $.Deferred();
-            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/", function (data, textStatus, jqXHR) {
+            $.getJSON(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get(), function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 deferred.reject(jqXHR, textStatus, errorThrown);

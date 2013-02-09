@@ -183,6 +183,20 @@ var App;
                 var Names = People.Names;
             })(WebApi.People || (WebApi.People = {}));
             var People = WebApi.People;
+            (function (Employees) {
+                (function (ModuleSettings) {
+                    var FacultyRanks = (function () {
+                        function FacultyRanks() { }
+                        FacultyRanks.get = function get() {
+                            return makeUrl('my/employee-module-settings/faculty-ranks');
+                        }
+                        return FacultyRanks;
+                    })();
+                    ModuleSettings.FacultyRanks = FacultyRanks;                    
+                })(Employees.ModuleSettings || (Employees.ModuleSettings = {}));
+                var ModuleSettings = Employees.ModuleSettings;
+            })(WebApi.Employees || (WebApi.Employees = {}));
+            var Employees = WebApi.Employees;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
     })(App.Routes || (App.Routes = {}));

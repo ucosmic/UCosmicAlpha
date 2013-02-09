@@ -11,7 +11,8 @@ module DataContext {
 
         /*override*/ GetFacultyRanks(): JQueryDeferred {
             var deferred: JQueryDeferred = $.Deferred();
-            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/",
+            //$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString() + "/facultyranks/",
+            $.getJSON(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get(),
                   function (data: any, textStatus: string, jqXHR: JQueryXHR) {
                       deferred.resolve(data);
                   }).fail(function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) {

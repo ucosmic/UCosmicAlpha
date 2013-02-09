@@ -421,6 +421,7 @@
     </Compile>
     <Compile Include="Models\EmployeeModuleSettingsModel.cs" />
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
+    <Compile Include="Models\FacultyRankApiModel.cs" />
     <Compile Include="Models\IReturnUrl.cs" />
     <Compile Include="Models\PersonApiModel.cs" />
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />

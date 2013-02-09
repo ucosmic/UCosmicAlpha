@@ -172,7 +172,7 @@ namespace UCosmic.SeedData
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Dan" && x.LastName == "Ludwig");
                 if (person == null) throw new Exception("UC person not found.");
 
-                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for UC.");
 
                 EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
@@ -208,7 +208,7 @@ namespace UCosmic.SeedData
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
                 if (person == null) throw new Exception("USF person not found");
 
-                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
                 EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
@@ -227,7 +227,7 @@ namespace UCosmic.SeedData
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
                 if (person == null) throw new Exception("USF person not found");
 
-                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
                 EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Associate Professor");
@@ -246,7 +246,7 @@ namespace UCosmic.SeedData
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "William" && x.LastName == "Hogarth");
                 if (person == null) throw new Exception("USF person not found");
 
-                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new RootEmployeeModuleSettingsByPersonId(person.RevisionId));
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
                 Seed(new CreateEmployee

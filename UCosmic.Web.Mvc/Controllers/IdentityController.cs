@@ -52,7 +52,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
                 /* Set the anchor link text to the employee personal info controller. */
                 EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
-                    new RootEmployeeModuleSettingsByUserName(model.UserName));
+                    new EmployeeModuleSettingsByUserName(model.UserName));
                 if (employeeModuleSettings != null)
                     Mapper.Map(employeeModuleSettings, tenancy);
 

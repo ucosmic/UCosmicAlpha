@@ -178,6 +178,16 @@ module App.Routes {
                 }
             }
         }
+
+        export module Employees {
+            export module ModuleSettings {
+                export class FacultyRanks {
+                    static get (): string {
+                        return makeUrl('my/employee-module-settings/faculty-ranks');
+                    }
+                }
+            }
+        }
     }
 }
 

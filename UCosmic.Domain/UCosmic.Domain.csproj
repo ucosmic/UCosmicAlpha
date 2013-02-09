@@ -133,10 +133,10 @@
     <Compile Include="Domain\Employees\Entities\Employee.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
-    <Compile Include="Domain\Employees\Queries\EmployeeFromPersonId.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeByPersonId.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByEstablishmentId.cs" />
-    <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByPersonId.cs" />
-    <Compile Include="Domain\Employees\Queries\RootEmployeeModuleSettingsByUserName.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByPersonId.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />

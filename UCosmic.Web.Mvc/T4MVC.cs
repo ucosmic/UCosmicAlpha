@@ -292,6 +292,7 @@ namespace Links
             public static readonly string employeemockservice_ts = Url("employeemockservice.ts");
             public static readonly string employeemockservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/employeemockservice.min.js") ? Url("employeemockservice.min.js") : Url("employeemockservice.js");
                           
+            public static readonly string employeemockservice_min_js = Url("employeemockservice.min.js");
             public static readonly string employeewebservice_ts = Url("employeewebservice.ts");
             public static readonly string employeewebservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/employeewebservice.min.js") ? Url("employeewebservice.min.js") : Url("employeewebservice.js");
                           
