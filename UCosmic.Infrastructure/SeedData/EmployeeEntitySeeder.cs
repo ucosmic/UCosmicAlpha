@@ -183,7 +183,7 @@ namespace UCosmic.SeedData
                     FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "UCosmic CTO",
                     JobTitles = "Software Architect",
-                    ForPersonId = person.RevisionId
+                    PersonId = person.RevisionId
                 });
             }
 
@@ -219,7 +219,7 @@ namespace UCosmic.SeedData
                     FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "USF World UCosmic Developer",
                     JobTitles = "Software Developer",
-                    ForPersonId = person.RevisionId
+                    PersonId = person.RevisionId
                 });
             }
             
@@ -238,7 +238,7 @@ namespace UCosmic.SeedData
                     FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "Director of Sociology Graduate Program",
                     JobTitles = "Director",
-                    ForPersonId = person.RevisionId
+                    PersonId = person.RevisionId
                 });
             }
 
@@ -252,7 +252,7 @@ namespace UCosmic.SeedData
                 Seed(new CreateEmployee
                 {
                     JobTitles = "Regional Chancellor",
-                    ForPersonId = person.RevisionId
+                    PersonId = person.RevisionId
                 });
             }
             
@@ -284,7 +284,7 @@ namespace UCosmic.SeedData
         protected Employee Seed(CreateEmployee command)
         {
             // make sure entity does not already exist
-            var employee = QueryProcessor.Execute(new EmployeeByPersonId(command.ForPersonId));
+            var employee = QueryProcessor.Execute(new EmployeeByPersonId(command.PersonId));
 
             if (employee != null) return employee;
 

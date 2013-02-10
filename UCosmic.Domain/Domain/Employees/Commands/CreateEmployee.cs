@@ -10,29 +10,21 @@ namespace UCosmic.Domain.Employees
         public int? FacultyRankId { get; set; }
         public string AdministrativeAppointments { get; set; }
         public string JobTitles { get; set; }
-        public int ForPersonId { get; set; }
+        public int PersonId { get; set; }
 
         public Employee CreatedEmployee { get; internal set; }
     }
 
     public class ValidateCreateEmployeeCommand : AbstractValidator<CreateEmployee>
     {
-        public ValidateCreateEmployeeCommand(IProcessQueries queryProcessor)
+        public ValidateCreateEmployeeCommand(IQueryEntities entities)
         {
-            //CascadeMode = CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            //RuleFor(x => x.DisplayName)
-            //    // display name cannot be empty
-            //    .NotEmpty()
-            //        .WithMessage(MustNotHaveEmptyDisplayName.FailMessage)
-            //;
-
-            //RuleFor(x => x.UserName)
-            //    // if username is present, validate that it is not attached to another person
-            //    .Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
-            //        .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,
-            //            p => p.UserName)
-            //;
+            RuleFor(x => x.PersonId)
+                .MustFindPersonById(entities)
+                .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
+            ;
         }
     }
 
@@ -52,7 +44,7 @@ namespace UCosmic.Domain.Employees
             // construct the entity
             var employee = new Employee
             {
-                Person = _entities.Get<Person>().SingleOrDefault( p => p.RevisionId == command.ForPersonId ),
+                Person = _entities.Get<Person>().SingleOrDefault( p => p.RevisionId == command.PersonId ),
                 FacultyRank = (command.FacultyRankId.HasValue) ? _entities.Get<EmployeeFacultyRank>().Single(x => x.Id == command.FacultyRankId) : null,
                 AdministrativeAppointments = command.AdministrativeAppointments,
                 JobTitles = command.JobTitles,

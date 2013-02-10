@@ -224,7 +224,7 @@ namespace UCosmic.Domain.People
                         FacultyRankId = command.EmployeeFacultyRankId,
                         AdministrativeAppointments = command.EmployeeAdministrativeAppointments,
                         JobTitles = command.EmployeeJobTitles,
-                        ForPersonId = person.RevisionId
+                        PersonId = person.RevisionId
                     };
 
                     _createEmployee.Handle(createEmployeeCommand);
