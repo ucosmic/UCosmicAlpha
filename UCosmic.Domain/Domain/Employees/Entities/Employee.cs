@@ -18,9 +18,11 @@ namespace UCosmic.Domain.Employees
         {
             var state = JsonConvert.SerializeObject(new
             {
-                FacultyRank = (employee.FacultyRank != null) ? employee.FacultyRank.Rank : null,
+                employee.Id,
+                PersonId = employee.Person.RevisionId,
+                FacultyRankId = employee.FacultyRank != null ? employee.FacultyRank.Id : (int?)null,
+                employee.JobTitles,
                 employee.AdministrativeAppointments,
-                employee.JobTitles
             });
             return state;
         }
