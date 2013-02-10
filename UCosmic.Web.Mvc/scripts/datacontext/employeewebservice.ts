@@ -24,7 +24,8 @@ module DataContext {
 
         /*override*/ Get(): JQueryDeferred {
             var deferred: JQueryDeferred = $.Deferred();
-            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString(),
+            //$.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString(),
+            $.getJSON(App.Routes.WebApi.My.Profile.get(),
                  function (data: any, textStatus: string, jqXHR: JQueryXHR): void {
                      deferred.resolve(data);
                  })
@@ -46,7 +47,8 @@ module DataContext {
                 error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) {
                     deferred.reject(jqXHR, textStatus, errorThrown);
                 },
-                url: this.GetBaseUrl() + "/" + this.GetId().toString()
+                //url: this.GetBaseUrl() + "/" + this.GetId().toString()
+                url: App.Routes.WebApi.My.Profile.put()
             });
             return deferred;
         }

@@ -19,7 +19,7 @@ var ViewModels;
                 this._picture = ko.observable();
                 this._jobTitles = ko.observable();
                 this._facultyRanks = ko.observableArray();
-                this._facultyRank = ko.observable();
+                this._facultyRankId = ko.observable();
                 this._administrativeAppointments = ko.observable();
                 this.$photo = ko.observable();
                 this.$facultyRanks = ko.observable();
@@ -105,11 +105,11 @@ var ViewModels;
             PersonalInfo.prototype.FacultyRanks_Add = function (inRank) {
                 this._facultyRanks.push(inRank);
             };
-            PersonalInfo.prototype.GetFacultyRank = function () {
-                return this._facultyRank();
+            PersonalInfo.prototype.GetFacultyRankId = function () {
+                return this._facultyRankId();
             };
-            PersonalInfo.prototype.SetFacultyRank = function (inValue) {
-                this._facultyRank(inValue);
+            PersonalInfo.prototype.SetFacultyRankId = function (inValue) {
+                this._facultyRankId(inValue);
             };
             PersonalInfo.prototype.GetAdministrativeAppointments = function () {
                 return this._administrativeAppointments();
@@ -148,21 +148,11 @@ var ViewModels;
                 me.SetMiddleName((data.middleName != null) ? data.middleName : "");
                 me.SetLastName((data.lastName != null) ? data.lastName : "");
                 me.SetSuffix((data.suffix != null) ? data.suffix : "");
-                me.SetJobTitles((data.employeeJobTitles != null) ? data.employeeJobTitles : "");
+                me.SetJobTitles((data.jobTitles != null) ? data.jobTitles : "");
                 me.SetGender(data.gender);
                 me._employeeId = data.employeeId;
-                if(data.employeeFacultyRank != null) {
-                    var i = 0;
-                    while((i < me.GetFacultyRanks().length) && (me.GetFacultyRanks()[i].id != data.employeeFacultyRank.id)) {
-                        i += 1;
-                    }
-                    if(i < me.GetFacultyRanks().length) {
-                        me.SetFacultyRank(me.GetFacultyRanks()[i]);
-                    }
-                } else {
-                    me.SetFacultyRank(null);
-                }
-                me.SetAdministrativeAppointments((data.employeeAdministrativeAppointments != null) ? data.employeeAdministrativeAppointments : "");
+                me.SetFacultyRankId(data.facultyRankId);
+                me.SetAdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
                 me.SetPicture(data.picture);
             };
             PersonalInfo.prototype.FromViewModel = function (inSelf) {
@@ -177,14 +167,11 @@ var ViewModels;
                     middleName: (me.GetMiddleName().length > 0) ? me.GetMiddleName() : null,
                     lastName: (me.GetLastName().length > 0) ? me.GetLastName() : null,
                     suffix: (me.GetSuffix().length > 0) ? me.GetSuffix() : null,
-                    employeeJobTitles: me.GetJobTitles(),
+                    jobTitles: me.GetJobTitles(),
                     gender: me.GetGender(),
                     employeeId: me._employeeId,
-                    employeeFacultyRank: (me.GetFacultyRank() != null) ? {
-                        id: me.GetFacultyRank().id,
-                        rank: me.GetFacultyRank().rank
-                    } : null,
-                    employeeAdministrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
+                    facultyRankId: me.GetFacultyRankId(),
+                    administrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
                     picture: me.GetPicture()
                 };
             };

@@ -14,8 +14,8 @@ module ViewModels.Employee {
         private _dataContext: DataContext.IEmployee;
         private _isInitialized: bool = false;
 
-        private _revisionId: number;
-        private _employeeId: number;
+        //private _revisionId: number;
+        //private _employeeId: number;
 
         isDisplayNameDerived: KnockoutObservableBool = ko.observable();
         displayName: KnockoutObservableString = ko.observable();
@@ -28,9 +28,9 @@ module ViewModels.Employee {
         suffix: KnockoutObservableString = ko.observable();
 
         facultyRanks: KnockoutObservableArray = ko.observableArray();
-        employeeFacultyRankId: KnockoutObservableNumber = ko.observable();
-        employeeJobTitles: KnockoutObservableString = ko.observable();
-        employeeAdministrativeAppointments: KnockoutObservableString = ko.observable();
+        facultyRankId: KnockoutObservableNumber = ko.observable();
+        jobTitles: KnockoutObservableString = ko.observable();
+        administrativeAppointments: KnockoutObservableString = ko.observable();
 
         gender: KnockoutObservableString = ko.observable();
         isActive: KnockoutObservableBool = ko.observable();
@@ -61,10 +61,10 @@ module ViewModels.Employee {
 
                     this.facultyRanks(facultyRanks); // populate the faculty ranks menu
 
-                    this._revisionId = viewModel.revisionId; // not an observable
-                    this._employeeId = viewModel.employeeId; // not an observable
+                    //this._revisionId = viewModel.revisionId; // not an observable
+                    //this._employeeId = viewModel.employeeId; // not an observable
                     var viewModelMapping = { // options for viewmodel ko.mapping
-                        ignore: ['revisionId', 'employeeId'] // do not map these to observables
+                        //ignore: ['revisionId', 'employeeId'] // do not map these to observables
                     };
                     ko.mapping.fromJS(viewModel, viewModelMapping, this); // populate the scalars
 
@@ -81,8 +81,8 @@ module ViewModels.Employee {
 
         saveInfo(formElement: HTMLFormElement): void {
             var apiModel = ko.mapping.toJS(this);
-            apiModel.revisionId = this._revisionId;
-            apiModel.employeeId = this._employeeId;
+            //apiModel.revisionId = this._revisionId;
+            //apiModel.employeeId = this._employeeId;
 
             this._dataContext.Put(apiModel)
                     .then(  /* Success */ function (data: any): void { },

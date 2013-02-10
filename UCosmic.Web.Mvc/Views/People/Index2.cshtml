@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="on-left name-and-title">
                                         <div class="display-name" data-bind="text: displayName"></div>
-                                        <div class="titles" data-bind="multilineText: employeeJobTitles"></div>
+                                        <div class="titles" data-bind="multilineText: jobTitles"></div>
                                         @if (User.IsInRole(RoleName.EmployeeProfileManager))
                                         {
                                             <div class="admin-only">
@@ -158,7 +158,7 @@
                                                 <label>Faculty rank</label>
                                             </div>
                                             <div class="field-input">
-                                                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: employeeFacultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
+                                                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
                                                 </select>
                                             </div>
                                         </div>
@@ -167,7 +167,7 @@
                                                 <label>My Preferred Title is</label>
                                             </div>
                                             <div class="field-input">
-                                                <textarea rows="2" data-bind="value: employeeJobTitles"></textarea>
+                                                <textarea rows="2" data-bind="value: jobTitles"></textarea>
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -175,7 +175,7 @@
                                                 <label>Administrative Appointments</label>
                                             </div>
                                             <div class="field-input">
-                                                <textarea rows="2" data-bind="value: employeeAdministrativeAppointments"></textarea>
+                                                <textarea rows="2" data-bind="value: administrativeAppointments"></textarea>
                                             </div>
                                         </div>
                                         @if (User.IsInRole(RoleName.EmployeeProfileManager))

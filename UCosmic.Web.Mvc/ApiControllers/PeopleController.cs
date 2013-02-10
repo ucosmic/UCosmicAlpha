@@ -10,6 +10,7 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [DefaultApiHttpRouteConvention]
+    [Authorize(Roles = "Person API Invoker")]
     public class PeopleController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;

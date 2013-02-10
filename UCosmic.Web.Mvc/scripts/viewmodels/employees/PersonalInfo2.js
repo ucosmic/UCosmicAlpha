@@ -13,9 +13,9 @@ var ViewModels;
                 this.lastName = ko.observable();
                 this.suffix = ko.observable();
                 this.facultyRanks = ko.observableArray();
-                this.employeeFacultyRankId = ko.observable();
-                this.employeeJobTitles = ko.observable();
-                this.employeeAdministrativeAppointments = ko.observable();
+                this.facultyRankId = ko.observable();
+                this.jobTitles = ko.observable();
+                this.administrativeAppointments = ko.observable();
                 this.gender = ko.observable();
                 this.isActive = ko.observable();
                 this.$photo = ko.observable();
@@ -33,13 +33,7 @@ var ViewModels;
                 var viewModelPact = this._dataContext.Get();
                 $.when(facultyRanksPact, viewModelPact).then(function (facultyRanks, viewModel) {
                     _this.facultyRanks(facultyRanks);
-                    _this._revisionId = viewModel.revisionId;
-                    _this._employeeId = viewModel.employeeId;
                     var viewModelMapping = {
-                        ignore: [
-                            'revisionId', 
-                            'employeeId'
-                        ]
                     };
                     ko.mapping.fromJS(viewModel, viewModelMapping, _this);
                     $(_this).trigger('ready');
@@ -50,8 +44,6 @@ var ViewModels;
             };
             PersonalInfo2.prototype.saveInfo = function (formElement) {
                 var apiModel = ko.mapping.toJS(this);
-                apiModel.revisionId = this._revisionId;
-                apiModel.employeeId = this._employeeId;
                 this._dataContext.Put(apiModel).then(function (data) {
                 }, function (errorThrown) {
                 });

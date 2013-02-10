@@ -21,7 +21,7 @@ var DataContext;
         };
         EmployeeWebService.prototype.Get = function () {
             var deferred = $.Deferred();
-            $.getJSON(this.GetBaseUrl() + "/" + this.GetId().toString(), function (data, textStatus, jqXHR) {
+            $.getJSON(App.Routes.WebApi.My.Profile.get(), function (data, textStatus, jqXHR) {
                 deferred.resolve(data);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 deferred.reject(jqXHR, textStatus, errorThrown);
@@ -39,7 +39,7 @@ var DataContext;
                 error: function (jqXHR, textStatus, errorThrown) {
                     deferred.reject(jqXHR, textStatus, errorThrown);
                 },
-                url: this.GetBaseUrl() + "/" + this.GetId().toString()
+                url: App.Routes.WebApi.My.Profile.put()
             });
             return deferred;
         };

@@ -74,9 +74,9 @@ module ViewModels.Employee {
 		SetFacultyRanks(inValue: any[]): void { this._facultyRanks(inValue); }
 		FacultyRanks_Add(inRank: any): void { this._facultyRanks.push(inRank); }
 
-		private _facultyRank: KnockoutObservableAny = ko.observable();
-		GetFacultyRank(): any { return this._facultyRank(); }
-		SetFacultyRank(inValue: any): void { this._facultyRank(inValue); }
+		private _facultyRankId: KnockoutObservableNumber = ko.observable();
+		GetFacultyRankId(): any { return this._facultyRankId(); }
+		SetFacultyRankId(inValue: any): void { this._facultyRankId(inValue); }
 
 		private _administrativeAppointments: KnockoutObservableString = ko.observable();
 		GetAdministrativeAppointments(): string { return this._administrativeAppointments(); }
@@ -190,22 +190,23 @@ module ViewModels.Employee {
 			me.SetMiddleName((data.middleName != null) ? data.middleName : "");
 			me.SetLastName((data.lastName != null) ? data.lastName : "");
 			me.SetSuffix((data.suffix != null) ? data.suffix : "");
-			me.SetJobTitles((data.employeeJobTitles != null) ? data.employeeJobTitles : "");
+			me.SetJobTitles((data.jobTitles != null) ? data.jobTitles : "");
 			me.SetGender(data.gender);
 			me._employeeId = data.employeeId;
-			if (data.employeeFacultyRank != null) {
-				var i: number = 0;
-				while ((i < me.GetFacultyRanks().length) && (me.GetFacultyRanks()[i].id != data.employeeFacultyRank.id))
-				{ i += 1; }
-
-				if (i < me.GetFacultyRanks().length) {
-					me.SetFacultyRank(me.GetFacultyRanks()[i]);
-				}
-			}
-			else {
-				me.SetFacultyRank(null);
-			}
-			me.SetAdministrativeAppointments((data.employeeAdministrativeAppointments != null) ? data.employeeAdministrativeAppointments : "");
+			me.SetFacultyRankId(data.facultyRankId);
+			//if (data.facultyRankId) {
+			//	var i: number = 0;
+			//	while ((i < me.GetFacultyRanks().length) && (me.GetFacultyRanks()[i].id != data.facultyRankId))
+			//	{ i += 1; }
+            //
+			//	if (i < me.GetFacultyRanks().length) {
+			//		me.SetFacultyRank(me.GetFacultyRanks()[i]);
+			//	}
+			//}
+			//else {
+			//	me.SetFacultyRank(null);
+			//}
+			me.SetAdministrativeAppointments((data.administrativeAppointments != null) ? data.administrativeAppointments : "");
 			me.SetPicture(data.picture);
 		}
 
@@ -227,13 +228,14 @@ module ViewModels.Employee {
 				middleName: (me.GetMiddleName().length > 0) ? me.GetMiddleName() : null,
 				lastName: (me.GetLastName().length > 0) ? me.GetLastName() : null,
 				suffix: (me.GetSuffix().length > 0) ? me.GetSuffix() : null,
-				employeeJobTitles: me.GetJobTitles(),
+				jobTitles: me.GetJobTitles(),
 				gender: me.GetGender(),
 				employeeId: me._employeeId,
-				employeeFacultyRank: (me.GetFacultyRank() != null) ?
-					{ id: me.GetFacultyRank().id, rank: me.GetFacultyRank().rank } :
-					null,
-				employeeAdministrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
+                facultyRankId: me.GetFacultyRankId(),
+				//facultyRank: (me.GetFacultyRank() != null) ?
+				//	{ id: me.GetFacultyRank().id, rank: me.GetFacultyRank().rank } :
+				//	null,
+				administrativeAppointments: (me.GetAdministrativeAppointments().length > 0) ? me.GetAdministrativeAppointments() : null,
 				picture: me.GetPicture()
 			};
 		}

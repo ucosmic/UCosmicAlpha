@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.Models
         public string JobTitles { get; set; }
     }
 
-    public static class PersonApiProfiler
+    public static class MyProfileApiModelProfiler
     {
         public class EntityToModelProfile : Profile
         {
