@@ -7,13 +7,12 @@ namespace UCosmic.Domain.Employees
 {
     public class CreateEmployee
     {
-        //public EmployeeFacultyRank FacultyRank { get; set; }
         public int? FacultyRankId { get; set; }
         public string AdministrativeAppointments { get; set; }
         public string JobTitles { get; set; }
         public int ForPersonId { get; set; }
 
-        public Employee CreatedEmployee { get; set; }
+        public Employee CreatedEmployee { get; internal set; }
     }
 
     public class ValidateCreateEmployeeCommand : AbstractValidator<CreateEmployee>
@@ -50,7 +49,7 @@ namespace UCosmic.Domain.Employees
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // construct the person
+            // construct the entity
             var employee = new Employee
             {
                 Person = _entities.Get<Person>().SingleOrDefault( p => p.RevisionId == command.ForPersonId ),
@@ -58,6 +57,20 @@ namespace UCosmic.Domain.Employees
                 AdministrativeAppointments = command.AdministrativeAppointments,
                 JobTitles = command.JobTitles,
             };
+
+            //// log audit
+            //var audit = new CommandEvent
+            //{
+            //    RaisedBy = command.Principal.Identity.Name,
+            //    Name = command.GetType().FullName,
+            //    Value = JsonConvert.SerializeObject(new
+            //    {
+            //        command.prop1,
+            //        command.propN,
+            //    }),
+            //    NewState = createdEntity.ToJsonAudit(),
+            //};
+            //_entities.Create(audit);
 
             // store
             _entities.Create(employee);

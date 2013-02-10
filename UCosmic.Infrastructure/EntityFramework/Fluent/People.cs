@@ -16,6 +16,13 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(false)
             ;
 
+            // has zero or one employee
+            HasOptional(p => p.Employee)
+                .WithRequired(d => d.Person)
+                .Map(m => m.MapKey("PersonId"))
+                .WillCascadeOnDelete(true)
+            ;
+
             // has many email addresses
             HasMany(p => p.Emails)
                 .WithRequired(d => d.Person)

@@ -9,13 +9,16 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(Employee).Name, DbSchemaName.Employees);
 
-            HasRequired(p => p.Person)
-                .WithOptional(d => d.Employee)
+            HasRequired(d => d.Person)
+                .WithOptional(p => p.Employee)
                 .Map(m => m.MapKey("PersonId"))
                 .WillCascadeOnDelete(true)
             ;
 
-            HasOptional(p => p.FacultyRank);
+            HasOptional(p => p.FacultyRank)
+                .WithMany()
+                .Map(m => m.MapKey("FacultyRankId"))
+            ;
 
             Property(p => p.AdministrativeAppointments).HasMaxLength(500).IsOptional();
             Property(p => p.JobTitles).HasMaxLength(500).IsOptional();
