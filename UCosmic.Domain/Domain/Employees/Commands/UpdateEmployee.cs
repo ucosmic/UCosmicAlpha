@@ -17,22 +17,14 @@ namespace UCosmic.Domain.Employees
 
     public class ValidateUpdateEmployeeCommand : AbstractValidator<UpdateEmployee>
     {
-        public ValidateUpdateEmployeeCommand(IProcessQueries queryProcessor)
+        public ValidateUpdateEmployeeCommand(IQueryEntities entities)
         {
-            //CascadeMode = CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            //RuleFor(p => p.DisplayName)
-            //    // display name cannot be empty
-            //    .NotEmpty()
-            //        .WithMessage(ValidatePerson.FailedBecauseDisplayNameWasEmpty)
-            //;
-
-            //RuleFor(p => p.UserName)
-            //    // if username is present, validate that it is not attached to another person
-            //    .Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
-            //        .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,
-            //            p => p.UserName)
-            //;
+            RuleFor(x => x.Id)
+                .MustFindEmployeeById(entities)
+                    .WithMessage(MustFindEmployeeById.FailMessageFormat, x => x.Id)
+            ;
         }
     }
 

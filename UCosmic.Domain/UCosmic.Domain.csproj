@@ -138,6 +138,7 @@
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByPersonId.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
+    <Compile Include="Domain\Employees\Validation\MustFindEmployeeById.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCategory.cs" />
