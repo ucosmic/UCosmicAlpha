@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Employees
 {
     public class UpdateEmployee
     {
         public int Id { get; set; }
-        public int PersonId { get; set; }
-        public int FacultyRankId { get; set; }
+        public int? FacultyRankId { get; set; }
+        public string JobTitles { get; set; }
         public string AdministrativeAppointments { get; set; }
+
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateUpdateEmployeeCommand : AbstractValidator<UpdateEmployee>
@@ -32,82 +34,72 @@ namespace UCosmic.Domain.Employees
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
 
         public HandleUpdateEmployeeCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
         }
 
         public void Handle(UpdateEmployee command)
         {
             if (command == null) { throw new ArgumentNullException("command"); }
 
-            Employee employee = _entities.Get<Employee>()
+            var employee = _entities.Get<Employee>()
+                .EagerLoad(_entities, new Expression<Func<Employee, object>>[]
+                {
+                    x => x.FacultyRank,
+                })
                 .SingleOrDefault(p => p.Id == command.Id);
-            if (employee == null) { return; }
+            if (employee == null) // employee should never be null thanks to validator
+                throw new InvalidOperationException(string.Format(
+                    "Employee '{0}' does not exist", command.Id));
 
-            Person person = _entities.Get<Person>()
-               .SingleOrDefault(p => p.RevisionId == command.PersonId);
-
-            EmployeeFacultyRank facultyRank = _entities.Get<EmployeeFacultyRank>()
-                .SingleOrDefault(p => p.Id == command.FacultyRankId);
+            // only mutate when state is modified
+            var changed = (command.JobTitles != employee.JobTitles) ||
+                (command.AdministrativeAppointments != employee.AdministrativeAppointments) ||
+                (command.FacultyRankId.HasValue && employee.FacultyRank == null) ||
+                (!command.FacultyRankId.HasValue && employee.FacultyRank != null) ||
+                (command.FacultyRankId.HasValue && employee.FacultyRank != null
+                    && command.FacultyRankId.Value != employee.FacultyRank.Id)
+            ;
+            if (!changed) return;
 
             // log audit
             var audit = new CommandEvent
+            {
+                RaisedBy = System.Threading.Thread.CurrentPrincipal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
                 {
-                    RaisedBy = person.FirstName + " " + person.LastName,
-                    Name = command.GetType().FullName,
-                    Value = JsonConvert.SerializeObject(new
-                    {
-                        Id = command.Id,
-                        EmployeeFacultyRank = (facultyRank != null) ? facultyRank.Rank : null,
-                        command.AdministrativeAppointments,
-                    }),
-                    PreviousState = employee.ToJsonAudit(),
-                };
+                    command.Id,
+                    command.FacultyRankId,
+                    command.JobTitles,
+                    command.AdministrativeAppointments,
+                }),
+                PreviousState = employee.ToJsonAudit(),
+            };
 
-            bool changed = false;
+            // update values
+            EmployeeFacultyRank facultyRank = null;
+            if (command.FacultyRankId.HasValue)
+                facultyRank = _entities.Get<EmployeeFacultyRank>()
+                    .SingleOrDefault(x => x.Id == command.FacultyRankId.Value);
 
-            if (person.RevisionId != command.Id)
+            employee.FacultyRank = facultyRank;
+            employee.JobTitles = command.JobTitles;
+            employee.AdministrativeAppointments = command.AdministrativeAppointments;
+
+            // push to database
+            audit.NewState = employee.ToJsonAudit();
+            _entities.Create(audit);
+            _entities.Update(employee);
+
+            if (!command.NoCommit)
             {
-                employee.Person = person;
-                changed = true;
-            }
-
-            if (command.FacultyRankId == 0)
-            {
-                employee.FacultyRank = null;
-                changed = true;
-            }
-            else if ((employee.FacultyRank == null) ||
-                    ((employee.FacultyRank != null) && (employee.FacultyRank.Id != command.FacultyRankId)))
-            {
-                employee.FacultyRank = _entities.Get<EmployeeFacultyRank>()
-                                            .SingleOrDefault(x => x.Id == command.FacultyRankId);
-                changed = true;
-            }
-
-            if (employee.AdministrativeAppointments != command.AdministrativeAppointments)
-            {
-                employee.AdministrativeAppointments = command.AdministrativeAppointments;
-                changed = true;
-            }
-
-            // update
-            if (changed)
-            {
-                audit.NewState = person.ToJsonAudit();
-                _entities.Create(audit);
-                _entities.Update(employee);
-
                 _unitOfWork.SaveChanges();
-                //_eventProcessor.Raise(new EmployeeChanged());
             }
         }
     }
