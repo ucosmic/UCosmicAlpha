@@ -9,20 +9,25 @@ namespace UCosmic.Domain.Employees
 {
     public class CreateEmployeeModuleSettings
     {
-        public ICollection<EmployeeFacultyRank> EmployeeFacultyRanks { get; set; }
+        public ICollection<EmployeeFacultyRank> EmployeeFacultyRanks { get; set; } // TODO: eliminate entity property from command
         public bool NotifyAdminOnUpdate { get; set; }
         public int NotifyAdminPersonId { get; set; }
         public string PersonalInfoAnchorText { get; set; }
-        public int ForEstablishmentId { get; set; }
+        public int EstablishmentId { get; set; }
 
-        public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; set; }
+        public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; internal set; }
     }
 
     public class ValidateCreateEmployeeModuleSettingsCommand : AbstractValidator<CreateEmployeeModuleSettings>
     {
         public ValidateCreateEmployeeModuleSettingsCommand(IQueryEntities entities)
         {
-            /* TODO */
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.EstablishmentId)
+                .MustFindEstablishmentById(entities)
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId)
+            ;
         }
     }
 
@@ -45,7 +50,7 @@ namespace UCosmic.Domain.Employees
                 NotifyAdminOnUpdate = command.NotifyAdminOnUpdate,
                 NotifyAdmins = new[] { _entities.Get<Person>().SingleOrDefault(x => x.RevisionId == command.NotifyAdminPersonId) },
                 PersonalInfoAnchorText = command.PersonalInfoAnchorText,
-                Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.ForEstablishmentId)
+                Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.EstablishmentId)
             };
 
             _entities.Create(employeeModuleSettings);

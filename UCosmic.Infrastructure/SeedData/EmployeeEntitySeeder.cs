@@ -60,7 +60,7 @@ namespace UCosmic.SeedData
                 },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = null, //"My International",
-                ForEstablishmentId = establishment.RevisionId,
+                EstablishmentId = establishment.RevisionId,
             });
         }
     }
@@ -96,7 +96,7 @@ namespace UCosmic.SeedData
                 },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My USF World Profile",
-                ForEstablishmentId = establishment.RevisionId,
+                EstablishmentId = establishment.RevisionId,
             });
         }
     }
@@ -122,7 +122,7 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             var employeeModuleSettings = _queryProcessor.Execute(
-                new EmployeeModuleSettingsByEstablishmentId(command.ForEstablishmentId));
+                new EmployeeModuleSettingsByEstablishmentId(command.EstablishmentId));
 
             if (employeeModuleSettings != null) return employeeModuleSettings;
 
