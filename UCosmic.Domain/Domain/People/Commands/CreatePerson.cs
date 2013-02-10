@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using FluentValidation;
 using UCosmic.Domain.Identity;
@@ -9,11 +7,6 @@ namespace UCosmic.Domain.People
 {
     public class CreatePerson
     {
-        public CreatePerson()
-        {
-            Affiliations = new Collection<Affiliation>();
-        }
-
         public string DisplayName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -22,7 +15,6 @@ namespace UCosmic.Domain.People
         public EmailAddress[] EmailAddresses { get; set; }
         public Person CreatedPerson { get; internal set; }
         public string Gender { get; set; }
-        public ICollection<Affiliation> Affiliations { get; set; }
         public byte[] Picture { get; set; }
 
         public class EmailAddress
@@ -76,7 +68,6 @@ namespace UCosmic.Domain.People
                 LastName = command.LastName,
                 DisplayName = command.DisplayName,
                 Gender = command.Gender,
-                Affiliations = command.Affiliations,
                 Picture = command.Picture,
             };
 
