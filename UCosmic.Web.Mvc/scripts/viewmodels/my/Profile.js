@@ -47,15 +47,8 @@ var ViewModels;
                 });
                 $.when(facultyRanksPact, viewModelPact).then(function (facultyRanks, viewModel) {
                     _this.facultyRanks(facultyRanks);
-                    _this._revisionId = viewModel.revisionId;
-                    _this._employeeId = viewModel.employeeId;
-                    var viewModelMapping = {
-                        ignore: [
-                            'revisionId', 
-                            'employeeId'
-                        ]
-                    };
-                    ko.mapping.fromJS(viewModel, viewModelMapping, _this);
+                    ko.mapping.fromJS(viewModel, {
+                    }, _this);
                     $(_this).trigger('ready');
                     _this._isInitialized = true;
                     _this.$facultyRanks().kendoDropDownList();
@@ -67,8 +60,6 @@ var ViewModels;
                     this.errors.showAllMessages();
                 } else {
                     var apiModel = ko.mapping.toJS(this);
-                    apiModel.revisionId = this._revisionId;
-                    apiModel.employeeId = this._employeeId;
                     $.ajax({
                         url: App.Routes.WebApi.My.Profile.put(),
                         type: 'PUT',

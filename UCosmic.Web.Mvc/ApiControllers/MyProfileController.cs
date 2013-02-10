@@ -16,10 +16,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class MyProfileController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UpdatePerson> _updateHandler;
+        private readonly IHandleCommands<UpdateMyProfile> _updateHandler;
 
         public MyProfileController(IProcessQueries queryProcessor
-            , IHandleCommands<UpdatePerson> updateHandler
+            , IHandleCommands<UpdateMyProfile> updateHandler
         )
         {
             _queryProcessor = queryProcessor;
@@ -52,9 +52,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("")]
         public HttpResponseMessage Put(MyProfileApiModel model)
         {
-            var person = _queryProcessor.Execute(new MyPerson(User));
+            //var person = _queryProcessor.Execute(new MyPerson(User));
 
-            var command = new UpdatePerson(person.RevisionId);
+            var command = new UpdateMyProfile(User);
             Mapper.Map(model, command);
 
             try

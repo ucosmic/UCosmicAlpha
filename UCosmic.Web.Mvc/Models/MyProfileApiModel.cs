@@ -7,7 +7,6 @@ namespace UCosmic.Web.Mvc.Models
     public class MyProfileApiModel
     {
         /* From Person */
-        public int RevisionId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
         public string DisplayName { get; set; }
@@ -17,8 +16,8 @@ namespace UCosmic.Web.Mvc.Models
         public string LastName { get; set; }
         public string Suffix { get; set; }
         public string Gender { get; set; }
+
         /* From Employee */
-        public int? EmployeeId { get; set; }
         public int? FacultyRankId { get; set; }
         public string AdministrativeAppointments { get; set; }
         public string JobTitles { get; set; }
@@ -45,13 +44,8 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<MyProfileApiModel, UpdatePerson>()
-                    .ForMember(d => d.EmployeeFacultyRankId, o => o.MapFrom(s => 
-                        (s.FacultyRankId.HasValue) ? s.FacultyRankId.Value : (int?)null))
-                    .ForMember(d => d.EmployeeAdministrativeAppointments, o => o.MapFrom(s =>
-                        s.AdministrativeAppointments))
-                    .ForMember(d => d.EmployeeJobTitles, o => o.MapFrom(s =>
-                        s.JobTitles))
+                CreateMap<MyProfileApiModel, UpdateMyProfile>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
                 ;
             }
         }

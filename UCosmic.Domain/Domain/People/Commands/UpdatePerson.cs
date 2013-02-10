@@ -11,14 +11,12 @@ namespace UCosmic.Domain.People
     {
         public UpdatePerson(int revisionId)
         {
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
             RevisionId = revisionId;
             IsActive = true;
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         /* Person */
-        public int RevisionId { get ; set ; }
+        public int RevisionId { get; private set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
         public string DisplayName { get; set; }
@@ -30,61 +28,120 @@ namespace UCosmic.Domain.People
         public string Gender { get; set; }
         /* Employee */
         public int? EmployeeId { get; set; }
-        //public EmployeeFacultyRank EmployeeFacultyRank { get; set; }
         public int? EmployeeFacultyRankId { get; set; }
         public string EmployeeAdministrativeAppointments { get; set; }
         public string EmployeeJobTitles { get; set; }
 
-        //public byte[] Picture { get; set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateUpdatePersonCommand : AbstractValidator<UpdatePerson>
     {
-        public ValidateUpdatePersonCommand(IProcessQueries queryProcessor)
+        public ValidateUpdatePersonCommand(IQueryEntities entities)
         {
-            //CascadeMode = CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            //RuleFor(p => p.DisplayName)
-            //    // display name cannot be empty
-            //    .NotEmpty()
-            //        .WithMessage(ValidatePerson.FailedBecauseDisplayNameWasEmpty)
-            //;
-
-            //RuleFor(p => p.UserName)
-            //    // if username is present, validate that it is not attached to another person
-            //    .Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
-            //        .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,
-            //            p => p.UserName)
-            //;
+            RuleFor(x => x.RevisionId)
+                .MustFindPersonById(entities)
+                    .WithMessage(MustFindPersonById.FailMessageFormat, x => x.RevisionId)
+            ;
         }
     }
 
     public class HandleUpdatePersonCommand : IHandleCommands<UpdatePerson>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        //private readonly IProcessEvents _eventProcessor;
         private readonly IHandleCommands<CreateEmployee> _createEmployee;
+        private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdatePersonCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
-            //, IProcessEvents eventProcessor
             , IHandleCommands<CreateEmployee> createEmployee
+            , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            //_eventProcessor = eventProcessor;
             _createEmployee = createEmployee;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(UpdatePerson command)
+        {
+            Handle2(command);
+        }
+
+        private void Handle2(UpdatePerson command)
         {
             if (command == null) { throw new ArgumentNullException("command"); }
 
             var person = _entities.Get<Person>()
                 .SingleOrDefault(p => p.RevisionId == command.RevisionId);
-            if (person == null) { return; }
+            if (person == null) // person should never be null thanks to validator
+                throw new InvalidOperationException(string.Format(
+                    "Person '{0}' does not exist", command.RevisionId));
+
+            // only mutate when state is modified
+            if (command.IsActive == person.IsActive &&
+                command.IsDisplayNameDerived == person.IsDisplayNameDerived &&
+                command.DisplayName == person.DisplayName &&
+                command.Salutation == person.Salutation &&
+                command.FirstName == person.FirstName &&
+                command.MiddleName == person.MiddleName &&
+                command.LastName == person.LastName &&
+                command.Suffix == person.Suffix &&
+                command.Gender == person.Gender)
+                return;
+
+            // log audit
+            var personAudit = new CommandEvent
+            {
+                RaisedBy = command.FirstName + " " + command.LastName,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    Id = command.RevisionId,
+                    command.IsActive,
+                    command.IsDisplayNameDerived,
+                    command.DisplayName,
+                    command.Salutation,
+                    command.FirstName,
+                    command.MiddleName,
+                    command.LastName,
+                    command.Suffix,
+                    command.Gender,
+                }),
+                PreviousState = person.ToJsonAudit(),
+            };
+
+            // update values
+            person.IsActive = command.IsActive;
+            person.IsDisplayNameDerived = command.IsDisplayNameDerived;
+            person.DisplayName = command.DisplayName;
+            person.Salutation = command.Salutation;
+            person.FirstName = command.FirstName;
+            person.MiddleName = command.MiddleName;
+            person.LastName = command.LastName;
+            person.Suffix = command.Suffix;
+            person.Gender = command.Gender;
+
+            // push to database
+            personAudit.NewState = person.ToJsonAudit();
+            _entities.Create(personAudit);
+            _entities.Update(person);
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
+        }
+
+        private void Handle1(UpdatePerson command)
+        {
+            if (command == null) { throw new ArgumentNullException("command"); }
+
+            var person = _entities.Get<Person>()
+                .SingleOrDefault(p => p.RevisionId == command.RevisionId);
+            if (person == null) // person should never be null thanks to validator
+                throw new InvalidOperationException(string.Format(
+                    "Person '{0}' does not exist", command.RevisionId));
 
             // log audit
             var personAudit = new CommandEvent

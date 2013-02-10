@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Employees
 
             RuleFor(x => x.PersonId)
                 .MustFindPersonById(entities)
-                .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
+                    .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
             ;
         }
     }

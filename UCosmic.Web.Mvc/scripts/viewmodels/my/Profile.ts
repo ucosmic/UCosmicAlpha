@@ -14,9 +14,6 @@ module ViewModels.My {
 
         private _isInitialized: bool = false;
 
-        private _revisionId: number;
-        private _employeeId: number;
-
         isDisplayNameDerived: KnockoutObservableBool = ko.observable();
         displayName: KnockoutObservableString = ko.observable();
         private _userDisplayName: string = '';
@@ -86,13 +83,7 @@ module ViewModels.My {
                 (facultyRanks: any, viewModel: any): void => {
 
                     this.facultyRanks(facultyRanks); // populate the faculty ranks menu
-
-                    this._revisionId = viewModel.revisionId; // not an observable
-                    this._employeeId = viewModel.employeeId; // not an observable
-                    var viewModelMapping = { // options for viewmodel ko.mapping
-                        ignore: ['revisionId', 'employeeId'] // do not map these to observables
-                    };
-                    ko.mapping.fromJS(viewModel, viewModelMapping, this); // populate the scalars
+                    ko.mapping.fromJS(viewModel, { }, this); // populate the scalars
 
                     $(this).trigger('ready'); // ready to apply bindings
                     this._isInitialized = true; // bindings have been applied
@@ -112,8 +103,6 @@ module ViewModels.My {
             }
             else {
                 var apiModel = ko.mapping.toJS(this);
-                apiModel.revisionId = this._revisionId;
-                apiModel.employeeId = this._employeeId;
 
                 $.ajax({
                     url: App.Routes.WebApi.My.Profile.put(),

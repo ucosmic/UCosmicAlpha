@@ -6,6 +6,7 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
 {
+    // deprecated. use UpdatePerson instead.
     public class UpdateMyName
     {
         public IPrincipal Principal { get; set; }
