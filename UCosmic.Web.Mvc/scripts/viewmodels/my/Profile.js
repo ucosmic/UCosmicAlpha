@@ -3,6 +3,7 @@ var ViewModels;
     (function (My) {
         var Profile = (function () {
             function Profile() {
+                var _this = this;
                 this._isInitialized = false;
                 this.isDisplayNameDerived = ko.observable();
                 this.displayName = ko.observable();
@@ -23,6 +24,9 @@ var ViewModels;
                 this.$nameSalutation = ko.observable();
                 this.$nameSuffix = ko.observable();
                 this._initialize();
+                this.isFacultyRanksVisible = ko.computed(function () {
+                    return _this.facultyRanks() && _this.facultyRanks().length > 0;
+                });
                 this._setupKendoWidgets();
                 this._setupDisplayNameDerivation();
             }

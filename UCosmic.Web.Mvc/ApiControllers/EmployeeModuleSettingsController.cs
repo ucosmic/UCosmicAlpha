@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
@@ -34,8 +35,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         x => x.FacultyRanks,
                     }
                 });
-            if (employeeModuleSettings == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            // do not throw exception, some tenants may not use settings or faculty ranks
+            if (employeeModuleSettings == null || !employeeModuleSettings.FacultyRanks.Any())
+                return Enumerable.Empty<FacultyRankApiModel>();
 
             var models = Mapper.Map<FacultyRankApiModel[]>(employeeModuleSettings.FacultyRanks);
             return models;

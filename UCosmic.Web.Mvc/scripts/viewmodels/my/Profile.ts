@@ -3,6 +3,7 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
+/// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../datacontext/iemployee.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -26,6 +27,7 @@ module ViewModels.My {
         lastName: KnockoutObservableString = ko.observable();
         suffix: KnockoutObservableString = ko.observable();
 
+        isFacultyRanksVisible: () => bool;
         facultyRanks: KnockoutObservableArray = ko.observableArray();
         facultyRankId: KnockoutObservableNumber = ko.observable();
         jobTitles: KnockoutObservableString = ko.observable();
@@ -41,6 +43,12 @@ module ViewModels.My {
 
         constructor() {
             this._initialize();
+
+            // do not display faculty ranks for tenants that do not have
+            // employee module settings or faculty rank options
+            this.isFacultyRanksVisible = ko.computed((): bool => {
+                return this.facultyRanks() && this.facultyRanks().length > 0;
+            });
 
             this._setupKendoWidgets();
             this._setupDisplayNameDerivation();
