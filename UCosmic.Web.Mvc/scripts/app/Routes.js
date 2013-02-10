@@ -153,6 +153,20 @@ var App;
                 Establishments.Locations = Locations;                
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
+            (function (My) {
+                var Profile = (function () {
+                    function Profile() { }
+                    Profile.get = function get() {
+                        return makeUrl('my/profile');
+                    }
+                    Profile.put = function put() {
+                        return Profile.get();
+                    }
+                    return Profile;
+                })();
+                My.Profile = Profile;                
+            })(WebApi.My || (WebApi.My = {}));
+            var My = WebApi.My;
             (function (People) {
                 (function (Names) {
                     var Salutations = (function () {

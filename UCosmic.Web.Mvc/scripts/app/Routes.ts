@@ -159,6 +159,17 @@ module App.Routes {
 
         }
 
+        export module My {
+            export class Profile {
+                static get (): string {
+                    return makeUrl('my/profile');
+                }
+                static put (): string {
+                    return get();
+                }
+            }
+        }
+
         export module People {
             export module Names {
                 export class Salutations {

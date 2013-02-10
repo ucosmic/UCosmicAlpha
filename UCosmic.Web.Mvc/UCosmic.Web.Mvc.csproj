@@ -292,6 +292,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\EstablishmentLocationsController.cs" />
     <Compile Include="ApiControllers\EstablishmentUrlsController.cs" />
@@ -368,6 +369,7 @@
     <Compile Include="Areas\PeopleDeprecated\PeopleDeprecatedAreaRegistration.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
+    <Compile Include="Controllers\MyProfileController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\EstablishmentsController.cs" />
@@ -419,6 +421,7 @@
     <Compile Include="IdentityDeprecated.UpdateNameController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MyProfileApiModel.cs" />
     <Compile Include="Models\EmployeeModuleSettingsModel.cs" />
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
     <Compile Include="Models\FacultyRankApiModel.cs" />
@@ -442,6 +445,9 @@
     <Compile Include="Models\UserVoiceLinkModel.cs" />
     <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
     <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
+    <Compile Include="MyProfileController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -1535,6 +1541,13 @@
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\ServerApiModel.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
+    <Content Include="scripts\viewmodels\my\Profile.js">
+      <DependentUpon>Profile.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\my\Profile.min.js">
+      <DependentUpon>Profile.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\places\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
@@ -1752,6 +1765,7 @@
     <Content Include="styles\tenants\umn.edu\designs.scss" />
     <Content Include="styles\tenants\usf.edu\designs.scss" />
     <Content Include="Views\People\Index2.cshtml" />
+    <Content Include="Views\MyProfile\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -42,6 +42,7 @@ namespace UCosmic.Web.Mvc
                         "~/scripts/ko/knockout.validation.js",
                         "~/scripts/ko/knockout.binding-handlers.js",
                         "~/scripts/sammy/sammy-{version}.js",
+                        "~/scripts/kendo/2012.3.1114/kendo.web.js",
                         "~/scripts/oss/jquery.placeholder.js",
                         "~/scripts/oss/jquery.animate-enhanced.js",
                         "~/scripts/oss/jquery.autosize.js",
@@ -74,6 +75,10 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/datacontext/employeewebservice.js",
                 "~/scripts/viewmodels/employees/PersonalInfo.js",
                 "~/scripts/viewmodels/employees/PersonalInfo2.js"));
+
+            // my personal profile page
+            bundles.Add(new ScriptBundle("~/bundles/my/profile").Include(
+                "~/scripts/viewmodels/my/Profile.js"));
 
             // bootstrap css bundles
             var tenants = new[]
@@ -117,6 +122,11 @@ namespace UCosmic.Web.Mvc
                         "~/content/themes/base/jquery.ui.datepicker.css",
                         "~/content/themes/base/jquery.ui.progressbar.css",
                         "~/content/themes/base/jquery.ui.theme.css"));
+
+            // KendoUI uniform theme
+            bundles.Add(new StyleBundle("~/kendoui/uniform/css").Include(
+                        "~/content/kendo/2012.3.1114/kendo.common.css",
+                        "~/content/kendo/2012.3.1114/kendo.uniform.css"));
         }
     }
 }

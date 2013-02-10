@@ -36,6 +36,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Web.Mvc.Controllers.T4MVC_EstablishmentsController();
     public static UCosmic.Web.Mvc.Controllers.HomeController Home = new UCosmic.Web.Mvc.Controllers.T4MVC_HomeController();
     public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
+    public static UCosmic.Web.Mvc.Controllers.MyProfileController MyProfile = new UCosmic.Web.Mvc.Controllers.T4MVC_MyProfileController();
     public static UCosmic.Web.Mvc.Controllers.PeopleController People = new UCosmic.Web.Mvc.Controllers.T4MVC_PeopleController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
@@ -2172,6 +2173,17 @@ namespace Links
                 public static readonly string ServerApiModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.min.js") ? Url("ServerApiModel.min.js") : Url("ServerApiModel.js");
                               
                 public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class my {
+                private const string URLPATH = "~/scripts/viewmodels/my";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string Profile_ts = Url("Profile.ts");
+                public static readonly string Profile_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile.min.js") ? Url("Profile.min.js") : Url("Profile.js");
+                              
+                public static readonly string Profile_min_js = Url("Profile.min.js");
             }
         
             public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
