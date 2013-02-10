@@ -27,6 +27,7 @@ var ViewModels;
                 this.isFacultyRanksVisible = ko.computed(function () {
                     return _this.facultyRanks() && _this.facultyRanks().length > 0;
                 });
+                this._setupValidation();
                 this._setupKendoWidgets();
                 this._setupDisplayNameDerivation();
             }
@@ -62,20 +63,54 @@ var ViewModels;
                 });
             };
             Profile.prototype.saveInfo = function (formElement) {
-                var apiModel = ko.mapping.toJS(this);
-                apiModel.revisionId = this._revisionId;
-                apiModel.employeeId = this._employeeId;
-                $.ajax({
-                    url: App.Routes.WebApi.My.Profile.put(),
-                    type: 'PUT',
-                    data: apiModel
-                }).done(function () {
-                }).fail(function () {
-                });
-                $("#accordion").accordion('activate', 1);
+                if(!this.isValid()) {
+                    this.errors.showAllMessages();
+                } else {
+                    var apiModel = ko.mapping.toJS(this);
+                    apiModel.revisionId = this._revisionId;
+                    apiModel.employeeId = this._employeeId;
+                    $.ajax({
+                        url: App.Routes.WebApi.My.Profile.put(),
+                        type: 'PUT',
+                        data: apiModel
+                    }).done(function () {
+                    }).fail(function () {
+                    });
+                    $("#accordion").accordion('activate', 1);
+                }
             };
             Profile.prototype.savePicture = function (formElement) {
                 $("#accordion").accordion('activate', 0);
+            };
+            Profile.prototype._setupValidation = function () {
+                this.displayName.extend({
+                    required: {
+                        message: 'Display name is required.'
+                    },
+                    maxLength: 200
+                });
+                this.salutation.extend({
+                    maxLength: 50
+                });
+                this.firstName.extend({
+                    maxLength: 100
+                });
+                this.middleName.extend({
+                    maxLength: 100
+                });
+                this.lastName.extend({
+                    maxLength: 100
+                });
+                this.suffix.extend({
+                    maxLength: 50
+                });
+                this.jobTitles.extend({
+                    maxLength: 500
+                });
+                this.administrativeAppointments.extend({
+                    maxLength: 500
+                });
+                ko.validation.group(this);
             };
             Profile.prototype._setupKendoWidgets = function () {
                 this.$nameSalutation.subscribe(function (newValue) {

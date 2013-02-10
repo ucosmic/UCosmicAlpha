@@ -13,6 +13,7 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  margin: 0;
   width: 100%;
   max-width: 100%;
   font-size: 16px;
@@ -66,6 +67,8 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
     cursor: not-allowed; }
 
 textarea {
+  margin: 0;
+  vertical-align: bottom;
   height: auto;
   min-height: 38px; }
   textarea.no-resize {
@@ -300,6 +303,8 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
   max-width: 300px; }
 
 .validationMessage {
+  display: inline-block;
+  margin-top: 4px;
   color: #c00;
   font-weight: bold; }
 

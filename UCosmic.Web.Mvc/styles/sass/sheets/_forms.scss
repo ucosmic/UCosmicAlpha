@@ -6,6 +6,7 @@ input[type="date"],  input[type="datetime"], input[type="datetime-local"],
 input[type="month"], input[type="time"],     input[type="week"], textarea {
     -webkit-appearance: none;
     @include border-box;
+    margin: 0;
     width: 100%;
     max-width: 100%;
     @include font-height(16px, 20px);
@@ -41,6 +42,8 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
 }
 
 textarea {
+    margin: 0;
+    vertical-align: bottom;
     height: auto;
     min-height: 38px;
     &.no-resize {
@@ -254,6 +257,8 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
 }
 
 .validationMessage {
+    display: inline-block;
+    margin-top: 4px;
     color: #c00;
     font-weight: bold;
 }

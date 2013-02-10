@@ -86,7 +86,7 @@
                         <div id="accordion" style="">
                             <h2>My Information</h2>
                             <div class="fieldset">
-                                <form data-bind="submit: saveInfo">
+                                <form data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
                                     <div class="field-table w690-l250-v440">
                                         <div class="field-row">
                                             <div class="field-label" style="padding-top: 0;">

@@ -10,7 +10,7 @@
 
 module ViewModels.My {
 
-    export class Profile {
+    export class Profile implements KnockoutValidationGroup {
 
         private _isInitialized: bool = false;
 
@@ -41,6 +41,9 @@ module ViewModels.My {
         $nameSalutation: KnockoutObservableJQuery = ko.observable();
         $nameSuffix: KnockoutObservableJQuery = ko.observable();
 
+        isValid: () => bool;
+        errors: KnockoutValidationErrors;
+
         constructor() {
             this._initialize();
 
@@ -50,6 +53,7 @@ module ViewModels.My {
                 return this.facultyRanks() && this.facultyRanks().length > 0;
             });
 
+            this._setupValidation();
             this._setupKendoWidgets();
             this._setupDisplayNameDerivation();
         }
@@ -102,27 +106,73 @@ module ViewModels.My {
         }
 
         saveInfo(formElement: HTMLFormElement): void {
-            var apiModel = ko.mapping.toJS(this);
-            apiModel.revisionId = this._revisionId;
-            apiModel.employeeId = this._employeeId;
 
-            $.ajax({
-                url: App.Routes.WebApi.My.Profile.put(),
-                type: 'PUT',
-                data: apiModel
-            })
-            .done(() => {
-                // flash feedback message
-            })
-            .fail(() => {
-                //alert('a PUT API call failed :(');
-            });
+            if (!this.isValid()) {
+                this.errors.showAllMessages();
+            }
+            else {
+                var apiModel = ko.mapping.toJS(this);
+                apiModel.revisionId = this._revisionId;
+                apiModel.employeeId = this._employeeId;
 
-            $("#accordion").accordion('activate', 1);	// Open next panel
+                $.ajax({
+                    url: App.Routes.WebApi.My.Profile.put(),
+                    type: 'PUT',
+                    data: apiModel
+                })
+                .done(() => {
+                    // flash feedback message
+                })
+                .fail(() => {
+                    //alert('a PUT API call failed :(');
+                });
+
+                $("#accordion").accordion('activate', 1);	// Open next panel
+            }
         }
 
         savePicture(formElement: HTMLFormElement): void {
             $("#accordion").accordion('activate', 0);	// Open next panel
+        }
+
+        // client validation rules
+        private _setupValidation(): void {
+            this.displayName.extend({
+                required: {
+                    message: 'Display name is required.'
+                },
+                maxLength: 200
+            });
+
+            this.salutation.extend({
+                maxLength: 50
+            });
+
+            this.firstName.extend({
+                maxLength: 100
+            });
+
+            this.middleName.extend({
+                maxLength: 100
+            });
+
+            this.lastName.extend({
+                maxLength: 100
+            });
+
+            this.suffix.extend({
+                maxLength: 50
+            });
+
+            this.jobTitles.extend({
+                maxLength: 500
+            });
+
+            this.administrativeAppointments.extend({
+                maxLength: 500
+            });
+
+            ko.validation.group(this);
         }
 
         // comboboxes for salutation & suffix
