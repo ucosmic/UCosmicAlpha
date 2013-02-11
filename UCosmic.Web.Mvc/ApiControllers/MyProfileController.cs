@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -74,6 +78,45 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, "Personal information was successfully updated.");
+        }
+
+        [GET("photo")]
+        public HttpResponseMessage GetPhoto([FromUri] ImageResizeRequestModel model)
+        {
+            var person = _queryProcessor.Execute(new MyPerson(User)
+            {
+                EagerLoad = new Expression<Func<Person, object>>[]
+                {
+                    x => x.Photo.Binary,
+                }
+            });
+
+            Stream stream;
+            var mimeType = "image/png";
+
+            if (person.Photo != null)
+            {
+                // resize the user's photo image
+                stream = person.Photo.Binary.Content.Resize(model);
+                mimeType = person.Photo.MimeType;
+            }
+            else
+            {
+                // otherwise, return the unisex photo
+                var relativePath = string.Format("~/{0}", Links.images.icons.user.unisex_a_128_png);
+                var absolutePath = HttpContext.Current.Server.MapPath(relativePath);
+                var image = Image.FromFile(absolutePath);
+                stream = new MemoryStream();
+                image.Save(stream, image.RawFormat);
+                stream.Position = 0;
+            }
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream),
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            return response;
         }
 
         [POST("photo")]
