@@ -115,10 +115,12 @@ body
             padding: 8px;
             background-color: transparent;
             .photo {
+                @include border-box;
+                width: 138px;
                 padding-right: 10px;
                 img {
-                    width: 128px;
-                    height: 128px;
+                    max-width: 128px;
+                    max-height: 128px;
                 }
             }
             .name-and-title {

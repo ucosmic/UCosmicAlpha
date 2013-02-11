@@ -94,10 +94,14 @@ body .person-profile {
     padding: 8px;
     background-color: transparent; }
     body .person-profile > .card .photo {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 138px;
       padding-right: 10px; }
       body .person-profile > .card .photo img {
-        width: 128px;
-        height: 128px; }
+        max-width: 128px;
+        max-height: 128px; }
     body .person-profile > .card .name-and-title {
       width: 410px; }
       body .person-profile > .card .name-and-title .display-name {

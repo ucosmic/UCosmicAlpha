@@ -5,6 +5,7 @@ var ViewModels;
             function Profile() {
                 var _this = this;
                 this._isInitialized = false;
+                this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get(128));
                 this.isDisplayNameDerived = ko.observable();
                 this.displayName = ko.observable();
                 this._userDisplayName = '';
@@ -104,6 +105,7 @@ var ViewModels;
                 ko.validation.group(this);
             };
             Profile.prototype._setupKendoWidgets = function () {
+                var _this = this;
                 this.$nameSalutation.subscribe(function (newValue) {
                     if(newValue && newValue.length) {
                         newValue.kendoComboBox({
@@ -142,11 +144,12 @@ var ViewModels;
                                 select: 'Choose a photo to upload...'
                             },
                             async: {
-                                saveUrl: '/api/my/profile/photo',
-                                removeUrl: '/api/my/profile/photo',
+                                saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
+                                removeUrl: App.Routes.WebApi.My.Profile.Photo.del(),
                                 removeVerb: 'DELETE'
                             },
                             success: function (e) {
+                                _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, undefined, undefined, new Date()));
                             },
                             error: function (e) {
                                 alert('there was an error');

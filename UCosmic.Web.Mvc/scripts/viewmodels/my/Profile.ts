@@ -14,6 +14,9 @@ module ViewModels.My {
 
         private _isInitialized: bool = false;
 
+        photoSrc: KnockoutObservableString = ko.observable(
+            App.Routes.WebApi.My.Profile.Photo.get(128));
+
         isDisplayNameDerived: KnockoutObservableBool = ko.observable();
         displayName: KnockoutObservableString = ko.observable();
         private _userDisplayName: string = '';
@@ -205,13 +208,15 @@ module ViewModels.My {
                             select: 'Choose a photo to upload...'
                         },
                         async: {
-                            saveUrl: '/api/my/profile/photo',
-                            removeUrl: '/api/my/profile/photo',
+                            saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
+                            removeUrl: App.Routes.WebApi.My.Profile.Photo.del(),
                             removeVerb: 'DELETE'
                             //batch: true
                         },
                         success: (e: any): void => {
                             //alert('there was success');
+                            this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
+                                undefined, undefined, new Date()));
                         },
                         error: (e: any): void => {
                             alert('there was an error');

@@ -154,17 +154,48 @@ var App;
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
             (function (My) {
-                var Profile = (function () {
-                    function Profile() { }
-                    Profile.get = function get() {
+                (function (Profile) {
+                    function get() {
                         return makeUrl('my/profile');
                     }
-                    Profile.put = function put() {
-                        return Profile.get();
+                    Profile.get = get;
+                    function put() {
+                        return get();
                     }
-                    return Profile;
-                })();
-                My.Profile = Profile;                
+                    Profile.put = put;
+                    var Photo = (function () {
+                        function Photo() { }
+                        Photo.get = function get(maxSide, maxWidth, maxHeight, refresh) {
+                            var url = makeUrl('my/profile/photo');
+                            url += '?';
+                            if(maxSide) {
+                                url += 'maxSide=' + maxSide + '&';
+                            }
+                            if(maxWidth) {
+                                url += 'maxWidth=' + maxWidth + '&';
+                            }
+                            if(maxHeight) {
+                                url += 'maxHeight=' + maxHeight + '&';
+                            }
+                            if(refresh) {
+                                url += 'refresh=' + refresh.toISOString() + '&';
+                            }
+                            if(url.lastIndexOf('&') === url.length - 1) {
+                                url = url.substr(0, url.length - 1);
+                            }
+                            return url;
+                        }
+                        Photo.post = function post() {
+                            return makeUrl('my/profile/photo');
+                        }
+                        Photo.del = function del() {
+                            return Photo.post();
+                        }
+                        return Photo;
+                    })();
+                    Profile.Photo = Photo;                    
+                })(My.Profile || (My.Profile = {}));
+                var Profile = My.Profile;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
             (function (People) {

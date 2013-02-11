@@ -54,8 +54,7 @@
                             <div class="card">
                                 <div class="group">
                                     <div class="on-left photo">
-                                        @*<img src="~/images/icons/user/unisex-a-128.png" alt="" />*@
-                                        <img src="~/images/samples/sample-photo-128.jpg" alt="" />
+                                        <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
                                     </div>
                                     <div class="on-left name-and-title">
                                         <div class="display-name" data-bind="text: displayName"></div>
@@ -90,7 +89,7 @@
                                     <div class="field-table w690-l250-v440">
                                         <div class="field-row">
                                             <div class="field-label" style="padding-top: 0;">
-                                                <img src="~/images/samples/sample-photo-128.jpg" alt="" />
+                                                <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
                                             </div>
                                             <div class="field-input">
                                                 <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />

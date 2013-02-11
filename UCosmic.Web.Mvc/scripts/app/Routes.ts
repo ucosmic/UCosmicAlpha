@@ -160,12 +160,33 @@ module App.Routes {
         }
 
         export module My {
-            export class Profile {
-                static get (): string {
+            export module Profile {
+                export function get (): string {
                     return makeUrl('my/profile');
                 }
-                static put (): string {
+                export function put(): string {
                     return get();
+                }
+                export class Photo {
+                    static get (maxSide?: number, maxWidth?: number, maxHeight?: number,
+                        refresh?: Date): string {
+                        var url = makeUrl('my/profile/photo');
+                        //url = url.substr(0, url.length - 1); // strip trailing slash
+                        url += '?';
+                        if (maxSide) url += 'maxSide=' + maxSide + '&';
+                        if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
+                        if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
+                        if (refresh) url += 'refresh=' + refresh.toISOString() + '&';
+                        if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
+                            url = url.substr(0, url.length - 1);
+                        return url;
+                    }
+                    static post() {
+                        return makeUrl('my/profile/photo');
+                    }
+                    static del() {
+                        return post();
+                    }
                 }
             }
         }
