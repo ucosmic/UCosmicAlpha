@@ -54,8 +54,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("")]
         public HttpResponseMessage Put(MyProfileApiModel model)
         {
-            //var person = _queryProcessor.Execute(new MyPerson(User));
-
             var command = new UpdateMyProfile(User);
             Mapper.Map(model, command);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,17 +21,17 @@ namespace UCosmic.Web.Mvc
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/png"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/gif"));
 
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
-
             // IE8 sometimes uses these mime types
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/pjpeg"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/x-png"));
 
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
         }
 
         public override bool CanReadType(Type type)
         {
-            return type == typeof (FileMedia);
+            // allow this formatter to handle batch requests with multiple files
+            return type == typeof(FileMedia) || typeof(IEnumerable<FileMedia>).IsAssignableFrom(type);
         }
 
         public override bool CanWriteType(Type type)
@@ -51,21 +52,35 @@ namespace UCosmic.Web.Mvc
                 if (t.IsFaulted || t.IsCanceled)
                     throw new HttpResponseException(HttpStatusCode.InternalServerError);
 
-                var fileContent = t.Result.Contents.FirstOrDefault(x => SupportedMediaTypes.Contains(x.Headers.ContentType));
-                if (fileContent == null)
+                var fileContents = t.Result.Contents.Where(x => SupportedMediaTypes.Contains(x.Headers.ContentType))
+                    .ToArray();
+                if (!fileContents.Any())
                 {
                     taskCompletionSource.SetResult(null);
                 }
                 else
                 {
-                    var fileName = fileContent.Headers.ContentDisposition.FileName;
-                    var mediaType = fileContent.Headers.ContentType.MediaType;
-
-                    using (var imgStream = fileContent.ReadAsStreamAsync().Result)
+                    var fileMedias = new List<FileMedia>();
+                    foreach (var fileContent in fileContents)
                     {
-                        var imageBuffer = ReadFully(imgStream);
-                        var result = new FileMedia(fileName, mediaType, imageBuffer);
-                        taskCompletionSource.SetResult(result);
+                        var fileName = fileContent.Headers.ContentDisposition.FileName;
+                        var mediaType = fileContent.Headers.ContentType.MediaType;
+
+                        using (var imgStream = fileContent.ReadAsStreamAsync().Result)
+                        {
+                            var imageBuffer = ReadFully(imgStream);
+                            var result = new FileMedia(fileName, mediaType, imageBuffer);
+                            fileMedias.Add(result);
+                        }
+                    }
+
+                    if (fileMedias.Count == 1)
+                    {
+                        taskCompletionSource.SetResult(fileMedias.Single());
+                    }
+                    else
+                    {
+                        taskCompletionSource.SetResult(fileMedias);
                     }
                 }
             });

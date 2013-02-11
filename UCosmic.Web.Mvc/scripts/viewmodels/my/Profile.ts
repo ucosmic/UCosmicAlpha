@@ -207,6 +207,7 @@ module ViewModels.My {
                         async: {
                             saveUrl: '/api/my/profile/photo',
                             removeUrl: 'removeit'
+                            //batch: true
                         },
                         success: (e: any): void => {
                             //alert('there was success');
