@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
@@ -13,11 +14,11 @@ namespace UCosmic.Domain.People
     {
         protected internal Person()
         {
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
             IsActive = true;
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Affiliations = new Collection<Affiliation>();
             Emails = new Collection<EmailAddress>();
-            Messages = new List<EmailMessage>();
+            Messages = new Collection<EmailMessage>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -30,7 +31,7 @@ namespace UCosmic.Domain.People
         public string LastName { get; protected internal set; }
         public string Suffix { get; protected internal set; }
         public string Gender { get; protected internal set; }
-        public byte[] Picture { get; protected internal set; }
+        public virtual LoadableFile Photo { get; protected internal set; }
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
         public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
     

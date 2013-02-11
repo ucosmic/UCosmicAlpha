@@ -171,6 +171,8 @@
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentNameWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\_Deprecated\ValidateEstablishment.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
+    <Compile Include="Domain\Files\Entities\LoadableFileBinary.cs" />
+    <Compile Include="Domain\Files\Entities\LoadableFile.cs" />
     <Compile Include="Domain\Identity\Commands\CreatePassword.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
     <Compile Include="Api\Validation\EntityWrapper.cs" />
@@ -185,6 +187,8 @@
     <Compile Include="Domain\Identity\Queries\GenerateRandomSecret.cs" />
     <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />
+    <Compile Include="Domain\People\Commands\DeleteMyPhoto.cs" />
+    <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyProfile.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeRegisteredUser.cs" />
     <Compile Include="Domain\Identity\Validation\MustHaveLocalMembershipAccount.cs" />

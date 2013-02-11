@@ -143,7 +143,8 @@ var ViewModels;
                             },
                             async: {
                                 saveUrl: '/api/my/profile/photo',
-                                removeUrl: 'removeit'
+                                removeUrl: '/api/my/profile/photo',
+                                removeVerb: 'DELETE'
                             },
                             success: function (e) {
                             },

@@ -14,7 +14,6 @@ namespace UCosmic.Domain.People
         public bool UserIsRegistered { get; set; }
         public EmailAddress[] EmailAddresses { get; set; }
         public string Gender { get; set; }
-        public byte[] Picture { get; set; }
 
         public Person CreatedPerson { get; internal set; }
 
@@ -69,7 +68,6 @@ namespace UCosmic.Domain.People
                 LastName = command.LastName,
                 DisplayName = command.DisplayName,
                 Gender = command.Gender,
-                Picture = command.Picture,
             };
 
             // attach email addresses

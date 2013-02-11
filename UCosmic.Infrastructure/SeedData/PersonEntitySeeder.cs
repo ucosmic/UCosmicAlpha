@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
@@ -9,10 +10,12 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<UpdateMyPhoto> __updatePhoto;
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
             , IHandleCommands<CreateAffiliation> createAffiliation
+            , IHandleCommands<UpdateMyPhoto> updatePhoto
             , ICommandEntities entities
             , IUnitOfWork unitOfWork
         )
@@ -20,6 +23,7 @@ namespace UCosmic.SeedData
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
+            __updatePhoto = updatePhoto;
         }
 
         public override void Seed()
@@ -261,7 +265,7 @@ namespace UCosmic.SeedData
                 var usf = _queryProcessor.Execute(new EstablishmentByUrl("www.usf.edu"));
                 if (usf == null) throw new Exception("USF Establishment not found.");
 
-                Seed(usf.RevisionId, new CreatePerson
+                var person = Seed(usf.RevisionId, new CreatePerson
                 {
                     FirstName = "Margaret",
                     LastName = "Kusenbach",
@@ -277,11 +281,16 @@ namespace UCosmic.SeedData
                                 IsConfirmed = true,
                             },
                         },
-                    Picture = PeopleImages.BlueGradient128X128Jpeg,
+                });
+                __updatePhoto.Handle(new UpdateMyPhoto(new GenericPrincipal(new GenericIdentity(person.User.Name), null))
+                {
+                    Content = PeopleImages.BlueGradient128X128Jpeg,
+                    Name = "test-photo.jpg",
+                    MimeType = "image/jpg",
                 });
                 /* Affiliations set below. */
 
-                Seed(usf.RevisionId, new CreatePerson
+                person = Seed(usf.RevisionId, new CreatePerson
                 {
                     FirstName = "William",
                     LastName = "Hogarth",
@@ -297,7 +306,12 @@ namespace UCosmic.SeedData
                                     IsConfirmed = true,
                                 },
                         },
-                    Picture = PeopleImages.BlueGradient128X128Jpeg,
+                });
+                __updatePhoto.Handle(new UpdateMyPhoto(new GenericPrincipal(new GenericIdentity(person.User.Name), null))
+                {
+                    Content = PeopleImages.BlueGradient128X128Jpeg,
+                    Name = "test-photo.jpg",
+                    MimeType = "image/jpg",
                 });
                 /* Affiliations set below. */
             } /* USF People */

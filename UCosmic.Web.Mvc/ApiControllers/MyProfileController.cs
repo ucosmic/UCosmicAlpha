@@ -18,14 +18,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class MyProfileController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UpdateMyProfile> _updateHandler;
+        private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
+        private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
+        private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
 
         public MyProfileController(IProcessQueries queryProcessor
-            , IHandleCommands<UpdateMyProfile> updateHandler
+            , IHandleCommands<UpdateMyProfile> profileUpdateHandler
+            , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
+            , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
         )
         {
             _queryProcessor = queryProcessor;
-            _updateHandler = updateHandler;
+            _profileUpdateHandler = profileUpdateHandler;
+            _photoUpdateHandler = photoUpdateHandler;
+            _photoDeleteHandler = photoDeleteHandler;
         }
 
         [GET("")]
@@ -59,7 +65,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             try
             {
-                _updateHandler.Handle(command);
+                _profileUpdateHandler.Handle(command);
             }
             catch (ValidationException ex)
             {
@@ -80,6 +86,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, failMessage);
             }
 
+            _photoUpdateHandler.Handle(new UpdateMyPhoto(User)
+            {
+                Name = photo.FileName,
+                MimeType = photo.ContentType,
+                Content = photo.Content,
+            });
+
             // for some reason, KendoUIWeb's upload widget will only think the upload succeeded
             // when the response is either empty, or contains a JSON payload with text/plain encoding.
             // so if we want to send a message back to the client, we have to serialize it in a JSON wrapper.
@@ -87,6 +100,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var successPayload = new { message = successMessage };
             var successJson = JsonConvert.SerializeObject(successPayload);
             return Request.CreateResponse(HttpStatusCode.OK, successJson, "text/plain");
+        }
+
+        [DELETE("photo")]
+        public HttpResponseMessage DeletePhoto(KendoUploadRemoveFileApiModel model)
+        {
+            _photoDeleteHandler.Handle(new DeleteMyPhoto(User)
+            {
+                FileNames = (model != null) ? model.FileNames : null,
+            });
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

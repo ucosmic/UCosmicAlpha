@@ -206,7 +206,8 @@ module ViewModels.My {
                         },
                         async: {
                             saveUrl: '/api/my/profile/photo',
-                            removeUrl: 'removeit'
+                            removeUrl: '/api/my/profile/photo',
+                            removeVerb: 'DELETE'
                             //batch: true
                         },
                         success: (e: any): void => {

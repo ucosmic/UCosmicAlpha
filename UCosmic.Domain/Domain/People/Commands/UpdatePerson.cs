@@ -3,7 +3,6 @@ using System.Linq;
 using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
-using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.People
 {
@@ -93,7 +92,7 @@ namespace UCosmic.Domain.People
             // log audit
             var personAudit = new CommandEvent
             {
-                RaisedBy = command.FirstName + " " + command.LastName,
+                RaisedBy = System.Threading.Thread.CurrentPrincipal.Identity.Name,
                 Name = command.GetType().FullName,
                 Value = JsonConvert.SerializeObject(new
                 {

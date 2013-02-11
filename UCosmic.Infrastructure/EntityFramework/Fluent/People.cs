@@ -23,6 +23,13 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(true)
             ;
 
+            // has zero or one photo
+            HasOptional(d => d.Photo)
+                .WithOptionalDependent()
+                .Map(m => m.MapKey("PhotoId"))
+                .WillCascadeOnDelete(false)
+            ;
+
             // has many email addresses
             HasMany(p => p.Emails)
                 .WithRequired(d => d.Person)
