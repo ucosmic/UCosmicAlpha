@@ -140,6 +140,10 @@ var ViewModels;
                             multiple: false,
                             localization: {
                                 select: 'Choose a photo to upload...'
+                            },
+                            async: {
+                                saveUrl: '/api/my/profile/photo',
+                                removeUrl: 'removeit'
                             }
                         });
                     }

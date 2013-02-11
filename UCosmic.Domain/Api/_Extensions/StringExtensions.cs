@@ -19,6 +19,16 @@ namespace UCosmic
             return input;
         }
 
+        public static string WithoutEnclosingDoubleQuotes(this string input)
+        {
+            const string doubleQuote = "\"";
+            if (input.StartsWith(doubleQuote))
+                input = input.Substring(1);
+            if (input.EndsWith(doubleQuote))
+                input = input.Substring(0, input.Length - 1);
+            return input;
+        }
+
         public static byte[] ToHexBytes(this string hex)
         {
             if (string.IsNullOrWhiteSpace(hex)) return null;

@@ -12,6 +12,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
+    [Authorize]
     [RoutePrefix("api/my/profile")]
     public class MyProfileController : ApiController
     {
@@ -68,6 +69,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, "Personal information was successfully updated.");
+        }
+
+        [POST("photo")]
+        public HttpResponseMessage PostPhoto(FileMedia photo)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, "Photo was successfully uploaded.");
         }
     }
 }

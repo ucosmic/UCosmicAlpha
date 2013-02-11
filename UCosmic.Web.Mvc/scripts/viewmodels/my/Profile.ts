@@ -203,11 +203,11 @@ module ViewModels.My {
                         multiple: false,
                         localization: {
                             select: 'Choose a photo to upload...'
+                        },
+                        async: {
+                            saveUrl: '/api/my/profile/photo',
+                            removeUrl: 'removeit'
                         }
-                        //async: {
-                        //    saveUrl: 'saveit',
-                        //    removeUrl: 'removeit'
-                        //}
                     });
                 }
             });
