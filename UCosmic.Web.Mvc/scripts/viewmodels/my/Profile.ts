@@ -207,6 +207,12 @@ module ViewModels.My {
                         async: {
                             saveUrl: '/api/my/profile/photo',
                             removeUrl: 'removeit'
+                        },
+                        success: (e: any): void => {
+                            //alert('there was success');
+                        },
+                        error: (e: any): void => {
+                            alert('there was an error');
                         }
                     });
                 }

@@ -19,7 +19,13 @@ namespace UCosmic.Web.Mvc
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/jpg"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/png"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/gif"));
+
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
+
+            // IE8 sometimes uses these mime types
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/pjpeg"));
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/x-png"));
+
         }
 
         public override bool CanReadType(Type type)
@@ -45,15 +51,22 @@ namespace UCosmic.Web.Mvc
                 if (t.IsFaulted || t.IsCanceled)
                     throw new HttpResponseException(HttpStatusCode.InternalServerError);
 
-                var fileContent = t.Result.Contents.First(x => SupportedMediaTypes.Contains(x.Headers.ContentType));
-                var fileName = fileContent.Headers.ContentDisposition.FileName;
-                var mediaType = fileContent.Headers.ContentType.MediaType;
-
-                using (var imgStream = fileContent.ReadAsStreamAsync().Result)
+                var fileContent = t.Result.Contents.FirstOrDefault(x => SupportedMediaTypes.Contains(x.Headers.ContentType));
+                if (fileContent == null)
                 {
-                    var imageBuffer = ReadFully(imgStream);
-                    var result = new FileMedia(fileName, mediaType, imageBuffer);
-                    taskCompletionSource.SetResult(result);
+                    taskCompletionSource.SetResult(null);
+                }
+                else
+                {
+                    var fileName = fileContent.Headers.ContentDisposition.FileName;
+                    var mediaType = fileContent.Headers.ContentType.MediaType;
+
+                    using (var imgStream = fileContent.ReadAsStreamAsync().Result)
+                    {
+                        var imageBuffer = ReadFully(imgStream);
+                        var result = new FileMedia(fileName, mediaType, imageBuffer);
+                        taskCompletionSource.SetResult(result);
+                    }
                 }
             });
 

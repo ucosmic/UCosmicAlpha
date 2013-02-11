@@ -144,6 +144,11 @@ var ViewModels;
                             async: {
                                 saveUrl: '/api/my/profile/photo',
                                 removeUrl: 'removeit'
+                            },
+                            success: function (e) {
+                            },
+                            error: function (e) {
+                                alert('there was an error');
                             }
                         });
                     }
