@@ -8,51 +8,76 @@ namespace UCosmic.Web.Mvc
 {
     public static class ImageResizer
     {
-        public static Stream Resize(this byte[] imageContent, ImageResizeRequestModel resizeParameters)
+        public static Stream ResizeImage(this byte[] imageContent, ImageResizeRequestModel resizeParameters)
         {
             if (imageContent == null) throw new ArgumentNullException("imageContent");
             if (resizeParameters == null) throw new ArgumentNullException("resizeParameters");
 
             Stream stream = new MemoryStream(imageContent);
+            using (var image = Image.FromStream(stream))
+            {
+                return image.ResizeImage(resizeParameters);
+            }
+        }
+
+        public static Stream ResizeImage(this string imagePath, ImageResizeRequestModel resizeParameters)
+        {
+            if (imagePath == null) throw new ArgumentNullException("imagePath");
+            if (resizeParameters == null) throw new ArgumentNullException("resizeParameters");
+
+            using (var image = Image.FromFile(imagePath))
+            {
+                return image.ResizeImage(resizeParameters);
+            }
+        }
+
+        private static Stream ResizeImage(this Image image, ImageResizeRequestModel resizeParameters)
+        {
+            if (image == null) throw new ArgumentNullException("image");
+            if (resizeParameters == null) throw new ArgumentNullException("resizeParameters");
+
+            Stream stream;
             if (resizeParameters.MaxHeight.HasValue ||
                 resizeParameters.MaxWidth.HasValue ||
                 resizeParameters.MaxSide.HasValue)
             {
-                using (var image = Image.FromStream(stream))
+                var targetSize = resizeParameters.GetTargetSize(new Size(image.Width, image.Height));
+                var quality = resizeParameters.GetQuality();
+
+                if (quality == ImageResizeQuality.High)
                 {
-                    var targetSize = resizeParameters.GetTargetSize(new Size(image.Width, image.Height));
-                    var quality = resizeParameters.GetQuality();
-
-                    if (quality == ImageResizeQuality.High)
+                    using (var thumbnailBitmap = new Bitmap(targetSize.Width, targetSize.Height))
                     {
-                        using (var thumbnailBitmap = new Bitmap(targetSize.Width, targetSize.Height))
+                        thumbnailBitmap.SetResolution(72.0f, 72.0f);
+                        using (var thumbnailGraph = Graphics.FromImage(thumbnailBitmap))
                         {
-                            thumbnailBitmap.SetResolution(72.0f, 72.0f);
-                            using (var thumbnailGraph = Graphics.FromImage(thumbnailBitmap))
-                            {
-                                thumbnailGraph.CompositingQuality = CompositingQuality.HighQuality;
-                                thumbnailGraph.SmoothingMode = SmoothingMode.HighQuality;
-                                thumbnailGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            thumbnailGraph.CompositingQuality = CompositingQuality.HighQuality;
+                            thumbnailGraph.SmoothingMode = SmoothingMode.HighQuality;
+                            thumbnailGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                                var imageRectangle = new Rectangle(0, 0, targetSize.Width, targetSize.Height);
-                                thumbnailGraph.DrawImage(image, imageRectangle);
+                            var imageRectangle = new Rectangle(0, 0, targetSize.Width, targetSize.Height);
+                            thumbnailGraph.DrawImage(image, imageRectangle);
 
-                                stream = new MemoryStream();
-                                thumbnailBitmap.Save(stream, image.RawFormat);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var abort = new Image.GetThumbnailImageAbort(() => false);
-                        using (var thumbnailImage = image.GetThumbnailImage(
-                            targetSize.Width, targetSize.Height, abort, IntPtr.Zero))
-                        {
                             stream = new MemoryStream();
-                            thumbnailImage.Save(stream, image.RawFormat);
+                            thumbnailBitmap.Save(stream, image.RawFormat);
                         }
                     }
                 }
+                else
+                {
+                    var abort = new Image.GetThumbnailImageAbort(() => false);
+                    using (var thumbnailImage = image.GetThumbnailImage(
+                        targetSize.Width, targetSize.Height, abort, IntPtr.Zero))
+                    {
+                        stream = new MemoryStream();
+                        thumbnailImage.Save(stream, image.RawFormat);
+                    }
+                }
+            }
+            else
+            {
+                stream = new MemoryStream();
+                image.Save(stream, image.RawFormat);
             }
 
             stream.Position = 0;

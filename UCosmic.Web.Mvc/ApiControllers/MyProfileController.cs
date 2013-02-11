@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
@@ -97,7 +96,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (person.Photo != null)
             {
                 // resize the user's photo image
-                stream = person.Photo.Binary.Content.Resize(model);
+                stream = person.Photo.Binary.Content.ResizeImage(model);
                 mimeType = person.Photo.MimeType;
             }
             else
@@ -105,10 +104,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 // otherwise, return the unisex photo
                 var relativePath = string.Format("~/{0}", Links.images.icons.user.unisex_a_128_png);
                 var absolutePath = HttpContext.Current.Server.MapPath(relativePath);
-                var image = Image.FromFile(absolutePath);
-                stream = new MemoryStream();
-                image.Save(stream, image.RawFormat);
-                stream.Position = 0;
+                stream = absolutePath.ResizeImage(model);
             }
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
