@@ -386,6 +386,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CacheHttpGetAttribute.cs" />
+    <Compile Include="Helpers\FileMediaFormatter.cs" />
     <Compile Include="Helpers\DefaultApiHttpRouteConventionAttribute.cs" />
     <Compile Include="Helpers\EnforceHttpsAttribute.cs" />
     <Compile Include="Helpers\EntityMapper.cs" />
@@ -422,7 +423,6 @@
     <Compile Include="IdentityDeprecated.UpdateNameController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FileMedia.cs" />
     <Compile Include="Models\MyProfileApiModel.cs" />
     <Compile Include="Models\EmployeeModuleSettingsModel.cs" />
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
