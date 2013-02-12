@@ -120,6 +120,8 @@ namespace UCosmic.Web.Mvc
 
         private static Size ReduceByHeight(this Size originalSize, double maxHeight)
         {
+            if (originalSize.Height <= maxHeight) return originalSize;
+
             var scale = maxHeight / originalSize.Height;
             var targetWidth = Math.Round(scale * originalSize.Width);
             var targetHeight = Math.Round(scale * originalSize.Height);
@@ -129,6 +131,8 @@ namespace UCosmic.Web.Mvc
 
         private static Size ReduceByWidth(this Size originalSize, double maxWidth)
         {
+            if (originalSize.Width <= maxWidth) return originalSize;
+
             var scale = maxWidth / originalSize.Width;
             var targetWidth = Math.Round(scale * originalSize.Width);
             var targetHeight = Math.Round(scale * originalSize.Height);
