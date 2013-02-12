@@ -1479,6 +1479,7 @@
     <Content Include="scripts\tinymce\utils\validate.js" />
     <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo2.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\EmailAddresses.ts" />
+    <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\people\EmailAddresses.js">
       <DependentUpon>EmailAddresses.ts</DependentUpon>
     </Content>

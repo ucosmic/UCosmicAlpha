@@ -62,18 +62,13 @@
                                         @if (User.IsInRole(RoleName.EmployeeProfileManager))
                                         {
                                             <div class="admin-only">
-                                                <em>Male, Inactive</em>
+                                                <em><span data-bind="text: genderText"></span>, <span data-bind="text: isActiveText"></span></em>
                                             </div>
                                         }
                                     </div>
                                     <div class="on-left faculty">
-                                        <span class="branded-dark1 badge">Distinguished Professor</span>
-                                        <div class="appointments">
-                                            Senior Advisor on Academic Affairs, United Nations Global Compact (UNGC)
-                                            <br />
-                                            Vice President & Treasurer, American International Recruitment Council (AIRC)
-                                            <br />
-                                            Executive Director, UCosmic Consortium
+                                        <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
+                                        <div class="appointments" data-bind="multilineText: administrativeAppointments">
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +146,7 @@
                                                 <input type="text" data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
                                             </div>
                                         </div>
-                                        <div class="field-row" data-bind="visible: isFacultyRanksVisible">
+                                        <div class="field-row" data-bind="visible: isFacultyRankEditable">
                                             <div class="field-label">
                                                 <label>Faculty rank</label>
                                             </div>
@@ -165,7 +160,7 @@
                                                 <label>My Preferred Title is</label>
                                             </div>
                                             <div class="field-input">
-                                                <textarea rows="2" data-bind="value: jobTitles"></textarea>
+                                                <textarea rows="2" data-bind="value: jobTitles, valueUpdate: 'afterkeydown'"></textarea>
                                             </div>
                                         </div>
                                         <div class="field-row">
@@ -173,7 +168,7 @@
                                                 <label>Administrative Appointments</label>
                                             </div>
                                             <div class="field-input">
-                                                <textarea rows="2" data-bind="value: administrativeAppointments"></textarea>
+                                                <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
                                             </div>
                                         </div>
                                         @if (User.IsInRole(RoleName.EmployeeProfileManager))
@@ -217,38 +212,6 @@
                                 </form>
                             </fieldset>
                         </section>
-                        @*<div id="accordion" style="">
-                            <h2>My Information</h2>
-                            <div class="fieldset">
-                            </div>
-
-                            <h2>My Email Addresses</h2>
-                            <div class="fieldset">
-                                <form data-xbind="submit: saveEmails">
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
-                            </div>
-
-                            <h2>My Affiliations</h2>
-                            <div class="fieldset">
-                                <form data-xbind="submit: saveAffiliations">
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
-                            </div>
-
-                            <h2>My Picture</h2>
-                            <div class="fieldset">
-                                <form data-xbind="submit: savePicture">
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
-                            </div>
-                        </div>*@
                     </div>
                 </div>
             </div>

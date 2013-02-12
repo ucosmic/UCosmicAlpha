@@ -3,7 +3,6 @@ var ViewModels;
     (function (My) {
         var Profile = (function () {
             function Profile() {
-                var _this = this;
                 this._isInitialized = false;
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get(128));
                 this.isDisplayNameDerived = ko.observable();
@@ -26,12 +25,10 @@ var ViewModels;
                 this.$nameSuffix = ko.observable();
                 this.editMode = ko.observable(false);
                 this._initialize();
-                this.isFacultyRanksVisible = ko.computed(function () {
-                    return _this.facultyRanks() && _this.facultyRanks().length > 0;
-                });
                 this._setupValidation();
                 this._setupKendoWidgets();
                 this._setupDisplayNameDerivation();
+                this._setupCardComputeds();
             }
             Profile.prototype._initialize = function () {
                 var _this = this;
@@ -195,6 +192,41 @@ var ViewModels;
                     }
                 }).extend({
                     throttle: 400
+                });
+            };
+            Profile.prototype._setupCardComputeds = function () {
+                var _this = this;
+                this.genderText = ko.computed(function () {
+                    var genderCode = _this.gender();
+                    if(genderCode === 'M') {
+                        return 'Male';
+                    }
+                    if(genderCode === 'F') {
+                        return 'Female';
+                    }
+                    if(genderCode === 'P') {
+                        return 'Gender Undisclosed';
+                    }
+                    return 'Gender Unknown';
+                });
+                this.isActiveText = ko.computed(function () {
+                    return _this.isActive() ? 'Active' : 'Inactive';
+                });
+                this.isFacultyRankEditable = ko.computed(function () {
+                    return _this.facultyRanks() && _this.facultyRanks().length > 0;
+                });
+                this.facultyRankText = ko.computed(function () {
+                    var id = _this.facultyRankId();
+                    for(var i = 0; i < _this.facultyRanks().length; i++) {
+                        var facultyRank = _this.facultyRanks()[i];
+                        if(id === facultyRank.id) {
+                            return facultyRank.rank;
+                        }
+                    }
+                    return undefined;
+                });
+                this.isFacultyRankVisible = ko.computed(function () {
+                    return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
                 });
             };
             return Profile;

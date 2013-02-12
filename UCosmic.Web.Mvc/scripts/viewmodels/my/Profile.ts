@@ -7,6 +7,7 @@
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
+/// <reference path="../employees/ServerApiModel.d.ts" />
 
 module ViewModels.My {
 
@@ -27,14 +28,18 @@ module ViewModels.My {
         lastName: KnockoutObservableString = ko.observable();
         suffix: KnockoutObservableString = ko.observable();
 
-        isFacultyRanksVisible: () => bool;
-        facultyRanks: KnockoutObservableArray = ko.observableArray();
+        isFacultyRankEditable: () => bool;
+        isFacultyRankVisible: () => bool;
+        facultyRankText: () => string;
+        facultyRanks: KnockoutObservableFacultyRankModelArray = ko.observableArray();
         facultyRankId: KnockoutObservableNumber = ko.observable();
         jobTitles: KnockoutObservableString = ko.observable();
         administrativeAppointments: KnockoutObservableString = ko.observable();
 
         gender: KnockoutObservableString = ko.observable();
         isActive: KnockoutObservableBool = ko.observable();
+        genderText: () => string;
+        isActiveText: () => string;
 
         $photo: KnockoutObservableJQuery = ko.observable();
         $facultyRanks: KnockoutObservableJQuery = ko.observable();
@@ -49,15 +54,10 @@ module ViewModels.My {
         constructor() {
             this._initialize();
 
-            // do not display faculty ranks for tenants that do not have
-            // employee module settings or faculty rank options
-            this.isFacultyRanksVisible = ko.computed((): bool => {
-                return this.facultyRanks() && this.facultyRanks().length > 0;
-            });
-
             this._setupValidation();
             this._setupKendoWidgets();
             this._setupDisplayNameDerivation();
+            this._setupCardComputeds();
         }
 
         private _initialize() {
@@ -264,6 +264,51 @@ module ViewModels.My {
                     this.displayName(this._userDisplayName);
                 }
             }).extend({ throttle: 400 }); // wait for observables to stop changing
+        }
+
+        private _setupCardComputeds(): void {
+
+            // text translation for gender codes
+            this.genderText = ko.computed((): string => {
+                var genderCode = this.gender();
+                if (genderCode === 'M') return 'Male';
+                if (genderCode === 'F') return 'Female';
+                if (genderCode === 'P') return 'Gender Undisclosed';
+                return 'Gender Unknown';
+            });
+
+            // friendly string for isActive boolean
+            this.isActiveText = ko.computed((): string => {
+                return this.isActive() ? 'Active' : 'Inactive';
+            });
+
+            // do not display faculty rank editor for tenants that do not have
+            // employee module settings or faculty rank options
+            this.isFacultyRankEditable = ko.computed((): bool => {
+                return this.facultyRanks() && this.facultyRanks().length > 0;
+            });
+
+            // compute the selected faculty rank text
+            this.facultyRankText = ko.computed((): string => {
+                var id = this.facultyRankId();
+                for (var i = 0; i < this.facultyRanks().length; i++) {
+                    var facultyRank: Employees.IServerFacultyRankApiModel = this.facultyRanks()[i];
+                    if (id === facultyRank.id) {
+                        return facultyRank.rank;
+                    }
+                }
+                return undefined;
+            });
+
+            // do not display faculty rank on the form card when it is not set
+            // or when it is set to other
+            this.isFacultyRankVisible = ko.computed((): bool => {
+                return this.isFacultyRankEditable() &&
+                    this.facultyRankId() &&
+                    this.facultyRankText() &&
+                    this.facultyRankText().toLowerCase() !== 'other';
+            });
+
         }
     }
 
