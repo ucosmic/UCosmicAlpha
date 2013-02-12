@@ -7,6 +7,8 @@
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
+/// <reference path="../Spinner.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="../employees/ServerApiModel.d.ts" />
 
 module ViewModels.My {
@@ -14,9 +16,16 @@ module ViewModels.My {
     export class Profile implements KnockoutValidationGroup {
 
         private _isInitialized: bool = false;
+        private _originalValues: IServerProfileApiModel;
 
+        isPhotoExtensionInvalid: KnockoutObservableBool = ko.observable(false);
+        isPhotoTooManyBytes: KnockoutObservableBool = ko.observable(false);
+        isPhotoFailureUnexpected: KnockoutObservableBool = ko.observable(false);
+        photoFileExtension: KnockoutObservableString = ko.observable();
+        photoFileName: KnockoutObservableString = ko.observable();
         photoSrc: KnockoutObservableString = ko.observable(
             App.Routes.WebApi.My.Profile.Photo.get(128));
+        photoSpinner = new Spinner(new SpinnerOptions(400));
 
         isDisplayNameDerived: KnockoutObservableBool = ko.observable();
         displayName: KnockoutObservableString = ko.observable();
@@ -50,6 +59,7 @@ module ViewModels.My {
         isValid: () => bool;
         errors: KnockoutValidationErrors;
         editMode: KnockoutObservableBool = ko.observable(false);
+        saveSpinner = new Spinner(new SpinnerOptions(200));
 
         constructor() {
             this._initialize();
@@ -65,7 +75,7 @@ module ViewModels.My {
             // start both requests at the same time
             var facultyRanksPact = $.Deferred();
             $.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get())
-                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                .done((data: Employees.IServerFacultyRankApiModel[], textStatus: string, jqXHR: JQueryXHR): void => {
                     facultyRanksPact.resolve(data);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -74,7 +84,7 @@ module ViewModels.My {
 
             var viewModelPact = $.Deferred();
             $.get(App.Routes.WebApi.My.Profile.get())
-                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                .done((data: IServerProfileApiModel, textStatus: string, jqXHR: JQueryXHR): void => {
                     viewModelPact.resolve(data);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -85,14 +95,17 @@ module ViewModels.My {
             $.when(facultyRanksPact, viewModelPact).then(
 
                 // all requests succeeded
-                (facultyRanks: any, viewModel: any): void => {
+                (facultyRanks: Employees.IServerFacultyRankApiModel[], viewModel: IServerProfileApiModel): void => {
 
                     this.facultyRanks(facultyRanks); // populate the faculty ranks menu
                     ko.mapping.fromJS(viewModel, { }, this); // populate the scalars
+                    this._originalValues = viewModel;
 
-                    $(this).trigger('ready'); // ready to apply bindings
-                    this._isInitialized = true; // bindings have been applied
-                    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
+                    if (!this._isInitialized) {
+                        $(this).trigger('ready'); // ready to apply bindings
+                        this._isInitialized = true; // bindings have been applied
+                        this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
+                    }
                 },
 
                 // one of the responses failed (never called more than once, even on multifailures)
@@ -101,11 +114,23 @@ module ViewModels.My {
                 });
         }
 
-        startEditing(): void {
+        startEditing(): void { // show the editor
             this.editMode(true);
             if (this.$editSection.length) {
                 this.$editSection.slideDown();
             }
+        }
+
+        stopEditing(): void { // hide the editor
+            this.editMode(false);
+            if (this.$editSection.length) {
+                this.$editSection.slideUp();
+            }
+        }
+
+        cancelEditing(): void {
+            ko.mapping.fromJS(this._originalValues, { }, this); // restore original values
+            this.stopEditing();
         }
 
         saveInfo(formElement: HTMLFormElement): void {
@@ -116,6 +141,7 @@ module ViewModels.My {
             else {
                 var apiModel = ko.mapping.toJS(this);
 
+                this.saveSpinner.start();
                 $.ajax({
                     url: App.Routes.WebApi.My.Profile.put(),
                     type: 'PUT',
@@ -123,13 +149,14 @@ module ViewModels.My {
                 })
                 .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
                     App.flasher.flash(responseText);
-                    if (this.$editSection.length) {
-                        this.$editSection.slideUp();
-                    }
-                    this.editMode(false);
+                    this.stopEditing();
+                    this._initialize(); // re-initialize original values
                 })
                 .fail(() => {
                     //alert('a PUT API call failed :(');
+                })
+                .always((): void => {
+                    this.saveSpinner.stop();
                 });
             }
         }
@@ -218,16 +245,64 @@ module ViewModels.My {
                         async: {
                             saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
                             removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
-                            //removeVerb: 'DELETE'
-                            //batch: true
+                        },
+                        upload: (e: any): void => {
+                            // client-side check for file extension
+                            var allowedExtensions: string[] = ['.png', '.jpg', '.jpeg', '.gif'];
+                            this.isPhotoExtensionInvalid(false);
+                            this.isPhotoTooManyBytes(false);
+                            this.isPhotoFailureUnexpected(false);
+                            $(e.files).each((index: number): void => {
+                                var isExtensionAllowed: bool = false;
+                                var isByteNumberAllowed: bool = false;
+                                var extension: string = e.files[index].extension;
+                                this.photoFileExtension(extension || '[NONE]');
+                                this.photoFileName(e.files[index].name);
+                                for (var i = 0; i < allowedExtensions.length; i++) {
+                                    if (allowedExtensions[i] === extension.toLowerCase()) {
+                                        isExtensionAllowed = true;
+                                        break;
+                                    }
+                                }
+                                if (!isExtensionAllowed) {
+                                    e.preventDefault(); // prevent upload
+                                    this.isPhotoExtensionInvalid(true); // update UI with feedback
+                                }
+                                else if (e.files[index].rawFile.size > (1024 * 1024)) {
+                                    e.preventDefault(); // prevent upload
+                                    this.isPhotoTooManyBytes(true); // update UI with feedback
+                                }
+                            });
+                            if (!e.isDefaultPrevented()) {
+                                this.photoSpinner.start(); // display async wait message
+                            }
+                        },
+                        complete: (): void => {
+                            this.photoSpinner.stop(); // hide async wait message
                         },
                         success: (e: any): void => {
-                            //alert('there was success');
+                            if (e.response && e.response.message) {
+                                App.flasher.flash(e.response.message);
+                            }
                             this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
                                 null, true));
                         },
                         error: (e: any): void => {
-                            alert('there was an error');
+                            // kendo response is as json string, not js object
+                            var fileName: string, fileExtension: string;
+
+                            if (e.files && e.files.length > 0) {
+                                fileName = e.files[0].name;
+                                fileExtension = e.files[0].extension;
+                            }
+                            if (fileName) this.photoFileName(fileName);
+                            if (fileExtension) this.photoFileExtension(fileExtension);
+
+                            if (e.XMLHttpRequest.status === 415)
+                                this.isPhotoExtensionInvalid(true);
+                            else if (e.XMLHttpRequest.status === 413)
+                                this.isPhotoTooManyBytes(true);
+                            else this.isPhotoFailureUnexpected(true);
                         }
                     });
                 }

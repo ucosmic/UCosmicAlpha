@@ -268,7 +268,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
   button[disabled], button[disabled=true], input[type=submit][disabled], input[type=submit][disabled=true], input[type=reset][disabled], input[type=reset][disabled=true], input[type=button][disabled], input[type=button][disabled=true] {
-    cursor: default !important;
+    cursor: not-allowed !important;
     -moz-opacity: 0.5;
     opacity: 0.5;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -295,7 +295,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
   button.link[disabled], button.link[disabled=true], input[type=submit].link[disabled], input[type=submit].link[disabled=true], input[type=reset].link[disabled], input[type=reset].link[disabled=true], input[type=button].link[disabled], input[type=button].link[disabled=true], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled], body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true][disabled=true] {
     color: #555;
     text-decoration: none !important;
-    cursor: default; }
+    cursor: not-allowed; }
 
 .k-upload-button {
   width: auto;

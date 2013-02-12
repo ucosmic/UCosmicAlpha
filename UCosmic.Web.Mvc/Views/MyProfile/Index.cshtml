@@ -87,7 +87,28 @@
                                                 <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
                                             </div>
                                             <div class="field-input">
-                                                <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                                                <div>
+                                                    <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                                                </div>
+                                                <div style="padding-left: 4px;">
+                                                    <div data-bind="visible: isPhotoExtensionInvalid">
+                                                        <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
+                                                            is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
+                                                    </div>
+                                                    <div data-bind="visible: isPhotoTooManyBytes">
+                                                        <span class="validationMessage">The photo &quot;<span data-bind="text: photoFileName"></span>&quot; 
+                                                            is too large. Please choose a photo that is less than 1 megabyte in size.</span>
+                                                    </div>
+                                                    <div data-bind="visible: isPhotoFailureUnexpected">
+                                                        <span class="validationMessage">Your photo upload was not successful, please try again. If you continue to experience
+                                                            unexpected problems, please use the Feedback &amp; Support link on this page to report the issue.
+                                                        </span>
+                                                    </div>
+                                                    <div data-bind="visible: photoSpinner.isVisible" style="padding-top: 4px;">
+                                                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                                        <strong>Uploading...</strong>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="field-row above-unlabeled-row">
@@ -151,7 +172,7 @@
                                                 <label>Faculty rank</label>
                                             </div>
                                             <div class="field-input">
-                                                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
+                                                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
                                                 </select>
                                             </div>
                                         </div>
@@ -205,7 +226,12 @@
                                         }
                                         <div class="field-row">
                                             <div class="field-unlabeled-input">
-                                                <input type="submit" value="Save" />
+                                                <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
+                                                &nbsp;&nbsp;&nbsp;
+                                                <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                                                <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
                                             </div>
                                         </div>
                                     </div>

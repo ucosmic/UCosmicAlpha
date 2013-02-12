@@ -63,6 +63,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("")]
         public HttpResponseMessage Put(MyProfileApiModel model)
         {
+            //System.Threading.Thread.Sleep(2000); // test API latency
+
             var command = new UpdateMyProfile(User);
             Mapper.Map(model, command);
 
@@ -118,12 +120,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("photo")]
         public HttpResponseMessage PostPhoto(FileMedia photo)
         {
-            // when the photo us null, it's because the user tried to upload an invalid file type.
+            //System.Threading.Thread.Sleep(2000); // test API latency
+            //throw new Exception("Oops"); // test unexpected server error
+
+            // when the photo us null, it's because the user tried to upload an invalid file type (415)
             if (photo == null)
-            {
-                const string failMessage = "Photo was not successfully uploaded.";
-                return Request.CreateResponse(HttpStatusCode.BadRequest, failMessage);
-            }
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+            // do not allow photo uploads exceeding 1MB (413)
+            if (photo.Content.Length > (1024 * 1024))
+                throw new HttpResponseException(HttpStatusCode.RequestEntityTooLarge);
 
             _photoUpdateHandler.Handle(new UpdateMyPhoto(User)
             {
@@ -135,7 +141,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             // for some reason, KendoUIWeb's upload widget will only think the upload succeeded
             // when the response is either empty, or contains a JSON payload with text/plain encoding.
             // so if we want to send a message back to the client, we have to serialize it in a JSON wrapper.
-            const string successMessage = "Photo was successfully uploaded.";
+            const string successMessage = "Your photo was changed successfully.";
             var successPayload = new { message = successMessage };
             var successJson = JsonConvert.SerializeObject(successPayload);
             return Request.CreateResponse(HttpStatusCode.OK, successJson, "text/plain");

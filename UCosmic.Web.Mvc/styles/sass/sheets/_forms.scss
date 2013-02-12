@@ -223,7 +223,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
         @include opacity(1);
     }
     &[disabled], &[disabled=true] {
-        cursor: default !important;
+        cursor: not-allowed !important;
         @include opacity(.5);
     }
 }
@@ -247,7 +247,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
     &[disabled], &[disabled=true] {
         color: #555;
         text-decoration: none !important;
-        cursor: default;
+        cursor: not-allowed;
     }
 }
 

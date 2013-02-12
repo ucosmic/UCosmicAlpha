@@ -80,6 +80,7 @@ namespace UCosmic.Web.Mvc
 
             // my personal profile page
             bundles.Add(new ScriptBundle("~/bundles/my/profile").Include(
+                "~/scripts/viewmodels/Spinner.js",
                 "~/scripts/viewmodels/my/Profile.js"));
 
             // bootstrap css bundles

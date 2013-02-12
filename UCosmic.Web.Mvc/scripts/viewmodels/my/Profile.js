@@ -4,7 +4,13 @@ var ViewModels;
         var Profile = (function () {
             function Profile() {
                 this._isInitialized = false;
+                this.isPhotoExtensionInvalid = ko.observable(false);
+                this.isPhotoTooManyBytes = ko.observable(false);
+                this.isPhotoFailureUnexpected = ko.observable(false);
+                this.photoFileExtension = ko.observable();
+                this.photoFileName = ko.observable();
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get(128));
+                this.photoSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
                 this.isDisplayNameDerived = ko.observable();
                 this.displayName = ko.observable();
                 this._userDisplayName = '';
@@ -24,6 +30,7 @@ var ViewModels;
                 this.$nameSalutation = ko.observable();
                 this.$nameSuffix = ko.observable();
                 this.editMode = ko.observable(false);
+                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this._initialize();
                 this._setupValidation();
                 this._setupKendoWidgets();
@@ -48,9 +55,12 @@ var ViewModels;
                     _this.facultyRanks(facultyRanks);
                     ko.mapping.fromJS(viewModel, {
                     }, _this);
-                    $(_this).trigger('ready');
-                    _this._isInitialized = true;
-                    _this.$facultyRanks().kendoDropDownList();
+                    _this._originalValues = viewModel;
+                    if(!_this._isInitialized) {
+                        $(_this).trigger('ready');
+                        _this._isInitialized = true;
+                        _this.$facultyRanks().kendoDropDownList();
+                    }
                 }, function (xhr, textStatus, errorThrown) {
                 });
             };
@@ -60,23 +70,35 @@ var ViewModels;
                     this.$editSection.slideDown();
                 }
             };
+            Profile.prototype.stopEditing = function () {
+                this.editMode(false);
+                if(this.$editSection.length) {
+                    this.$editSection.slideUp();
+                }
+            };
+            Profile.prototype.cancelEditing = function () {
+                ko.mapping.fromJS(this._originalValues, {
+                }, this);
+                this.stopEditing();
+            };
             Profile.prototype.saveInfo = function (formElement) {
                 var _this = this;
                 if(!this.isValid()) {
                     this.errors.showAllMessages();
                 } else {
                     var apiModel = ko.mapping.toJS(this);
+                    this.saveSpinner.start();
                     $.ajax({
                         url: App.Routes.WebApi.My.Profile.put(),
                         type: 'PUT',
                         data: apiModel
                     }).done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
-                        if(_this.$editSection.length) {
-                            _this.$editSection.slideUp();
-                        }
-                        _this.editMode(false);
+                        _this.stopEditing();
+                        _this._initialize();
                     }).fail(function () {
+                    }).always(function () {
+                        _this.saveSpinner.stop();
                     });
                 }
             };
@@ -154,11 +176,72 @@ var ViewModels;
                                 saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
                                 removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
                             },
+                            upload: function (e) {
+                                var allowedExtensions = [
+                                    '.png', 
+                                    '.jpg', 
+                                    '.jpeg', 
+                                    '.gif'
+                                ];
+                                _this.isPhotoExtensionInvalid(false);
+                                _this.isPhotoTooManyBytes(false);
+                                _this.isPhotoFailureUnexpected(false);
+                                $(e.files).each(function (index) {
+                                    var isExtensionAllowed = false;
+                                    var isByteNumberAllowed = false;
+                                    var extension = e.files[index].extension;
+                                    _this.photoFileExtension(extension || '[NONE]');
+                                    _this.photoFileName(e.files[index].name);
+                                    for(var i = 0; i < allowedExtensions.length; i++) {
+                                        if(allowedExtensions[i] === extension.toLowerCase()) {
+                                            isExtensionAllowed = true;
+                                            break;
+                                        }
+                                    }
+                                    if(!isExtensionAllowed) {
+                                        e.preventDefault();
+                                        _this.isPhotoExtensionInvalid(true);
+                                    } else {
+                                        if(e.files[index].rawFile.size > (1024 * 1024)) {
+                                            e.preventDefault();
+                                            _this.isPhotoTooManyBytes(true);
+                                        }
+                                    }
+                                });
+                                if(!e.isDefaultPrevented()) {
+                                    _this.photoSpinner.start();
+                                }
+                            },
+                            complete: function () {
+                                _this.photoSpinner.stop();
+                            },
                             success: function (e) {
+                                if(e.response && e.response.message) {
+                                    App.flasher.flash(e.response.message);
+                                }
                                 _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
                             },
                             error: function (e) {
-                                alert('there was an error');
+                                var fileName, fileExtension;
+                                if(e.files && e.files.length > 0) {
+                                    fileName = e.files[0].name;
+                                    fileExtension = e.files[0].extension;
+                                }
+                                if(fileName) {
+                                    _this.photoFileName(fileName);
+                                }
+                                if(fileExtension) {
+                                    _this.photoFileExtension(fileExtension);
+                                }
+                                if(e.XMLHttpRequest.status === 415) {
+                                    _this.isPhotoExtensionInvalid(true);
+                                } else {
+                                    if(e.XMLHttpRequest.status === 413) {
+                                        _this.isPhotoTooManyBytes(true);
+                                    } else {
+                                        _this.isPhotoFailureUnexpected(true);
+                                    }
+                                }
                             }
                         });
                     }

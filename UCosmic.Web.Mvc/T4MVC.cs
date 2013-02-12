@@ -2114,6 +2114,14 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class employees {
+                private const string URLPATH = "~/scripts/viewmodels/employees";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class establishments {
                 private const string URLPATH = "~/scripts/viewmodels/establishments";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2165,6 +2173,7 @@ namespace Links
                 public static readonly string Profile_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile.min.js") ? Url("Profile.min.js") : Url("Profile.js");
                               
                 public static readonly string Profile_min_js = Url("Profile.min.js");
+                public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }
         
             public static readonly string PagedSearch_ts = Url("PagedSearch.ts");

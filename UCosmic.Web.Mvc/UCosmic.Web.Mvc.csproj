@@ -1480,6 +1480,7 @@
     <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo2.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\EmailAddresses.ts" />
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
+    <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\people\EmailAddresses.js">
       <DependentUpon>EmailAddresses.ts</DependentUpon>
     </Content>
