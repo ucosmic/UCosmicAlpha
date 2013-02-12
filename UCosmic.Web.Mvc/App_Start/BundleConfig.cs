@@ -77,8 +77,6 @@ namespace UCosmic.Web.Mvc
                 //"~/scripts/viewmodels/people/PersonalInfo2.js"),
                 "~/scripts/viewmodels/people/PersonalInfo3.js",
                 "~/scripts/viewmodels/people/EmailAddresses.js"));
-                "~/scripts/viewmodels/employees/PersonalInfo.js",
-                "~/scripts/viewmodels/employees/PersonalInfo2.js"));
 
             // my personal profile page
             bundles.Add(new ScriptBundle("~/bundles/my/profile").Include(

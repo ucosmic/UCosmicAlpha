@@ -293,7 +293,6 @@ namespace Links
             public static readonly string people_ts = Url("people.ts");
             public static readonly string people_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/people.min.js") ? Url("people.min.js") : Url("people.js");
                           
-            public static readonly string employeemockservice_min_js = Url("employeemockservice.min.js");
             public static readonly string people_min_js = Url("people.min.js");
             public static readonly string peoplewebservice_ts = Url("peoplewebservice.ts");
             public static readonly string peoplewebservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/peoplewebservice.min.js") ? Url("peoplewebservice.min.js") : Url("peoplewebservice.js");
@@ -2180,6 +2179,7 @@ namespace Links
                 public static readonly string EmailAddresses_ts = Url("EmailAddresses.ts");
                 public static readonly string EmailAddresses_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EmailAddresses.min.js") ? Url("EmailAddresses.min.js") : Url("EmailAddresses.js");
                               
+                public static readonly string EmailAddresses_min_js = Url("EmailAddresses.min.js");
                 public static readonly string PersonalInfo_ts = Url("PersonalInfo.ts");
                 public static readonly string PersonalInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PersonalInfo.min.js") ? Url("PersonalInfo.min.js") : Url("PersonalInfo.js");
                               
