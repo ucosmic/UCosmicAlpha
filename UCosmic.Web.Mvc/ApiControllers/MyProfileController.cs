@@ -47,6 +47,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EagerLoad = new Expression<Func<Person, object>>[]
                 {
                     x => x.Employee,
+                    x => x.Photo,
                 }
             });
 
@@ -150,6 +151,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("photo")]
         public HttpResponseMessage DeletePhoto()
         {
+            //System.Threading.Thread.Sleep(2000); // test API latency
+            //throw new Exception("Oops"); // test unexpected server error
+
             /*
              * Do not use this endpoint for KendoUIWeb's Upload widget. See the
              * KendoRemovePhoto action comment below. This action is for deleting
@@ -158,7 +162,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             _photoDeleteHandler.Handle(new DeleteMyPhoto(User));
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.OK, "Your photo was deleted successfully.");
         }
 
         [POST("photo/kendo-remove")]

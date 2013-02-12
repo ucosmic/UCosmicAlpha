@@ -25,8 +25,6 @@
             $(viewModel).on('ready', function () {
                 ko.applyBindings(viewModel, $('#my_profile')[0]);
             });
-            $("#accordion").accordion();
-            $("#accordion").removeClass("ui-widget");
         });
 
     </script>
@@ -91,6 +89,17 @@
                                                     <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
                                                 </div>
                                                 <div style="padding-left: 4px;">
+                                                    <div data-bind="visible: hasPhoto" style="padding-top: 4px;">
+                                                        <input type="button" value="Delete my photo" data-bind="click: startDeletingPhoto, attr: { disabled: photoDeleteSpinner.isVisible } " />
+                                                        <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                                    </div>
+                                                    <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                                                        <div>
+                                                            <p>
+                                                                Are you sure you want to delete your profile photo?
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                     <div data-bind="visible: isPhotoExtensionInvalid">
                                                         <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
                                                             is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
@@ -100,11 +109,11 @@
                                                             is too large. Please choose a photo that is less than 1 megabyte in size.</span>
                                                     </div>
                                                     <div data-bind="visible: isPhotoFailureUnexpected">
-                                                        <span class="validationMessage">Your photo upload was not successful, please try again. If you continue to experience
-                                                            unexpected problems, please use the Feedback &amp; Support link on this page to report the issue.
+                                                        <span class="validationMessage">UCosmic experienced an unexpected error managing your photo, please try again. 
+                                                            If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
                                                         </span>
                                                     </div>
-                                                    <div data-bind="visible: photoSpinner.isVisible" style="padding-top: 4px;">
+                                                    <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px;">
                                                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                                                         <strong>Uploading...</strong>
                                                     </div>

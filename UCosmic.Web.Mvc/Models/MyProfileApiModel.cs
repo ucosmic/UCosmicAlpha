@@ -16,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public string LastName { get; set; }
         public string Suffix { get; set; }
         public string Gender { get; set; }
+        public bool HasPhoto { get; set; }
 
         /* From Employee */
         public int? FacultyRankId { get; set; }
@@ -30,6 +31,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<Person, MyProfileApiModel>()
+                    .ForMember(d => d.HasPhoto, o => o.MapFrom(s => s.Photo != null))
                     .ForMember(d => d.FacultyRankId, o => o.MapFrom(s =>
                         (s.Employee != null && s.Employee.FacultyRank != null) ? s.Employee.FacultyRank.Id : (int?)null))
                     .ForMember(d => d.AdministrativeAppointments, o => o.MapFrom(s =>

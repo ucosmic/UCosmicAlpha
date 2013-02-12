@@ -4,13 +4,15 @@ var ViewModels;
         var Profile = (function () {
             function Profile() {
                 this._isInitialized = false;
+                this.hasPhoto = ko.observable();
                 this.isPhotoExtensionInvalid = ko.observable(false);
                 this.isPhotoTooManyBytes = ko.observable(false);
                 this.isPhotoFailureUnexpected = ko.observable(false);
                 this.photoFileExtension = ko.observable();
                 this.photoFileName = ko.observable();
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get(128));
-                this.photoSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+                this.photoUploadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+                this.photoDeleteSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
                 this.isDisplayNameDerived = ko.observable();
                 this.displayName = ko.observable();
                 this._userDisplayName = '';
@@ -81,7 +83,7 @@ var ViewModels;
                 }, this);
                 this.stopEditing();
             };
-            Profile.prototype.saveInfo = function (formElement) {
+            Profile.prototype.saveInfo = function () {
                 var _this = this;
                 if(!this.isValid()) {
                     this.errors.showAllMessages();
@@ -101,6 +103,59 @@ var ViewModels;
                         _this.saveSpinner.stop();
                     });
                 }
+            };
+            Profile.prototype.startDeletingPhoto = function () {
+                var _this = this;
+                if(this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
+                    this.$confirmPurgeDialog.dialog({
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: 'Yes, confirm delete',
+                                click: function () {
+                                    _this.$confirmPurgeDialog.dialog('close');
+                                    _this._deletePhoto();
+                                }
+                            }, 
+                            {
+                                text: 'No, cancel delete',
+                                click: function () {
+                                    _this.$confirmPurgeDialog.dialog('close');
+                                    _this.photoDeleteSpinner.stop();
+                                },
+                                'data-css-link': true
+                            }
+                        ]
+                    });
+                } else {
+                    if(confirm('Are you sure you want to delete your profile photo?')) {
+                        this._deletePhoto();
+                    }
+                }
+            };
+            Profile.prototype._deletePhoto = function () {
+                var _this = this;
+                this.photoDeleteSpinner.start();
+                this.isPhotoExtensionInvalid(false);
+                this.isPhotoTooManyBytes(false);
+                this.isPhotoFailureUnexpected(false);
+                $.ajax({
+                    url: App.Routes.WebApi.My.Profile.Photo.del(),
+                    type: 'DELETE'
+                }).always(function () {
+                    _this.photoDeleteSpinner.stop();
+                }).done(function (response, statusText, xhr) {
+                    if(typeof response === 'string') {
+                        App.flasher.flash(response);
+                    }
+                    _this.hasPhoto(false);
+                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
+                }).fail(function () {
+                    _this.isPhotoFailureUnexpected(true);
+                });
             };
             Profile.prototype._setupValidation = function () {
                 this.displayName.extend({
@@ -209,17 +264,20 @@ var ViewModels;
                                     }
                                 });
                                 if(!e.isDefaultPrevented()) {
-                                    _this.photoSpinner.start();
+                                    _this.photoUploadSpinner.start();
                                 }
                             },
                             complete: function () {
-                                _this.photoSpinner.stop();
+                                _this.photoUploadSpinner.stop();
                             },
                             success: function (e) {
-                                if(e.response && e.response.message) {
-                                    App.flasher.flash(e.response.message);
+                                if(e.operation == 'upload') {
+                                    if(e.response && e.response.message) {
+                                        App.flasher.flash(e.response.message);
+                                    }
+                                    _this.hasPhoto(true);
+                                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
                                 }
-                                _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
                             },
                             error: function (e) {
                                 var fileName, fileExtension;

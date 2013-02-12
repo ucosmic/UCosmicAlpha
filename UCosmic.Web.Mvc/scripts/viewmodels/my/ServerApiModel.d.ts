@@ -8,6 +8,7 @@
 module ViewModels.My {
 
     export interface IServerProfileApiModel {
+        hasPhoto: bool;
         isActive: bool;
         isDisplayNameDerived: bool;
         displayName: string;

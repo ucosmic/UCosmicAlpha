@@ -18,6 +18,7 @@ module ViewModels.My {
         private _isInitialized: bool = false;
         private _originalValues: IServerProfileApiModel;
 
+        hasPhoto: KnockoutObservableBool = ko.observable();
         isPhotoExtensionInvalid: KnockoutObservableBool = ko.observable(false);
         isPhotoTooManyBytes: KnockoutObservableBool = ko.observable(false);
         isPhotoFailureUnexpected: KnockoutObservableBool = ko.observable(false);
@@ -25,7 +26,8 @@ module ViewModels.My {
         photoFileName: KnockoutObservableString = ko.observable();
         photoSrc: KnockoutObservableString = ko.observable(
             App.Routes.WebApi.My.Profile.Photo.get(128));
-        photoSpinner = new Spinner(new SpinnerOptions(400));
+        photoUploadSpinner = new Spinner(new SpinnerOptions(400));
+        photoDeleteSpinner = new Spinner(new SpinnerOptions(400));
 
         isDisplayNameDerived: KnockoutObservableBool = ko.observable();
         displayName: KnockoutObservableString = ko.observable();
@@ -55,6 +57,7 @@ module ViewModels.My {
         $nameSalutation: KnockoutObservableJQuery = ko.observable();
         $nameSuffix: KnockoutObservableJQuery = ko.observable();
         $editSection: JQuery;
+        $confirmPurgeDialog: JQuery;
 
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -98,7 +101,7 @@ module ViewModels.My {
                 (facultyRanks: Employees.IServerFacultyRankApiModel[], viewModel: IServerProfileApiModel): void => {
 
                     this.facultyRanks(facultyRanks); // populate the faculty ranks menu
-                    ko.mapping.fromJS(viewModel, { }, this); // populate the scalars
+                    ko.mapping.fromJS(viewModel, {}, this); // populate the scalars
                     this._originalValues = viewModel;
 
                     if (!this._isInitialized) {
@@ -129,11 +132,11 @@ module ViewModels.My {
         }
 
         cancelEditing(): void {
-            ko.mapping.fromJS(this._originalValues, { }, this); // restore original values
+            ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
             this.stopEditing();
         }
 
-        saveInfo(formElement: HTMLFormElement): void {
+        saveInfo(): void {
 
             if (!this.isValid()) {
                 this.errors.showAllMessages();
@@ -159,6 +162,60 @@ module ViewModels.My {
                     this.saveSpinner.stop();
                 });
             }
+        }
+
+        startDeletingPhoto(): void {
+            if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
+                this.$confirmPurgeDialog.dialog({
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'Yes, confirm delete',
+                            click: (): void => {
+                                this.$confirmPurgeDialog.dialog('close');
+                                this._deletePhoto();
+                            }
+                        },
+                        {
+                            text: 'No, cancel delete',
+                            click: (): void => {
+                                this.$confirmPurgeDialog.dialog('close');
+                                this.photoDeleteSpinner.stop();
+                            },
+                            'data-css-link': true
+                        }
+                    ]
+                });
+            }
+            else if (confirm('Are you sure you want to delete your profile photo?')) {
+                this._deletePhoto();
+            }
+        }
+
+        private _deletePhoto(): void {
+            this.photoDeleteSpinner.start();
+            this.isPhotoExtensionInvalid(false);
+            this.isPhotoTooManyBytes(false);
+            this.isPhotoFailureUnexpected(false);
+            $.ajax({ // submit ajax DELETE request
+                url: App.Routes.WebApi.My.Profile.Photo.del(),
+                type: 'DELETE'
+            })
+            .always((): void => {
+                this.photoDeleteSpinner.stop();
+            })
+            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                if (typeof response === 'string') App.flasher.flash(response);
+                this.hasPhoto(false);
+                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
+                    null, true));
+            })
+            .fail((): void => {
+                this.isPhotoFailureUnexpected(true);
+            });
         }
 
         // client validation rules
@@ -234,6 +291,7 @@ module ViewModels.My {
                     });
             });
 
+            // this is getting a little long, can probably factor out event handlers / validation stuff
             this.$photo.subscribe((newValue: JQuery): void => {
                 if (newValue && newValue.length) {
                     newValue.kendoUpload({
@@ -274,18 +332,23 @@ module ViewModels.My {
                                 }
                             });
                             if (!e.isDefaultPrevented()) {
-                                this.photoSpinner.start(); // display async wait message
+                                this.photoUploadSpinner.start(); // display async wait message
                             }
                         },
                         complete: (): void => {
-                            this.photoSpinner.stop(); // hide async wait message
+                            this.photoUploadSpinner.stop(); // hide async wait message
                         },
                         success: (e: any): void => {
-                            if (e.response && e.response.message) {
-                                App.flasher.flash(e.response.message);
+                            // this event is triggered by both upload and remove requests
+                            // ignore remove operations becuase they don't actually do anything
+                            if (e.operation == 'upload') {
+                                if (e.response && e.response.message) {
+                                    App.flasher.flash(e.response.message);
+                                }
+                                this.hasPhoto(true);
+                                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
+                                    null, true));
                             }
-                            this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
-                                null, true));
                         },
                         error: (e: any): void => {
                             // kendo response is as json string, not js object
