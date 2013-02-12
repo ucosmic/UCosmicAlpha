@@ -20,11 +20,15 @@
 
     <script type="text/javascript">
 
-        $(function () {
+        $(function() {
             var viewModel = new ViewModels.My.Profile();
-            $(viewModel).on('ready', function () {
+            $(viewModel).on('ready', function() {
                 ko.applyBindings(viewModel, $('#my_profile')[0]);
             });
+            $('#tabstrip').kendoTabStrip({
+                animation: false
+            })
+            .show();
         });
 
     </script>
@@ -39,7 +43,7 @@
     </nav>
 }
 
-<div id="my_profile" class="content fixed to-top" data-current-module="home">
+<div class="content fixed to-top" data-current-module="home">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
@@ -48,205 +52,235 @@
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
-                        <div class="person-profile" data-bind="click: startEditing, css: { clickable: !editMode() }">
-                            <div class="card">
-                                <div class="group">
-                                    <div class="on-left photo">
-                                        <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
-                                    </div>
-                                    <div class="on-left name-and-title">
-                                        <div class="display-name" data-bind="text: displayName"></div>
-                                        <div class="titles" data-bind="multilineText: jobTitles"></div>
-                                        @if (User.IsInRole(RoleName.EmployeeProfileManager))
-                                        {
-                                            <div class="admin-only">
-                                                <em><span data-bind="text: genderText"></span>, <span data-bind="text: isActiveText"></span></em>
+                        <div id="my_profile">
+                            <section class="person-profile" data-bind="click: startEditing, css: { clickable: !editMode() }">
+                                <div class="card">
+                                    <div class="group">
+                                        <div class="on-left photo">
+                                            <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
+                                        </div>
+                                        <div class="on-left name-and-title">
+                                            <div class="display-name" data-bind="text: displayName"></div>
+                                            <div class="titles" data-bind="multilineText: jobTitles"></div>
+                                            @if (User.IsInRole(RoleName.EmployeeProfileManager))
+                                            {
+                                                <div class="admin-only">
+                                                    <em><span data-bind="text: genderText"></span>, <span data-bind="text: isActiveText"></span></em>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="on-left faculty">
+                                            <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
+                                            <div class="appointments" data-bind="multilineText: administrativeAppointments">
                                             </div>
-                                        }
-                                    </div>
-                                    <div class="on-left faculty">
-                                        <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
-                                        <div class="appointments" data-bind="multilineText: administrativeAppointments">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="action">
-                                Click to edit
-                            </div>
-                        </div>
-                        <section style="display: none;" data-bind="jqElement: '$editSection'">
-                            <fieldset class="no-sidebar">
-                                <legend>Edit @customProfileTitle</legend>
-                                <form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
-                                    <div class="field-table w870-l300-v570">
-                                        <div class="field-row">
-                                            <div class="field-label" style="padding-top: 0;">
-                                                <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
-                                            </div>
-                                            <div class="field-input">
-                                                <div>
-                                                    <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                                <div class="action">
+                                    Click to edit
+                                </div>
+                            </section>
+                            <section style="display: none;" data-bind="jqElement: '$editSection'">
+                                <fieldset class="no-sidebar">
+                                    <legend>Edit @customProfileTitle</legend>
+                                    <form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                                        <div class="field-table w870-l300-v570">
+                                            <div class="field-row">
+                                                <div class="field-label" style="padding-top: 0;">
+                                                    <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
                                                 </div>
-                                                <div style="padding-left: 4px;">
-                                                    <div data-bind="visible: hasPhoto" style="padding-top: 4px;">
-                                                        <input type="button" value="Delete my photo" data-bind="click: startDeletingPhoto, attr: { disabled: photoDeleteSpinner.isVisible } " />
-                                                        <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                                <div class="field-input">
+                                                    <div>
+                                                        <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
                                                     </div>
-                                                    <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
-                                                        <div>
-                                                            <p>
-                                                                Are you sure you want to delete your profile photo?
-                                                            </p>
+                                                    <div style="padding-left: 4px;">
+                                                        <div data-bind="visible: hasPhoto" style="padding-top: 4px;">
+                                                            <input type="button" value="Delete my photo" data-bind="click: startDeletingPhoto, attr: { disabled: photoDeleteSpinner.isVisible } " />
+                                                            <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                                        </div>
+                                                        <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                                                            <div>
+                                                                <p>
+                                                                    Are you sure you want to delete your profile photo?
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div data-bind="visible: isPhotoExtensionInvalid">
+                                                            <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
+                                                                is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
+                                                        </div>
+                                                        <div data-bind="visible: isPhotoTooManyBytes">
+                                                            <span class="validationMessage">The photo &quot;<span data-bind="text: photoFileName"></span>&quot; 
+                                                                is too large. Please choose a photo that is less than 1 megabyte in size.</span>
+                                                        </div>
+                                                        <div data-bind="visible: isPhotoFailureUnexpected">
+                                                            <span class="validationMessage">UCosmic experienced an unexpected error managing your photo, please try again. 
+                                                                If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
+                                                            </span>
+                                                        </div>
+                                                        <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px;">
+                                                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                                            <strong>Uploading...</strong>
                                                         </div>
                                                     </div>
-                                                    <div data-bind="visible: isPhotoExtensionInvalid">
-                                                        <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
-                                                            is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
-                                                    </div>
-                                                    <div data-bind="visible: isPhotoTooManyBytes">
-                                                        <span class="validationMessage">The photo &quot;<span data-bind="text: photoFileName"></span>&quot; 
-                                                            is too large. Please choose a photo that is less than 1 megabyte in size.</span>
-                                                    </div>
-                                                    <div data-bind="visible: isPhotoFailureUnexpected">
-                                                        <span class="validationMessage">UCosmic experienced an unexpected error managing your photo, please try again. 
-                                                            If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
-                                                        </span>
-                                                    </div>
-                                                    <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px;">
-                                                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                                                        <strong>Uploading...</strong>
-                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="field-row above-unlabeled-row">
-                                            <div class="field-label">
-                                                <label>Display name</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <input type="text" data-bind="value: displayName, valueUpdate: 'afterkeydown', attr: { disabled: isDisplayNameDerived }" />
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-unlabeled-input">
-                                                <label>
-                                                    <input type="checkbox" data-bind="checked: isDisplayNameDerived" />
-                                                    Automatically generate my display name based on the fields below.
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>Salutation</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <input type="text" data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>First name</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <input type="text" data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>Middle name or initial</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <input type="text" data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>Last name</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <input type="text" data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>Suffix</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <input type="text" data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
-                                            </div>
-                                        </div>
-                                        <div class="field-row" data-bind="visible: isFacultyRankEditable">
-                                            <div class="field-label">
-                                                <label>Faculty rank</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>My Preferred Title is</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <textarea rows="2" data-bind="value: jobTitles, valueUpdate: 'afterkeydown'"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="field-row">
-                                            <div class="field-label">
-                                                <label>Administrative Appointments</label>
-                                            </div>
-                                            <div class="field-input">
-                                                <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
-                                            </div>
-                                        </div>
-                                        @if (User.IsInRole(RoleName.EmployeeProfileManager))
-                                        {
-                                            <div class="field-row">
+                                            <div class="field-row above-unlabeled-row">
                                                 <div class="field-label">
-                                                    <label>Gender</label>
+                                                    <label>Display name</label>
                                                 </div>
-                                                <div class="field-input for-checkables">
-                                                    <label>
-                                                        <input type="radio" name="genderGroup" value="@PersonGender.Male" data-bind="checked: gender" />
-                                                        <span>Male</span>
-                                                    </label>
-                                                    &nbsp;&nbsp;&nbsp;
-                                                    <label>
-                                                        <input type="radio" name="genderGroup" value="@PersonGender.Female" data-bind="checked: gender" />
-                                                        <span>Female</span>
-                                                    </label>
-                                                    &nbsp;&nbsp;&nbsp;
-                                                    <label>
-                                                        <input type="radio" name="genderGroup" value="@PersonGender.NonDisclosed" data-bind="checked: gender" />
-                                                        <span>Undisclosed</span>
-                                                    </label>
+                                                <div class="field-input">
+                                                    <input type="text" data-bind="value: displayName, valueUpdate: 'afterkeydown', attr: { disabled: isDisplayNameDerived }" />
                                                 </div>
                                             </div>
                                             <div class="field-row">
                                                 <div class="field-unlabeled-input">
                                                     <label>
-                                                        <input type="checkbox" data-bind="checked: isActive" />
-                                                        This profile is currently active.
+                                                        <input type="checkbox" data-bind="checked: isDisplayNameDerived" />
+                                                        Automatically generate my display name based on the fields below.
                                                     </label>
                                                 </div>
                                             </div>
-                                        }
-                                        <div class="field-row">
-                                            <div class="field-unlabeled-input">
-                                                <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
-                                                &nbsp;&nbsp;&nbsp;
-                                                <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
-                                                <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>Salutation</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <input type="text" data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
+                                                </div>
+                                            </div>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>First name</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <input type="text" data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
+                                                </div>
+                                            </div>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>Middle name or initial</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <input type="text" data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
+                                                </div>
+                                            </div>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>Last name</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <input type="text" data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
+                                                </div>
+                                            </div>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>Suffix</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <input type="text" data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
+                                                </div>
+                                            </div>
+                                            <div class="field-row" data-bind="visible: isFacultyRankEditable">
+                                                <div class="field-label">
+                                                    <label>Faculty rank</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>My Preferred Title is</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <textarea rows="2" data-bind="value: jobTitles, valueUpdate: 'afterkeydown'"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="field-row">
+                                                <div class="field-label">
+                                                    <label>Administrative Appointments</label>
+                                                </div>
+                                                <div class="field-input">
+                                                    <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
+                                                </div>
+                                            </div>
+                                            @if (User.IsInRole(RoleName.EmployeeProfileManager))
+                                            {
+                                                <div class="field-row">
+                                                    <div class="field-label">
+                                                        <label>Gender</label>
+                                                    </div>
+                                                    <div class="field-input for-checkables">
+                                                        <label>
+                                                            <input type="radio" name="genderGroup" value="@PersonGender.Male" data-bind="checked: gender" />
+                                                            <span>Male</span>
+                                                        </label>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <label>
+                                                            <input type="radio" name="genderGroup" value="@PersonGender.Female" data-bind="checked: gender" />
+                                                            <span>Female</span>
+                                                        </label>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <label>
+                                                            <input type="radio" name="genderGroup" value="@PersonGender.NonDisclosed" data-bind="checked: gender" />
+                                                            <span>Undisclosed</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="field-row">
+                                                    <div class="field-unlabeled-input">
+                                                        <label>
+                                                            <input type="checkbox" data-bind="checked: isActive" />
+                                                            This profile is currently active.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="field-row">
+                                                <div class="field-unlabeled-input">
+                                                    <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
+                                                    &nbsp;&nbsp;&nbsp;
+                                                    <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
+                                                    &nbsp;&nbsp;&nbsp;
+                                                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                                                    <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </fieldset>
-                        </section>
+                                    </form>
+                                </fieldset>
+                            </section>
+                        </div>
+                        <div id="tabstrip" style="display: none;">
+                            <ul>
+                                <li class="k-state-active">Activities</li>
+                                <li>Geographic Expertise</li>
+                                <li>Language Expertise</li>
+                                <li>Formal Education</li>
+                                <li>Affiliations</li>
+                                <li>Email Addresses</li>
+                            </ul>
+                            <div>
+                                My International Activities
+                            </div>
+                            <div>
+                                My Geographic Expertise
+                            </div>
+                            <div>
+                                My Language Expertise
+                            </div>
+                            <div>
+                                My Formal Education Outside the U.S.
+                            </div>
+                            <div>
+                                My Affiliations
+                            </div>
+                            <div>
+                                My Email Addresses
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
