@@ -23,7 +23,7 @@
                         var tenancy = Request.Tenancy();
                         var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle)) 
                             ? tenancy.CustomProfileTitle : "My UCosmic Profile";
-                        <a href="@Url.Action(MVC.People.Index())">@customProfileTitle</a>
+                        <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
 
                         <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                     }
