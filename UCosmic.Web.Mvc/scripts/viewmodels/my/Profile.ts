@@ -6,6 +6,7 @@
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../Flasher.ts" />
 
 module ViewModels.My {
 
@@ -39,9 +40,11 @@ module ViewModels.My {
         $facultyRanks: KnockoutObservableJQuery = ko.observable();
         $nameSalutation: KnockoutObservableJQuery = ko.observable();
         $nameSuffix: KnockoutObservableJQuery = ko.observable();
+        $editSection: JQuery;
 
         isValid: () => bool;
         errors: KnockoutValidationErrors;
+        editMode: KnockoutObservableBool = ko.observable(false);
 
         constructor() {
             this._initialize();
@@ -98,6 +101,13 @@ module ViewModels.My {
                 });
         }
 
+        startEditing(): void {
+            this.editMode(true);
+            if (this.$editSection.length) {
+                this.$editSection.slideDown();
+            }
+        }
+
         saveInfo(formElement: HTMLFormElement): void {
 
             if (!this.isValid()) {
@@ -111,19 +121,17 @@ module ViewModels.My {
                     type: 'PUT',
                     data: apiModel
                 })
-                .done(() => {
-                    // flash feedback message
+                .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
+                    App.flasher.flash(responseText);
+                    if (this.$editSection.length) {
+                        this.$editSection.slideUp();
+                    }
+                    this.editMode(false);
                 })
                 .fail(() => {
                     //alert('a PUT API call failed :(');
                 });
-
-                $("#accordion").accordion('activate', 1);	// Open next panel
             }
-        }
-
-        savePicture(formElement: HTMLFormElement): void {
-            $("#accordion").accordion('activate', 0);	// Open next panel
         }
 
         // client validation rules

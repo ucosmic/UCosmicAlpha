@@ -76,7 +76,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return badRequest;
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, "Personal information was successfully updated.");
+            return Request.CreateResponse(HttpStatusCode.OK, "Your profile was saved successfully.");
         }
 
         [GET("photo")]

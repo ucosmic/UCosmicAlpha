@@ -24,6 +24,7 @@ var ViewModels;
                 this.$facultyRanks = ko.observable();
                 this.$nameSalutation = ko.observable();
                 this.$nameSuffix = ko.observable();
+                this.editMode = ko.observable(false);
                 this._initialize();
                 this.isFacultyRanksVisible = ko.computed(function () {
                     return _this.facultyRanks() && _this.facultyRanks().length > 0;
@@ -56,7 +57,14 @@ var ViewModels;
                 }, function (xhr, textStatus, errorThrown) {
                 });
             };
+            Profile.prototype.startEditing = function () {
+                this.editMode(true);
+                if(this.$editSection.length) {
+                    this.$editSection.slideDown();
+                }
+            };
             Profile.prototype.saveInfo = function (formElement) {
+                var _this = this;
                 if(!this.isValid()) {
                     this.errors.showAllMessages();
                 } else {
@@ -65,14 +73,15 @@ var ViewModels;
                         url: App.Routes.WebApi.My.Profile.put(),
                         type: 'PUT',
                         data: apiModel
-                    }).done(function () {
+                    }).done(function (responseText, statusText, xhr) {
+                        App.flasher.flash(responseText);
+                        if(_this.$editSection.length) {
+                            _this.$editSection.slideUp();
+                        }
+                        _this.editMode(false);
                     }).fail(function () {
                     });
-                    $("#accordion").accordion('activate', 1);
                 }
-            };
-            Profile.prototype.savePicture = function (formElement) {
-                $("#accordion").accordion('activate', 0);
             };
             Profile.prototype._setupValidation = function () {
                 this.displayName.extend({

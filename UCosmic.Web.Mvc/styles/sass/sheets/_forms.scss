@@ -297,6 +297,21 @@ form {
     }
 }
 
+fieldset {
+    &.no-sidebar {
+        @include border-box;
+        padding: 20px 40px;
+        border: solid 1px #ccc;
+        border-radius: 12px;
+    }
+
+    legend {
+        margin-left: 4px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+}
+
 .field-table {
     margin: 16px 0;
     .field-row {
@@ -373,6 +388,9 @@ form {
     }
     &.w690-l190-v500 {
         @include field-column-split(190px, 500px);
+    }
+    &.w870-l300-v570 {
+        @include field-column-split(300px, 570px);
     }
 }
 

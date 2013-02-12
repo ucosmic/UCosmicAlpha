@@ -20,7 +20,7 @@
 
     <script type="text/javascript">
 
-        $(function() {
+        $(function () {
             var viewModel = new ViewModels.My.Profile();
             $(viewModel).on('ready', function () {
                 ko.applyBindings(viewModel, $('#my_profile')[0]);
@@ -50,7 +50,7 @@
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
-                        <div class="person-profile clickable">
+                        <div class="person-profile" data-bind="click: startEditing, css: { clickable: !editMode() }">
                             <div class="card">
                                 <div class="group">
                                     <div class="on-left photo">
@@ -70,9 +70,9 @@
                                         <span class="branded-dark1 badge">Distinguished Professor</span>
                                         <div class="appointments">
                                             Senior Advisor on Academic Affairs, United Nations Global Compact (UNGC)
-                                            <br/>
+                                            <br />
                                             Vice President & Treasurer, American International Recruitment Council (AIRC)
-                                            <br/>
+                                            <br />
                                             Executive Director, UCosmic Consortium
                                         </div>
                                     </div>
@@ -82,11 +82,11 @@
                                 Click to edit
                             </div>
                         </div>
-                        <div id="accordion" style="">
-                            <h2>My Information</h2>
-                            <div class="fieldset">
+                        <section style="display: none;" data-bind="jqElement: '$editSection'">
+                            <fieldset class="no-sidebar">
+                                <legend>Edit @customProfileTitle</legend>
                                 <form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
-                                    <div class="field-table w690-l250-v440">
+                                    <div class="field-table w870-l300-v570">
                                         <div class="field-row">
                                             <div class="field-label" style="padding-top: 0;">
                                                 <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
@@ -129,7 +129,7 @@
                                         </div>
                                         <div class="field-row">
                                             <div class="field-label">
-                                                <label>Middle name</label>
+                                                <label>Middle name or initial</label>
                                             </div>
                                             <div class="field-input">
                                                 <input type="text" data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
@@ -215,6 +215,11 @@
                                         </div>
                                     </div>
                                 </form>
+                            </fieldset>
+                        </section>
+                        @*<div id="accordion" style="">
+                            <h2>My Information</h2>
+                            <div class="fieldset">
                             </div>
 
                             <h2>My Email Addresses</h2>
@@ -243,7 +248,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>

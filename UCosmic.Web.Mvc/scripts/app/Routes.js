@@ -200,7 +200,7 @@ var App;
                                 url += 'quality=' + imageResizeQuality + '&';
                             }
                             if(refresh) {
-                                url += 'refresh=' + new Date().toISOString() + '&';
+                                url += 'refresh=' + new Date().toUTCString() + '&';
                             }
                             if(url.lastIndexOf('&') === url.length - 1) {
                                 url = url.substr(0, url.length - 1);

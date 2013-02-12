@@ -211,7 +211,7 @@ module App.Routes {
 
                     function finalizeGetUrl(url: string, imageResizeQuality?: string, refresh?: bool): string {
                         if (imageResizeQuality) url += 'quality=' + imageResizeQuality + '&';
-                        if (refresh) url += 'refresh=' + new Date().toISOString() + '&';
+                        if (refresh) url += 'refresh=' + new Date().toUTCString() + '&';
                         if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
                             url = url.substr(0, url.length - 1);
                         if (url.lastIndexOf('?') === url.length - 1) // strip trailing question mark
