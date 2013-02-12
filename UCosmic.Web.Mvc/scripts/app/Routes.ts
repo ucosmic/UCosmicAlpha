@@ -54,6 +54,17 @@ module App.Routes {
                 isAdmin3?: bool;
             }
 
+            export function get (args: IFilterPlaces): string;
+
+            export function get (latitude: number, longitude: number): string;
+
+            export function get (arg1: any, arg2?: number): string {
+                if (!arg2 || typeof arg2 !== 'number')
+                    return getByFilterArgs(arg1);
+                else
+                    return getByLatLng(arg1, arg2);
+            }
+
             function getByFilterArgs(args: IFilterPlaces): string {
                 var url = makeUrl('places');
                 url = url.substr(0, url.length - 1); // strip trailing slash
@@ -72,15 +83,6 @@ module App.Routes {
             function getByLatLng(latitude: number, longitude: number): string {
                 var url = 'places/by-coordinates/' + latitude + '/' + longitude;
                 return makeUrl(url);
-            }
-
-            export function get (args: IFilterPlaces): string;
-            export function get (latitude: number, longitude: number): string;
-            export function get (arg1: any, arg2?: number): string {
-                if (!arg2 || typeof arg2 !== 'number')
-                    return getByFilterArgs(arg1);
-                else
-                    return getByLatLng(arg1, arg2);
             }
         }
 
@@ -167,25 +169,64 @@ module App.Routes {
                 export function put(): string {
                     return get();
                 }
-                export class Photo {
-                    static get (maxSide?: number, maxWidth?: number, maxHeight?: number,
-                        refresh?: Date): string {
-                        var url = makeUrl('my/profile/photo');
-                        //url = url.substr(0, url.length - 1); // strip trailing slash
-                        url += '?';
+                export module Photo {
+                    export function get (maxSide?: number, imageResizeQuality?: string,
+                        refresh?: bool): string;
+
+                    export function get (maxWidth?: number, maxHeight?: number,
+                        imageResizeQuality?: string, refresh?: bool): string;
+
+                    export function get(arg1?: number, arg2?: any, arg3?: any, arg4?: any): string {
+                        if (arguments.length === 4
+                            || (arguments.length >= 2 && typeof arguments[1] === 'number')
+                            || (arguments.length >= 3 && typeof arguments[2] === 'string')
+                        ) {
+                            return getByMaxSides(arg1, arg2, arg3, arg4);
+                        }
+                        return getByMaxSide(arg1, arg2, arg3);
+                    }
+
+                    function getByMaxSide(maxSide?: number, imageResizeQuality?: string,
+                        refresh?: bool): string {
+                        var url = initializeGetUrl();
                         if (maxSide) url += 'maxSide=' + maxSide + '&';
+                        url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                        return url;
+                    }
+
+                    function getByMaxSides(maxWidth?: number, maxHeight?: number,
+                        imageResizeQuality?: string, refresh?: bool): string {
+                        var url = initializeGetUrl();
                         if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
                         if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
-                        if (refresh) url += 'refresh=' + refresh.toISOString() + '&';
+                        url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                        return url;
+                    }
+
+                    function initializeGetUrl(): string {
+                        var url = makeUrl('my/profile/photo');
+                        url += '?';
+                        return url;
+                    }
+
+                    function finalizeGetUrl(url: string, imageResizeQuality?: string, refresh?: bool): string {
+                        if (imageResizeQuality) url += 'quality=' + imageResizeQuality + '&';
+                        if (refresh) url += 'refresh=' + new Date().toISOString() + '&';
                         if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
+                            url = url.substr(0, url.length - 1);
+                        if (url.lastIndexOf('?') === url.length - 1) // strip trailing question mark
                             url = url.substr(0, url.length - 1);
                         return url;
                     }
-                    static post() {
+
+                    export function post() {
                         return makeUrl('my/profile/photo');
                     }
-                    static del() {
+                    export function del() {
                         return post();
+                    }
+                    export function kendoRemove() {
+                        return makeUrl('my/profile/photo/kendo-remove');
                     }
                 }
             }
@@ -219,6 +260,13 @@ module App.Routes {
                     }
                 }
             }
+        }
+    }
+
+    export module Params {
+        export class ImageResizeQuality {
+            static THUMBNAIL: string = 'thumbnail';
+            static HIGH: string = 'high';
         }
     }
 }

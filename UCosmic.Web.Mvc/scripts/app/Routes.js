@@ -44,6 +44,14 @@ var App;
             })(WebApi.Countries || (WebApi.Countries = {}));
             var Countries = WebApi.Countries;
             (function (Places) {
+                                                function get(arg1, arg2) {
+                    if(!arg2 || typeof arg2 !== 'number') {
+                        return getByFilterArgs(arg1);
+                    } else {
+                        return getByLatLng(arg1, arg2);
+                    }
+                }
+                Places.get = get;
                 function getByFilterArgs(args) {
                     var url = makeUrl('places');
                     url = url.substr(0, url.length - 1);
@@ -75,14 +83,6 @@ var App;
                     var url = 'places/by-coordinates/' + latitude + '/' + longitude;
                     return makeUrl(url);
                 }
-                                                function get(arg1, arg2) {
-                    if(!arg2 || typeof arg2 !== 'number') {
-                        return getByFilterArgs(arg1);
-                    } else {
-                        return getByLatLng(arg1, arg2);
-                    }
-                }
-                Places.get = get;
             })(WebApi.Places || (WebApi.Places = {}));
             var Places = WebApi.Places;
             (function (Establishments) {
@@ -163,37 +163,67 @@ var App;
                         return get();
                     }
                     Profile.put = put;
-                    var Photo = (function () {
-                        function Photo() { }
-                        Photo.get = function get(maxSide, maxWidth, maxHeight, refresh) {
-                            var url = makeUrl('my/profile/photo');
-                            url += '?';
+                    (function (Photo) {
+                                                                        function get(arg1, arg2, arg3, arg4) {
+                            if(arguments.length === 4 || (arguments.length >= 2 && typeof arguments[1] === 'number') || (arguments.length >= 3 && typeof arguments[2] === 'string')) {
+                                return getByMaxSides(arg1, arg2, arg3, arg4);
+                            }
+                            return getByMaxSide(arg1, arg2, arg3);
+                        }
+                        Photo.get = get;
+                        function getByMaxSide(maxSide, imageResizeQuality, refresh) {
+                            var url = initializeGetUrl();
                             if(maxSide) {
                                 url += 'maxSide=' + maxSide + '&';
                             }
+                            url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                            return url;
+                        }
+                        function getByMaxSides(maxWidth, maxHeight, imageResizeQuality, refresh) {
+                            var url = initializeGetUrl();
                             if(maxWidth) {
                                 url += 'maxWidth=' + maxWidth + '&';
                             }
                             if(maxHeight) {
                                 url += 'maxHeight=' + maxHeight + '&';
                             }
+                            url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                            return url;
+                        }
+                        function initializeGetUrl() {
+                            var url = makeUrl('my/profile/photo');
+                            url += '?';
+                            return url;
+                        }
+                        function finalizeGetUrl(url, imageResizeQuality, refresh) {
+                            if(imageResizeQuality) {
+                                url += 'quality=' + imageResizeQuality + '&';
+                            }
                             if(refresh) {
-                                url += 'refresh=' + refresh.toISOString() + '&';
+                                url += 'refresh=' + new Date().toISOString() + '&';
                             }
                             if(url.lastIndexOf('&') === url.length - 1) {
                                 url = url.substr(0, url.length - 1);
                             }
+                            if(url.lastIndexOf('?') === url.length - 1) {
+                                url = url.substr(0, url.length - 1);
+                            }
                             return url;
                         }
-                        Photo.post = function post() {
+                        function post() {
                             return makeUrl('my/profile/photo');
                         }
-                        Photo.del = function del() {
-                            return Photo.post();
+                        Photo.post = post;
+                        function del() {
+                            return post();
                         }
-                        return Photo;
-                    })();
-                    Profile.Photo = Photo;                    
+                        Photo.del = del;
+                        function kendoRemove() {
+                            return makeUrl('my/profile/photo/kendo-remove');
+                        }
+                        Photo.kendoRemove = kendoRemove;
+                    })(Profile.Photo || (Profile.Photo = {}));
+                    var Photo = Profile.Photo;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
             })(WebApi.My || (WebApi.My = {}));
@@ -244,6 +274,16 @@ var App;
             var Employees = WebApi.Employees;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
+        (function (Params) {
+            var ImageResizeQuality = (function () {
+                function ImageResizeQuality() { }
+                ImageResizeQuality.THUMBNAIL = 'thumbnail';
+                ImageResizeQuality.HIGH = 'high';
+                return ImageResizeQuality;
+            })();
+            Params.ImageResizeQuality = ImageResizeQuality;            
+        })(Routes.Params || (Routes.Params = {}));
+        var Params = Routes.Params;
     })(App.Routes || (App.Routes = {}));
     var Routes = App.Routes;
 })(App || (App = {}));

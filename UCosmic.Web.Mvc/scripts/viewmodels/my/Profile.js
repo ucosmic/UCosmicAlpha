@@ -140,16 +140,16 @@ var ViewModels;
                     if(newValue && newValue.length) {
                         newValue.kendoUpload({
                             multiple: false,
+                            showFileList: false,
                             localization: {
                                 select: 'Choose a photo to upload...'
                             },
                             async: {
                                 saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
-                                removeUrl: App.Routes.WebApi.My.Profile.Photo.del(),
-                                removeVerb: 'DELETE'
+                                removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
                             },
                             success: function (e) {
-                                _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, undefined, undefined, new Date()));
+                                _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
                             },
                             error: function (e) {
                                 alert('there was an error');

@@ -5,7 +5,6 @@
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
-/// <reference path="../../datacontext/iemployee.ts" />
 /// <reference path="../../app/Routes.ts" />
 
 module ViewModels.My {
@@ -204,19 +203,20 @@ module ViewModels.My {
                 if (newValue && newValue.length) {
                     newValue.kendoUpload({
                         multiple: false,
+                        showFileList: false,
                         localization: {
                             select: 'Choose a photo to upload...'
                         },
                         async: {
                             saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
-                            removeUrl: App.Routes.WebApi.My.Profile.Photo.del(),
-                            removeVerb: 'DELETE'
+                            removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
+                            //removeVerb: 'DELETE'
                             //batch: true
                         },
                         success: (e: any): void => {
                             //alert('there was success');
                             this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
-                                undefined, undefined, new Date()));
+                                null, true));
                         },
                         error: (e: any): void => {
                             alert('there was an error');

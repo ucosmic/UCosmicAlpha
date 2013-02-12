@@ -142,12 +142,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("photo")]
-        public HttpResponseMessage DeletePhoto(KendoUploadRemoveFileApiModel model)
+        public HttpResponseMessage DeletePhoto()
         {
-            _photoDeleteHandler.Handle(new DeleteMyPhoto(User)
-            {
-                FileNames = (model != null) ? model.FileNames : null,
-            });
+            /*
+             * Do not use this endpoint for KendoUIWeb's Upload widget. See the
+             * KendoRemovePhoto action comment below. This action is for deleting
+             * a photo when a new one is not being simultaneously uploaded.
+             */
+
+            _photoDeleteHandler.Handle(new DeleteMyPhoto(User));
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [POST("photo/kendo-remove")]
+        public HttpResponseMessage KendoRemovePhoto()
+        {
+            /*
+             * KendoUIWeb's Upload widget requires a remove URL endpoint.
+             * When it is aware of a previous photo, and when it disallows
+             * multiple file uploads, uploading will issue a request to this
+             * URL in order to delete them. However it is possible for both
+             * the saveUrl and removeUrl to be issued in parallel, which can
+             * lead to concurrency issues. Because the PostPhoto action &
+             * command take care of deleting any previously-existing photo,
+             * this action is left empty and simply returns a result to tell
+             * Kendo Upload that the removal operation was successful.
+             */
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

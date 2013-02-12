@@ -294,7 +294,6 @@
     </Compile>
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Models\ImageResizeRequestModel.cs" />
-    <Compile Include="Models\KendoUploadRemoveFileApiModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\EstablishmentLocationsController.cs" />
