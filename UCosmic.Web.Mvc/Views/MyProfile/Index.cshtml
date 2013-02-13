@@ -38,8 +38,8 @@
 
 @section bib
 {
-    <nav class="bib hide" data-current-bib="people">
-        @Html.Partial(MVC.Admin.Views._Bib)
+    <nav class="bib hide" data-current-bib="my">
+        @Html.Partial(MVC.Home.Views._Bib)
     </nav>
 }
 
@@ -80,7 +80,7 @@
                                     Click to edit
                                 </div>
                             </section>
-                            <section style="display: none;" data-bind="jqElement: '$editSection'">
+                            <section class="fieldset" style="display: none;" data-bind="jqElement: '$editSection'">
                                 <fieldset class="no-sidebar">
                                     <legend>Edit @customProfileTitle</legend>
                                     <form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
@@ -146,7 +146,8 @@
                                                     <label>Salutation</label>
                                                 </div>
                                                 <div class="field-input">
-                                                    <input type="text" data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
+                                                    <input type="text" placeholder="[None]"
+                                                        data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
                                                 </div>
                                             </div>
                                             <div class="field-row">
@@ -154,7 +155,8 @@
                                                     <label>First name</label>
                                                 </div>
                                                 <div class="field-input">
-                                                    <input type="text" data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
+                                                    <input type="text" placeholder="[Please enter your first name here]"
+                                                        data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
                                                 </div>
                                             </div>
                                             <div class="field-row">
@@ -162,7 +164,8 @@
                                                     <label>Middle name or initial</label>
                                                 </div>
                                                 <div class="field-input">
-                                                    <input type="text" data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
+                                                    <input type="text" placeholder="[None]"
+                                                         data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
                                                 </div>
                                             </div>
                                             <div class="field-row">
@@ -170,7 +173,8 @@
                                                     <label>Last name</label>
                                                 </div>
                                                 <div class="field-input">
-                                                    <input type="text" data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
+                                                    <input type="text" placeholder="[Please enter your last name here]"
+                                                        data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
                                                 </div>
                                             </div>
                                             <div class="field-row">
@@ -178,7 +182,8 @@
                                                     <label>Suffix</label>
                                                 </div>
                                                 <div class="field-input">
-                                                    <input type="text" data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
+                                                    <input type="text" placeholder="[None]"
+                                                        data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
                                                 </div>
                                             </div>
                                             <div class="field-row" data-bind="visible: isFacultyRankEditable">
@@ -253,7 +258,7 @@
                                 </fieldset>
                             </section>
                         </div>
-                        <div id="tabstrip" style="display: none;">
+                        <div id="tabstrip" class="profile-tabs" style="display: none;">
                             <ul>
                                 <li class="k-state-active">Activities</li>
                                 <li>Geographic Expertise</li>

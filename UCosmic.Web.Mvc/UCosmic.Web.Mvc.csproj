@@ -1782,6 +1782,7 @@
     <Content Include="Views\People\_EmailAddresses.cshtml" />
     <Content Include="Views\People\_Affiliations.cshtml" />
     <Content Include="Views\People\_Pictures.cshtml" />
+    <Content Include="Views\Home\_Bib.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

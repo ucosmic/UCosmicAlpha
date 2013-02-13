@@ -154,4 +154,20 @@ body
         }
     }
 
+    .profile-tabs.k-tabstrip {
+        background-image: none;
+        border-width: 0;
+        ul.k-tabstrip-items {
+            padding: 0;
+            li.k-item {
+                margin-left: 4px;
+            }
+        }
+        .k-content {
+            margin: 0;
+            padding: 8px;
+            border-width: 0;
+            border-top-width: 1px;
+        }
+    }
 }

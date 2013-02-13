@@ -128,4 +128,16 @@ body .person-profile {
     padding: 0 16px 8px 16px;
     visibility: hidden;
     background-color: #dddddd; }
+body .profile-tabs.k-tabstrip {
+  background-image: none;
+  border-width: 0; }
+  body .profile-tabs.k-tabstrip ul.k-tabstrip-items {
+    padding: 0; }
+    body .profile-tabs.k-tabstrip ul.k-tabstrip-items li.k-item {
+      margin-left: 4px; }
+  body .profile-tabs.k-tabstrip .k-content {
+    margin: 0;
+    padding: 8px;
+    border-width: 0;
+    border-top-width: 1px; }
 
