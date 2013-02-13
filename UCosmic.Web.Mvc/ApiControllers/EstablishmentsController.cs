@@ -29,7 +29,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{establishmentId}")]
-        public EstablishmentApiModel Get(int establishmentId)
+        public EstablishmentApiModel GetOne(int establishmentId)
         {
             var view = _queryProcessor.Execute(new EstablishmentViewById(establishmentId));
             if (view == null) throw new HttpResponseException(HttpStatusCode.NotFound);

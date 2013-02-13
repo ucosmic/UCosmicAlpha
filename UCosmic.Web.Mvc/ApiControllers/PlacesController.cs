@@ -55,6 +55,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CacheHttpGet(Duration = 3600)]
         public IEnumerable<PlaceApiModel> GetByCoordinates(double latitude, double longitude)
         {
+            //System.Threading.Thread.Sleep(5000); // test api latency
+
             var foundPlace = _placeFinder.Find(new PlaceByCoordinates(latitude, longitude))
                 .FirstOrDefault(x => x.WoeId.HasValue);
             if (foundPlace != null && foundPlace.WoeId.HasValue)

@@ -1,6 +1,6 @@
 /* default layout importer */
 /* main sass bootstrap */
-/* suny.edu brand values */
+/* suny brand values */
 /* default variable values */
 /* main layout stylesheet */
 html {
@@ -601,6 +601,8 @@ body .ui-dialog {
         body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button .ui-button-text {
           padding: 0;
           line-height: normal; }
+  body .ui-dialog.no-close .ui-dialog-titlebar-close {
+    display: none; }
 body .ui-widget-overlay {
   background: black url("../../../images/bg/ui-bg_flat_black_40x100.png") 50% 50% repeat-x;
   -moz-opacity: 0.6;

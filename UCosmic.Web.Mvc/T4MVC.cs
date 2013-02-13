@@ -2130,6 +2130,10 @@ namespace Links
                 public static readonly string Item_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Item.min.js") ? Url("Item.min.js") : Url("Item.js");
                               
                 public static readonly string Item_min_js = Url("Item.min.js");
+                public static readonly string Location_ts = Url("Location.ts");
+                public static readonly string Location_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Location.min.js") ? Url("Location.min.js") : Url("Location.js");
+                              
+                public static readonly string Location_min_js = Url("Location.min.js");
                 public static readonly string Name_ts = Url("Name.ts");
                 public static readonly string Name_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Name.min.js") ? Url("Name.min.js") : Url("Name.js");
                               
@@ -2936,6 +2940,7 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
+                public static readonly string spinner_24_blue_gif = Url("spinner-24-blue.gif");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

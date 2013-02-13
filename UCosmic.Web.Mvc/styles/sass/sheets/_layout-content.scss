@@ -345,6 +345,11 @@ body {
                 }
             }
         }
+        &.no-close {
+            .ui-dialog-titlebar-close {
+                display: none;
+            }
+        }
     }
     .ui-widget-overlay {
         background: #000 url('../../../images/bg/ui-bg_flat_black_40x100.png') 50% 50% repeat-x;

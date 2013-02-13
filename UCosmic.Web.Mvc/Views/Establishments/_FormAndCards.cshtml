@@ -3,7 +3,7 @@
         <div data-side-swiper="on" class="left">
             @Html.Partial(MVC.Establishments.Views._FormNamesSection)
             @Html.Partial(MVC.Establishments.Views._FormUrlsSection)
-            <section id="location" class="fieldset">
+            <section id="location" class="fieldset" data-bind="with: location">
                 <header>
                     <h2>
                         Location
@@ -25,7 +25,8 @@
                             </div>
                             <div class="field-input">
                                 <select data-bind="options: countries, optionsCaption: countryOptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: countryId,
-                                    event: { change: changePlaceInLocation }" id="establishment_location_country_menu">
+                                    event: { change: changePlaceInLocation }"
+                                    id="establishment_location_country_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -36,7 +37,8 @@
                             </div>
                             <div class="field-input">
                                 <select data-bind="options: admin1s, optionsCaption: admin1OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin1Id,
-                                    event: { change: changePlaceInLocation }" id="establishment_location_admin1_menu">
+                                    event: { change: changePlaceInLocation }"
+                                    id="establishment_location_admin1_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -47,7 +49,8 @@
                             </div>
                             <div class="field-input">
                                 <select data-bind="options: admin2s, optionsCaption: admin2OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin2Id,
-                                    event: { change: changePlaceInLocation }" id="establishment_location_admin2_menu">
+                                    event: { change: changePlaceInLocation }"
+                                    id="establishment_location_admin2_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -58,7 +61,8 @@
                             </div>
                             <div class="field-input">
                                 <select data-bind="options: admin3s, optionsCaption: admin3OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin3Id,
-                                    event: { change: changePlaceInLocation }" id="establishment_location_admin3_menu">
+                                    event: { change: changePlaceInLocation }"
+                                    id="establishment_location_admin3_menu">
                                     <option>[Loading...]</option>
                                 </select>
                             </div>
@@ -82,6 +86,13 @@
                     </div>
                     <div id="map_canvas" class="map-canvas-w100-h500" data-bind="jqObservableElement: '$mapCanvas'"></div>
                     @Html.Partial(MVC.Shared.Views._GoogleMapsToolsOverlay)
+                </div>
+                <div data-bind="jqElement: '$dataLoadingDialog'" title="Loading Geographic Information" style="display: none;">
+                    <div>
+                        <p class="content">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" /> Please wait a moment while geographic information is retrieved for this place marker.
+                        </p>
+                    </div>
                 </div>
             </section>
             <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">
