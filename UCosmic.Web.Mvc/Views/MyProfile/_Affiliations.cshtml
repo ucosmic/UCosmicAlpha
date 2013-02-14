@@ -1,0 +1,42 @@
+﻿<div id="myprofileaffiliations">
+    
+    <header>
+        <h2><span>
+                Affiliations
+                <a href="#" title="Add a new affiliation" data-bind="click: addAffiliation">
+                    <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new affiliation" />
+                </a>
+            </span>
+        </h2>
+    </header>
+
+    <div>
+        <ol class="data" data-bind="foreach: affiliations" >
+            <li class="hover-hilite" data-bind="click: editAffiliation">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tbody>
+                                        <tr><td>Campus</td></tr>
+                                        <tr><td>College</td></tr>
+                                        <tr><td>Department</td></tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td>Job Description</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+        </ol> 
+    </div>
+
+    <form data-xbind="submit: saveAffiliation">
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    </form>
+
+</div>

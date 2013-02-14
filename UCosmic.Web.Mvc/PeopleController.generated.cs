@@ -139,15 +139,9 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
-                public readonly string _Affiliations = "_Affiliations";
-                public readonly string _EmailAddresses = "_EmailAddresses";
-                public readonly string _Pictures = "_Pictures";
                 public readonly string Index = "Index";
                 public readonly string Index2 = "Index2";
             }
-            public readonly string _Affiliations = "~/Views/People/_Affiliations.cshtml";
-            public readonly string _EmailAddresses = "~/Views/People/_EmailAddresses.cshtml";
-            public readonly string _Pictures = "~/Views/People/_Pictures.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";
             public readonly string Index2 = "~/Views/People/Index2.cshtml";
         }

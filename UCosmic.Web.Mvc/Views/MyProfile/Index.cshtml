@@ -20,21 +20,31 @@
 
     <script type="text/javascript">
 
-        $(function() {
-            var viewModel = new ViewModels.My.Profile();
-            $(viewModel).on('ready', function() {
-                ko.applyBindings(viewModel, $('#my_profile')[0]);
+        $(function () {
+            var profileViewModel = new ViewModels.My.Profile();
+            $(profileViewModel).on('ready', function () {
+                ko.applyBindings(profileViewModel, $('#my_profile')[0]);
             });
             $('#tabstrip').kendoTabStrip({
                 animation: false
             })
             .show();
+            
+            //var emailAddressesViewModel = new ViewModels.My.EmailAddresses();
+            //$(emailAddressesViewModel).on('ready', function () {
+            //    ko.applyBindings(affiliationsViewModel, $('#myprofileemailaddresses')[0]);
+            //});
+
+            //var affiliationsViewModel = new ViewModels.My.Affiliations();
+            //$(affiliationsViewModel).on('ready', function () {
+            //    ko.applyBindings(affiliationsViewModel, $('#myprofileaffiliations')[0]);
+            //});
+
         });
 
     </script>
 
 }
-
 
 @section bib
 {
@@ -84,6 +94,7 @@
                                 <fieldset class="no-sidebar">
                                     <legend>Edit @customProfileTitle</legend>
                                     <form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                                	@Html.Partial(MVC.MyProfile.Views._PersonalInfo)
                                         <div class="field-table w870-l300-v570">
                                             <div class="field-row">
                                                 <div class="field-label" style="padding-top: 0;">
@@ -261,6 +272,7 @@
                         <div id="tabstrip" class="profile-tabs" style="display: none;">
                             <ul>
                                 <li class="k-state-active">Activities</li>
+                                @Html.Partial(MVC.MyProfile.Views._EmailAddresses)
                                 <li>Geographic Expertise</li>
                                 <li>Language Expertise</li>
                                 <li>Formal Education</li>
@@ -273,12 +285,14 @@
                             <div>
                                 My Geographic Expertise
                             </div>
+                                @Html.Partial(MVC.MyProfile.Views._Affiliations)
                             <div>
                                 My Language Expertise
                             </div>
                             <div>
                                 My Formal Education Outside the U.S.
                             </div>
+                                @Html.Partial(MVC.MyProfile.Views._Pictures)
                             <div>
                                 My Affiliations
                             </div>
@@ -292,5 +306,3 @@
         </div>
     </div>
 </div>
-
-
