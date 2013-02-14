@@ -303,7 +303,6 @@
     <Compile Include="ApiControllers\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\CountriesController.cs" />
     <Compile Include="ApiControllers\EstablishmentsController.cs" />
-    <Compile Include="ApiControllers\PeopleController.cs" />
     <Compile Include="ApiControllers\PersonNamesController.cs" />
     <Compile Include="ApiControllers\PlacesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
@@ -372,7 +371,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
     <Compile Include="Controllers\MyProfileController.cs" />
-    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\EstablishmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -430,7 +428,7 @@
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
     <Compile Include="Models\FacultyRankApiModel.cs" />
     <Compile Include="Models\IReturnUrl.cs" />
-    <Compile Include="Models\PersonApiModel.cs" />
+    <Compile Include="Models\PersonNameApiModel.cs" />
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
@@ -450,9 +448,6 @@
     <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
     <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
     <Compile Include="MyProfileController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="PeopleDeprecated.PersonInfoController.generated.cs">
@@ -1481,8 +1476,6 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
-    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo2.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\people\EmailAddresses.ts" />
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
@@ -1497,30 +1490,11 @@
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
+    <Content Include="scripts\viewmodels\my\Affiliations.min.js">
+      <DependentUpon>Affiliations.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\my\EmailAddresses.js">
       <DependentUpon>EmailAddresses.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\EmailAddresses.js">
-      <DependentUpon>EmailAddresses.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\EmailAddresses.min.js">
-      <DependentUpon>EmailAddresses.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\PersonalInfo.js">
-      <DependentUpon>PersonalInfo.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\PersonalInfo.min.js">
-      <DependentUpon>PersonalInfo.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\PersonalInfo2.js">
-      <DependentUpon>PersonalInfo2.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\PersonalInfo2.min.js">
-      <DependentUpon>PersonalInfo2.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo3.ts" />
-    <Content Include="scripts\viewmodels\people\PersonalInfo3.js">
-      <DependentUpon>PersonalInfo3.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
@@ -1551,7 +1525,6 @@
     <Content Include="scripts\viewmodels\establishments\Item.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfo.ts" />
     <Content Include="scripts\viewmodels\establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
@@ -1571,14 +1544,14 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\ServerApiModel.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
+    <Content Include="scripts\viewmodels\my\EmailAddresses.min.js">
+      <DependentUpon>EmailAddresses.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\my\Profile.js">
       <DependentUpon>Profile.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\my\Profile.min.js">
       <DependentUpon>Profile.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\people\PersonalInfo3.min.js">
-      <DependentUpon>PersonalInfo3.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\places\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
@@ -1788,7 +1761,6 @@
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
-    <Content Include="Views\People\Index.cshtml" />
     <Content Include="styles\sass\sheets\_designs.scss" />
     <Content Include="styles\tenants\_default\designs.scss" />
     <Content Include="styles\tenants\lehigh.edu\designs.scss" />
@@ -1796,12 +1768,10 @@
     <Content Include="styles\tenants\uc.edu\designs.scss" />
     <Content Include="styles\tenants\umn.edu\designs.scss" />
     <Content Include="styles\tenants\usf.edu\designs.scss" />
-    <Content Include="Views\People\Index2.cshtml" />
     <Content Include="Views\MyProfile\Index.cshtml" />
     <Content Include="Views\MyProfile\_EmailAddresses.cshtml" />
     <Content Include="Views\MyProfile\_PersonalInfo.cshtml" />
     <Content Include="Views\MyProfile\_Affiliations.cshtml" />
-    <Content Include="Views\MyProfile\_Pictures.cshtml" />
     <Content Include="Views\Home\_Bib.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -1,13 +1,43 @@
-﻿@using UCosmic.Domain.People
-
-<form id="myprofilepersonalinfo" data-bind="submit: saveInfo">
-    <div class="field-table w690-l250-v440">
+﻿<form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
+    <div class="field-table w870-l300-v570">
         <div class="field-row">
             <div class="field-label" style="padding-top: 0;">
-                <img src="~/images/samples/sample-photo-128.jpg" alt="" />
+                <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
             </div>
             <div class="field-input">
-                <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                <div>
+                    <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                </div>
+                <div style="padding-left: 4px;">
+                    <div data-bind="visible: hasPhoto" style="padding-top: 4px;">
+                        <input type="button" value="Delete my photo" data-bind="click: startDeletingPhoto, attr: { disabled: photoDeleteSpinner.isVisible } " />
+                        <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    </div>
+                    <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                        <div>
+                            <p>
+                                Are you sure you want to delete your profile photo?
+                            </p>
+                        </div>
+                    </div>
+                    <div data-bind="visible: isPhotoExtensionInvalid">
+                        <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
+                            is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
+                    </div>
+                    <div data-bind="visible: isPhotoTooManyBytes">
+                        <span class="validationMessage">The photo &quot;<span data-bind="text: photoFileName"></span>&quot; 
+                            is too large. Please choose a photo that is less than 1 megabyte in size.</span>
+                    </div>
+                    <div data-bind="visible: isPhotoFailureUnexpected">
+                        <span class="validationMessage">UCosmic experienced an unexpected error managing your photo, please try again. 
+                            If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
+                        </span>
+                    </div>
+                    <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px;">
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                        <strong>Uploading...</strong>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="field-row above-unlabeled-row">
@@ -31,7 +61,8 @@
                 <label>Salutation</label>
             </div>
             <div class="field-input">
-                <input type="text" data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
+                <input type="text" placeholder="[None]"
+                    data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
             </div>
         </div>
         <div class="field-row">
@@ -39,15 +70,17 @@
                 <label>First name</label>
             </div>
             <div class="field-input">
-                <input type="text" data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
+                <input type="text" placeholder="[Please enter your first name here]"
+                    data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">
             <div class="field-label">
-                <label>Middle name</label>
+                <label>Middle name or initial</label>
             </div>
             <div class="field-input">
-                <input type="text" data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
+                <input type="text" placeholder="[None]"
+                        data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">
@@ -55,7 +88,8 @@
                 <label>Last name</label>
             </div>
             <div class="field-input">
-                <input type="text" data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
+                <input type="text" placeholder="[Please enter your last name here]"
+                    data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">
@@ -63,10 +97,11 @@
                 <label>Suffix</label>
             </div>
             <div class="field-input">
-                <input type="text" data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
+                <input type="text" placeholder="[None]"
+                    data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
             </div>
         </div>
-        <div class="field-row">
+        <div class="field-row" data-bind="visible: isFacultyRankEditable">
             <div class="field-label">
                 <label>Faculty rank</label>
             </div>
@@ -80,7 +115,7 @@
                 <label>My Preferred Title is</label>
             </div>
             <div class="field-input">
-                <textarea rows="2" data-bind="value: jobTitles"></textarea>
+                <textarea rows="2" data-bind="value: jobTitles, valueUpdate: 'afterkeydown'"></textarea>
             </div>
         </div>
         <div class="field-row">
@@ -88,7 +123,7 @@
                 <label>Administrative Appointments</label>
             </div>
             <div class="field-input">
-                <textarea rows="2" data-bind="value: administrativeAppointments"></textarea>
+                <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
             </div>
         </div>
         @if (User.IsInRole(RoleName.EmployeeProfileManager))
@@ -99,19 +134,19 @@
                 </div>
                 <div class="field-input for-checkables">
                     <label>
-                        <input type="radio" name="genderGroup" value="@PersonGender.Male" data-bind="checked: gender" />
+                        <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Male" data-bind="checked: gender" />
                         <span>Male</span>
                     </label>
                     &nbsp;&nbsp;&nbsp;
-                                                    <label>
-                                                        <input type="radio" name="genderGroup" value="@PersonGender.Female" data-bind="checked: gender" />
-                                                        <span>Female</span>
-                                                    </label>
+                    <label>
+                        <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Female" data-bind="checked: gender" />
+                        <span>Female</span>
+                    </label>
                     &nbsp;&nbsp;&nbsp;
-                                                    <label>
-                                                        <input type="radio" name="genderGroup" value="@PersonGender.NonDisclosed" data-bind="checked: gender" />
-                                                        <span>Undisclosed</span>
-                                                    </label>
+                    <label>
+                        <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.NonDisclosed" data-bind="checked: gender" />
+                        <span>Undisclosed</span>
+                    </label>
                 </div>
             </div>
             <div class="field-row">
@@ -122,10 +157,15 @@
                     </label>
                 </div>
             </div>
-                                        }
+        }
         <div class="field-row">
             <div class="field-unlabeled-input">
-                <input type="submit" value="Save" />
+                <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
+                &nbsp;&nbsp;&nbsp;
+                <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
+                &nbsp;&nbsp;&nbsp;
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
             </div>
         </div>
     </div>
