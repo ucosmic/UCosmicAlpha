@@ -1784,6 +1784,7 @@
     <Content Include="Views\MyProfile\_Affiliations.cshtml" />
     <Content Include="Views\Home\_Bib.cshtml" />
     <Content Include="Views\Establishments\_FormLocationSection.cshtml" />
+    <Content Include="Views\MyProfile\_Activities.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
