@@ -34,6 +34,7 @@ module App.GoogleMaps {
         private marker: gm.Marker;
         private $markerAddButton: JQuery;
         private $markerRemoveButton: JQuery;
+        private $markerButtonsContainer: JQuery;
         private $destroyMarkerConfirmDialog;
         private markerMoveListener: gm.MapsEventListener;
         private markerDropListener: gm.MapsEventListener;
@@ -51,6 +52,7 @@ module App.GoogleMaps {
             this.element = this.$element[0];
             this.$markerAddButton = this.$element.find('.marker img.add-button');
             this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
+            this.$markerButtonsContainer = this.$element.find('.marker');
 
             this.setMap(map); // invokes onAdd() then draw()
         }
@@ -88,10 +90,11 @@ module App.GoogleMaps {
         }
 
         placeMarker(latLng: gm.LatLng): void {
+            var isDraggable: bool = this.$markerButtonsContainer.is(':visible');
             this.marker = new gm.Marker({ // set a draggable marker at the coordinates
                 map: this.getMap(),
                 position: latLng,
-                draggable: true
+                draggable: isDraggable
             });
             this.updateMarkerLatLng(latLng);
 
@@ -224,6 +227,19 @@ module App.GoogleMaps {
             this.$markerAddButton.show(); // show add button
             $(this.getMap().getDiv()).trigger('marker_destroyed', this);
         }
-    }
 
+        hideMarkerTools(): void {
+            if (this.$markerButtonsContainer && this.$markerButtonsContainer.length)
+                this.$markerButtonsContainer.hide();
+            if (this.marker)
+                this.marker.setDraggable(false);
+        }
+
+        showMarkerTools(): void {
+            if (this.$markerButtonsContainer && this.$markerButtonsContainer.length)
+                this.$markerButtonsContainer.show();
+            if (this.marker)
+                this.marker.setDraggable(true);
+        }
+    }
 }

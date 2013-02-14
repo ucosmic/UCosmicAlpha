@@ -6,7 +6,10 @@
             <section id="location" class="fieldset" data-bind="with: location">
                 <header>
                     <h2>
-                        Location
+                        <span>Location</span>
+                        <a href="#" title="Edit location" data-bind="visible: isEditIconVisible" style="display: none;">
+                            <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit location" />
+                        </a>
                     </h2>
                 </header>
                 <div>

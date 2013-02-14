@@ -2897,6 +2897,15 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class edit {
+                private const string URLPATH = "~/images/icons/edit";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string pencil_a_24_png = Url("pencil-a-24.png");
+                public static readonly string pencil_a_64_png = Url("pencil-a-64.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class logo {
                 private const string URLPATH = "~/images/icons/logo";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

@@ -3,10 +3,10 @@
         <h2>
             <span data-bind="visible: id">URL(s)</span>
             <span data-bind="visible: id === 0">Official URL</span>
-            <a href="#" title="Add a new URL" data-bind="visible: canAddUrl, click: addUrl">
+            <a href="#" title="Add a new URL" data-bind="visible: canAddUrl() && !urlsSpinner.isVisible(), click: addUrl" style="display: none;">
                 <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new URL" />
             </a>
-            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: urlsSpinner.isVisible" />
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: urlsSpinner.isVisible" style="display: none;" />
         </h2>
     </header>
     <ul class="data-items" data-bind="foreach: urls">

@@ -23,7 +23,8 @@ var ViewModels;
                 this.places = ko.observableArray();
                 this.subAdmins = ko.observableArray();
                 this.dataLoadingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
-                this._ownerId = ownerId;
+                this.isEditing = ko.observable();
+                this.ownerId = ownerId;
                 this._initComputedsAndSubscriptions();
                 this.dataLoadingSpinner.isVisible.subscribe(function (newValue) {
                     if(!_this.$dataLoadingDialog || !_this.$dataLoadingDialog.length) {
@@ -39,6 +40,12 @@ var ViewModels;
                     } else {
                         _this.$dataLoadingDialog.dialog('close');
                     }
+                });
+                this.isEditable = ko.computed(function () {
+                    return _this.ownerId && _this.ownerId !== 0;
+                });
+                this.isEditIconVisible = ko.computed(function () {
+                    return _this.ownerId && !_this.isEditing();
                 });
             }
             Location.prototype._initComputedsAndSubscriptions = function () {
@@ -184,6 +191,7 @@ var ViewModels;
                 this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
+                    _this.mapTools().hideMarkerTools();
                 });
                 this.$mapCanvas().on('marker_destroyed', function () {
                     _this.countryId(undefined);
@@ -202,8 +210,8 @@ var ViewModels;
                     }).fail(function (arg1, arg2, arg3, arg4, arg5) {
                     });
                 });
-                if(this._ownerId) {
-                    $.get(App.Routes.WebApi.Establishments.Locations.get(this._ownerId)).done(function (response) {
+                if(this.ownerId) {
+                    $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                         gm.event.addListenerOnce(_this.map, 'idle', function () {
                             if(response.googleMapZoomLevel) {
                                 _this.map.setZoom(response.googleMapZoomLevel);
@@ -219,6 +227,10 @@ var ViewModels;
                             }
                         });
                         _this.fillPlacesHierarchy(response.places);
+                    });
+                } else {
+                    gm.event.addListenerOnce(this.map, 'idle', function () {
+                        _this.mapTools().showMarkerTools();
                     });
                 }
             };

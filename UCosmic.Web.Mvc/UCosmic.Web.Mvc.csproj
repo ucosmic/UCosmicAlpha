@@ -707,6 +707,8 @@
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
+    <Content Include="images\icons\edit\pencil-a-24.png" />
+    <Content Include="images\icons\edit\pencil-a-64.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <Content Include="images\icons\user\unisex-a-128.png" />
     <Content Include="images\icons\user\unisex-a-256.png" />

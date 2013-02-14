@@ -98,10 +98,10 @@ module ViewModels.Establishments {
 
             // request names
             ko.computed((): void => {
-                if (this.id)
+                if (this.id) // only get names if this is an existing establishment
                     this.requestNames();
 
-                else setTimeout(() => {
+                else setTimeout(() => { // otherwise, stop spinning and load a single name form
                     this.namesSpinner.stop();
                     this.addName();
                 }, 0);

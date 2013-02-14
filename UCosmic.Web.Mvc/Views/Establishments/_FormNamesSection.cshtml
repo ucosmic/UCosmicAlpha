@@ -3,10 +3,10 @@
         <h2>
             <span data-bind="visible: id">Name(s)</span>
             <span data-bind="visible: id === 0">Official Name</span>
-            <a href="#" title="Add a new name" data-bind="visible: canAddName, click: addName">
+            <a href="#" title="Add a new name" data-bind="visible: canAddName() && !namesSpinner.isVisible(), click: addName" style="display: none;">
                 <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new name" />
             </a>
-            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" />
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" style="display: none;" />
         </h2>
     </header>
     <ul class="data-items" data-bind="foreach: names">

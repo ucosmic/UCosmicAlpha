@@ -27,6 +27,7 @@ var App;
                 this.element = this.$element[0];
                 this.$markerAddButton = this.$element.find('.marker img.add-button');
                 this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
+                this.$markerButtonsContainer = this.$element.find('.marker');
                 this.setMap(map);
             }
             ToolsOverlay.prototype.onAdd = function () {
@@ -56,10 +57,11 @@ var App;
             };
             ToolsOverlay.prototype.placeMarker = function (latLng) {
                 var _this = this;
+                var isDraggable = this.$markerButtonsContainer.is(':visible');
                 this.marker = new gm.Marker({
                     map: this.getMap(),
                     position: latLng,
-                    draggable: true
+                    draggable: isDraggable
                 });
                 this.updateMarkerLatLng(latLng);
                 gm.event.addListener(this.marker, 'dragstart', function (e) {
@@ -182,6 +184,22 @@ var App;
                 this.$markerRemoveButton.hide();
                 this.$markerAddButton.show();
                 $(this.getMap().getDiv()).trigger('marker_destroyed', this);
+            };
+            ToolsOverlay.prototype.hideMarkerTools = function () {
+                if(this.$markerButtonsContainer && this.$markerButtonsContainer.length) {
+                    this.$markerButtonsContainer.hide();
+                }
+                if(this.marker) {
+                    this.marker.setDraggable(false);
+                }
+            };
+            ToolsOverlay.prototype.showMarkerTools = function () {
+                if(this.$markerButtonsContainer && this.$markerButtonsContainer.length) {
+                    this.$markerButtonsContainer.show();
+                }
+                if(this.marker) {
+                    this.marker.setDraggable(true);
+                }
             };
             return ToolsOverlay;
         })(google.maps.OverlayView);

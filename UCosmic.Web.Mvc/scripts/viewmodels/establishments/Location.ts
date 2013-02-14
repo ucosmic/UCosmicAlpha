@@ -10,7 +10,7 @@ module ViewModels.Establishments {
 
     export class Location {
 
-        private _ownerId: number;
+        ownerId: number;
         map: google.maps.Map;
         mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
         toolsMarkerLat: KnockoutComputed;
@@ -45,9 +45,12 @@ module ViewModels.Establishments {
         subAdmins: KnockoutObservablePlaceModelArray = ko.observableArray();
         dataLoadingSpinner: Spinner = new Spinner(new SpinnerOptions(400));
         $dataLoadingDialog: JQuery;
+        isEditable: () => bool;
+        isEditIconVisible: () => bool;
+        isEditing: KnockoutObservableBool = ko.observable();
 
         constructor(ownerId: number) {
-            this._ownerId = ownerId;
+            this.ownerId = ownerId;
             this._initComputedsAndSubscriptions();
 
             this.dataLoadingSpinner.isVisible.subscribe((newValue: bool): void => {
@@ -65,6 +68,14 @@ module ViewModels.Establishments {
                 else {
                     this.$dataLoadingDialog.dialog('close');
                 }
+            });
+
+            this.isEditable = ko.computed((): bool => {
+                return this.ownerId && this.ownerId !== 0;
+            });
+
+            this.isEditIconVisible = ko.computed((): bool => {
+                return this.ownerId && !this.isEditing();
             });
         }
 
@@ -231,6 +242,7 @@ module ViewModels.Establishments {
             this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
             gm.event.addListenerOnce(this.map, 'idle', (): void => {
                 this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));
+                this.mapTools().hideMarkerTools(); // initially hide the marker tools
             });
 
             // tools overlay marker
@@ -257,8 +269,8 @@ module ViewModels.Establishments {
                 });
             });
 
-            if (this._ownerId)
-                $.get(App.Routes.WebApi.Establishments.Locations.get(this._ownerId))
+            if (this.ownerId) { // set up based on current owner id
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
                 .done((response: IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
 
@@ -278,6 +290,12 @@ module ViewModels.Establishments {
 
                     this.fillPlacesHierarchy(response.places);
                 })
+            }
+            else { // otherwise, make map editable
+                gm.event.addListenerOnce(this.map, 'idle', (): void => {
+                    this.mapTools().showMarkerTools();
+                });
+            }
         }
 
         private fillPlacesHierarchy(places: Places.IServerApiModel[]): void {
