@@ -752,24 +752,16 @@
     <TypeScriptCompile Include="scripts\datacontext\peoplewebservice.ts" />
     <Content Include="scripts\datacontext\people.min.js">
       <DependentUpon>people.ts</DependentUpon>
-    <Content Include="scripts\datacontext\peoplewebservice.js">
-      <DependentUpon>peoplewebservice.ts</DependentUpon>
     </Content>
     <Content Include="scripts\datacontext\peoplewebservice.js">
       <DependentUpon>peoplewebservice.ts</DependentUpon>
-    <TypeScriptCompile Include="scripts\datacontext\people.ts" />
-    <Content Include="scripts\datacontext\peoplewebservice.min.js">
-      <DependentUpon>peoplewebservice.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\datacontext\people.ts" />
-    <Content Include="scripts\datacontext\people.js">
     <Content Include="scripts\datacontext\people.js">
       <DependentUpon>people.ts</DependentUpon>
     </Content>
     <Content Include="scripts\datacontext\peoplewebservice.min.js">
       <DependentUpon>peoplewebservice.ts</DependentUpon>
-    <Content Include="scripts\datacontext\people.min.js">
-      <DependentUpon>people.ts</DependentUpon>
     </Content>
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
@@ -1495,6 +1487,11 @@
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
+    <Content Include="scripts\viewmodels\my\EmailAddresses.js">
+      <DependentUpon>EmailAddresses.ts</DependentUpon>
+    </Content>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Location.min.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -1562,9 +1559,6 @@
     </Content>
     <Content Include="scripts\viewmodels\my\Profile.js">
       <DependentUpon>Profile.ts</DependentUpon>
-    <Content Include="scripts\viewmodels\people\PersonalInfo3.min.js">
-      <DependentUpon>PersonalInfo3.ts</DependentUpon>
-    </Content>
     </Content>
     <Content Include="scripts\viewmodels\my\Profile.min.js">
       <DependentUpon>Profile.ts</DependentUpon>

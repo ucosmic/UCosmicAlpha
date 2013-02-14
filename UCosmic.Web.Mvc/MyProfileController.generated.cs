@@ -80,11 +80,13 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Affiliations = "_Affiliations";
                 public readonly string _EmailAddresses = "_EmailAddresses";
                 public readonly string _PersonalInfo = "_PersonalInfo";
+                public readonly string _Pictures = "_Pictures";
                 public readonly string Index = "Index";
             }
             public readonly string _Affiliations = "~/Views/MyProfile/_Affiliations.cshtml";
             public readonly string _EmailAddresses = "~/Views/MyProfile/_EmailAddresses.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
+            public readonly string _Pictures = "~/Views/MyProfile/_Pictures.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
         }
     }

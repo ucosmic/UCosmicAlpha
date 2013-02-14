@@ -2193,9 +2193,13 @@ namespace Links
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-                
-
-                
+                              
+                public static readonly string EmailAddresses_min_js = Url("EmailAddresses.min.js");
+                              
+                public static readonly string PersonalInfo_min_js = Url("PersonalInfo.min.js");
+                              
+                public static readonly string PersonalInfo2_min_js = Url("PersonalInfo2.min.js");
+                              
         
             public static class places {
                 private const string URLPATH = "~/scripts/viewmodels/places";
