@@ -328,19 +328,8 @@ module ViewModels.Establishments {
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
                 .done((response: IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
-
-                        // zoom map to reveal location
-                        if (response.googleMapZoomLevel)
-                            this.map.setZoom(response.googleMapZoomLevel);
-                        else if (response.box.hasValue)
-                            this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
-
-                        // place marker and set map center
-                        if (response.center.hasValue) {
-                            var latLng = Places.Utils.convertToLatLng(response.center);
-                            this.mapTools().placeMarker(latLng);
-                            this.map.setCenter(latLng);
-                        }
+                        this.loadMapZoom(response);
+                        this.loadMapMarker(response);
                     });
 
                     this.fillPlacesHierarchy(response.places);
@@ -350,6 +339,23 @@ module ViewModels.Establishments {
                 gm.event.addListenerOnce(this.map, 'idle', (): void => {
                     this.isEditing(true);
                 });
+            }
+        }
+
+        private loadMapZoom(response: IServerLocationApiModel): void {
+            // zoom map to reveal location
+            if (response.googleMapZoomLevel)
+                this.map.setZoom(response.googleMapZoomLevel);
+            else if (response.box.hasValue)
+                this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
+        }
+
+        private loadMapMarker(response: IServerLocationApiModel): void {
+            // place marker and set map center
+            if (response.center.hasValue) {
+                var latLng = Places.Utils.convertToLatLng(response.center);
+                this.mapTools().placeMarker(latLng);
+                this.map.setCenter(latLng);
             }
         }
 
@@ -448,6 +454,24 @@ module ViewModels.Establishments {
 
         clickToCancelEdit(): void {
             this.isEditing(false);
+
+            // shouldn't be able to click this button for add form, guarding anyway
+            if (!this.ownerId) return;
+
+            // restore initial values
+            $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
+                .done((response: IServerLocationApiModel): void => {
+
+                // reset zoom
+                this.map.setZoom(1);
+                this.loadMapZoom(response);
+
+                // reset marker
+                this.mapTools().destroyMarker();
+                this.loadMapMarker(response);
+
+                this.fillPlacesHierarchy(response.places);
+            })
         }
     }
 

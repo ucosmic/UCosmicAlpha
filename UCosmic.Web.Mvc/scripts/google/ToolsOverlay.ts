@@ -209,7 +209,7 @@ module App.GoogleMaps {
             }
         }
 
-        private destroyMarker(): void {
+        destroyMarker(): void {
             this.getMap().setOptions({ draggableCursor: undefined });
             if (this.markerMoveListener) { // remove all previous listeners
                 gm.event.removeListener(this.markerMoveListener);

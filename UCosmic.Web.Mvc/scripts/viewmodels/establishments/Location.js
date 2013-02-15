@@ -259,18 +259,8 @@ var ViewModels;
                 if(this.ownerId) {
                     $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                         gm.event.addListenerOnce(_this.map, 'idle', function () {
-                            if(response.googleMapZoomLevel) {
-                                _this.map.setZoom(response.googleMapZoomLevel);
-                            } else {
-                                if(response.box.hasValue) {
-                                    _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
-                                }
-                            }
-                            if(response.center.hasValue) {
-                                var latLng = ViewModels.Places.Utils.convertToLatLng(response.center);
-                                _this.mapTools().placeMarker(latLng);
-                                _this.map.setCenter(latLng);
-                            }
+                            _this.loadMapZoom(response);
+                            _this.loadMapMarker(response);
                         });
                         _this.fillPlacesHierarchy(response.places);
                     });
@@ -278,6 +268,22 @@ var ViewModels;
                     gm.event.addListenerOnce(this.map, 'idle', function () {
                         _this.isEditing(true);
                     });
+                }
+            };
+            Location.prototype.loadMapZoom = function (response) {
+                if(response.googleMapZoomLevel) {
+                    this.map.setZoom(response.googleMapZoomLevel);
+                } else {
+                    if(response.box.hasValue) {
+                        this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
+                    }
+                }
+            };
+            Location.prototype.loadMapMarker = function (response) {
+                if(response.center.hasValue) {
+                    var latLng = ViewModels.Places.Utils.convertToLatLng(response.center);
+                    this.mapTools().placeMarker(latLng);
+                    this.map.setCenter(latLng);
                 }
             };
             Location.prototype.fillPlacesHierarchy = function (places) {
@@ -384,7 +390,18 @@ var ViewModels;
                 this.isEditing(true);
             };
             Location.prototype.clickToCancelEdit = function () {
+                var _this = this;
                 this.isEditing(false);
+                if(!this.ownerId) {
+                    return;
+                }
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
+                    _this.map.setZoom(1);
+                    _this.loadMapZoom(response);
+                    _this.mapTools().destroyMarker();
+                    _this.loadMapMarker(response);
+                    _this.fillPlacesHierarchy(response.places);
+                });
             };
             return Location;
         })();
