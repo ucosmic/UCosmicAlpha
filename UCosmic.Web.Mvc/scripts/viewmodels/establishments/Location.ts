@@ -473,6 +473,10 @@ module ViewModels.Establishments {
                 this.fillPlacesHierarchy(response.places);
             })
         }
+
+        clickForHelp(): void {
+            alert('TODO: Show location help dialog here.');
+        }
     }
 
 }

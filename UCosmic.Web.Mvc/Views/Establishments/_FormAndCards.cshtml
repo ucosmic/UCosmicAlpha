@@ -7,6 +7,9 @@
                 <header>
                     <h2>
                         <span>Location</span>
+                        <a href="#/location/help/" title="Help with location" data-bind="click: clickForHelp">
+                            <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help with location" />
+                        </a>
                         <a href="#/location/edit/" title="Edit location" data-bind="visible: isEditIconVisible, click: clickToEdit" style="display: none;">
                             <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit location" />
                         </a>
@@ -31,6 +34,7 @@
                             </span>
                         </span>
                     </div>
+                    <span data-bind="visible: !continentId() || !countryId() || !admin1Id()">[Location is unknown]</span>
                 </div>
                 <div class="field-table w690-l190-v500" data-bind="visible: isEditing" style="display: none;">
                     <div class="field-row">

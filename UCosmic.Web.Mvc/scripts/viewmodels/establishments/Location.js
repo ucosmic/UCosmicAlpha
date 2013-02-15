@@ -403,6 +403,9 @@ var ViewModels;
                     _this.fillPlacesHierarchy(response.places);
                 });
             };
+            Location.prototype.clickForHelp = function () {
+                alert('TODO: Show location help dialog here.');
+            };
             return Location;
         })();
         Establishments.Location = Location;        
