@@ -12,6 +12,7 @@ module ViewModels.Establishments {
 
         ownerId: number;
         map: google.maps.Map;
+        mapZoom: KnockoutObservableNumber = ko.observable(1);
         mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
@@ -21,22 +22,26 @@ module ViewModels.Establishments {
         continentName: KnockoutComputed;
         countries: KnockoutObservablePlaceModelArray = ko.observableArray();
         countryId: KnockoutObservableNumber = ko.observable();
+        countryName: KnockoutComputed;
         countryOptionsCaption: KnockoutComputed;
         private _countryId: number;
         admin1s: KnockoutObservablePlaceModelArray = ko.observableArray();
         admin1Id: KnockoutObservableNumber = ko.observable();
+        admin1Name: KnockoutComputed;
         admin1OptionsCaption: KnockoutComputed;
         admin1sLoading: KnockoutObservableBool = ko.observable(false);
         private _admin1Id: number;
         showAdmin1Input: KnockoutComputed;
         admin2s: KnockoutObservablePlaceModelArray = ko.observableArray();
         admin2Id: KnockoutObservableNumber = ko.observable();
+        admin2Name: KnockoutComputed;
         admin2OptionsCaption: KnockoutComputed;
         admin2sLoading: KnockoutObservableBool = ko.observable(false);
         private _admin2Id: number;
         showAdmin2Input: KnockoutComputed;
         admin3s: KnockoutObservablePlaceModelArray = ko.observableArray();
         admin3Id: KnockoutObservableNumber = ko.observable();
+        admin3Name: KnockoutComputed;
         admin3OptionsCaption: KnockoutComputed;
         admin3sLoading: KnockoutObservableBool = ko.observable(false);
         private _admin3Id: number;
@@ -71,11 +76,28 @@ module ViewModels.Establishments {
             });
 
             this.isEditable = ko.computed((): bool => {
+                // may be a bad name for this property
+                // this only returns true for the edit page, returns false for add page
                 return this.ownerId && this.ownerId !== 0;
             });
 
             this.isEditIconVisible = ko.computed((): bool => {
-                return this.ownerId && !this.isEditing();
+                // whether or not to display edit icon to user
+                // should never show on add page, because is always editable
+                // should only display on edit page to make isEditing() === true
+                return this.isEditable() && !this.isEditing();
+            });
+
+            this.isEditing.subscribe((newValue: bool): void => {
+                // when edit mode is changed, show or hide marker tool overlay
+                if (newValue) {
+                    // show map marker tool
+                    this.mapTools().showMarkerTools();
+                }
+                else if (this.isEditable()) {
+                    // always display for add page, but hide for edit page
+                    this.mapTools().hideMarkerTools();
+                }
             });
         }
 
@@ -123,6 +145,12 @@ module ViewModels.Establishments {
                 });
             })
             .extend({ throttle: 1 });
+            this.countryName = ko.computed((): string => {
+                var countryId = this.countryId();
+                if (!countryId) return '[Unspecified]';
+                var country = Places.Utils.getPlaceById(this.countries(), countryId);
+                return country ? country.officialName : '[Unknown]';
+            });
             this.countryId.subscribe((newValue: number): void => {
                 // when this value is set before the countries menu is loaded,
                 // it will be reset to undefined.
@@ -177,6 +205,12 @@ module ViewModels.Establishments {
                     }
                 }
             });
+            this.admin1Name = ko.computed((): string => {
+                var admin1Id = this.admin1Id();
+                if (!admin1Id) return '[Unspecified]';
+                var admin1 = Places.Utils.getPlaceById(this.admin1s(), admin1Id);
+                return admin1 ? admin1.officialName : '[Unknown]';
+            });
 
             // admin2 dropdown
             this.admin2OptionsCaption = ko.computed((): string => {
@@ -205,6 +239,12 @@ module ViewModels.Establishments {
                     }
                 }
             });
+            this.admin2Name = ko.computed((): string => {
+                var admin2Id = this.admin2Id();
+                if (!admin2Id) return '[Unspecified]';
+                var admin2 = Places.Utils.getPlaceById(this.admin2s(), admin2Id);
+                return admin2 ? admin2.officialName : '[Unknown]';
+            });
 
             // admin3 dropdown
             this.admin3OptionsCaption = ko.computed((): string => {
@@ -229,21 +269,36 @@ module ViewModels.Establishments {
                     }
                 }
             });
+            this.admin3Name = ko.computed((): string => {
+                var admin3Id = this.admin3Id();
+                if (!admin3Id) return '[Unspecified]';
+                var admin3 = Places.Utils.getPlaceById(this.admin3s(), admin3Id);
+                return admin3 ? admin3.officialName : '[Unknown]';
+            });
         }
 
-        initMap(): void {
+        private initMap(): void {
+            var me = this;
+            // do everything necessary to initialize the google map
             var mapOptions: gm.MapOptions = {
                 mapTypeId: gm.MapTypeId.ROADMAP,
-                center: new gm.LatLng(0, 0),
-                zoom: 1,
-                draggable: true,
-                scrollwheel: false
+                center: new gm.LatLng(0, 0), // americas on left, australia on right
+                zoom: me.mapZoom(), // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
             };
-            this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
+            this.map = new gm.Map(this.$mapCanvas()[0], mapOptions); // create map on element
+
             gm.event.addListenerOnce(this.map, 'idle', (): void => {
                 this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));
                 this.mapTools().hideMarkerTools(); // initially hide the marker tools
+
+                gm.event.addListener(this.map, 'zoom_changed', (): void => {
+                    // track the map zoom
+                    this.mapZoom(this.map.getZoom());
+                });
             });
+
 
             // tools overlay marker
             this.$mapCanvas().on('marker_destroyed', (): void => {
@@ -293,7 +348,7 @@ module ViewModels.Establishments {
             }
             else { // otherwise, make map editable
                 gm.event.addListenerOnce(this.map, 'idle', (): void => {
-                    this.mapTools().showMarkerTools();
+                    this.isEditing(true);
                 });
             }
         }
@@ -385,6 +440,14 @@ module ViewModels.Establishments {
 
         changePlaceInLocation(): void {
             this.subAdmins([]);
+        }
+
+        clickToEdit(): void {
+            this.isEditing(true);
+        }
+
+        clickToCancelEdit(): void {
+            this.isEditing(false);
         }
     }
 

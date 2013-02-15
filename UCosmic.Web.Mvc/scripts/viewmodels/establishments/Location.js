@@ -5,6 +5,7 @@ var ViewModels;
         var Location = (function () {
             function Location(ownerId) {
                 var _this = this;
+                this.mapZoom = ko.observable(1);
                 this.mapTools = ko.observable();
                 this.$mapCanvas = ko.observable();
                 this.continents = ko.observableArray();
@@ -45,7 +46,16 @@ var ViewModels;
                     return _this.ownerId && _this.ownerId !== 0;
                 });
                 this.isEditIconVisible = ko.computed(function () {
-                    return _this.ownerId && !_this.isEditing();
+                    return _this.isEditable() && !_this.isEditing();
+                });
+                this.isEditing.subscribe(function (newValue) {
+                    if(newValue) {
+                        _this.mapTools().showMarkerTools();
+                    } else {
+                        if(_this.isEditable()) {
+                            _this.mapTools().hideMarkerTools();
+                        }
+                    }
                 });
             }
             Location.prototype._initComputedsAndSubscriptions = function () {
@@ -95,6 +105,14 @@ var ViewModels;
                 }).extend({
                     throttle: 1
                 });
+                this.countryName = ko.computed(function () {
+                    var countryId = _this.countryId();
+                    if(!countryId) {
+                        return '[Unspecified]';
+                    }
+                    var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), countryId);
+                    return country ? country.officialName : '[Unknown]';
+                });
                 this.countryId.subscribe(function (newValue) {
                     if(newValue && _this.countries().length == 0) {
                         _this._countryId = newValue;
@@ -136,6 +154,14 @@ var ViewModels;
                         }
                     }
                 });
+                this.admin1Name = ko.computed(function () {
+                    var admin1Id = _this.admin1Id();
+                    if(!admin1Id) {
+                        return '[Unspecified]';
+                    }
+                    var admin1 = ViewModels.Places.Utils.getPlaceById(_this.admin1s(), admin1Id);
+                    return admin1 ? admin1.officialName : '[Unknown]';
+                });
                 this.admin2OptionsCaption = ko.computed(function () {
                     return !_this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({
@@ -158,6 +184,14 @@ var ViewModels;
                         }
                     }
                 });
+                this.admin2Name = ko.computed(function () {
+                    var admin2Id = _this.admin2Id();
+                    if(!admin2Id) {
+                        return '[Unspecified]';
+                    }
+                    var admin2 = ViewModels.Places.Utils.getPlaceById(_this.admin2s(), admin2Id);
+                    return admin2 ? admin2.officialName : '[Unknown]';
+                });
                 this.admin3OptionsCaption = ko.computed(function () {
                     return !_this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({
@@ -178,13 +212,22 @@ var ViewModels;
                         }
                     }
                 });
+                this.admin3Name = ko.computed(function () {
+                    var admin3Id = _this.admin3Id();
+                    if(!admin3Id) {
+                        return '[Unspecified]';
+                    }
+                    var admin3 = ViewModels.Places.Utils.getPlaceById(_this.admin3s(), admin3Id);
+                    return admin3 ? admin3.officialName : '[Unknown]';
+                });
             };
             Location.prototype.initMap = function () {
                 var _this = this;
+                var me = this;
                 var mapOptions = {
                     mapTypeId: gm.MapTypeId.ROADMAP,
                     center: new gm.LatLng(0, 0),
-                    zoom: 1,
+                    zoom: me.mapZoom(),
                     draggable: true,
                     scrollwheel: false
                 };
@@ -192,6 +235,9 @@ var ViewModels;
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
                     _this.mapTools().hideMarkerTools();
+                    gm.event.addListener(_this.map, 'zoom_changed', function () {
+                        _this.mapZoom(_this.map.getZoom());
+                    });
                 });
                 this.$mapCanvas().on('marker_destroyed', function () {
                     _this.countryId(undefined);
@@ -230,7 +276,7 @@ var ViewModels;
                     });
                 } else {
                     gm.event.addListenerOnce(this.map, 'idle', function () {
-                        _this.mapTools().showMarkerTools();
+                        _this.isEditing(true);
                     });
                 }
             };
@@ -333,6 +379,12 @@ var ViewModels;
             };
             Location.prototype.changePlaceInLocation = function () {
                 this.subAdmins([]);
+            };
+            Location.prototype.clickToEdit = function () {
+                this.isEditing(true);
+            };
+            Location.prototype.clickToCancelEdit = function () {
+                this.isEditing(false);
             };
             return Location;
         })();
