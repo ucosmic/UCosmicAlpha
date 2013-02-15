@@ -49,7 +49,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("derive-display-name")]
-        public string GetDeriveDisplayName([FromUri] PersonNameApiModel model)
+        public string GetDeriveDisplayName([FromUri] MyProfileApiModel model)
         {
             if (model == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 

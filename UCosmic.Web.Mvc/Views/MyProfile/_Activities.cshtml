@@ -1,5 +1,20 @@
-﻿<form id="myprofileeactivities" data-xbind="submit: saveEmails">
-    <div>
-        <input type="submit" value="Save" />
-    </div>
-</form>
+﻿<section id="names" class="fieldset">
+    <header>
+        <h2>
+            <span>My International Activity</span>
+            <a href="#" title="Add a new name" data-bind="visible: canAddName() && !namesSpinner.isVisible(), click: addName" style="display: none;">
+                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new name" />
+            </a>
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" style="display: none;" />
+        </h2>
+    </header>
+
+
+    <form id="my_profile_activities" data-xbind="submit: saveEmails">
+
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    </form>
+
+</section>

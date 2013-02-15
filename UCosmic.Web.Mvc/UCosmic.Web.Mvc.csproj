@@ -432,7 +432,6 @@
     <Compile Include="Models\EstablishmentLocationApiModel.cs" />
     <Compile Include="Models\FacultyRankApiModel.cs" />
     <Compile Include="Models\IReturnUrl.cs" />
-    <Compile Include="Models\PersonNameApiModel.cs" />
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
@@ -452,6 +451,9 @@
     <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
     <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
     <Compile Include="MyProfileController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="PeopleDeprecated.PersonInfoController.generated.cs">
@@ -706,10 +708,7 @@
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
-    <Content Include="images\icons\edit\pencil-a-24.png" />
-    <Content Include="images\icons\edit\pencil-a-64.png" />
     <Content Include="images\icons\help\question-mark-24-blue.png" />
-    <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <Content Include="images\icons\user\unisex-a-128.png" />
     <Content Include="images\icons\user\unisex-a-256.png" />
     <Content Include="images\samples\sample-photo-128.jpg" />
@@ -1483,27 +1482,15 @@
     <Content Include="scripts\tinymce\utils\validate.js" />
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
-    <Content Include="scripts\viewmodels\establishments\Location.js">
-      <DependentUpon>Location.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
-    <Content Include="scripts\viewmodels\my\EmailAddresses.js">
-      <DependentUpon>EmailAddresses.ts</DependentUpon>
-    </Content>
-    </Content>
-    <Content Include="scripts\viewmodels\establishments\Location.min.js">
-      <DependentUpon>Location.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <Content Include="scripts\viewmodels\my\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
-    <Content Include="scripts\viewmodels\my\Affiliations.min.js">
-      <DependentUpon>Affiliations.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\my\EmailAddresses.js">
+      <DependentUpon>EmailAddresses.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\my\EmailAddresses.min.js">
       <DependentUpon>EmailAddresses.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Name.js">
@@ -1554,9 +1541,6 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\ServerApiModel.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
-    <Content Include="scripts\viewmodels\my\EmailAddresses.min.js">
-      <DependentUpon>EmailAddresses.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\my\Profile.js">
       <DependentUpon>Profile.ts</DependentUpon>
     </Content>
@@ -1771,6 +1755,7 @@
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
+    <Content Include="Views\People\Index.cshtml" />
     <Content Include="styles\sass\sheets\_designs.scss" />
     <Content Include="styles\tenants\_default\designs.scss" />
     <Content Include="styles\tenants\lehigh.edu\designs.scss" />
@@ -1778,11 +1763,11 @@
     <Content Include="styles\tenants\uc.edu\designs.scss" />
     <Content Include="styles\tenants\umn.edu\designs.scss" />
     <Content Include="styles\tenants\usf.edu\designs.scss" />
+    <Content Include="Views\People\Index2.cshtml" />
     <Content Include="Views\MyProfile\Index.cshtml" />
     <Content Include="Views\MyProfile\_EmailAddresses.cshtml" />
     <Content Include="Views\MyProfile\_PersonalInfo.cshtml" />
     <Content Include="Views\MyProfile\_Affiliations.cshtml" />
-    <Content Include="Views\Home\_Bib.cshtml" />
     <Content Include="Views\Establishments\_FormLocationSection.cshtml" />
     <Content Include="Views\MyProfile\_Activities.cshtml" />
     <None Include="Web.Debug.config">
@@ -1942,6 +1927,7 @@
     <Folder Include="App_Data\mail\" />
     <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
+    <Folder Include="scripts\viewmodels\people\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>
   <ItemGroup>
