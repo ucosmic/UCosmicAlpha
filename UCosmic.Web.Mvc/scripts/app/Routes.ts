@@ -157,6 +157,10 @@ module App.Routes {
                     var url = 'establishments/' + establishmentId + '/location';
                     return makeUrl(url);
                 }
+
+                static put (establishmentId: number): string {
+                    return get(establishmentId);
+                }
             }
 
         }

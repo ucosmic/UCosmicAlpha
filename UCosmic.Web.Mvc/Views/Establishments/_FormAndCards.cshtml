@@ -34,7 +34,7 @@
                             </span>
                         </span>
                     </div>
-                    <span data-bind="visible: !continentId() || !countryId() || !admin1Id()">[Location is unknown]</span>
+                    <span data-bind="visible: isLoaded() && !places().length">[Location is unknown]</span>
                 </div>
                 <div class="field-table w690-l190-v500" data-bind="visible: isEditing" style="display: none;">
                     <div class="field-row">
@@ -123,12 +123,12 @@
                     </div>
                     <div class="field-row" data-bind="visible: isEditable">
                         <div class="field-unlabeled-input">
-                            <input type="submit" value="Save" data-bind="attr: { disabled: true }" />
+                            <input type="button" value="Save" data-bind="click: clickToSave, attr: { disabled: saveSpinner.isVisible }" />
                             &nbsp;&nbsp;&nbsp;
                             <a href="#/cancel-location-edit/" data-bind="click: clickToCancelEdit">Cancel</a>
-                            @*&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;
                             <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
-                            <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>*@
+                            <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
                         </div>
                     </div>
                 </div>

@@ -92,7 +92,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("{establishmentId}/names")]
-        [Authorize(Roles = "Establishment Administrator")]
+        [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Post(int establishmentId, EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
@@ -129,7 +129,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("{establishmentId}/names/{establishmentNameId}")]
-        [Authorize(Roles = "Establishment Administrator")]
+        [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Put(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
@@ -156,7 +156,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("{establishmentId}/names/{establishmentNameId}")]
-        [Authorize(Roles = "Establishment Administrator")]
+        [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Delete(int establishmentId, int establishmentNameId)
         {
             //System.Threading.Thread.Sleep(2000);

@@ -8,10 +8,12 @@ var ViewModels;
                 this.mapZoom = ko.observable(1);
                 this.mapTools = ko.observable();
                 this.$mapCanvas = ko.observable();
+                this.isLoaded = ko.observable();
                 this.continents = ko.observableArray();
                 this.continentId = ko.observable();
                 this.countries = ko.observableArray();
                 this.countryId = ko.observable();
+                this.allowCountryFitBounds = true;
                 this.admin1s = ko.observableArray();
                 this.admin1Id = ko.observable();
                 this.admin1sLoading = ko.observable(false);
@@ -23,11 +25,12 @@ var ViewModels;
                 this.admin3sLoading = ko.observable(false);
                 this.places = ko.observableArray();
                 this.subAdmins = ko.observableArray();
-                this.dataLoadingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+                this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
                 this.isEditing = ko.observable();
                 this.ownerId = ownerId;
                 this._initComputedsAndSubscriptions();
-                this.dataLoadingSpinner.isVisible.subscribe(function (newValue) {
+                this.loadSpinner.isVisible.subscribe(function (newValue) {
                     if(!_this.$dataLoadingDialog || !_this.$dataLoadingDialog.length) {
                         return;
                     }
@@ -120,14 +123,26 @@ var ViewModels;
                     if(newValue && _this.countries().length > 0) {
                         var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), newValue);
                         if(country) {
-                            _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
+                            if(_this.allowCountryFitBounds) {
+                                _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
+                            } else {
+                                setTimeout(function () {
+                                    _this.allowCountryFitBounds = true;
+                                }, 1000);
+                            }
                             _this.continentId(country.parentId);
                             _this.loadAdmin1s(country.id);
                         }
                     } else {
                         if(!newValue && _this.countries().length > 0) {
                             _this.map.setCenter(new gm.LatLng(0, 0));
-                            _this.map.setZoom(1);
+                            if(_this.allowCountryFitBounds) {
+                                _this.map.setZoom(1);
+                            } else {
+                                setTimeout(function () {
+                                    _this.allowCountryFitBounds = true;
+                                }, 1000);
+                            }
                             _this.continentId(null);
                         }
                     }
@@ -246,23 +261,25 @@ var ViewModels;
                 this.$mapCanvas().on('marker_dragend marker_created', function () {
                     var latLng = _this.mapTools().markerLatLng();
                     var route = App.Routes.WebApi.Places.get(latLng.lat(), latLng.lng());
-                    _this.dataLoadingSpinner.start();
+                    _this.loadSpinner.start();
                     $.get(route).done(function (response) {
                         if(response && response.length) {
                             _this.fillPlacesHierarchy(response);
                         }
                     }).always(function () {
-                        _this.dataLoadingSpinner.stop();
+                        _this.loadSpinner.stop();
                     }).fail(function (arg1, arg2, arg3, arg4, arg5) {
                     });
                 });
                 if(this.ownerId) {
+                    this.isLoaded(false);
                     $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                         gm.event.addListenerOnce(_this.map, 'idle', function () {
                             _this.loadMapZoom(response);
                             _this.loadMapMarker(response);
                         });
                         _this.fillPlacesHierarchy(response.places);
+                        _this.isLoaded(true);
                     });
                 } else {
                     gm.event.addListenerOnce(this.map, 'idle', function () {
@@ -277,6 +294,9 @@ var ViewModels;
                     if(response.box.hasValue) {
                         this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
                     }
+                }
+                if(response.googleMapZoomLevel || response.box.hasValue) {
+                    this.allowCountryFitBounds = false;
                 }
             };
             Location.prototype.loadMapMarker = function (response) {
@@ -325,7 +345,6 @@ var ViewModels;
             };
             Location.prototype.loadAdmin1s = function (countryId) {
                 var _this = this;
-                this.admin1s([]);
                 var admin1Url = App.Routes.WebApi.Places.get({
                     isAdmin1: true,
                     parentId: countryId
@@ -345,7 +364,6 @@ var ViewModels;
             };
             Location.prototype.loadAdmin2s = function (admin1Id) {
                 var _this = this;
-                this.admin2s([]);
                 var admin2Url = App.Routes.WebApi.Places.get({
                     isAdmin2: true,
                     parentId: admin1Id
@@ -365,7 +383,6 @@ var ViewModels;
             };
             Location.prototype.loadAdmin3s = function (admin2Id) {
                 var _this = this;
-                this.admin3s([]);
                 var admin3Url = App.Routes.WebApi.Places.get({
                     isAdmin3: true,
                     parentId: admin2Id
@@ -389,18 +406,95 @@ var ViewModels;
             Location.prototype.clickToEdit = function () {
                 this.isEditing(true);
             };
+            Location.prototype.clickToSave = function () {
+                var _this = this;
+                var me = this;
+                if(!this.ownerId) {
+                    return;
+                }
+                this.saveSpinner.start();
+                $.ajax({
+                    url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
+                    type: 'PUT',
+                    data: me.toJs()
+                }).always(function () {
+                    me.saveSpinner.stop();
+                }).done(function (arg1, arg2, arg3) {
+                    alert('done');
+                    _this.isEditing(false);
+                }).fail(function (arg1, arg2, arg3) {
+                    alert('fail');
+                });
+            };
+            Location.prototype.toJs = function () {
+                var center, centerLat = this.toolsMarkerLat(), centerLng = this.toolsMarkerLng();
+                if(centerLat != null && centerLng != null) {
+                    center = {
+                        latitude: centerLat,
+                        longitude: centerLng
+                    };
+                }
+                if(center) {
+                    this.map.setCenter(ViewModels.Places.Utils.convertToLatLng(center));
+                }
+                var box, northEast, northEastLat = this.map.getBounds().getNorthEast().lat(), northEastLng = this.map.getBounds().getNorthEast().lat(), southWest, southWestLat = this.map.getBounds().getSouthWest().lat(), southWestLng = this.map.getBounds().getSouthWest().lat(), zoom = this.map.getZoom(), placeId;
+                if(northEastLat || northEastLng || southWestLat || southWestLng) {
+                    box = {
+                        northEast: {
+                            latitude: northEastLat,
+                            longitude: northEastLng
+                        },
+                        southWest: {
+                            latitude: southWestLat,
+                            longitude: southWestLng
+                        }
+                    };
+                }
+                if(this.subAdmins().length) {
+                    placeId = this.subAdmins()[this.subAdmins().length - 1].id;
+                } else {
+                    if(this.admin3Id()) {
+                        placeId = this.admin3Id();
+                    } else {
+                        if(this.admin2Id()) {
+                            placeId = this.admin2Id();
+                        } else {
+                            if(this.admin1Id()) {
+                                placeId = this.admin1Id();
+                            } else {
+                                if(this.countryId()) {
+                                    placeId = this.countryId();
+                                } else {
+                                    if(this.continentId()) {
+                                        placeId = this.continentId();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                var js = {
+                    center: center,
+                    box: box,
+                    googleMapZoomLevel: zoom,
+                    placeId: placeId
+                };
+                return js;
+            };
             Location.prototype.clickToCancelEdit = function () {
                 var _this = this;
                 this.isEditing(false);
                 if(!this.ownerId) {
                     return;
                 }
+                this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                     _this.map.setZoom(1);
                     _this.loadMapZoom(response);
                     _this.mapTools().destroyMarker();
                     _this.loadMapMarker(response);
                     _this.fillPlacesHierarchy(response.places);
+                    _this.isLoaded(true);
                 });
             };
             Location.prototype.clickForHelp = function () {

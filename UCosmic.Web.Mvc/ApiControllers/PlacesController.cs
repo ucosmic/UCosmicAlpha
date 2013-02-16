@@ -29,7 +29,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CacheHttpGet(Duration = 3600)]
         public IEnumerable<PlaceApiModel> GetFiltered([FromUri] PlaceFilterInputModel input)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             var query = Mapper.Map<FilteredPlaces>(input);
             query.EagerLoad = new Expression<Func<Place, object>>[]
             {
@@ -45,6 +46,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CacheHttpGet(Duration = 3600)]
         public PlaceApiModel GetById(int placeId)
         {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             var query = new PlaceById(placeId);
             var entity = _queryProcessor.Execute(query);
             var model = Mapper.Map<PlaceApiModel>(entity);
@@ -79,6 +82,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CacheHttpGet(Duration = 3600)]
         public IEnumerable<PlaceApiModel> GetChildren(int placeId)
         {
+            //System.Threading.Thread.Sleep(5000); // test api latency
+
             var query = new PlaceById(placeId)
             {
                 EagerLoad = new Expression<Func<Place, object>>[]

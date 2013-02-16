@@ -12,6 +12,14 @@ namespace UCosmic.Web.Mvc.Models
         public PlaceApiModel[] Places { get; set; }
     }
 
+    public class EstablishmentLocationPutModel
+    {
+        public MapPointModel Center { get; set; }
+        public MapBoxModel Box { get; set; }
+        public int? GoogleMapZoomLevel { get; set; }
+        public int? PlaceId { get; set; }
+    }
+
     public static class EstablishmentLocationApiProfiler
     {
         public class EntityToModelProfile : Profile

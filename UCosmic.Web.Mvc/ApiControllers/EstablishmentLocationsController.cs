@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -35,6 +36,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var model = Mapper.Map<EstablishmentLocationApiModel>(entity.Location);
             return model;
+        }
+
+        [PUT("{establishmentId}/location")]
+        [Authorize(Roles = RoleName.EstablishmentAdministrator)]
+        public HttpResponseMessage Put(int establishmentId, EstablishmentLocationPutModel model)
+        {
+            //return null; // cause fail callback on client
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment location was successfully updated.");
+            return response;
         }
     }
 }

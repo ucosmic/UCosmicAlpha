@@ -17,6 +17,7 @@ module ViewModels.Establishments {
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
+        isLoaded: KnockoutObservableBool = ko.observable();
         continents: KnockoutObservablePlaceModelArray = ko.observableArray();
         continentId: KnockoutObservableNumber = ko.observable();
         continentName: KnockoutComputed;
@@ -25,6 +26,7 @@ module ViewModels.Establishments {
         countryName: KnockoutComputed;
         countryOptionsCaption: KnockoutComputed;
         private _countryId: number;
+        private allowCountryFitBounds: bool = true;
         admin1s: KnockoutObservablePlaceModelArray = ko.observableArray();
         admin1Id: KnockoutObservableNumber = ko.observable();
         admin1Name: KnockoutComputed;
@@ -48,7 +50,8 @@ module ViewModels.Establishments {
         showAdmin3Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();
         subAdmins: KnockoutObservablePlaceModelArray = ko.observableArray();
-        dataLoadingSpinner: Spinner = new Spinner(new SpinnerOptions(400));
+        loadSpinner: Spinner = new Spinner(new SpinnerOptions(400));
+        saveSpinner: Spinner = new Spinner(new SpinnerOptions(400));
         $dataLoadingDialog: JQuery;
         isEditable: () => bool;
         isEditIconVisible: () => bool;
@@ -58,7 +61,7 @@ module ViewModels.Establishments {
             this.ownerId = ownerId;
             this._initComputedsAndSubscriptions();
 
-            this.dataLoadingSpinner.isVisible.subscribe((newValue: bool): void => {
+            this.loadSpinner.isVisible.subscribe((newValue: bool): void => {
                 if (!this.$dataLoadingDialog || !this.$dataLoadingDialog.length) {
                     return;
                 }
@@ -162,7 +165,14 @@ module ViewModels.Establishments {
                     var country: Places.IServerApiModel = Places.Utils
                         .getPlaceById(this.countries(), newValue);
                     if (country) {
-                        this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
+                        if (this.allowCountryFitBounds) {
+                            this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
+                        }
+                        else {
+                            setTimeout((): void => {
+                                this.allowCountryFitBounds = true;
+                            }, 1000);
+                        }
 
                         // cascade the continent
                         this.continentId(country.parentId);
@@ -174,7 +184,14 @@ module ViewModels.Establishments {
                 else if (!newValue && this.countries().length > 0) {
                     // when changing to unspecified, zoom out menu
                     this.map.setCenter(new gm.LatLng(0, 0));
-                    this.map.setZoom(1);
+                    if (this.allowCountryFitBounds) {
+                        this.map.setZoom(1);
+                    }
+                    else {
+                        setTimeout((): void => {
+                            this.allowCountryFitBounds = true;
+                        }, 1000);
+                    }
                     this.continentId(null);
                 }
             });
@@ -309,7 +326,7 @@ module ViewModels.Establishments {
             this.$mapCanvas().on('marker_dragend marker_created', (): void => {
                 var latLng = this.mapTools().markerLatLng();
                 var route = App.Routes.WebApi.Places.get(latLng.lat(), latLng.lng());
-                this.dataLoadingSpinner.start();
+                this.loadSpinner.start();
                 $.get(route)
                 .done((response: Places.IServerApiModel[]): void => {
                     if (response && response.length) {
@@ -317,7 +334,7 @@ module ViewModels.Establishments {
                     }
                 })
                 .always((): void => {
-                    this.dataLoadingSpinner.stop();
+                    this.loadSpinner.stop();
                 })
                 .fail((arg1: any, arg2, arg3, arg4, arg5): void => {
                     //alert('update call fail :(');
@@ -325,6 +342,7 @@ module ViewModels.Establishments {
             });
 
             if (this.ownerId) { // set up based on current owner id
+                this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
                 .done((response: IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
@@ -333,6 +351,7 @@ module ViewModels.Establishments {
                     });
 
                     this.fillPlacesHierarchy(response.places);
+                    this.isLoaded(true);
                 })
             }
             else { // otherwise, make map editable
@@ -348,6 +367,8 @@ module ViewModels.Establishments {
                 this.map.setZoom(response.googleMapZoomLevel);
             else if (response.box.hasValue)
                 this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
+            if (response.googleMapZoomLevel || response.box.hasValue)
+                this.allowCountryFitBounds = false;
         }
 
         private loadMapMarker(response: IServerLocationApiModel): void {
@@ -394,7 +415,7 @@ module ViewModels.Establishments {
         }
 
         private loadAdmin1s(countryId: number): void {
-            this.admin1s([]);
+            //this.admin1s([]);
             var admin1Url = App.Routes.WebApi.Places
                 .get({ isAdmin1: true, parentId: countryId });
             this.admin1sLoading(true);
@@ -411,7 +432,7 @@ module ViewModels.Establishments {
         }
 
         private loadAdmin2s(admin1Id: number): void {
-            this.admin2s([]);
+            //this.admin2s([]);
             var admin2Url = App.Routes.WebApi.Places
                 .get({ isAdmin2: true, parentId: admin1Id });
             this.admin2sLoading(true);
@@ -428,7 +449,7 @@ module ViewModels.Establishments {
         }
 
         private loadAdmin3s(admin2Id: number): void {
-            this.admin3s([]);
+            //this.admin3s([]);
             var admin3Url = App.Routes.WebApi.Places
                 .get({ isAdmin3: true, parentId: admin2Id });
             this.admin3sLoading(true);
@@ -452,6 +473,87 @@ module ViewModels.Establishments {
             this.isEditing(true);
         }
 
+        clickToSave(): void {
+            var me = this;
+            // shouldn't be able to click this button for add form, guarding anyway
+            if (!this.ownerId) return;
+
+            this.saveSpinner.start();
+            $.ajax({
+                url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
+                type: 'PUT',
+                data: me.toJs()
+            })
+            .always((): void => {
+                me.saveSpinner.stop();
+            })
+            .done((arg1: any, arg2, arg3): void => {
+                alert('done');
+                this.isEditing(false);
+            })
+            .fail((arg1: any, arg2, arg3): void => {
+                alert('fail');
+            });
+        }
+
+        private toJs(): IServerLocationPutModel {
+            var center: Places.IServerPointModel,
+                centerLat: number = this.toolsMarkerLat(),
+                centerLng: number = this.toolsMarkerLng();
+            if (centerLat != null && centerLng != null)
+                center = {
+                    latitude: centerLat,
+                    longitude: centerLng
+                };
+
+            // center the map on the lat/lng before getting bounds
+            if (center)
+                this.map.setCenter(Places.Utils.convertToLatLng(center));
+
+            var box: Places.IServerBoxModel,
+                northEast: Places.IServerPointModel,
+                northEastLat: number = this.map.getBounds().getNorthEast().lat(),
+                northEastLng: number = this.map.getBounds().getNorthEast().lat(),
+                southWest: Places.IServerPointModel,
+                southWestLat: number = this.map.getBounds().getSouthWest().lat(),
+                southWestLng: number = this.map.getBounds().getSouthWest().lat(),
+                zoom: number = this.map.getZoom(),
+                placeId: number
+            ;
+            if (northEastLat || northEastLng || southWestLat || southWestLng)
+                box = {
+                    northEast: {
+                        latitude: northEastLat,
+                        longitude: northEastLng
+                    },
+                    southWest: {
+                        latitude: southWestLat,
+                        longitude: southWestLng
+                    }
+                };
+
+            if (this.subAdmins().length)
+                placeId = this.subAdmins()[this.subAdmins().length - 1].id;
+            else if (this.admin3Id())
+                placeId = this.admin3Id();
+            else if (this.admin2Id())
+                placeId = this.admin2Id();
+            else if (this.admin1Id())
+                placeId = this.admin1Id();
+            else if (this.countryId())
+                placeId = this.countryId();
+            else if (this.continentId())
+                placeId = this.continentId();
+
+            var js: IServerLocationPutModel = {
+                center: center,
+                box: box,
+                googleMapZoomLevel: zoom,
+                placeId: placeId
+            };
+            return js;
+        }
+
         clickToCancelEdit(): void {
             this.isEditing(false);
 
@@ -459,19 +561,20 @@ module ViewModels.Establishments {
             if (!this.ownerId) return;
 
             // restore initial values
+            this.isLoaded(false);
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
                 .done((response: IServerLocationApiModel): void => {
+                    // reset zoom
+                    this.map.setZoom(1);
+                    this.loadMapZoom(response);
 
-                // reset zoom
-                this.map.setZoom(1);
-                this.loadMapZoom(response);
+                    // reset marker
+                    this.mapTools().destroyMarker();
+                    this.loadMapMarker(response);
 
-                // reset marker
-                this.mapTools().destroyMarker();
-                this.loadMapMarker(response);
-
-                this.fillPlacesHierarchy(response.places);
-            })
+                    this.fillPlacesHierarchy(response.places);
+                    this.isLoaded(true);
+                })
         }
 
         clickForHelp(): void {

@@ -148,6 +148,9 @@ var App;
                         var url = 'establishments/' + establishmentId + '/location';
                         return makeUrl(url);
                     }
+                    Locations.put = function put(establishmentId) {
+                        return Locations.get(establishmentId);
+                    }
                     return Locations;
                 })();
                 Establishments.Locations = Locations;                
