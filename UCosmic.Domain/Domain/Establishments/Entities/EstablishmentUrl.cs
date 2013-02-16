@@ -20,7 +20,6 @@ namespace UCosmic.Domain.Establishments
         }
     }
 
-
     internal static class EstablishmentUrlSerializer
     {
         internal static string ToJsonAudit(this EstablishmentUrl establishmentUrl)

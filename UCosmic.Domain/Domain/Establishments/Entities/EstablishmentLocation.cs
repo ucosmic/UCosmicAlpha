@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
 using UCosmic.Domain.Places;
 using System.Globalization;
 
@@ -50,5 +51,25 @@ namespace UCosmic.Domain.Establishments
         public int? GoogleMapZoomLevel { get; protected internal set; }
 
         public virtual ICollection<Place> Places { get; protected internal set; }
+    }
+
+    internal static class EstablishmentLocationSerializer
+    {
+        internal static string ToJsonAudit(this EstablishmentLocation establishmentLocation)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = establishmentLocation.RevisionId,
+                CenterLatitude = establishmentLocation.Center.Latitude,
+                CenterLongitude = establishmentLocation.Center.Longitude,
+                BoxNorthEastLatitude = establishmentLocation.BoundingBox.Northeast.Latitude,
+                BoxNorthEastLongitude = establishmentLocation.BoundingBox.Northeast.Longitude,
+                BoxSouthWestLatitude = establishmentLocation.BoundingBox.Southwest.Latitude,
+                BoxSouthWestLongitude = establishmentLocation.BoundingBox.Southwest.Longitude,
+                establishmentLocation.GoogleMapZoomLevel,
+                PlaceIds = establishmentLocation.Places.Select(x => x.RevisionId).ToArray(),
+            });
+            return state;
+        }
     }
 }

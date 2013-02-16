@@ -15,7 +15,7 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class MapPointProfiler
     {
-        public class EntityToModelProfile: Profile
+        public class DomainToModelProfile: Profile
         {
             protected override void Configure()
             {

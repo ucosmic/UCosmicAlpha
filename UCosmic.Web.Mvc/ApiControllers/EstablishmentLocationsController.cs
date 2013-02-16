@@ -7,6 +7,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -16,16 +17,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class EstablishmentLocationsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<UpdateEstablishmentLocation> _updateHandler;
 
-        public EstablishmentLocationsController(IProcessQueries queryProcessor)
+        public EstablishmentLocationsController(IProcessQueries queryProcessor
+            , IHandleCommands<UpdateEstablishmentLocation> updateHandler
+        )
         {
             _queryProcessor = queryProcessor;
+            _updateHandler = updateHandler;
         }
 
         [GET("{establishmentId}/location")]
         public EstablishmentLocationApiModel Get(int establishmentId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test API latency
+
             var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId)
             {
                 EagerLoad = new Expression<Func<Establishment, object>>[]
@@ -42,7 +48,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Put(int establishmentId, EstablishmentLocationPutModel model)
         {
-            //return null; // cause fail callback on client
+            //System.Threading.Thread.Sleep(2000); // test API latency
+            //return null; // test client fail callback
+
+            var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId));
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var command = new UpdateEstablishmentLocation(establishmentId, User);
+            Mapper.Map(model, command);
+
+            try
+            {
+                _updateHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment location was successfully updated.");
             return response;
         }

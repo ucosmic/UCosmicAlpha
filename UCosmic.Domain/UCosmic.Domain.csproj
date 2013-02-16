@@ -140,6 +140,7 @@
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeById.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentLocation.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCategory.cs" />
@@ -286,6 +287,7 @@
     <Compile Include="Domain\Places\Queries\FilteredPlaces.cs" />
     <Compile Include="Domain\Places\Queries\Countries.cs" />
     <Compile Include="Domain\Places\Queries\WoeIdByCoordinates.cs" />
+    <Compile Include="Domain\Places\Validation\MustFindPlaceById.cs" />
     <Compile Include="Domain\Places\_Etc\GeoNamesConverter.cs" />
     <Compile Include="Domain\Places\_Etc\GeoPlanetConverter.cs" />
     <Compile Include="Domain\Places\_Etc\KnownWoeIds.cs" />

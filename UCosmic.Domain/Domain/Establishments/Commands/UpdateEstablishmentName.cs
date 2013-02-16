@@ -148,11 +148,9 @@ namespace UCosmic.Domain.Establishments
             _entities.Create(audit);
             _entities.Update(establishmentName);
 
-            if (!command.NoCommit)
-            {
-                _unitOfWork.SaveChanges();
-                _eventProcessor.Raise(new EstablishmentChanged());
-            }
+            if (command.NoCommit) return;
+            _unitOfWork.SaveChanges();
+            _eventProcessor.Raise(new EstablishmentChanged());
         }
     }
 }

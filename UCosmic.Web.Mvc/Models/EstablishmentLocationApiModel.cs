@@ -33,5 +33,16 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class PutModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EstablishmentLocationPutModel, UpdateEstablishmentLocation>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.Id, o => o.Ignore())
+                ;
+            }
+        }
     }
 }

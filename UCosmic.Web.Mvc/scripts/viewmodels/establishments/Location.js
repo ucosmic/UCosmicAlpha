@@ -256,6 +256,10 @@ var ViewModels;
                 });
                 this.$mapCanvas().on('marker_destroyed', function () {
                     _this.countryId(undefined);
+                    _this.continentId(undefined);
+                    _this.admin1Id(undefined);
+                    _this.admin2Id(undefined);
+                    _this.admin3Id(undefined);
                     _this.subAdmins([]);
                 });
                 this.$mapCanvas().on('marker_dragend marker_created', function () {
@@ -264,6 +268,7 @@ var ViewModels;
                     _this.loadSpinner.start();
                     $.get(route).done(function (response) {
                         if(response && response.length) {
+                            _this.allowCountryFitBounds = false;
                             _this.fillPlacesHierarchy(response);
                         }
                     }).always(function () {
@@ -288,12 +293,15 @@ var ViewModels;
                 }
             };
             Location.prototype.loadMapZoom = function (response) {
-                if(response.googleMapZoomLevel) {
+                if(response.googleMapZoomLevel && response.center && response.center.hasValue) {
                     this.map.setZoom(response.googleMapZoomLevel);
                 } else {
                     if(response.box.hasValue) {
                         this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
                     }
+                }
+                if(response.googleMapZoomLevel && response.googleMapZoomLevel > 1) {
+                    this.map.setZoom(response.googleMapZoomLevel);
                 }
                 if(response.googleMapZoomLevel || response.box.hasValue) {
                     this.allowCountryFitBounds = false;
@@ -419,15 +427,14 @@ var ViewModels;
                     data: me.toJs()
                 }).always(function () {
                     me.saveSpinner.stop();
-                }).done(function (arg1, arg2, arg3) {
-                    alert('done');
+                }).done(function (response, statusText, xhr) {
+                    App.flasher.flash(response);
                     _this.isEditing(false);
                 }).fail(function (arg1, arg2, arg3) {
-                    alert('fail');
                 });
             };
             Location.prototype.toJs = function () {
-                var center, centerLat = this.toolsMarkerLat(), centerLng = this.toolsMarkerLng();
+                var center, centerLat = this.toolsMarkerLat(), centerLng = this.toolsMarkerLng(), zoom = this.map.getZoom();
                 if(centerLat != null && centerLng != null) {
                     center = {
                         latitude: centerLat,
@@ -437,8 +444,8 @@ var ViewModels;
                 if(center) {
                     this.map.setCenter(ViewModels.Places.Utils.convertToLatLng(center));
                 }
-                var box, northEast, northEastLat = this.map.getBounds().getNorthEast().lat(), northEastLng = this.map.getBounds().getNorthEast().lat(), southWest, southWestLat = this.map.getBounds().getSouthWest().lat(), southWestLng = this.map.getBounds().getSouthWest().lat(), zoom = this.map.getZoom(), placeId;
-                if(northEastLat || northEastLng || southWestLat || southWestLng) {
+                var box, northEast, northEastLat = this.map.getBounds().getNorthEast().lat(), northEastLng = this.map.getBounds().getNorthEast().lng(), southWest, southWestLat = this.map.getBounds().getSouthWest().lat(), southWestLng = this.map.getBounds().getSouthWest().lng(), placeId;
+                if(zoom && zoom > 1) {
                     box = {
                         northEast: {
                             latitude: northEastLat,

@@ -19,7 +19,7 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class MapBoxProfiler
     {
-        public class EntityToModelProfile : Profile
+        public class DomainToModelProfile : Profile
         {
             protected override void Configure()
             {

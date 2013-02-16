@@ -3,6 +3,7 @@
 /// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="../Spinner.ts" />
+/// <reference path="../Flasher.ts" />
 
 module ViewModels.Establishments {
 
@@ -320,6 +321,10 @@ module ViewModels.Establishments {
             // tools overlay marker
             this.$mapCanvas().on('marker_destroyed', (): void => {
                 this.countryId(undefined); // reset location info
+                this.continentId(undefined);
+                this.admin1Id(undefined);
+                this.admin2Id(undefined);
+                this.admin3Id(undefined);
                 this.subAdmins([]);
             });
 
@@ -330,6 +335,7 @@ module ViewModels.Establishments {
                 $.get(route)
                 .done((response: Places.IServerApiModel[]): void => {
                     if (response && response.length) {
+                        this.allowCountryFitBounds = false;
                         this.fillPlacesHierarchy(response);
                     }
                 })
@@ -363,10 +369,14 @@ module ViewModels.Establishments {
 
         private loadMapZoom(response: IServerLocationApiModel): void {
             // zoom map to reveal location
-            if (response.googleMapZoomLevel)
+            if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                 this.map.setZoom(response.googleMapZoomLevel);
             else if (response.box.hasValue)
                 this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
+
+            // map may have no center but bounding box and zoom
+            if (response.googleMapZoomLevel && response.googleMapZoomLevel > 1)
+                this.map.setZoom(response.googleMapZoomLevel);
             if (response.googleMapZoomLevel || response.box.hasValue)
                 this.allowCountryFitBounds = false;
         }
@@ -487,19 +497,20 @@ module ViewModels.Establishments {
             .always((): void => {
                 me.saveSpinner.stop();
             })
-            .done((arg1: any, arg2, arg3): void => {
-                alert('done');
+            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                App.flasher.flash(response);
                 this.isEditing(false);
             })
             .fail((arg1: any, arg2, arg3): void => {
-                alert('fail');
+                //alert('fail :(');
             });
         }
 
         private toJs(): IServerLocationPutModel {
             var center: Places.IServerPointModel,
                 centerLat: number = this.toolsMarkerLat(),
-                centerLng: number = this.toolsMarkerLng();
+                centerLng: number = this.toolsMarkerLng(),
+                zoom: number = this.map.getZoom();
             if (centerLat != null && centerLng != null)
                 center = {
                     latitude: centerLat,
@@ -513,14 +524,13 @@ module ViewModels.Establishments {
             var box: Places.IServerBoxModel,
                 northEast: Places.IServerPointModel,
                 northEastLat: number = this.map.getBounds().getNorthEast().lat(),
-                northEastLng: number = this.map.getBounds().getNorthEast().lat(),
+                northEastLng: number = this.map.getBounds().getNorthEast().lng(),
                 southWest: Places.IServerPointModel,
                 southWestLat: number = this.map.getBounds().getSouthWest().lat(),
-                southWestLng: number = this.map.getBounds().getSouthWest().lat(),
-                zoom: number = this.map.getZoom(),
+                southWestLng: number = this.map.getBounds().getSouthWest().lng(),
                 placeId: number
             ;
-            if (northEastLat || northEastLng || southWestLat || southWestLng)
+            if (zoom && zoom > 1)
                 box = {
                     northEast: {
                         latitude: northEastLat,
