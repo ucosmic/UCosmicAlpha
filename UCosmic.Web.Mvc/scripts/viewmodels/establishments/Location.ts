@@ -492,7 +492,7 @@ module ViewModels.Establishments {
             $.ajax({
                 url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
                 type: 'PUT',
-                data: me.toJs()
+                data: me.serializeData()
             })
             .always((): void => {
                 me.saveSpinner.stop();
@@ -506,7 +506,7 @@ module ViewModels.Establishments {
             });
         }
 
-        private toJs(): IServerLocationPutModel {
+        serializeData(): IServerLocationPutModel {
             var center: Places.IServerPointModel,
                 centerLat: number = this.toolsMarkerLat(),
                 centerLng: number = this.toolsMarkerLng(),

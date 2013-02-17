@@ -36,5 +36,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var model = Mapper.Map<EstablishmentApiModel>(view);
             return model;
         }
+
+        [POST("")]
+        public EstablishmentApiModel Post(EstablishmentPostModel model)
+        {
+            return null;
+        }
     }
 }

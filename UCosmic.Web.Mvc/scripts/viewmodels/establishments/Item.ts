@@ -40,7 +40,7 @@ module ViewModels.Establishments {
 
         // observables, computeds, & variables
         languages: KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
-        names: KnockoutObservableEstablishmentNameModelArray = ko.observableArray();
+        names: KnockoutObservableEstablishmentNameViewModelArray = ko.observableArray();
         editingName: KnockoutObservableNumber = ko.observable(0);
         canAddName: KnockoutComputed;
         private _namesMapping: any;
@@ -112,7 +112,7 @@ module ViewModels.Establishments {
         //#region URLs
 
         // observables, computeds, & variables
-        urls: KnockoutObservableEstablishmentUrlModelArray = ko.observableArray();
+        urls: KnockoutObservableEstablishmentUrlViewModelArray = ko.observableArray();
         editingUrl: KnockoutObservableNumber = ko.observable(0);
         canAddUrl: KnockoutComputed;
         private _urlsMapping: any;
@@ -169,5 +169,51 @@ module ViewModels.Establishments {
         }
 
         //#endregion
+
+        submitToCreate(formElement: HTMLFormElement): bool {
+            if (!this.id || this.id === 0) {
+                // reference the single name and url
+                var officialName: Name = this.names()[0];
+                var officialUrl: Url = this.urls()[0];
+                var location = this.location;
+
+                // wait for async validation to stop
+                if (officialName.text.isValidating() || officialUrl.value.isValidating()) {
+                    setTimeout((): bool => {
+                        var waitResult = this.submitToCreate(formElement);
+                        return false;
+                    }, 5);
+                    return false;
+                }
+
+                // check validity
+                if (!officialName.isValid()) {
+                    officialName.errors.showAllMessages();
+                }
+                if (!officialUrl.isValid()) {
+                    officialUrl.errors.showAllMessages();
+                }
+                if (officialName.isValid() && officialUrl.isValid()) {
+                    var url = App.Routes.WebApi.Establishments.post();
+                    var data: any = {
+                        officialName: officialName.serializeData(),
+                        officialUrl: officialUrl.serializeData(),
+                        location: location.serializeData()
+                    };
+                    $.post(url, data)
+                    .always((): void => {
+                        alert('always');
+                    })
+                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                        alert('done');
+                    })
+                    .fail((arg1: any, arg2, arg3): void => {
+                        alert('fail :(');
+                    });
+                }
+            }
+
+            return false;
+        }
     }
 }

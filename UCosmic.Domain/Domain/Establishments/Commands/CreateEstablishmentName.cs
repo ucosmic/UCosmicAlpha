@@ -32,13 +32,12 @@ namespace UCosmic.Domain.Establishments
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            // owner id must be within valid range and exist in the database
-            RuleFor(x => x.OwnerId)
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment id", x => x.OwnerId)
-                .MustFindEstablishmentById(entities)
-                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.OwnerId)
-            ;
+            // owner id must exist in the database when in valid range
+            When(x => x.OwnerId > 0, () =>
+                RuleFor(x => x.OwnerId)
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.OwnerId)
+            );
 
             // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Text)

@@ -424,7 +424,7 @@ var ViewModels;
                 $.ajax({
                     url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
                     type: 'PUT',
-                    data: me.toJs()
+                    data: me.serializeData()
                 }).always(function () {
                     me.saveSpinner.stop();
                 }).done(function (response, statusText, xhr) {
@@ -433,7 +433,7 @@ var ViewModels;
                 }).fail(function (arg1, arg2, arg3) {
                 });
             };
-            Location.prototype.toJs = function () {
+            Location.prototype.serializeData = function () {
                 var center, centerLat = this.toolsMarkerLat(), centerLng = this.toolsMarkerLng(), zoom = this.map.getZoom();
                 if(centerLat != null && centerLng != null) {
                     center = {

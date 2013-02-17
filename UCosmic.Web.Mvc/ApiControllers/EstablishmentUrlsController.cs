@@ -182,15 +182,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Validate(int establishmentId, int establishmentUrlId, EstablishmentUrlApiModel model)
         {
             //System.Threading.Thread.Sleep(2000);
-            if (!FindResources(establishmentId, establishmentUrlId > 0 ? establishmentUrlId : (int?)null))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
 
             model.OwnerId = establishmentId;
             model.Id = establishmentUrlId;
 
             ValidationResult validationResult;
             string propertyName;
-            if (model.Id < 1)
+            if (model.OwnerId < 1 || model.Id < 1)
             {
                 var command = new CreateEstablishmentUrl(User);
                 Mapper.Map(model, command);

@@ -184,16 +184,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{establishmentId}/names/{establishmentNameId}/validate-text")]
         public HttpResponseMessage Validate(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000);
-            if (!FindResources(establishmentId, establishmentNameId > 0 ? establishmentNameId : (int?)null))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            System.Threading.Thread.Sleep(2000); // test api latency
 
             model.OwnerId = establishmentId;
             model.Id = establishmentNameId;
 
             ValidationResult validationResult;
             string propertyName;
-            if (model.Id < 1)
+            if (model.OwnerId < 1 || model.Id < 1)
             {
                 var command = new CreateEstablishmentName(User);
                 Mapper.Map(model, command);

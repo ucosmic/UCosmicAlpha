@@ -95,6 +95,10 @@ module App.Routes {
                 return makeUrl(url);
             }
 
+            export function post (): string {
+                return makeUrl('establishments');
+            }
+
             export class Names {
 
                 static get (establishmentId: number, establishmentNameId?: number): string {

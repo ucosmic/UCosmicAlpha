@@ -94,6 +94,10 @@ var App;
                     return makeUrl(url);
                 }
                 Establishments.get = get;
+                function post() {
+                    return makeUrl('establishments');
+                }
+                Establishments.post = post;
                 var Names = (function () {
                     function Names() { }
                     Names.get = function get(establishmentId, establishmentNameId) {

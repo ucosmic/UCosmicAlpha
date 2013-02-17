@@ -293,6 +293,7 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ImageResizer.cs" />
+    <Compile Include="Models\EstablishmentPostModel.cs" />
     <Compile Include="Models\ImageResizeRequestModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />

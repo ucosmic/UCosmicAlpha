@@ -123,6 +123,43 @@ var ViewModels;
                     throttle: 1
                 });
             };
+            Item.prototype.submitToCreate = function (formElement) {
+                var _this = this;
+                if(!this.id || this.id === 0) {
+                    var officialName = this.names()[0];
+                    var officialUrl = this.urls()[0];
+                    var location = this.location;
+                    if(officialName.text.isValidating() || officialUrl.value.isValidating()) {
+                        setTimeout(function () {
+                            var waitResult = _this.submitToCreate(formElement);
+                            return false;
+                        }, 5);
+                        return false;
+                    }
+                    if(!officialName.isValid()) {
+                        officialName.errors.showAllMessages();
+                    }
+                    if(!officialUrl.isValid()) {
+                        officialUrl.errors.showAllMessages();
+                    }
+                    if(officialName.isValid() && officialUrl.isValid()) {
+                        var url = App.Routes.WebApi.Establishments.post();
+                        var data = {
+                            officialName: officialName.serializeData(),
+                            officialUrl: officialUrl.serializeData(),
+                            location: location.serializeData()
+                        };
+                        $.post(url, data).always(function () {
+                            alert('always');
+                        }).done(function (response, statusText, xhr) {
+                            alert('done');
+                        }).fail(function (arg1, arg2, arg3) {
+                            alert('fail :(');
+                        });
+                    }
+                }
+                return false;
+            };
             return Item;
         })();
         Establishments.Item = Item;        
