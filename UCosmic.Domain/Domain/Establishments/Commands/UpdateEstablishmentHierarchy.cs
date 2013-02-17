@@ -5,13 +5,13 @@ namespace UCosmic.Domain.Establishments
 {
     public class UpdateEstablishmentHierarchy
     {
-        public UpdateEstablishmentHierarchy(Establishment establishment)
+        internal UpdateEstablishmentHierarchy(Establishment establishment)
         {
             if (establishment == null) throw new ArgumentNullException("establishment");
             Establishment = establishment;
         }
 
-        public Establishment Establishment { get; private set; }
+        internal Establishment Establishment { get; private set; }
     }
 
     public class HandleUpdateEstablishmentHierarchyCommand : IHandleCommands<UpdateEstablishmentHierarchy>

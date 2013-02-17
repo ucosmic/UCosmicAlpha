@@ -1,5 +1,7 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
+/// <reference path="Name.ts" />
+/// <reference path="Url.ts" />
 
 interface KnockoutObservableEstablishmentNameModelArray extends KnockoutObservableArrayFunctions {
     (): ViewModels.Establishments.IServerNameApiModel[];

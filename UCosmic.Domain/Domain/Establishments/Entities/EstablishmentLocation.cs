@@ -55,19 +55,19 @@ namespace UCosmic.Domain.Establishments
 
     internal static class EstablishmentLocationSerializer
     {
-        internal static string ToJsonAudit(this EstablishmentLocation establishmentLocation)
+        internal static string ToJsonAudit(this EstablishmentLocation entity)
         {
             var state = JsonConvert.SerializeObject(new
             {
-                Id = establishmentLocation.RevisionId,
-                CenterLatitude = establishmentLocation.Center.Latitude,
-                CenterLongitude = establishmentLocation.Center.Longitude,
-                BoxNorthEastLatitude = establishmentLocation.BoundingBox.Northeast.Latitude,
-                BoxNorthEastLongitude = establishmentLocation.BoundingBox.Northeast.Longitude,
-                BoxSouthWestLatitude = establishmentLocation.BoundingBox.Southwest.Latitude,
-                BoxSouthWestLongitude = establishmentLocation.BoundingBox.Southwest.Longitude,
-                establishmentLocation.GoogleMapZoomLevel,
-                PlaceIds = establishmentLocation.Places.Select(x => x.RevisionId).ToArray(),
+                Id = entity.RevisionId,
+                CenterLatitude = entity.Center.Latitude,
+                CenterLongitude = entity.Center.Longitude,
+                BoxNorthEastLatitude = entity.BoundingBox.Northeast.Latitude,
+                BoxNorthEastLongitude = entity.BoundingBox.Northeast.Longitude,
+                BoxSouthWestLatitude = entity.BoundingBox.Southwest.Latitude,
+                BoxSouthWestLongitude = entity.BoundingBox.Southwest.Longitude,
+                entity.GoogleMapZoomLevel,
+                PlaceIds = entity.Places.Select(x => x.RevisionId).ToArray(),
             });
             return state;
         }

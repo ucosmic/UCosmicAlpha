@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div data-bind="visible: editMode" style="display: none;">
-                <form method="POST" data-bind="submit: saveEditor, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                <div data-bind="validationOptions: { decorateElement: true, errorClass: 'error' }">
                     <div class="field" style="margin-top: 0;">
                         <textarea rows="1" class="no-resize" data-bind="value: text, jqElement: '$textElement', css: { spinning: textValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
                     </div>
@@ -50,7 +50,7 @@
                         </select>
                     </div>
                     <div data-bind="visible: owner.id">
-                        <input type="submit" value="Save" data-bind="enable: !saveSpinner.isVisible()" />
+                        <input type="button" value="Save" data-bind="click: saveEditor, enable: !saveSpinner.isVisible()" />
                         <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
                         &nbsp;
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: textValidationSpinner.isVisible" />
@@ -58,7 +58,7 @@
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
                         <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
                     </div>
-                </form>
+                </div>
             </div>
             <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
                 <div>

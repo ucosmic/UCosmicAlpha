@@ -59,7 +59,8 @@ namespace UCosmic.EntityFramework
 
             // Establishment 1 <---> 1 EstablishmentLocation
             HasRequired(p => p.Location)
-                .WithRequiredPrincipal(d => d.ForEstablishment);
+                .WithRequiredPrincipal(d => d.ForEstablishment)
+                .WillCascadeOnDelete(true);
 
             // Establishment 1 <---> 0..1 EstablishmentSamlSignOn
             HasOptional(p => p.SamlSignOn)

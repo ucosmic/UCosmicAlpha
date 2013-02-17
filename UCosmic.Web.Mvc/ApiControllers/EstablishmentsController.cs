@@ -1,7 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -11,10 +15,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class EstablishmentsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<CreateEstablishment> _createHandler;
 
-        public EstablishmentsController(IProcessQueries queryProcessor)
+        public EstablishmentsController(IProcessQueries queryProcessor
+            , IHandleCommands<CreateEstablishment> createHandler
+        )
         {
             _queryProcessor = queryProcessor;
+            _createHandler = createHandler;
         }
 
         public PageOfEstablishmentApiModel GetAll([FromUri] EstablishmentSearchInputModel input)
@@ -38,9 +46,38 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("")]
-        public EstablishmentApiModel Post(EstablishmentPostModel model)
+        public HttpResponseMessage Post(EstablishmentPostModel model)
         {
-            return null;
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var command = new CreateEstablishment(User)
+            {
+                OfficialName = new CreateEstablishmentName(User),
+                OfficialUrl = new CreateEstablishmentUrl(User),
+                Location = new UpdateEstablishmentLocation(0, User),
+            };
+            Mapper.Map(model, command);
+
+            try
+            {
+                _createHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Establishment was successfully created.");
+            var url = Url.Link(null, new
+            {
+                controller = "Establishments",
+                action = "GetOne",
+                establishmentId = command.CreatedEstablishmentId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
     }
 }

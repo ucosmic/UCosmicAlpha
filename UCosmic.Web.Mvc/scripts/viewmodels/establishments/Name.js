@@ -192,6 +192,7 @@ var ViewModels;
                         }
                     }
                 }
+                return false;
             };
             Name.prototype.cancelEditor = function () {
                 this.owner.editingName(0);

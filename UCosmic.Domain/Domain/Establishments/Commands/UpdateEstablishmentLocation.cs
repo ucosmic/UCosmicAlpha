@@ -21,7 +21,7 @@ namespace UCosmic.Domain.Establishments
         }
 
         public IPrincipal Principal { get; private set; }
-        public int Id { get; private set; }
+        public int Id { get; internal set; }
 
         public double? CenterLatitude { get; set; }
         public double? CenterLongitude { get; set; }

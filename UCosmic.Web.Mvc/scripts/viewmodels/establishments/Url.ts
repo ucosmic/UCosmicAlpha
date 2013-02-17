@@ -209,7 +209,7 @@ module ViewModels.Establishments {
             }
         }
 
-        saveEditor(): void {
+        saveEditor(): bool {
             this.saveEditorClicked = true;
             if (!this.isValid()) { // validate
                 this.saveEditorClicked = false;
@@ -236,6 +236,7 @@ module ViewModels.Establishments {
                     .done(this.mutationSuccess).fail(this.mutationError);
                 }
             }
+            return false;
         }
 
         cancelEditor(): void {

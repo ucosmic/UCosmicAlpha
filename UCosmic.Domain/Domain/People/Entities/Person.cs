@@ -144,20 +144,20 @@ namespace UCosmic.Domain.People
 
     internal static class PersonSerializer
     {
-        internal static string ToJsonAudit(this Person person)
+        internal static string ToJsonAudit(this Person entity)
         {
             var state = JsonConvert.SerializeObject(new
             {
-                Id = person.RevisionId,
-                person.IsActive,
-                person.IsDisplayNameDerived,
-                person.DisplayName,
-                person.Salutation,
-                person.FirstName,
-                person.MiddleName,
-                person.LastName,
-                person.Suffix,
-                person.Gender,
+                Id = entity.RevisionId,
+                entity.IsActive,
+                entity.IsDisplayNameDerived,
+                entity.DisplayName,
+                entity.Salutation,
+                entity.FirstName,
+                entity.MiddleName,
+                entity.LastName,
+                entity.Suffix,
+                entity.Gender,
 
             });
             return state;

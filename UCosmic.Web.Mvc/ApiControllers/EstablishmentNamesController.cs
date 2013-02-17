@@ -95,7 +95,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Post(int establishmentId, EstablishmentNameApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             model.OwnerId = establishmentId;

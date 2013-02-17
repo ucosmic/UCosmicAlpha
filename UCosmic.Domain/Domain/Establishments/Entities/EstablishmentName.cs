@@ -47,17 +47,17 @@ namespace UCosmic.Domain.Establishments
 
     internal static class EstablishmentNameSerializer
     {
-        internal static string ToJsonAudit(this EstablishmentName establishmentName)
+        internal static string ToJsonAudit(this EstablishmentName entity)
         {
             var state = JsonConvert.SerializeObject(new
             {
-                Id = establishmentName.RevisionId,
-                ForEstablishmentId = establishmentName.ForEstablishment.RevisionId,
-                TranslationToLanguageId = (establishmentName.TranslationToLanguage != null)
-                    ? establishmentName.TranslationToLanguage.Id : (int?)null,
-                establishmentName.Text,
-                establishmentName.IsOfficialName,
-                establishmentName.IsFormerName,
+                Id = entity.RevisionId,
+                ForEstablishmentId = entity.ForEstablishment.RevisionId,
+                TranslationToLanguageId = (entity.TranslationToLanguage != null)
+                    ? entity.TranslationToLanguage.Id : (int?)null,
+                entity.Text,
+                entity.IsOfficialName,
+                entity.IsFormerName,
             });
             return state;
         }

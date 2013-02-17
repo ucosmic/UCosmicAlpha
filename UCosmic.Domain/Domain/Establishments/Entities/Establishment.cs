@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 
@@ -77,11 +78,31 @@ namespace UCosmic.Domain.Establishments
         public EstablishmentContactInfo PublicContactInfo { get; protected internal set; }
         public EstablishmentContactInfo PartnerContactInfo { get; protected internal set; }
 
+        // TODO: // remove this property to make EmployeeModuleSettings uni-directional
         public virtual EmployeeModuleSettings EmployeeModuleSettings { get; set; }
 
         public override string ToString()
         {
             return OfficialName;
+        }
+    }
+
+    internal static class EstablishmentSerializer
+    {
+        internal static string ToJsonAudit(this Establishment entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = entity.RevisionId,
+                TypeId = entity.Type.RevisionId,
+                ParentId = entity.Parent != null ? entity.Parent.RevisionId : (int?)null,
+                entity.OfficialName,
+                entity.WebsiteUrl,
+                entity.CollegeBoardDesignatedIndicator,
+                entity.UCosmicCode,
+                entity.IsMember,
+            });
+            return state;
         }
     }
 }

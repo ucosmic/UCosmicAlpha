@@ -18,14 +18,14 @@ namespace UCosmic.Domain.Files
 
     internal static class LoadableFileSerializer
     {
-        internal static string ToJsonAudit(this LoadableFile file)
+        internal static string ToJsonAudit(this LoadableFile entity)
         {
             var state = JsonConvert.SerializeObject(new
             {
-                file.Id,
-                file.Length,
-                file.Name,
-                file.MimeType,
+                entity.Id,
+                entity.Length,
+                entity.Name,
+                entity.MimeType,
                 //file.Binary.Content, // this works, but unnecessarily bloats the database
             });
             return state;

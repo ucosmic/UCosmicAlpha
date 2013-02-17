@@ -198,6 +198,7 @@ var ViewModels;
                         }
                     }
                 }
+                return false;
             };
             Url.prototype.cancelEditor = function () {
                 this.owner.editingUrl(0);

@@ -14,15 +14,15 @@ namespace UCosmic.Domain.Employees
 
     internal static class EmployeeSerializer
     {
-        internal static string ToJsonAudit(this Employee employee)
+        internal static string ToJsonAudit(this Employee entity)
         {
             var state = JsonConvert.SerializeObject(new
             {
-                employee.Id,
-                PersonId = employee.Person.RevisionId,
-                FacultyRankId = employee.FacultyRank != null ? employee.FacultyRank.Id : (int?)null,
-                employee.JobTitles,
-                employee.AdministrativeAppointments,
+                entity.Id,
+                PersonId = entity.Person.RevisionId,
+                FacultyRankId = entity.FacultyRank != null ? entity.FacultyRank.Id : (int?)null,
+                entity.JobTitles,
+                entity.AdministrativeAppointments,
             });
             return state;
         }

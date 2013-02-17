@@ -24,6 +24,9 @@ namespace UCosmic.Domain.Establishments
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
         public string LanguageCode { get; set; }
+
+        internal bool NoCommit { get; set; }
+        internal EstablishmentName CreatedEntity { get; set; }
     }
 
     public class ValidateCreateEstablishmentNameCommand : AbstractValidator<CreateEstablishmentName>
@@ -141,9 +144,12 @@ namespace UCosmic.Domain.Establishments
                 }),
                 NewState = establishmentName.ToJsonAudit(),
             };
-            _entities.Create(audit);
 
+            _entities.Create(audit);
             _entities.Update(establishment);
+            command.CreatedEntity = establishmentName;
+            if (command.NoCommit) return;
+
             _unitOfWork.SaveChanges();
             command.Id = establishmentName.RevisionId;
             _eventProcessor.Raise(new EstablishmentChanged());

@@ -22,15 +22,15 @@ namespace UCosmic.Domain.Establishments
 
     internal static class EstablishmentUrlSerializer
     {
-        internal static string ToJsonAudit(this EstablishmentUrl establishmentUrl)
+        internal static string ToJsonAudit(this EstablishmentUrl entity)
         {
             var state = JsonConvert.SerializeObject(new
             {
-                Id = establishmentUrl.RevisionId,
-                ForEstablishmentId = establishmentUrl.ForEstablishment.RevisionId,
-                establishmentUrl.Value,
-                establishmentUrl.IsOfficialUrl,
-                establishmentUrl.IsFormerUrl,
+                Id = entity.RevisionId,
+                ForEstablishmentId = entity.ForEstablishment.RevisionId,
+                entity.Value,
+                entity.IsOfficialUrl,
+                entity.IsFormerUrl,
             });
             return state;
         }

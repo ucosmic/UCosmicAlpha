@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Models
 {
@@ -17,9 +18,10 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                //CreateMap<EstablishmentView, EstablishmentApiModel>()
-                //    .ForMember(d => d.OfficialUrl, o => o.ResolveUsing(s => s.WebsiteUrl))
-                //;
+                CreateMap<EstablishmentPostModel, CreateEstablishment>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.CreatedEstablishmentId, o => o.Ignore())
+                ;
             }
         }
     }
