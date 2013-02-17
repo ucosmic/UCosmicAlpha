@@ -65,7 +65,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentSunyEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -75,7 +75,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var suny = Seed(new CreateEstablishment
+            var suny = Seed(new SeedEstablishment
             {
                 OfficialName = "State University of New York (SUNY)",
                 IsMember = true,
@@ -84,7 +84,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.suny.edu",
                 EmailDomains = new[] { "@suny.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Adirondack",
                 IsMember = true,
@@ -94,7 +94,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyacc.edu",
                 EmailDomains = new[] { "@sunyacc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University at Albany (SUNY)",
                 IsMember = true,
@@ -104,7 +104,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.albany.edu",
                 EmailDomains = new[] { "@albany.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Alfred State College (SUNY)",
                 IsMember = true,
@@ -114,7 +114,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.alfredstate.edu",
                 EmailDomains = new[] { "@alfredstate.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Alfred University (SUNY)",
                 IsMember = true,
@@ -124,7 +124,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.alfred.edu",
                 EmailDomains = new[] { "@alfred.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Binghamtom University (SUNY)",
                 IsMember = true,
@@ -134,7 +134,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.binghamton.edu",
                 EmailDomains = new[] { "@binghamton.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "The College at Brockport (SUNY)",
                 IsMember = true,
@@ -144,7 +144,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.brockport.edu",
                 EmailDomains = new[] { "@brockport.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Broome Community College (SUNY)",
                 IsMember = true,
@@ -154,7 +154,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunybroome.edu",
                 EmailDomains = new[] { "@sunybroome.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University at Buffalo (SUNY)",
                 IsMember = true,
@@ -164,7 +164,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.buffalo.edu",
                 EmailDomains = new[] { "@buffalo.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Buffalo State College (SUNY)",
                 IsMember = true,
@@ -174,7 +174,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.buffalostate.edu",
                 EmailDomains = new[] { "@buffalostate.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Canton",
                 IsMember = true,
@@ -184,7 +184,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.canton.edu",
                 EmailDomains = new[] { "@canton.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Cayuga Community College (SUNY)",
                 IsMember = true,
@@ -194,7 +194,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cayuga-cc.edu",
                 EmailDomains = new[] { "@cayuga-cc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Clinton Community College (SUNY)",
                 IsMember = true,
@@ -204,7 +204,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.clinton.edu",
                 EmailDomains = new[] { "@clinton.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Cobleskill",
                 IsMember = true,
@@ -214,7 +214,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cobleskill.edu",
                 EmailDomains = new[] { "@cobleskill.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Columbia-Greene Community College",
                 IsMember = true,
@@ -224,7 +224,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunycgcc.edu",
                 EmailDomains = new[] { "@sunycgcc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Cornell University College of Agriculture and Life Sciences",
                 IsMember = true,
@@ -234,7 +234,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cals.cornell.edu",
                 EmailDomains = new[] { "@cals.cornell.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Cornell University College of Human Ecology",
                 IsMember = true,
@@ -244,7 +244,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.human.cornell.edu",
                 EmailDomains = new[] { "@human.cornell.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Cornell University College of Veterinary Medicine",
                 IsMember = true,
@@ -254,7 +254,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.vet.cornell.edu",
                 EmailDomains = new[] { "@vet.cornell.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Cornell University ILR School",
                 IsMember = true,
@@ -264,7 +264,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ilr.cornell.edu",
                 EmailDomains = new[] { "@ilr.cornell.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Corning Community College (SUNY)",
                 IsMember = true,
@@ -274,7 +274,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.corning-cc.edu",
                 EmailDomains = new[] { "@corning-cc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Cortland",
                 IsMember = true,
@@ -284,7 +284,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cortland.edu",
                 EmailDomains = new[] { "@cortland.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Delhi",
                 IsMember = true,
@@ -294,7 +294,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.delhi.edu",
                 EmailDomains = new[] { "@delhi.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Downstate Medical Center",
                 IsMember = true,
@@ -304,7 +304,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.downstate.edu",
                 EmailDomains = new[] { "@downstate.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Dutchess Community College (SUNY)",
                 IsMember = true,
@@ -314,7 +314,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunydutchess.edu",
                 EmailDomains = new[] { "@sunydutchess.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Empire State College",
                 IsMember = true,
@@ -324,7 +324,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.esc.edu",
                 EmailDomains = new[] { "@esc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY College of Environmental Science and Forestry",
                 IsMember = true,
@@ -334,7 +334,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.esf.edu",
                 EmailDomains = new[] { "@esf.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Erie Community College (SUNY)",
                 IsMember = true,
@@ -344,7 +344,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ecc.edu",
                 EmailDomains = new[] { "@ecc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Farmingdale State College (SUNY)",
                 IsMember = true,
@@ -354,7 +354,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.farmingdale.edu",
                 EmailDomains = new[] { "@farmingdale.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Fashion Institute of Technology (SUNY)",
                 IsMember = true,
@@ -364,7 +364,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.fitnyc.edu",
                 EmailDomains = new[] { "@fitnyc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Finger Lakes Community College (SUNY)",
                 IsMember = true,
@@ -374,7 +374,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.flcc.edu",
                 EmailDomains = new[] { "@flcc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Fredonia",
                 IsMember = true,
@@ -384,7 +384,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.fredonia.edu",
                 EmailDomains = new[] { "@fredonia.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Fulton-Montgomery Community College (SUNY)",
                 IsMember = true,
@@ -394,7 +394,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "fmcc.suny.edu",
                 EmailDomains = new[] { "@fmcc.suny.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Genesse Community College (SUNY)",
                 IsMember = true,
@@ -404,7 +404,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.genesse.edu",
                 EmailDomains = new[] { "@genesse.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Geneseo",
                 IsMember = true,
@@ -414,7 +414,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.geneseo.edu",
                 EmailDomains = new[] { "@geneseo.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Herkimer County Community College (SUNY)",
                 IsMember = true,
@@ -424,7 +424,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.herkimer.edu",
                 EmailDomains = new[] { "@herkimer.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Hudson Valley Community College (SUNY)",
                 IsMember = true,
@@ -434,7 +434,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.hvcc.edu",
                 EmailDomains = new[] { "@hvcc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Jamestown Community College (SUNY)",
                 IsMember = true,
@@ -444,7 +444,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyjcc.edu",
                 EmailDomains = new[] { "@sunyjcc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Jefferson Community College (SUNY)",
                 IsMember = true,
@@ -454,7 +454,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyjefferson.edu",
                 EmailDomains = new[] { "@sunyjefferson.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Maritime College (SUNY)",
                 IsMember = true,
@@ -464,7 +464,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunymaritime.edu",
                 EmailDomains = new[] { "@sunymaritime.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Mohawk Valley Community College (SUNY)",
                 IsMember = true,
@@ -474,7 +474,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.mvcc.edu",
                 EmailDomains = new[] { "@mvcc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Monroe Community College (SUNY)",
                 IsMember = true,
@@ -484,7 +484,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.monroecc.edu",
                 EmailDomains = new[] { "@monroecc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Morrisville State College (SUNY)",
                 IsMember = true,
@@ -494,7 +494,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.morrisville.edu",
                 EmailDomains = new[] { "@morrisville.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Nassau Community College (SUNY)",
                 IsMember = true,
@@ -504,7 +504,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ncc.edu",
                 EmailDomains = new[] { "@ncc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "New Paltz (SUNY)",
                 IsMember = true,
@@ -514,7 +514,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.newpaltz.edu",
                 EmailDomains = new[] { "@newpaltz.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Niagra County Community College (SUNY)",
                 IsMember = true,
@@ -524,7 +524,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.niagaracc.suny.edu",
                 EmailDomains = new[] { "@niagaracc.suny.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "North Country Community College (SUNY)",
                 IsMember = true,
@@ -534,7 +534,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.nccc.edu",
                 EmailDomains = new[] { "@nccc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "The College at Old Westbury (SUNY)",
                 IsMember = true,
@@ -544,7 +544,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.oldwestbury.edu",
                 EmailDomains = new[] { "@oldwestbury.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY College at Oneonta",
                 IsMember = true,
@@ -554,7 +554,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.oneonta.edu",
                 EmailDomains = new[] { "@oneonta.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Onondaga Community College (SUNY)",
                 IsMember = true,
@@ -564,7 +564,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyocc.edu",
                 EmailDomains = new[] { "@sunyocc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY College of Optometry",
                 IsMember = true,
@@ -574,7 +574,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyopt.edu",
                 EmailDomains = new[] { "@sunyopt.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Orange",
                 IsMember = true,
@@ -584,7 +584,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyorange.edu",
                 EmailDomains = new[] { "@sunyorange.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Oswego (SUNY)",
                 IsMember = true,
@@ -594,7 +594,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.oswego.edu",
                 EmailDomains = new[] { "@oswego.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Plattsburgh",
                 IsMember = true,
@@ -604,7 +604,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.plattsburgh.edu",
                 EmailDomains = new[] { "@plattsburgh.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Potsdam",
                 IsMember = true,
@@ -614,7 +614,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.potsdam.edu",
                 EmailDomains = new[] { "@potsdam.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Purchase College (SUNY)",
                 IsMember = true,
@@ -624,7 +624,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.purchase.edu",
                 EmailDomains = new[] { "@purchase.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Rockland Community College",
                 IsMember = true,
@@ -634,7 +634,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyrockland.edu",
                 EmailDomains = new[] { "@sunyrockland.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Schenectady County Community College (SUNY)",
                 IsMember = true,
@@ -644,7 +644,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunysccc.edu",
                 EmailDomains = new[] { "@sunysccc.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Stony Brook University (SUNY)",
                 IsMember = true,
@@ -654,7 +654,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.stonybrook.edu",
                 EmailDomains = new[] { "@stonybrook.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Suffolk County Community College (SUNY)",
                 IsMember = true,
@@ -664,7 +664,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunysuffolk.edu",
                 EmailDomains = new[] { "@sunysuffolk.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Sullivan Community College (SUNY)",
                 IsMember = true,
@@ -674,7 +674,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunysullivan.edu",
                 EmailDomains = new[] { "@sunysullivan.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNYIT",
                 IsMember = true,
@@ -684,7 +684,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyit.edu",
                 EmailDomains = new[] { "@sunyit.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Tompkins Cortland Community College (SUNY)",
                 IsMember = true,
@@ -694,7 +694,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.tc3.edu",
                 EmailDomains = new[] { "@tc3.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "SUNY Ulster",
                 IsMember = true,
@@ -704,7 +704,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sunyulster.edu",
                 EmailDomains = new[] { "@sunyulster.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Upstate Medical University (SUNY)",
                 IsMember = true,
@@ -714,7 +714,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.upstate.edu",
                 EmailDomains = new[] { "@upstate.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Westchester Community College (SUNY)",
                 IsMember = true,
@@ -732,7 +732,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentUcEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -742,7 +742,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var uc = Seed(new CreateEstablishment
+            var uc = Seed(new SeedEstablishment
             {
                 OfficialName = "University of Cincinnati",
                 IsMember = true,
@@ -754,7 +754,7 @@ namespace UCosmic.SeedData
                 CenterLatitude = 39.132084,
                 CenterLongitude = -84.516479,
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Allied Health Sciences, University of Cincinnati",
                 IsMember = true,
@@ -763,7 +763,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cahs.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "McMicken College of Arts & Sciences, University of Cincinnati",
                 IsMember = true,
@@ -772,7 +772,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.artsci.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Business, University of Cincinnati",
                 IsMember = true,
@@ -781,7 +781,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.business.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College Conservatory of Music, University of Cincinnati",
                 IsMember = true,
@@ -790,7 +790,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "ccm.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Design, Architecture, Art, and Planning, University of Cincinnati",
                 IsMember = true,
@@ -799,7 +799,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.daap.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Education, Criminal Justice, and Human Services, University of Cincinnati",
                 IsMember = true,
@@ -808,7 +808,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cech.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Engineering & Applied Sciences, University of Cincinnati",
                 IsMember = true,
@@ -817,7 +817,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.ceas.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Law, University of Cincinnati",
                 IsMember = true,
@@ -826,7 +826,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.law.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Medicine, University of Cincinnati",
                 IsMember = true,
@@ -835,7 +835,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.med.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Nursing, University of Cincinnati",
                 IsMember = true,
@@ -844,7 +844,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "nursing.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "James L. Winkle College of Pharmacy, University of Cincinnati",
                 IsMember = true,
@@ -853,7 +853,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "pharmacy.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "School of Social Work, University of Cincinnati",
                 IsMember = true,
@@ -862,7 +862,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.uc.edu/socialwork",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Raymond Walters College, University of Cincinnati",
                 IsMember = true,
@@ -871,7 +871,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.rwc.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Clermont College, University of Cincinnati",
                 IsMember = true,
@@ -880,7 +880,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.ucclermont.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Cincinnati Graduate School",
                 IsMember = true,
@@ -889,7 +889,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.grad.uc.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Cincinnati Honors Program",
                 IsMember = true,
@@ -906,7 +906,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentFoundingMemberEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -918,7 +918,7 @@ namespace UCosmic.SeedData
         {
             #region Lehigh
 
-            var lehigh = Seed(new CreateEstablishment
+            var lehigh = Seed(new SeedEstablishment
             {
                 OfficialName = "Lehigh University",
                 IsMember = true,
@@ -927,7 +927,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.lehigh.edu",
                 EmailDomains = new[] { "@lehigh.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Lehigh University College of Arts and Sciences",
                 IsMember = true,
@@ -936,7 +936,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "cas.lehigh.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Lehigh University College of Business and Economics",
                 IsMember = true,
@@ -945,7 +945,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.lehigh.edu/business",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Lehigh University College of Education",
                 IsMember = true,
@@ -954,7 +954,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.lehigh.edu/education",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Lehigh University P.C. Rossin College of Engineering and Applied Science",
                 IsMember = true,
@@ -967,7 +967,7 @@ namespace UCosmic.SeedData
             #endregion
             #region Manipal
 
-            var manipalGlobal = Seed(new CreateEstablishment
+            var manipalGlobal = Seed(new SeedEstablishment
             {
                 OfficialName = "Manipal Education",
                 IsMember = true,
@@ -975,7 +975,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.UniversitySystem.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.manipalglobal.com",
             });
-            var manipalEdu = Seed(new CreateEstablishment
+            var manipalEdu = Seed(new SeedEstablishment
             {
                 OfficialName = "Manipal University",
                 IsMember = true,
@@ -985,7 +985,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.manipal.edu",
                 EmailDomains = new[] { "@manipal.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Melaka Manipal Medical College",
                 IsMember = true,
@@ -994,7 +994,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.manipal.edu/Institutions/Medicine/MMMCMelaka",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "ICICI Manipal Academy",
                 IsMember = true,
@@ -1004,7 +1004,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ima.manipal.edu",
                 EmailDomains = new[] { "@ima.manipal.edu" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "American University of Antigua",
                 IsMember = true,
@@ -1014,7 +1014,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.auamed.org",
                 EmailDomains = new[] { "@auamed.org" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Manipal University Dubai Campus",
                 IsMember = true,
@@ -1024,7 +1024,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.manipaldubai.com",
                 EmailDomains = new[] { "@manipaldubai.com" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Manipal College of Medical Sciences, Nepal",
                 IsMember = true,
@@ -1034,7 +1034,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.manipal.edu.np",
                 EmailDomains = new[] { "@manipal.edu.np" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Sikkim Manipal University",
                 IsMember = true,
@@ -1044,7 +1044,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.smude.edu.in",
                 EmailDomains = new[] { "@smude.edu.in" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Manipal International University",
                 IsMember = true,
@@ -1058,7 +1058,7 @@ namespace UCosmic.SeedData
             #endregion
             #region Usil
 
-            var usil = Seed(new CreateEstablishment
+            var usil = Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad San Ignacio de Loyola",
                 IsMember = true,
@@ -1067,7 +1067,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.usil.edu.pe",
                 EmailDomains = new[] { "@usil.edu.pe" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad San Ignacio de Loyola Facultad de Ciencias Empresariales",
                 IsMember = true,
@@ -1076,7 +1076,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=9",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad San Ignacio de Loyola Facultad de Educación",
                 IsMember = true,
@@ -1085,7 +1085,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=12",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad San Ignacio de Loyola Facultad de Administración Hotelera, Turismo y Gastronomía",
                 IsMember = true,
@@ -1094,7 +1094,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=8",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad San Ignacio de Loyola Facultad de  Humanidades",
                 IsMember = true,
@@ -1103,7 +1103,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.usil.edu.pe/0/facultad.aspx?PFL=11",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad San Ignacio de Loyola Ingeniería y Arquitectura",
                 IsMember = true,
@@ -1116,7 +1116,7 @@ namespace UCosmic.SeedData
             #endregion
             #region Griffith
 
-            var griffith = Seed(new CreateEstablishment
+            var griffith = Seed(new SeedEstablishment
             {
                 OfficialName = "Griffith University",
                 IsMember = true,
@@ -1125,7 +1125,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.griffith.edu.au",
                 EmailDomains = new[] { "@griffith.edu.au" },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Griffith University Gold Coast Campus",
                 IsMember = true,
@@ -1134,7 +1134,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/gold-coast-campus",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Griffith University Logan Campus",
                 IsMember = true,
@@ -1143,7 +1143,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/logan-campus",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Griffith University Mt Gravatt Campus",
                 IsMember = true,
@@ -1152,7 +1152,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/mt-gravatt-campus",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Griffith University Nathan Campus",
                 IsMember = true,
@@ -1161,7 +1161,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.griffith.edu.au/about-griffith/campuses/nathan-campus",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Griffith University South Bank Campus",
                 IsMember = true,
@@ -1174,7 +1174,7 @@ namespace UCosmic.SeedData
             #endregion
             #region Singles (Bjtu, Edinburgh, etc)
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Beijing Jiaotong University",
                 IsMember = true,
@@ -1184,7 +1184,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@bjtu.edu.cn", "@njtu.edu.cn" },
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "www.njtu.edu.cn",
                         IsDefunct = true,
@@ -1192,7 +1192,7 @@ namespace UCosmic.SeedData
                 },
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Northern Jiaotong University",
                         IsDefunct = true,
@@ -1202,7 +1202,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Edinburgh Napier University",
                 IsMember = true,
@@ -1212,7 +1212,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@napier.ac.uk" },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Future University in Egypt",
                 IsMember = true,
@@ -1222,7 +1222,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@fue.edu.eg" },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Presbiteriana Mackenzie",
                 IsMember = false,
@@ -1231,7 +1231,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.mackenzie.br",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "The University of New South Wales",
                 IsMember = true,
@@ -1241,7 +1241,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@unsw.edu.au" },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Minnesota",
                 IsMember = true,
@@ -1251,7 +1251,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@umn.edu" },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "The College Board",
                 IsMember = true,
@@ -1261,7 +1261,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@collegeboard.org" },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Institute of International Education (IIE)",
                 IsMember = true,
@@ -1271,7 +1271,7 @@ namespace UCosmic.SeedData
                 EmailDomains = new[] { "@iie.org" },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Terra Dotta, LLC",
                 IsMember = true,
@@ -1290,7 +1290,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentUmnEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -1301,7 +1301,7 @@ namespace UCosmic.SeedData
         public override void Seed()
         {
             var umn = _queryProcessor.Execute(new EstablishmentByUrl("www.umn.edu"));
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Center for Allied Health Programs, University of Minnesota",
                 IsMember = true,
@@ -1310,7 +1310,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cahp.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Biological Sciences, University of Minnesota",
                 IsMember = true,
@@ -1319,7 +1319,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cbs.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Continuing Education, University of Minnesota",
                 IsMember = true,
@@ -1328,7 +1328,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cce.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "School of Dentistry, University of Minnesota",
                 IsMember = true,
@@ -1337,7 +1337,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.dentistry.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Design, University of Minnesota",
                 IsMember = true,
@@ -1346,7 +1346,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.design.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Education & Human Development, University of Minnesota",
                 IsMember = true,
@@ -1355,7 +1355,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cehd.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Minnesota Extension",
                 IsMember = true,
@@ -1364,7 +1364,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.extension.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Food, Agricultural and Natural Resource Sciences, University of Minnesota",
                 IsMember = true,
@@ -1373,7 +1373,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cfans.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "The Graduate School, University of Minnesota",
                 IsMember = true,
@@ -1382,7 +1382,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.grad.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Minnesota Law School",
                 IsMember = true,
@@ -1391,7 +1391,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.law.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Liberal Arts, University of Minnesota",
                 IsMember = true,
@@ -1400,7 +1400,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cla.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Carlson School of Management, University of Minnesota",
                 IsMember = true,
@@ -1409,7 +1409,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.csom.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Minnesota Medical School",
                 IsMember = true,
@@ -1418,7 +1418,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.med.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "School of Nursing, University of Minnesota",
                 IsMember = true,
@@ -1427,7 +1427,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.nursing.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Pharmacy, University of Minnesota",
                 IsMember = true,
@@ -1436,7 +1436,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.pharmacy.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Hubert H. Humphrey School of Public Affairs, University of Minnesota",
                 IsMember = true,
@@ -1445,7 +1445,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.hhh.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "School of Public Health, University of Minnesota",
                 IsMember = true,
@@ -1454,7 +1454,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.sph.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Science & Engineering, University of Minnesota",
                 IsMember = true,
@@ -1463,7 +1463,7 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.cse.umn.edu",
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "College of Veterinary Medicine, University of Minnesota",
                 IsMember = true,
@@ -1480,7 +1480,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentUsfEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -1490,7 +1490,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var university = Seed(new CreateEstablishment
+            var university = Seed(new SeedEstablishment
                 {
                     OfficialName = "University of South Florida",
                     IsMember = true,
@@ -1503,7 +1503,7 @@ namespace UCosmic.SeedData
                     CenterLongitude = -82.414803,
                 });
 
-            var campus = Seed(new CreateEstablishment
+            var campus = Seed(new SeedEstablishment
                 {
                     OfficialName = "USF Tampa Campus",
                     IsMember = true,
@@ -1512,7 +1512,7 @@ namespace UCosmic.SeedData
                         KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
                 });
 
-            var college = Seed(new CreateEstablishment
+            var college = Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Arts & Sciences",
                 IsMember = true,
@@ -1522,7 +1522,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cas.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Arts & Sciences Department of Africana Studies",
                 IsMember = true,
@@ -1532,7 +1532,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "africanastudies.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Arts & Sciences Department of Anthropology",
                 IsMember = true,
@@ -1542,7 +1542,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "anthropology.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Arts & Sciences Department of Cell Biology, Microbiology and Molecular Biology",
                 IsMember = true,
@@ -1552,7 +1552,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "biology.usf.edu/cmmb",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Arts & Sciences Department of Chemistry",
                 IsMember = true,
@@ -1562,7 +1562,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "chemistry.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Arts & Sciences Department of Sociology",
                 IsMember = true,
@@ -1574,7 +1574,7 @@ namespace UCosmic.SeedData
 
             /* TODO: Seed the other departments */
 
-            college = Seed(new CreateEstablishment
+            college = Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Behavioral and Community Sciences",
                 IsMember = true,
@@ -1584,7 +1584,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cbcs.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Behavioral and Community Sciences Department of Child & Family Studies",
                 IsMember = true,
@@ -1594,7 +1594,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "cfs.cbcs.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Behavioral and Community Sciences Department of Communication Sciences & Disorders",
                 IsMember = true,
@@ -1604,7 +1604,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "csd.cbcs.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of Behavioral and Community Sciences Department of Criminology",
                 IsMember = true,
@@ -1616,7 +1616,7 @@ namespace UCosmic.SeedData
 
             /* TODO: Seed the other departments */
 
-            college = Seed(new CreateEstablishment
+            college = Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of School of Accountancy",
                 IsMember = true,
@@ -1626,7 +1626,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "business.usf.edu",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of School of Accountancy Department of Finance",
                 IsMember = true,
@@ -1636,7 +1636,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "business.usf.edu/departments/accountancy",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of School of Accountancy Department of Information Systems / Decision Sciences",
                 IsMember = true,
@@ -1646,7 +1646,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "business.usf.edu/departments/isds",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of School of Accountancy Department of Management & Organization",
                 IsMember = true,
@@ -1656,7 +1656,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "business.usf.edu/departments/management",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "USF College of School of Accountancy Department of Marketing",
                 IsMember = true,
@@ -1668,7 +1668,7 @@ namespace UCosmic.SeedData
 
             /* TODO: Seed other colleges */
 
-            campus = Seed(new CreateEstablishment
+            campus = Seed(new SeedEstablishment
             {
                 OfficialName = "USF St. Petersburg Campus",
                 OfficialWebsiteUrl = "www.usfsp.edu",
@@ -1688,7 +1688,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentUwoEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -1698,7 +1698,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Western University",
                 IsMember = true,
@@ -1720,7 +1720,7 @@ namespace UCosmic.SeedData
         private readonly IUnitOfWork _unitOfWork;
 
         public EstablishmentTestShibEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IHandleCommands<UpdateSamlSignOnInfo> updateSaml
             , IUnitOfWork unitOfWork
         )
@@ -1733,7 +1733,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var testShib = Seed(new CreateEstablishment
+            var testShib = Seed(new SeedEstablishment
             {
                 OfficialName = "TestShib2",
                 IsMember = true,
@@ -1759,7 +1759,7 @@ namespace UCosmic.SeedData
         private readonly IUnitOfWork _unitOfWork;
 
         public EstablishmentUcShibEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IHandleCommands<UpdateSamlSignOnInfo> updateSaml
             , IUnitOfWork unitOfWork
         )
@@ -1788,7 +1788,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentSamplePartnerEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -1800,7 +1800,7 @@ namespace UCosmic.SeedData
         {
             var en = _queryProcessor.Execute(new LanguageByIsoCode("en"));
             var fr = _queryProcessor.Execute(new LanguageByIsoCode("fr"));
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Jinan University",
                 IsMember = true,
@@ -1812,7 +1812,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = 113.347710,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Swinburne University of Technology",
                 IsMember = true,
@@ -1821,7 +1821,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.swinburne.edu.au",
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "www.swin.edu.au"
                     },
@@ -1831,7 +1831,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = 144.991974,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Fachhochschule Nordwestschweiz",
                 IsMember = true,
@@ -1840,12 +1840,12 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.fhnw.ch",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Applied Sciences Northwestern Switzerland",
                         TranslationToLanguageId = en.Id,
                     },
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Fachhochschule Beider Basel",
                         TranslationToLanguageId = en.Id,
@@ -1854,7 +1854,7 @@ namespace UCosmic.SeedData
                 },
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "www.fhbb.ch",
                         IsDefunct = true,
@@ -1865,7 +1865,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = 8.207265,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Johannes Kepler Universität Linz",
                 IsMember = true,
@@ -1874,7 +1874,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.jku.at",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Johannes Kepler University Linz",
                         TranslationToLanguageId = en.Id,
@@ -1885,7 +1885,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = 14.317374,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Université catholique de Louvain",
                 IsMember = true,
@@ -1894,7 +1894,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.uclouvain.be",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Catholic University of Louvain",
                         TranslationToLanguageId = en.Id,
@@ -1905,7 +1905,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = 4.604945,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Federal do Paraná",
                 IsMember = true,
@@ -1914,7 +1914,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ufpr.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Federal University of Parana",
                         TranslationToLanguageId = en.Id,
@@ -1925,7 +1925,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -49.267353,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Federal do Rio de Janeiro",
                 IsMember = true,
@@ -1934,7 +1934,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ufrj.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Federal University of Rio de Janeiro",
                         TranslationToLanguageId = en.Id,
@@ -1945,7 +1945,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -43.223907,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "University of Florida",
                 IsMember = true,
@@ -1957,7 +1957,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -82.350685,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Instituto de Pesquisa e Planejamento Urbano de Curitiba",
                 IsMember = true,
@@ -1966,7 +1966,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ippuc.org.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Institute for Research and Urban Planning Curtiba",
                         TranslationToLanguageId = en.Id,
@@ -1977,7 +1977,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -49.252010,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Positivo",
                 IsMember = true,
@@ -1986,7 +1986,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.up.com.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Positive University",
                         TranslationToLanguageId = en.Id,
@@ -1997,7 +1997,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -49.355865,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade de São Paulo",
                 IsMember = true,
@@ -2006,7 +2006,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.usp.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Sao Paulo",
                         TranslationToLanguageId = en.Id,
@@ -2017,7 +2017,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -46.715672,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad del Desarrollo",
                 IsMember = true,
@@ -2026,7 +2026,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.udd.cl",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Development",
                         TranslationToLanguageId = en.Id,
@@ -2037,7 +2037,7 @@ namespace UCosmic.SeedData
                 CenterLongitude = -73.036003,
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad Nacional del Nordeste",
                 IsMember = true,
@@ -2046,7 +2046,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.unne.edu.ar",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Northeast National University",
                         TranslationToLanguageId = en.Id,
@@ -2054,7 +2054,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad de Flores",
                 IsMember = true,
@@ -2063,7 +2063,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.uflo.edu.ar",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Flores",
                         TranslationToLanguageId = en.Id,
@@ -2071,7 +2071,7 @@ namespace UCosmic.SeedData
                 },
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "universidad.uflo.edu.ar",
                         IsDefunct = true,
@@ -2079,7 +2079,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Federal de Goiás",
                 IsMember = true,
@@ -2088,7 +2088,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ufg.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Federal University of Goias",
                         TranslationToLanguageId = en.Id,
@@ -2096,7 +2096,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Fundação Getúlio Vargas",
                 IsMember = true,
@@ -2105,7 +2105,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.fgv.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Getulio Vargas Foundation",
                         TranslationToLanguageId = en.Id,
@@ -2113,14 +2113,14 @@ namespace UCosmic.SeedData
                 },
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "portal.fgv.br",
                     },
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Estadual do Ceara",
                 IsMember = true,
@@ -2129,7 +2129,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.uece.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Ceara State University",
                         TranslationToLanguageId = en.Id,
@@ -2137,7 +2137,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidade Estadual Paulista",
                 IsMember = true,
@@ -2146,7 +2146,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.unesp.br",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Paulista State University",
                         TranslationToLanguageId = en.Id,
@@ -2154,7 +2154,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Université du Québec à Montréal",
                 IsMember = true,
@@ -2163,7 +2163,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.uqam.ca",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Quebec at Montreal",
                         TranslationToLanguageId = en.Id,
@@ -2171,7 +2171,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad de Artes, Ciencias y Comunicación",
                 IsMember = true,
@@ -2180,7 +2180,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.uniacc.cl",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Arts, Sciences, and Communication",
                         TranslationToLanguageId = en.Id,
@@ -2188,7 +2188,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad de Santiago de Chile",
                 IsMember = true,
@@ -2197,7 +2197,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.usach.cl",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "University of Santiago Chile",
                         TranslationToLanguageId = en.Id,
@@ -2205,7 +2205,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Capital Normal University",
                 IsMember = true,
@@ -2214,7 +2214,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cnu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Chang'an University",
                 IsMember = true,
@@ -2223,7 +2223,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.xahu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "The China Conservatory",
                 IsMember = true,
@@ -2232,7 +2232,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ccmusic.edu.cn",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "China Conservatory of Music",
                         TranslationToLanguageId = en.Id,
@@ -2241,7 +2241,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Dalian Jiaotong University",
                 IsMember = true,
@@ -2250,7 +2250,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.djtu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "East China Jiaotong University",
                 IsMember = true,
@@ -2259,7 +2259,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ecjtu.jx.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Environmental Management College of China",
                 IsMember = true,
@@ -2268,7 +2268,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.emcc.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Guangxi University",
                 IsMember = true,
@@ -2277,7 +2277,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.gxu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Guangxi University of Technology",
                 IsMember = true,
@@ -2286,7 +2286,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.gxut.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Guilin University of Technology",
                 IsMember = true,
@@ -2295,7 +2295,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.glut.edu.cn",
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "www.glite.edu.cn",
                         IsDefunct = true,
@@ -2303,7 +2303,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Hebei University of Technology",
                 IsMember = true,
@@ -2312,7 +2312,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.hebut.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Chinese Academy of Sciences",
                 IsMember = true,
@@ -2321,7 +2321,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cas.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Institute of Psychology, Chinese Academy of Sciences",
                 IsMember = true,
@@ -2330,7 +2330,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.psych.cas.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Liaoning Normal University",
                 IsMember = true,
@@ -2339,7 +2339,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.lnnu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Nankai University",
                 IsMember = true,
@@ -2348,7 +2348,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.nankai.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Shandong Province",
                 IsMember = true,
@@ -2357,7 +2357,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sd.gov.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Shandong University",
                 IsMember = true,
@@ -2366,7 +2366,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sdu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Shanghai Academy of Environmental Sciences",
                 IsMember = true,
@@ -2375,7 +2375,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.saes.sh.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Shanghai Jiao Tong University",
                 IsMember = true,
@@ -2384,7 +2384,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sjtu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Soochow University",
                 IsMember = true,
@@ -2393,7 +2393,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.suda.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "South China Normal University",
                 IsMember = true,
@@ -2402,7 +2402,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.scnu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Southwestern University of Finance and Economics",
                 IsMember = true,
@@ -2411,7 +2411,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.swufe.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Sun Yat-Sen University",
                 IsMember = true,
@@ -2420,7 +2420,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.sysu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Tongji University",
                 IsMember = true,
@@ -2429,7 +2429,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.tongji.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Tsinghua University",
                 IsMember = true,
@@ -2438,7 +2438,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.tsinghua.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Xian International Studies University",
                 IsMember = true,
@@ -2447,7 +2447,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.xisu.edu.cn",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad Tecnológica de Bolívar",
                 IsMember = true,
@@ -2456,7 +2456,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.unitecnologica.edu.co",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Technology University of Bolivar",
                         TranslationToLanguageId = en.Id,
@@ -2464,7 +2464,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad del Atlántico",
                 IsMember = true,
@@ -2473,7 +2473,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.uniatlantico.edu.co",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Atlantic University",
                         TranslationToLanguageId = en.Id,
@@ -2481,7 +2481,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Universidad del Valle",
                 IsMember = true,
@@ -2490,7 +2490,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.univalle.edu.co",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Valle University",
                         TranslationToLanguageId = en.Id,
@@ -2498,7 +2498,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Arcada",
                 IsMember = true,
@@ -2507,7 +2507,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.arcada.fi",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Tekniska Läroverkets Kamratförbund r.f",
                 IsMember = true,
@@ -2516,7 +2516,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.tlk.fi",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Swedish Institute of Technology",
                         TranslationToLanguageId = en.Id,
@@ -2524,7 +2524,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Audencia Nantes School of Management",
                 IsMember = true,
@@ -2533,7 +2533,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.audencia.com",
                 NonOfficialNames = new[]
                 {
-                    new CreateEstablishment.NonOfficialName
+                    new SeedEstablishment.NonOfficialName
                     {
                         Text = "Ecole Supérieure de Commerce de Nantes",
                         TranslationToLanguageId = fr.Id,
@@ -2541,7 +2541,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Nanyang Technological University",
                 IsMember = true,
@@ -2550,7 +2550,7 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.ntu.edu.sg",
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Chungnam National University",
                 IsMember = true,
@@ -2559,18 +2559,18 @@ namespace UCosmic.SeedData
                 OfficialWebsiteUrl = "www.cnu.ac.kr",
                 NonOfficialUrls = new[]
                 {
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "plus.cnu.ac.kr",
                     },
-                    new CreateEstablishment.NonOfficialUrl
+                    new SeedEstablishment.NonOfficialUrl
                     {
                         Value = "ipsi.cnu.ac.kr",
                     },
                 },
             });
 
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Beijing University of Technology",
                 IsMember = true,
@@ -2586,7 +2586,7 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
 
         public EstablishmentRecruitmentAgencyEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
@@ -2601,7 +2601,7 @@ namespace UCosmic.SeedData
 
             #region EduGlobal
 
-            var eduGlobalHq = Seed(new CreateEstablishment
+            var eduGlobalHq = Seed(new SeedEstablishment
             {
                 OfficialName = "EduGlobal Beijing",
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -2612,25 +2612,25 @@ namespace UCosmic.SeedData
                 CenterLongitude = 116.4178770000002,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "7F North Office Tower, Beijing New World Centre\r\n3B Chongwenmenwai St\r\n100062 Beijing\r\nPR China",
                     },
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = zh.Id,
                         Text = "中国北京崇文区崇文门外大街3号B\r\n北京新世界中心写字楼B座7层\r\n邮编：100062",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 (10) 6708 0808",
                     Fax = "+86 (10) 6708 2541",
                     Email = "infobeijing@eduglobal.com",
                 },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "EduGlobal Changchun",
                 ParentId = eduGlobalHq.RevisionId,
@@ -2641,18 +2641,18 @@ namespace UCosmic.SeedData
                 CenterLongitude = 125.310471,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "Songhuajiang University,\r\nNo.758 Qianjin Street, Changchun City,\r\nJilin Province\r\n130000, P.R.China",
                     },
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = zh.Id,
                         Text = "吉林省长春市前进大街758号松花江大学\r\n邮编：130000",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 431 85111566",
                     Fax = "+86 431-85111566",
@@ -2663,7 +2663,7 @@ namespace UCosmic.SeedData
             #endregion
             #region EIC Group
 
-            var eicHq = Seed(new CreateEstablishment
+            var eicHq = Seed(new SeedEstablishment
             {
                 OfficialName = "EIC Group Beijing",
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -2674,25 +2674,25 @@ namespace UCosmic.SeedData
                 CenterLongitude = 116.4593730001,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "Room 1203, Block A, Jianwai SOHO\r\n39 East 3rd Ring Road\r\nChaoyang District, Beijing\r\nChina  100022",
                     },
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = zh.Id,
                         Text = "北京市朝阳区东三环中路39号建外SOHO A座\r\n12,15层国贸办公区",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 (10) 5878 1616",
                     Fax = "+86 (10) 5869 4393",
                     Email = "beijing@eic.org.cn",
                 },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "EIC Group Changsha",
                 ParentId = eicHq.RevisionId,
@@ -2703,18 +2703,18 @@ namespace UCosmic.SeedData
                 CenterLongitude = 112.976715,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "Floor 24, Pinghetang Business Mansion\r\nNo. 88 Huangxing Middle Road\r\nChangsha City, Hunan Province\r\nChina",
                     },
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = zh.Id,
                         Text = "长沙市黄兴中路88号平和堂商务楼24楼启德教育\r\n中心",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 (731) 8448 8495",
                     Fax = "+86 (731) 8448 3835",
@@ -2725,7 +2725,7 @@ namespace UCosmic.SeedData
             #endregion
             #region CanAchieve
 
-            var canAchieveHq = Seed(new CreateEstablishment
+            var canAchieveHq = Seed(new SeedEstablishment
             {
                 OfficialName = "Can Achieve Group Beijing",
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
@@ -2736,19 +2736,19 @@ namespace UCosmic.SeedData
                 CenterLongitude = 116.459831,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "802, Tower B, JianWai SOHO, Office Building\r\nChaoyang District\r\nBeijing China, 100022",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 (10) 5869 9445",
                     Fax = "+86 (10) 5869 4171",
                 },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Can Achieve Group Nanjing",
                 ParentId = canAchieveHq.RevisionId,
@@ -2759,18 +2759,18 @@ namespace UCosmic.SeedData
                 CenterLongitude = 118.789917,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "A 12F Deji Mansion, No. 188 Changjiang Road\r\nNanjing, Jiangsu Province\r\nChina, 210018",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 (25) 8681 6111",
                 },
             });
-            Seed(new CreateEstablishment
+            Seed(new SeedEstablishment
             {
                 OfficialName = "Can Achieve Group Guangzhou",
                 ParentId = canAchieveHq.RevisionId,
@@ -2781,13 +2781,13 @@ namespace UCosmic.SeedData
                 CenterLongitude = 113.32875100002,
                 Addresses = new[]
                 {
-                    new CreateEstablishment.Address
+                    new SeedEstablishment.Address
                     {
                         TranslationToLanguageId = en.Id,
                         Text = "Room 511, Nanfang Securities Building\r\nNo.140-148, Tiyu Dong Road",
                     },
                 },
-                PublicContactInfo = new CreateEstablishment.ContactInfo
+                PublicContactInfo = new SeedEstablishment.ContactInfo
                 {
                     Phone = "+86 (20) 2222 0066",
                 },
@@ -2800,11 +2800,11 @@ namespace UCosmic.SeedData
     public abstract class BaseEstablishmentEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<CreateEstablishment> _createEstablishment;
+        private readonly IHandleCommands<SeedEstablishment> _createEstablishment;
         private readonly IUnitOfWork _unitOfWork;
 
         protected BaseEstablishmentEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateEstablishment> createEstablishment
+            , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
         {
@@ -2815,7 +2815,7 @@ namespace UCosmic.SeedData
 
         public abstract void Seed();
 
-        protected Establishment Seed(CreateEstablishment command)
+        protected Establishment Seed(SeedEstablishment command)
         {
             // make sure establishment does not already exist
             var establishment = _queryProcessor.Execute(new EstablishmentByOfficialName(command.OfficialName));

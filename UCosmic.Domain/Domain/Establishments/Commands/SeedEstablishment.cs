@@ -5,7 +5,7 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class CreateEstablishment
+    public class SeedEstablishment
     {
         public string OfficialName { get; set; }
         public bool IsMember { get; set; }
@@ -51,13 +51,13 @@ namespace UCosmic.Domain.Establishments
         }
     }
 
-    public class HandleCreateEstablishmentCommand : IHandleCommands<CreateEstablishment>
+    public class HandleSeedEstablishmentCommand : IHandleCommands<SeedEstablishment>
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
 
-        public HandleCreateEstablishmentCommand(IProcessQueries queryProcessor
+        public HandleSeedEstablishmentCommand(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IHandleCommands<UpdateEstablishmentHierarchy> hierarchy
         )
@@ -67,7 +67,7 @@ namespace UCosmic.Domain.Establishments
             _hierarchy = hierarchy;
         }
 
-        public void Handle(CreateEstablishment command)
+        public void Handle(SeedEstablishment command)
         {
             if (command == null) throw new ArgumentNullException("command");
 

@@ -142,7 +142,7 @@
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeById.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentLocation.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
-    <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
+    <Compile Include="Domain\Establishments\Commands\SeedEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentCategory.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishmentType.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchies.cs" />
