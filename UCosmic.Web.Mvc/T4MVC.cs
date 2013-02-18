@@ -2950,6 +2950,19 @@ namespace Links
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class placeholders {
+            private const string URLPATH = "~/images/placeholders";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string aqua_96x96_png = Url("aqua-96x96.png");
+            public static readonly string blue_96x96_png = Url("blue-96x96.png");
+            public static readonly string green_96x96_png = Url("green-96x96.png");
+            public static readonly string purple_96x96_png = Url("purple-96x96.png");
+            public static readonly string red_96x96_png = Url("red-96x96.png");
+            public static readonly string yellow_96x96_png = Url("yellow-96x96.png");
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class samples {
             private const string URLPATH = "~/images/samples";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
