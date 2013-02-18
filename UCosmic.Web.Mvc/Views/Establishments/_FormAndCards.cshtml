@@ -2,6 +2,14 @@
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on" class="left">
+                <section class="fieldset" data-bind="validationOptions: { decorateElement: true, errorClass: 'error' }">
+                    <select data-bind="foreach: categories, value: typeId" style="margin-right: 12px;">
+                        <option data-bind="visible: $index() == 0 && !$parent.id, text: $parent.typeEmptyText" style="display: none;" value="">[Loading...]</option>
+                        <optgroup label="" data-bind="attr: { label: text }, foreach: types">
+                            <option data-bind="attr: { value: id }, text: text"></option>
+                        </optgroup>
+                    </select>
+                </section>
                 @Html.Partial(MVC.Establishments.Views._FormNamesSection)
                 @Html.Partial(MVC.Establishments.Views._FormUrlsSection)
                 @Html.Partial(MVC.Establishments.Views._FormLocationSection)

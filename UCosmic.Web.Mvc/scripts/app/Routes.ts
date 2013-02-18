@@ -99,6 +99,10 @@ module App.Routes {
                 return makeUrl('establishments');
             }
 
+            export function put (establishmentId: number): string {
+                return get(establishmentId);
+            }
+
             export class Names {
 
                 static get (establishmentId: number, establishmentNameId?: number): string {
@@ -167,6 +171,15 @@ module App.Routes {
                 }
             }
 
+            export class Categories {
+
+                static get (id?: number): string {
+                    var url = 'establishment-categories';
+                    if (id)
+                        url += '/' + id;
+                    return makeUrl(url);
+                }
+            }
         }
 
         export module My {

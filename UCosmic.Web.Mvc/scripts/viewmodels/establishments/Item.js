@@ -4,10 +4,14 @@ var ViewModels;
         var gm = google.maps;
         var Item = (function () {
             function Item(id) {
+                var _this = this;
                 this.id = 0;
+                this._isInitialized = ko.observable(false);
                 this.$genericAlertDialog = undefined;
                 this.createSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0));
                 this.validatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.categories = ko.observableArray();
+                this.typeId = ko.observable();
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
@@ -19,6 +23,80 @@ var ViewModels;
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
                 this.location = new Establishments.Location(this.id);
+                this.typeEmptyText = ko.computed(function () {
+                    return _this.categories().length > 0 ? '[Select a type]' : '[Loading...]';
+                });
+                this.typeId.extend({
+                    required: {
+                        message: 'Establishment type is required'
+                    }
+                });
+                var categoriesPact = $.Deferred();
+                $.get(App.Routes.WebApi.Establishments.Categories.get()).done(function (data, textStatus, jqXHR) {
+                    categoriesPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    categoriesPact.reject(jqXHR, textStatus, errorThrown);
+                });
+                var viewModelPact = $.Deferred();
+                if(this.id) {
+                    $.get(App.Routes.WebApi.Establishments.get(this.id)).done(function (data, textStatus, jqXHR) {
+                        viewModelPact.resolve(data);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        viewModelPact.reject(jqXHR, textStatus, errorThrown);
+                    });
+                } else {
+                    viewModelPact.resolve(undefined);
+                }
+                $.when(categoriesPact, viewModelPact).then(function (categories, viewModel) {
+                    ko.mapping.fromJS(categories, {
+                    }, _this.categories);
+                    if(viewModel) {
+                        ko.mapping.fromJS(viewModel, {
+                            ignore: [
+                                'id'
+                            ]
+                        }, _this);
+                    }
+                    _this._originalValues = viewModel;
+                    if(!_this._isInitialized()) {
+                        _this._isInitialized(true);
+                    }
+                }, function (xhr, textStatus, errorThrown) {
+                });
+                ko.computed(function () {
+                    if(!_this.id || !_this._isInitialized()) {
+                        return;
+                    }
+                    var typeId = _this.typeId();
+                    var data = {
+                        typeId: typeId
+                    };
+                    if(data.typeId == _this._originalValues.typeId) {
+                        return;
+                    }
+                    var url = App.Routes.WebApi.Establishments.put(_this.id);
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        data: data
+                    }).done(function (response, statusText, xhr) {
+                        App.flasher.flash(response);
+                        $.get(App.Routes.WebApi.Establishments.get(_this.id)).done(function (viewModel, textStatus, jqXHR) {
+                            if(viewModel) {
+                                ko.mapping.fromJS(viewModel, {
+                                    ignore: [
+                                        'id'
+                                    ]
+                                }, _this);
+                            }
+                            _this._originalValues = viewModel;
+                        });
+                    }).fail(function (xhr, statusText, errorThrown) {
+                    });
+                }).extend({
+                    throttle: 400
+                });
+                ko.validation.group(this);
             }
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
@@ -128,6 +206,7 @@ var ViewModels;
             Item.prototype.submitToCreate = function (formElement) {
                 var _this = this;
                 if(!this.id || this.id === 0) {
+                    var me = this;
                     this.validatingSpinner.start();
                     var officialName = this.names()[0];
                     var officialUrl = this.urls()[0];
@@ -139,6 +218,9 @@ var ViewModels;
                         }, 5);
                         return false;
                     }
+                    if(!this.isValid()) {
+                        this.errors.showAllMessages();
+                    }
                     if(!officialName.isValid()) {
                         officialName.errors.showAllMessages();
                     }
@@ -149,6 +231,7 @@ var ViewModels;
                     if(officialName.isValid() && officialUrl.isValid()) {
                         var url = App.Routes.WebApi.Establishments.post();
                         var data = {
+                            typeId: me.typeId(),
                             officialName: officialName.serializeData(),
                             officialUrl: officialUrl.serializeData(),
                             location: location.serializeData()

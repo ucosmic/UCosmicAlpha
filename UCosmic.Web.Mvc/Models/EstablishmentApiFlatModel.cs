@@ -5,7 +5,7 @@ using UCosmic.Domain.Establishments;
 namespace UCosmic.Web.Mvc.Models
 {
     [DataContract(Name = "Establishment", Namespace = "")]
-    public class EstablishmentApiModel
+    public class EstablishmentApiFlatModel
     {
         [DataMember]
         public int Id { get; set; }
@@ -33,30 +33,25 @@ namespace UCosmic.Web.Mvc.Models
     }
 
     [DataContract(Name = "PageOfEstablishments", Namespace = "")]
-    public class PageOfEstablishmentApiModel : PageOf<EstablishmentApiModel> { }
+    public class PageOfEstablishmentApiFlatModel : PageOf<EstablishmentApiFlatModel> { }
 
     public static class EstablishmentApiProfiler
     {
-        public class ViewToModelProfiler : Profile
+        public class ViewToModelProfile : Profile
         {
             protected override void Configure()
             {
-                CreateMap<EstablishmentView, EstablishmentApiModel>()
+                CreateMap<EstablishmentView, EstablishmentApiFlatModel>()
                     .ForMember(d => d.OfficialUrl, o => o.ResolveUsing(s => s.WebsiteUrl))
                 ;
             }
         }
 
-        //public class PagedViewResultToPageOfModelsProfiler
-        //    : PagedQueryResultToPageOfItemsProfiler<EstablishmentView, EstablishmentApiModel>
-        //{
-        //}
-
-        public class PagedQueryResultToPageOfItemsProfiler : Profile
+        public class PagedQueryResultToPageOfItemsProfile : Profile
         {
             protected override void Configure()
             {
-                CreateMap<PagedQueryResult<EstablishmentView>, PageOfEstablishmentApiModel>();
+                CreateMap<PagedQueryResult<EstablishmentView>, PageOfEstablishmentApiFlatModel>();
             }
         }
 

@@ -140,6 +140,7 @@
     <Compile Include="Domain\Employees\Queries\EmployeeModuleSettingsByUserName.cs" />
     <Compile Include="Domain\Employees\Validation\EmployeeConstraints.cs" />
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeById.cs" />
+    <Compile Include="Domain\Establishments\Commands\UpdateEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEstablishment.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentLocation.cs" />
     <Compile Include="Domain\Establishments\Commands\CreateEmailTemplate.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentCategories.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategoryByCode.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentTypeByEnglishName.cs" />
@@ -157,6 +159,10 @@
     <Compile Include="Domain\Establishments\Queries\EmailTemplateByName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByEmail.cs" />
     <Compile Include="Domain\Establishments\Queries\FindEstablishmentsWithName.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustBeUniqueUCosmicCode.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustBeUniqueCeebCode.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustFindEstablishmentTypeById.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustHaveCeebCodeLength.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotHaveSamlIntegration.cs" />
     <Compile Include="Domain\Establishments\Validation\MustBeMemberEstablishment.cs" />
     <Compile Include="Domain\Establishments\Validation\MustFindEstablishmentByEmail.cs" />

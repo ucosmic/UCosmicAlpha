@@ -292,7 +292,10 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
+    <Compile Include="Models\EstablishmentApiFlatModel.cs" />
+    <Compile Include="Models\EstablishmentTypeApiModel.cs" />
     <Compile Include="Models\EstablishmentPostModel.cs" />
     <Compile Include="Models\ImageResizeRequestModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />
@@ -433,7 +436,7 @@
     <Compile Include="Models\EstablishmentUrlApiModel.cs" />
     <Compile Include="Models\LanguageApiModel.cs" />
     <Compile Include="Models\CountryApiModel.cs" />
-    <Compile Include="Models\EstablishmentApiModel.cs" />
+    <Compile Include="Models\EstablishmentApiScalarModel.cs" />
     <Compile Include="Models\EstablishmentNameApiModel.cs" />
     <Compile Include="Models\EstablishmentSearchInputModel.cs" />
     <Compile Include="Models\MapBoxModel.cs" />

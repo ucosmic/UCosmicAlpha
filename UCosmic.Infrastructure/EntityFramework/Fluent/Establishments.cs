@@ -78,8 +78,8 @@ namespace UCosmic.EntityFramework
             Property(p => p.PartnerContactInfo.Fax).HasMaxLength(50).HasColumnName("PartnerFax");
             Property(p => p.PartnerContactInfo.Email).HasMaxLength(256).HasColumnName("PartnerEmail");
 
-            Property(p => p.UCosmicCode).IsFixedLength().HasMaxLength(6).IsUnicode(false);
-            Property(p => p.CollegeBoardDesignatedIndicator).IsFixedLength().HasMaxLength(6).IsUnicode(false);
+            Property(p => p.UCosmicCode).IsFixedLength().HasMaxLength(EstablishmentConstraints.CeebCodeLength).IsUnicode(false);
+            Property(p => p.CollegeBoardDesignatedIndicator).IsFixedLength().HasMaxLength(EstablishmentConstraints.CeebCodeLength).IsUnicode(false);
         }
     }
 
@@ -159,7 +159,7 @@ namespace UCosmic.EntityFramework
 
             // has one category
             HasRequired(d => d.Category)
-                .WithMany()
+                .WithMany(p => p.Types)
                 .HasForeignKey(d => d.CategoryCode)
                 .WillCascadeOnDelete(false); // do not delete type if category is deleted
 
@@ -175,6 +175,12 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(EstablishmentCategory).Name, DbSchemaName.Establishments);
 
             HasKey(e => e.Code);
+
+            // has many types
+            HasMany(p => p.Types)
+                .WithRequired(d => d.Category)
+                .HasForeignKey(d => d.CategoryCode)
+                .WillCascadeOnDelete(false); // do not delete type if category is deleted
 
             Property(c => c.EnglishName).IsRequired().HasMaxLength(150);
             Property(c => c.EnglishPluralName).HasMaxLength(150);

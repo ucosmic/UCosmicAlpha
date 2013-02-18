@@ -37,13 +37,20 @@ interface KnockoutObservableEstablishmentUrlViewModelArray extends KnockoutObser
 
 module ViewModels.Establishments {
 
-    export interface IServerApiModel {
+    export interface IServerApiFlatModel {
         id: number;
         officialName: string;
         translatedName: string;
         officialUrl: string;
         countryName: string;
         countryCode: string;
+        uCosmicCode: string;
+        ceebCode: string;
+    }
+
+    export interface IServerApiScalarModel {
+        id: number;
+        typeId: number;
         uCosmicCode: string;
         ceebCode: string;
     }

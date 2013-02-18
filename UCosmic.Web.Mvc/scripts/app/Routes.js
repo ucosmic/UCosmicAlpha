@@ -98,6 +98,10 @@ var App;
                     return makeUrl('establishments');
                 }
                 Establishments.post = post;
+                function put(establishmentId) {
+                    return get(establishmentId);
+                }
+                Establishments.put = put;
                 var Names = (function () {
                     function Names() { }
                     Names.get = function get(establishmentId, establishmentNameId) {
@@ -158,6 +162,18 @@ var App;
                     return Locations;
                 })();
                 Establishments.Locations = Locations;                
+                var Categories = (function () {
+                    function Categories() { }
+                    Categories.get = function get(id) {
+                        var url = 'establishment-categories';
+                        if(id) {
+                            url += '/' + id;
+                        }
+                        return makeUrl(url);
+                    }
+                    return Categories;
+                })();
+                Establishments.Categories = Categories;                
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
             (function (My) {

@@ -5,6 +5,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class EstablishmentPostModel
     {
+        public int TypeId { get; set; }
         public EstablishmentNameApiModel OfficialName { get; set; }
         public EstablishmentUrlApiModel OfficialUrl { get; set; }
         public EstablishmentLocationPutModel Location { get; set; }

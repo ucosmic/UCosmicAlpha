@@ -150,6 +150,11 @@ select {
   padding: 8px;
   font-size: 16px;
   line-height: 20px; }
+  select.validationElement {
+    background-color: #ffc0cb;
+    border-color: #c00;
+    border-right-color: #c66;
+    border-bottom-color: #c66; }
 
 select.inline {
   padding: 0;

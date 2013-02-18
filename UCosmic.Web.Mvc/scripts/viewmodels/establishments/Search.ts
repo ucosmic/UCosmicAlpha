@@ -163,7 +163,7 @@ module ViewModels.Establishments {
         };
         swipeCallback(): void {
         }
-        receiveResults(js: IServerApiModel[]): void {
+        receiveResults(js: IServerApiFlatModel[]): void {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -191,7 +191,7 @@ module ViewModels.Establishments {
                 keyword: this.throttledKeyword(),
                 orderBy: this.orderBy()
             })
-            .done((response: IServerApiModel[]): void => {
+            .done((response: IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
             });
         }

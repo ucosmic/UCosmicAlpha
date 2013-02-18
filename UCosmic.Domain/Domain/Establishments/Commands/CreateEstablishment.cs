@@ -16,6 +16,7 @@ namespace UCosmic.Domain.Establishments
         }
 
         public IPrincipal Principal { get; private set; }
+        public int TypeId { get; set; }
         public CreateEstablishmentName OfficialName { get; set; }
         public CreateEstablishmentUrl OfficialUrl { get; set; }
         public UpdateEstablishmentLocation Location { get; set; }
@@ -27,8 +28,8 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateCreateEstablishmentCommand : AbstractValidator<CreateEstablishment>
     {
-        public ValidateCreateEstablishmentCommand(//IQueryEntities entities
-            IValidator<CreateEstablishmentName> officialNameValidator
+        public ValidateCreateEstablishmentCommand(IQueryEntities entities
+            , IValidator<CreateEstablishmentName> officialNameValidator
             , IValidator<CreateEstablishmentUrl> officialUrlValidator
         )
         {
@@ -41,6 +42,24 @@ namespace UCosmic.Domain.Establishments
                 .Must(x => officialNameValidator.Validate(x).IsValid)
                     .WithMessage("Establishment official name failed one or more validation rules.")
             ;
+
+            // typeid is required
+            RuleFor(x => x.TypeId)
+                .MustFindEstablishmentTypeById(entities)
+                    .WithMessage(MustFindEstablishmentTypeById.FailMessageFormat, x => x.TypeId)
+            ;
+
+            RuleFor(x => x.CeebCode)
+                .MustHaveCeebCodeLength()
+                    .WithMessage(MustHaveCeebCodeLength.FailMessage)
+                .MustBeUniqueCeebCode(entities)
+                    .WithMessage(MustBeUniqueCeebCode<object>.FailMessageFormat, x => x.CeebCode);
+
+            RuleFor(x => x.UCosmicCode)
+                .MustHaveCeebCodeLength()
+                    .WithMessage(MustHaveCeebCodeLength.FailMessage)
+                .MustBeUniqueUCosmicCode(entities)
+                    .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode);
 
             // when the establishment name is official, it cannot be a former / defunct name
             When(x => x.OfficialUrl != null && !string.IsNullOrWhiteSpace(x.OfficialUrl.Value), () =>
@@ -84,10 +103,8 @@ namespace UCosmic.Domain.Establishments
             if (command == null) throw new ArgumentNullException("command");
 
             var hasOfficialUrl = command.OfficialUrl != null && !string.IsNullOrWhiteSpace(command.OfficialUrl.Value);
-
-            // TODO: get establishment type from command
             var establishmentType = _entities.Get<EstablishmentType>()
-                .Single(x => "University".Equals(x.EnglishName, StringComparison.OrdinalIgnoreCase));
+                .Single(x => x.RevisionId == command.TypeId);
 
             // create initial establishment
             var establishment = new Establishment

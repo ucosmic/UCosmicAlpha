@@ -13,7 +13,7 @@ module ViewModels.Establishments {
         officialNameMatchesTranslation: KnockoutComputed;
         officialNameDoesNotMatchTranslation: KnockoutComputed;
 
-        constructor (values: IServerApiModel) {
+        constructor (values: IServerApiFlatModel) {
 
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);

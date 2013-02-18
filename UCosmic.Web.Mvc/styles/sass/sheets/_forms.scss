@@ -120,6 +120,12 @@ select {
     border-bottom-color: #ddd;
     padding: 8px;
     @include font-height(16px, 20px);
+    &.validationElement {
+        background-color: #ffc0cb;
+        border-color: #c00;
+        border-right-color: #c66;
+        border-bottom-color: #c66;
+    }
 }
 
 select.inline {

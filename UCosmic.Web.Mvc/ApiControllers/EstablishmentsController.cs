@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -16,16 +18,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateEstablishment> _createHandler;
+        private readonly IHandleCommands<UpdateEstablishment> _updateHandler;
 
         public EstablishmentsController(IProcessQueries queryProcessor
             , IHandleCommands<CreateEstablishment> createHandler
+            , IHandleCommands<UpdateEstablishment> updateHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
+            _updateHandler = updateHandler;
         }
 
-        public PageOfEstablishmentApiModel GetAll([FromUri] EstablishmentSearchInputModel input)
+        public PageOfEstablishmentApiFlatModel GetAll([FromUri] EstablishmentSearchInputModel input)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
@@ -33,16 +38,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
             var views = _queryProcessor.Execute(query);
-            var model = Mapper.Map<PageOfEstablishmentApiModel>(views);
+            var model = Mapper.Map<PageOfEstablishmentApiFlatModel>(views);
             return model;
         }
 
         [GET("{establishmentId}")]
-        public EstablishmentApiModel GetOne(int establishmentId)
+        public EstablishmentApiScalarModel GetOne(int establishmentId)
         {
-            var view = _queryProcessor.Execute(new EstablishmentViewById(establishmentId));
-            if (view == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            var model = Mapper.Map<EstablishmentApiModel>(view);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId)
+            {
+                EagerLoad = new Expression<Func<Establishment, object>>[]
+                {
+                    x => x.Type,
+                }
+            });
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<EstablishmentApiScalarModel>(entity);
             return model;
         }
 
@@ -79,6 +92,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);
 
+            return response;
+        }
+
+        [PUT("{id}")]
+        public HttpResponseMessage Put(int id, EstablishmentApiScalarModel model)
+        {
+            var entity = _queryProcessor.Execute(new EstablishmentById(id));
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            model.Id = id;
+            var command = new UpdateEstablishment(id, User);
+            Mapper.Map(model, command);
+
+            try
+            {
+                _updateHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment was successfully updated.");
             return response;
         }
     }

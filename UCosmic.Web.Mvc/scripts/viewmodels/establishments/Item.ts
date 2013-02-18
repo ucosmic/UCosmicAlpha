@@ -19,14 +19,21 @@ module ViewModels.Establishments {
 
     import gm = google.maps
 
-    export class Item {
+    export class Item implements KnockoutValidationGroup {
 
         // fields
         id: number = 0;
+        private _originalValues: any;
+        private _isInitialized: KnockoutObservableBool = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
         createSpinner: Spinner = new Spinner(new SpinnerOptions(0));
         validatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        categories: KnockoutObservableArray = ko.observableArray();
+        typeId: KnockoutObservableNumber = ko.observable();
+        typeEmptyText: KnockoutComputed;
+        isValid: () => bool;
+        errors: KnockoutValidationErrors;
 
         constructor(id?: number) {
 
@@ -36,6 +43,102 @@ module ViewModels.Establishments {
             this._initNamesComputeds();
             this._initUrlsComputeds();
             this.location = new Location(this.id);
+
+            this.typeEmptyText = ko.computed((): string => {
+                return this.categories().length > 0 ? '[Select a type]' : '[Loading...]';
+            });
+
+            this.typeId.extend({
+                required: {
+                    message: 'Establishment type is required'
+                }
+            });
+
+            // load the scalars
+            var categoriesPact = $.Deferred();
+            $.get(App.Routes.WebApi.Establishments.Categories.get())
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    categoriesPact.resolve(data);
+                })
+                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    categoriesPact.reject(jqXHR, textStatus, errorThrown);
+                });
+
+            var viewModelPact = $.Deferred();
+            if (this.id) {
+                $.get(App.Routes.WebApi.Establishments.get(this.id))
+                    .done((data: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
+                        viewModelPact.resolve(data);
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        viewModelPact.reject(jqXHR, textStatus, errorThrown);
+                    });
+            }
+            else {
+                viewModelPact.resolve(undefined);
+            }
+
+            $.when(categoriesPact, viewModelPact).then(
+
+                // all requests succeeded
+                (categories: any[], viewModel: IServerApiScalarModel): void => {
+
+                    ko.mapping.fromJS(categories, {}, this.categories);
+                    if (viewModel) {
+                        ko.mapping.fromJS(viewModel, {
+                            ignore: ['id']
+                        }, this);
+                    }
+
+                    this._originalValues = viewModel;
+                    
+                    if (!this._isInitialized()) {
+                        //$(this).trigger('ready'); // ready to apply bindings
+                        this._isInitialized(true); // bindings have been applied
+                        //this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
+                    }
+                },
+
+                // one of the responses failed (never called more than once, even on multifailures)
+                (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    //alert('a GET API call failed :(');
+                });
+
+            ko.computed((): void => {
+                if (!this.id || !this._isInitialized()) return;
+                var typeId = this.typeId();
+                var data = {
+                    typeId: typeId
+                };
+                if (data.typeId == this._originalValues.typeId) {
+                    return;
+                }
+                var url = App.Routes.WebApi.Establishments.put(this.id);
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: data
+                })
+                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                    App.flasher.flash(response);
+                    $.get(App.Routes.WebApi.Establishments.get(this.id))
+                        .done((viewModel: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
+                            // TODO: not dry
+                            if (viewModel) {
+                                ko.mapping.fromJS(viewModel, {
+                                    ignore: ['id']
+                                }, this);
+                            }
+                            // TODO: not dry
+                            this._originalValues = viewModel;
+                        })
+                })
+                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    //alert('fail :(');
+                });
+            }).extend({ throttle: 400 });
+
+            ko.validation.group(this);
         }
 
         //#region Names
@@ -174,7 +277,7 @@ module ViewModels.Establishments {
 
         submitToCreate(formElement: HTMLFormElement): bool {
             if (!this.id || this.id === 0) {
-
+                var me = this;
                 this.validatingSpinner.start();
 
                 // reference the single name and url
@@ -192,6 +295,9 @@ module ViewModels.Establishments {
                 }
 
                 // check validity
+                if (!this.isValid()) {
+                    this.errors.showAllMessages();
+                }
                 if (!officialName.isValid()) {
                     officialName.errors.showAllMessages();
                 }
@@ -202,6 +308,7 @@ module ViewModels.Establishments {
                 if (officialName.isValid() && officialUrl.isValid()) {
                     var url = App.Routes.WebApi.Establishments.post();
                     var data: any = {
+                        typeId: me.typeId(),
                         officialName: officialName.serializeData(),
                         officialUrl: officialUrl.serializeData(),
                         location: location.serializeData()
