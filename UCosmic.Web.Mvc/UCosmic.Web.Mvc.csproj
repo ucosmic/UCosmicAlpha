@@ -1762,7 +1762,6 @@
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
-    <Content Include="Views\People\Index.cshtml" />
     <Content Include="styles\sass\sheets\_designs.scss">
       <Compile>False</Compile>
       <Minify>True</Minify>
@@ -1775,7 +1774,6 @@
     <Content Include="styles\tenants\uc.edu\designs.scss" />
     <Content Include="styles\tenants\umn.edu\designs.scss" />
     <Content Include="styles\tenants\usf.edu\designs.scss" />
-    <Content Include="Views\People\Index2.cshtml" />
     <Content Include="Views\MyProfile\Index.cshtml" />
     <Content Include="Views\MyProfile\_EmailAddresses.cshtml" />
     <Content Include="Views\MyProfile\_PersonalInfo.cshtml" />
