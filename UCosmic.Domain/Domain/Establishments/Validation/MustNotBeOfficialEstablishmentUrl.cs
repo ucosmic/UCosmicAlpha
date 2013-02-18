@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using FluentValidation;
 using FluentValidation.Validators;
 
@@ -28,9 +29,20 @@ namespace UCosmic.Domain.Establishments
             var value = (int)context.PropertyValue;
 
             var entity = _entities.Query<EstablishmentUrl>()
+                .EagerLoad(_entities, new Expression<Func<EstablishmentUrl, object>>[]
+                {
+                    x => x.ForEstablishment,
+                })
                 .Single(x => x.RevisionId == value);
 
-            return !entity.IsOfficialUrl;
+            var owner = _entities.Query<Establishment>()
+                .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
+                {
+                    x => x.Urls,
+                })
+                .Single(x => x.RevisionId == entity.ForEstablishment.RevisionId);
+
+            return !entity.IsOfficialUrl || owner.Urls.Count == 1;
         }
     }
 

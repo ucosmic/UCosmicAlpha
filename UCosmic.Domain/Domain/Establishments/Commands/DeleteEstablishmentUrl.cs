@@ -40,8 +40,8 @@ namespace UCosmic.Domain.Establishments
                 .MustNotBeOfficialEstablishmentUrl(entities)
                     .WithMessage(MustNotBeOfficialEstablishmentUrl.FailMessageFormat, x => x.Id)
 
-                .MustNotBeOnlyEstablishmentUrl(entities)
-                    .WithMessage(MustNotBeOnlyEstablishmentUrl.FailMessageFormat, x => x.Id)
+                //.MustNotBeOnlyEstablishmentUrl(entities)
+                //    .WithMessage(MustNotBeOnlyEstablishmentUrl.FailMessageFormat, x => x.Id)
             ;
         }
     }
@@ -72,6 +72,9 @@ namespace UCosmic.Domain.Establishments
                 .SingleOrDefault(x => x.RevisionId == command.Id)
             ;
             if (establishmentUrl == null) return; // delete idempotently
+
+            if (establishmentUrl.IsOfficialUrl)
+                establishmentUrl.ForEstablishment.WebsiteUrl = null;
 
             // log audit
             var audit = new CommandEvent

@@ -11,7 +11,7 @@
     </header>
     <ul class="data-items" data-bind="foreach: names">
         <li data-bind="css: { selected: editMode }">
-            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': $parent.editingName() }">
+            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingName() }">
                 <div class="group">
                     <div class="on-left" style="max-width: 645px;">
                         <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
@@ -19,7 +19,7 @@
                         <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
                         <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
                     </div>
-                    <div class="on-right" data-bind="visible: !isOfficialName() && !$parent.editingName()">
+                    <div class="on-right" data-bind="visible: !isOfficialName() && !owner.editingName()">
                         <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this name">
                             <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
@@ -43,9 +43,9 @@
                         </label>
                     </div>
                     <div class="field">
-                        <select data-bind="value: selectedLanguageCode, options: $parent.languages, optionsText: 'name', optionsValue: 'code', jqElement: '$languagesElement', visible: $parent.languages().length > 0" style="display: none;">
+                        <select data-bind="value: selectedLanguageCode, options: owner.languages, optionsText: 'name', optionsValue: 'code', jqElement: '$languagesElement', visible: owner.languages().length > 0" style="display: none;">
                         </select>
-                        <select data-bind="visible: $parent.languages().length < 1">
+                        <select data-bind="visible: owner.languages().length < 1">
                             <option>[Loading...]</option>
                         </select>
                     </div>

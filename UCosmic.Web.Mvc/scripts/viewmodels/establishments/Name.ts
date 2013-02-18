@@ -90,7 +90,7 @@ module ViewModels.Establishments {
         // private fields
         private saveEditorClicked: bool = false;
         private originalValues: ServerNameApiModel;
-        private owner: any;
+        private owner: Item;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 

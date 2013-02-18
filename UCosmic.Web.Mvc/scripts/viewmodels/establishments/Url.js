@@ -110,6 +110,15 @@ var ViewModels;
                     }
                     return 'http://' + url;
                 });
+                this.isDeletable = ko.computed(function () {
+                    if(_this.owner.editingUrl()) {
+                        return false;
+                    }
+                    if(_this.owner.urls().length == 1) {
+                        return true;
+                    }
+                    return !_this.isOfficialUrl();
+                });
                 this.mutationSuccess = function (response) {
                     _this.owner.requestUrls(function () {
                         _this.owner.editingUrl(0);
@@ -216,7 +225,7 @@ var ViewModels;
                 if(this.owner.editingUrl()) {
                     return;
                 }
-                if(this.isOfficialUrl()) {
+                if(this.isOfficialUrl() && this.owner.urls().length > 1) {
                     this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
                     this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',

@@ -11,7 +11,7 @@
     </header>
     <ul class="data-items" data-bind="foreach: urls">
         <li data-bind="css: { selected: editMode }">
-            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': $parent.editingUrl() }">
+            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingUrl() }">
                 <div class="group">
                     <div class="on-left" style="max-width: 645px;">
                         <span data-bind="text: value, css: { 'bold': isOfficialUrl() }" class="inline-block"></span>
@@ -20,7 +20,7 @@
                         <span class="red badge" data-bind="visible: isFormerUrl" style="display: none;">Former / Defunct</span>
                         <a class="link badge" href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }">Link</a>
                     </div>
-                    <div class="on-right" data-bind="visible: !isOfficialUrl() && !$parent.editingUrl()">
+                    <div class="on-right" data-bind="visible: isDeletable">
                         <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this URL">
                             <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />

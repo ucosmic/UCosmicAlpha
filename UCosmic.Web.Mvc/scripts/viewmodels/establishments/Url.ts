@@ -75,6 +75,7 @@ module ViewModels.Establishments {
         // computeds
         isOfficialUrlEnabled: KnockoutComputed;
         isValueValidatableAsync: KnockoutComputed;
+        isDeletable: KnockoutComputed;
         valueHref: KnockoutComputed;
 
         // spinners
@@ -85,7 +86,7 @@ module ViewModels.Establishments {
         // private fields
         private saveEditorClicked: bool = false;
         private originalValues: ServerUrlApiModel;
-        private owner: any;
+        private owner: Item;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
@@ -142,6 +143,12 @@ module ViewModels.Establishments {
                 var url = this.value();
                 if (!url) return url;
                 return 'http://' + url;
+            });
+
+            this.isDeletable = ko.computed((): bool => {
+                if (this.owner.editingUrl()) return false;
+                if (this.owner.urls().length == 1) return true;
+                return !this.isOfficialUrl();
             });
 
             this.mutationSuccess = (response: string): void => {
@@ -253,7 +260,8 @@ module ViewModels.Establishments {
         purge(vm: Url, e: JQueryEventObject): void {
             e.stopPropagation();
             if (this.owner.editingUrl()) return;
-            if (this.isOfficialUrl()) {
+
+            if (this.isOfficialUrl() && this.owner.urls().length > 1) {
                 this.owner.$genericAlertDialog.find('p.content')
                     .html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
                 this.owner.$genericAlertDialog.dialog({
