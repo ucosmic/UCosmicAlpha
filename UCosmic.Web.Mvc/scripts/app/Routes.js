@@ -290,14 +290,10 @@ var App;
                 return url;
             }
             (function (Establishments) {
-                function get(establishmentId) {
-                    var url = 'establishments';
-                    if(establishmentId) {
-                        url += '/' + establishmentId;
-                    }
-                    return makeUrl(url);
+                function show(establishmentId) {
+                    return makeUrl('establishments/' + establishmentId);
                 }
-                Establishments.get = get;
+                Establishments.show = show;
             })(Mvc.Establishments || (Mvc.Establishments = {}));
             var Establishments = Mvc.Establishments;
         })(Routes.Mvc || (Routes.Mvc = {}));

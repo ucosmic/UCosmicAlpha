@@ -222,7 +222,7 @@ module ViewModels.Establishments {
                             var pkStart = redirect.lastIndexOf('/') + 1;
                             var pkString = redirect.substr(pkStart);
                             var pk = parseInt(pkString);
-                            var path = App.Routes.Mvc.Establishments.get(pk);
+                            var path = App.Routes.Mvc.Establishments.show(pk);
                             window.location.href = path;
                         }
                     })

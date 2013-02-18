@@ -280,11 +280,8 @@ module App.Routes {
         }
 
         export module Establishments {
-            export function get (establishmentId?: number) {
-                var url = 'establishments';
-                if (establishmentId)
-                    url += '/' + establishmentId;
-                return makeUrl(url);
+            export function show (establishmentId: number) {
+                return makeUrl('establishments/' + establishmentId);
             }
         }
     }
