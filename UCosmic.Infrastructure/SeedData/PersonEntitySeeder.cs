@@ -10,7 +10,7 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<UpdateMyPhoto> __updatePhoto;
+        private readonly IHandleCommands<UpdateMyPhoto> _updatePhoto;
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
@@ -23,7 +23,7 @@ namespace UCosmic.SeedData
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
-            __updatePhoto = updatePhoto;
+            _updatePhoto = updatePhoto;
         }
 
         public override void Seed()
@@ -282,7 +282,7 @@ namespace UCosmic.SeedData
                             },
                         },
                 });
-                __updatePhoto.Handle(new UpdateMyPhoto(new GenericPrincipal(new GenericIdentity(person.User.Name), null))
+                _updatePhoto.Handle(new UpdateMyPhoto(new GenericPrincipal(new GenericIdentity(person.User.Name), null))
                 {
                     Content = PeopleImages.BlueGradient128X128Jpeg,
                     Name = "test-photo.jpg",
@@ -307,7 +307,7 @@ namespace UCosmic.SeedData
                                 },
                         },
                 });
-                __updatePhoto.Handle(new UpdateMyPhoto(new GenericPrincipal(new GenericIdentity(person.User.Name), null))
+                _updatePhoto.Handle(new UpdateMyPhoto(new GenericPrincipal(new GenericIdentity(person.User.Name), null))
                 {
                     Content = PeopleImages.BlueGradient128X128Jpeg,
                     Name = "test-photo.jpg",
