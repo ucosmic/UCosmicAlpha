@@ -64,7 +64,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("")]
         public HttpResponseMessage Put(MyProfileApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000); // test API latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
 
             var command = new UpdateMyProfile(User);
             Mapper.Map(model, command);
@@ -121,7 +121,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("photo")]
         public HttpResponseMessage PostPhoto(FileMedia photo)
         {
-            //System.Threading.Thread.Sleep(2000); // test API latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
             //throw new Exception("Oops"); // test unexpected server error
 
             // when the photo us null, it's because the user tried to upload an invalid file type (415)
@@ -151,7 +151,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("photo")]
         public HttpResponseMessage DeletePhoto()
         {
-            //System.Threading.Thread.Sleep(2000); // test API latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
             //throw new Exception("Oops"); // test unexpected server error
 
             /*

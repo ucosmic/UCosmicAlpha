@@ -281,6 +281,27 @@ var App;
             var Employees = WebApi.Employees;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
+        (function (Mvc) {
+            function makeUrl(relativeUrl) {
+                var url = Routes.applicationPath + relativeUrl;
+                if(!hasTrailingSlash(url)) {
+                    url = url + '/';
+                }
+                return url;
+            }
+            (function (Establishments) {
+                function get(establishmentId) {
+                    var url = 'establishments';
+                    if(establishmentId) {
+                        url += '/' + establishmentId;
+                    }
+                    return makeUrl(url);
+                }
+                Establishments.get = get;
+            })(Mvc.Establishments || (Mvc.Establishments = {}));
+            var Establishments = Mvc.Establishments;
+        })(Routes.Mvc || (Routes.Mvc = {}));
+        var Mvc = Routes.Mvc;
         (function (Params) {
             var ImageResizeQuality = (function () {
                 function ImageResizeQuality() { }

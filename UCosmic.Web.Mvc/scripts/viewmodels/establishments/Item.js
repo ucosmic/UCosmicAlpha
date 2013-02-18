@@ -6,6 +6,8 @@ var ViewModels;
             function Item(id) {
                 this.id = 0;
                 this.$genericAlertDialog = undefined;
+                this.createSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0));
+                this.validatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
@@ -126,6 +128,7 @@ var ViewModels;
             Item.prototype.submitToCreate = function (formElement) {
                 var _this = this;
                 if(!this.id || this.id === 0) {
+                    this.validatingSpinner.start();
                     var officialName = this.names()[0];
                     var officialUrl = this.urls()[0];
                     var location = this.location;
@@ -142,6 +145,7 @@ var ViewModels;
                     if(!officialUrl.isValid()) {
                         officialUrl.errors.showAllMessages();
                     }
+                    this.validatingSpinner.stop();
                     if(officialName.isValid() && officialUrl.isValid()) {
                         var url = App.Routes.WebApi.Establishments.post();
                         var data = {
@@ -149,12 +153,37 @@ var ViewModels;
                             officialUrl: officialUrl.serializeData(),
                             location: location.serializeData()
                         };
+                        this.createSpinner.start();
                         $.post(url, data).always(function () {
-                            alert('always');
+                            _this.createSpinner.stop();
                         }).done(function (response, statusText, xhr) {
-                            alert('done');
-                        }).fail(function (arg1, arg2, arg3) {
-                            alert('fail :(');
+                            var redirect = xhr.getResponseHeader('Location');
+                            if(redirect) {
+                                while(redirect.lastIndexOf('/') === redirect.length - 1) {
+                                    redirect = redirect.substr(0, redirect.length - 1);
+                                }
+                                var pkStart = redirect.lastIndexOf('/') + 1;
+                                var pkString = redirect.substr(pkStart);
+                                var pk = parseInt(pkString);
+                                var path = App.Routes.Mvc.Establishments.get(pk);
+                                window.location.href = path;
+                            }
+                        }).fail(function (xhr, statusText, errorThrown) {
+                            if(xhr.status === 400) {
+                                _this.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': function () {
+                                            _this.$genericAlertDialog.dialog('close');
+                                        }
+                                    }
+                                });
+                            }
                         });
                     }
                 }

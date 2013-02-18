@@ -44,9 +44,9 @@ namespace UCosmic.Domain.Establishments
             // id must be within valid range and exist in the database
             RuleFor(x => x.Id)
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment name id", x => x.Id)
-                .MustFindEstablishmentNameById(entities)
-                    .WithMessage(MustFindEstablishmentNameById.FailMessageFormat, x => x.Id)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment id", x => x.Id)
+                .MustFindEstablishmentById(entities)
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.Id)
             ;
 
             // text of the establishment name is required, has max length, and must be unique

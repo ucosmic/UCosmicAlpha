@@ -22,7 +22,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [CacheHttpGet(Duration = 3600)]
         public IEnumerable<CountryApiModel> GetAll()
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             var entities = _queryProcessor.Execute(new Countries
             {
                 EagerLoad = new Expression<Func<Place, object>>[]

@@ -30,7 +30,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{establishmentId}/location")]
         public EstablishmentLocationApiModel Get(int establishmentId)
         {
-            //System.Threading.Thread.Sleep(2000); // test API latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
 
             var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId)
             {
@@ -48,7 +48,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Put(int establishmentId, EstablishmentLocationPutModel model)
         {
-            //System.Threading.Thread.Sleep(2000); // test API latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
             //return null; // test client fail callback
 
             var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId));

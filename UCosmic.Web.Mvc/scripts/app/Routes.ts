@@ -271,6 +271,24 @@ module App.Routes {
         }
     }
 
+    export module Mvc {
+
+        function makeUrl(relativeUrl: string): string {
+            var url = Routes.applicationPath + relativeUrl;
+            if (!hasTrailingSlash(url)) url = url + '/';
+            return url;
+        }
+
+        export module Establishments {
+            export function get (establishmentId?: number) {
+                var url = 'establishments';
+                if (establishmentId)
+                    url += '/' + establishmentId;
+                return makeUrl(url);
+            }
+        }
+    }
+
     export module Params {
         export class ImageResizeQuality {
             static THUMBNAIL: string = 'thumbnail';

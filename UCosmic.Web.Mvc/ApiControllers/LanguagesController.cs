@@ -21,7 +21,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [CacheHttpGet(Duration = 3600)]
         public IEnumerable<LanguageApiModel> GetAll()
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             var views = _queryProcessor.Execute(new LanguagesUnfiltered
             {
                 UserLanguageFirst = true,

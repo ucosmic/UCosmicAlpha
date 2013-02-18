@@ -152,7 +152,13 @@
                 </section>
                 <section class="fieldset">
                     <div>
-                        <input type="submit" value="Save" data-bind="visible: !id" />
+                        <input type="submit" value="Save" data-bind="visible: !id, attr: { disabled: createSpinner.isVisible }" />
+                        &nbsp;&nbsp;&nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: validatingSpinner.isVisible" />
+                        <strong data-bind="visible: validatingSpinner.isVisible">Validating...</strong>
+                        &nbsp;&nbsp;&nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: createSpinner.isVisible" />
+                        <strong data-bind="visible: createSpinner.isVisible">Saving...</strong>
                     </div>
                 </section>
                 <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">

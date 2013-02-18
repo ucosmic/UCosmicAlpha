@@ -25,6 +25,8 @@ module ViewModels.Establishments {
         id: number = 0;
         $genericAlertDialog: JQuery = undefined;
         location: Location;
+        createSpinner: Spinner = new Spinner(new SpinnerOptions(0));
+        validatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
 
         constructor(id?: number) {
 
@@ -172,6 +174,9 @@ module ViewModels.Establishments {
 
         submitToCreate(formElement: HTMLFormElement): bool {
             if (!this.id || this.id === 0) {
+
+                this.validatingSpinner.start();
+
                 // reference the single name and url
                 var officialName: Name = this.names()[0];
                 var officialUrl: Url = this.urls()[0];
@@ -193,6 +198,7 @@ module ViewModels.Establishments {
                 if (!officialUrl.isValid()) {
                     officialUrl.errors.showAllMessages();
                 }
+                this.validatingSpinner.stop();
                 if (officialName.isValid() && officialUrl.isValid()) {
                     var url = App.Routes.WebApi.Establishments.post();
                     var data: any = {
@@ -200,15 +206,41 @@ module ViewModels.Establishments {
                         officialUrl: officialUrl.serializeData(),
                         location: location.serializeData()
                     };
+                    this.createSpinner.start();
                     $.post(url, data)
                     .always((): void => {
-                        alert('always');
+                        this.createSpinner.stop();
                     })
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        alert('done');
+                        // redirect to show
+                        var redirect = xhr.getResponseHeader('Location');
+                        if (redirect) {
+                            // extract primary key
+                            while (redirect.lastIndexOf('/') === redirect.length - 1) {
+                                redirect = redirect.substr(0, redirect.length - 1);
+                            }
+                            var pkStart = redirect.lastIndexOf('/') + 1;
+                            var pkString = redirect.substr(pkStart);
+                            var pk = parseInt(pkString);
+                            var path = App.Routes.Mvc.Establishments.get(pk);
+                            window.location.href = path;
+                        }
                     })
-                    .fail((arg1: any, arg2, arg3): void => {
-                        alert('fail :(');
+                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
                     });
                 }
             }

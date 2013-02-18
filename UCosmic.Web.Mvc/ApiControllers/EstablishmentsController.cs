@@ -2,7 +2,10 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Routing;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
@@ -27,9 +30,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         public PageOfEstablishmentApiModel GetAll([FromUri] EstablishmentSearchInputModel input)
         {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
-            //System.Threading.Thread.Sleep(2000);
             var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
             var views = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfEstablishmentApiModel>(views);
@@ -77,6 +81,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);
+
             return response;
         }
     }

@@ -46,7 +46,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{establishmentId}/names")]
         public IEnumerable<EstablishmentNameApiModel> GetAll(int establishmentId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -74,7 +75,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{establishmentId}/names/{establishmentNameId}")]
         public EstablishmentNameApiModel Get(int establishmentId, int establishmentNameId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId, establishmentNameId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -133,7 +135,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Put(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId, establishmentNameId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             model.OwnerId = establishmentId;
@@ -160,7 +163,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Delete(int establishmentId, int establishmentNameId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId, establishmentNameId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -185,7 +189,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{establishmentId}/names/{establishmentNameId}/validate-text")]
         public HttpResponseMessage Validate(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
         {
-            System.Threading.Thread.Sleep(2000); // test api latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
 
             model.OwnerId = establishmentId;
             model.Id = establishmentNameId;

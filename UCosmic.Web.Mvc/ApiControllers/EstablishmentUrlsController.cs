@@ -46,7 +46,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{establishmentId}/urls")]
         public IEnumerable<EstablishmentUrlApiModel> GetAll(int establishmentId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -73,7 +74,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{establishmentId}/urls/{establishmentUrlId}")]
         public EstablishmentUrlApiModel Get(int establishmentId, int establishmentUrlId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId, establishmentUrlId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -93,7 +95,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Post(int establishmentId, EstablishmentUrlApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             model.OwnerId = establishmentId;
@@ -129,7 +132,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Put(int establishmentId, int establishmentUrlId, EstablishmentUrlApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId, establishmentUrlId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             model.OwnerId = establishmentId;
@@ -156,7 +160,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Delete(int establishmentId, int establishmentUrlId)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             if (!FindResources(establishmentId, establishmentUrlId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -181,7 +186,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{establishmentId}/urls/{establishmentUrlId}/validate-value")]
         public HttpResponseMessage Validate(int establishmentId, int establishmentUrlId, EstablishmentUrlApiModel model)
         {
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(2000); // test api latency
 
             model.OwnerId = establishmentId;
             model.Id = establishmentUrlId;

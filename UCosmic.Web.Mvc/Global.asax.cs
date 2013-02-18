@@ -15,12 +15,12 @@ namespace UCosmic.Web.Mvc
         {
             IocConfig.RegisterDependencies();
 
-            AreaRegistration.RegisterAllAreas();
-
             WebApiConfig.RegisterApi(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            AreaRegistration.RegisterAllAreas();
 
             AutoMapperConfig.RegisterProfiles();
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
