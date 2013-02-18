@@ -294,6 +294,12 @@ var App;
                     return makeUrl('establishments/' + establishmentId);
                 }
                 Establishments.show = show;
+                function created(location) {
+                    var url = makeUrl('establishments/created');
+                    url += '?location=' + location;
+                    return url;
+                }
+                Establishments.created = created;
             })(Mvc.Establishments || (Mvc.Establishments = {}));
             var Establishments = Mvc.Establishments;
         })(Routes.Mvc || (Routes.Mvc = {}));

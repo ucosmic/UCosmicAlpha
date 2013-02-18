@@ -283,6 +283,11 @@ module App.Routes {
             export function show (establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);
             }
+            export function created (location: string) {
+                var url = makeUrl('establishments/created');
+                url += '?location=' + location;
+                return url;
+            }
         }
     }
 

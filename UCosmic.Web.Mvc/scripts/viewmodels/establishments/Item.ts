@@ -208,25 +208,13 @@ module ViewModels.Establishments {
                     };
                     this.createSpinner.start();
                     $.post(url, data)
-                    .always((): void => {
-                        this.createSpinner.stop();
-                    })
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         // redirect to show
-                        var redirect = xhr.getResponseHeader('Location');
-                        if (redirect) {
-                            // extract primary key
-                            while (redirect.lastIndexOf('/') === redirect.length - 1) {
-                                redirect = redirect.substr(0, redirect.length - 1);
-                            }
-                            var pkStart = redirect.lastIndexOf('/') + 1;
-                            var pkString = redirect.substr(pkStart);
-                            var pk = parseInt(pkString);
-                            var path = App.Routes.Mvc.Establishments.show(pk);
-                            window.location.href = path;
-                        }
+                        window.location.href = App.Routes.Mvc.Establishments
+                            .created(xhr.getResponseHeader('Location'));
                     })
                     .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.createSpinner.stop();
                         if (xhr.status === 400) { // validation message will be in xhr response text...
                             this.$genericAlertDialog.find('p.content')
                                 .html(xhr.responseText.replace('\n', '<br /><br />'));

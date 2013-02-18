@@ -101,5 +101,18 @@ namespace UCosmic
             }
             return null;
         }
+
+        public static int? GetLastInt(this string value, char separator = '/')
+        {
+            if (string.IsNullOrWhiteSpace(value)) return null;
+
+            var parts = value.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+            int asInt;
+            foreach (var part in parts)
+                if (int.TryParse(part, out asInt))
+                    return asInt;
+
+            return null;
+        }
     }
 }

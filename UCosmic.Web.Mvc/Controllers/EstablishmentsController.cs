@@ -5,6 +5,7 @@ using UCosmic.Domain.Establishments;
 namespace UCosmic.Web.Mvc.Controllers
 {
     [RestfulRouteConvention]
+    [TryAuthorize(Roles = RoleName.EstablishmentAdministrator)]
     public partial class EstablishmentsController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
@@ -14,7 +15,6 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [TryAuthorize(Roles = RoleName.EstablishmentAdministrator)]
         public virtual ViewResult Index()
         {
             return View();
@@ -26,12 +26,23 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Establishments.Views.Form);
         }
 
-        public virtual ViewResult Create()
+        [GET("created")]
+        public virtual ActionResult Created(string location)
         {
-            return null;
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                // strip id out of location header
+                var id = location.GetLastInt();
+
+                if (id.HasValue)
+                {
+                    TempData.Flash("Establishment was successfully created.");
+                    return RedirectToAction(MVC.Establishments.Show(id.Value));
+                }
+            }
+            return HttpNotFound();
         }
 
-        [TryAuthorize(Roles = RoleName.EstablishmentAdministrator)]
         public virtual ActionResult Show(int id)
         {
             var entity = _queryProcessor.Execute(new EstablishmentById(id));
@@ -42,24 +53,24 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Establishments.Views.Form);
         }
 
-        public virtual ViewResult Edit(int id)
-        {
-            return null;
-        }
+        //public virtual ViewResult Edit(int id)
+        //{
+        //    return null;
+        //}
 
-        public virtual ViewResult Update(int id)
-        {
-            return null;
-        }
+        //public virtual ViewResult Update(int id)
+        //{
+        //    return null;
+        //}
 
-        public virtual ViewResult Delete(int id)
-        {
-            return null;
-        }
+        //public virtual ViewResult Delete(int id)
+        //{
+        //    return null;
+        //}
 
-        public virtual ViewResult Destroy(int id)
-        {
-            return null;
-        }
+        //public virtual ViewResult Destroy(int id)
+        //{
+        //    return null;
+        //}
     }
 }

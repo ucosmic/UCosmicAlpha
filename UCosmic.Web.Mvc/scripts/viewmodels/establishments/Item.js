@@ -154,21 +154,10 @@ var ViewModels;
                             location: location.serializeData()
                         };
                         this.createSpinner.start();
-                        $.post(url, data).always(function () {
-                            _this.createSpinner.stop();
-                        }).done(function (response, statusText, xhr) {
-                            var redirect = xhr.getResponseHeader('Location');
-                            if(redirect) {
-                                while(redirect.lastIndexOf('/') === redirect.length - 1) {
-                                    redirect = redirect.substr(0, redirect.length - 1);
-                                }
-                                var pkStart = redirect.lastIndexOf('/') + 1;
-                                var pkString = redirect.substr(pkStart);
-                                var pk = parseInt(pkString);
-                                var path = App.Routes.Mvc.Establishments.show(pk);
-                                window.location.href = path;
-                            }
+                        $.post(url, data).done(function (response, statusText, xhr) {
+                            window.location.href = App.Routes.Mvc.Establishments.created(xhr.getResponseHeader('Location'));
                         }).fail(function (xhr, statusText, errorThrown) {
+                            _this.createSpinner.stop();
                             if(xhr.status === 400) {
                                 _this.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.$genericAlertDialog.dialog({
