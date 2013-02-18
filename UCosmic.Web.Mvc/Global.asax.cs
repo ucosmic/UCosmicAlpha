@@ -13,6 +13,8 @@ namespace UCosmic.Web.Mvc
     {
         protected void Application_Start()
         {
+            AutoMapperConfig.RegisterProfiles(); 
+            
             IocConfig.RegisterDependencies();
 
             WebApiConfig.RegisterApi(GlobalConfiguration.Configuration);
@@ -22,7 +24,6 @@ namespace UCosmic.Web.Mvc
 
             AreaRegistration.RegisterAllAreas();
 
-            AutoMapperConfig.RegisterProfiles();
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
         }
     }

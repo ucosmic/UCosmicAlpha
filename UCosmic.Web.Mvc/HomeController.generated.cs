@@ -94,6 +94,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _Bib = "_Bib";
                 public readonly string Alumni = "Alumni";
                 public readonly string CorporateEngagement = "CorporateEngagement";
                 public readonly string Employees = "Employees";
@@ -103,6 +104,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Students = "Students";
                 public readonly string Travel = "Travel";
             }
+            public readonly string _Bib = "~/Views/Home/_Bib.cshtml";
             public readonly string Alumni = "~/Views/Home/Alumni.cshtml";
             public readonly string CorporateEngagement = "~/Views/Home/CorporateEngagement.cshtml";
             public readonly string Employees = "~/Views/Home/Employees.cshtml";

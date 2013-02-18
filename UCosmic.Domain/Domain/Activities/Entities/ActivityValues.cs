@@ -12,5 +12,8 @@ namespace UCosmic.Domain.Activities
         public string Content { get; protected internal set; }
         public DateTime? StartsOn { get; protected internal set; }
         public DateTime? EndsOn { get; protected internal set; }
+        public int? CountryId { get; protected internal set; }
+        public int? TypeId { get; protected internal set; }
+
     }
 }

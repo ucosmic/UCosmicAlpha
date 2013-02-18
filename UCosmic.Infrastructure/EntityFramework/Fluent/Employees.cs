@@ -46,6 +46,11 @@ namespace UCosmic.EntityFramework
                 .WithMany()
                 .Map(m => m.ToTable("EmployeeModuleSettingsNotifyingAdmins", DbSchemaName.Employees)
                     .MapLeftKey("EmployeeModuleSettingsId").MapRightKey("PersonId"));
+
+            HasMany(p => p.ActivityTypes)
+                .WithOptional()
+                .Map(m => m.MapKey("EmployeeModuleSettingsId"))
+                .WillCascadeOnDelete(false); 
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
         }

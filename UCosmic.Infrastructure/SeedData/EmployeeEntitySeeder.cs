@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
@@ -97,6 +98,17 @@ namespace UCosmic.SeedData
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My USF World Profile",
                 EstablishmentId = establishment.RevisionId,
+                ActivityTypes = new Collection<ActivityType>
+                {
+                    new ActivityType {Type = "Research"},
+                    new ActivityType {Type = "Conference Participation"},
+                    new ActivityType {Type = "Teaching/Mentoring"},
+                    new ActivityType {Type = "Creative Endeavor"},
+                    new ActivityType {Type = "Professional Development and Service"},
+                    new ActivityType {Type = "Honor/Award"}
+                },
+                OfferCountry = true,
+                OfferActivityTypes = true
             });
         }
     }

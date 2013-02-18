@@ -16,15 +16,24 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.PersonId)
                 .WillCascadeOnDelete(true);
 
+            HasRequired(d => d.UpdatedByPerson)
+                .WithMany()
+                .HasForeignKey(d => d.UpdatedByPersonId)
+                .WillCascadeOnDelete(false);
+
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
             Property(p => p.Values.Title).HasColumnName("Title").HasMaxLength(200);
             Property(p => p.Values.Content).HasColumnName("Content").HasColumnType("ntext");
-            Property(p => p.Values.StartsOn).HasColumnName("StartsOn");
-            Property(p => p.Values.EndsOn).HasColumnName("EndsOn");
+            Property(p => p.Values.StartsOn).HasColumnName("StartsOn").IsOptional();
+            Property(p => p.Values.EndsOn).HasColumnName("EndsOn").IsOptional();
+            Property(p => p.Values.CountryId).HasColumnName("CountryId").IsOptional();
+            Property(p => p.Values.TypeId).HasColumnName("TypeId").IsOptional();
             Property(p => p.DraftedValues.Title).HasColumnName("DraftedTitle").HasMaxLength(200);
             Property(p => p.DraftedValues.Content).HasColumnName("DraftedContent").HasColumnType("ntext");
-            Property(p => p.DraftedValues.StartsOn).HasColumnName("DraftedStartsOn");
-            Property(p => p.DraftedValues.EndsOn).HasColumnName("DraftedEndsOn");
+            Property(p => p.DraftedValues.StartsOn).HasColumnName("DraftedStartsOn").IsOptional();
+            Property(p => p.DraftedValues.EndsOn).HasColumnName("DraftedEndsOn").IsOptional();
+            Property(p => p.DraftedValues.CountryId).HasColumnName("DraftedCountryId").IsOptional();
+            Property(p => p.DraftedValues.TypeId).HasColumnName("DraftedTypeId").IsOptional();
             Ignore(p => p.Mode);
         }
     }
@@ -64,6 +73,17 @@ namespace UCosmic.EntityFramework
             Property(p => p.DomainTypeText).HasColumnName("DomainType").IsRequired().HasMaxLength(20);
             Property(p => p.Text).IsRequired().HasMaxLength(500);
             Ignore(p => p.DomainType);
+        }
+    }
+
+
+    public class ActivityTypeOrm : EntityTypeConfiguration<ActivityType>
+    {
+        public ActivityTypeOrm()
+        {
+            ToTable(typeof(ActivityType).Name, DbSchemaName.Activities);
+
+            Property(p => p.Type).IsRequired().HasMaxLength(ActivityConstraints.TypeMaxLength);
         }
     }
 }

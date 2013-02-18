@@ -43,5 +43,7 @@ namespace UCosmic.Domain.Activities
 
         public DateTime CreatedOn { get; protected internal set; }
         public DateTime UpdatedOn { get; protected internal set; }
+        public virtual Person UpdatedByPerson { get; protected internal set; }
+        public int UpdatedByPersonId { get; protected internal set; }
     }
 }

@@ -123,6 +123,7 @@
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
     <Compile Include="Domain\Activities\Queries\MyActivities.cs" />
+    <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEntityId.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Commands\DeleteEmployee.cs" />
     <Compile Include="Domain\Employees\Commands\UpdateEmployee.cs" />
+    <Compile Include="Domain\Activities\Entities\ActivityType.cs" />
     <Compile Include="Domain\Employees\Entities\Employee.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeFacultyRank.cs" />
     <Compile Include="Domain\Employees\Entities\EmployeeModuleSettings.cs" />
