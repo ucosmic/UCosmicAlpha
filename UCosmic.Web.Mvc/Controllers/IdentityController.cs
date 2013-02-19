@@ -60,7 +60,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 Response.Tenancy(tenancy);
 
                 TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", model.UserName));
-                return Redirect(model.ReturnUrl ?? _userSigner.DefaultSignedOnUrl);
+                var returnUrl = model.ReturnUrl;
+                if (string.IsNullOrWhiteSpace(returnUrl) || returnUrl == "/")
+                {
+                    returnUrl = _userSigner.DefaultSignedOnUrl;
+                }
+                return Redirect(returnUrl);
             }
 
             return View();
