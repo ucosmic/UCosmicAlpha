@@ -44,13 +44,21 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
 
-        public class ModelToCommandProfile : Profile
+        public class ModelToUpdateCommandProfile : Profile
         {
             protected override void Configure()
             {
                 CreateMap<MyProfileApiModel, UpdateMyProfile>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                 ;
+            }
+        }
+
+        public class ModelToGenerateDisplayNameProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<MyProfileApiModel, GenerateDisplayName>();
             }
         }
     }
