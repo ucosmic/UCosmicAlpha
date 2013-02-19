@@ -294,6 +294,8 @@
     </Compile>
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
+    <Compile Include="Helpers\LocalOnlyAttribute.cs" />
+    <Compile Include="Helpers\WebApiExtensions.cs" />
     <Compile Include="Models\EstablishmentApiFlatModel.cs" />
     <Compile Include="Models\ActivityApiModel.cs" />
     <Compile Include="Models\EstablishmentTypeApiModel.cs" />

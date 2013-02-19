@@ -13,6 +13,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
+    [LocalOnly]
     [RoutePrefix("api/establishments")]
     public class EstablishmentLocationsController : ApiController
     {
