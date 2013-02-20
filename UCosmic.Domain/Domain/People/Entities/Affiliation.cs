@@ -14,6 +14,9 @@ namespace UCosmic.Domain.People
         public int EstablishmentId { get; protected internal set; }
         public virtual Establishment Establishment { get; protected internal set; }
 
+        // TODO: temporary until data is moved to Employee entity.
+        public string JobTitles { get; protected internal set; }
+
         /* Default affiliation should be linked to a University type Establishment. */
         public bool IsDefault { get; protected internal set; }
 

@@ -121,6 +121,8 @@ namespace UCosmic.EntityFramework
             HasKey(p => new { p.PersonId, p.EstablishmentId });
 
             HasRequired(p => p.Establishment);
+
+            Property(p => p.JobTitles).HasMaxLength(500);
         }
     }
 }
