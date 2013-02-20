@@ -9,6 +9,11 @@
         <a href="#">Relationships by Institution</a>
     </li>
     <li class="my">
-        <a href="@Url.Action(MVC.MyProfile.Index())">My USF World Profile</a>
+        @{
+            var tenancy = Request.Tenancy();
+            var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
+                ? tenancy.CustomProfileTitle : "My UCosmic Profile";
+        }
+        <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
     </li>
 </ul>
