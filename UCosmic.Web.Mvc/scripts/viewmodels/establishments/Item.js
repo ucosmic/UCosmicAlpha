@@ -108,6 +108,7 @@ var ViewModels;
                 this.ceebCode = ko.observable();
                 this.uCosmicCode = ko.observable();
                 this.isEditingTypeId = ko.observable();
+                this.isValidationSummaryVisible = ko.observable(false);
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
@@ -297,6 +298,7 @@ var ViewModels;
                         }, 50);
                         return false;
                     }
+                    this.isValidationSummaryVisible(true);
                     if(!this.isValid()) {
                         this.errors.showAllMessages();
                     }

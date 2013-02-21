@@ -72,6 +72,24 @@
                         <strong data-bind="visible: createSpinner.isVisible">Saving...</strong>
                     </div>
                 </section>
+                <section class="fieldset" data-bind="visible: isValidationSummaryVisible() && errors().length">
+                    <div class="validation-summary">
+                        <h3>Please correct the following and try again:</h3>
+                        <div data-bind="foreach: names">
+                            <ol data-bind="foreach: errors">
+                                <li><span class="validationMessage" data-bind="text: $data"></span></li>
+                            </ol>
+                        </div>
+                        <div data-bind="foreach: urls">
+                            <ol data-bind="foreach: errors">
+                                <li><span class="validationMessage" data-bind="text: $data"></span></li>
+                            </ol>
+                        </div>
+                        <ol data-bind="foreach: errors">
+                            <li><span class="validationMessage" data-bind="text: $data"></span></li>
+                        </ol>
+                    </div>
+                </section>
                 <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">
                     <div>
                         <p class="content">

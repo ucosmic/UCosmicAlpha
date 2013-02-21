@@ -124,6 +124,7 @@ module ViewModels.Establishments {
         ceebCode: KnockoutObservableString = ko.observable();
         uCosmicCode: KnockoutObservableString = ko.observable();
         isEditingTypeId: KnockoutObservableBool = ko.observable();
+        isValidationSummaryVisible = ko.observable(false);
         typeEmptyText: KnockoutComputed;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -162,6 +163,7 @@ module ViewModels.Establishments {
                     this.ceebCode($.trim(this.ceebCode()));
             });
             this.ceebCode.extend({
+                //throttle: 5000,
                 validEstablishmentCeebCode: this
             });
 
@@ -367,6 +369,7 @@ module ViewModels.Establishments {
                 }
 
                 // check validity
+                this.isValidationSummaryVisible(true);
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                 }
