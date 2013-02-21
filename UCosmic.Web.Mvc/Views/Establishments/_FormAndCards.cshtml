@@ -1,8 +1,8 @@
-﻿<form method="POST" data-bind="submit: submitToCreate">
+﻿<form method="POST" data-bind="submit: submitToCreate, validationOptions: { decorateElement: true, errorClass: 'error' }">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on" class="left">
-                <section class="fieldset" data-bind="validationOptions: { decorateElement: true, errorClass: 'error' }">
+                <section class="fieldset">
                     <select data-bind="foreach: categories, value: typeId" style="margin-right: 12px;">
                         <option data-bind="visible: $index() == 0 && !$parent.id, text: $parent.typeEmptyText" style="display: none;" value="">[Loading...]</option>
                         <optgroup label="" data-bind="attr: { label: text }, foreach: types">
@@ -13,7 +13,7 @@
                 @Html.Partial(MVC.Establishments.Views._FormNamesSection)
                 @Html.Partial(MVC.Establishments.Views._FormUrlsSection)
                 @Html.Partial(MVC.Establishments.Views._FormLocationSection)
-                <section class="fieldset" data-bind="visible: isInstitution, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                <section class="fieldset" data-bind="visible: isInstitution">
                     <header>
                         <h2>
                             <span>Institutional Identifier Codes</span>

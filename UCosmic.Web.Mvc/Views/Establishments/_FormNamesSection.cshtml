@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div data-bind="visible: editMode" style="display: none;">
-                <div data-bind="validationOptions: { decorateElement: true, errorClass: 'error' }">
+                <div>
                     <div class="field" style="margin-top: 0;">
                         <textarea rows="1" class="no-resize" data-bind="value: text, jqElement: '$textElement', css: { spinning: textValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
                     </div>
