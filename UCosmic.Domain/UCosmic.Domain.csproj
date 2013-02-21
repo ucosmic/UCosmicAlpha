@@ -161,6 +161,7 @@
     <Compile Include="Domain\Establishments\Queries\EmailTemplateByName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByEmail.cs" />
     <Compile Include="Domain\Establishments\Queries\FindEstablishmentsWithName.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustHaveUCosmicCodeLength.cs" />
     <Compile Include="Domain\Establishments\Validation\MustBeUniqueUCosmicCode.cs" />
     <Compile Include="Domain\Establishments\Validation\MustBeUniqueCeebCode.cs" />
     <Compile Include="Domain\Establishments\Validation\MustFindEstablishmentTypeById.cs" />

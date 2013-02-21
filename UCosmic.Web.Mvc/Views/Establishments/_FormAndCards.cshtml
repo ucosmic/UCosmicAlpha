@@ -13,6 +13,31 @@
                 @Html.Partial(MVC.Establishments.Views._FormNamesSection)
                 @Html.Partial(MVC.Establishments.Views._FormUrlsSection)
                 @Html.Partial(MVC.Establishments.Views._FormLocationSection)
+                <section class="fieldset" data-bind="validationOptions: { decorateElement: true, errorClass: 'error' }">
+                    <header>
+                        <h2>
+                            <span>Institutional Identifier Codes</span>
+                        </h2>
+                    </header>
+                    <div class="field-table w690-l190-v500">
+                        <div class="field-row">
+                            <div class="field-label">
+                                <label>CEEB Code</label>
+                            </div>
+                            <div class="field-input">
+                                <input type="text" data-bind="value: ceebCode, valueUpdate: 'afterkeydown'" placeholder="[None]" />
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field-label">
+                                <label>UCosmic Code</label>
+                            </div>
+                            <div class="field-input">
+                                <input type="text" data-bind="value: uCosmicCode, valueUpdate: 'afterkeydown'" placeholder="[None]" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <section class="fieldset">
                     <div>
                         <input type="submit" value="Save" data-bind="visible: !id, attr: { disabled: createSpinner.isVisible }" />

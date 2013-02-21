@@ -78,7 +78,7 @@ namespace UCosmic.EntityFramework
             Property(p => p.PartnerContactInfo.Fax).HasMaxLength(50).HasColumnName("PartnerFax");
             Property(p => p.PartnerContactInfo.Email).HasMaxLength(256).HasColumnName("PartnerEmail");
 
-            Property(p => p.UCosmicCode).IsFixedLength().HasMaxLength(EstablishmentConstraints.CeebCodeLength).IsUnicode(false);
+            Property(p => p.UCosmicCode).IsFixedLength().HasMaxLength(EstablishmentConstraints.UCosmicCodeLength).IsUnicode(false);
             Property(p => p.CollegeBoardDesignatedIndicator).IsFixedLength().HasMaxLength(EstablishmentConstraints.CeebCodeLength).IsUnicode(false);
         }
     }

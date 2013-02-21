@@ -102,6 +102,10 @@ var App;
                     return get(establishmentId);
                 }
                 Establishments.put = put;
+                function validateCeebCode(establishmentId) {
+                    return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
+                }
+                Establishments.validateCeebCode = validateCeebCode;
                 var Names = (function () {
                     function Names() { }
                     Names.get = function get(establishmentId, establishmentNameId) {

@@ -15,6 +15,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public string Code { get; set; }
         public string Text { get; set; }
+        public string PluralText { get; set; }
         public EstablishmentTypeApiModel[] Types { get; set; }
     }
 
@@ -41,6 +42,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<EstablishmentCategory, EstablishmentCategoryApiModel>()
                     .ForMember(d => d.Text, o => o.MapFrom(s => s.EnglishName))
+                    .ForMember(d => d.PluralText, o => o.MapFrom(s => s.EnglishPluralName))
                 ;
             }
         }

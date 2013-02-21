@@ -2,6 +2,41 @@ var ViewModels;
 (function (ViewModels) {
     (function (Establishments) {
         var gm = google.maps;
+        var CeebCodeValidator = (function () {
+            function CeebCodeValidator() {
+                this.async = true;
+                this.message = 'error';
+                this._isAwaitingResponse = false;
+                this._ruleName = 'validEstablishmentCeebCode';
+                ko.validation.rules[this._ruleName] = this;
+                ko.validation.addExtender(this._ruleName);
+            }
+            CeebCodeValidator.prototype.validator = function (val, vm, callback) {
+                var _this = this;
+                if(this._isValidatable(vm)) {
+                    var route = App.Routes.WebApi.Establishments.validateCeebCode(vm.id);
+                    this._isAwaitingResponse = true;
+                    $.post(route, vm.serializeData()).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
+                        });
+                    });
+                }
+            };
+            CeebCodeValidator.prototype._isValidatable = function (vm) {
+                if(vm.id && vm.id !== 0) {
+                    return !this._isAwaitingResponse && vm && vm.originalValues && vm.originalValues.ceebCode !== vm.ceebCode();
+                }
+                return vm && vm.ceebCode() && !this._isAwaitingResponse;
+            };
+            return CeebCodeValidator;
+        })();        
+        new CeebCodeValidator();
         var Item = (function () {
             function Item(id) {
                 var _this = this;
@@ -12,6 +47,8 @@ var ViewModels;
                 this.validatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this.categories = ko.observableArray();
                 this.typeId = ko.observable();
+                this.ceebCode = ko.observable();
+                this.uCosmicCode = ko.observable();
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
@@ -29,6 +66,14 @@ var ViewModels;
                 this.typeId.extend({
                     required: {
                         message: 'Establishment type is required'
+                    }
+                });
+                this.ceebCode.extend({
+                    validEstablishmentCeebCode: this
+                });
+                this.ceebCode.subscribe(function (newValue) {
+                    if(_this.ceebCode()) {
+                        _this.ceebCode($.trim(_this.ceebCode()));
                     }
                 });
                 var categoriesPact = $.Deferred();
@@ -50,6 +95,7 @@ var ViewModels;
                 $.when(categoriesPact, viewModelPact).then(function (categories, viewModel) {
                     ko.mapping.fromJS(categories, {
                     }, _this.categories);
+                    _this.originalValues = viewModel;
                     if(viewModel) {
                         ko.mapping.fromJS(viewModel, {
                             ignore: [
@@ -57,7 +103,6 @@ var ViewModels;
                             ]
                         }, _this);
                     }
-                    _this._originalValues = viewModel;
                     if(!_this._isInitialized()) {
                         _this._isInitialized(true);
                     }
@@ -67,11 +112,8 @@ var ViewModels;
                     if(!_this.id || !_this._isInitialized()) {
                         return;
                     }
-                    var typeId = _this.typeId();
-                    var data = {
-                        typeId: typeId
-                    };
-                    if(data.typeId == _this._originalValues.typeId) {
+                    var data = _this.serializeData();
+                    if(data.typeId == _this.originalValues.typeId) {
                         return;
                     }
                     var url = App.Routes.WebApi.Establishments.put(_this.id);
@@ -82,6 +124,7 @@ var ViewModels;
                     }).done(function (response, statusText, xhr) {
                         App.flasher.flash(response);
                         $.get(App.Routes.WebApi.Establishments.get(_this.id)).done(function (viewModel, textStatus, jqXHR) {
+                            _this.originalValues = viewModel;
                             if(viewModel) {
                                 ko.mapping.fromJS(viewModel, {
                                     ignore: [
@@ -89,7 +132,6 @@ var ViewModels;
                                     ]
                                 }, _this);
                             }
-                            _this._originalValues = viewModel;
                         });
                     }).fail(function (xhr, statusText, errorThrown) {
                     });
@@ -211,7 +253,7 @@ var ViewModels;
                     var officialName = this.names()[0];
                     var officialUrl = this.urls()[0];
                     var location = this.location;
-                    if(officialName.text.isValidating() || officialUrl.value.isValidating()) {
+                    if(officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating()) {
                         setTimeout(function () {
                             var waitResult = _this.submitToCreate(formElement);
                             return false;
@@ -230,12 +272,10 @@ var ViewModels;
                     this.validatingSpinner.stop();
                     if(officialName.isValid() && officialUrl.isValid()) {
                         var url = App.Routes.WebApi.Establishments.post();
-                        var data = {
-                            typeId: me.typeId(),
-                            officialName: officialName.serializeData(),
-                            officialUrl: officialUrl.serializeData(),
-                            location: location.serializeData()
-                        };
+                        var data = this.serializeData();
+                        data.officialName = officialName.serializeData();
+                        data.officialUrl = officialUrl.serializeData();
+                        data.location = location.serializeData();
                         this.createSpinner.start();
                         $.post(url, data).done(function (response, statusText, xhr) {
                             window.location.href = App.Routes.Mvc.Establishments.created(xhr.getResponseHeader('Location'));
@@ -260,6 +300,13 @@ var ViewModels;
                     }
                 }
                 return false;
+            };
+            Item.prototype.serializeData = function () {
+                var data = {
+                };
+                data.typeId = this.typeId();
+                data.ceebCode = this.ceebCode();
+                return data;
             };
             return Item;
         })();

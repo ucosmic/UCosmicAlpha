@@ -9,6 +9,9 @@ namespace UCosmic.Domain.Establishments
 {
     public class CreateEstablishment
     {
+        private string _ceebCode;
+        private string _uCosmicCode;
+
         public CreateEstablishment(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
@@ -20,8 +23,17 @@ namespace UCosmic.Domain.Establishments
         public CreateEstablishmentName OfficialName { get; set; }
         public CreateEstablishmentUrl OfficialUrl { get; set; }
         public UpdateEstablishmentLocation Location { get; set; }
-        public string CeebCode { get; set; }
-        public string UCosmicCode { get; set; }
+        public string CeebCode
+        {
+            get { return _ceebCode; }
+            set { _ceebCode = value == null ? null : value.Trim(); }
+        }
+
+        public string UCosmicCode
+        {
+            get { return _uCosmicCode; }
+            set { _uCosmicCode = value == null ? null : value.Trim(); }
+        }
 
         public int CreatedEstablishmentId { get; internal set; }
     }
@@ -49,17 +61,23 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(MustFindEstablishmentTypeById.FailMessageFormat, x => x.TypeId)
             ;
 
-            RuleFor(x => x.CeebCode)
-                .MustHaveCeebCodeLength()
-                    .WithMessage(MustHaveCeebCodeLength.FailMessage)
-                .MustBeUniqueCeebCode(entities)
-                    .WithMessage(MustBeUniqueCeebCode<object>.FailMessageFormat, x => x.CeebCode);
+            // validate CEEB code
+            When(x => !string.IsNullOrEmpty(x.CeebCode), () =>
+                RuleFor(x => x.CeebCode)
+                    .Length(EstablishmentConstraints.CeebCodeLength)
+                        .WithMessage(MustHaveCeebCodeLength.FailMessage)
+                    .MustBeUniqueCeebCode(entities)
+                        .WithMessage(MustBeUniqueCeebCode<object>.FailMessageFormat, x => x.CeebCode)
+            );
 
-            RuleFor(x => x.UCosmicCode)
-                .MustHaveCeebCodeLength()
-                    .WithMessage(MustHaveCeebCodeLength.FailMessage)
-                .MustBeUniqueUCosmicCode(entities)
-                    .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode);
+            // validate UCosmic code
+            When(x => !string.IsNullOrEmpty(x.UCosmicCode), () =>
+                RuleFor(x => x.UCosmicCode)
+                    .Length(EstablishmentConstraints.UCosmicCodeLength)
+                        .WithMessage(MustHaveUCosmicCodeLength.FailMessage)
+                    .MustBeUniqueUCosmicCode(entities)
+                        .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode)
+            );
 
             // when the establishment name is official, it cannot be a former / defunct name
             When(x => x.OfficialUrl != null && !string.IsNullOrWhiteSpace(x.OfficialUrl.Value), () =>

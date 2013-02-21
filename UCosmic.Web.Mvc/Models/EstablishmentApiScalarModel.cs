@@ -34,5 +34,19 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class ModelToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EstablishmentApiScalarModel, CreateEstablishment>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.OfficialName, o => o.Ignore())
+                    .ForMember(d => d.OfficialUrl, o => o.Ignore())
+                    .ForMember(d => d.Location, o => o.Ignore())
+                    .ForMember(d => d.CreatedEstablishmentId, o => o.Ignore())
+                ;
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ using System.Web.Http;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -19,15 +20,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateEstablishment> _createHandler;
         private readonly IHandleCommands<UpdateEstablishment> _updateHandler;
+        private readonly IValidator<CreateEstablishment> _createValidator;
+        private readonly IValidator<UpdateEstablishment> _updateValidator;
 
         public EstablishmentsController(IProcessQueries queryProcessor
             , IHandleCommands<CreateEstablishment> createHandler
             , IHandleCommands<UpdateEstablishment> updateHandler
+            , IValidator<CreateEstablishment> createValidator
+            , IValidator<UpdateEstablishment> updateValidator
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
             _updateHandler = updateHandler;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public PageOfEstablishmentApiFlatModel GetAll([FromUri] EstablishmentSearchInputModel input)
@@ -117,6 +124,38 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment was successfully updated.");
             return response;
+        }
+
+        [POST("{establishmentId}/validate-ceeb-code")]
+        public HttpResponseMessage ValidateCeebCode(int establishmentId, EstablishmentApiScalarModel model)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            model.Id = establishmentId;
+
+            ValidationResult validationResult;
+            string propertyName;
+            if (model.Id < 1)
+            {
+                var command = new CreateEstablishment(User);
+                Mapper.Map(model, command);
+                validationResult = _createValidator.Validate(command);
+                propertyName = command.PropertyName(y => y.CeebCode);
+            }
+            else
+            {
+                var command = new UpdateEstablishment(model.Id, User);
+                Mapper.Map(model, command);
+                validationResult = _updateValidator.Validate(command);
+                propertyName = command.PropertyName(y => y.CeebCode);
+            }
+
+            Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forText))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forText).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

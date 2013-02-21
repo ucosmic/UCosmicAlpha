@@ -10,6 +10,8 @@ namespace UCosmic.Domain.Establishments
 {
     public class UpdateEstablishment
     {
+        private string _ceebCode;
+
         public UpdateEstablishment(int id, IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
@@ -21,7 +23,11 @@ namespace UCosmic.Domain.Establishments
         public int Id { get; private set; }
 
         public int TypeId { get; set; }
-        //public string CeebCode { get; set; }
+        public string CeebCode
+        {
+            get { return _ceebCode; }
+            set { _ceebCode = value == null ? null : value.Trim(); }
+        }
         //public string UCosmicCode { get; set; }
 
         internal bool NoCommit { get; set; }
@@ -52,13 +58,23 @@ namespace UCosmic.Domain.Establishments
                 .MustFindEstablishmentTypeById(entities)
                     .WithMessage(MustFindEstablishmentTypeById.FailMessageFormat, x => x.TypeId);
 
-            //RuleFor(x => x.CeebCode)
-            //    .MustBeUniqueCeebCode(entities, x => x.Id)
-            //        .WithMessage(MustBeUniqueCeebCode<object>.FailMessageFormat, x => x.CeebCode);
+            // validate CEEB code
+            When(x => !string.IsNullOrEmpty(x.CeebCode), () =>
+                RuleFor(x => x.CeebCode)
+                    .Length(EstablishmentConstraints.CeebCodeLength)
+                        .WithMessage(MustHaveCeebCodeLength.FailMessage)
+                    .MustBeUniqueCeebCode(entities, x => x.Id)
+                        .WithMessage(MustBeUniqueCeebCode<object>.FailMessageFormat, x => x.CeebCode)
+            );
 
-            //RuleFor(x => x.UCosmicCode)
-            //    .MustBeUniqueUCosmicCode(entities)
-            //        .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode);
+            //// validate UCosmic code
+            //When(x => !string.IsNullOrEmpty(x.UCosmicCode), () =>
+            //    RuleFor(x => x.UCosmicCode)
+            //        .Length(EstablishmentConstraints.UCosmicCodeLength)
+            //            .WithMessage(MustHaveUCosmicCodeLength.FailMessage)
+            //        .MustBeUniqueUCosmicCode(entities)
+            //            .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode)
+            //);
         }
     }
 

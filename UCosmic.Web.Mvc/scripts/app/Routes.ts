@@ -103,6 +103,10 @@ module App.Routes {
                 return get(establishmentId);
             }
 
+            export function validateCeebCode (establishmentId: number): string {
+                    return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
+            }
+
             export class Names {
 
                 static get (establishmentId: number, establishmentNameId?: number): string {

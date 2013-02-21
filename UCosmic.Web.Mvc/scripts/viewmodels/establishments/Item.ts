@@ -14,16 +14,50 @@
 /// <reference path="Url.ts" />
 /// <reference path="Location.ts" />
 
-
 module ViewModels.Establishments {
 
     import gm = google.maps
+
+    class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
+        async: bool = true;
+        message: string = 'error';
+        private _isAwaitingResponse: bool = false;
+        private _ruleName: string = 'validEstablishmentCeebCode';
+        validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
+            if (this._isValidatable(vm)) {
+                var route = App.Routes.WebApi.Establishments
+                    .validateCeebCode(vm.id);
+                this._isAwaitingResponse = true;
+                $.post(route, vm.serializeData())
+                .always((): void => {
+                    this._isAwaitingResponse = false;
+                })
+                .done((): void => {
+                    callback(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    callback({ isValid: false, message: xhr.responseText });
+                });
+            }
+        }
+        private _isValidatable(vm: Item): bool {
+            if (vm.id && vm.id !== 0)
+                return !this._isAwaitingResponse && vm && vm.originalValues
+                    && vm.originalValues.ceebCode !== vm.ceebCode(); // edit
+            return vm && vm.ceebCode() &&!this._isAwaitingResponse; // create
+        }
+        constructor() {
+            ko.validation.rules[this._ruleName] = this;
+            ko.validation.addExtender(this._ruleName);
+        }
+    }
+    new CeebCodeValidator();
 
     export class Item implements KnockoutValidationGroup {
 
         // fields
         id: number = 0;
-        private _originalValues: any;
+        originalValues: any;
         private _isInitialized: KnockoutObservableBool = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
@@ -31,6 +65,8 @@ module ViewModels.Establishments {
         validatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
         categories: KnockoutObservableArray = ko.observableArray();
         typeId: KnockoutObservableNumber = ko.observable();
+        ceebCode: KnockoutObservableString = ko.observable();
+        uCosmicCode: KnockoutObservableString = ko.observable();
         typeEmptyText: KnockoutComputed;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -52,6 +88,14 @@ module ViewModels.Establishments {
                 required: {
                     message: 'Establishment type is required'
                 }
+            });
+
+            this.ceebCode.extend({
+                validEstablishmentCeebCode: this
+            });
+            this.ceebCode.subscribe((newValue: string): void => {
+                if (this.ceebCode()) // disallow space characters
+                    this.ceebCode($.trim(this.ceebCode()));
             });
 
             // load the scalars
@@ -84,14 +128,14 @@ module ViewModels.Establishments {
                 (categories: any[], viewModel: IServerApiScalarModel): void => {
 
                     ko.mapping.fromJS(categories, {}, this.categories);
+
+                    this.originalValues = viewModel;
                     if (viewModel) {
                         ko.mapping.fromJS(viewModel, {
                             ignore: ['id']
                         }, this);
                     }
 
-                    this._originalValues = viewModel;
-                    
                     if (!this._isInitialized()) {
                         //$(this).trigger('ready'); // ready to apply bindings
                         this._isInitialized(true); // bindings have been applied
@@ -106,11 +150,8 @@ module ViewModels.Establishments {
 
             ko.computed((): void => {
                 if (!this.id || !this._isInitialized()) return;
-                var typeId = this.typeId();
-                var data = {
-                    typeId: typeId
-                };
-                if (data.typeId == this._originalValues.typeId) {
+                var data = this.serializeData();
+                if (data.typeId == this.originalValues.typeId) {
                     return;
                 }
                 var url = App.Routes.WebApi.Establishments.put(this.id);
@@ -124,13 +165,12 @@ module ViewModels.Establishments {
                     $.get(App.Routes.WebApi.Establishments.get(this.id))
                         .done((viewModel: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
                             // TODO: not dry
+                            this.originalValues = viewModel;
                             if (viewModel) {
                                 ko.mapping.fromJS(viewModel, {
                                     ignore: ['id']
                                 }, this);
                             }
-                            // TODO: not dry
-                            this._originalValues = viewModel;
                         })
                 })
                 .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
@@ -286,7 +326,8 @@ module ViewModels.Establishments {
                 var location = this.location;
 
                 // wait for async validation to stop
-                if (officialName.text.isValidating() || officialUrl.value.isValidating()) {
+                if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
+                    this.ceebCode.isValidating()) {
                     setTimeout((): bool => {
                         var waitResult = this.submitToCreate(formElement);
                         return false;
@@ -307,12 +348,10 @@ module ViewModels.Establishments {
                 this.validatingSpinner.stop();
                 if (officialName.isValid() && officialUrl.isValid()) {
                     var url = App.Routes.WebApi.Establishments.post();
-                    var data: any = {
-                        typeId: me.typeId(),
-                        officialName: officialName.serializeData(),
-                        officialUrl: officialUrl.serializeData(),
-                        location: location.serializeData()
-                    };
+                    var data = this.serializeData();
+                    data.officialName = officialName.serializeData();
+                    data.officialUrl = officialUrl.serializeData();
+                    data.location = location.serializeData();
                     this.createSpinner.start();
                     $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
@@ -341,6 +380,13 @@ module ViewModels.Establishments {
             }
 
             return false;
+        }
+
+        serializeData(): any {
+            var data: any = {};
+            data.typeId = this.typeId();
+            data.ceebCode = this.ceebCode();
+            return data;
         }
     }
 }
