@@ -27,7 +27,7 @@ var ViewModels;
                         });
                     });
                 } else {
-                    if(!this._isAwaitingResponse) {
+                    if(!this._isAwaitingResponse || this._isOk(vm)) {
                         callback(true);
                     }
                 }
@@ -37,6 +37,12 @@ var ViewModels;
                     return !this._isAwaitingResponse && vm && vm.ceebCode() && vm.originalValues && vm.originalValues.ceebCode !== vm.ceebCode();
                 }
                 return vm && vm.ceebCode() && !this._isAwaitingResponse;
+            };
+            CeebCodeValidator.prototype._isOk = function (vm) {
+                if(vm.id && vm.id !== 0) {
+                    return vm && vm.ceebCode() && vm.originalValues && vm.originalValues.ceebCode == vm.ceebCode();
+                }
+                return false;
             };
             return CeebCodeValidator;
         })();        
@@ -66,7 +72,7 @@ var ViewModels;
                         });
                     });
                 } else {
-                    if(!this._isAwaitingResponse) {
+                    if(!this._isAwaitingResponse || this._isOk(vm)) {
                         callback(true);
                     }
                 }
@@ -76,6 +82,12 @@ var ViewModels;
                     return !this._isAwaitingResponse && vm && vm.uCosmicCode() && vm.originalValues && vm.originalValues.uCosmicCode !== vm.uCosmicCode();
                 }
                 return vm && vm.uCosmicCode() && !this._isAwaitingResponse;
+            };
+            UCosmicCodeValidator.prototype._isOk = function (vm) {
+                if(vm.id && vm.id !== 0) {
+                    return vm && vm.uCosmicCode() && vm.originalValues && vm.originalValues.uCosmicCode == vm.uCosmicCode();
+                }
+                return false;
             };
             return UCosmicCodeValidator;
         })();        
@@ -89,9 +101,13 @@ var ViewModels;
                 this.createSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0));
                 this.validatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this.categories = ko.observableArray();
+                this.typeIdSaveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.typeIdValidatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this.typeId = ko.observable();
+                this.typeText = ko.observable('[Loading...]');
                 this.ceebCode = ko.observable();
                 this.uCosmicCode = ko.observable();
+                this.isEditingTypeId = ko.observable();
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
@@ -104,30 +120,32 @@ var ViewModels;
                 this._initUrlsComputeds();
                 this.location = new Establishments.Location(this.id);
                 this.typeEmptyText = ko.computed(function () {
-                    return _this.categories().length > 0 ? '[Select a type]' : '[Loading...]';
+                    return _this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
                 });
-                this._computeIsInstitution();
+                this.typeText = ko.computed(function () {
+                    var categories = _this.categories();
+                    for(var i = 0; i < categories.length; i++) {
+                        var types = categories[i].types();
+                        for(var ii = 0; ii < types.length; ii++) {
+                            if(types[ii].id() == _this.typeId()) {
+                                return types[ii].text();
+                            }
+                        }
+                    }
+                    return '[Unknown]';
+                });
                 this.typeId.extend({
                     required: {
                         message: 'Establishment type is required'
                     }
                 });
-                this.typeId.subscribe(function (newValue) {
-                    if(!_this.isInstitution()) {
-                        _this.ceebCode(undefined);
-                        _this.uCosmicCode(undefined);
-                    } else {
-                        _this.ceebCode(_this.originalValues.ceebCode);
-                        _this.uCosmicCode(_this.originalValues.uCosmicCode);
-                    }
-                });
-                this.ceebCode.extend({
-                    validEstablishmentCeebCode: this
-                });
                 this.ceebCode.subscribe(function (newValue) {
                     if(_this.ceebCode()) {
                         _this.ceebCode($.trim(_this.ceebCode()));
                     }
+                });
+                this.ceebCode.extend({
+                    validEstablishmentCeebCode: this
                 });
                 this.uCosmicCode.extend({
                     validEstablishmentUCosmicCode: this
@@ -143,64 +161,19 @@ var ViewModels;
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     categoriesPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                var viewModelPact = $.Deferred();
-                if(this.id) {
-                    $.get(App.Routes.WebApi.Establishments.get(this.id)).done(function (data, textStatus, jqXHR) {
-                        viewModelPact.resolve(data);
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        viewModelPact.reject(jqXHR, textStatus, errorThrown);
-                    });
-                } else {
-                    viewModelPact.resolve(undefined);
-                }
+                var viewModelPact = this._loadScalars();
                 $.when(categoriesPact, viewModelPact).then(function (categories, viewModel) {
                     ko.mapping.fromJS(categories, {
                     }, _this.categories);
-                    _this.originalValues = viewModel;
-                    if(viewModel) {
-                        ko.mapping.fromJS(viewModel, {
-                            ignore: [
-                                'id'
-                            ]
-                        }, _this);
+                    _this._pullScalars(viewModel);
+                    if(!id) {
+                        _this.isEditingTypeId(true);
+                        _this.errors.showAllMessages(false);
                     }
                     if(!_this._isInitialized()) {
                         _this._isInitialized(true);
                     }
                 }, function (xhr, textStatus, errorThrown) {
-                });
-                ko.computed(function () {
-                    if(!_this.id || !_this._isInitialized()) {
-                        return;
-                    }
-                    var data = _this.serializeData();
-                    if(data.typeId == _this.originalValues.typeId && data.ceebCode == _this.originalValues.ceebCode && data.uCosmicCode == _this.originalValues.uCosmicCode) {
-                        return;
-                    }
-                    if(!_this.isValid() || _this.ceebCode.isValidating() || _this.uCosmicCode.isValidating()) {
-                        return;
-                    }
-                    var url = App.Routes.WebApi.Establishments.put(_this.id);
-                    $.ajax({
-                        url: url,
-                        type: 'PUT',
-                        data: data
-                    }).done(function (response, statusText, xhr) {
-                        App.flasher.flash(response);
-                        $.get(App.Routes.WebApi.Establishments.get(_this.id)).done(function (viewModel, textStatus, jqXHR) {
-                            _this.originalValues = viewModel;
-                            if(viewModel) {
-                                ko.mapping.fromJS(viewModel, {
-                                    ignore: [
-                                        'id'
-                                    ]
-                                }, _this);
-                            }
-                        });
-                    }).fail(function (xhr, statusText, errorThrown) {
-                    });
-                }).extend({
-                    throttle: 400
                 });
                 ko.validation.group(this);
             }
@@ -334,7 +307,7 @@ var ViewModels;
                         officialUrl.errors.showAllMessages();
                     }
                     this.validatingSpinner.stop();
-                    if(officialName.isValid() && officialUrl.isValid()) {
+                    if(officialName.isValid() && officialUrl.isValid() && this.isValid()) {
                         var url = App.Routes.WebApi.Establishments.post();
                         var data = this.serializeData();
                         data.officialName = officialName.serializeData();
@@ -373,24 +346,69 @@ var ViewModels;
                 data.uCosmicCode = this.uCosmicCode();
                 return data;
             };
-            Item.prototype._computeIsInstitution = function () {
+            Item.prototype._loadScalars = function () {
+                var deferred = $.Deferred();
+                if(this.id) {
+                    $.get(App.Routes.WebApi.Establishments.get(this.id)).done(function (response, textStatus, jqXHR) {
+                        deferred.resolve(response);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
+                } else {
+                    deferred.resolve(undefined);
+                }
+                return deferred;
+            };
+            Item.prototype._pullScalars = function (response) {
+                this.originalValues = response;
+                if(response) {
+                    ko.mapping.fromJS(response, {
+                        ignore: [
+                            'id'
+                        ]
+                    }, this);
+                }
+            };
+            Item.prototype.clickToEditTypeId = function () {
+                this.isEditingTypeId(true);
+            };
+            Item.prototype.clickToSaveTypeId = function () {
                 var _this = this;
-                this.isInstitution = ko.computed(function () {
-                    if(_this.typeId()) {
-                        var categories = _this.categories();
-                        for(var i = 0; i < categories.length; i++) {
-                            var categoryCode = categories[i].code();
-                            if(categoryCode && categoryCode.toUpperCase() === 'INST') {
-                                var types = categories[i].types();
-                                for(var ii = 0; ii < types.length; ii++) {
-                                    if(types[ii].id() == _this.typeId()) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return false;
+                if(!this.id) {
+                    return;
+                }
+                if(this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
+                    this.typeIdValidatingSpinner.start();
+                    window.setTimeout(function () {
+                        _this.clickToSaveTypeId();
+                    }, 50);
+                    return;
+                }
+                this.typeIdValidatingSpinner.stop();
+                if(!this.isValid()) {
+                    this.errors.showAllMessages();
+                } else {
+                    this.typeIdSaveSpinner.start();
+                    var data = this.serializeData();
+                    var url = App.Routes.WebApi.Establishments.put(this.id);
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        data: data
+                    }).always(function () {
+                        _this.typeIdSaveSpinner.stop();
+                    }).done(function (response, statusText, xhr) {
+                        App.flasher.flash(response);
+                        _this.typeIdSaveSpinner.stop();
+                        _this.clickToCancelTypeIdEdit();
+                    });
+                }
+            };
+            Item.prototype.clickToCancelTypeIdEdit = function () {
+                var _this = this;
+                this.isEditingTypeId(false);
+                this._loadScalars().done(function (response) {
+                    _this._pullScalars(response);
                 });
             };
             return Item;

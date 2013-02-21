@@ -38,7 +38,6 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
     public static UCosmic.Web.Mvc.Controllers.MyProfileController MyProfile = new UCosmic.Web.Mvc.Controllers.T4MVC_MyProfileController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
-    public static T4MVC.PeopleController People = new T4MVC.PeopleController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 
@@ -2131,6 +2130,10 @@ namespace Links
                 public static readonly string Item_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Item.min.js") ? Url("Item.min.js") : Url("Item.js");
                               
                 public static readonly string Item_min_js = Url("Item.min.js");
+                public static readonly string Location_ts = Url("Location.ts");
+                public static readonly string Location_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Location.min.js") ? Url("Location.min.js") : Url("Location.js");
+                              
+                public static readonly string Location_min_js = Url("Location.min.js");
                 public static readonly string Name_ts = Url("Name.ts");
                 public static readonly string Name_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Name.min.js") ? Url("Name.min.js") : Url("Name.js");
                               
@@ -2882,6 +2885,15 @@ namespace Links
                 public static readonly string closer_24_light_png = Url("closer-24-light.png");
                 public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
                 public static readonly string closer_24_red_png = Url("closer-24-red.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class edit {
+                private const string URLPATH = "~/images/icons/edit";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string pencil_a_24_png = Url("pencil-a-24.png");
+                public static readonly string pencil_a_64_png = Url("pencil-a-64.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

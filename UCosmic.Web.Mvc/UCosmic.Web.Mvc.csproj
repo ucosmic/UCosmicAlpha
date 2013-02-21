@@ -456,9 +456,6 @@
     <Compile Include="MyProfileController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="PeopleController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
     <Compile Include="PeopleDeprecated.PersonInfoController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -711,6 +708,8 @@
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
+    <Content Include="images\icons\edit\pencil-a-24.png" />
+    <Content Include="images\icons\edit\pencil-a-64.png" />
     <Content Include="images\icons\help\question-mark-24-blue.png" />
     <Content Include="images\icons\user\unisex-a-128.png" />
     <Content Include="images\icons\user\unisex-a-256.png" />
@@ -1492,6 +1491,13 @@
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
+    <Content Include="scripts\viewmodels\establishments\Location.js">
+      <DependentUpon>Location.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Location.min.js">
+      <DependentUpon>Location.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\my\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>

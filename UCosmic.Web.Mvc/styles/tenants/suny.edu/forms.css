@@ -146,7 +146,7 @@ select {
   border: solid 1px #aaa;
   border-right-color: #ddd;
   border-bottom-color: #ddd;
-  padding: 8px;
+  padding: 8px 4px;
   font-size: 16px;
   line-height: 20px; }
   select.validationElement {

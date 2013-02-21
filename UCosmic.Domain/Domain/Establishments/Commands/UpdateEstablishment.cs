@@ -111,16 +111,6 @@ namespace UCosmic.Domain.Establishments
                 })
                 .Single(x => x.RevisionId == command.Id);
 
-            // get establishment type
-            var establishmentType = _entities.Get<EstablishmentType>()
-                .Single(x => x.RevisionId == command.TypeId);
-            if (establishmentType.CategoryCode != EstablishmentCategoryCode.Inst)
-            {
-                // do not allow these codes for non-institutions
-                command.CeebCode = null;
-                command.UCosmicCode = null;
-            }
-
             // only mutate when state is modified
             if (command.TypeId == entity.Type.RevisionId &&
                 command.CeebCode == entity.CollegeBoardDesignatedIndicator &&
@@ -146,6 +136,8 @@ namespace UCosmic.Domain.Establishments
             // update scalars
             if (entity.Type.RevisionId != command.TypeId)
             {
+                var establishmentType = _entities.Get<EstablishmentType>()
+                    .Single(x => x.RevisionId == command.TypeId);
                 entity.Type = establishmentType;
             }
             entity.CollegeBoardDesignatedIndicator = command.CeebCode;

@@ -105,6 +105,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{id}")]
         public HttpResponseMessage Put(int id, EstablishmentApiScalarModel model)
         {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
             var entity = _queryProcessor.Execute(new EstablishmentById(id));
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 

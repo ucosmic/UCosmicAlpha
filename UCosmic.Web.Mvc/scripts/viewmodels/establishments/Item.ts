@@ -39,7 +39,7 @@ module ViewModels.Establishments {
                     callback({ isValid: false, message: xhr.responseText });
                 });
             }
-            else if (!this._isAwaitingResponse) {
+            else if (!this._isAwaitingResponse || this._isOk(vm)) {
                 callback(true);
             }
         }
@@ -47,7 +47,13 @@ module ViewModels.Establishments {
             if (vm.id && vm.id !== 0)
                 return !this._isAwaitingResponse && vm && vm.ceebCode() && vm.originalValues
                     && vm.originalValues.ceebCode !== vm.ceebCode(); // edit
-            return vm && vm.ceebCode() &&!this._isAwaitingResponse; // create
+            return vm && vm.ceebCode() && !this._isAwaitingResponse; // create
+        }
+        private _isOk(vm: Item): bool {
+            if (vm.id && vm.id !== 0)
+                return vm && vm.ceebCode() && vm.originalValues
+                    && vm.originalValues.ceebCode == vm.ceebCode();
+            return false;
         }
         constructor() {
             ko.validation.rules[this._ruleName] = this;
@@ -77,7 +83,7 @@ module ViewModels.Establishments {
                     callback({ isValid: false, message: xhr.responseText });
                 });
             }
-            else if (!this._isAwaitingResponse) {
+            else if (!this._isAwaitingResponse || this._isOk(vm)) {
                 callback(true);
             }
         }
@@ -85,7 +91,13 @@ module ViewModels.Establishments {
             if (vm.id && vm.id !== 0)
                 return !this._isAwaitingResponse && vm && vm.uCosmicCode() && vm.originalValues
                     && vm.originalValues.uCosmicCode !== vm.uCosmicCode(); // edit
-            return vm && vm.uCosmicCode() &&!this._isAwaitingResponse; // create
+            return vm && vm.uCosmicCode() && !this._isAwaitingResponse; // create
+        }
+        private _isOk(vm: Item): bool {
+            if (vm.id && vm.id !== 0)
+                return vm && vm.uCosmicCode() && vm.originalValues
+                    && vm.originalValues.uCosmicCode == vm.uCosmicCode();
+            return false;
         }
         constructor() {
             ko.validation.rules[this._ruleName] = this;
@@ -105,10 +117,13 @@ module ViewModels.Establishments {
         createSpinner: Spinner = new Spinner(new SpinnerOptions(0));
         validatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
         categories: KnockoutObservableArray = ko.observableArray();
+        typeIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        typeIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
         typeId: KnockoutObservableNumber = ko.observable();
+        typeText: KnockoutObservableString = ko.observable('[Loading...]');
         ceebCode: KnockoutObservableString = ko.observable();
         uCosmicCode: KnockoutObservableString = ko.observable();
-        isInstitution: () => bool;
+        isEditingTypeId: KnockoutObservableBool = ko.observable();
         typeEmptyText: KnockoutComputed;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -123,32 +138,31 @@ module ViewModels.Establishments {
             this.location = new Location(this.id);
 
             this.typeEmptyText = ko.computed((): string => {
-                return this.categories().length > 0 ? '[Select a type]' : '[Loading...]';
+                return this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
             });
-
-            this._computeIsInstitution();
+            this.typeText = ko.computed((): string => {
+                var categories = this.categories();
+                for (var i = 0; i < categories.length; i++) {
+                    var types: any[] = categories[i].types();
+                    for (var ii = 0; ii < types.length; ii++) {
+                        if (types[ii].id() == this.typeId())
+                            return types[ii].text();
+                    }
+                }
+                return '[Unknown]';
+            });
             this.typeId.extend({
                 required: {
                     message: 'Establishment type is required'
                 }
             });
-            this.typeId.subscribe((newValue: number): void => {
-                if (!this.isInstitution()) {
-                    this.ceebCode(undefined);
-                    this.uCosmicCode(undefined);
-                }
-                else {
-                    this.ceebCode(this.originalValues.ceebCode);
-                    this.uCosmicCode(this.originalValues.uCosmicCode);
-                }
-            });
 
-            this.ceebCode.extend({
-                validEstablishmentCeebCode: this
-            });
             this.ceebCode.subscribe((newValue: string): void => {
                 if (this.ceebCode()) // disallow space characters
                     this.ceebCode($.trim(this.ceebCode()));
+            });
+            this.ceebCode.extend({
+                validEstablishmentCeebCode: this
             });
 
             this.uCosmicCode.extend({
@@ -169,19 +183,7 @@ module ViewModels.Establishments {
                     categoriesPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
-            var viewModelPact = $.Deferred();
-            if (this.id) {
-                $.get(App.Routes.WebApi.Establishments.get(this.id))
-                    .done((data: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
-                        viewModelPact.resolve(data);
-                    })
-                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                        viewModelPact.reject(jqXHR, textStatus, errorThrown);
-                    });
-            }
-            else {
-                viewModelPact.resolve(undefined);
-            }
+            var viewModelPact = this._loadScalars();
 
             $.when(categoriesPact, viewModelPact).then(
 
@@ -190,17 +192,15 @@ module ViewModels.Establishments {
 
                     ko.mapping.fromJS(categories, {}, this.categories);
 
-                    this.originalValues = viewModel;
-                    if (viewModel) {
-                        ko.mapping.fromJS(viewModel, {
-                            ignore: ['id']
-                        }, this);
+                    this._pullScalars(viewModel);
+
+                    if (!id) {
+                        this.isEditingTypeId(true);
+                        this.errors.showAllMessages(false);
                     }
 
                     if (!this._isInitialized()) {
-                        //$(this).trigger('ready'); // ready to apply bindings
                         this._isInitialized(true); // bindings have been applied
-                        //this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     }
                 },
 
@@ -208,41 +208,6 @@ module ViewModels.Establishments {
                 (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     //alert('a GET API call failed :(');
                 });
-
-            ko.computed((): void => {
-                if (!this.id || !this._isInitialized()) return;
-                var data = this.serializeData();
-                if (data.typeId == this.originalValues.typeId &&
-                    data.ceebCode == this.originalValues.ceebCode &&
-                    data.uCosmicCode == this.originalValues.uCosmicCode) {
-                    return;
-                }
-                if (!this.isValid() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
-                    return;
-                }
-                var url = App.Routes.WebApi.Establishments.put(this.id);
-                $.ajax({
-                    url: url,
-                    type: 'PUT',
-                    data: data
-                })
-                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                    App.flasher.flash(response);
-                    $.get(App.Routes.WebApi.Establishments.get(this.id))
-                        .done((viewModel: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
-                            // TODO: not dry
-                            this.originalValues = viewModel;
-                            if (viewModel) {
-                                ko.mapping.fromJS(viewModel, {
-                                    ignore: ['id']
-                                }, this);
-                            }
-                        })
-                })
-                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                    //alert('fail :(');
-                });
-            }).extend({ throttle: 400 });
 
             ko.validation.group(this);
         }
@@ -412,7 +377,7 @@ module ViewModels.Establishments {
                     officialUrl.errors.showAllMessages();
                 }
                 this.validatingSpinner.stop();
-                if (officialName.isValid() && officialUrl.isValid()) {
+                if (officialName.isValid() && officialUrl.isValid() && this.isValid()) {
                     var url = App.Routes.WebApi.Establishments.post();
                     var data = this.serializeData();
                     data.officialName = officialName.serializeData();
@@ -456,23 +421,81 @@ module ViewModels.Establishments {
             return data;
         }
 
-        private _computeIsInstitution(): void {
-            this.isInstitution = ko.computed((): bool => {
-                if (this.typeId()) {
-                    var categories = this.categories();
-                    for (var i = 0; i < categories.length; i++) {
-                        var categoryCode: string = categories[i].code();
-                        if (categoryCode && categoryCode.toUpperCase() === 'INST') {
-                            var types: any[] = categories[i].types();
-                            for (var ii = 0; ii < types.length; ii++) {
-                                if (types[ii].id() == this.typeId()) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-                return false;
+        // hit /api/establishments/{id} for scalar values
+        private _loadScalars(): JQueryDeferred {
+            var deferred = $.Deferred();
+            if (this.id) {
+                $.get(App.Routes.WebApi.Establishments.get(this.id))
+                    .done((response: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
+                        deferred.resolve(response);
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
+            }
+            else {
+                deferred.resolve(undefined);
+            }
+            return deferred;
+        }
+
+        // populate scalar value observables from api values
+        private _pullScalars(response: IServerApiScalarModel): void {
+            this.originalValues = response;
+            if (response) {
+                ko.mapping.fromJS(response, {
+                    ignore: ['id']
+                }, this);
+            }
+        }
+
+        // hide read-only UI and allow form input for typeId & institution codes
+        clickToEditTypeId(): void {
+            this.isEditingTypeId(true);
+        }
+
+        // save typeId & institution codes
+        clickToSaveTypeId(): void {
+            if (!this.id) return; // guard against a put before establishment is created
+
+            // wait for async validators to finish
+            if (this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
+                this.typeIdValidatingSpinner.start();
+                window.setTimeout((): void => {
+                    this.clickToSaveTypeId();
+                }, 50);
+                return;
+            }
+
+            this.typeIdValidatingSpinner.stop();
+            if (!this.isValid()) {
+                this.errors.showAllMessages();
+            }
+            else {
+                this.typeIdSaveSpinner.start();
+                var data = this.serializeData();
+                var url = App.Routes.WebApi.Establishments.put(this.id);
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: data
+                })
+                .always((): void => {
+                    this.typeIdSaveSpinner.stop();
+                })
+                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                    App.flasher.flash(response);
+                    this.typeIdSaveSpinner.stop();
+                    this.clickToCancelTypeIdEdit();
+                });
+            }
+        }
+
+        // restore original values when cancelling edit of typeId & institution codes
+        clickToCancelTypeIdEdit(): void {
+            this.isEditingTypeId(false);
+            this._loadScalars().done((response: IServerApiScalarModel): void => {
+                this._pullScalars(response);
             });
         }
     }
