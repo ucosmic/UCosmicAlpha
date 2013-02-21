@@ -39,10 +39,13 @@ module ViewModels.Establishments {
                     callback({ isValid: false, message: xhr.responseText });
                 });
             }
+            else if (!this._isAwaitingResponse) {
+                callback(true);
+            }
         }
         private _isValidatable(vm: Item): bool {
             if (vm.id && vm.id !== 0)
-                return !this._isAwaitingResponse && vm && vm.originalValues
+                return !this._isAwaitingResponse && vm && vm.ceebCode() && vm.originalValues
                     && vm.originalValues.ceebCode !== vm.ceebCode(); // edit
             return vm && vm.ceebCode() &&!this._isAwaitingResponse; // create
         }
@@ -74,10 +77,13 @@ module ViewModels.Establishments {
                     callback({ isValid: false, message: xhr.responseText });
                 });
             }
+            else if (!this._isAwaitingResponse) {
+                callback(true);
+            }
         }
         private _isValidatable(vm: Item): bool {
             if (vm.id && vm.id !== 0)
-                return !this._isAwaitingResponse && vm && vm.originalValues
+                return !this._isAwaitingResponse && vm && vm.uCosmicCode() && vm.originalValues
                     && vm.originalValues.uCosmicCode !== vm.uCosmicCode(); // edit
             return vm && vm.uCosmicCode() &&!this._isAwaitingResponse; // create
         }
@@ -102,6 +108,7 @@ module ViewModels.Establishments {
         typeId: KnockoutObservableNumber = ko.observable();
         ceebCode: KnockoutObservableString = ko.observable();
         uCosmicCode: KnockoutObservableString = ko.observable();
+        isInstitution: () => bool;
         typeEmptyText: KnockoutComputed;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -119,9 +126,20 @@ module ViewModels.Establishments {
                 return this.categories().length > 0 ? '[Select a type]' : '[Loading...]';
             });
 
+            this._computeIsInstitution();
             this.typeId.extend({
                 required: {
                     message: 'Establishment type is required'
+                }
+            });
+            this.typeId.subscribe((newValue: number): void => {
+                if (!this.isInstitution()) {
+                    this.ceebCode(undefined);
+                    this.uCosmicCode(undefined);
+                }
+                else {
+                    this.ceebCode(this.originalValues.ceebCode);
+                    this.uCosmicCode(this.originalValues.uCosmicCode);
                 }
             });
 
@@ -194,7 +212,12 @@ module ViewModels.Establishments {
             ko.computed((): void => {
                 if (!this.id || !this._isInitialized()) return;
                 var data = this.serializeData();
-                if (data.typeId == this.originalValues.typeId) {
+                if (data.typeId == this.originalValues.typeId &&
+                    data.ceebCode == this.originalValues.ceebCode &&
+                    data.uCosmicCode == this.originalValues.uCosmicCode) {
+                    return;
+                }
+                if (!this.isValid() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                     return;
                 }
                 var url = App.Routes.WebApi.Establishments.put(this.id);
@@ -431,6 +454,26 @@ module ViewModels.Establishments {
             data.ceebCode = this.ceebCode();
             data.uCosmicCode = this.uCosmicCode();
             return data;
+        }
+
+        private _computeIsInstitution(): void {
+            this.isInstitution = ko.computed((): bool => {
+                if (this.typeId()) {
+                    var categories = this.categories();
+                    for (var i = 0; i < categories.length; i++) {
+                        var categoryCode: string = categories[i].code();
+                        if (categoryCode && categoryCode.toUpperCase() === 'INST') {
+                            var types: any[] = categories[i].types();
+                            for (var ii = 0; ii < types.length; ii++) {
+                                if (types[ii].id() == this.typeId()) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            });
         }
     }
 }

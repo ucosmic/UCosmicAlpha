@@ -26,11 +26,15 @@ var ViewModels;
                             message: xhr.responseText
                         });
                     });
+                } else {
+                    if(!this._isAwaitingResponse) {
+                        callback(true);
+                    }
                 }
             };
             CeebCodeValidator.prototype._isValidatable = function (vm) {
                 if(vm.id && vm.id !== 0) {
-                    return !this._isAwaitingResponse && vm && vm.originalValues && vm.originalValues.ceebCode !== vm.ceebCode();
+                    return !this._isAwaitingResponse && vm && vm.ceebCode() && vm.originalValues && vm.originalValues.ceebCode !== vm.ceebCode();
                 }
                 return vm && vm.ceebCode() && !this._isAwaitingResponse;
             };
@@ -61,11 +65,15 @@ var ViewModels;
                             message: xhr.responseText
                         });
                     });
+                } else {
+                    if(!this._isAwaitingResponse) {
+                        callback(true);
+                    }
                 }
             };
             UCosmicCodeValidator.prototype._isValidatable = function (vm) {
                 if(vm.id && vm.id !== 0) {
-                    return !this._isAwaitingResponse && vm && vm.originalValues && vm.originalValues.uCosmicCode !== vm.uCosmicCode();
+                    return !this._isAwaitingResponse && vm && vm.uCosmicCode() && vm.originalValues && vm.originalValues.uCosmicCode !== vm.uCosmicCode();
                 }
                 return vm && vm.uCosmicCode() && !this._isAwaitingResponse;
             };
@@ -98,9 +106,19 @@ var ViewModels;
                 this.typeEmptyText = ko.computed(function () {
                     return _this.categories().length > 0 ? '[Select a type]' : '[Loading...]';
                 });
+                this._computeIsInstitution();
                 this.typeId.extend({
                     required: {
                         message: 'Establishment type is required'
+                    }
+                });
+                this.typeId.subscribe(function (newValue) {
+                    if(!_this.isInstitution()) {
+                        _this.ceebCode(undefined);
+                        _this.uCosmicCode(undefined);
+                    } else {
+                        _this.ceebCode(_this.originalValues.ceebCode);
+                        _this.uCosmicCode(_this.originalValues.uCosmicCode);
                     }
                 });
                 this.ceebCode.extend({
@@ -156,7 +174,10 @@ var ViewModels;
                         return;
                     }
                     var data = _this.serializeData();
-                    if(data.typeId == _this.originalValues.typeId) {
+                    if(data.typeId == _this.originalValues.typeId && data.ceebCode == _this.originalValues.ceebCode && data.uCosmicCode == _this.originalValues.uCosmicCode) {
+                        return;
+                    }
+                    if(!_this.isValid() || _this.ceebCode.isValidating() || _this.uCosmicCode.isValidating()) {
                         return;
                     }
                     var url = App.Routes.WebApi.Establishments.put(_this.id);
@@ -351,6 +372,26 @@ var ViewModels;
                 data.ceebCode = this.ceebCode();
                 data.uCosmicCode = this.uCosmicCode();
                 return data;
+            };
+            Item.prototype._computeIsInstitution = function () {
+                var _this = this;
+                this.isInstitution = ko.computed(function () {
+                    if(_this.typeId()) {
+                        var categories = _this.categories();
+                        for(var i = 0; i < categories.length; i++) {
+                            var categoryCode = categories[i].code();
+                            if(categoryCode && categoryCode.toUpperCase() === 'INST') {
+                                var types = categories[i].types();
+                                for(var ii = 0; ii < types.length; ii++) {
+                                    if(types[ii].id() == _this.typeId()) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return false;
+                });
             };
             return Item;
         })();

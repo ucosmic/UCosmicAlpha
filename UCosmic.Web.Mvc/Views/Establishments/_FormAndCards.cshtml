@@ -13,7 +13,7 @@
                 @Html.Partial(MVC.Establishments.Views._FormNamesSection)
                 @Html.Partial(MVC.Establishments.Views._FormUrlsSection)
                 @Html.Partial(MVC.Establishments.Views._FormLocationSection)
-                <section class="fieldset" data-bind="validationOptions: { decorateElement: true, errorClass: 'error' }">
+                <section class="fieldset" data-bind="visible: isInstitution, validationOptions: { decorateElement: true, errorClass: 'error' }">
                     <header>
                         <h2>
                             <span>Institutional Identifier Codes</span>

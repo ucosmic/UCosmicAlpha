@@ -77,7 +77,7 @@ namespace UCosmic.Domain.Establishments
                 RuleFor(x => x.UCosmicCode)
                     .Length(EstablishmentConstraints.UCosmicCodeLength)
                         .WithMessage(MustHaveUCosmicCodeLength.FailMessage)
-                    .MustBeUniqueUCosmicCode(entities)
+                    .MustBeUniqueUCosmicCode(entities, x => x.Id)
                         .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode)
             );
         }
@@ -111,10 +111,20 @@ namespace UCosmic.Domain.Establishments
                 })
                 .Single(x => x.RevisionId == command.Id);
 
+            // get establishment type
+            var establishmentType = _entities.Get<EstablishmentType>()
+                .Single(x => x.RevisionId == command.TypeId);
+            if (establishmentType.CategoryCode != EstablishmentCategoryCode.Inst)
+            {
+                // do not allow these codes for non-institutions
+                command.CeebCode = null;
+                command.UCosmicCode = null;
+            }
+
             // only mutate when state is modified
-            if (command.TypeId == entity.Type.RevisionId
-                //command.CeebCode == entity.CollegeBoardDesignatedIndicator &&
-                //command.UCosmicCode == entity.UCosmicCode
+            if (command.TypeId == entity.Type.RevisionId &&
+                command.CeebCode == entity.CollegeBoardDesignatedIndicator &&
+                command.UCosmicCode == entity.UCosmicCode
             )
                 return;
 
@@ -127,8 +137,8 @@ namespace UCosmic.Domain.Establishments
                 {
                     command.Id,
                     command.TypeId,
-                    //command.CeebCode,
-                    //command.UCosmicCode,
+                    command.CeebCode,
+                    command.UCosmicCode,
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };
@@ -136,12 +146,10 @@ namespace UCosmic.Domain.Establishments
             // update scalars
             if (entity.Type.RevisionId != command.TypeId)
             {
-                var establishmentType = _entities.Get<EstablishmentType>()
-                    .Single(x => x.RevisionId == command.TypeId);
                 entity.Type = establishmentType;
             }
-            //entity.CollegeBoardDesignatedIndicator = command.CeebCode;
-            //entity.UCosmicCode = command.UCosmicCode;
+            entity.CollegeBoardDesignatedIndicator = command.CeebCode;
+            entity.UCosmicCode = command.UCosmicCode;
 
             audit.NewState = entity.ToJsonAudit();
             _entities.Create(audit);

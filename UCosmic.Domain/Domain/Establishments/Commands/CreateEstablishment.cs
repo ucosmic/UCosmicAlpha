@@ -124,6 +124,13 @@ namespace UCosmic.Domain.Establishments
             var establishmentType = _entities.Get<EstablishmentType>()
                 .Single(x => x.RevisionId == command.TypeId);
 
+            if (establishmentType.CategoryCode != EstablishmentCategoryCode.Inst)
+            {
+                // do not allow these codes for non-institutions
+                command.CeebCode = null;
+                command.UCosmicCode = null;
+            }
+
             // create initial establishment
             var establishment = new Establishment
             {
