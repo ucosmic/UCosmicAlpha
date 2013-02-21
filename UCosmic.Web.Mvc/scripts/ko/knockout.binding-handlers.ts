@@ -7,6 +7,7 @@ interface KnockoutBindingHandlers {
     jqObservableElement: KnockoutBindingHandler;
     multilineText: KnockoutBindingHandler;
     slideDownVisible: KnockoutBindingHandler;
+    fadeVisible: KnockoutBindingHandler;
 }
 
 ko.bindingHandlers.element = {
@@ -59,5 +60,16 @@ ko.bindingHandlers.slideDownVisible = {
         else if (!value && $(element).is(':visible')) {
             $(element).slideUp('fast');
         }
+    }
+};
+
+ko.bindingHandlers.fadeVisible = {
+    update: function (element: HTMLElement, valueAccessor: () => any): void {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var isCurrentlyVisible = !(element.style.display == "none");
+        if (value && !isCurrentlyVisible)
+            $(element).fadeIn();
+        else if ((!value) && isCurrentlyVisible)
+            $(element).fadeOut();
     }
 };
