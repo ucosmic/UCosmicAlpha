@@ -53,6 +53,41 @@ module ViewModels.Establishments {
     }
     new CeebCodeValidator();
 
+    class UCosmicCodeValidator implements KnockoutValidationAsyncRuleDefinition {
+        async: bool = true;
+        message: string = 'error';
+        private _isAwaitingResponse: bool = false;
+        private _ruleName: string = 'validEstablishmentUCosmicCode';
+        validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
+            if (this._isValidatable(vm)) {
+                var route = App.Routes.WebApi.Establishments
+                    .validateUCosmicCode(vm.id);
+                this._isAwaitingResponse = true;
+                $.post(route, vm.serializeData())
+                .always((): void => {
+                    this._isAwaitingResponse = false;
+                })
+                .done((): void => {
+                    callback(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    callback({ isValid: false, message: xhr.responseText });
+                });
+            }
+        }
+        private _isValidatable(vm: Item): bool {
+            if (vm.id && vm.id !== 0)
+                return !this._isAwaitingResponse && vm && vm.originalValues
+                    && vm.originalValues.uCosmicCode !== vm.uCosmicCode(); // edit
+            return vm && vm.uCosmicCode() &&!this._isAwaitingResponse; // create
+        }
+        constructor() {
+            ko.validation.rules[this._ruleName] = this;
+            ko.validation.addExtender(this._ruleName);
+        }
+    }
+    new UCosmicCodeValidator();
+
     export class Item implements KnockoutValidationGroup {
 
         // fields
@@ -96,6 +131,14 @@ module ViewModels.Establishments {
             this.ceebCode.subscribe((newValue: string): void => {
                 if (this.ceebCode()) // disallow space characters
                     this.ceebCode($.trim(this.ceebCode()));
+            });
+
+            this.uCosmicCode.extend({
+                validEstablishmentUCosmicCode: this
+            });
+            this.uCosmicCode.subscribe((newValue: string): void => {
+                if (this.uCosmicCode()) // disallow space characters
+                    this.uCosmicCode($.trim(this.uCosmicCode()));
             });
 
             // load the scalars
@@ -327,11 +370,11 @@ module ViewModels.Establishments {
 
                 // wait for async validation to stop
                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
-                    this.ceebCode.isValidating()) {
+                    this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                     setTimeout((): bool => {
                         var waitResult = this.submitToCreate(formElement);
                         return false;
-                    }, 5);
+                    }, 50);
                     return false;
                 }
 
@@ -386,6 +429,7 @@ module ViewModels.Establishments {
             var data: any = {};
             data.typeId = this.typeId();
             data.ceebCode = this.ceebCode();
+            data.uCosmicCode = this.uCosmicCode();
             return data;
         }
     }

@@ -11,6 +11,7 @@ namespace UCosmic.Domain.Establishments
     public class UpdateEstablishment
     {
         private string _ceebCode;
+        private string _uCosmicCode;
 
         public UpdateEstablishment(int id, IPrincipal principal)
         {
@@ -28,7 +29,11 @@ namespace UCosmic.Domain.Establishments
             get { return _ceebCode; }
             set { _ceebCode = value == null ? null : value.Trim(); }
         }
-        //public string UCosmicCode { get; set; }
+        public string UCosmicCode
+        {
+            get { return _uCosmicCode; }
+            set { _uCosmicCode = value == null ? null : value.Trim(); }
+        }
 
         internal bool NoCommit { get; set; }
     }
@@ -67,14 +72,14 @@ namespace UCosmic.Domain.Establishments
                         .WithMessage(MustBeUniqueCeebCode<object>.FailMessageFormat, x => x.CeebCode)
             );
 
-            //// validate UCosmic code
-            //When(x => !string.IsNullOrEmpty(x.UCosmicCode), () =>
-            //    RuleFor(x => x.UCosmicCode)
-            //        .Length(EstablishmentConstraints.UCosmicCodeLength)
-            //            .WithMessage(MustHaveUCosmicCodeLength.FailMessage)
-            //        .MustBeUniqueUCosmicCode(entities)
-            //            .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode)
-            //);
+            // validate UCosmic code
+            When(x => !string.IsNullOrEmpty(x.UCosmicCode), () =>
+                RuleFor(x => x.UCosmicCode)
+                    .Length(EstablishmentConstraints.UCosmicCodeLength)
+                        .WithMessage(MustHaveUCosmicCodeLength.FailMessage)
+                    .MustBeUniqueUCosmicCode(entities)
+                        .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode)
+            );
         }
     }
 

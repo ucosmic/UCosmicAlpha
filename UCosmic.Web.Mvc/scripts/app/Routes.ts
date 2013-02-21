@@ -107,6 +107,10 @@ module App.Routes {
                     return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
             }
 
+            export function validateUCosmicCode (establishmentId: number): string {
+                    return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
+            }
+
             export class Names {
 
                 static get (establishmentId: number, establishmentNameId?: number): string {

@@ -106,6 +106,10 @@ var App;
                     return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
                 }
                 Establishments.validateCeebCode = validateCeebCode;
+                function validateUCosmicCode(establishmentId) {
+                    return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
+                }
+                Establishments.validateUCosmicCode = validateUCosmicCode;
                 var Names = (function () {
                     function Names() { }
                     Names.get = function get(establishmentId, establishmentNameId) {

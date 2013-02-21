@@ -157,5 +157,37 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+        [POST("{establishmentId}/validate-ucosmic-code")]
+        public HttpResponseMessage ValidateUCosmicCode(int establishmentId, EstablishmentApiScalarModel model)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            model.Id = establishmentId;
+
+            ValidationResult validationResult;
+            string propertyName;
+            if (model.Id < 1)
+            {
+                var command = new CreateEstablishment(User);
+                Mapper.Map(model, command);
+                validationResult = _createValidator.Validate(command);
+                propertyName = command.PropertyName(y => y.UCosmicCode);
+            }
+            else
+            {
+                var command = new UpdateEstablishment(model.Id, User);
+                Mapper.Map(model, command);
+                validationResult = _updateValidator.Validate(command);
+                propertyName = command.PropertyName(y => y.UCosmicCode);
+            }
+
+            Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forText))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forText).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

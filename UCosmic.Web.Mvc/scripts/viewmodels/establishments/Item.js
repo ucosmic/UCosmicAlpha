@@ -37,6 +37,41 @@ var ViewModels;
             return CeebCodeValidator;
         })();        
         new CeebCodeValidator();
+        var UCosmicCodeValidator = (function () {
+            function UCosmicCodeValidator() {
+                this.async = true;
+                this.message = 'error';
+                this._isAwaitingResponse = false;
+                this._ruleName = 'validEstablishmentUCosmicCode';
+                ko.validation.rules[this._ruleName] = this;
+                ko.validation.addExtender(this._ruleName);
+            }
+            UCosmicCodeValidator.prototype.validator = function (val, vm, callback) {
+                var _this = this;
+                if(this._isValidatable(vm)) {
+                    var route = App.Routes.WebApi.Establishments.validateUCosmicCode(vm.id);
+                    this._isAwaitingResponse = true;
+                    $.post(route, vm.serializeData()).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
+                        });
+                    });
+                }
+            };
+            UCosmicCodeValidator.prototype._isValidatable = function (vm) {
+                if(vm.id && vm.id !== 0) {
+                    return !this._isAwaitingResponse && vm && vm.originalValues && vm.originalValues.uCosmicCode !== vm.uCosmicCode();
+                }
+                return vm && vm.uCosmicCode() && !this._isAwaitingResponse;
+            };
+            return UCosmicCodeValidator;
+        })();        
+        new UCosmicCodeValidator();
         var Item = (function () {
             function Item(id) {
                 var _this = this;
@@ -74,6 +109,14 @@ var ViewModels;
                 this.ceebCode.subscribe(function (newValue) {
                     if(_this.ceebCode()) {
                         _this.ceebCode($.trim(_this.ceebCode()));
+                    }
+                });
+                this.uCosmicCode.extend({
+                    validEstablishmentUCosmicCode: this
+                });
+                this.uCosmicCode.subscribe(function (newValue) {
+                    if(_this.uCosmicCode()) {
+                        _this.uCosmicCode($.trim(_this.uCosmicCode()));
                     }
                 });
                 var categoriesPact = $.Deferred();
@@ -253,11 +296,11 @@ var ViewModels;
                     var officialName = this.names()[0];
                     var officialUrl = this.urls()[0];
                     var location = this.location;
-                    if(officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating()) {
+                    if(officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                         setTimeout(function () {
                             var waitResult = _this.submitToCreate(formElement);
                             return false;
-                        }, 5);
+                        }, 50);
                         return false;
                     }
                     if(!this.isValid()) {
@@ -306,6 +349,7 @@ var ViewModels;
                 };
                 data.typeId = this.typeId();
                 data.ceebCode = this.ceebCode();
+                data.uCosmicCode = this.uCosmicCode();
                 return data;
             };
             return Item;
