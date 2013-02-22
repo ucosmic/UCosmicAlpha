@@ -195,6 +195,7 @@
     <Compile Include="Domain\Identity\Commands\SendSignUpMessage.cs" />
     <Compile Include="Domain\Identity\Commands\UpdateMyPreference.cs" />
     <Compile Include="Domain\Identity\Entities\Preference.cs" />
+    <Compile Include="Domain\Identity\Queries\MyUsers.cs" />
     <Compile Include="Domain\Identity\Queries\GenerateRandomSecret.cs" />
     <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />

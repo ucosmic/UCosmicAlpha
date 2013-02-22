@@ -38,6 +38,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
     public static UCosmic.Web.Mvc.Controllers.MyProfileController MyProfile = new UCosmic.Web.Mvc.Controllers.T4MVC_MyProfileController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
+    public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 
@@ -2879,6 +2880,7 @@ namespace Links
                 private const string URLPATH = "~/images/icons/closer";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string closer_16_dark_png = Url("closer-16-dark.png");
                 public static readonly string closer_16_red_disc_png = Url("closer-16-red-disc.png");
                 public static readonly string closer_20_red_disc_png = Url("closer-20-red-disc.png");
                 public static readonly string closer_24_dark_png = Url("closer-24-dark.png");

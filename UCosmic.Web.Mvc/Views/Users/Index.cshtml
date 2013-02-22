@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Users";
+}
+
+@section bib
+{
+    <nav class="bib hide" data-current-bib="users">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $.get('/api/users/')
+            .done(function(data) {
+                alert('got users');
+            })
+            .fail(function() {
+                alert('failed to get users');
+            });
+    </script>
+}
+
+<div class="fixed content" data-current-module="admin">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <p>
+        This alpha placeholder page has no content.
+    </p>
+</div>

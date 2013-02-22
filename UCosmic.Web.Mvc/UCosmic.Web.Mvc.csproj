@@ -293,6 +293,8 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
+    <Compile Include="ApiControllers\UsersController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\LocalOnlyAttribute.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
@@ -450,6 +452,7 @@
     <Compile Include="Models\SignInForm.cs" />
     <Compile Include="Models\Tenancy.cs" />
     <Compile Include="Models\TextValuePair.cs" />
+    <Compile Include="Models\UserApiModel.cs" />
     <Compile Include="Models\UserVoiceLinkModel.cs" />
     <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
     <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
@@ -475,6 +478,9 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="TenancyController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UsersController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -1790,6 +1796,7 @@
     <Content Include="Views\Establishments\_FormLocationSection.cshtml" />
     <Content Include="Views\MyProfile\_Activities.cshtml" />
     <Content Include="Views\Home\_Bib.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
