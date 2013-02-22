@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 using AutoMapper;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
 {

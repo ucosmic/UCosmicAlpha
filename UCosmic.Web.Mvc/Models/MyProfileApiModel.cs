@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
-using UCosmic.Domain.Activities;
+﻿using AutoMapper;
 using UCosmic.Domain.People;
 
 
