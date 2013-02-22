@@ -32,7 +32,7 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(EmployeeModuleSettings).Name, DbSchemaName.Employees);
 
             HasRequired(p => p.Establishment)
-                .WithOptional(d => d.EmployeeModuleSettings) // tell EF that EmployeeModuleSettings belongs to exactly 1 Establishment
+                .WithOptional() // tell EF that EmployeeModuleSettings belongs to exactly 1 Establishment
                 .Map(m => m.MapKey("EstablishmentId")) // give DB a friendlier fk column name
                 .WillCascadeOnDelete(false) // don't delete Establishments when deleting an EmployeeModuleSettings
             ;
