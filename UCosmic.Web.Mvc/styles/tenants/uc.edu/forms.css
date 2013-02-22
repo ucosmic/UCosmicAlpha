@@ -477,6 +477,17 @@ fieldset legend {
   .field-table.w870-l300-v570 .field-unlabeled-input, .field-table.w870-l300-v570 .field-unlabeled-value {
     width: 870px; }
 
+.flasher.side * {
+  cursor: pointer; }
+.flasher.side > .content {
+  margin-bottom: 20px;
+  margin-left: 4px;
+  padding: 8px;
+  background-color: #ffec8f; }
+  .flasher.side > .content > img.closer {
+    float: right;
+    padding-left: 4px; }
+
 .typed-item {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

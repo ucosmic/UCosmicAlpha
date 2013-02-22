@@ -109,6 +109,7 @@ var ViewModels;
                 this.uCosmicCode = ko.observable();
                 this.isEditingTypeId = ko.observable();
                 this.isValidationSummaryVisible = ko.observable(false);
+                this.flasherProxy = new App.FlasherProxy();
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);

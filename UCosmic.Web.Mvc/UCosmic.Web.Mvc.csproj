@@ -708,6 +708,7 @@
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
+    <Content Include="images\icons\closer\closer-16-dark.png" />
     <Content Include="images\icons\edit\pencil-a-24.png" />
     <Content Include="images\icons\edit\pencil-a-64.png" />
     <Content Include="images\icons\help\question-mark-24-blue.png" />

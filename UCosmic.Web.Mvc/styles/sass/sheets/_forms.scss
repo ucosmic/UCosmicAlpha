@@ -418,6 +418,24 @@ fieldset {
     }
 }
 
+.flasher.side {
+    * {
+        cursor: pointer;
+    }
+
+    > .content {
+        margin-bottom: 20px;
+        margin-left: 4px;
+        padding: 8px;
+        background-color: #ffec8f;
+
+        > img.closer {
+            float: right;
+            padding-left: 4px;
+        }
+    }
+}
+
 .typed-item {
     @include border-box;
     margin-bottom: 16px;

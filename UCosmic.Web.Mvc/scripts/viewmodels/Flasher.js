@@ -10,8 +10,12 @@ var App;
             tickInterval = window.setInterval(function () {
                 tick(flasher);
             }, 1000);
+            flasher.isDismissing(false);
+            flasher.isDismissed(false);
             flasher.$element.hide().removeClass('hide').fadeIn('fast');
         } else {
+            flasher.isDismissed(true);
+            flasher.isDismissing(false);
             if(tickInterval) {
                 window.clearInterval(tickInterval);
             }
@@ -35,6 +39,8 @@ var App;
             var _this = this;
             this.text = ko.observable();
             this.tickCount = ko.observable(9);
+            this.isDismissing = ko.observable();
+            this.isDismissed = ko.observable();
             this.$element = undefined;
             ko.computed(function () {
                 init(_this);
@@ -48,6 +54,7 @@ var App;
         };
         Flasher.prototype.dismiss = function () {
             var _this = this;
+            this.isDismissing(true);
             this.$element.fadeOut('slow', function () {
                 _this.text('');
                 _this.$element.addClass('hide');
@@ -57,4 +64,23 @@ var App;
     })();
     App.Flasher = Flasher;    
     App.flasher = new Flasher();
+    var FlasherProxy = (function () {
+        function FlasherProxy() {
+            var _this = this;
+            this.text = ko.computed(function () {
+                return App.flasher.text();
+            });
+            this.isVisible = ko.computed(function () {
+                if(App.flasher.isDismissing() || App.flasher.isDismissed()) {
+                    return false;
+                }
+                return _this.text();
+            });
+        }
+        FlasherProxy.prototype.dismiss = function () {
+            App.flasher.dismiss();
+        };
+        return FlasherProxy;
+    })();
+    App.FlasherProxy = FlasherProxy;    
 })(App || (App = {}));

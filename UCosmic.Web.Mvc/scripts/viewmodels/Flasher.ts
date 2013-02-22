@@ -17,9 +17,13 @@ module App {
             tickInterval = window.setInterval(() => { // set up new tick interval
                 tick(flasher); // tick once each second
             }, 1000);
+            flasher.isDismissing(false);
+            flasher.isDismissed(false);
             flasher.$element.hide().removeClass('hide').fadeIn('fast'); // fade in element
         }
         else { // when there is no flasher text
+            flasher.isDismissed(true);
+            flasher.isDismissing(false);
             if (tickInterval) // clear the tick interval
                 window.clearInterval(tickInterval);
             if (flasher.$element) // hide the flasher element
@@ -43,6 +47,8 @@ module App {
     export interface IFlasher {
         text: KnockoutObservableString;
         tickCount: KnockoutObservableNumber;
+        isDismissing: KnockoutObservableBool;
+        isDismissed: KnockoutObservableBool;
         $element: JQuery;
         flash(text: string): void;
         dismiss(): void;
@@ -52,6 +58,8 @@ module App {
     export class Flasher implements IFlasher {
 
         constructor () {
+            // register init as a computed so that it will execute
+            // whenever an observable changes
             ko.computed(() => { init(this); });
         }
 
@@ -60,6 +68,9 @@ module App {
 
         // number of seconds to display the flashed text
         tickCount: KnockoutObservableNumber = ko.observable(9);
+
+        isDismissing: KnockoutObservableBool = ko.observable();
+        isDismissed: KnockoutObservableBool = ko.observable();
 
         // DOM element that wraps the flasher markup
         $element: JQuery = undefined;
@@ -72,6 +83,7 @@ module App {
 
         // fade out and then hide the flasher DOM element
         dismiss(): void {
+            this.isDismissing(true);
             this.$element.fadeOut('slow', () => { // lambda captures outer 'this'
                 this.text('');
                 this.$element.addClass('hide');
@@ -80,4 +92,27 @@ module App {
     }
 
     export var flasher: IFlasher = new Flasher(); // implement flasher as singleton instance
+
+    // proxy to display flasher info on other page sections
+    export class FlasherProxy {
+
+        text: KnockoutComputed;
+        isVisible: KnockoutComputed;
+
+        constructor() {
+            this.text = ko.computed((): string => {
+                return App.flasher.text();
+            });
+            this.isVisible = ko.computed((): bool => {
+                if (App.flasher.isDismissing() || App.flasher.isDismissed()) {
+                    return false;
+                }
+                return this.text();
+            });
+        }
+
+        dismiss(): void {
+            App.flasher.dismiss();
+        }
+    }
 }

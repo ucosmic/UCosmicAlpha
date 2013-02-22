@@ -255,12 +255,16 @@ var ViewModels;
                     });
                 });
                 this.$mapCanvas().on('marker_destroyed', function () {
+                    var center = _this.map.getCenter();
+                    var zoom = _this.map.getZoom();
                     _this.countryId(undefined);
                     _this.continentId(undefined);
                     _this.admin1Id(undefined);
                     _this.admin2Id(undefined);
                     _this.admin3Id(undefined);
                     _this.subAdmins([]);
+                    _this.map.setCenter(center);
+                    _this.map.setZoom(zoom);
                 });
                 this.$mapCanvas().on('marker_dragend marker_created', function () {
                     var latLng = _this.mapTools().markerLatLng();

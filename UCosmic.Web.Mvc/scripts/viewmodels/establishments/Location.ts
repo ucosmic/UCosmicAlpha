@@ -320,12 +320,16 @@ module ViewModels.Establishments {
 
             // tools overlay marker
             this.$mapCanvas().on('marker_destroyed', (): void => {
+                var center = this.map.getCenter();
+                var zoom = this.map.getZoom();
                 this.countryId(undefined); // reset location info
                 this.continentId(undefined);
                 this.admin1Id(undefined);
                 this.admin2Id(undefined);
                 this.admin3Id(undefined);
                 this.subAdmins([]);
+                this.map.setCenter(center);
+                this.map.setZoom(zoom);
             });
 
             this.$mapCanvas().on('marker_dragend marker_created', (): void => {

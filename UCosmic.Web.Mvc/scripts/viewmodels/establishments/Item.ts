@@ -128,6 +128,7 @@ module ViewModels.Establishments {
         typeEmptyText: KnockoutComputed;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
+        flasherProxy = new App.FlasherProxy();
 
         constructor(id?: number) {
 

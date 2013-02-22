@@ -1,4 +1,10 @@
-﻿<nav class="side">
+﻿<div data-bind="with: flasherProxy" class="side flasher">
+    <div data-bind="slideDownVisible: isVisible, click: dismiss" class="content" title="Click to dismiss" style="display: none;">
+        <img class="closer" src="~/images/icons/closer/closer-16-dark.png" alt="" />
+        <span data-bind="text: text">Here is my flash feedback message</span>
+    </div>
+</div>
+<nav class="side">
     <ul>
         <li class="current">
             <a href="#/" class="group">
@@ -26,8 +32,3 @@
         </li>
     </ul>
 </nav>
-<div data-bind="slideDownVisible: App.flasher.text()" style="margin-top: 20px; padding-left: 16px; display: none;">
-    <div style="padding: 8px; background-color: blanchedalmond;">
-        <span data-bind="text: App.flasher.text()"></span>
-    </div>
-</div>

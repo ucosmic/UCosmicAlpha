@@ -34,7 +34,7 @@
                                 <label>CEEB Code</label>
                             </div>
                             <div class="field-input">
-                                <div class="text-box when-hovered" data-bind="text: ceebCode, click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                                <div class="text-box when-hovered" data-bind="text: ceebCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
                                 <input type="text" data-bind="value: ceebCode, valueUpdate: 'afterkeydown', visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                 <label>UCosmic Code</label>
                             </div>
                             <div class="field-input">
-                                <div class="text-box when-hovered" data-bind="text: uCosmicCode, click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                                <div class="text-box when-hovered" data-bind="text: uCosmicCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
                                 <input type="text" data-bind="value: uCosmicCode, valueUpdate: 'afterkeydown', visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
                             </div>
                         </div>
