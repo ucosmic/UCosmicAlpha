@@ -16,6 +16,12 @@ namespace UCosmic.SeedData
 
         public void Seed()
         {
+            Seed(RoleName.SecurityAdministrator,
+                "Security Administrators can control the roles and role grants to users within their organization."
+            );
+            Seed(RoleName.AuthenticationAgent,
+                "Authentication Agents can sign on as any user, regardless of establishment."
+            );
             Seed(RoleName.AuthorizationAgent,
                 "Authorization Agents can control the roles and role grants to any user, regardless of establishment."
             );
@@ -26,9 +32,6 @@ namespace UCosmic.SeedData
             Seed(RoleName.InstitutionalAgreementSupervisor,
                 "Institutional Agreement Supervisors can grant Institutional Agreement Manager " +
                 "privileges to users at their institutions."
-            );
-            Seed(RoleName.AuthenticationAgent,
-                "Authentication Agents can sign on as any user, regardless of establishment."
             );
             Seed(RoleName.EstablishmentLocationAgent,
                 "Establishment Location Agents can modify location information for any establishment."

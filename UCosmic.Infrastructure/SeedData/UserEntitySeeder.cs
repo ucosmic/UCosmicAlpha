@@ -71,7 +71,7 @@ namespace UCosmic.SeedData
             };
             var managerRoles = new[] { RoleName.InstitutionalAgreementManager };
             var supervisorRoles = new[] { RoleName.InstitutionalAgreementSupervisor };
-            var agentRoles = new[] { RoleName.AuthorizationAgent };
+            var adminRoles = new[] { RoleName.SecurityAdministrator };
 
             foreach (var testEstablishment in testEstablishments)
             {
@@ -95,12 +95,12 @@ namespace UCosmic.SeedData
                     , testEstablishment.Key
                     , supervisorRoles);
 
-                Seed(string.Format("agent1{0}", testEstablishment.Value)
-                    , "Agent"
+                Seed(string.Format("admin1{0}", testEstablishment.Value)
+                    , "Administrator"
                     , "One"
                     , PersonGender.NonDisclosed
                     , testEstablishment.Key
-                    , agentRoles);
+                    , adminRoles);
             }
         }
 

@@ -6,7 +6,9 @@ namespace UCosmic
 {
     public static class RoleName
     {
+        public const string SecurityAdministrator = "Security Administrator";
         public const string AuthorizationAgent = "Authorization Agent";
+        public const string SecurityAdministrators = "Security Administrator,Authorization Agent";
         public const string AuthenticationAgent = "Authentication Agent";
 
         public const string InstitutionalAgreementSupervisor = "Institutional Agreement Supervisor";
