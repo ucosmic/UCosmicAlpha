@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -86,36 +83,22 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("photo")]
         public HttpResponseMessage GetPhoto([FromUri] ImageResizeRequestModel model)
         {
-            var person = _queryProcessor.Execute(new MyPerson(User)
+            var tenancy = Request.Tenancy();
+            int? personId;
+            if (tenancy != null && tenancy.PersonId.HasValue)
             {
-                EagerLoad = new Expression<Func<Person, object>>[]
-                {
-                    x => x.Photo.Binary,
-                }
-            });
-
-            Stream stream;
-            var mimeType = "image/png";
-
-            if (person.Photo != null)
-            {
-                // resize the user's photo image
-                stream = person.Photo.Binary.Content.ResizeImage(model);
-                mimeType = person.Photo.MimeType;
+                personId = tenancy.PersonId.Value;
             }
             else
             {
-                // otherwise, return the unisex photo
-                var relativePath = string.Format("~/{0}", Links.images.icons.user.unisex_a_128_png);
-                var absolutePath = HttpContext.Current.Server.MapPath(relativePath);
-                stream = absolutePath.ResizeImage(model);
+                var person = _queryProcessor.Execute(new MyPerson(User));
+                personId = person.RevisionId;
             }
-
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            var peopleController = new PeopleController(_queryProcessor)
             {
-                Content = new StreamContent(stream),
+                Request = Request,
             };
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            var response = peopleController.GetPhoto(personId.Value, model);
             return response;
         }
 

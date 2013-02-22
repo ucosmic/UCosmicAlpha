@@ -11,14 +11,11 @@
 
 @section scripts
 {
+    <script type="text/javascript" src="~/scripts/app/Routes.js"></script>
+    <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
     <script type="text/javascript">
-        $.get('/api/users/')
-            .done(function(data) {
-                alert('got users');
-            })
-            .fail(function() {
-                alert('failed to get users');
-            });
+        var viewModel = new ViewModels.Users.Search();
+        ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
     </script>
 }
 
@@ -26,7 +23,23 @@
     <header>
         <h1>@ViewBag.Title</h1>
     </header>
-    <p>
-        This alpha placeholder page has no content.
-    </p>
+    <ol data-bind="foreach: items">
+        <li>
+            <span data-bind="text: name"></span>
+            <br />
+            <span data-bind="text: personDisplayName"></span>
+            <br />
+            <ol data-bind="visible: hasRoles, foreach: roleGrants">
+                <li>
+                    <span data-bind="text: roleName"></span>
+                    <br/>
+                    @*<span data-bind="text: roleDescription"></span>*@
+                </li>
+            </ol>
+            <span data-bind="visible: hasNoRoles">[No roles]</span>
+            <br />
+            <br />
+            <br />
+        </li>
+    </ol>
 </div>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Web;
 using Newtonsoft.Json;
 using UCosmic.Web.Mvc.Models;
@@ -33,6 +35,21 @@ namespace UCosmic.Web.Mvc
             var cookie = request.Cookies.Get(CookieName);
             if (cookie != null)
                 json = cookie.Value ?? json;
+
+            // deserialize & return the tenancy from json
+            var tenancy = JsonConvert.DeserializeObject<Tenancy>(json);
+            return tenancy;
+        }
+
+        public static Tenancy Tenancy(this HttpRequestMessage request)
+        {
+            // default tenancy is empty
+            var json = "{}";
+
+            // try to get tenancy json from cookie
+            var cookie = request.Headers.GetCookies(CookieName).FirstOrDefault();
+            if (cookie != null)
+                json = cookie[CookieName].Value ?? json;
 
             // deserialize & return the tenancy from json
             var tenancy = JsonConvert.DeserializeObject<Tenancy>(json);

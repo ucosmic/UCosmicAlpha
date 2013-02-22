@@ -259,6 +259,17 @@ var App;
                 var Profile = My.Profile;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
+            (function (Users) {
+                function get(id) {
+                    var url = 'users';
+                    if(id) {
+                        url += '/' + id;
+                    }
+                    return makeUrl(url);
+                }
+                Users.get = get;
+            })(WebApi.Users || (WebApi.Users = {}));
+            var Users = WebApi.Users;
             (function (People) {
                 (function (Names) {
                     var Salutations = (function () {

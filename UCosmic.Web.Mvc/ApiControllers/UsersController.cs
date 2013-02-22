@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using AutoMapper;
@@ -26,6 +27,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EagerLoad = new Expression<Func<User, object>>[]
                 {
                     x => x.Person,
+                    x => x.Grants.Select(y => y.Role),
                 }
             });
             var models = Mapper.Map<UserApiModel[]>(entities);

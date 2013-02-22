@@ -293,6 +293,7 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
+    <Compile Include="ApiControllers\PeopleController.cs" />
     <Compile Include="ApiControllers\UsersController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
@@ -1574,6 +1575,13 @@
     </Content>
     <Content Include="scripts\viewmodels\places\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
+    <Content Include="scripts\viewmodels\users\Search.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\users\Search.min.js">
+      <DependentUpon>Search.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentNameViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentUrlViewModel.js" />

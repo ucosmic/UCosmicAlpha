@@ -261,6 +261,15 @@ module App.Routes {
             }
         }
 
+        export module Users {
+            export function get (id?: number) {
+                var url = 'users';
+                if (id)
+                    url += '/' + id;
+                return makeUrl(url);
+            }
+        }
+
         export module People {
             export module Names {
                 export class Salutations {
