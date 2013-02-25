@@ -149,10 +149,16 @@
     <input id="scroll_top_tracker" type="hidden" />
 
     @*
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
     *@
+
+    @*
+        for some reason, kendo web ui does not work when jQuery is minified & bundled like this.
+        current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
+    *@
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
     @Html.Partial(MVC.Shared.Views._GoogleMapsScript)
     @Scripts.Render("~/bundles/layout")

@@ -7,9 +7,12 @@ namespace UCosmic.Web.Mvc
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
+            // uncomment the following line to enable bundle optimization at debug time.
             //BundleTable.EnableOptimizations = true;
+
 #if AZURE
-            BundleTable.EnableOptimizations = false;
+            // uncomment the following line to disable bundle optimization at deployment time.
+            //BundleTable.EnableOptimizations = false;
 #endif
 
             #region Default Bundles
@@ -38,7 +41,12 @@ namespace UCosmic.Web.Mvc
 
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
-                "~/scripts/jquery/jquery-{version}.js",
+
+                // for some reason, kendo web ui does not work when jQuery is minified & bundled like this.
+                // current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
+
+                //"~/scripts/jquery/jquery-{version}.js",
+
                 "~/scripts/jquery/jquery-ui-{version}.js",
                 "~/scripts/ko/knockout-{version}.js",
                 "~/scripts/ko/knockout.mapping-latest.js",
