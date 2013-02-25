@@ -1,25 +1,28 @@
-﻿namespace UCosmic.Domain.Activities
+﻿using System;
+
+namespace UCosmic.Domain.Activities
 {
     public class ActivityTag : Entity, IAmNumbered
     {
-        protected internal ActivityTag()
-        {
-        }
+        public int Id { get; protected internal set; }
 
-        public int ActivityPersonId { get; protected internal set; }
-        public int ActivityNumber { get; protected internal set; }
         public virtual Activity Activity { get; protected internal set; }
+        public int ActivityId { get; protected internal set; }
 
         public int Number { get; protected internal set; }
         public string Text { get; protected internal set; }
 
-        public string DomainTypeText { get; protected set; }
+        public string DomainTypeText { get; private set; }
         public ActivityTagDomainType DomainType
         {
             get { return DomainTypeText.AsEnum<ActivityTagDomainType>(); }
             protected internal set { DomainTypeText = value.AsSentenceFragment(); }
         }
+        public bool IsInstitution { get; protected internal set; }
 
         public int? DomainKey { get; protected internal set; }
+
+        public string ModeText { get; private set; }
+        public ActivityMode Mode { get { return ModeText.AsEnum<ActivityMode>(); } protected internal set { ModeText = value.AsSentenceFragment(); } }
     }
 }

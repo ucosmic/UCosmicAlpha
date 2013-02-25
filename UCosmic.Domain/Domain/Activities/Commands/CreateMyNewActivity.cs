@@ -1,12 +1,25 @@
 ﻿using System;
-using System.Security.Principal;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateMyNewActivity
     {
-        public IPrincipal Principal { get; set; }
+        public CreateMyNewActivity()
+        {
+            Values = new Collection<ActivityValues>();
+            Tags = new Collection<ActivityTag>();
+        }
+
+        public User User { get; set; }
+        public string ModeText { get; set; }
+        public ICollection<ActivityValues> Values { get; set; }
+        public ICollection<ActivityTag> Tags { get; set; }
+
         public Activity CreatedActivity { get; internal set; }
     }
 
@@ -23,22 +36,30 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            //var person = _queryProcessor.Execute(
-            //    new GetMyPersonQuery(command.Principal));
-            var person = _entities.Get<Person>()
-                .ByUserName(command.Principal.Identity.Name);
+            Person person = _entities.Get<Person>()
+                .Single(p => p.RevisionId == command.User.Person.RevisionId);
 
             var otherActivities = _entities.Get<Activity>()
-                .WithPersonId(person.RevisionId)
-            ;
+                .WithPersonId(command.ModeText, person.RevisionId);
 
             var activity = new Activity
             {
                 Person = person,
                 PersonId = person.RevisionId,
-                Number = otherActivities.NextNumber(),
+                Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
+                Mode = command.ModeText.AsEnum<ActivityMode>(),
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now,
+                UpdatedByUser = command.User,
+                UpdatedByUserId = command.User.RevisionId
             };
+
+            foreach (ActivityValues value in command.Values) { activity.Values.Add(value); }
+
+            foreach (ActivityTag tag in command.Tags) { activity.Tags.Add(tag); }
+
             _entities.Create(activity);
+
             command.CreatedActivity = activity;
         }
     }

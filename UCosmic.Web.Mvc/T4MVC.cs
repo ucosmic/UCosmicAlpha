@@ -24,8 +24,6 @@ using T4MVC;
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC
 {
-    static readonly ActivitiesDeprecatedClass s_ActivitiesDeprecated = new ActivitiesDeprecatedClass();
-    public static ActivitiesDeprecatedClass ActivitiesDeprecated { get { return s_ActivitiesDeprecated; } }
     static readonly IdentityDeprecatedClass s_IdentityDeprecated = new IdentityDeprecatedClass();
     public static IdentityDeprecatedClass IdentityDeprecated { get { return s_IdentityDeprecated; } }
     static readonly PeopleDeprecatedClass s_PeopleDeprecated = new PeopleDeprecatedClass();
@@ -45,19 +43,6 @@ public static class MVC
 
 namespace T4MVC
 {
-    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class ActivitiesDeprecatedClass
-    {
-        public readonly string Name = "ActivitiesDeprecated";
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.ActivityFormController ActivityForm = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_ActivityFormController();
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.ActivityIndexController ActivityIndex = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_ActivityIndexController();
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.ActivityInfoController ActivityInfo = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_ActivityInfoController();
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.ActivityListController ActivityList = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_ActivityListController();
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.ActivitySearchController ActivitySearch = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_ActivitySearchController();
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.TagListController TagList = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_TagListController();
-        public UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.TagMenuController TagMenu = new UCosmic.Web.Mvc.Areas.ActivitiesDeprecated.Controllers.T4MVC_TagMenuController();
-        public T4MVC.ActivitiesDeprecated.SharedController Shared = new T4MVC.ActivitiesDeprecated.SharedController();
-    }
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
     public class IdentityDeprecatedClass
     {
@@ -146,19 +131,6 @@ public class T4MVC_System_Web_Mvc_RedirectResult : System.Web.Mvc.RedirectResult
 public class T4MVC_System_Web_Mvc_JsonResult : System.Web.Mvc.JsonResult, IT4MVCActionResult
 {
     public T4MVC_System_Web_Mvc_JsonResult(string area, string controller, string action, string protocol = null): base()
-    {
-        this.InitMVCT4Result(area, controller, action, protocol);
-    }
-    
-    public string Controller { get; set; }
-    public string Action { get; set; }
-    public string Protocol { get; set; }
-    public RouteValueDictionary RouteValueDictionary { get; set; }
-}
-[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-public class T4MVC_System_Web_Mvc_RedirectToRouteResult : System.Web.Mvc.RedirectToRouteResult, IT4MVCActionResult
-{
-    public T4MVC_System_Web_Mvc_RedirectToRouteResult(string area, string controller, string action, string protocol = null): base(" ", default(System.Web.Routing.RouteValueDictionary), default(bool))
     {
         this.InitMVCT4Result(area, controller, action, protocol);
     }
@@ -2973,6 +2945,19 @@ namespace Links
                 public static readonly string unisex_a_256_png = Url("unisex-a-256.png");
             }
         
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class placeholders {
+            private const string URLPATH = "~/images/placeholders";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string aqua_96x96_png = Url("aqua-96x96.png");
+            public static readonly string blue_96x96_png = Url("blue-96x96.png");
+            public static readonly string green_96x96_png = Url("green-96x96.png");
+            public static readonly string purple_96x96_png = Url("purple-96x96.png");
+            public static readonly string red_96x96_png = Url("red-96x96.png");
+            public static readonly string yellow_96x96_png = Url("yellow-96x96.png");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

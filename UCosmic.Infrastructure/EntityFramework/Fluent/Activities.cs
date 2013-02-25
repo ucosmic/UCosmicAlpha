@@ -7,34 +7,73 @@ namespace UCosmic.EntityFramework
     {
         public ActivityOrm()
         {
-            ToTable(typeof(Activity).Name, DbSchemaName.Activities);
+            ToTable(typeof(Activity).Name, DbSchemaName.ActivitiesV2);
 
-            HasKey(p => new { p.PersonId, p.Number });
+            HasKey(p => p.Id);
 
             HasRequired(d => d.Person)
                 .WithMany()
                 .HasForeignKey(d => d.PersonId)
-                .WillCascadeOnDelete(true);
-
-            HasRequired(d => d.UpdatedByPerson)
-                .WithMany()
-                .HasForeignKey(d => d.UpdatedByPersonId)
                 .WillCascadeOnDelete(false);
 
+            HasRequired(d => d.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(d => d.UpdatedByUserId)
+                .WillCascadeOnDelete(false);
+
+            HasMany(p => p.Values)
+                .WithRequired(d => d.Activity)
+                .HasForeignKey(d => d.ActivityId)
+                .WillCascadeOnDelete(true);
+
+            HasMany(p => p.Tags)
+                .WithRequired(d => d.Activity)
+                .HasForeignKey(d => d.ActivityId)
+                .WillCascadeOnDelete(true); 
+            
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
-            Property(p => p.Values.Title).HasColumnName("Title").HasMaxLength(200);
-            Property(p => p.Values.Content).HasColumnName("Content").HasColumnType("ntext");
-            Property(p => p.Values.StartsOn).HasColumnName("StartsOn").IsOptional();
-            Property(p => p.Values.EndsOn).HasColumnName("EndsOn").IsOptional();
-            Property(p => p.Values.CountryId).HasColumnName("CountryId").IsOptional();
-            Property(p => p.Values.TypeId).HasColumnName("TypeId").IsOptional();
-            Property(p => p.DraftedValues.Title).HasColumnName("DraftedTitle").HasMaxLength(200);
-            Property(p => p.DraftedValues.Content).HasColumnName("DraftedContent").HasColumnType("ntext");
-            Property(p => p.DraftedValues.StartsOn).HasColumnName("DraftedStartsOn").IsOptional();
-            Property(p => p.DraftedValues.EndsOn).HasColumnName("DraftedEndsOn").IsOptional();
-            Property(p => p.DraftedValues.CountryId).HasColumnName("DraftedCountryId").IsOptional();
-            Property(p => p.DraftedValues.TypeId).HasColumnName("DraftedTypeId").IsOptional();
+
             Ignore(p => p.Mode);
+        }
+    }
+
+    public class ActivityValuesOrm : EntityTypeConfiguration<ActivityValues>
+    {
+        public ActivityValuesOrm()
+        {
+            ToTable(typeof(ActivityValues).Name, DbSchemaName.ActivitiesV2);
+
+            HasKey(p => p.Id);
+
+            HasMany(p => p.Locations)
+                .WithRequired(d => d.ActivityValues)
+                .HasForeignKey(d => d.ActivityValuesId)
+                .WillCascadeOnDelete(true);
+
+            Property(p => p.Title).HasColumnName("Title").HasMaxLength(200);
+            Property(p => p.Content).HasColumnName("Content").HasColumnType("ntext");
+            Property(p => p.StartsOn).HasColumnName("StartsOn").IsOptional();
+            Property(p => p.EndsOn).HasColumnName("EndsOn").IsOptional();
+            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
+
+            Ignore(p => p.Mode);
+        }
+    }
+
+    public class ActivityLocationOrm : EntityTypeConfiguration<ActivityLocation>
+    {
+        public ActivityLocationOrm()
+        {
+            ToTable(typeof (ActivityLocation).Name, DbSchemaName.ActivitiesV2);
+
+            HasKey(p => p.Id);
+
+            // ActivityLocation 1 ---> 1 Place
+            // Place * ---> 1 ActivityLocation
+            HasRequired(p => p.Place)
+                .WithMany()
+                .HasForeignKey(d => d.PlaceId)
+                .WillCascadeOnDelete(false);        
         }
     }
 
@@ -42,46 +81,27 @@ namespace UCosmic.EntityFramework
     {
         public ActivityTagOrm()
         {
-            ToTable(typeof(ActivityTag).Name, DbSchemaName.Activities);
+            ToTable(typeof(ActivityTag).Name, DbSchemaName.ActivitiesV2);
 
-            HasKey(p => new { p.ActivityPersonId, p.ActivityNumber, p.Number });
+            HasKey(p => p.Id);
 
-            HasRequired(d => d.Activity)
-                .WithMany(p => p.Tags)
-                .HasForeignKey(d => new { d.ActivityPersonId, d.ActivityNumber })
-                .WillCascadeOnDelete(true);
-
+            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
             Property(p => p.DomainTypeText).HasColumnName("DomainType").IsRequired().HasMaxLength(20);
             Property(p => p.Text).IsRequired().HasMaxLength(500);
+            Property(p => p.IsInstitution).HasColumnName("IsInstitution");
+
+            Ignore(p => p.Mode);
             Ignore(p => p.DomainType);
         }
     }
-
-    public class DraftedTagOrm : EntityTypeConfiguration<DraftedTag>
-    {
-        public DraftedTagOrm()
-        {
-            ToTable(typeof(DraftedTag).Name, DbSchemaName.Activities);
-
-            HasKey(p => new { p.ActivityPersonId, p.ActivityNumber, p.Number });
-
-            HasRequired(d => d.Activity)
-                .WithMany(p => p.DraftedTags)
-                .HasForeignKey(d => new { d.ActivityPersonId, d.ActivityNumber })
-                .WillCascadeOnDelete(true);
-
-            Property(p => p.DomainTypeText).HasColumnName("DomainType").IsRequired().HasMaxLength(20);
-            Property(p => p.Text).IsRequired().HasMaxLength(500);
-            Ignore(p => p.DomainType);
-        }
-    }
-
 
     public class ActivityTypeOrm : EntityTypeConfiguration<ActivityType>
     {
         public ActivityTypeOrm()
         {
-            ToTable(typeof(ActivityType).Name, DbSchemaName.Activities);
+            ToTable(typeof(ActivityType).Name, DbSchemaName.ActivitiesV2);
+
+            HasKey(p => p.Id);
 
             Property(p => p.Type).IsRequired().HasMaxLength(ActivityConstraints.TypeMaxLength);
         }

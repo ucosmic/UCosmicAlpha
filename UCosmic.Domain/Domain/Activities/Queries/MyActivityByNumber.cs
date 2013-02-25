@@ -7,6 +7,7 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; set; }
         public int Number { get; set; }
+        public string ModeText { get; set; }
     }
 
     public class HandleMyActivityByNumberQuery : IHandleQueries<MyActivityByNumber, Activity>
@@ -24,7 +25,7 @@ namespace UCosmic.Domain.Activities
 
             var result = _entities.Query<Activity>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .ByUserNameAndNumber(query.Principal.Identity.Name, query.Number)
+                .ByUserNameAndNumber(query.ModeText, query.Principal.Identity.Name, query.Number)
             ;
 
             return result;

@@ -2,11 +2,69 @@
 using System.Linq;
 using System.Linq.Expressions;
 
+/*
+ * Activity Functions
+ * -------------------
+ * 
+ * (New), Save as Draft
+ *  Create Activity with Mode = ActivityMode.Draft
+ *  Create ActivityValues with Mode = ActivityMode.Draft
+ *  Create ActivityTags with Mode = ActivityMode.Draft 
+ * 
+ * (New), Save as Public
+ *  Create Activity with Mode = ActivityMode.Public
+ *  Create ActivityValues with Mode = ActivityMode.Public
+ *  Create ActivityTags with Mode = ActivityMode.Public
+ *  
+ * (New), Cancel
+ *  Remove AutoSave
+ * 
+ * (Edit)
+ *  Before editing, check for existence of AutoSaveDraft/Public
+ *  Activity and if found, set Draft/Public Activity.
+ *  
+ * (Edit) ActivityMode.Draft, Save As Draft
+ *  Set ActivityValues
+ *  Removed deleted Tags
+ *  Add new Tags
+ *  Remove Activity with Mode = AutoSaveDraft
+ *  
+ * (Edit) ActivityMode.Draft, Cancel
+ *  Remove Activity with Mode = AutoSaveDraft
+ *  
+ * (Edit) ActivityMode.Public, Save As Final
+ *  Set ActivityValues
+ *  Remove deleted Tags
+ *  Add new Tags
+ *  Remove Activity with Mode = AutoSavePublic
+ * 
+ * (Edit) ActivityMode.Draft, Save As Final
+ *      Change Mode to Public
+ *      Set ActivityValues
+ *      Remove deleted Tags
+ *      Add new Tags
+ *  Remove Activity with Mode = AutoSaveDraft
+ * 
+ * (Edit) ActivityMode.Public, Save As Draft
+ *      Change Mode to Draft
+ *      Set ActivityValues
+ *      Remove deleted Tags
+ *      Add new Tags
+ *  Remove Activity with Mode = AutoSavePublic
+ *      
+ * AutoSavePublic (ActivityMode.Public, Auto save)
+ * AutoSaveDraft (ActivityMode.Draft, Auto save)
+ *      Set Activity
+ *      Set ActivityValues
+ *      Set ActivityTags
+ *      
+ */
+
 namespace UCosmic.Domain.Activities
 {
     public class UpdateMyActivity : DraftMyActivity
     {
-        public ActivityMode Mode { get; set; }
+        public string ModeText { get; set; }
     }
 
     public class HandleUpdateMyActivityCommand : IHandleCommands<UpdateMyActivity>
@@ -26,19 +84,14 @@ namespace UCosmic.Domain.Activities
                 .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
                 {
                     t => t.Tags,
-                    t => t.DraftedTags,
                 })
-                .ByUserNameAndNumber(command.Principal.Identity.Name, command.Number);
+                .ByUserNameAndNumber(command.ModeText, command.Principal.Identity.Name, command.Number);
 
-            activity.Mode = command.Mode;
-            activity.Values.Title = command.Title;
-            activity.Values.Content = command.Content;
-            activity.Values.StartsOn = command.StartsOn;
-            activity.Values.EndsOn = command.EndsOn;
-            activity.DraftedValues.Title = command.Title;
-            activity.DraftedValues.Content = command.Content;
-            activity.DraftedValues.StartsOn = command.StartsOn;
-            activity.DraftedValues.EndsOn = command.EndsOn;
+            //activity.Mode = command.ModeText.AsEnum<ActivityMode>();
+            //activity.Values.Title = command.Title;
+            //activity.Values.Content = command.Content;
+            //activity.Values.StartsOn = command.StartsOn;
+            //activity.Values.EndsOn = command.EndsOn;
 
             if (command.Tags != null)
             {
@@ -47,6 +100,7 @@ namespace UCosmic.Domain.Activities
                     .Select(deletedTag => activity.Tags
                         .Where(
                             tag =>
+                            tag.Mode == command.ModeText.AsEnum<ActivityMode>() &&
                             tag.Text == deletedTag.Text &&
                             tag.DomainType == deletedTag.DomainType &&
                             tag.DomainKey == deletedTag.DomainKey
@@ -64,6 +118,7 @@ namespace UCosmic.Domain.Activities
                     let tag = activity.Tags
                         .Where(
                             t =>
+                            t.Mode == command.ModeText.AsEnum<ActivityMode>() &&
                             t.Text == tagToAddOrKeep.Text &&
                             t.DomainType == tagToAddOrKeep.DomainType &&
                             t.DomainKey == tagToAddOrKeep.DomainKey
@@ -74,29 +129,27 @@ namespace UCosmic.Domain.Activities
                     activity.Tags.Add(new ActivityTag
                     {
                         Activity = activity,
-                        ActivityNumber = activity.Number,
-                        ActivityPersonId = activity.PersonId,
                         Number = activity.Tags.NextNumber(),
                         Text = tagToAddOrKeep.Text,
                         DomainType = tagToAddOrKeep.DomainType,
                         DomainKey = tagToAddOrKeep.DomainKey,
+                        Mode = ActivityMode.Public
                     });
                 }
             }
 
             // sync drafted tags with updated tags
-            activity.DraftedTags.Clear();
+            activity.Tags.Clear();
             foreach (var tag in activity.Tags)
             {
-                activity.DraftedTags.Add(new DraftedTag
+                activity.Tags.Add(new ActivityTag
                 {
                     Activity = tag.Activity,
-                    ActivityNumber = tag.ActivityNumber,
-                    ActivityPersonId = tag.ActivityPersonId,
                     Number = tag.Number,
                     Text = tag.Text,
                     DomainType = tag.DomainType,
-                    DomainKey = tag.DomainKey
+                    DomainKey = tag.DomainKey,
+                    Mode = ActivityMode.Draft
                 });
             }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 
@@ -12,6 +13,12 @@ namespace UCosmic.Web.Mvc.Models
         public int? DomainKey { get; protected internal set; }        
     }
 
+    public class ActivityLocationApiModel
+    {
+        public string PlaceOfficialName { get; protected internal set; }
+        public int PlaceId { get; protected internal set; }
+    }
+    
     public class ActivityApiModel
     {
         public int PersonId { get; protected internal set; }
@@ -22,27 +29,24 @@ namespace UCosmic.Web.Mvc.Models
         public string Content { get; protected internal set; }
         public DateTime? StartsOn { get; protected internal set; }
         public DateTime? EndsOn { get; protected internal set; }
-        public int? CountryId { get; protected internal set; }
+        public ICollection<ActivityLocationApiModel> ActivityLocations { get; protected internal set; }
         public int? TypeId { get; protected internal set; }
-        // Tags?
+        public ICollection<ActivityTagApiModel> ActivityTags { get; protected internal set; }
     }
 
-    public class PageOfActivityApiModel : PageOf<ActivityApiModel> { }
+    //public class PageOfActivityApiModel : PageOf<ActivityApiModel> { }
 
     public static class ActivityApiProfiler
     {
-        public class ViewToModelProfiler : Profile
+        public class EntityToModelProfiler : Profile
         {
             protected override void Configure()
             {
-                CreateMap<Activity, ActivityApiModel>()
-                    .ForMember(d => d.Title,  o => o.MapFrom( s => (s.Mode == ActivityMode.Public) ? s.Values.Title : s.DraftedValues.Title ))
-                    .ForMember(d => d.Content, o => o.MapFrom(s => (s.Mode == ActivityMode.Public) ? s.Values.Content : s.DraftedValues.Content))
-                    .ForMember(d => d.StartsOn, o => o.MapFrom(s => (s.Mode == ActivityMode.Public) ? s.Values.StartsOn : s.DraftedValues.StartsOn))
-                    .ForMember(d => d.EndsOn, o => o.MapFrom(s => (s.Mode == ActivityMode.Public) ? s.Values.EndsOn : s.DraftedValues.EndsOn))
-                    .ForMember(d => d.CountryId, o => o.MapFrom(s => (s.Mode == ActivityMode.Public) ? s.Values.CountryId : s.DraftedValues.CountryId))
-                    .ForMember(d => d.TypeId, o => o.MapFrom(s => (s.Mode == ActivityMode.Public) ? s.Values.TypeId : s.DraftedValues.TypeId))                 
-                    ;
+                //CreateMap<ActivityTag, ActivityTagApiModel>();
+
+                //CreateMap<ActivityLocation, ActivityLocationApiModel>();
+
+                //CreateMap<Activity, ActivityApiModel>();
             }
         }
 
@@ -55,7 +59,7 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<PagedQueryResult<Activity>, PageOfActivityApiModel>();
+                //CreateMap<PagedQueryResult<Activity>, PageOfActivityApiModel>();
             }
         }
 

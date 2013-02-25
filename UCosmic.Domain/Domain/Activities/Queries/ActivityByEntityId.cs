@@ -4,7 +4,7 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityByEntityId : BaseEntityQuery<Activity>, IDefineQuery<Activity>
     {
-        public Guid EntityId { get; set; }
+        public int Id { get; set; }
     }
 
     public class HandleActivityByEntityIdQuery : IHandleQueries<ActivityByEntityId, Activity>
@@ -22,7 +22,7 @@ namespace UCosmic.Domain.Activities
 
             var result = _entities.Query<Activity>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .ByEntityId(query.EntityId)
+                .ByEntityId(query.Id)
             ;
 
             return result;

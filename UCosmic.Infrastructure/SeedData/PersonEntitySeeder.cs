@@ -397,7 +397,7 @@ namespace UCosmic.SeedData
                 /* ------------------------------------------------------------------------ */
                 var person = _entities.Get<Person>()
                     .SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
-                if (person == null) throw new Exception("Person is null");
+                if (person == null) throw new Exception("Could not find Douglas Corarito by name (did name change?).");
 
                 var establishment = _entities.Get<Establishment>()
                     .SingleOrDefault(x => x.OfficialName == "University of South Florida");
@@ -415,7 +415,7 @@ namespace UCosmic.SeedData
                 /* ------------------------------------------------------------------------ */
                 person = _entities.Get<Person>()
                     .SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");
-                if (person == null) throw new Exception("Person is null");
+                if (person == null) throw new Exception("Could not find Margaret Kusenbach by name (did name change?).");
 
                 establishment = _entities.Get<Establishment>()
                     .SingleOrDefault(x => x.OfficialName == "USF College of Arts & Sciences Department of Sociology");
@@ -433,7 +433,7 @@ namespace UCosmic.SeedData
                 /* ------------------------------------------------------------------------ */
                 person = _entities.Get<Person>()
                     .SingleOrDefault(x => x.FirstName == "William" && x.LastName == "Hogarth");
-                if (person == null) throw new Exception("Person is null");
+                if (person == null) throw new Exception("Could not find William Hogarth by name (did name change?).");
 
                 establishment = _entities.Get<Establishment>()
                     .SingleOrDefault(x => x.OfficialName == "USF St. Petersburg Campus");

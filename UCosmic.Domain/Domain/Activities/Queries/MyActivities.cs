@@ -8,6 +8,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public string ModeText { get; set; }
     }
 
     public class HandleMyActivitiesQuery : IHandleQueries<MyActivities, PagedQueryResult<Activity>>
@@ -25,7 +26,7 @@ namespace UCosmic.Domain.Activities
 
             var results = _entities.Query<Activity>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .WithUserName(query.Principal.Identity.Name)
+                .WithUserName(query.ModeText,  query.Principal.Identity.Name)
                 .OrderBy(query.OrderBy)
             ;
 

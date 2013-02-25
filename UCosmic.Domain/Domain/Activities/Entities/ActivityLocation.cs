@@ -1,0 +1,16 @@
+﻿using System;
+using UCosmic.Domain.Places;
+
+namespace UCosmic.Domain.Activities
+{
+    public class ActivityLocation : Entity
+    {
+        public int Id { get; set; }
+
+        public virtual ActivityValues ActivityValues { get; set; }
+        public int ActivityValuesId { get; set; }
+
+        public virtual Place Place { get; set; }
+        public int PlaceId { get; set; }
+    }
+}

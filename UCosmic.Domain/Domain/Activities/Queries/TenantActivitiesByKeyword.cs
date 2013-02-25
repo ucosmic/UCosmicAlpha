@@ -26,8 +26,8 @@ namespace UCosmic.Domain.Activities
             var results = _entities.Query<Activity>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .WithTenant(query.Tenant)
-                .WithMode(ActivityMode.Public)
-                .WithKeyword(query.Keyword)
+                .WithMode(ActivityMode.Public.AsSentenceFragment())
+                .WithKeyword(ActivityMode.Public.AsSentenceFragment(), query.Keyword)
                 .OrderBy(query.OrderBy)
             ;
 

@@ -1,0 +1,76 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+
+namespace UCosmic.Domain.Activities
+{
+    public class CreateActivityValues
+    {
+        public CreateActivityValues()
+        {
+            Locations = new Collection<ActivityLocation>();
+        }
+
+        public Activity Activity { get; set; }
+        public int ActivityId { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public DateTime? StartsOn { get; set; }
+        public DateTime? EndsOn { get; set; }
+        public ICollection<ActivityLocation> Locations { get; set; }
+        public ActivityType Type { get; set; }
+        public int TypeId { get; set; }
+        public ActivityMode Mode { get; set; }
+
+        public ActivityValues CreatedActivityValues { get; protected internal set; }
+    }
+
+    public class HandleCreateActivityValuesCommand : IHandleCommands<CreateActivityValues>
+    {
+        private readonly ICommandEntities _entities;
+
+        public HandleCreateActivityValuesCommand(ICommandEntities entities)
+        {
+            _entities = entities;
+        }
+
+        public void Handle(CreateActivityValues command)
+        {
+            if (command == null) throw new ArgumentNullException("command");
+
+            Activity activity = command.Activity;
+            if (activity == null)
+            {
+                activity = _entities.Get<Activity>().SingleOrDefault(x => x.Id == command.ActivityId);
+                if (activity == null) { throw new Exception("Activity Id " + command.ActivityId.ToString() + " was not found"); }
+            }
+
+            ActivityType type = command.Type;
+            if (type == null)
+            {
+                type = _entities.Get<ActivityType>().SingleOrDefault(x => x.Id == command.TypeId);
+                if (type == null) { throw new Exception("Activity Type Id " + command.TypeId.ToString() + " was not found"); }
+            }
+
+            var activityValues = new ActivityValues
+            {
+                Activity = activity,
+                Title = command.Title,
+                Content = command.Content,
+                StartsOn = command.StartsOn,
+                EndsOn = command.EndsOn,
+                Type = type,
+                Mode = command.Mode
+            };
+
+            foreach (ActivityLocation location in command.Locations) { activityValues.Locations.Add(location); }
+
+            _entities.Create(activityValues);
+
+            command.CreatedActivityValues = activityValues;
+        }
+    }
+}
+

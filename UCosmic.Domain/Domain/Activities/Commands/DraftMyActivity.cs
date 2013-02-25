@@ -40,23 +40,24 @@ namespace UCosmic.Domain.Activities
             var activity = _entities.Get<Activity>()
                 .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
                 {
-                    t => t.DraftedTags,
+                    t => t.Tags,
                 })
-                .ByUserNameAndNumber(command.Principal.Identity.Name, command.Number);
+                .ByUserNameAndNumber(ActivityMode.Draft.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
             if (activity == null) return;
 
-            activity.DraftedValues.Title = command.Title;
-            activity.DraftedValues.Content = command.Content;
-            activity.DraftedValues.StartsOn = command.StartsOn;
-            activity.DraftedValues.EndsOn = command.EndsOn;
+            //activity.Values.Title = command.Title;
+            //activity.Values.Content = command.Content;
+            //activity.Values.StartsOn = command.StartsOn;
+            //activity.Values.EndsOn = command.EndsOn;
 
             if (command.Tags != null)
             {
                 // remove deleted tags
                 foreach (var tagToDelete in command.Tags.Where(t => t.IsDeleted)
-                    .Select(deletedTag => activity.DraftedTags
+                    .Select(deletedTag => activity.Tags
                         .Where(
                             draftedTag =>
+                            draftedTag.Mode == ActivityMode.Draft &&
                             draftedTag.Text == deletedTag.Text &&
                             draftedTag.DomainType == deletedTag.DomainType &&
                             draftedTag.DomainKey == deletedTag.DomainKey
@@ -65,15 +66,16 @@ namespace UCosmic.Domain.Activities
                     .SelectMany(tagsToDelete => tagsToDelete)
                 )
                 {
-                    activity.DraftedTags.Remove(tagToDelete);
+                    activity.Tags.Remove(tagToDelete);
                 }
 
                 // add new tags
                 foreach (var tagToAddOrKeep in
                     from tagToAddOrKeep in command.Tags.Where(t => !t.IsDeleted)
-                    let draftedTag = activity.DraftedTags
+                    let draftedTag = activity.Tags
                         .Where(
                             t =>
+                            t.Mode == ActivityMode.Draft &&
                             t.Text == tagToAddOrKeep.Text &&
                             t.DomainType == tagToAddOrKeep.DomainType &&
                             t.DomainKey == tagToAddOrKeep.DomainKey
@@ -81,15 +83,14 @@ namespace UCosmic.Domain.Activities
                     where !draftedTag.Any()
                     select tagToAddOrKeep)
                 {
-                    activity.DraftedTags.Add(new DraftedTag
+                    activity.Tags.Add(new ActivityTag
                     {
                         Activity = activity,
-                        ActivityNumber = activity.Number,
-                        ActivityPersonId = activity.PersonId,
-                        Number = activity.DraftedTags.NextNumber(),
+                        Number = activity.Tags.NextNumber(),
                         Text = tagToAddOrKeep.Text,
                         DomainType = tagToAddOrKeep.DomainType,
                         DomainKey = tagToAddOrKeep.DomainKey,
+                        Mode = ActivityMode.Draft
                     });
                 }
             }

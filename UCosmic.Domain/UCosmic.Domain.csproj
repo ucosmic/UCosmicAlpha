@@ -113,11 +113,16 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
+    <Compile Include="Domain\Activities\Commands\CopyMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateMyActivity.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
+    <Compile Include="Domain\Activities\Entities\ActivityLocation.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityMode.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTag.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />

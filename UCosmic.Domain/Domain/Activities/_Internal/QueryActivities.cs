@@ -5,37 +5,41 @@ namespace UCosmic.Domain.Activities
 {
     internal static class QueryActivities
     {
-        internal static IQueryable<Activity> WithPersonId(this IQueryable<Activity> queryable, int personId)
+        internal static IQueryable<Activity> WithPersonId(this IQueryable<Activity> queryable, string mode, int personId)
         {
-            queryable = queryable.Where(a => a.PersonId == personId);
+            queryable = queryable.Where(a => (a.PersonId == personId) && (a.ModeText == mode));
             return queryable;
         }
 
-        internal static IQueryable<Activity> WithUserName(this IQueryable<Activity> queryable, string userName)
+        internal static IQueryable<Activity> WithUserName(this IQueryable<Activity> queryable, string mode, string userName)
         {
             return queryable.Where(
                 a =>
+                a.ModeText == mode &&
                 a.Person.User != null &&
                 a.Person.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)
             );
         }
 
-        internal static Activity ByUserNameAndNumber(this IQueryable<Activity> queryable, string userName, int number)
+        internal static Activity ByUserNameAndNumber(this IQueryable<Activity> queryable,
+                                                     string modeText,
+                                                     string userName,
+                                                     int number)
         {
             return queryable.SingleOrDefault(
                 a =>
+                a.ModeText == modeText &&
                 a.Person.User != null &&
                 a.Person.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase) &&
                 a.Number == number
             );
         }
 
-        internal static Activity ByEntityId(this IQueryable<Activity> queryable, Guid entityId)
+        internal static Activity ByEntityId(this IQueryable<Activity> queryable, int id)
         {
             return queryable.SingleOrDefault(
                 a =>
-                a.EntityId == entityId &&
-                a.EntityId != Guid.Empty
+                a.Id == id 
             );
         }
 
@@ -92,26 +96,24 @@ namespace UCosmic.Domain.Activities
                 tenant, tenant != null ? tenant.GetType().Name : "null"));
         }
 
-        internal static IQueryable<Activity> WithMode(this IQueryable<Activity> queryable, ActivityMode mode)
+        internal static IQueryable<Activity> WithMode(this IQueryable<Activity> queryable, string modeText)
         {
-            var modeText = mode.AsSentenceFragment();
-            return queryable.Where(
-                a =>
-                modeText.Equals(a.ModeText, StringComparison.OrdinalIgnoreCase)
-            );
+            return queryable.Where(a => a.ModeText == modeText);
         }
 
-        internal static IQueryable<Activity> WithKeyword(this IQueryable<Activity> queryable, string keyword)
+        internal static IQueryable<Activity> WithKeyword(this IQueryable<Activity> queryable, string modeText, string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword)) return queryable;
 
             return queryable.Where(
                 a =>
-                a.Values.Title.Contains(keyword) ||
+                a.ModeText == modeText &&
+                //a.Values.Title.Contains(keyword) ||
                 a.Person.DisplayName.Contains(keyword) ||
                 a.Tags.Any
                 (
                     t =>
+                    t.ModeText == modeText &&
                     t.Text.Contains(keyword)
                 )
             );
