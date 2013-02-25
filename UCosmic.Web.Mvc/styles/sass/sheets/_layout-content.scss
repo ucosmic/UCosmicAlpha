@@ -68,6 +68,9 @@ body {
                             &:last-child > a > .text, &:last-child.static .content {
                                 @include border-radius(0 0 8px 8px);
                             }
+                            &:last-child.static.square-bottom .content {
+                                @include border-radius(0);
+                            }
                             &:last-child.current > a > .text {
                                 @include border-radius(0 0 8px 0);
                             }

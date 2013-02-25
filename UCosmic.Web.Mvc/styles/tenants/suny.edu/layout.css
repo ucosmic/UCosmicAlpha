@@ -360,6 +360,10 @@ body #main {
           -moz-border-radius: 0 0 8px 8px;
           -webkit-border-radius: 0 0 8px 8px;
           border-radius: 0 0 8px 8px; }
+        body #main > .content.fixed nav.side > ul > li:last-child.static.square-bottom .content {
+          -moz-border-radius: 0;
+          -webkit-border-radius: 0;
+          border-radius: 0; }
         body #main > .content.fixed nav.side > ul > li:last-child.current > a > .text {
           -moz-border-radius: 0 0 8px 0;
           -webkit-border-radius: 0 0 8px 0;
