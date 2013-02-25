@@ -11,12 +11,11 @@ namespace UCosmic.Web.Mvc
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            if (!actionContext.Request.GetIsLocal())
-            {
-                actionContext.Response = actionContext.Request.CreateErrorResponse(
-                    HttpStatusCode.Forbidden, "This API endpoint is not public.");
-            }
-
+            //if (!actionContext.Request.GetIsLocal())
+            //{
+            //    actionContext.Response = actionContext.Request.CreateErrorResponse(
+            //        HttpStatusCode.Forbidden, "This API endpoint is not public.");
+            //}
         }
     }
 }
