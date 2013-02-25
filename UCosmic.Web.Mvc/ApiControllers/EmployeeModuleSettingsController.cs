@@ -11,7 +11,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [LocalOnly]
+    [Authorize]
     [RoutePrefix("api/my/employee-module-settings")]
     public class EmployeeModuleSettingsController : ApiController
     {
