@@ -38,8 +38,12 @@ ko.bindingHandlers.slideDownVisible = {
         if(value && !$(element).is(':visible')) {
             $(element).slideDown('fast');
         } else {
-            if(!value && $(element).is(':visible')) {
-                $(element).slideUp('fast');
+            if(!value) {
+                if($(element).is(':animated')) {
+                    $(element).hide();
+                } else {
+                    $(element).slideUp('fast');
+                }
             }
         }
     }

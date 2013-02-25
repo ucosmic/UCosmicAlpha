@@ -57,8 +57,14 @@ ko.bindingHandlers.slideDownVisible = {
         if (value && !$(element).is(':visible')) {
             $(element).slideDown('fast');
         }
-        else if (!value && $(element).is(':visible')) {
-            $(element).slideUp('fast');
+        else if (!value) {
+            // element may still be animating
+            if ($(element).is(':animated')) {
+                $(element).hide();
+            }
+            else {
+                $(element).slideUp('fast');
+            }
         }
     }
 };
