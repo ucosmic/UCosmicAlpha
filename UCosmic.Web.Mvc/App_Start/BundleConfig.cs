@@ -131,7 +131,7 @@ namespace UCosmic.Web.Mvc
                 "~/content/themes/base/jquery.ui.theme.css"));
 
             // KendoUI uniform theme
-            bundles.Add(new StyleBundle("~/kendoui/uniform/css").Include(
+            bundles.Add(new StyleBundle("~/content/kendo/2012.3.1114/uniform-css").Include(
                 "~/content/kendo/2012.3.1114/kendo.common.css",
                 "~/content/kendo/2012.3.1114/kendo.uniform.css"));
         }
