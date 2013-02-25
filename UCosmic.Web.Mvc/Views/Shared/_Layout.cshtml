@@ -21,7 +21,7 @@
                         <a href="#/me" class="email">@User.Identity.Name</a>
 
                         var tenancy = Request.Tenancy();
-                        var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle)) 
+                        var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
                             ? tenancy.CustomProfileTitle : "My UCosmic Profile";
                         <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
 
