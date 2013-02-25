@@ -8,6 +8,7 @@ namespace UCosmic.Domain.Establishments
     public class EstablishmentViewProjector : IHandleEvents<ApplicationStarted>, IHandleEvents<EstablishmentChanged>
     {
         private static readonly object UpdateLock = new object();
+        private static bool _isUpdating;
         private readonly IQueryEntities _entities;
         private readonly IManageViews _viewManager;
 
@@ -21,6 +22,7 @@ namespace UCosmic.Domain.Establishments
         {
             lock (UpdateLock)
             {
+                _isUpdating = true;
                 var existing = _viewManager.Get<IEnumerable<EstablishmentView>>();
                 if (existing != null && !force)
                     return existing;
@@ -40,13 +42,16 @@ namespace UCosmic.Domain.Establishments
                 foreach (var entity in entities)
                     view.Add(new EstablishmentView(entity));
                 _viewManager.Set<IEnumerable<EstablishmentView>>(view.ToArray());
+                _isUpdating = false;
                 return _viewManager.Get<IEnumerable<EstablishmentView>>();
             }
         }
 
         internal IEnumerable<EstablishmentView> GetView()
         {
-            return UpdateView();
+            return _isUpdating
+                ? _viewManager.Get<IEnumerable<EstablishmentView>>()
+                : UpdateView();
         }
 
         public void Handle(ApplicationStarted @event)
