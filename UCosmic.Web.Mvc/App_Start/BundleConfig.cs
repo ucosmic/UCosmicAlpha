@@ -34,25 +34,25 @@ namespace UCosmic.Web.Mvc
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/scripts/modernizr/modernizr-{version}.js"));
+                "~/scripts/modernizr/modernizr-{version}.js"));
 
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
-                        "~/scripts/jquery/jquery-{version}.js",
-                        "~/scripts/jquery/jquery-ui-{version}.js",
-                        "~/scripts/ko/knockout-{version}.js",
-                        "~/scripts/ko/knockout.mapping-latest.js",
-                        "~/scripts/ko/knockout.validation.js",
-                        "~/scripts/ko/knockout.binding-handlers.js",
-                        "~/scripts/sammy/sammy-{version}.js",
-                        "~/scripts/kendo/2012.3.1114/kendo.web.js",
-                        "~/scripts/oss/jquery.placeholder.js",
-                        "~/scripts/oss/jquery.animate-enhanced.js",
-                        "~/scripts/oss/jquery.autosize.js",
-                        "~/scripts/app/App.js",
-                        "~/scripts/app/SideSwiper.js",
-                        "~/scripts/app/Routes.js",
-                        "~/scripts/viewmodels/Flasher.js"));
+                "~/scripts/jquery/jquery-{version}.js",
+                "~/scripts/jquery/jquery-ui-{version}.js",
+                "~/scripts/ko/knockout-{version}.js",
+                "~/scripts/ko/knockout.mapping-latest.js",
+                "~/scripts/ko/knockout.validation.js",
+                "~/scripts/ko/knockout.binding-handlers.js",
+                "~/scripts/sammy/sammy-{version}.js",
+                "~/scripts/kendo/2012.3.1114/kendo.web.js",
+                "~/scripts/oss/jquery.placeholder.js",
+                "~/scripts/oss/jquery.animate-enhanced.js",
+                "~/scripts/oss/jquery.autosize.js",
+                "~/scripts/app/App.js",
+                "~/scripts/app/SideSwiper.js",
+                "~/scripts/app/Routes.js",
+                "~/scripts/viewmodels/Flasher.js"));
 
             // establishment search page
             bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
@@ -117,23 +117,23 @@ namespace UCosmic.Web.Mvc
 
             // jQuery UI theme
             bundles.Add(new StyleBundle("~/content/themes/base/css").Include(
-                        "~/content/themes/base/jquery.ui.core.css",
-                        "~/content/themes/base/jquery.ui.resizable.css",
-                        "~/content/themes/base/jquery.ui.selectable.css",
-                        "~/content/themes/base/jquery.ui.accordion.css",
-                        "~/content/themes/base/jquery.ui.autocomplete.css",
-                        "~/content/themes/base/jquery.ui.button.css",
-                        "~/content/themes/base/jquery.ui.dialog.css",
-                        "~/content/themes/base/jquery.ui.slider.css",
-                        "~/content/themes/base/jquery.ui.tabs.css",
-                        "~/content/themes/base/jquery.ui.datepicker.css",
-                        "~/content/themes/base/jquery.ui.progressbar.css",
-                        "~/content/themes/base/jquery.ui.theme.css"));
+                "~/content/themes/base/jquery.ui.core.css",
+                "~/content/themes/base/jquery.ui.resizable.css",
+                "~/content/themes/base/jquery.ui.selectable.css",
+                "~/content/themes/base/jquery.ui.accordion.css",
+                "~/content/themes/base/jquery.ui.autocomplete.css",
+                "~/content/themes/base/jquery.ui.button.css",
+                "~/content/themes/base/jquery.ui.dialog.css",
+                "~/content/themes/base/jquery.ui.slider.css",
+                "~/content/themes/base/jquery.ui.tabs.css",
+                "~/content/themes/base/jquery.ui.datepicker.css",
+                "~/content/themes/base/jquery.ui.progressbar.css",
+                "~/content/themes/base/jquery.ui.theme.css"));
 
             // KendoUI uniform theme
             bundles.Add(new StyleBundle("~/kendoui/uniform/css").Include(
-                        "~/content/kendo/2012.3.1114/kendo.common.css",
-                        "~/content/kendo/2012.3.1114/kendo.uniform.css"));
+                "~/content/kendo/2012.3.1114/kendo.common.css",
+                "~/content/kendo/2012.3.1114/kendo.uniform.css"));
         }
     }
 }
