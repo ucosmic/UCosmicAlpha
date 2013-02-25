@@ -2214,6 +2214,17 @@ namespace Links
             public static readonly string Spinner_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Spinner.min.js") ? Url("Spinner.min.js") : Url("Spinner.js");
                           
             public static readonly string Spinner_min_js = Url("Spinner.min.js");
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class users {
+                private const string URLPATH = "~/scripts/viewmodels/users";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string Search_ts = Url("Search.ts");
+                public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
+                              
+                public static readonly string Search_min_js = Url("Search.min.js");
+            }
+        
         }
     
     }
