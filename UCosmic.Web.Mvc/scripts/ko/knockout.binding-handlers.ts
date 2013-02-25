@@ -46,7 +46,7 @@ ko.bindingHandlers.multilineText = {
             ko.utils.setHtml(element, text);
         }
         else {
-            ko.utils.setTextContent(element, text);
+            ko.utils.setHtml(element, '');
         }
     }
 };

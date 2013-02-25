@@ -252,7 +252,7 @@ interface KnockoutUtils {
     triggerEvent(element: any, eventType: any): void;
     unwrapObservable(value: any): any;
     toggleDomNodeCssClass(node: any, className: string, shouldHaveClass: bool): void;
-    setTextContent(element: any, textContent: string): void;
+    // setTextContent(element: any, textContent: string): void; // function is not part of the minified API surface
     setElementName(element: any, name: string): void;
     ensureSelectElementIsRenderedCorrectly(selectElement);
     forceRefresh(node: any): void;

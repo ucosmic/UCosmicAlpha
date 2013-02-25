@@ -28,7 +28,7 @@ ko.bindingHandlers.multilineText = {
             text = text.replace('\r\n', '<br />').replace('\n\r', '<br />').replace('\n', '<br />').replace('\r', '<br />');
             ko.utils.setHtml(element, text);
         } else {
-            ko.utils.setTextContent(element, text);
+            ko.utils.setHtml(element, '');
         }
     }
 };
