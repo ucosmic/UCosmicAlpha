@@ -8,6 +8,9 @@ namespace UCosmic.Web.Mvc
         public static void RegisterBundles(BundleCollection bundles)
         {
             //BundleTable.EnableOptimizations = true;
+#if AZURE
+            BundleTable.EnableOptimizations = false;
+#endif
 
             #region Default Bundles
             //// jQuery
