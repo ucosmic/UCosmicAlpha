@@ -10,6 +10,7 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [DefaultApiHttpRouteConvention]
+    [Authorize(Roles = RoleName.SecurityAdministrators)]
     public class UsersController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -19,7 +20,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        [Authorize(Roles = RoleName.SecurityAdministrators)]
         public IEnumerable<UserApiModel> GetAll()
         {
             var entities = _queryProcessor.Execute(new MyUsers(User)
