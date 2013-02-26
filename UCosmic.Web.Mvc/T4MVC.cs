@@ -116,9 +116,9 @@ public class T4MVC_System_Web_Mvc_ViewResult : System.Web.Mvc.ViewResult, IT4MVC
     public RouteValueDictionary RouteValueDictionary { get; set; }
 }
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-public class T4MVC_System_Web_Mvc_RedirectResult : System.Web.Mvc.RedirectResult, IT4MVCActionResult
+public class T4MVC_System_Web_Mvc_PartialViewResult : System.Web.Mvc.PartialViewResult, IT4MVCActionResult
 {
-    public T4MVC_System_Web_Mvc_RedirectResult(string area, string controller, string action, string protocol = null): base(" ", default(bool))
+    public T4MVC_System_Web_Mvc_PartialViewResult(string area, string controller, string action, string protocol = null): base()
     {
         this.InitMVCT4Result(area, controller, action, protocol);
     }
@@ -129,9 +129,9 @@ public class T4MVC_System_Web_Mvc_RedirectResult : System.Web.Mvc.RedirectResult
     public RouteValueDictionary RouteValueDictionary { get; set; }
 }
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-public class T4MVC_System_Web_Mvc_PartialViewResult : System.Web.Mvc.PartialViewResult, IT4MVCActionResult
+public class T4MVC_System_Web_Mvc_RedirectResult : System.Web.Mvc.RedirectResult, IT4MVCActionResult
 {
-    public T4MVC_System_Web_Mvc_PartialViewResult(string area, string controller, string action, string protocol = null): base()
+    public T4MVC_System_Web_Mvc_RedirectResult(string area, string controller, string action, string protocol = null): base(" ", default(bool))
     {
         this.InitMVCT4Result(area, controller, action, protocol);
     }

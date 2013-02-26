@@ -71,6 +71,8 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string SignIn = "SignIn";
             public readonly string SignOut = "SignOut";
+            public readonly string RealSamlMetadata = "RealSamlMetadata";
+            public readonly string TestSamlMetadata = "TestSamlMetadata";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -78,6 +80,8 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string SignIn = "SignIn";
             public const string SignOut = "SignOut";
+            public const string RealSamlMetadata = "RealSamlMetadata";
+            public const string TestSamlMetadata = "TestSamlMetadata";
         }
 
 
@@ -98,6 +102,22 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string returnUrl = "returnUrl";
         }
+        static readonly ActionParamsClass_RealSamlMetadata s_params_RealSamlMetadata = new ActionParamsClass_RealSamlMetadata();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_RealSamlMetadata RealSamlMetadataParams { get { return s_params_RealSamlMetadata; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_RealSamlMetadata
+        {
+            public readonly string contentType = "contentType";
+        }
+        static readonly ActionParamsClass_TestSamlMetadata s_params_TestSamlMetadata = new ActionParamsClass_TestSamlMetadata();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_TestSamlMetadata TestSamlMetadataParams { get { return s_params_TestSamlMetadata; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_TestSamlMetadata
+        {
+            public readonly string contentType = "contentType";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -108,9 +128,11 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _SamlMetadata = "_SamlMetadata";
                 public readonly string SignIn = "SignIn";
                 public readonly string SignOut = "SignOut";
             }
+            public readonly string _SamlMetadata = "~/Views/Identity/_SamlMetadata.cshtml";
             public readonly string SignIn = "~/Views/Identity/SignIn.cshtml";
             public readonly string SignOut = "~/Views/Identity/SignOut.cshtml";
         }
@@ -139,6 +161,20 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.PartialViewResult RealSamlMetadata(string contentType)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.RealSamlMetadata);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "contentType", contentType);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.PartialViewResult TestSamlMetadata(string contentType)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.TestSamlMetadata);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "contentType", contentType);
             return callInfo;
         }
 
