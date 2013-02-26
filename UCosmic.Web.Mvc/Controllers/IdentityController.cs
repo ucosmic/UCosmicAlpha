@@ -100,12 +100,14 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("sign-on/saml/2/metadata")]
+        [NonHtmlOutputCache(Duration = 60 * 60 * 24 * 7 * 30, VaryByParam = "*")]
         public virtual PartialViewResult RealSamlMetadata(string contentType = null)
         {
             return Get(contentType);
         }
 
         [GET("sign-on/saml/2/metadata/develop")]
+        [NonHtmlOutputCache(Duration = 60 * 60 * 24 * 7 * 30, VaryByParam = "*")]
         public virtual PartialViewResult TestSamlMetadata(string contentType = null)
         {
             return Get(contentType, false);

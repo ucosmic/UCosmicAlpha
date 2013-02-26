@@ -298,6 +298,7 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\LocalOnlyAttribute.cs" />
+    <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
     <Compile Include="Models\EstablishmentApiFlatModel.cs" />
     <Compile Include="Models\ActivityApiModel.cs" />
