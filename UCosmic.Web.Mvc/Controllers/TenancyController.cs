@@ -10,6 +10,10 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("as/{id?}")]
         public virtual RedirectResult Tenant(string id, string returnUrl)
         {
+            // check for www. prefix
+            if (id != null && id.StartsWith("www."))
+                id = id.Substring(4);
+
             // only change the style domain of the tenancy cookie
             var tenancy = Request.Tenancy();
             if (tenancy == null) tenancy = new Tenancy { StyleDomain = id };
