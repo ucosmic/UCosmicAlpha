@@ -22,10 +22,10 @@ using System.Web.Routing;
 using T4MVC;
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class IdentityController
+    public partial class SamlMetadataController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected IdentityController(Dummy d) { }
+        protected SamlMetadataController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -41,27 +41,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult SignIn()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
-        }
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult SignOut()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
-        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public IdentityController Actions { get { return MVC.Identity; } }
+        public SamlMetadataController Actions { get { return MVC.SamlMetadata; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "Identity";
+        public readonly string Name = "SamlMetadata";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "Identity";
+        public const string NameConst = "SamlMetadata";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -69,34 +57,33 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string SignIn = "SignIn";
-            public readonly string SignOut = "SignOut";
+            public readonly string RealSamlMetadata = "RealSamlMetadata";
+            public readonly string TestSamlMetadata = "TestSamlMetadata";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string SignIn = "SignIn";
-            public const string SignOut = "SignOut";
+            public const string RealSamlMetadata = "RealSamlMetadata";
+            public const string TestSamlMetadata = "TestSamlMetadata";
         }
 
 
-        static readonly ActionParamsClass_SignIn s_params_SignIn = new ActionParamsClass_SignIn();
+        static readonly ActionParamsClass_RealSamlMetadata s_params_RealSamlMetadata = new ActionParamsClass_RealSamlMetadata();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_SignIn SignInParams { get { return s_params_SignIn; } }
+        public ActionParamsClass_RealSamlMetadata RealSamlMetadataParams { get { return s_params_RealSamlMetadata; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_SignIn
+        public class ActionParamsClass_RealSamlMetadata
         {
-            public readonly string returnUrl = "returnUrl";
-            public readonly string model = "model";
+            public readonly string contentType = "contentType";
         }
-        static readonly ActionParamsClass_SignOut s_params_SignOut = new ActionParamsClass_SignOut();
+        static readonly ActionParamsClass_TestSamlMetadata s_params_TestSamlMetadata = new ActionParamsClass_TestSamlMetadata();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_SignOut SignOutParams { get { return s_params_SignOut; } }
+        public ActionParamsClass_TestSamlMetadata TestSamlMetadataParams { get { return s_params_TestSamlMetadata; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_SignOut
+        public class ActionParamsClass_TestSamlMetadata
         {
-            public readonly string returnUrl = "returnUrl";
+            public readonly string contentType = "contentType";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -108,37 +95,28 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
-                public readonly string SignIn = "SignIn";
-                public readonly string SignOut = "SignOut";
+                public readonly string _EntityDescriptorXml = "_EntityDescriptorXml";
             }
-            public readonly string SignIn = "~/Views/Identity/SignIn.cshtml";
-            public readonly string SignOut = "~/Views/Identity/SignOut.cshtml";
+            public readonly string _EntityDescriptorXml = "~/Views/SamlMetadata/_EntityDescriptorXml.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_IdentityController : UCosmic.Web.Mvc.Controllers.IdentityController
+    public class T4MVC_SamlMetadataController : UCosmic.Web.Mvc.Controllers.SamlMetadataController
     {
-        public T4MVC_IdentityController() : base(Dummy.Instance) { }
+        public T4MVC_SamlMetadataController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult SignIn(string returnUrl)
+        public override System.Web.Mvc.PartialViewResult RealSamlMetadata(string contentType)
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.RealSamlMetadata);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "contentType", contentType);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult SignIn(UCosmic.Web.Mvc.Models.SignInForm model)
+        public override System.Web.Mvc.PartialViewResult TestSamlMetadata(string contentType)
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult SignOut(string returnUrl)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.TestSamlMetadata);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "contentType", contentType);
             return callInfo;
         }
 

@@ -295,6 +295,7 @@
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
     <Compile Include="ApiControllers\UsersController.cs" />
+    <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\LocalOnlyAttribute.cs" />
@@ -472,6 +473,9 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SamlMetadataController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="SharedController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -1807,7 +1811,7 @@
     <Content Include="Views\MyProfile\_Activities.cshtml" />
     <Content Include="Views\Home\_Bib.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Identity\_SamlMetadata.cshtml" />
+    <Content Include="Views\SamlMetadata\_EntityDescriptorXml.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
