@@ -1,4 +1,7 @@
-﻿using System.Web.Optimization;
+﻿#if DEBUG
+using System.Linq;
+#endif
+using System.Web.Optimization;
 
 namespace UCosmic.Web.Mvc
 {
@@ -105,6 +108,11 @@ namespace UCosmic.Web.Mvc
                 "lehigh.edu",
                 "usf.edu",
             };
+#if DEBUG
+            var testTenants = tenants.ToList();
+            testTenants.Add("testshib.org");
+            tenants = testTenants.ToArray();
+#endif
             foreach (var tenant in tenants)
             {
                 bundles.Add(new StyleBundle(string.Format("~/styles/tenants/{0}/main", tenant)).Include(

@@ -1678,6 +1678,19 @@
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
     </Content>
+    <None Include="styles\tenants\testshib.org\banner-logo.png" />
+    <None Include="styles\tenants\testshib.org\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
+    </None>
+    <None Include="styles\tenants\testshib.org\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </None>
+    <None Include="styles\tenants\testshib.org\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </None>
+    <None Include="styles\tenants\testshib.org\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </None>
     <Content Include="styles\tenants\lehigh.edu\banner-logo.png" />
     <Content Include="styles\tenants\lehigh.edu\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -1812,6 +1825,12 @@
     <Content Include="Views\Home\_Bib.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\SamlMetadata\_EntityDescriptorXml.cshtml" />
+    <None Include="styles\tenants\testshib.org\_brand.scss" />
+    <None Include="styles\tenants\testshib.org\_values.scss" />
+    <None Include="styles\tenants\testshib.org\designs.scss" />
+    <None Include="styles\tenants\testshib.org\forms.scss" />
+    <None Include="styles\tenants\testshib.org\ie8.scss" />
+    <None Include="styles\tenants\testshib.org\layout.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
