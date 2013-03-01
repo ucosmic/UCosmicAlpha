@@ -1593,7 +1593,7 @@
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentNameViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentUrlViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentItemViewModel.js" />
-    <Content Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
+    <None Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
     <None Include="startup\disableTimeout.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1617,9 +1617,9 @@
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentSearchViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
     <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
-    <Content Include="scripts\app\_deprecated\_app.js" />
-    <Content Include="scripts\app\_deprecated\_fixed-scroll.js" />
-    <Content Include="scripts\app\_deprecated\_side-swiper.js" />
+    <None Include="scripts\app\_deprecated\_app.js" />
+    <None Include="scripts\app\_deprecated\_fixed-scroll.js" />
+    <None Include="scripts\app\_deprecated\_side-swiper.js" />
     <Content Include="scripts\jquery\jquery-ui-1.9.2.js" />
     <Content Include="scripts\jquery\jquery-ui-1.9.2.min.js" />
     <Content Include="scripts\oss\jquery.unobtrusive-ajax.js" />
@@ -1639,25 +1639,25 @@
     <Content Include="scripts\oss\jquery.autosize.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
-    <Content Include="scripts\app\_deprecated\_routes.js" />
+    <None Include="scripts\app\_deprecated\_routes.js" />
     <None Include="scripts\sammy\sammy-0.7.1-vsdoc.js" />
     <Content Include="scripts\sammy\sammy-0.7.1.js" />
     <Content Include="scripts\sammy\sammy-0.7.1.min.js" />
     <None Include="startup\sql\CoreData.sql" />
     <None Include="startup\sql\DevelopmentData.sql" />
     <None Include="startup\sql\LanguagesData.sql" />
-    <Content Include="scripts\_deprecated\areas\common\releases.js" />
-    <Content Include="scripts\_deprecated\areas\identity\person-form.js" />
-    <Content Include="scripts\_deprecated\areas\institutional-agreements\configuration-form.js" />
-    <Content Include="scripts\_deprecated\areas\institutional-agreements\public-search.js" />
-    <Content Include="scripts\_deprecated\areas\roles\roles-form.js" />
-    <Content Include="scripts\_deprecated\jquery.simplemodal-1.4.1.js" />
-    <Content Include="scripts\_deprecated\jquery.simplemodal.1.4.1.min.js" />
-    <Content Include="scripts\_deprecated\jquery.validate.js" />
-    <Content Include="scripts\_deprecated\jquery.validate.min.js" />
-    <Content Include="scripts\_deprecated\jquery.validate.unobtrusive.js" />
-    <Content Include="scripts\_deprecated\jquery.validate.unobtrusive.min.js" />
-    <Content Include="scripts\_deprecated\ucosmic.js" />
+    <None Include="scripts\_deprecated\areas\common\releases.js" />
+    <None Include="scripts\_deprecated\areas\identity\person-form.js" />
+    <None Include="scripts\_deprecated\areas\institutional-agreements\configuration-form.js" />
+    <None Include="scripts\_deprecated\areas\institutional-agreements\public-search.js" />
+    <None Include="scripts\_deprecated\areas\roles\roles-form.js" />
+    <None Include="scripts\_deprecated\jquery.simplemodal-1.4.1.js" />
+    <None Include="scripts\_deprecated\jquery.simplemodal.1.4.1.min.js" />
+    <None Include="scripts\_deprecated\jquery.validate.js" />
+    <None Include="scripts\_deprecated\jquery.validate.min.js" />
+    <None Include="scripts\_deprecated\jquery.validate.unobtrusive.js" />
+    <None Include="scripts\_deprecated\jquery.validate.unobtrusive.min.js" />
+    <None Include="scripts\_deprecated\ucosmic.js" />
     <Content Include="images\icons\closer\closer-16-red-disc.png" />
     <Content Include="images\icons\closer\closer-20-red-disc.png" />
     <Content Include="images\icons\closer\closer-24-dark.png" />
@@ -1774,16 +1774,16 @@
     <Content Include="styles\tenants\uc.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <Content Include="styles\_deprecated\default\button-gradient-active.gif" />
-    <Content Include="styles\_deprecated\default\button-gradient-hover.gif" />
-    <Content Include="styles\_deprecated\default\button-gradient.gif" />
-    <Content Include="styles\_deprecated\default\drop-arrow-button-sized.png" />
-    <Content Include="styles\_deprecated\default\drop-arrow.png" />
-    <Content Include="styles\_deprecated\default\head-logo.png" />
-    <Content Include="styles\_deprecated\default\head-row-shadow.png" />
-    <Content Include="styles\_deprecated\screen-ie8.css" />
-    <Content Include="styles\_deprecated\screen.css" />
-    <Content Include="styles\_resharper-unused.css" />
+    <None Include="styles\_deprecated\default\button-gradient-active.gif" />
+    <None Include="styles\_deprecated\default\button-gradient-hover.gif" />
+    <None Include="styles\_deprecated\default\button-gradient.gif" />
+    <None Include="styles\_deprecated\default\drop-arrow-button-sized.png" />
+    <None Include="styles\_deprecated\default\drop-arrow.png" />
+    <None Include="styles\_deprecated\default\head-logo.png" />
+    <None Include="styles\_deprecated\default\head-row-shadow.png" />
+    <None Include="styles\_deprecated\screen-ie8.css" />
+    <None Include="styles\_deprecated\screen.css" />
+    <None Include="styles\_resharper-unused.css" />
     <Content Include="T4MVC.tt.settings.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1799,24 +1799,24 @@
     <Content Include="Views\Establishments\Form.cshtml" />
     <Content Include="Views\Establishments\_FormNamesSection.cshtml" />
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
-    <Content Include="styles\sass\sheets\maps.scss" />
+    <None Include="styles\sass\sheets\maps.scss" />
     <Content Include="Views\Shared\_GoogleMapsToolsOverlay.cshtml" />
     <Content Include="Views\Shared\_DeprecatedLayout.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
-    <Content Include="styles\sass\sheets\_designs.scss">
+    <None Include="styles\sass\sheets\_designs.scss">
       <Compile>False</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\_default\designs.scss" />
-    <Content Include="styles\tenants\lehigh.edu\designs.scss" />
-    <Content Include="styles\tenants\suny.edu\designs.scss" />
-    <Content Include="styles\tenants\uc.edu\designs.scss" />
-    <Content Include="styles\tenants\umn.edu\designs.scss" />
-    <Content Include="styles\tenants\usf.edu\designs.scss" />
+    </None>
+    <None Include="styles\tenants\_default\designs.scss" />
+    <None Include="styles\tenants\lehigh.edu\designs.scss" />
+    <None Include="styles\tenants\suny.edu\designs.scss" />
+    <None Include="styles\tenants\uc.edu\designs.scss" />
+    <None Include="styles\tenants\umn.edu\designs.scss" />
+    <None Include="styles\tenants\usf.edu\designs.scss" />
     <Content Include="Views\MyProfile\Index.cshtml" />
     <Content Include="Views\MyProfile\_EmailAddresses.cshtml" />
     <Content Include="Views\MyProfile\_PersonalInfo.cshtml" />
@@ -1852,13 +1852,13 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="styles\tenants\_default\forms.scss">
+    <None Include="styles\tenants\_default\forms.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\sass\_bootstrap.scss" />
+    </None>
+    <None Include="styles\sass\_bootstrap.scss" />
     <Content Include="Views\Home\Travel.cshtml" />
     <Content Include="Views\Home\Representatives.cshtml" />
     <Content Include="Views\Home\Students.cshtml" />
@@ -1867,104 +1867,104 @@
     <Content Include="Views\Home\Alumni.cshtml" />
     <Content Include="Views\Home\GlobalPress.cshtml" />
     <Content Include="Views\Home\CorporateEngagement.cshtml" />
-    <Content Include="styles\sass\sheets\_layout.scss" />
-    <Content Include="styles\sass\sheets\_ie8.scss" />
-    <Content Include="styles\tenants\suny.edu\ie8.scss">
+    <None Include="styles\sass\sheets\_layout.scss" />
+    <None Include="styles\sass\sheets\_ie8.scss" />
+    <None Include="styles\tenants\suny.edu\ie8.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\suny.edu\layout.scss">
+    </None>
+    <None Include="styles\tenants\suny.edu\layout.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\suny.edu\_values.scss" />
-    <Content Include="styles\tenants\uc.edu\ie8.scss">
+    </None>
+    <None Include="styles\tenants\suny.edu\_values.scss" />
+    <None Include="styles\tenants\uc.edu\ie8.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\uc.edu\layout.scss">
+    </None>
+    <None Include="styles\tenants\uc.edu\layout.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\uc.edu\_values.scss" />
-    <Content Include="styles\tenants\usf.edu\_values.scss" />
-    <Content Include="styles\tenants\usf.edu\ie8.scss">
+    </None>
+    <None Include="styles\tenants\uc.edu\_values.scss" />
+    <None Include="styles\tenants\usf.edu\_values.scss" />
+    <None Include="styles\tenants\usf.edu\ie8.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\usf.edu\layout.scss">
+    </None>
+    <None Include="styles\tenants\usf.edu\layout.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\suny.edu\_brand.scss" />
-    <Content Include="styles\tenants\uc.edu\_brand.scss" />
-    <Content Include="styles\tenants\usf.edu\_brand.scss" />
-    <Content Include="styles\tenants\_default\layout.scss">
+    </None>
+    <None Include="styles\tenants\suny.edu\_brand.scss" />
+    <None Include="styles\tenants\uc.edu\_brand.scss" />
+    <None Include="styles\tenants\usf.edu\_brand.scss" />
+    <None Include="styles\tenants\_default\layout.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\_default\_values.scss" />
-    <Content Include="styles\tenants\umn.edu\_brand.scss" />
-    <Content Include="styles\tenants\umn.edu\_values.scss" />
-    <Content Include="styles\tenants\umn.edu\ie8.scss">
+    </None>
+    <None Include="styles\tenants\_default\_values.scss" />
+    <None Include="styles\tenants\umn.edu\_brand.scss" />
+    <None Include="styles\tenants\umn.edu\_values.scss" />
+    <None Include="styles\tenants\umn.edu\ie8.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\umn.edu\layout.scss">
+    </None>
+    <None Include="styles\tenants\umn.edu\layout.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\lehigh.edu\_brand.scss" />
-    <Content Include="styles\tenants\lehigh.edu\_values.scss" />
-    <Content Include="styles\tenants\lehigh.edu\ie8.scss">
+    </None>
+    <None Include="styles\tenants\lehigh.edu\_brand.scss" />
+    <None Include="styles\tenants\lehigh.edu\_values.scss" />
+    <None Include="styles\tenants\lehigh.edu\ie8.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\lehigh.edu\layout.scss">
+    </None>
+    <None Include="styles\tenants\lehigh.edu\layout.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\tenants\_default\ie8.scss">
+    </None>
+    <None Include="styles\tenants\_default\ie8.scss">
       <Compile>True</Compile>
       <Minify>True</Minify>
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="styles\sass\sheets\_forms.scss" />
-    <Content Include="styles\sass\_future.scss" />
-    <Content Include="styles\sass\sheets\_layout-footer.scss" />
-    <Content Include="styles\sass\sheets\_layout-banner.scss" />
-    <Content Include="styles\sass\sheets\_layout-content.scss" />
+    </None>
+    <None Include="styles\sass\sheets\_forms.scss" />
+    <None Include="styles\sass\_future.scss" />
+    <None Include="styles\sass\sheets\_layout-footer.scss" />
+    <None Include="styles\sass\sheets\_layout-banner.scss" />
+    <None Include="styles\sass\sheets\_layout-content.scss" />
     <Content Include="Views\Shared\_LayoutCss.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Shared\_SampleVerticalContent.cshtml" />
-    <Content Include="styles\tenants\suny.edu\forms.scss" />
-    <Content Include="styles\tenants\lehigh.edu\forms.scss" />
-    <Content Include="styles\tenants\uc.edu\forms.scss" />
-    <Content Include="styles\tenants\umn.edu\forms.scss" />
-    <Content Include="styles\tenants\usf.edu\forms.scss" />
+    <None Include="styles\tenants\suny.edu\forms.scss" />
+    <None Include="styles\tenants\lehigh.edu\forms.scss" />
+    <None Include="styles\tenants\uc.edu\forms.scss" />
+    <None Include="styles\tenants\umn.edu\forms.scss" />
+    <None Include="styles\tenants\usf.edu\forms.scss" />
     <Content Include="Views\Shared\_SampleSidebarNav.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_SampleStylingBib.cshtml" />
