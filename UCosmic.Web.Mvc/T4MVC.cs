@@ -2086,6 +2086,7 @@ namespace Links
                 public static readonly string Activities_ts = Url("Activities.ts");
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
+                public static readonly string Activities_min_js_map = Url("Activities.min.js.map");
                 public static readonly string Activities_min_js = Url("Activities.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
@@ -2690,6 +2691,28 @@ namespace Links
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class suny_edu {
                 private const string URLPATH = "~/styles/tenants/suny.edu";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _brand_scss = Url("_brand.scss");
+                public static readonly string _values_scss = Url("_values.scss");
+                public static readonly string banner_logo_png = Url("banner-logo.png");
+                public static readonly string designs_scss = Url("designs.scss");
+                public static readonly string designs_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/designs.min.css") ? Url("designs.min.css") : Url("designs.css");
+                     
+                public static readonly string forms_scss = Url("forms.scss");
+                public static readonly string forms_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/forms.min.css") ? Url("forms.min.css") : Url("forms.css");
+                     
+                public static readonly string ie8_scss = Url("ie8.scss");
+                public static readonly string ie8_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ie8.min.css") ? Url("ie8.min.css") : Url("ie8.css");
+                     
+                public static readonly string layout_scss = Url("layout.scss");
+                public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
+                     
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class testshib_org {
+                private const string URLPATH = "~/styles/tenants/testshib.org";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string _brand_scss = Url("_brand.scss");

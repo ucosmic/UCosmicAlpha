@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
 {
@@ -18,7 +20,7 @@ namespace UCosmic.Web.Mvc.Models
         public bool IsEarth { get; set; }
         public string OfficialName { get; set; }
     }
-   
+
     public class ActivityLocationApiModel
     {
         public int RevisionId { get; set; }
@@ -72,7 +74,7 @@ namespace UCosmic.Web.Mvc.Models
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
     }
-    
+
     public class PageOfActivityApiModel : PageOf<ActivityApiModel> { }
 
     public static class ActivityApiProfiler
@@ -82,7 +84,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<ActivityType, ActivityTypeNameApiModel>();
-                
+
                 CreateMap<ActivityTag, ActivityTagApiModel>();
 
                 CreateMap<ActivityValues, ActivityValuesApiModel>();
