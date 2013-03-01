@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-using NGeo.Yahoo.PlaceFinder;
+//using NGeo.Yahoo.PlaceFinder;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 using PlaceByWoeId = UCosmic.Domain.Places.PlaceByWoeId;
@@ -17,14 +17,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class PlacesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IConsumePlaceFinder _placeFinder;
+        //private readonly IConsumePlaceFinder _placeFinder;
 
         public PlacesController(IProcessQueries queryProcessor
-            , IConsumePlaceFinder placeFinder
+            //, IConsumePlaceFinder placeFinder
         )
         {
             _queryProcessor = queryProcessor;
-            _placeFinder = placeFinder;
+            //_placeFinder = placeFinder;
         }
 
         //[CacheHttpGet(Duration = 3600)]
@@ -61,11 +61,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             //System.Threading.Thread.Sleep(5000); // test api latency
 
-            var foundPlace = _placeFinder.Find(new PlaceByCoordinates(latitude, longitude))
-                .FirstOrDefault(x => x.WoeId.HasValue);
-            if (foundPlace != null && foundPlace.WoeId.HasValue)
+            var foundWoeId = _queryProcessor.Execute(new WoeIdByCoordinates(latitude, longitude));
+            if (foundWoeId > 0 && foundWoeId != GeoPlanetPlace.EarthWoeId)
             {
-                var place = _queryProcessor.Execute(new PlaceByWoeId(foundPlace.WoeId.Value)
+                var place = _queryProcessor.Execute(new PlaceByWoeId(foundWoeId)
                 {
                     EagerLoad = new Expression<Func<Place, object>>[]
                     {

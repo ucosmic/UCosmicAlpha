@@ -1,6 +1,5 @@
 ﻿using NGeo.GeoNames;
 using NGeo.Yahoo.GeoPlanet;
-using NGeo.Yahoo.PlaceFinder;
 using SimpleInjector;
 
 namespace UCosmic.WebApi
@@ -13,7 +12,6 @@ namespace UCosmic.WebApi
             container.RegisterPerWebRequest<IContainGeoNames>(() => new GeoNamesContainer(geoNamesUserName));
             container.RegisterPerWebRequest<IConsumeGeoPlanet, GeoPlanetClient>();
             container.RegisterPerWebRequest<IContainGeoPlanet>(() => new GeoPlanetContainer(geoPlanetAppId));
-            container.RegisterPerWebRequest<IConsumePlaceFinder, PlaceFinderClient>();
         }
     }
 }

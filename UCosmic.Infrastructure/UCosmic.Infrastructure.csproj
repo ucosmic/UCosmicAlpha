@@ -70,8 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NGeo">
-      <HintPath>..\packages\NGeo.1.7.5.0\lib\net40\NGeo.dll</HintPath>
+    <Reference Include="NGeo, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NGeo.1.8.0.0\lib\net40\NGeo.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
