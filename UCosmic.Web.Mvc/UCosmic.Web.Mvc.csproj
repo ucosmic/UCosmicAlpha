@@ -1595,8 +1595,14 @@
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentItemViewModel.js" />
     <None Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
     <None Include="startup\disableTimeout.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="startup\gacutil.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="startup\setupGac.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="startup\sql\ElmahSqlSetup.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -1675,6 +1681,9 @@
     <Content Include="images\icons\plus\plus-24-green.png" />
     <Content Include="images\icons\spinner\spinner-20-blue.gif" />
     <Content Include="images\icons\logo\user-voice-24-filled.png" />
+    <Content Include="startup\gacutil.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="styles\reset.css" />
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
