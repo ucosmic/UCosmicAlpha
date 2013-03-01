@@ -10,6 +10,14 @@ namespace UCosmic.Domain.Employees
 {
     public class CreateEmployeeModuleSettings
     {
+        public CreateEmployeeModuleSettings()
+        {
+            NotifyAdminOnUpdate = false;
+            OfferCountry = false;
+            OfferActivityTypes = false;
+            OfferFundingQuestions = false;
+        }
+
         public ICollection<EmployeeFacultyRank> EmployeeFacultyRanks { get; set; } // TODO: eliminate entity property from command
         public bool NotifyAdminOnUpdate { get; set; }
         public int NotifyAdminPersonId { get; set; }
@@ -18,6 +26,7 @@ namespace UCosmic.Domain.Employees
         public ICollection<ActivityType> ActivityTypes { get; set; }
         public bool OfferCountry { get; set; }
         public bool OfferActivityTypes { get; set; }
+        public bool OfferFundingQuestions { get; set; }
 
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; internal set; }
     }
@@ -56,8 +65,9 @@ namespace UCosmic.Domain.Employees
                 PersonalInfoAnchorText = command.PersonalInfoAnchorText,
                 Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.EstablishmentId),
                 ActivityTypes = command.ActivityTypes,
-                OfferCountry = false,
-                OfferActivityType = false
+                OfferCountry = command.OfferCountry,
+                OfferActivityType = command.OfferActivityTypes,
+                OfferFundingQuestions = command.OfferFundingQuestions
             };
 
             _entities.Create(employeeModuleSettings);

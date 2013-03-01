@@ -95,7 +95,7 @@ namespace UCosmic.Domain.Activities
                 }
             }
 
-            activity.UpdatedOn = DateTime.UtcNow;
+            //activity.UpdatedOn = DateTime.UtcNow;
 
             _entities.Update(activity);
         }

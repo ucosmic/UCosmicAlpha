@@ -16,6 +16,7 @@ var ViewModels;
                 this.isDisplayNameDerived = ko.observable();
                 this.displayName = ko.observable();
                 this._userDisplayName = '';
+                this.personId = 0;
                 this.salutation = ko.observable();
                 this.firstName = ko.observable();
                 this.middleName = ko.observable();
@@ -56,7 +57,9 @@ var ViewModels;
                 $.when(facultyRanksPact, viewModelPact).then(function (facultyRanks, viewModel) {
                     _this.facultyRanks(facultyRanks);
                     ko.mapping.fromJS(viewModel, {
+                        ignore: "personId"
                     }, _this);
+                    _this.personId = viewModel.personId;
                     _this._originalValues = viewModel;
                     if(!_this._isInitialized) {
                         $(_this).trigger('ready');

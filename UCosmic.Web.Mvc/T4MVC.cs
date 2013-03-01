@@ -2079,6 +2079,18 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class activities {
+                private const string URLPATH = "~/scripts/viewmodels/activities";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string Activities_ts = Url("Activities.ts");
+                public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
+                              
+                public static readonly string Activities_min_js = Url("Activities.min.js");
+                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class agreements {
                 private const string URLPATH = "~/scripts/viewmodels/agreements";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2150,6 +2162,7 @@ namespace Links
                 public static readonly string Affiliations_ts = Url("Affiliations.ts");
                 public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
                               
+                public static readonly string Affiliations_min_js = Url("Affiliations.min.js");
                 public static readonly string EmailAddresses_ts = Url("EmailAddresses.ts");
                 public static readonly string EmailAddresses_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EmailAddresses.min.js") ? Url("EmailAddresses.min.js") : Url("EmailAddresses.js");
                               
@@ -2945,19 +2958,6 @@ namespace Links
                 public static readonly string unisex_a_256_png = Url("unisex-a-256.png");
             }
         
-        }
-    
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class placeholders {
-            private const string URLPATH = "~/images/placeholders";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string aqua_96x96_png = Url("aqua-96x96.png");
-            public static readonly string blue_96x96_png = Url("blue-96x96.png");
-            public static readonly string green_96x96_png = Url("green-96x96.png");
-            public static readonly string purple_96x96_png = Url("purple-96x96.png");
-            public static readonly string red_96x96_png = Url("red-96x96.png");
-            public static readonly string yellow_96x96_png = Url("yellow-96x96.png");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

@@ -8,21 +8,16 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateActivityValues
     {
-        public CreateActivityValues()
-        {
-            Locations = new Collection<ActivityLocation>();
-        }
-
-        public Activity Activity { get; set; }
         public int ActivityId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
-        public ICollection<ActivityLocation> Locations { get; set; }
         public ActivityType Type { get; set; }
         public int TypeId { get; set; }
         public ActivityMode Mode { get; set; }
+        public bool? WasExternallyFunded { get; set; }
+        public bool? WasInternallyFunded { get; set; }
 
         public ActivityValues CreatedActivityValues { get; protected internal set; }
     }
@@ -40,12 +35,8 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            Activity activity = command.Activity;
-            if (activity == null)
-            {
-                activity = _entities.Get<Activity>().SingleOrDefault(x => x.Id == command.ActivityId);
-                if (activity == null) { throw new Exception("Activity Id " + command.ActivityId.ToString() + " was not found"); }
-            }
+            Activity activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.ActivityId);
+            if (activity == null) { throw new Exception("Activity Id " + command.ActivityId.ToString() + " was not found"); }
 
             ActivityType type = command.Type;
             if (type == null)
@@ -56,18 +47,21 @@ namespace UCosmic.Domain.Activities
 
             var activityValues = new ActivityValues
             {
-                Activity = activity,
+                ActivityId = activity.RevisionId,
                 Title = command.Title,
                 Content = command.Content,
                 StartsOn = command.StartsOn,
                 EndsOn = command.EndsOn,
                 Type = type,
-                Mode = command.Mode
+                Mode = command.Mode,
+                WasExternallyFunded = command.WasExternallyFunded,
+                WasInternallyFunded = command.WasInternallyFunded
             };
 
-            foreach (ActivityLocation location in command.Locations) { activityValues.Locations.Add(location); }
-
             _entities.Create(activityValues);
+
+            //activity.Values.Add(activityValues);
+            //_entities.Update(activity);
 
             command.CreatedActivityValues = activityValues;
         }

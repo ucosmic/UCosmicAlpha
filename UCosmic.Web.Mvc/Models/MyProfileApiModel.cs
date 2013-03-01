@@ -7,6 +7,7 @@ namespace UCosmic.Web.Mvc.Models
     public class MyProfileApiModel
     {
         /* From Person */
+        public int PersonId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
         public string DisplayName { get; set; }
@@ -31,6 +32,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<Person, MyProfileApiModel>()
+                    .ForMember(d => d.PersonId, o => o.MapFrom(s => s.RevisionId) )
                     .ForMember(d => d.HasPhoto, o => o.MapFrom(s => s.Photo != null))
                     .ForMember(d => d.FacultyRankId, o => o.MapFrom(s =>
                         (s.Employee != null && s.Employee.FacultyRank != null) ? s.Employee.FacultyRank.Id : (int?)null))

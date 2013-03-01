@@ -95,11 +95,11 @@ module App.Routes {
                 return makeUrl(url);
             }
 
-            export function post (): string {
+            export function post(): string {
                 return makeUrl('establishments');
             }
 
-            export function put (establishmentId: number): string {
+            export function put(establishmentId: number): string {
                 return get(establishmentId);
             }
 
@@ -174,7 +174,7 @@ module App.Routes {
                     return makeUrl(url);
                 }
 
-                static put (establishmentId: number): string {
+                static put(establishmentId: number): string {
                     return get(establishmentId);
                 }
             }
@@ -205,7 +205,7 @@ module App.Routes {
                     export function get (maxWidth?: number, maxHeight?: number,
                         imageResizeQuality?: string, refresh?: bool): string;
 
-                    export function get(arg1?: number, arg2?: any, arg3?: any, arg4?: any): string {
+                    export function get (arg1?: number, arg2?: any, arg3?: any, arg4?: any): string {
                         if (arguments.length === 4
                             || (arguments.length >= 2 && typeof arguments[1] === 'number')
                             || (arguments.length >= 3 && typeof arguments[2] === 'string')
@@ -299,6 +299,26 @@ module App.Routes {
                 }
             }
         }
+
+        export module Activities {
+
+            export function get (): string {
+                return makeUrl('activities/page');
+            }
+
+            export class Locations {
+                static get (): string {
+                    return makeUrl('activities/locations');
+                }
+            }
+
+            export class Types {
+                static get (): string {
+                    return makeUrl('activities/types');
+                }
+            }
+
+        }
     }
 
     export module Mvc {
@@ -310,10 +330,10 @@ module App.Routes {
         }
 
         export module Establishments {
-            export function show (establishmentId: number) {
+            export function show(establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);
             }
-            export function created (location: string) {
+            export function created(location: string) {
                 var url = makeUrl('establishments/created');
                 url += '?location=' + location;
                 return url;
@@ -328,5 +348,3 @@ module App.Routes {
         }
     }
 }
-
-

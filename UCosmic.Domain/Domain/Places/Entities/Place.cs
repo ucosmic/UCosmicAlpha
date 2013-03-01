@@ -35,6 +35,7 @@ namespace UCosmic.Domain.Places
         public bool IsEarth { get; protected internal set; }
         public bool IsContinent { get; protected internal set; }
         public bool IsCountry { get; protected internal set; }
+        //public bool IsBodyOfWater { get; protected internal set; }
         public bool IsAdmin1 { get; protected internal set; }
         public bool IsAdmin2 { get; protected internal set; }
         public bool IsAdmin3 { get; protected internal set; }

@@ -8,5 +8,6 @@ namespace UCosmic.Domain.Places
         Country = 12,
         Continent = 29,
         TimeZone = 31,
+        BodyOfWater = 0 // TODO: What is this value?
     }
 }

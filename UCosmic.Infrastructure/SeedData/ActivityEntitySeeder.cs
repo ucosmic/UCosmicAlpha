@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Principal;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Identity;
@@ -57,14 +53,21 @@ namespace UCosmic.SeedData
 
                 CreateMyNewActivity createMyNewActivityCommand = null;
 
-                { // ACTIVITY 1
+
+                // ACTIVITY 1
+                Guid entityId = new Guid("95F98FB4-EFB2-4F8E-AE79-E2B23F04D4FE");
+                bool activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                if (!activityExists)
+                {
                     createMyNewActivityCommand = new CreateMyNewActivity
                     {
+                        EntityId = entityId,
                         User = user,
                         ModeText = ActivityMode.Draft.AsSentenceFragment()
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
+                    _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
@@ -73,7 +76,7 @@ namespace UCosmic.SeedData
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Title =
                             "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
                         Content =
@@ -84,24 +87,25 @@ namespace UCosmic.SeedData
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
+                    _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
-                        ActivityValues = activityValues,
+                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
-                        ActivityValues = activityValues,
+                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "Canada").RevisionId,
                     });
 
                     _createActivityTag.Handle(new CreateActivityTag
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Text = "Vietnam",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Vietnam").RevisionId,
@@ -110,7 +114,7 @@ namespace UCosmic.SeedData
 
                     _createActivityTag.Handle(new CreateActivityTag
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Text = "India",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "India").RevisionId,
@@ -119,37 +123,10 @@ namespace UCosmic.SeedData
 
                     _createActivityTag.Handle(new CreateActivityTag
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Text = "India",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "UNIVERSITY OF SASKATCHEWAN",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "UNIVERSITY OF CALGARY",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "CHINA UNIVERSITY OF GEOSCIENCES",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
                         Mode = activity.Mode
                     });
 
@@ -157,14 +134,20 @@ namespace UCosmic.SeedData
                 } // ACTIVITY 1
 
 
-                { // ACTIVITY 2
+                // ACTIVITY 2
+                entityId = new Guid("894A9E42-F693-4268-826A-C78618D8D6D0");
+                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                if (!activityExists)
+                {
                     createMyNewActivityCommand = new CreateMyNewActivity
                     {
+                        EntityId = entityId,
                         User = user,
                         ModeText = ActivityMode.Draft.AsSentenceFragment()
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
+                    _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
@@ -173,7 +156,7 @@ namespace UCosmic.SeedData
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Title = "Professional Development Program for Teachers of English at Shandong University",
                         Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
                         StartsOn = new DateTime(2003, 6, 1),
@@ -182,35 +165,34 @@ namespace UCosmic.SeedData
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
+                    _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
-                        ActivityValues = activityValues,
+                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "SHANDONG UNIVERSITY",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
-                        Mode = activity.Mode
                     });
 
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 2
 
-                { // ACTIVITY 3
+
+                // ACTIVITY 3
+                entityId = new Guid("6C03F4D0-FBB6-41CB-8E98-D9B129EFF0F8");
+                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                if (!activityExists)
+                {
                     createMyNewActivityCommand = new CreateMyNewActivity
                     {
+                        EntityId = entityId,
                         User = user,
                         ModeText = ActivityMode.Draft.AsSentenceFragment()
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
+                    _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
@@ -219,7 +201,7 @@ namespace UCosmic.SeedData
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Title = "Workshop Preparation: Air pollution and Chinese Historic Site",
                         Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
                         StartsOn = new DateTime(2006, 10, 9),
@@ -229,44 +211,34 @@ namespace UCosmic.SeedData
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
+                    _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
-                        ActivityValues = activityValues,
+                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "XIAN INTERNATIONAL STUDIES UNIVERSITY",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "TSINGHUA UNIVERSITY CHINA",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
-                        Mode = activity.Mode
                     });
 
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 3
 
-                { // ACTIVITY 4
+
+                // ACTIVITY 4
+                entityId = new Guid("8ABCB82E-7ACA-41D6-93CD-637C2006804E");
+                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                if (!activityExists)
+                {
                     createMyNewActivityCommand = new CreateMyNewActivity
                     {
+                        EntityId = entityId,
                         User = user,
                         ModeText = ActivityMode.Draft.AsSentenceFragment()
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
+                    _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
@@ -275,7 +247,7 @@ namespace UCosmic.SeedData
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
                         Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music",
                         TypeId = activityType.Id,
@@ -283,26 +255,34 @@ namespace UCosmic.SeedData
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
+                    _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
-                        ActivityValues = activityValues,
+                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 4
 
-                { // ACTIVITY 5
+
+                // ACTIVITY 5
+                entityId = new Guid("F0754F12-8E4E-4557-B9E0-32A173CB36DA");
+                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                if (!activityExists)
+                {
                     createMyNewActivityCommand = new CreateMyNewActivity
                     {
+                        EntityId = entityId,
                         User = user,
                         ModeText = ActivityMode.Draft.AsSentenceFragment()
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
+                    _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
@@ -311,7 +291,7 @@ namespace UCosmic.SeedData
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
-                        Activity = activity,
+                        ActivityId = activity.RevisionId,
                         Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
                         Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students.",
                         TypeId = activityType.Id,
@@ -319,22 +299,14 @@ namespace UCosmic.SeedData
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
+                    _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
-                        ActivityValues = activityValues,
+                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        Activity = activity,
-                        Text = "ZHEJIANG UNIVERSITY",
-                        DomainType = ActivityTagDomainType.Custom,
-                        IsInstitution = true,
-                        Mode = activity.Mode
                     });
 
                     _unitOfWork.SaveChanges();

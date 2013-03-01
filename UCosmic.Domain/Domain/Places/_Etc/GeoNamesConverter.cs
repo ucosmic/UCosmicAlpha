@@ -126,6 +126,7 @@ namespace UCosmic.Domain.Places
                             && source.Feature.ClassCode == GeoNamesFeatureClassEnum.Area.GetCode()))
                     .ForMember(target => target.IsCountry, opt => opt.ResolveUsing(source =>
                         source.AsCountry != null))
+                    //.ForMember(target => target.IsBodyOfWater, opt => opt.Ignore())
                     .ForMember(target => target.BoundingBox, opt => opt.ResolveUsing(source =>
                         (source.AsCountry != null) ? source.AsCountry.BoundingBox : new BoundingBox(null, null, null, null)))
                     .ForMember(target => target.IsAdmin1, opt => opt.ResolveUsing(source =>

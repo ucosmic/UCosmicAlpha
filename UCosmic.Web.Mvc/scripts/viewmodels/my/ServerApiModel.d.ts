@@ -11,6 +11,7 @@ module ViewModels.My {
         hasPhoto: bool;
         isActive: bool;
         isDisplayNameDerived: bool;
+        personId: number;
         displayName: string;
         firstName: string;
         middleName: string;

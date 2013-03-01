@@ -9,16 +9,9 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateMyNewActivity
     {
-        public CreateMyNewActivity()
-        {
-            Values = new Collection<ActivityValues>();
-            Tags = new Collection<ActivityTag>();
-        }
-
+        public Guid? EntityId { get; set; }
         public User User { get; set; }
         public string ModeText { get; set; }
-        public ICollection<ActivityValues> Values { get; set; }
-        public ICollection<ActivityTag> Tags { get; set; }
 
         public Activity CreatedActivity { get; internal set; }
     }
@@ -40,23 +33,20 @@ namespace UCosmic.Domain.Activities
                 .Single(p => p.RevisionId == command.User.Person.RevisionId);
 
             var otherActivities = _entities.Get<Activity>()
-                .WithPersonId(command.ModeText, person.RevisionId);
+                                           .WithPersonId(person.RevisionId)
+                                           .WithMode(command.ModeText);
 
             var activity = new Activity
             {
-                Person = person,
                 PersonId = person.RevisionId,
                 Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
-                Mode = command.ModeText.AsEnum<ActivityMode>(),
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
-                UpdatedByUser = command.User,
-                UpdatedByUserId = command.User.RevisionId
+                Mode = command.ModeText.AsEnum<ActivityMode>()
             };
 
-            foreach (ActivityValues value in command.Values) { activity.Values.Add(value); }
-
-            foreach (ActivityTag tag in command.Tags) { activity.Tags.Add(tag); }
+            if (command.EntityId != null)
+            {
+                activity.EntityId = command.EntityId.Value;
+            }
 
             _entities.Create(activity);
 

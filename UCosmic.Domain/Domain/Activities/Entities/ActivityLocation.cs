@@ -1,12 +1,9 @@
-﻿using System;
-using UCosmic.Domain.Places;
+﻿using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityLocation : Entity
+    public class ActivityLocation : RevisableEntity
     {
-        public int Id { get; set; }
-
         public virtual ActivityValues ActivityValues { get; set; }
         public int ActivityValuesId { get; set; }
 

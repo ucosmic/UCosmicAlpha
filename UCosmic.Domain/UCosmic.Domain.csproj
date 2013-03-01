@@ -120,7 +120,7 @@
     <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
-    <Compile Include="Domain\Activities\Commands\UpdateMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityLocation.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityMode.cs" />
@@ -128,7 +128,7 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
-    <Compile Include="Domain\Activities\Queries\MyActivities.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivitiesByPersonIdMode.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />

@@ -5,17 +5,16 @@ namespace UCosmic.Domain.Activities
 {
     internal static class QueryActivities
     {
-        internal static IQueryable<Activity> WithPersonId(this IQueryable<Activity> queryable, string mode, int personId)
+        internal static IQueryable<Activity> WithPersonId(this IQueryable<Activity> queryable, int personId)
         {
-            queryable = queryable.Where(a => (a.PersonId == personId) && (a.ModeText == mode));
+            queryable = queryable.Where(a => a.PersonId == personId);
             return queryable;
         }
-
-        internal static IQueryable<Activity> WithUserName(this IQueryable<Activity> queryable, string mode, string userName)
+        
+        internal static IQueryable<Activity> WithUserName(this IQueryable<Activity> queryable, string userName)
         {
             return queryable.Where(
                 a =>
-                a.ModeText == mode &&
                 a.Person.User != null &&
                 a.Person.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)
             );
@@ -39,7 +38,7 @@ namespace UCosmic.Domain.Activities
         {
             return queryable.SingleOrDefault(
                 a =>
-                a.Id == id 
+                a.RevisionId == id 
             );
         }
 

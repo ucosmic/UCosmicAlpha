@@ -1,11 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityTag : Entity, IAmNumbered
+    public class ActivityTag : RevisableEntity, IAmNumbered
     {
-        public int Id { get; protected internal set; }
-
         public virtual Activity Activity { get; protected internal set; }
         public int ActivityId { get; protected internal set; }
 
@@ -18,7 +17,6 @@ namespace UCosmic.Domain.Activities
             get { return DomainTypeText.AsEnum<ActivityTagDomainType>(); }
             protected internal set { DomainTypeText = value.AsSentenceFragment(); }
         }
-        public bool IsInstitution { get; protected internal set; }
 
         public int? DomainKey { get; protected internal set; }
 

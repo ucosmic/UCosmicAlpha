@@ -98,6 +98,11 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/Spinner.js",
                 "~/scripts/viewmodels/my/Profile.js"));
 
+            // activities
+            bundles.Add(new ScriptBundle("~/bundles/activities").Include(
+                "~/scripts/viewmodels/activities/Activities.js",
+                "~/scripts/oss/jquery.dotdotdot-1.5.6.js"));
+
             // bootstrap css bundles
             var tenants = new[]
             {

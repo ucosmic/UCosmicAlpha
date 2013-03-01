@@ -18,6 +18,7 @@ namespace UCosmic.Domain.People
         public IPrincipal Principal { get; private set; }
 
         /* Person */
+        public int PersonId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
         public string DisplayName { get; set; }

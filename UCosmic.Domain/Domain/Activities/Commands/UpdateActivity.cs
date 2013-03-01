@@ -62,12 +62,12 @@ using System.Linq.Expressions;
 
 namespace UCosmic.Domain.Activities
 {
-    public class UpdateMyActivity : DraftMyActivity
+    public class UpdateActivity : DraftMyActivity
     {
         public string ModeText { get; set; }
     }
 
-    public class HandleUpdateMyActivityCommand : IHandleCommands<UpdateMyActivity>
+    public class HandleUpdateMyActivityCommand : IHandleCommands<UpdateActivity>
     {
         private readonly ICommandEntities _entities;
 
@@ -76,7 +76,7 @@ namespace UCosmic.Domain.Activities
             _entities = entities;
         }
 
-        public void Handle(UpdateMyActivity command)
+        public void Handle(UpdateActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -153,7 +153,7 @@ namespace UCosmic.Domain.Activities
                 });
             }
 
-            activity.UpdatedOn = DateTime.UtcNow;
+            //activity.UpdatedOn = DateTime.UtcNow;
 
             _entities.Update(activity);
         }

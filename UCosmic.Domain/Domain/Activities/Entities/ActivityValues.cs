@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityValues : Entity
+    public class ActivityValues : RevisableEntity
     {
         public ActivityValues()
         {
@@ -24,9 +23,9 @@ namespace UCosmic.Domain.Activities
             Type = v.Type;
             TypeId = v.TypeId;
             Mode = v.Mode;
+            WasExternallyFunded = v.WasExternallyFunded;
+            WasInternallyFunded = v.WasInternallyFunded;
         }
-
-        public int Id { get; protected internal set; }
 
         public virtual Activity Activity { get; protected internal set; }
         public int ActivityId { get; protected internal set; }
@@ -40,5 +39,7 @@ namespace UCosmic.Domain.Activities
         public int? TypeId { get; protected internal set; }
         public string ModeText { get; private set; }
         public ActivityMode Mode { get { return ModeText.AsEnum<ActivityMode>(); } protected internal set { ModeText = value.AsSentenceFragment(); } }
+        public bool? WasExternallyFunded { get; protected internal set; }
+        public bool? WasInternallyFunded { get; protected internal set; }
     }
 }

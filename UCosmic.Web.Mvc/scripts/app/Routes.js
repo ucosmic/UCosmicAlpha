@@ -314,6 +314,29 @@ var App;
                 var ModuleSettings = Employees.ModuleSettings;
             })(WebApi.Employees || (WebApi.Employees = {}));
             var Employees = WebApi.Employees;
+            (function (Activities) {
+                function get() {
+                    return makeUrl('activities/page');
+                }
+                Activities.get = get;
+                var Locations = (function () {
+                    function Locations() { }
+                    Locations.get = function get() {
+                        return makeUrl('activities/locations');
+                    }
+                    return Locations;
+                })();
+                Activities.Locations = Locations;                
+                var Types = (function () {
+                    function Types() { }
+                    Types.get = function get() {
+                        return makeUrl('activities/types');
+                    }
+                    return Types;
+                })();
+                Activities.Types = Types;                
+            })(WebApi.Activities || (WebApi.Activities = {}));
+            var Activities = WebApi.Activities;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
         (function (Mvc) {

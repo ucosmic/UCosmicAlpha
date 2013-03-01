@@ -15,6 +15,9 @@ namespace UCosmic.Domain.Employees
             ActivityTypes = new Collection<ActivityType>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
             NotifyAdminOnUpdate = false;
+            OfferCountry = true;
+            OfferActivityType = true;
+            OfferFundingQuestions = true;
         }
 
         public int Id { get; set; }
@@ -26,5 +29,6 @@ namespace UCosmic.Domain.Employees
         public virtual Establishment Establishment { get; protected internal set; }
         public bool OfferCountry { get; protected internal set; }
         public bool OfferActivityType { get; protected internal set; }
+        public bool OfferFundingQuestions { get; protected internal set; }
     }
 }

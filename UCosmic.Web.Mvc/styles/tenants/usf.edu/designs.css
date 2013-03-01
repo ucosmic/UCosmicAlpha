@@ -1,4 +1,4 @@
-/* usf designs importer */
+/* usf designs importer 2 */
 /* main sass bootstrap */
 /* suny brand values */
 /* default variable values */
@@ -142,4 +142,8 @@ body .profile-tabs.k-tabstrip {
     padding: 8px;
     border-width: 0;
     border-top-width: 1px; }
+body .ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 

@@ -6,21 +6,17 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
-    public class Activity : Entity, IAmNumbered
+    public class Activity : RevisableEntity, IAmNumbered
     {
         protected internal Activity()
         {
             Mode = ActivityMode.Draft;
-            CreatedOn = DateTime.UtcNow;
-            UpdatedOn = DateTime.UtcNow;
 
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Values = new Collection<ActivityValues>();
             Tags = new Collection<ActivityTag>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
-
-        public int Id { get; protected internal set; }
 
         public virtual Person Person { get; protected internal set; }
         public int PersonId { get; protected internal set; }
@@ -31,10 +27,5 @@ namespace UCosmic.Domain.Activities
 
         public virtual ICollection<ActivityValues> Values { get; protected internal set; }
         public virtual ICollection<ActivityTag> Tags { get; protected set; }
-
-        public DateTime CreatedOn { get; protected internal set; }
-        public DateTime UpdatedOn { get; protected internal set; }
-        public virtual User UpdatedByUser { get; protected internal set; }
-        public int UpdatedByUserId { get; protected internal set; }
     }
 }

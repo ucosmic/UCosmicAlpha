@@ -1,4 +1,4 @@
-﻿/// <reference path="../../jquery/jquery-1.8.3.js" />
+﻿/// <reference path="../../jquery/jquery-1.8.2.js" />
 /// <reference path="../../ko/knockout-2.2.0.js" />
 /// <reference path="../../sammy/sammy-0.7.1.js" />
 /// <reference path="../../app/SideSwiper.js" />

@@ -11,6 +11,8 @@ namespace UCosmic.Web.Mvc.Models
         public int? ParentId { get; set; }
         public bool? IsCountry { get; set; }
         public bool? IsContinent { get; set; }
+        public bool? IsEarth { get; set; }
+        //public bool? IsBodyOfWater { get; set; }
         public bool? IsAdmin1 { get; set; }
         public bool? IsAdmin2 { get; set; }
         public bool? IsAdmin3 { get; set; }

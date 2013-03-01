@@ -33,6 +33,8 @@ module ViewModels.My {
         displayName: KnockoutObservableString = ko.observable();
         private _userDisplayName: string = '';
 
+        personId: number = 0;
+
         salutation: KnockoutObservableString = ko.observable();
         firstName: KnockoutObservableString = ko.observable();
         middleName: KnockoutObservableString = ko.observable();
@@ -101,7 +103,10 @@ module ViewModels.My {
                 (facultyRanks: Employees.IServerFacultyRankApiModel[], viewModel: IServerProfileApiModel): void => {
 
                     this.facultyRanks(facultyRanks); // populate the faculty ranks menu
-                    ko.mapping.fromJS(viewModel, {}, this); // populate the scalars
+
+                    ko.mapping.fromJS(viewModel, { ignore: "personId" }, this); // populate the scalars
+                    this.personId = viewModel.personId;
+
                     this._originalValues = viewModel;
 
                     if (!this._isInitialized) {

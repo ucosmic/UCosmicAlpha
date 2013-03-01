@@ -269,6 +269,7 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
     <Compile Include="ApiControllers\UsersController.cs" />
@@ -1427,6 +1428,9 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
+    <Content Include="scripts\viewmodels\activities\Activities.min.js.map">
+      <DependentUpon>Activities.js</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
@@ -1439,6 +1443,17 @@
     </Content>
     <Content Include="scripts\viewmodels\my\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\my\Affiliations.min.js">
+      <DependentUpon>Affiliations.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\ServiceApiModel.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\Activities.ts" />
+    <Content Include="scripts\viewmodels\activities\Activities.js">
+      <DependentUpon>Activities.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\Activities.min.js">
+      <DependentUpon>Activities.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
     <Content Include="scripts\viewmodels\my\EmailAddresses.js">

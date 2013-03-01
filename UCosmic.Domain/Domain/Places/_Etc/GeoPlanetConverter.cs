@@ -110,8 +110,7 @@ namespace UCosmic.Domain.Places
             {
                 CreateMap<GeoPlanetPlace, Place>()
                     .ForMember(d => d.OfficialName, o => o.ResolveUsing(s => s.EnglishName))
-                    .ForMember(d => d.IsEarth, o => o.ResolveUsing(s =>
-                        s.WoeId == 1))
+                    .ForMember(d => d.IsEarth, o => o.ResolveUsing(s => s.WoeId == 1))
                     //.ForMember(d => d.IsContinent, o => o.ResolveUsing(s =>
                     //    s.Type.Code == 29))
                     //.ForMember(d => d.IsCountry, o => o.ResolveUsing(s =>

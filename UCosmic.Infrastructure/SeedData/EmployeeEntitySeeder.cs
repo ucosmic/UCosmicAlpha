@@ -108,7 +108,8 @@ namespace UCosmic.SeedData
                     new ActivityType {Type = "Honor/Award"}
                 },
                 OfferCountry = true,
-                OfferActivityTypes = true
+                OfferActivityTypes = true,
+                OfferFundingQuestions = true
             });
         }
     }
