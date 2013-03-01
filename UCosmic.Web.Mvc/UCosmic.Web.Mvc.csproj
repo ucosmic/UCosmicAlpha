@@ -389,6 +389,7 @@
     <Compile Include="Models\MapBoxModel.cs" />
     <Compile Include="Models\MapPointModel.cs" />
     <Compile Include="Models\PageOf.cs" />
+    <Compile Include="Models\PersonNameApiModel.cs" />
     <Compile Include="Models\PlaceApiModel.cs" />
     <Compile Include="Models\PlaceFilterInputModel.cs" />
     <Compile Include="Models\SamlServiceProviderEntityDescriptor.cs" />
