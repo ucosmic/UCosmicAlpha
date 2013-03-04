@@ -52,8 +52,11 @@ namespace UCosmic.Web.Mvc
             container.RegisterConfigurationManager();
             container.RegisterMailSender();
             container.RegisterHttpConsumer();
-            container.RegisterNGeo(ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()],
-                ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()]);
+            container.RegisterNGeo(
+                ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()],
+                ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()],
+                ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerKey.ToString()],
+                ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerSecret.ToString()]);
             container.RegisterElmahExceptionLogger();
             container.RegisterEntityFramework();
             container.RegisterFluentValidation(Assembly.GetAssembly(typeof (IHandleCommands<>)));

@@ -6,6 +6,8 @@
 
         GeoNamesUserName,
         GeoPlanetAppId,
+        PlaceFinderConsumerKey,
+        PlaceFinderConsumerSecret,
 
         SamlRealServiceProviderEntityId,
         SamlRealCertificateThumbprint,
