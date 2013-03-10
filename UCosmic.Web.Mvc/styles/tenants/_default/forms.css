@@ -305,7 +305,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
   width: auto;
   max-width: 300px; }
 
-.validationMessage {
+.validationMessage, .field-validation-error {
   display: inline-block;
   margin-top: 4px;
   color: #c00;

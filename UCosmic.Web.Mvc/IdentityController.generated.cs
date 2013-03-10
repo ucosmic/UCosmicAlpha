@@ -49,6 +49,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Tenantize()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Tenantize);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult SignOut()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
@@ -70,6 +76,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string SignIn = "SignIn";
+            public readonly string Tenantize = "Tenantize";
             public readonly string SignOut = "SignOut";
         }
 
@@ -77,6 +84,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNameConstants
         {
             public const string SignIn = "SignIn";
+            public const string Tenantize = "Tenantize";
             public const string SignOut = "SignOut";
         }
 
@@ -89,6 +97,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string returnUrl = "returnUrl";
             public readonly string model = "model";
+        }
+        static readonly ActionParamsClass_Tenantize s_params_Tenantize = new ActionParamsClass_Tenantize();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Tenantize TenantizeParams { get { return s_params_Tenantize; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Tenantize
+        {
+            public readonly string returnUrl = "returnUrl";
         }
         static readonly ActionParamsClass_SignOut s_params_SignOut = new ActionParamsClass_SignOut();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -132,6 +148,13 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Tenantize(string returnUrl)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Tenantize);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
             return callInfo;
         }
 

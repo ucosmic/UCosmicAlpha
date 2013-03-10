@@ -107,6 +107,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Data.OData.5.1.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.DistributedCache, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.Web.DistributedCache.dll</HintPath>
     </Reference>
@@ -2003,13 +2008,16 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
-    <Content Include="scripts\viewmodels\activities\Activities.min.js.map">
-      <DependentUpon>Activities.js</DependentUpon>
-    </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
+    <Content Include="scripts\viewmodels\activities\Activities.js">
+      <DependentUpon>Activities.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\Activities.min.js">
+      <DependentUpon>Activities.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\activities\Activity.ts" />
     <Content Include="scripts\viewmodels\activities\Activity.js">
       <DependentUpon>Activity.ts</DependentUpon>
@@ -2031,12 +2039,6 @@
     </Content>
     <Content Include="scripts\viewmodels\activities\ServiceApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Activities.ts" />
-    <Content Include="scripts\viewmodels\activities\Activities.js">
-      <DependentUpon>Activities.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\activities\Activities.min.js">
-      <DependentUpon>Activities.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
     <Content Include="scripts\viewmodels\my\EmailAddresses.js">
       <DependentUpon>EmailAddresses.ts</DependentUpon>

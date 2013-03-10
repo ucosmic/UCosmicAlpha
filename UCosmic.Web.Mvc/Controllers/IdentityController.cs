@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Net;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain.Employees;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 
@@ -14,60 +16,131 @@ namespace UCosmic.Web.Mvc.Controllers
         private readonly ISignUsers _userSigner;
         private readonly IStorePasswords _passwords;
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<UpdateSamlSignOnMetadata> _updateSamlMetadata;
+        private readonly IProvideSaml2Service _samlServiceProvider;
+        private readonly IManageConfigurations _configurationManager;
 
         public IdentityController(ISignUsers userSigner
             , IStorePasswords passwords
             , IProcessQueries queryProcessor
+            , IHandleCommands<UpdateSamlSignOnMetadata> updateSamlMetadata
+            , IProvideSaml2Service samlServiceProvider
+            , IManageConfigurations configurationManager
         )
         {
             _userSigner = userSigner;
             _passwords = passwords;
             _queryProcessor = queryProcessor;
+            _updateSamlMetadata = updateSamlMetadata;
+            _samlServiceProvider = samlServiceProvider;
+            _configurationManager = configurationManager;
         }
 
         [GET("sign-in")]
         [ValidateSigningReturnUrl]
         public virtual ActionResult SignIn(string returnUrl)
         {
-            return View();
+            // detect SAML SSO from skin cookie
+            var tenancy = Request.Tenancy();
+            if (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.StyleDomain))
+            {
+                // get the establishment for this skin
+                var styleDomain = tenancy.StyleDomain;
+                if (!styleDomain.StartsWith("www."))
+                    styleDomain = "www." + styleDomain;
+                var establishment = _queryProcessor.Execute(
+                    new EstablishmentByUrl(styleDomain)
+                    {
+                        EagerLoad = new Expression<Func<Establishment, object>>[]
+                        {
+                            e => e.SamlSignOn,
+                        }
+                    }
+                );
+                if (establishment != null && establishment.HasSamlSignOn())
+                {
+                    return PushToSamlSsoExternal(establishment, returnUrl);
+
+                    // wait for the authn response
+                    //return new EmptyResult();
+                }
+            }
+
+            var model = new SignInForm();
+#if DEBUG
+            model.ShowPasswordField = true;
+#endif
+
+            return View(model);
         }
 
         [POST("sign-in")]
         public virtual ActionResult SignIn(SignInForm model)
         {
-            if (_passwords.Validate(model.UserName, model.Password))
+            if (ModelState.IsValid)
             {
-                _userSigner.SignOn(model.UserName, model.RememberMe);
-
-                // get tenancy cookie info
-                var user = _queryProcessor.Execute(new UserByName(model.UserName)
+                // check for saml integration
+                var establishment = _queryProcessor.Execute(new EstablishmentByEmail(model.UserName.GetEmailDomain())
                 {
-                    EagerLoad = new Expression<Func<User, object>>[]
+                    EagerLoad = new Expression<Func<Establishment, object>>[]
+                    {
+                        x => x.SamlSignOn,
+                    }
+                });
+                if (establishment != null && establishment.HasSamlSignOn())
+                {
+                    return PushToSamlSsoExternal(establishment, model.ReturnUrl);
+                }
+                if (!string.IsNullOrWhiteSpace(model.Password) && _passwords.Validate(model.UserName, model.Password))
+                {
+                    _userSigner.SignOn(model.UserName, model.RememberMe);
+
+                    return RedirectToAction(MVC.Identity.Tenantize(model.ReturnUrl));
+                }
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    model.ShowPasswordField = true;
+                }
+            }
+
+            return View(model);
+        }
+
+        [GET("sign-in/tenantize")]
+        public virtual ActionResult Tenantize(string returnUrl)
+        {
+            if (string.IsNullOrWhiteSpace(User.Identity.Name))
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            // get tenancy cookie info
+            var user = _queryProcessor.Execute(new UserByName(User.Identity.Name)
+            {
+                EagerLoad = new Expression<Func<User, object>>[]
                     {
                         x => x.Person.Affiliations,
                     },
-                });
-                var tenancy = Mapper.Map<Tenancy>(user);
+            });
+            if (user == null) return new HttpNotFoundResult();
 
-                /* Set the anchor link text to the employee personal info controller. */
-                EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
-                    new EmployeeModuleSettingsByUserName(model.UserName));
-                if (employeeModuleSettings != null)
-                    Mapper.Map(employeeModuleSettings, tenancy);
 
-                // set tenancy
-                Response.Tenancy(tenancy);
+            var tenancy = Mapper.Map<Tenancy>(user);
 
-                TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", model.UserName));
-                var returnUrl = model.ReturnUrl;
-                if (string.IsNullOrWhiteSpace(returnUrl) || returnUrl == "/")
-                {
-                    returnUrl = _userSigner.DefaultSignedOnUrl;
-                }
-                return Redirect(returnUrl);
+            /* Set the anchor link text to the employee personal info controller. */
+            EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
+                new EmployeeModuleSettingsByUserName(user.Name));
+            if (employeeModuleSettings != null)
+                Mapper.Map(employeeModuleSettings, tenancy);
+
+            // set tenancy
+            Response.Tenancy(tenancy);
+
+            TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", User.Identity.Name));
+
+            if (string.IsNullOrWhiteSpace(returnUrl) || returnUrl == "/")
+            {
+                returnUrl = _userSigner.DefaultSignedOnUrl;
             }
-
-            return View();
+            return Redirect(returnUrl);
         }
 
         [GET("sign-out")]
@@ -90,6 +163,78 @@ namespace UCosmic.Web.Mvc.Controllers
             }
 
             return View();
+        }
+
+        [NonAction]
+        private ActionResult PushToSamlSsoExternal(Establishment establishment, string returnUrl)
+        {
+            if (establishment != null)
+            {
+                // update the provider metadata
+                _updateSamlMetadata.Handle(
+                    new UpdateSamlSignOnMetadata
+                    {
+                        EstablishmentId = establishment.RevisionId,
+                    }
+                );
+
+                var callbackUrl = returnUrl ?? Url.Action(MVC.MyProfile.Index());
+                callbackUrl = MakeAbsoluteUrl(callbackUrl);
+
+                var redirectUrl = "https://develop.ucosmic.com";
+                if (_configurationManager.SamlRealServiceProviderEntityId.StartsWith("https://preview.ucosmic.com"))
+                {
+                    redirectUrl = "https://preview.ucosmic.com";
+                }
+
+                redirectUrl = string.Format("{0}/sign-on/alpha-proxy/{1}/?returnUrl={2}", redirectUrl,
+                    establishment.RevisionId, Server.UrlEncode(callbackUrl));
+                return Redirect(redirectUrl);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        //[NonAction]
+        //private void PushToSamlSsoInternal(Establishment establishment, string returnUrl)
+        //{
+        //    if (establishment == null) return;
+
+        //    // update the provider metadata
+        //    _updateSamlMetadata.Handle(
+        //        new UpdateSamlSignOnMetadata
+        //        {
+        //            EstablishmentId = establishment.RevisionId,
+        //        }
+        //    );
+
+        //    // clear the email from temp data
+        //    //TempData.SigningEmailAddress(null);
+
+        //    var callbackUrl = returnUrl ?? Url.Action(MVC.MyProfile.Index());
+        //    //callbackUrl = MakeAbsoluteUrl(callbackUrl);
+
+        //    // send the authn request
+        //    _samlServiceProvider.SendAuthnRequest(
+        //        establishment.SamlSignOn.SsoLocation,
+        //        establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
+        //        _configurationManager.SamlRealServiceProviderEntityId,
+        //        callbackUrl,
+        //        HttpContext
+        //    );
+        //}
+
+        [NonAction]
+        private string MakeAbsoluteUrl(string relativeUrl)
+        {
+            return Request.Url != null
+            ? string.Format("{0}{1}{2}{3}{4}",
+                Request.Url.Scheme,
+                Uri.SchemeDelimiter,
+                Request.Url.Host,
+                (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port),
+                relativeUrl
+                ) : null;
         }
     }
 }
