@@ -11,7 +11,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [LocalOnly]
+    [LocalApiEndpoint]
     [DefaultApiHttpRouteConvention]
     public class PeopleController : ApiController
     {

@@ -134,6 +134,7 @@
     <Compile Include="Cqrs\SimpleInjectorCqrsRegistration.cs" />
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
+    <Compile Include="Cryptography\AesExtensions.cs" />
     <Compile Include="EntityFramework\DropCreateDbOnEveryBuild.cs" />
     <Compile Include="EntityFramework\DropCreateDbOnModelChange.cs" />
     <Compile Include="EntityFramework\Fluent\Activities.cs" />

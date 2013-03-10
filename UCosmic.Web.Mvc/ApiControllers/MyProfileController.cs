@@ -14,7 +14,6 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [Authorize]
-    [LocalOnly]
     [RoutePrefix("api/my/profile")]
     public class MyProfileController : ApiController
     {

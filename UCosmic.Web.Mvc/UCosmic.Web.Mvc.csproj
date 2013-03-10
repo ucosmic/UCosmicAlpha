@@ -281,8 +281,9 @@
     <Compile Include="ApiControllers\UsersController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />
+    <Compile Include="Helpers\LocalApiEndpointAttribute.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
-    <Compile Include="Helpers\LocalOnlyAttribute.cs" />
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
     <Compile Include="Models\EstablishmentApiFlatModel.cs" />

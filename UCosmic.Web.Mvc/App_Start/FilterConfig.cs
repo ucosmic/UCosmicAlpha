@@ -7,6 +7,7 @@ namespace UCosmic.Web.Mvc
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new LocalApiAuthorizeAttribute());
 
 #if !DEBUG
             filters.Add(new EnforceHttpsAttribute());

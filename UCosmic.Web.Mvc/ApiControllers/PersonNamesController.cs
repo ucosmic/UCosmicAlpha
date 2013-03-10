@@ -9,7 +9,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [LocalOnly]
+    [LocalApiEndpoint]
     [RoutePrefix("api/person-names")]
     public class PersonNamesController : ApiController
     {

@@ -5,26 +5,21 @@ using System.Linq.Expressions;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-//using NGeo.Yahoo.PlaceFinder;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 using PlaceByWoeId = UCosmic.Domain.Places.PlaceByWoeId;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [LocalOnly]
+    [LocalApiEndpoint]
     [DefaultApiHttpRouteConvention]
     public class PlacesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        //private readonly IConsumePlaceFinder _placeFinder;
 
-        public PlacesController(IProcessQueries queryProcessor
-            //, IConsumePlaceFinder placeFinder
-        )
+        public PlacesController(IProcessQueries queryProcessor)
         {
             _queryProcessor = queryProcessor;
-            //_placeFinder = placeFinder;
         }
 
         //[CacheHttpGet(Duration = 3600)]
