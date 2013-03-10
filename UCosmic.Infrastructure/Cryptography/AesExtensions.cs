@@ -34,12 +34,12 @@ namespace UCosmic.Cryptography
                     var encryptor = algorithm.CreateEncryptor(algorithm.Key, algorithm.IV);
 
                     // Create the streams used for encryption.
-                    using (var memoryStrean = new MemoryStream())
+                    using (var memoryStream = new MemoryStream())
                     {
                         // prepend the IV
-                        memoryStrean.Write(BitConverter.GetBytes(algorithm.IV.Length), 0, sizeof(int));
-                        memoryStrean.Write(algorithm.IV, 0, algorithm.IV.Length);
-                        using (var cryptoStream = new CryptoStream(memoryStrean, encryptor, CryptoStreamMode.Write))
+                        memoryStream.Write(BitConverter.GetBytes(algorithm.IV.Length), 0, sizeof(int));
+                        memoryStream.Write(algorithm.IV, 0, algorithm.IV.Length);
+                        using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
                         {
                             using (var streamWriter = new StreamWriter(cryptoStream))
                             {
@@ -47,7 +47,7 @@ namespace UCosmic.Cryptography
                                 streamWriter.Write(plainText);
                             }
                         }
-                        var encrypted = Convert.ToBase64String(memoryStrean.ToArray());
+                        var encrypted = Convert.ToBase64String(memoryStream.ToArray());
                         return encrypted;
                     }
 
