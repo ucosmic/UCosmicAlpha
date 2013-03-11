@@ -6,18 +6,18 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.Identity
 {
-    public class MyUsers : BaseEntitiesQuery<User>, IDefineQuery<User[]>
+    public class MyUsers : BaseEntitiesQuery<User>, IDefineQuery<IQueryable<User>>
     {
-        public MyUsers(IPrincipal principal)
+        internal MyUsers(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
         }
 
-        public IPrincipal Principal { get; private set; }
+        internal IPrincipal Principal { get; private set; }
     }
 
-    public class HandleMyUsersQuery : IHandleQueries<MyUsers, User[]>
+    public class HandleMyUsersQuery : IHandleQueries<MyUsers, IQueryable<User>>
     {
         private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queryProcessor;
@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Identity
             _queryProcessor = queryProcessor;
         }
 
-        public User[] Handle(MyUsers query)
+        public IQueryable<User> Handle(MyUsers query)
         {
             var results = _entities.Query<User>()
                 .EagerLoad(_entities, query.EagerLoad);
@@ -63,7 +63,7 @@ namespace UCosmic.Domain.Identity
             }
 
             results = results.OrderBy(query.OrderBy);
-            return results.ToArray();
+            return results;
         }
     }
 }

@@ -80,8 +80,10 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Index = "Index";
             }
+            public readonly string _SearchSideBar = "~/Views/Users/_SearchSideBar.cshtml";
             public readonly string Index = "~/Views/Users/Index.cshtml";
         }
     }

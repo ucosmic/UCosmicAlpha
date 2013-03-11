@@ -20,6 +20,8 @@ namespace UCosmic.Web.Mvc.Models
         }
     }
 
+    public class PageOfUserApiModel : PageOf<UserApiModel> { }
+
     public static class UserApiProfiler
     {
         public class EntityToModelProfile : Profile
@@ -35,6 +37,14 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<RoleGrant, UserApiModel.RoleGrant>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                 ;
+            }
+        }
+
+        public class PagedQueryResultToPageOfItemsProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<PagedQueryResult<User>, PageOfUserApiModel>();
             }
         }
     }

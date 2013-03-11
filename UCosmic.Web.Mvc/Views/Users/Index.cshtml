@@ -11,35 +11,73 @@
 
 @section scripts
 {
+
     <script type="text/javascript" src="~/scripts/app/Routes.js"></script>
+
+    <script type="text/javascript" src="~/scripts/viewmodels/Spinner.js"></script>
+
+    <script type="text/javascript" src="~/scripts/viewmodels/PagedSearch.js"></script>
+
     <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
+
     <script type="text/javascript">
         var viewModel = new ViewModels.Users.Search();
         ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
+        viewModel.sammy.run();
     </script>
+
 }
 
-<div class="fixed content" data-current-module="admin">
-    <header>
-        <h1>@ViewBag.Title</h1>
-    </header>
-    <ol data-bind="foreach: items">
-        <li>
-            <span data-bind="text: name"></span>
-            <br />
-            <span data-bind="text: personDisplayName"></span>
-            <br />
-            <ol data-bind="visible: hasRoles, foreach: roleGrants">
+<div class="content fixed to-top" data-current-module="admin">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            <div class="field" style="margin-bottom: 0;">
+                <input type="hidden" data-bind="value: keyword" />
+                <input type="search" placeholder="Enter a user's name or email address" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
+            </div>
+            <p data-bind="visible: hasNoItems" style="display: none;">
+                There are no results that match your search terms.
+            </p>
+            <p data-bind="visible: showStatus" style="display: none;">
+                <strong>Showing <span data-bind="text: firstNumber"></span>
+                    <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
+                    of <span data-bind="text: itemTotal"></span></strong>
+                <span data-bind="visible: hasManyPages">(page
+                    @*<select class="inline" data-bind="options: pageNumberOptions, value: selectedPageNumber">
+                    </select>*@
+                    <span data-bind="text: transitionedPageNumber"></span>
+                    of <span data-bind="text: pageCount"></span>)</span>
+            </p>
+            <ol data-bind="foreach: items">
                 <li>
-                    <span data-bind="text: roleName"></span>
-                    <br/>
-                    @*<span data-bind="text: roleDescription"></span>*@
+                    <span data-bind="text: name"></span>
+                    <br />
+                    <span data-bind="text: personDisplayName"></span>
+                    <br />
+                    <ol data-bind="visible: hasRoles, foreach: roleGrants">
+                        <li>
+                            <span data-bind="text: roleName"></span>
+                            <br />
+                            @*<span data-bind="text: roleDescription"></span>*@
+                        </li>
+                    </ol>
+                    <span data-bind="visible: hasNoRoles" style="display: none;">[No roles]</span>
+                    <br />
+                    <br />
+                    <br />
                 </li>
             </ol>
-            <span data-bind="visible: hasNoRoles">[No roles]</span>
-            <br />
-            <br />
-            <br />
-        </li>
-    </ol>
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Users.Views._SearchSideBar)
+            </div>
+        </aside>
+    </form>
 </div>

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Identity;
@@ -20,17 +20,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        public IEnumerable<UserApiModel> GetAll()
+        public PageOfUserApiModel GetAll([FromUri] UserSearchInputModel input)
         {
-            var entities = _queryProcessor.Execute(new MyUsers(User)
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            if (input.PageSize < 1)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var query = new MyUsersByKeyword(User)
             {
                 EagerLoad = new Expression<Func<User, object>>[]
                 {
                     x => x.Person,
                     x => x.Grants.Select(y => y.Role),
-                }
-            });
-            var models = Mapper.Map<UserApiModel[]>(entities);
+                },
+            };
+            Mapper.Map(input, query);
+
+            var entities = _queryProcessor.Execute(query);
+            var models = Mapper.Map<PageOfUserApiModel>(entities);
             return models;
         }
     }

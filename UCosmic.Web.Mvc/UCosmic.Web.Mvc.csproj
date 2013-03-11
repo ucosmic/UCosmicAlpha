@@ -286,6 +286,7 @@
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
+    <Compile Include="Models\UserSearchInputModel.cs" />
     <Compile Include="Models\EstablishmentApiFlatModel.cs" />
     <Compile Include="Models\ActivityApiModel.cs" />
     <Compile Include="Models\EstablishmentTypeApiModel.cs" />
@@ -2366,6 +2367,7 @@
     <None Include="styles\tenants\testshib.org\ie8.scss" />
     <None Include="styles\tenants\testshib.org\layout.scss" />
     <Content Include="Views\MyProfile\ActivityEdit.cshtml" />
+    <Content Include="Views\Users\_SearchSideBar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
