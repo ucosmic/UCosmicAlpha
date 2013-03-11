@@ -18,5 +18,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        [GET("my/activity/{activityId?}")]
+        public virtual ActionResult ActivityEdit(int? activityId)
+        {
+            return View(activityId);
+        }
     }
 }

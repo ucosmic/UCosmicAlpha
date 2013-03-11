@@ -99,24 +99,7 @@
                                 <li>Email Addresses</li>
                             </ul>
                             <div>
-                                <div id="activities"> <!-- TODO: Move to partial -->
-                                    <header>
-                                        <h2>
-                                            <span>Activities</span>
-                                            <a href="#" title="Add a new activity" data-bind="click: addActivity">
-                                                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new activity" />
-                                            </a>
-                                        </h2>
-                                    </header>
-                                    <table class="data">
-                                        <colgroup>
-                                            <col style="width: 10%" />
-                                            <col style="width: 80%" />
-                                        </colgroup>
-                                        <tbody data-bind="template: { name: 'activities-template', foreach: items }">
-                                        </tbody>
-                                    </table>
-                                </div>
+                                @Html.Partial(MVC.MyProfile.Views._Activities)
                             </div>
                             <div>
                                 My Geographic Expertise
@@ -143,32 +126,4 @@
     </div>
 </div>
 
-<script type="text/html" id="activities-template">
-    <tr class="hover-hilite" >
-        <!-- image -->
-        <td>
-            <img src="../../images/placeholders/blue-96x96.png" alt="image" width="96" height="96" />
-        </td>
-        <!-- Description (styles will be moved later) -->
-        <td style="vertical-align: top">
-            <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.getTypeName(values()[0].typeId())"></span>
-                <span class="red badge" style="display:inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
-            </div>
-            <div class="ellipsis">
-                <span data-bind="text: values()[0].title()"></span>
-            </div>
-            <div class="ellipsis">
-                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values()[0].startsOn(), values()[0].endsOn())"></span>
-                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values()[0].locations())"></span>
-            </div>
-        </td>
-        <!-- Remove Button -->
-        <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Remove activity">
-                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove activity" />
-            </a>
-        </td>
-    </tr>
-</script>
 

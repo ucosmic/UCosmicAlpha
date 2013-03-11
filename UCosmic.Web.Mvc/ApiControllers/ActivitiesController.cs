@@ -20,14 +20,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class ActivitiesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UpdateActivity> _profileUpdateHandler;
 
-        public ActivitiesController(IProcessQueries queryProcessor
-                                    , IHandleCommands<UpdateActivity> profileUpdateHandler
-            )
+        public ActivitiesController(IProcessQueries queryProcessor)
         {
             _queryProcessor = queryProcessor;
-            _profileUpdateHandler = profileUpdateHandler;
         }
 
         [POST("page")]
@@ -71,24 +67,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             return model;
         }        
-        
-        [PUT("")]
-        public HttpResponseMessage Put(ActivityApiModel model)
+
+        [DELETE("delete/{id}")]
+        public HttpResponseMessage Delete(int id)
         {
-            var command = new UpdateActivity();
-            Mapper.Map(model, command);
+            //var command = new UpdateActivity();
+            //Mapper.Map(model, command);
 
-            try
-            {
-                _profileUpdateHandler.Handle(command);
-            }
-            catch (ValidationException ex)
-            {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-                return badRequest;
-            }
+            //try
+            //{
+            //    _profileUpdateHandler.Handle(command);
+            //}
+            //catch (ValidationException ex)
+            //{
+            //    var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+            //    return badRequest;
+            //}
 
-            return Request.CreateResponse(HttpStatusCode.OK, "Your activity was saved successfully.");
+            return Request.CreateResponse(HttpStatusCode.OK, "Activity " + id.ToString() + " was deleted successfully.");
         }
     }
 }

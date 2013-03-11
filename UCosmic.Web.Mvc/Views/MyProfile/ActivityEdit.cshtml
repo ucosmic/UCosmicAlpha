@@ -1,0 +1,240 @@
+﻿@{
+    ViewBag.Title = "My International Activity";
+}
+
+@section styles
+{
+	<link rel="stylesheet" type="text/css" href="~/styles/chosen.css">
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/activity")
+
+    <script type="text/javascript">
+
+        $(function () {
+            var activityViewModel = new ViewModels.Activities.Activity(@Model);
+
+            activityViewModel.Load()
+                .done(function () {
+
+                    ko.applyBindings(this, $("#activity-edit")[0]);
+
+                    $("#countrySelector").kendoMultiSelect({
+                        dataTextField: "officialName",
+                        dataValueField: "placeId",
+                        dataSource: activityViewModel.activityLocationsList,
+                        placeHolder: "[Select Country or Body of Water]"
+                    });
+
+                    $("#fromDatePicker").kendoDatePicker();
+                    $("#toDatePicker").kendoDatePicker();
+
+                    tinyMCE.init({
+                        // Example content CSS (should be your site CSS)
+                        //content_css : 'css/content.css',
+                        content_css: "~/scripts/tinymce/css/content.css",
+                        convert_urls: false,
+
+                        // General options
+                        theme: 'advanced',
+                        mode: 'exact',
+                        elements: 'tinymce',
+                        height: '300',
+                        width: '100%',
+                        verify_html: true,
+                        plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
+
+                        // Theme options
+                        theme_advanced_buttons1: 'save,undo,redo,restoredraft,|,formatselect,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
+                        theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
+                        theme_advanced_buttons3: '',
+
+                        theme_advanced_toolbar_location: 'top',
+                        theme_advanced_toolbar_align: 'left',
+                        theme_advanced_statusbar_location: 'bottom',
+                        theme_advanced_resizing: true,
+                        theme_advanced_resizing_max_height: '580',
+                        theme_advanced_resize_horizontal: false,
+                        theme_advanced_blockformats: 'h2,h3,p,blockquote',
+
+                        //save_enablewhendirty: true,
+                        //save_onsavecallback: 'onSavePluginCallback',
+
+                        // Drop lists for link/image/media/template dialogs
+                        // template_external_list_url: 'lists/template_list.js',
+                        // external_link_list_url: 'lists/link_list.js',
+                        // external_image_list_url: 'lists/image_list.js',
+                        // media_external_list_url: 'lists/media_list.js'
+                    });
+                }) // done
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    alert(textStatus + "|" + errorThrown);
+                }); // fail
+            
+        }); // function
+
+    </script>
+}
+
+@section bib
+{
+    <nav class="bib hide" data-current-bib="my">
+        @Html.Partial(MVC.Home.Views._Bib)
+    </nav>
+}
+
+<div class="content fixed to-top" data-current-module="home">
+	<div data-side-swiper="root">
+		<div data-side-swiper="deck">
+			<div data-side-swiper="on">
+				<div class="group">
+					<div class="on-left from-top" style="width: 100%;">
+						<header>
+							<h1>@ViewBag.Title</h1>
+							<span class="on-right"><input type="button" value="Guide Me"/></span>
+						</header>
+						<div id="activity-edit" style="margin-bottom: 38px">
+							<table class="activity">
+								<tbody>
+									<tr>
+										<!-- TITLE -->
+										<td class="field-name">Title</td>
+										<td>
+											<span>
+												<textarea rows="1" style="width: 600px" placeholder="[Enter Title]"></textarea><label class="required-field">*</label>
+													<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/>
+											</span>
+										</td>
+									</tr>
+									<!-- COUNTRY -->
+									<tr>
+										<td class="field-name">Country/Location</td>
+										<td>
+											<span>
+											    <select id="countrySelector" style="vertical-align: middle; width: 600px; height:34px"></select>
+                                                <!-- <label class="required-field">*</label>
+												<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
+											</span>
+										</td>
+									</tr>
+									<!-- TYPE -->
+									<tr>
+										<td class="field-name">Type</td>
+										<td>
+										    <span><select style="vertical-align: middle; width: 400px; height: 38px">
+										              <option>Research and Creative Endeavors</option>
+										              <option>Earned Advanced Degrees</option>
+										              <option>Teaching and Mentoring</option>
+										              <option>Professional Service and Consulting</option>
+                                                      <option>Awards and Honors</option>
+										          </select><label class="required-field">*</label>
+												<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/>
+											</span>
+										</td>
+									</tr>
+									<!-- FROM and TO DATES -->
+									<tr>
+										<td class="field-name">From</td>
+										<td>
+											<span>
+												<span>
+													<input id="fromDatePicker" style="height: 30px; vertical-align: middle"/>
+														<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position" data-bind="click: function (data, event) { help(data, event, null); }"/>
+												</span>
+												To&nbsp;<input id="toDatePicker" style="height: 32px; vertical-align: middle"/>
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- DESCRIPTION -->
+							<div style="margin-bottom: inherit">
+								<header style="margin-bottom: 4px">
+									<h2>Description</h2>
+									<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>
+								</header>
+								<textarea id="tinymce"></textarea>
+							</div>
+							<!-- TAGS -->
+							<div style="margin-bottom: inherit">
+								<header style="margin-bottom: 4px">
+									<h2>Tags</h2>
+								</header>
+								<span>
+									<span><textarea rows="1" style="vertical-align: middle; width: 200px" placeholder="[Enter Tag]"></textarea><img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position"/></span>
+									<input type="button" value="Add"/>
+									<textarea rows="1" style="width: 500px; white-space: nowrap; overflow-x: auto; overflow-y: hidden"></textarea>
+								</span>
+							</div>
+							<!-- DOCUMENTS -->
+							<div style="width: 100%">
+								<header style="margin-bottom: inherit">
+									<h2>
+										<span>Documents</span>
+											<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function (data, event) { addDocument(data, event, null); }"/>
+									</h2>
+								</header>
+								<div>
+									<table class="data">
+										<thead>
+											<tr>
+												<th style="width: 5%">Visible</th>
+												<th style="width: 10%">Preview</th>
+												<th style="width: 60%">Name</th>
+												<th style="width: 10%">Type</th>
+												<th style="width: 10%">Size</th>
+												<th style="width: 5%"></th>
+											</tr>
+										</thead>
+										<!-- <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"> -->
+											<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- LAST UPDATED -->
+							<div style="width: 33%; border-top: 1px; border-style: solid">
+								<span style="font-size:smaller; color:slategray">Last updated <label id="last-updated-date">00/00/0000</label> by <label id="last-updated-name">John Doe</label></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="activity-document-template">
+    <tr class="hover-hilite"
+        data-bind="click: function (data, event) { $parent.editActivity(data, event, revisionId()); }"
+        href="@Url.Action(MVC.MyProfile.ActivityEdit())">
+        <!-- Image -->
+        <td>
+            <img src="../../images/placeholders/blue-96x96.png" alt="image" width="96" height="96" />
+        </td>
+        <!-- Description -->
+        <td style="vertical-align: top">
+            <div style="height: 30px">
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.getTypeName(values()[0].typeId())"></span>
+                <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
+            </div>
+            <div class="ellipsis">
+                <span data-bind="text: values()[0].title()"></span>
+            </div>
+            <div class="ellipsis">
+                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values()[0].startsOn(), values()[0].endsOn())"></span>
+                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values()[0].locations())"></span>
+            </div>
+        </td>
+        <!-- Remove Button -->
+        <td style="text-align: center; vertical-align: middle">
+            <a href="#" title="Remove activity" data-bind="click: function (data, event) { $parent.deleteActivity(data, event, $parent); }, clickBubble: false">
+                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove activity" />
+            </a>
+        </td>
+    </tr>
+</script>

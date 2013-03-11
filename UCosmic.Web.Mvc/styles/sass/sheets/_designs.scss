@@ -1,8 +1,8 @@
-body
-{
+body {
     table.data {
         width: 100%;
         margin: 16px 0;
+
         th {
             border: solid 1px #fff;
             padding: 4px 8px;
@@ -12,11 +12,13 @@ body
             color: $table-header-text-color;
             font-weight: bold;
         }
+
         td {
             border: solid 1px #fff;
             padding: 4px;
             vertical-align: text-top;
         }
+
         tbody {
             tr {
                 &:nth-child(even) {
@@ -24,10 +26,12 @@ body
                         background-color: $table-row-even-bg-color;
                     }
                 }
+
                 &.hover-hilite:hover {
                     * {
                         cursor: pointer;
                     }
+
                     td {
                         background-color: $row-hilite-bg-color;
                     }
@@ -35,26 +39,56 @@ body
             }
         }
     }
+
+    table.activity {
+        width: 100%;
+        margin: 16px 0;
+
+        td.field-name {
+            padding-left: 4px;
+						padding-right: 4px;
+						padding-top: 16px;
+						padding-bottom: 16px;
+						text-align: right;
+            vertical-align: middle;
+        }
+
+				td {
+            padding-left: 4px;
+						padding-right: 4px;
+						padding-top: 16px;
+						padding-bottom: 16px;
+						text-align: left;
+            vertical-align: middle;
+				}
+    }
+
     ul.data, ol.data {
         > li {
             &.hover-hilite:hover {
                 background-color: $row-hilite-bg-color;
+
                 * {
                     cursor: pointer;
                 }
             }
+
             > div {
-                @include border-box;
+                @include
+                border-box;
                 margin-bottom: 1em;
                 border: solid 1px #555;
                 padding: 16px;
-                @include border-radius(8px);
+                @include
+                border-radius(8px);
+
                 > .on-right {
                     margin-left: 5px;
                 }
             }
         }
     }
+
     ul.data-items, ol.data-items {
         > li {
             margin-bottom: 4px;
@@ -63,30 +97,39 @@ body
 
     .badge {
         display: inline-block;
-        @include font-height(12px, 16px);
+        @include
+        font-height(12px, 16px);
         margin: 0 0 0 4px;
-        @include border-radius(4px);
+        @include
+        border-radius(4px);
         padding: 2px 6px;
         text-transform: uppercase;
         vertical-align: top;
-        @include text-shadow;
+        @include
+        text-shadow;
+
         &.green {
             background-color: #090;
             color: #fff;
         }
+
         &.red {
             background-color: #c00;
             color: #fff;
         }
+
         &.blue {
             background-color: #33f;
             color: #fff !important;
         }
+
         &.link {
-            @include text-shadow(0, 0, 0);
+            @include
+            text-shadow(0, 0, 0);
             background-color: #fff;
             border: solid 1px $main-link-color;
         }
+
         &.branded-dark1 {
             background-color: $branded-badge-dark1-bg-color;
             color: $branded-badge-dark1-text-color !important;
@@ -95,59 +138,80 @@ body
 
     .person-profile {
         margin-bottom: 16px;
+
         &.clickable:hover {
             *:hover {
                 cursor: pointer;
             }
+
             > .card {
-                @include border-radius(8px 8px 8px 0);
+                @include
+                border-radius(8px 8px 8px 0);
                 border-color: $person-profile-card-bg-color;
                 background-color: $person-profile-card-bg-color;
             }
+
             > .action {
                 visibility: visible;
             }
         }
+
         > .card {
-            @include border-box;
-            @include border-radius(8px);
+            @include
+            border-box;
+            @include
+            border-radius(8px);
             border: solid 1px transparent;
             padding: 8px;
             background-color: transparent;
+
             .photo {
-                @include border-box;
+                @include
+                border-box;
                 width: 138px;
                 padding-right: 10px;
+
                 img {
                     max-width: 128px;
                     max-height: 128px;
                 }
             }
+
             .name-and-title {
                 width: 410px;
+
                 .display-name {
-                    @include font-height(28px, 32px);
+                    @include
+                    font-height(28px, 32px);
                 }
+
                 .titles {
-                    @include font-height(18px, 22px);
+                    @include
+                    font-height(18px, 22px);
                 }
+
                 .admin-only {
                     margin-top: 4px;
                 }
             }
+
             .faculty {
                 margin-left: 4px;
                 padding-top: 8px;
                 width: 390px;
+
                 .appointments {
                     padding: 4px 0 0 4px;
-                    @include font-height(14px, 16px);
+                    @include
+                    font-height(14px, 16px);
                 }
             }
         }
+
         > .action {
             display: inline-block;
-            @include border-radius(0 0 8px 8px);
+            @include
+            border-radius(0 0 8px 8px);
             padding: 0 16px 8px 16px;
             visibility: hidden;
             background-color: $person-profile-card-bg-color;
@@ -157,12 +221,15 @@ body
     .profile-tabs.k-tabstrip {
         background-image: none;
         border-width: 0;
+
         ul.k-tabstrip-items {
             padding: 0;
+
             li.k-item {
                 margin-left: 4px;
             }
         }
+
         .k-content {
             margin: 0;
             padding: 8px;
@@ -175,6 +242,30 @@ body
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }   
+        -o-text-overflow: ellipsis;
+        -ms-text-overflow: ellipsis;
+    }
 
+    .required-field {
+        font-family: sans-serif;
+        font-size: xx-large;
+        vertical-align: text-top;
+        color: $branded-badge-dark1-bg-color;
+    }
+
+    .help-icon-position-on-required-field {
+        position: relative;
+        top: -30px;
+        right: 36px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .help-icon-position {
+        position: relative;
+        top: -28px;
+        right: 20px;
+        width: 16px;
+        height: 16px;
+    }
 }

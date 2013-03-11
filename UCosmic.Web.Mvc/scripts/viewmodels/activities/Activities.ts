@@ -121,16 +121,72 @@ module ViewModels.Activities {
         /* 
         */
         // --------------------------------------------------------------------------------
-        addActivity(): void {
+        deleteActivityById(activityId: number): void {
+            $.ajax({
+                type: "DELETE",
+                url: App.Routes.WebApi.Activities.Delete.get() + activityId.toString(),
+                success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXHR: JQueryXHR): void
+                    {
+                        alert(textStatus);
+                    },
+                error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void
+                    {
+                        alert(textStatus);
+                    }
+            });
         }
 
         // --------------------------------------------------------------------------------
         /*  
         */
         // --------------------------------------------------------------------------------
-        deleteActivity(): void {
+        deleteActivity(data:any, event:any, viewModel: any): void {
+             $("#confirmActivityDeleteDialog").dialog({
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                            { text: "Yes, confirm delete", click: function(): void {
+                                viewModel.deleteActivityById(data.revisionId());
+                                $(this).dialog("close");
+                                }
+                            },
+                            { text: "No, cancel delete", click: function(): void {
+                                $(this).dialog("close");
+                                }
+                            },
+                        ]
+            });
         }
 
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        editActivity(data: any, event: any, activityId: number): void {
+
+            var element = event.srcElement;
+            var url = null;
+
+            while ((element != null) && (element.nodeName != 'TR')) {
+                element = element.parentElement;
+            }
+
+            if (element != null) {
+                url = element.attributes["href"].value;
+            }
+
+            if (url != null) {
+                if (activityId == null) {
+                    location.href = url;
+                }
+                else {
+                    location.href = url + activityId.toString();
+                }
+            }
+        }
+        
         // --------------------------------------------------------------------------------
         /*  
         */

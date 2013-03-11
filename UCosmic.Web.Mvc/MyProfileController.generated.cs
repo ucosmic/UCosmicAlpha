@@ -41,6 +41,12 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult ActivityEdit()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public MyProfileController Actions { get { return MVC.MyProfile; } }
@@ -58,15 +64,25 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string ActivityEdit = "ActivityEdit";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string ActivityEdit = "ActivityEdit";
         }
 
 
+        static readonly ActionParamsClass_ActivityEdit s_params_ActivityEdit = new ActionParamsClass_ActivityEdit();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_ActivityEdit ActivityEditParams { get { return s_params_ActivityEdit; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_ActivityEdit
+        {
+            public readonly string activityId = "activityId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -81,12 +97,14 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Affiliations = "_Affiliations";
                 public readonly string _EmailAddresses = "_EmailAddresses";
                 public readonly string _PersonalInfo = "_PersonalInfo";
+                public readonly string ActivityEdit = "ActivityEdit";
                 public readonly string Index = "Index";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
             public readonly string _Affiliations = "~/Views/MyProfile/_Affiliations.cshtml";
             public readonly string _EmailAddresses = "~/Views/MyProfile/_EmailAddresses.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
+            public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
         }
     }
@@ -99,6 +117,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult ActivityEdit(int? activityId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "activityId", activityId);
             return callInfo;
         }
 

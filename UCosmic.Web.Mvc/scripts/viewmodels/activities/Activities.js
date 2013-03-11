@@ -52,9 +52,58 @@ var ViewModels;
                 }, function (xhr, textStatus, errorThrown) {
                 });
             };
-            ActivityList.prototype.addActivity = function () {
+            ActivityList.prototype.deleteActivityById = function (activityId) {
+                $.ajax({
+                    type: "DELETE",
+                    url: App.Routes.WebApi.Activities.Delete.get() + activityId.toString(),
+                    success: function (data, textStatus, jqXHR) {
+                        alert(textStatus);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(textStatus);
+                    }
+                });
             };
-            ActivityList.prototype.deleteActivity = function () {
+            ActivityList.prototype.deleteActivity = function (data, event, viewModel) {
+                $("#confirmActivityDeleteDialog").dialog({
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: "Yes, confirm delete",
+                            click: function () {
+                                viewModel.deleteActivityById(data.revisionId());
+                                $(this).dialog("close");
+                            }
+                        }, 
+                        {
+                            text: "No, cancel delete",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }, 
+                        
+                    ]
+                });
+            };
+            ActivityList.prototype.editActivity = function (data, event, activityId) {
+                var element = event.srcElement;
+                var url = null;
+                while((element != null) && (element.nodeName != 'TR')) {
+                    element = element.parentElement;
+                }
+                if(element != null) {
+                    url = element.attributes["href"].value;
+                }
+                if(url != null) {
+                    if(activityId == null) {
+                        location.href = url;
+                    } else {
+                        location.href = url + activityId.toString();
+                    }
+                }
             };
             ActivityList.prototype.getTypeName = function (id) {
                 var typeName = "";

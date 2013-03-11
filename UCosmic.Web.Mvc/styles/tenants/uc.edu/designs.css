@@ -25,6 +25,23 @@ body table.data {
     cursor: pointer; }
   body table.data tbody tr.hover-hilite:hover td {
     background-color: #ffffaa; }
+body table.activity {
+  width: 100%;
+  margin: 16px 0; }
+  body table.activity td.field-name {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: right;
+    vertical-align: middle; }
+  body table.activity td {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: left;
+    vertical-align: middle; }
 body ul.data > li.hover-hilite:hover, body ol.data > li.hover-hilite:hover {
   background-color: #ffffaa; }
   body ul.data > li.hover-hilite:hover *, body ol.data > li.hover-hilite:hover * {
@@ -142,4 +159,27 @@ body .profile-tabs.k-tabstrip {
     padding: 8px;
     border-width: 0;
     border-top-width: 1px; }
+body .ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis; }
+body .required-field {
+  font-family: sans-serif;
+  font-size: xx-large;
+  vertical-align: text-top;
+  color: #3333ff; }
+body .help-icon-position-on-required-field {
+  position: relative;
+  top: -30px;
+  right: 36px;
+  width: 16px;
+  height: 16px; }
+body .help-icon-position {
+  position: relative;
+  top: -28px;
+  right: 20px;
+  width: 16px;
+  height: 16px; }
 

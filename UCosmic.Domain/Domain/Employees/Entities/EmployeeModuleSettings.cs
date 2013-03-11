@@ -18,6 +18,7 @@ namespace UCosmic.Domain.Employees
             OfferCountry = true;
             OfferActivityType = true;
             OfferFundingQuestions = true;
+            InternationalPedigreeTitle = "International Pedigree";
         }
 
         public int Id { get; set; }
@@ -30,5 +31,6 @@ namespace UCosmic.Domain.Employees
         public bool OfferCountry { get; protected internal set; }
         public bool OfferActivityType { get; protected internal set; }
         public bool OfferFundingQuestions { get; protected internal set; }
+        public string InternationalPedigreeTitle { get; protected internal set; }
     }
 }

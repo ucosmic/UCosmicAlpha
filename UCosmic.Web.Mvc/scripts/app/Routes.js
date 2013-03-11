@@ -335,8 +335,23 @@ var App;
                     return Types;
                 })();
                 Activities.Types = Types;                
+                var Delete = (function () {
+                    function Delete() { }
+                    Delete.get = function get() {
+                        return makeUrl('activities/delete');
+                    }
+                    return Delete;
+                })();
+                Activities.Delete = Delete;                
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
+            (function (Activity) {
+                function get() {
+                    return makeUrl('activity');
+                }
+                Activity.get = get;
+            })(WebApi.Activity || (WebApi.Activity = {}));
+            var Activity = WebApi.Activity;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
         (function (Mvc) {

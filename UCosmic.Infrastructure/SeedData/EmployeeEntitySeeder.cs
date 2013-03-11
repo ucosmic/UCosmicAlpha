@@ -100,16 +100,17 @@ namespace UCosmic.SeedData
                 EstablishmentId = establishment.RevisionId,
                 ActivityTypes = new Collection<ActivityType>
                 {
-                    new ActivityType {Type = "Research"},
-                    new ActivityType {Type = "Conference Participation"},
-                    new ActivityType {Type = "Teaching/Mentoring"},
-                    new ActivityType {Type = "Creative Endeavor"},
-                    new ActivityType {Type = "Professional Development and Service"},
-                    new ActivityType {Type = "Honor/Award"}
+                    new ActivityType {Type = "Research and Creative Endeavors"},
+                    new ActivityType {Type = "Earned Advance Degrees"},
+                    new ActivityType {Type = "Teaching and Mentoring"},
+                    new ActivityType {Type = "Professional Service and Consulting"},
+                    new ActivityType {Type = "Awards and Honors"},
+                    new ActivityType {Type = "Conference Participation"}
                 },
                 OfferCountry = true,
                 OfferActivityTypes = true,
-                OfferFundingQuestions = true
+                OfferFundingQuestions = true,
+                InternationalPedigreeTitle = "My Formal Education Outside the US"
             });
         }
     }

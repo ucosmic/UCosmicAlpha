@@ -318,6 +318,18 @@ module App.Routes {
                 }
             }
 
+            export class Delete {
+                static get (): string {
+                    return makeUrl('activities/delete');
+                }
+            }
+        }
+
+        export module Activity {
+
+            export function get (): string {
+                return makeUrl('activity');
+            }
         }
     }
 

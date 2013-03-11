@@ -56,7 +56,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/ko/knockout.validation.js",
                 "~/scripts/ko/knockout.binding-handlers.js",
                 "~/scripts/sammy/sammy-{version}.js",
-                "~/scripts/kendo/2012.3.1114/kendo.web.js",
+                //"~/scripts/kendo/2012.3.1114/kendo.web.js",
+				"~/scripts/kendo/2013.1.226/kendo.web.js",
                 "~/scripts/oss/jquery.placeholder.js",
                 "~/scripts/oss/jquery.animate-enhanced.js",
                 "~/scripts/oss/jquery.autosize.js",
@@ -100,8 +101,12 @@ namespace UCosmic.Web.Mvc
 
             // activities
             bundles.Add(new ScriptBundle("~/bundles/activities").Include(
-                "~/scripts/viewmodels/activities/Activities.js",
-                "~/scripts/oss/jquery.dotdotdot-1.5.6.js"));
+                "~/scripts/viewmodels/activities/Activities.js"));
+
+            // activity edit
+            bundles.Add(new ScriptBundle("~/bundles/activity").Include(
+                "~/scripts/viewmodels/activities/Activity.js",
+                "~/scripts/tinymce/tiny_mce.js"));
 
             // bootstrap css bundles
             var tenants = new[]
@@ -152,9 +157,14 @@ namespace UCosmic.Web.Mvc
                 "~/content/themes/base/jquery.ui.theme.css"));
 
             // KendoUI uniform theme
-            bundles.Add(new StyleBundle("~/content/kendo/2012.3.1114/uniform-css").Include(
-                "~/content/kendo/2012.3.1114/kendo.common.css",
-                "~/content/kendo/2012.3.1114/kendo.uniform.css"));
+            bundles.Add(new StyleBundle(
+                //"~/content/kendo/2012.3.1114/uniform-css"
+                "~/content/kendo/2013.1.226/uniform-css"
+                ).Include(
+                //"~/content/kendo/2012.3.1114/kendo.common.css",
+                //"~/content/kendo/2012.3.1114/kendo.uniform.css",
+                "~/content/kendo/2013.1.226/kendo.common.css",
+                "~/content/kendo/2013.1.226/kendo.uniform.css"));
         }
     }
 }

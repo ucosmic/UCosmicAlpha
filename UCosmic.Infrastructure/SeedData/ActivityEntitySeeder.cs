@@ -71,7 +71,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type == "Research");
+                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research"));
                     if (activityType == null) { throw new Exception("USF 'Research' ActivityType not found."); }
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
@@ -151,7 +151,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type == "Teaching/Mentoring");
+                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching"));
                     if (activityType == null) { throw new Exception("USF 'Teaching/Mentoring' ActivityType not found."); }
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
@@ -196,7 +196,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type == "Conference Participation");
+                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference"));
                     if (activityType == null) { throw new Exception("USF 'Conference Participation' ActivityType not found."); }
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
@@ -242,7 +242,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type == "Creative Endeavor");
+                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative"));
                     if (activityType == null) { throw new Exception("USF 'Creative Endeavor' ActivityType not found."); }
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
@@ -286,7 +286,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type == "Honor/Award");
+                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Awards"));
                     if (activityType == null) { throw new Exception("USF 'Honor/Award' ActivityType not found."); }
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
