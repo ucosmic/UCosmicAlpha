@@ -54,6 +54,5 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<PagedQueryResult<EstablishmentView>, PageOfEstablishmentApiFlatModel>();
             }
         }
-
     }
 }
