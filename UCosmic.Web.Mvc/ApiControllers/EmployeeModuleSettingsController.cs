@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("faculty-ranks")]
-        public IEnumerable<FacultyRankApiModel> Get()
+        public IEnumerable<FacultyRankApiModel> GetFacultyRanks()
         {
             //throw new HttpResponseException(HttpStatusCode.BadRequest); // test API failure
 
@@ -41,6 +41,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Enumerable.Empty<FacultyRankApiModel>();
 
             var models = Mapper.Map<FacultyRankApiModel[]>(employeeModuleSettings.FacultyRanks);
+            return models;
+        }
+
+        [GET("activity-types")]
+        public IEnumerable<EmployeeActivityTypeApiModel> GetActivityTypes()
+        {
+            //throw new HttpResponseException(HttpStatusCode.BadRequest); // test API failure
+
+            var employeeModuleSettings = _queryProcessor.Execute(
+                new EmployeeModuleSettingsByUserName(User.Identity.Name)
+                {
+                    EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+                    {
+                        x => x.ActivityTypes
+                    }
+                });
+
+            // do not throw exception, some tenants may not use settings or faculty ranks
+            if (employeeModuleSettings == null || !employeeModuleSettings.ActivityTypes.Any())
+                return Enumerable.Empty<EmployeeActivityTypeApiModel>();
+
+            var models = Mapper.Map<EmployeeActivityTypeApiModel[]>(employeeModuleSettings.ActivityTypes);
             return models;
         }
     }

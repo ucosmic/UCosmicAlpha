@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
@@ -23,7 +22,7 @@ namespace UCosmic.Domain.Employees
         public int NotifyAdminPersonId { get; set; }
         public string PersonalInfoAnchorText { get; set; }
         public int EstablishmentId { get; set; }
-        public ICollection<ActivityType> ActivityTypes { get; set; }
+        public ICollection<EmployeeActivityType> EmployeeActivityTypes { get; set; }
         public bool OfferCountry { get; set; }
         public bool OfferActivityTypes { get; set; }
         public bool OfferFundingQuestions { get; set; }
@@ -65,7 +64,7 @@ namespace UCosmic.Domain.Employees
                 NotifyAdmins = new[] { _entities.Get<Person>().SingleOrDefault(x => x.RevisionId == command.NotifyAdminPersonId) },
                 PersonalInfoAnchorText = command.PersonalInfoAnchorText,
                 Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.EstablishmentId),
-                ActivityTypes = command.ActivityTypes,
+                ActivityTypes = command.EmployeeActivityTypes,
                 OfferCountry = command.OfferCountry,
                 OfferActivityType = command.OfferActivityTypes,
                 OfferFundingQuestions = command.OfferFundingQuestions,

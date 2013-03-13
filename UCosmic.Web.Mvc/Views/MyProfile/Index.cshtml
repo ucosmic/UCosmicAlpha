@@ -19,16 +19,24 @@
 
     <script type="text/javascript">
 
-        $(function () {
+        $(function() {
             var profileViewModel = new ViewModels.My.Profile();
-            $(profileViewModel).on('ready', function () {
+            $(profileViewModel).on('ready', function() {
                 ko.applyBindings(profileViewModel, $('#my_profile')[0]);
-                var activitiesViewModel = new ViewModels.Activities.ActivityList("activities", profileViewModel.personId);
+
+                var activitiesViewModel = new ViewModels.Activities.ActivityList(profileViewModel.personId);
+                activitiesViewModel.load()
+                    .done(function() {
+                        ko.applyBindings(activitiesViewModel, $("#activities")[0]);
+                    })
+                    .fail(function (jqXhr, textStatus, errorThrown) {
+                        alert(textStatus + "|" + errorThrown);
+                    });                 
             });
+            
             $('#tabstrip').kendoTabStrip({
                 animation: false
-            })
-            .show();
+            }).show();
 
         });
 

@@ -29,6 +29,14 @@ namespace UCosmic.Web.Mvc.Models
         public int PlaceId { get; set; }
     }
 
+    public class ActivityTypeApiModel
+    {
+        public int RevisionId { get; set; }
+        public byte[] Version { get; set; }
+        public int ActivityValuesId { get; set; }
+        public int TypeId { get; set; }
+    }
+
     public class ActivityTagApiModel
     {
         public int RevisionId { get; set; }
@@ -51,7 +59,7 @@ namespace UCosmic.Web.Mvc.Models
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
         public ICollection<ActivityLocationApiModel> Locations { get; set; }
-        public int? TypeId { get; set; }
+        public ICollection<ActivityTypeApiModel> Types { get; set; }
         public string ModeText { get; set; }
     }
 
@@ -83,7 +91,7 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<ActivityType, ActivityTypeNameApiModel>();
+                CreateMap<ActivityType, ActivityTypeApiModel>();
 
                 CreateMap<ActivityTag, ActivityTagApiModel>();
 
@@ -111,7 +119,6 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<PagedQueryResult<Activity>, PageOfActivityApiModel>();
             }
         }
-
     }
 
 

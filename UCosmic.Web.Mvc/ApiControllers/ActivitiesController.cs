@@ -40,19 +40,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("types")]
-        public ICollection<ActivityTypeNameApiModel> GetTypes()
-        {
-            var employeeModuleSettings = _queryProcessor.Execute(
-                new EmployeeModuleSettingsByUserName(User.Identity.Name));
-
-            var model =
-                Mapper.Map<ICollection<ActivityType>, ICollection<ActivityTypeNameApiModel>>(
-                    employeeModuleSettings.ActivityTypes);
-
-            return model;
-        }
-
         [GET("locations")]
         public ICollection<ActivityLocationNameApiModel> GetLocations()
         {

@@ -1,8 +1,13 @@
-﻿namespace UCosmic.Domain.Activities
+﻿using UCosmic.Domain.Employees;
+
+namespace UCosmic.Domain.Activities
 {
-    public class ActivityType : Entity
+    public class ActivityType : RevisableEntity
     {
-        public int Id { get; set; }
-        public string Type { get; set; }
+        public virtual ActivityValues ActivityValues { get; set; }
+        public int ActivityValuesId { get; set; }
+
+        public virtual EmployeeActivityType Type { get; set; }
+        public int TypeId { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace UCosmic.SeedData
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
         private readonly IHandleCommands<CreateActivityValues> _createActivityValues;
         private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
+        private readonly IHandleCommands<CreateActivityType> _createActivityType;
         private readonly IUnitOfWork _unitOfWork;
 
         public ActivityEntitySeeder(IProcessQueries queryProcessor
@@ -24,6 +25,7 @@ namespace UCosmic.SeedData
                                     , IHandleCommands<CreateActivityLocation> createActivityLocation
                                     , IHandleCommands<CreateActivityValues> createActivityValues
                                     , IHandleCommands<CreateActivityTag> createActivityTag
+                                    , IHandleCommands<CreateActivityType> createActivityType
                                     , IUnitOfWork unitOfWork
         )
         {
@@ -31,6 +33,7 @@ namespace UCosmic.SeedData
             _createActivityLocation = createActivityLocation;
             _createActivityValues = createActivityValues;
             _createActivityTag = createActivityTag;
+            _createActivityType = createActivityType;
             _unitOfWork = unitOfWork;
             _queryProcessor = queryProcessor;
             _entities = entities;
@@ -71,9 +74,6 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research"));
-                    if (activityType == null) { throw new Exception("USF 'Research' ActivityType not found."); }
-
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
                         ActivityId = activity.RevisionId,
@@ -82,7 +82,6 @@ namespace UCosmic.SeedData
                         Content =
                             "Permian/Triassic (P/Tr) Boundary Global Events—The P/Tr boundary represents the largest mass extinction in Earth history, yet its causes remain uncertain. I am investigating critical questions related to the extent and intensity of Permo-Triassic deep-ocean anoxia, patterns of upwelling of toxic sulfidic waters onto shallow-marine shelves and platforms, and the relationship of such events to global C-isotopic excursions and the delayed recovery of marine biotas during the Early Triassic. I am working on the P/Tr boundary globally.",
                         StartsOn = new DateTime(2003, 3, 1),
-                        TypeId = activityType.Id,
                         Mode = activity.Mode
                     };
 
@@ -90,6 +89,18 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
+
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id
+                    });
+                
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id
+                    });
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
@@ -151,16 +162,12 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching"));
-                    if (activityType == null) { throw new Exception("USF 'Teaching/Mentoring' ActivityType not found."); }
-
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
                         ActivityId = activity.RevisionId,
                         Title = "Professional Development Program for Teachers of English at Shandong University",
                         Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
                         StartsOn = new DateTime(2003, 6, 1),
-                        TypeId = activityType.Id,
                         Mode = activity.Mode
                     };
 
@@ -169,6 +176,12 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Service")).Id
+                    });
+            
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
                         ActivityValuesId = activityValues.RevisionId,
@@ -196,9 +209,6 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference"));
-                    if (activityType == null) { throw new Exception("USF 'Conference Participation' ActivityType not found."); }
-
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
                         ActivityId = activity.RevisionId,
@@ -206,7 +216,6 @@ namespace UCosmic.SeedData
                         Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
                         StartsOn = new DateTime(2006, 10, 9),
                         EndsOn = new DateTime(2006, 10, 10),
-                        TypeId = activityType.Id,
                         Mode = activity.Mode
                     };
 
@@ -214,6 +223,24 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
+
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference")).Id
+                    });
+
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id
+                    });
+
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honors")).Id
+                    });
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
@@ -242,15 +269,11 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative"));
-                    if (activityType == null) { throw new Exception("USF 'Creative Endeavor' ActivityType not found."); }
-
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
                         ActivityId = activity.RevisionId,
                         Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
                         Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music",
-                        TypeId = activityType.Id,
                         Mode = activity.Mode
                     };
 
@@ -258,6 +281,12 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
+
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative")).Id
+                    });
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
@@ -286,15 +315,11 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    ActivityType activityType = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Awards"));
-                    if (activityType == null) { throw new Exception("USF 'Honor/Award' ActivityType not found."); }
-
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
                         ActivityId = activity.RevisionId,
                         Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
                         Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students.",
-                        TypeId = activityType.Id,
                         Mode = activity.Mode
                     };
 
@@ -302,6 +327,12 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
+
+                    _createActivityType.Handle(new CreateActivityType
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Awards")).Id
+                    });
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {

@@ -7,12 +7,12 @@ var ViewModels;
         })();
         Activities.ActivitySearchInput = ActivitySearchInput;        
         var ActivityList = (function () {
-            function ActivityList(bindingId, personId) {
+            function ActivityList(personId) {
                 this.personId = personId;
-                this._initialize(bindingId);
             }
-            ActivityList.prototype._initialize = function (bindingId) {
+            ActivityList.prototype.load = function () {
                 var _this = this;
+                var deferred = $.Deferred();
                 var locationsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
                     locationsPact.resolve(data);
@@ -20,7 +20,7 @@ var ViewModels;
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.Types.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
@@ -35,22 +35,26 @@ var ViewModels;
                     type: "POST",
                     url: App.Routes.WebApi.Activities.get(),
                     data: activitiesSearchInput,
-                    success: function (data, textStatus, jqXHR) {
+                    success: function (data, textStatus, jqXhr) {
                         dataPact.resolve(data);
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        dataPact.reject(jqXHR, textStatus, errorThrown);
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        dataPact.reject(jqXhr, textStatus, errorThrown);
                     },
                     dataType: 'json'
                 });
-                $.when(typesPact, locationsPact, dataPact).then(function (types, locations, data) {
+                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
+                    debugger;
+
                     _this.activityTypesList = types;
                     _this.activityLocationsList = locations;
                     ko.mapping.fromJS(data, {
                     }, _this);
-                    ko.applyBindings(_this, $("#" + bindingId)[0]);
-                }, function (xhr, textStatus, errorThrown) {
+                    deferred.resolve();
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    deferred.reject(xhr, textStatus, errorThrown);
                 });
+                return deferred;
             };
             ActivityList.prototype.deleteActivityById = function (activityId) {
                 $.ajax({
@@ -149,6 +153,17 @@ var ViewModels;
                     formattedDateRange += "\xa0\xa0";
                 }
                 return formattedDateRange;
+            };
+            ActivityList.prototype.activityTypesFormatted = function (types) {
+                var formattedTypes = "";
+                var location;
+                for(var i = 0; i < types.length; i += 1) {
+                    if(i > 0) {
+                        formattedTypes += ", ";
+                    }
+                    formattedTypes += this.getTypeName(types[i].typeId());
+                }
+                return formattedTypes;
             };
             ActivityList.prototype.activityLocationsFormatted = function (locations) {
                 var formattedLocations = "";

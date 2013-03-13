@@ -17,7 +17,7 @@ module ViewModels.Activities {
 	export class Activity implements Service.ApiModels.IObservableActivity, KnockoutValidationGroup {
 
 	    activityLocationsList: Service.ApiModels.IActivityLocation[];
-	    activityTypesList: Service.ApiModels.IActivityType[];
+	    activityTypesList: KnockoutObservableArray;
 
         /* IObservableActivity implemented */
         revisionId: KnockoutObservableNumber;
@@ -41,7 +41,7 @@ module ViewModels.Activities {
         /* 
         */
         // --------------------------------------------------------------------------------
-        Load(): JQueryPromise {
+        load(): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
             var locationsPact = $.Deferred();
@@ -54,8 +54,8 @@ module ViewModels.Activities {
                 });
 
             var typesPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.Types.get())
-                .done((data: Service.ApiModels.IActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
+            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+                .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
                     typesPact.resolve(data);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -67,22 +67,26 @@ module ViewModels.Activities {
             $.ajax({
                     type: "GET",
                      url: App.Routes.WebApi.Activity.get() + this.revisionId().toString(),
-                 success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXHR: JQueryXHR): void 
+                 success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXhr: JQueryXHR): void 
                             { dataPact.resolve(data); },
-                   error: function  (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void
-                            { dataPact.reject(jqXHR, textStatus, errorThrown); },
+                   error: function  (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
+                            { dataPact.reject(jqXhr, textStatus, errorThrown); },
             });
             
             // only process after all requests have been resolved
             $.when(typesPact, locationsPact, dataPact)
-                .done( (types: Service.ApiModels.IActivityType[],
+                .done( (types: Service.ApiModels.IEmployeeActivityType[],
                         locations: Service.ApiModels.IActivityLocation[],
                         data: Service.ApiModels.IObservableActivity): void => {
 
-                    this.activityTypesList = types;
+                    debugger;
+
+                    this.activityTypesList = ko.observableArray();
+                    ko.mapping.fromJS(types, {}, this.activityTypesList);
+
                     this.activityLocationsList = locations;
 
-                    ko.mapping.fromJS(data, {}, this); // load data
+                    ko.mapping.fromJS(data, {}, this);
 
                     deferred.resolve();
                 })

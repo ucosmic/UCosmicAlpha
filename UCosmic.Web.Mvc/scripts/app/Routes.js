@@ -363,6 +363,14 @@ var App;
                         return FacultyRanks;
                     })();
                     ModuleSettings.FacultyRanks = FacultyRanks;                    
+                    var ActivityTypes = (function () {
+                        function ActivityTypes() { }
+                        ActivityTypes.get = function get() {
+                            return makeUrl('my/employee-module-settings/activity-types');
+                        }
+                        return ActivityTypes;
+                    })();
+                    ModuleSettings.ActivityTypes = ActivityTypes;                    
                 })(Employees.ModuleSettings || (Employees.ModuleSettings = {}));
                 var ModuleSettings = Employees.ModuleSettings;
             })(WebApi.Employees || (WebApi.Employees = {}));
@@ -380,14 +388,6 @@ var App;
                     return Locations;
                 })();
                 Activities.Locations = Locations;                
-                var Types = (function () {
-                    function Types() { }
-                    Types.get = function get() {
-                        return makeUrl('activities/types');
-                    }
-                    return Types;
-                })();
-                Activities.Types = Types;                
                 var Delete = (function () {
                     function Delete() { }
                     Delete.get = function get() {

@@ -5,7 +5,7 @@ var ViewModels;
             function Activity(activityId) {
                 this.revisionId = ko.observable(activityId);
             }
-            Activity.prototype.Load = function () {
+            Activity.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
                 var locationsPact = $.Deferred();
@@ -15,7 +15,7 @@ var ViewModels;
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.Types.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
@@ -24,15 +24,19 @@ var ViewModels;
                 $.ajax({
                     type: "GET",
                     url: App.Routes.WebApi.Activity.get() + this.revisionId().toString(),
-                    success: function (data, textStatus, jqXHR) {
+                    success: function (data, textStatus, jqXhr) {
                         dataPact.resolve(data);
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        dataPact.reject(jqXHR, textStatus, errorThrown);
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        dataPact.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
                 $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
-                    _this.activityTypesList = types;
+                    debugger;
+
+                    _this.activityTypesList = ko.observableArray();
+                    ko.mapping.fromJS(types, {
+                    }, _this.activityTypesList);
                     _this.activityLocationsList = locations;
                     ko.mapping.fromJS(data, {
                     }, _this);

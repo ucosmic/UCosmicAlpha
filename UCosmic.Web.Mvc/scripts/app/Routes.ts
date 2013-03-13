@@ -351,6 +351,11 @@ module App.Routes {
                         return makeUrl('my/employee-module-settings/faculty-ranks');
                     }
                 }
+                export class ActivityTypes {
+                    static get (): string {
+                        return makeUrl('my/employee-module-settings/activity-types');
+                    }
+                }
             }
         }
 
@@ -363,12 +368,6 @@ module App.Routes {
             export class Locations {
                 static get (): string {
                     return makeUrl('activities/locations');
-                }
-            }
-
-            export class Types {
-                static get (): string {
-                    return makeUrl('activities/types');
                 }
             }
 

@@ -24,7 +24,7 @@ module ViewModels.Activities {
 	export class ActivityList implements KnockoutValidationGroup {
 
 	    activityLocationsList: Service.ApiModels.IActivityLocation[];
-	    activityTypesList: Service.ApiModels.IActivityType[];
+	    activityTypesList: Service.ApiModels.IEmployeeActivityType[];
 
 	    personId: number;
         orderBy: string;
@@ -36,20 +36,16 @@ module ViewModels.Activities {
         /* 
         */
         // --------------------------------------------------------------------------------                        
-        constructor(bindingId: string, personId: number) {
-
+        constructor(personId: number) {
             this.personId = personId;
-            this._initialize(bindingId);
-
-            //this._setupValidation();
-            //this._setupKendoWidgets();
         }
 
         // --------------------------------------------------------------------------------
         /* 
         */
         // --------------------------------------------------------------------------------
-        private _initialize(bindingId: string) {
+        load(): JQueryPromise {
+            var deferred: JQueryDeferred = $.Deferred();
 
             var locationsPact = $.Deferred();
             $.get(App.Routes.WebApi.Activities.Locations.get())
@@ -61,8 +57,8 @@ module ViewModels.Activities {
                 });
 
             var typesPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.Types.get())
-                .done((data: Service.ApiModels.IActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
+            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+                .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
                     typesPact.resolve(data);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -81,40 +77,33 @@ module ViewModels.Activities {
                     type: "POST",
                      url: App.Routes.WebApi.Activities.get(),
                     data: activitiesSearchInput,
-                 success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXHR: JQueryXHR): void 
+                 success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXhr: JQueryXHR): void 
                             { dataPact.resolve(data); },
-                   error: function  (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void
-                            { dataPact.reject(jqXHR, textStatus, errorThrown); },
+                   error: function  (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
+                            { dataPact.reject(jqXhr, textStatus, errorThrown); },
                 dataType: 'json'
             });
             
             // only process after all requests have been resolved
-            $.when(typesPact, locationsPact, dataPact).then(
+            $.when(typesPact, locationsPact, dataPact)
+                .done( (types: Service.ApiModels.IEmployeeActivityType[],
+                    locations: Service.ApiModels.IActivityLocation[],
+                         data: Service.ApiModels.IActivityPage): void => {
 
-                // all requests succeeded
-                (     types: Service.ApiModels.IActivityType[],
-                  locations: Service.ApiModels.IActivityLocation[],
-                       data: Service.ApiModels.IActivityPage): void => {
+                    debugger;
 
                     this.activityTypesList = types;
                     this.activityLocationsList = locations;
 
-                    ko.mapping.fromJS(data, {}, this); // load data
+                    ko.mapping.fromJS(data, {}, this);
 
-                    //if (!this._isInitialized) {
-
-                        ko.applyBindings(this, $("#"+bindingId)[0]);
-
-                        //this._isInitialized = true; // bindings have been applied
-
-                        //this.$countries().kendoDropDownList(); // kendoui dropdown for countries
-                    //}
-                },
-
-                // one of the responses failed (never called more than once, even on multifailures)
-                (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    //alert('a GET API call failed :(');
+                    deferred.resolve();
+                })
+                .fail( (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    deferred.reject(xhr, textStatus, errorThrown);
                 });
+
+            return deferred;
         }
 
         // --------------------------------------------------------------------------------
@@ -254,6 +243,22 @@ module ViewModels.Activities {
             return formattedDateRange;
         }
 
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        activityTypesFormatted(types: Service.ApiModels.IObservableActivityType[]): string {
+            var formattedTypes: string = "";
+            var location: Service.ApiModels.IActivityLocation;
+
+            for (var i = 0; i < types.length; i += 1) {
+                if (i > 0) { formattedTypes += ", "; }
+                formattedTypes += this.getTypeName(types[i].typeId());
+            }
+
+            return formattedTypes;
+        }
+        
         // --------------------------------------------------------------------------------
         /*  
         */

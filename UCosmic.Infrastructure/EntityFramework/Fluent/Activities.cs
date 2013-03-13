@@ -41,6 +41,11 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ActivityValuesId)
                 .WillCascadeOnDelete(true);
 
+            HasMany(p => p.Types)
+                .WithRequired(d => d.ActivityValues)
+                .HasForeignKey(d => d.ActivityValuesId)
+                .WillCascadeOnDelete(true);
+
             Property(p => p.Title).HasMaxLength(200);
             Property(p => p.Content).HasColumnType("ntext");
             Property(p => p.StartsOn).IsOptional();
@@ -83,13 +88,16 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class ActivityTypeOrm : EntityTypeConfiguration<ActivityType>
+    public class ActivityTypeOrm : RevisableEntityTypeConfiguration<ActivityType>
     {
         public ActivityTypeOrm()
         {
             ToTable(typeof(ActivityType).Name, DbSchemaName.ActivitiesV2);
 
-            Property(p => p.Type).IsRequired().HasMaxLength(ActivityConstraints.TypeMaxLength);
+            HasRequired(p => p.Type)
+                .WithMany()
+                .HasForeignKey(d => d.TypeId)
+                .WillCascadeOnDelete(true);
         }
     }
 }

@@ -34,7 +34,7 @@
         <!-- Description -->
         <td style="vertical-align: top">
             <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.getTypeName(values()[0].typeId())"></span>
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.activityTypesFormatted(values()[0].types())"></span>
                 <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
             </div>
             <div class="ellipsis">

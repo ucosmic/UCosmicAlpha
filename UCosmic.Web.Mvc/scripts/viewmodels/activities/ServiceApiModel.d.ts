@@ -2,7 +2,7 @@
 
 module Service.ApiModels {
 
-    export interface IActivityType {
+    export interface IEmployeeActivityType {
         id: number;
         type: string;
     }
@@ -23,6 +23,14 @@ module Service.ApiModels {
         placeId: KnockoutObservableNumber;
     }
 
+    export interface IObservableActivityType
+    {
+        id: KnockoutObservableNumber;
+        version: KnockoutObservableString;      // byte[] converted to base64
+        activityValuesId: KnockoutObservableNumber;
+        typeId: KnockoutObservableNumber;
+    }
+
     export interface IObservableActivityValues {
         revisionId: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
@@ -32,7 +40,7 @@ module Service.ApiModels {
         wtartsOn: KnockoutObservableDate;
         endsOn: KnockoutObservableDate;
         locations: KnockoutObservableArray;
-        typeId: KnockoutObservableNumber;
+        types: KnockoutObservableArray;
         modeText: KnockoutObservableString;
     }
 
@@ -47,7 +55,6 @@ module Service.ApiModels {
         modeText: KnockoutObservableString; 
         isInstitution: KnockoutObservableBool;
     }
-
 
     export interface IObservableActivity {
         revisionId: KnockoutObservableNumber;

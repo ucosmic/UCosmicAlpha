@@ -13,13 +13,13 @@
 
     <script type="text/javascript">
 
-        $(function () {
+        $(function() {
             var activityViewModel = new ViewModels.Activities.Activity(@Model);
 
-            activityViewModel.Load()
+            activityViewModel.load()
                 .done(function () {
 
-                    ko.applyBindings(this, $("#activity-edit")[0]);
+                    ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
 
                     $("#countrySelector").kendoMultiSelect({
                         dataTextField: "officialName",
@@ -72,8 +72,9 @@
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
                 }); // fail
-            
+
         }); // function
+
 
     </script>
 }
@@ -111,28 +112,20 @@
 									<!-- COUNTRY -->
 									<tr>
 										<td class="field-name">Country/Location</td>
-										<td>
-											<span>
-											    <select id="countrySelector" style="vertical-align: middle; width: 600px; height:34px"></select>
-                                                <!-- <label class="required-field">*</label>
-												<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
-											</span>
-										</td>
+									    <td>
+									            <span>
+									                <select id="countrySelector" style="vertical-align: middle; width: 600px"></select>
+									                <!-- <label class="required-field">*</label> -->
+									                <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
+									            </span>
+									    </td>
 									</tr>
 									<!-- TYPE -->
 									<tr>
-										<td class="field-name">Type</td>
-										<td>
-										    <span><select style="vertical-align: middle; width: 400px; height: 38px">
-										              <option>Research and Creative Endeavors</option>
-										              <option>Earned Advanced Degrees</option>
-										              <option>Teaching and Mentoring</option>
-										              <option>Professional Service and Consulting</option>
-                                                      <option>Awards and Honors</option>
-										          </select><label class="required-field">*</label>
-												<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/>
-											</span>
-										</td>
+										<td class="field-name">Types</td>
+									    <td>
+									        <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypesList }" />
+									    </td>
 									</tr>
 									<!-- FROM and TO DATES -->
 									<tr>
@@ -143,7 +136,7 @@
 													<input id="fromDatePicker" style="height: 30px; vertical-align: middle"/>
 														<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position" data-bind="click: function (data, event) { help(data, event, null); }"/>
 												</span>
-												To&nbsp;<input id="toDatePicker" style="height: 32px; vertical-align: middle"/>
+												To&nbsp;<input id="toDatePicker" style="height: 30px; vertical-align: middle"/>
 											</span>
 										</td>
 									</tr>
@@ -165,36 +158,46 @@
 								<span>
 									<span><textarea rows="1" style="vertical-align: middle; width: 200px" placeholder="[Enter Tag]"></textarea><img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position"/></span>
 									<input type="button" value="Add"/>
-									<textarea rows="1" style="width: 500px; white-space: nowrap; overflow-x: auto; overflow-y: hidden"></textarea>
+									<textarea rows="1" disabled style="width: 500px; white-space: nowrap; overflow-x: auto; overflow-y: hidden"></textarea>
 								</span>
 							</div>
 							<!-- DOCUMENTS -->
-							<div style="width: 100%">
-								<header style="margin-bottom: inherit">
-									<h2>
-										<span>Documents</span>
-											<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function (data, event) { addDocument(data, event, null); }"/>
-									</h2>
-								</header>
-								<div>
-									<table class="data">
-										<thead>
-											<tr>
-												<th style="width: 5%">Visible</th>
-												<th style="width: 10%">Preview</th>
-												<th style="width: 60%">Name</th>
-												<th style="width: 10%">Type</th>
-												<th style="width: 10%">Size</th>
-												<th style="width: 5%"></th>
-											</tr>
-										</thead>
-										<!-- <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"> -->
-											<tbody>
-										</tbody>
-									</table>
-								</div>
-							</div>
-							<!-- LAST UPDATED -->
+						    <div style="width: 100%; margin-bottom: inherit">
+						        <header style="margin-bottom: inherit">
+						            <h2>
+						                <span>Documents</span>
+						                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function (data, event) { addDocument(data, event, null); }"/>
+						            </h2>
+						        </header>
+						        <div>
+						            <table class="data">
+						                <thead>
+						                    <tr>
+						                        <th style="width: 5%">Visible</th>
+						                        <th style="width: 10%">Preview</th>
+						                        <th style="width: 60%">Name</th>
+						                        <th style="width: 10%">Type</th>
+						                        <th style="width: 10%">Size</th>
+						                        <th style="width: 5%"></th>
+						                    </tr>
+						                </thead>
+						                <!-- <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"> -->
+						                <tbody>
+						                </tbody>
+						            </table>
+						        </div>
+						    </div>
+                            
+						    <!-- BUTTONS -->
+						    <div style="margin-bottom: inherit">
+						        <span>
+						            <input type="button" value="Save as Draft"/>
+						            <input type="button" value="Save as Final"/>
+                                    <input type="button" value="Cancel" style="float: right"/>
+						        </span>
+						    </div>
+
+						    <!-- LAST UPDATED -->
 							<div style="width: 33%; border-top: 1px; border-style: solid">
 								<span style="font-size:smaller; color:slategray">Last updated <label id="last-updated-date">00/00/0000</label> by <label id="last-updated-name">John Doe</label></span>
 							</div>
@@ -208,6 +211,12 @@
 
 
 <!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="activity-types-template">
+    <li>
+        <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="attr: { value: id }"/><span data-bind="text: type"></span>
+    </li>
+</script>
+
 <script type="text/html" id="activity-document-template">
     <tr class="hover-hilite"
         data-bind="click: function (data, event) { $parent.editActivity(data, event, revisionId()); }"

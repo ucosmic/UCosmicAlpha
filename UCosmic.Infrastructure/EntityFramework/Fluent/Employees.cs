@@ -50,7 +50,7 @@ namespace UCosmic.EntityFramework
             HasMany(p => p.ActivityTypes)
                 .WithOptional()
                 .Map(m => m.MapKey("EmployeeModuleSettingsId"))
-                .WillCascadeOnDelete(false); 
+                .WillCascadeOnDelete(true); 
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
             Property(p => p.InternationalPedigreeTitle).HasMaxLength(64);
@@ -64,6 +64,16 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(EmployeeFacultyRank).Name, DbSchemaName.Employees);
 
             Property(p => p.Rank).IsRequired().HasMaxLength(EmployeeFacultyRankConstraints.RankMaxLength);
+        }
+    }
+
+    public class EmployeeActivityTypeOrm : EntityTypeConfiguration<EmployeeActivityType>
+    {
+        public EmployeeActivityTypeOrm()
+        {
+            ToTable(typeof(EmployeeActivityType).Name, DbSchemaName.Employees);
+
+            Property(p => p.Type).IsRequired().HasMaxLength(EmployeeFacultyRankConstraints.ActivityTypeMaxLength);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace UCosmic.Domain.Activities
         public ActivityValues()
         {
             Locations = new Collection<ActivityLocation>();
+            Types = new Collection<ActivityType>();
         }
 
         public void Set(ActivityValues v)
@@ -20,8 +21,7 @@ namespace UCosmic.Domain.Activities
             StartsOn = v.StartsOn;
             EndsOn = v.EndsOn;
             Locations = v.Locations;
-            Type = v.Type;
-            TypeId = v.TypeId;
+            Types = v.Types;
             Mode = v.Mode;
             WasExternallyFunded = v.WasExternallyFunded;
             WasInternallyFunded = v.WasInternallyFunded;
@@ -35,8 +35,7 @@ namespace UCosmic.Domain.Activities
         public DateTime? StartsOn { get; protected internal set; }
         public DateTime? EndsOn { get; protected internal set; }
         public virtual ICollection<ActivityLocation> Locations { get; protected internal set; }
-        public virtual ActivityType Type { get; protected internal set; }
-        public int? TypeId { get; protected internal set; }
+        public virtual ICollection<ActivityType> Types { get; protected internal set; }
         public string ModeText { get; private set; }
         public ActivityMode Mode { get { return ModeText.AsEnum<ActivityMode>(); } protected internal set { ModeText = value.AsSentenceFragment(); } }
         public bool? WasExternallyFunded { get; protected internal set; }

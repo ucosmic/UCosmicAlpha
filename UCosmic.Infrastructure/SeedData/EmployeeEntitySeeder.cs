@@ -62,6 +62,15 @@ namespace UCosmic.SeedData
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = null, //"My International",
                 EstablishmentId = establishment.RevisionId,
+                    /* TODO: Need actual UC activity types here. */
+                EmployeeActivityTypes = new Collection<EmployeeActivityType>
+                {
+                    new EmployeeActivityType {Type = "Conference"},
+                    new EmployeeActivityType {Type = "Research or Creative Endeavors"},
+                    new EmployeeActivityType {Type = "Teaching and Mentoring"},
+                    new EmployeeActivityType {Type = "Professional Service, Consulting and Development"},
+                    new EmployeeActivityType {Type = "Awards and Honors"}
+                }
             });
         }
     }
@@ -98,14 +107,13 @@ namespace UCosmic.SeedData
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My USF World Profile",
                 EstablishmentId = establishment.RevisionId,
-                ActivityTypes = new Collection<ActivityType>
+                EmployeeActivityTypes = new Collection<EmployeeActivityType>
                 {
-                    new ActivityType {Type = "Research and Creative Endeavors"},
-                    new ActivityType {Type = "Earned Advance Degrees"},
-                    new ActivityType {Type = "Teaching and Mentoring"},
-                    new ActivityType {Type = "Professional Service and Consulting"},
-                    new ActivityType {Type = "Awards and Honors"},
-                    new ActivityType {Type = "Conference Participation"}
+                    new EmployeeActivityType {Type = "Conference"},
+                    new EmployeeActivityType {Type = "Research or Creative Endeavors"},
+                    new EmployeeActivityType {Type = "Teaching and Mentoring"},
+                    new EmployeeActivityType {Type = "Professional Service, Consulting and Development"},
+                    new EmployeeActivityType {Type = "Awards and Honors"}
                 },
                 OfferCountry = true,
                 OfferActivityTypes = true,

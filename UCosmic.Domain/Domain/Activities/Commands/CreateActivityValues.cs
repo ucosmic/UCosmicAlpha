@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {
@@ -13,8 +14,6 @@ namespace UCosmic.Domain.Activities
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
-        public ActivityType Type { get; set; }
-        public int TypeId { get; set; }
         public ActivityMode Mode { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
@@ -38,13 +37,6 @@ namespace UCosmic.Domain.Activities
             Activity activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.ActivityId);
             if (activity == null) { throw new Exception("Activity Id " + command.ActivityId.ToString() + " was not found"); }
 
-            ActivityType type = command.Type;
-            if (type == null)
-            {
-                type = _entities.Get<ActivityType>().SingleOrDefault(x => x.Id == command.TypeId);
-                if (type == null) { throw new Exception("Activity Type Id " + command.TypeId.ToString() + " was not found"); }
-            }
-
             var activityValues = new ActivityValues
             {
                 ActivityId = activity.RevisionId,
@@ -52,7 +44,6 @@ namespace UCosmic.Domain.Activities
                 Content = command.Content,
                 StartsOn = command.StartsOn,
                 EndsOn = command.EndsOn,
-                Type = type,
                 Mode = command.Mode,
                 WasExternallyFunded = command.WasExternallyFunded,
                 WasInternallyFunded = command.WasInternallyFunded
