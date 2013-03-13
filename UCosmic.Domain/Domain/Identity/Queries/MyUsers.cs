@@ -62,7 +62,7 @@ namespace UCosmic.Domain.Identity
                 ));
             }
 
-            results = results.OrderBy(query.OrderBy);
+            results = query.OrderBy != null ? results.OrderBy(query.OrderBy) : results.OrderBy(x => x.RevisionId);
             return results;
         }
     }

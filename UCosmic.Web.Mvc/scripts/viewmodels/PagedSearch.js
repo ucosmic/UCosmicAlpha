@@ -75,6 +75,9 @@ var ViewModels;
                 history.back();
             }
         };
+        PagedSearch.prototype.getPageHash = function (pageNumber) {
+            return '#/page/{0}/'.replace('{0}', pageNumber);
+        };
         return PagedSearch;
     })();
     ViewModels.PagedSearch = PagedSearch;    

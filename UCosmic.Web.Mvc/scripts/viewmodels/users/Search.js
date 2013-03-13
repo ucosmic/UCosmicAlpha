@@ -11,13 +11,18 @@ var ViewModels;
             function Search() {
                         _super.call(this);
                 this.sammy = Sammy();
+                this.$historyJson = ko.observable();
+                this._history = ko.observableArray([]);
+                this._historyIndex = 0;
                 this._init();
             }
             Search.prototype._init = function () {
+                this._setupHistory();
                 this._setupSammy();
                 this._setupQueryComputed();
             };
             Search.prototype._pullResults = function () {
+                var _this = this;
                 var deferred = $.Deferred();
                 var queryParameters = {
                     pageSize: this.pageSize(),
@@ -25,7 +30,11 @@ var ViewModels;
                     keyword: this.throttledKeyword(),
                     orderBy: this.orderBy()
                 };
+                this.nextForceDisabled(true);
+                this.prevForceDisabled(true);
                 $.get(App.Routes.WebApi.Users.get(), queryParameters).done(function (response, statusText, xhr) {
+                    _this.nextForceDisabled(false);
+                    _this.prevForceDisabled(false);
                     deferred.resolve(response, statusText, xhr);
                 }).fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);
@@ -72,17 +81,94 @@ var ViewModels;
                     if(self.nextForceDisabled() || self.prevForceDisabled()) {
                         return false;
                     }
+                    if(self._history().length > 1) {
+                        var toPath = this.path;
+                        for(var i = 0; i < self._history().length; i++) {
+                            var existingPath = self._history()[i];
+                            if(toPath === existingPath) {
+                                self._historyIndex = i;
+                                return true;
+                            }
+                        }
+                    }
+                    self._history.push(this.path);
+                    self._historyIndex = self._history().length - 1;
+                    return true;
+                });
+                this.sammy.get(this.getPageHash(':pageNumber'), function () {
                     var pageNumber = this.params['pageNumber'];
                     if(pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber())) {
                         self.pageNumber(parseInt(pageNumber));
                     }
-                    return true;
-                });
-                this.sammy.get('#/page/:pageNumber/', function () {
+                    document.title = 'Users (Page #' + self.pageNumber() + ')';
                 });
                 this.sammy.get('/users[\/]?', function () {
-                    _this.sammy.setLocation('#/page/1/');
+                    _this.sammy.setLocation(_this.getPageHash(1));
                 });
+            };
+            Search.prototype._setupHistory = function () {
+                var _this = this;
+                this.$historyJson.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        var json = newValue.val();
+                        if(json) {
+                            var js = $.parseJSON(json);
+                            ko.mapping.fromJS(js, {
+                            }, _this._history);
+                        }
+                    }
+                });
+                this._history.subscribe(function (newValue) {
+                    if(_this.$historyJson() && _this.$historyJson().length) {
+                        var currentJson = _this.$historyJson().val();
+                        var newJson = ko.toJSON(newValue);
+                        if(currentJson !== newJson) {
+                            _this.$historyJson().val(newJson);
+                        }
+                    }
+                });
+            };
+            Search.prototype.nextPage = function () {
+                this._gotoPage(1);
+            };
+            Search.prototype.prevPage = function () {
+                this._gotoPage(-1);
+            };
+            Search.prototype._gotoPage = function (pageDelta) {
+                if(pageDelta == 0) {
+                    return;
+                }
+                var isEnabled = pageDelta < 0 ? this.prevEnabled() : this.nextEnabled();
+                if(isEnabled) {
+                    var pageNumber = parseInt(this.pageNumber()) + pageDelta;
+                    if(pageNumber > 0 && pageNumber <= this.pageCount()) {
+                        if(this._history().length > 1) {
+                            var toPath = location.pathname + this.getPageHash(pageNumber);
+                            var i = (pageDelta < 0) ? 0 : this._history().length - 1;
+                            var iMove = function () {
+                                if(pageDelta < 0) {
+                                    i++;
+                                } else {
+                                    i--;
+                                }
+                            };
+                            for(; i < this._history().length && i >= 0; iMove()) {
+                                var existingPath = this._history()[i];
+                                if(toPath === existingPath) {
+                                    var historyDelta = i - this._historyIndex;
+                                    history.go(historyDelta);
+                                    this._historyIndex = i;
+                                    return;
+                                }
+                            }
+                        }
+                        this.pageNumber(pageNumber);
+                        var pagePath = this.getPageHash(pageNumber);
+                        if(this.sammy.getLocation() !== pagePath) {
+                            this.sammy.setLocation(pagePath);
+                        }
+                    }
+                }
             };
             return Search;
         })(ViewModels.PagedSearch);

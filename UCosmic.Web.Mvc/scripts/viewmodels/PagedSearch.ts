@@ -35,6 +35,9 @@ module ViewModels {
             if (this.prevEnabled())
                 history.back();
         }
+        getPageHash(pageNumber: any): string {
+            return '#/page/{0}/'.replace('{0}', pageNumber)
+        }
 
         // results
         items: KnockoutObservableArray = ko.observableArray();
