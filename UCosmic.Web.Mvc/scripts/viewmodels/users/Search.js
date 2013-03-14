@@ -30,14 +30,17 @@ var ViewModels;
                     keyword: this.throttledKeyword(),
                     orderBy: this.orderBy()
                 };
+                this.spinner.start();
                 this.nextForceDisabled(true);
                 this.prevForceDisabled(true);
                 $.get(App.Routes.WebApi.Users.get(), queryParameters).done(function (response, statusText, xhr) {
-                    _this.nextForceDisabled(false);
-                    _this.prevForceDisabled(false);
                     deferred.resolve(response, statusText, xhr);
                 }).fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);
+                }).always(function () {
+                    _this.spinner.stop();
+                    _this.nextForceDisabled(false);
+                    _this.prevForceDisabled(false);
                 });
                 return deferred;
             };
@@ -57,7 +60,6 @@ var ViewModels;
                     ]
                 };
                 ko.mapping.fromJS(results, resultsMapping, this);
-                this.spinner.stop();
                 this.transitionedPageNumber(this.pageNumber());
             };
             Search.prototype._setupQueryComputed = function () {

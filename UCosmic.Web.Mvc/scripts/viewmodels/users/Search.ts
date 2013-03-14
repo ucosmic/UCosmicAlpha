@@ -34,16 +34,20 @@ module ViewModels.Users {
                 keyword: this.throttledKeyword(),
                 orderBy: this.orderBy()
             };
+            this.spinner.start();
             this.nextForceDisabled(true);
             this.prevForceDisabled(true);
             $.get(App.Routes.WebApi.Users.get(), queryParameters)
             .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
-                this.nextForceDisabled(false);
-                this.prevForceDisabled(false);
                 deferred.resolve(response, statusText, xhr);
             })
             .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                 deferred.reject(xhr, statusText, errorThrown);
+            })
+            .always((): void => {
+                this.spinner.stop();
+                this.nextForceDisabled(false);
+                this.prevForceDisabled(false);
             });
             return deferred;
         }
@@ -61,7 +65,6 @@ module ViewModels.Users {
                 ignore: ['pageSize', 'pageNumber']
             };
             ko.mapping.fromJS(results, resultsMapping, this);
-            this.spinner.stop();
             this.transitionedPageNumber(this.pageNumber());
         }
 

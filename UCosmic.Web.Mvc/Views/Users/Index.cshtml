@@ -39,10 +39,14 @@
             </header>
             <div class="field" style="margin-bottom: 0;">
                 <input type="hidden" data-bind="value: keyword" />
-                <input type="search" placeholder="Enter a user's name or email address" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
+                <input type="search" placeholder="Enter a user name, email address, or access grant" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
             </div>
             <p data-bind="visible: hasNoItems" style="display: none;">
                 There are no results that match your search terms.
+            </p>
+            <p data-bind="visible: spinner.isVisible">
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                <strong>Loading search results...</strong>
             </p>
             <p data-bind="visible: showStatus" style="display: none;">
                 <strong>Showing <span data-bind="text: firstNumber"></span>
