@@ -58,23 +58,32 @@
                     <span data-bind="text: transitionedPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
-            <ol data-bind="foreach: items">
+            <ol data-bind="foreach: items, visible: hasItems" style="display: none;">
                 <li>
-                    <span data-bind="text: name"></span>
-                    <br />
-                    <span data-bind="text: personDisplayName"></span>
-                    <br />
-                    <ol data-bind="visible: hasRoles, foreach: roleGrants">
-                        <li>
-                            <span data-bind="text: roleName"></span>
-                            <br />
-                            @*<span data-bind="text: roleDescription"></span>*@
-                        </li>
-                    </ol>
-                    <span data-bind="visible: hasNoRoles" style="display: none;">[No roles]</span>
-                    <br />
-                    <br />
-                    <br />
+                    <div class="group">
+                        <div class="on-left">
+                            <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
+                        </div>
+                        <div class="on-left" style="margin-left: 8px; width: 580px;">
+                            <div>
+                                <span data-bind="text: name" style="font-weight: bold; font-size: 18px;"></span>
+                                <span data-bind="visible: hasUniqueDisplayName">- <span data-bind="    text: personDisplayName" style="font-weight: normal; font-size: 18px;"></span>
+                                </span>
+                            </div>
+                            <div style="margin-top: 2px;">
+                                <span class="branded-dark1 badge" data-bind="visible: hasNoRoles" style="display: none; margin-top: 2px; margin-bottom: 2px; margin-left: 0;">[No access grants]</span>
+                                <span data-bind="visible: hasRoles, foreach: roleGrants">
+                                    <span class="branded-dark1 badge" data-bind="text: roleName" style="margin-top: 2px; margin-bottom: 2px; margin-left: 0;"></span>
+                                </span>
+                                @*<ol data-bind="visible: hasRoles, foreach: roleGrants">
+                                    <li>
+                                        <span class="branded-dark1 badge" data-bind="text: roleName"></span>
+                                    </li>
+                                </ol>*@
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
                 </li>
             </ol>
         </div>

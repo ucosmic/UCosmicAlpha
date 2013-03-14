@@ -88,8 +88,8 @@ body .badge {
     background-color: #fff;
     border: solid 1px #7a0019; }
   body .badge.branded-dark1 {
-    background-color: #3333ff;
-    color: white !important; }
+    background-color: #7a0019;
+    color: #ffcc33 !important; }
 body .person-profile {
   margin-bottom: 16px; }
   body .person-profile.clickable:hover *:hover {

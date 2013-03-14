@@ -179,8 +179,22 @@ var ViewModels;
             function SearchResult(values) {
                 ko.mapping.fromJS(values, {
                 }, this);
+                this._setupPhotoComputeds();
+                this._setupNamingComputeds();
                 this._setupRoleGrantComputeds();
             }
+            SearchResult.prototype._setupPhotoComputeds = function () {
+                var _this = this;
+                this.photoSrc = ko.computed(function () {
+                    return App.Routes.WebApi.People.Photo.get(_this.id(), 100);
+                });
+            };
+            SearchResult.prototype._setupNamingComputeds = function () {
+                var _this = this;
+                this.hasUniqueDisplayName = ko.computed(function () {
+                    return _this.name() !== _this.personDisplayName();
+                });
+            };
             SearchResult.prototype._setupRoleGrantComputeds = function () {
                 var _this = this;
                 this.hasRoles = ko.computed(function () {

@@ -271,6 +271,72 @@ module App.Routes {
         }
 
         export module People {
+            export module Photo {
+                //export function get (id: number): string {
+                //    var url = 'people/' + id + '/photo';
+                //    return makeUrl(url);
+                //}
+
+
+
+
+
+                export function get (id: number, maxSide?: number, imageResizeQuality?: string,
+                    refresh?: bool): string;
+
+                export function get (id: number, maxWidth?: number, maxHeight?: number,
+                    imageResizeQuality?: string, refresh?: bool): string;
+
+                export function get (id: number, arg1?: number, arg2?: any, arg3?: any, arg4?: any): string {
+                    if (arguments.length === 5
+                        || (arguments.length >= 3 && typeof arguments[2] === 'number')
+                        || (arguments.length >= 4 && typeof arguments[3] === 'string')
+                    ) {
+                        return getByMaxSides(id, arg1, arg2, arg3, arg4);
+                    }
+                    return getByMaxSide(id, arg1, arg2, arg3);
+                }
+
+                function getByMaxSide(id: number, maxSide?: number, imageResizeQuality?: string,
+                    refresh?: bool): string {
+                    var url = initializeGetUrl(id);
+                    if (maxSide) url += 'maxSide=' + maxSide + '&';
+                    url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                    return url;
+                }
+
+                function getByMaxSides(id: number, maxWidth?: number, maxHeight?: number,
+                    imageResizeQuality?: string, refresh?: bool): string {
+                    var url = initializeGetUrl(id);
+                    if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
+                    if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
+                    url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                    return url;
+                }
+
+                function initializeGetUrl(id: number): string {
+                    var url = makeUrl('people/' + id + '/photo/');
+                    url += '?';
+                    return url;
+                }
+
+                function finalizeGetUrl(url: string, imageResizeQuality?: string, refresh?: bool): string {
+                    if (imageResizeQuality) url += 'quality=' + imageResizeQuality + '&';
+                    if (refresh) url += 'refresh=' + new Date().toUTCString() + '&';
+                    if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
+                        url = url.substr(0, url.length - 1);
+                    if (url.lastIndexOf('?') === url.length - 1) // strip trailing question mark
+                        url = url.substr(0, url.length - 1);
+                    return url;
+                }
+
+
+
+
+
+
+
+            }
             export module Names {
                 export class Salutations {
                     static get (): string {

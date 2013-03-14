@@ -193,13 +193,29 @@ module ViewModels.Users {
 
         hasRoles: KnockoutComputed;
         hasNoRoles: KnockoutComputed;
+        hasUniqueDisplayName: KnockoutComputed;
+        photoSrc: KnockoutComputed;
 
         constructor(values: any) {
 
             // map api data to observables
             ko.mapping.fromJS(values, {}, this);
 
+            this._setupPhotoComputeds();
+            this._setupNamingComputeds();
             this._setupRoleGrantComputeds();
+        }
+
+        private _setupPhotoComputeds(): void {
+            this.photoSrc = ko.computed((): string => {
+                return App.Routes.WebApi.People.Photo.get(this.id(), 100);
+            });
+        }
+
+        private _setupNamingComputeds(): void {
+            this.hasUniqueDisplayName = ko.computed((): bool => {
+                return this.name() !== this.personDisplayName();
+            });
         }
 
         private _setupRoleGrantComputeds(): void {
