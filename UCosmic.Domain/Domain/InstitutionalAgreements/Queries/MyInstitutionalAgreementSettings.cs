@@ -42,7 +42,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
             if (query == null) throw new ArgumentNullException("query");
 
             // make sure user is authorized to view settings
-            if (!query.Principal.IsInAnyRoles(RoleName.InstitutionalAgreementManagers))
+            if (!query.Principal.IsInAnyRole(RoleName.InstitutionalAgreementManagers))
                 throw new SecurityAccessDeniedException(string.Format(
                     "User '{0}' does not have privileges to invoke this function.",
                         query.Principal.Identity.Name));

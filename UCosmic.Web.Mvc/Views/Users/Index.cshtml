@@ -79,8 +79,14 @@
                                         <li>
                                             <span style="display: none;">Action</span>
                                             <ul>
-                                                <li>Impersonate</li>
-                                                <li>Manage Access Grants</li>
+                                                @if (User.IsInAnyRole(RoleName.AuthenticationAgent, RoleName.EmployeeProfileManager))
+                                                {
+                                                    <li>Impersonate</li>
+                                                }
+                                                @if (User.IsInAnyRole(RoleName.AuthorizationAgent, RoleName.SecurityAdministrator))
+                                                {
+                                                    <li>Manage Access Grants</li>
+                                                }
                                             </ul>
                                         </li>
                                     </ul>
