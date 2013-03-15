@@ -167,8 +167,7 @@ namespace UCosmic.SeedData
             _usfEmployeeSeeder.Seed();
         }
     }
-    
-    
+
     public class UcEmployeeSeeder : BaseEmployeeSeeder
     {
         public UcEmployeeSeeder(IProcessQueries queryProcessor
@@ -200,7 +199,26 @@ namespace UCosmic.SeedData
                     PersonId = person.RevisionId
                 });
             }
+            /*
+            {
+                Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Saibal" && x.LastName == "Ghosh");
+                if (person == null) throw new Exception("UC person not found.");
 
+                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
+                if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for UC.");
+
+                EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
+                if (facultyRank == null) throw new Exception("UC Professor rank not found.");
+
+                Seed(new CreateEmployee
+                {
+                    FacultyRankId = facultyRank.Id,
+                    AdministrativeAppointments = "UCosmic Dev",
+                    JobTitles = "UCosmic Dev",
+                    PersonId = person.RevisionId
+                });
+            }
+            */
             /* More employees ... */
         }
     }

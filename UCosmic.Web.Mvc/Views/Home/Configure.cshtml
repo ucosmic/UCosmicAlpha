@@ -1,0 +1,28 @@
+﻿@using UCosmic.Web.Mvc
+@{
+    ViewBag.Title = "Configure";
+}
+
+<div class="content fixed to-top" data-current-module="agreements">
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div id="all" data-side-swiper="on">
+                <form class="group">
+                    <div class="on-left from-top">
+                        <header>
+                            <h1>
+                                @ViewBag.Title
+                            </h1>
+                        </header>
+                    </div>
+                    <aside class="on-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content">
+                            @Html.Partial(MVC.Shared.Views._ConfigurationSidebarNav)
+                        </div>
+                    </aside>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

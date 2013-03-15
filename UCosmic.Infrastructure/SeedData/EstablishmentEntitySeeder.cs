@@ -2904,4 +2904,25 @@ namespace UCosmic.SeedData
         }
     }
 
+    public class EstablishmentConfigurationSeeder : BaseEstablishmentEntitySeeder
+    {
+        private readonly IProcessQueries _queryProcessor;
+
+        public EstablishmentConfigurationSeeder(IProcessQueries queryProcessor
+            , IHandleCommands<SeedEstablishment> createEstablishment
+            , IUnitOfWork unitOfWork
+        )
+            : base(queryProcessor, createEstablishment, unitOfWork)
+        {
+            _queryProcessor = queryProcessor;
+        }
+
+        public override void Seed()
+        {
+            //throw new System.NotImplementedException();
+
+        }
+
+    }
+
 }

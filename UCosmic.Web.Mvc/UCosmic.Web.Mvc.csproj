@@ -289,8 +289,12 @@
     <Compile Include="Models\UserSearchInputModel.cs" />
     <Compile Include="Models\EstablishmentApiFlatModel.cs" />
     <Compile Include="Models\ActivityApiModel.cs" />
+    <Compile Include="Models\EstablishmentConfigurationModel.cs" />
+    <Compile Include="Models\EstablishmentEmailModel.cs" />
+    <Compile Include="Models\EstablishmentsNotificationConfigurationModel.cs" />
     <Compile Include="Models\EstablishmentTypeApiModel.cs" />
     <Compile Include="Models\EstablishmentPostModel.cs" />
+    <Compile Include="Models\EstablishmentWelcomeMessageConfigurationModel.cs" />
     <Compile Include="Models\ImageResizeRequestModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
@@ -2368,6 +2372,8 @@
     <None Include="styles\tenants\testshib.org\layout.scss" />
     <Content Include="Views\MyProfile\ActivityEdit.cshtml" />
     <Content Include="Views\Users\_SearchSideBar.cshtml" />
+    <Content Include="Views\Shared\_ConfigurationSidebarNav.cshtml" />
+    <Content Include="Views\Home\Configure.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

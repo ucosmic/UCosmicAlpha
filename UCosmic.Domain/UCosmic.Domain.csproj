@@ -87,6 +87,7 @@
     <Compile Include="Api\Saml\SamlAttributeName.cs" />
     <Compile Include="Api\Saml\SamlAttributeNameString.cs" />
     <Compile Include="Api\Security\RoleName.cs" />
+    <Compile Include="Api\Validation\MustBeWellFormedEmail.cs" />
     <Compile Include="Api\Validation\MustNotExceedStringLength.cs" />
     <Compile Include="Api\Validation\MustNotBeEmpty.cs" />
     <Compile Include="Api\Validation\MustBePositivePrimaryKey.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Representatives\Entities\RepModuleSettings.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategories.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategoryByCode.cs" />

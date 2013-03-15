@@ -68,6 +68,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Travel = "Travel";
             public readonly string CorporateEngagement = "CorporateEngagement";
             public readonly string GlobalPress = "GlobalPress";
+            public readonly string Configure = "Configure";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -81,6 +82,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Travel = "Travel";
             public const string CorporateEngagement = "CorporateEngagement";
             public const string GlobalPress = "GlobalPress";
+            public const string Configure = "Configure";
         }
 
 
@@ -96,6 +98,7 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _Bib = "_Bib";
                 public readonly string Alumni = "Alumni";
+                public readonly string Configure = "Configure";
                 public readonly string CorporateEngagement = "CorporateEngagement";
                 public readonly string Employees = "Employees";
                 public readonly string GlobalPress = "GlobalPress";
@@ -106,6 +109,7 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             public readonly string _Bib = "~/Views/Home/_Bib.cshtml";
             public readonly string Alumni = "~/Views/Home/Alumni.cshtml";
+            public readonly string Configure = "~/Views/Home/Configure.cshtml";
             public readonly string CorporateEngagement = "~/Views/Home/CorporateEngagement.cshtml";
             public readonly string Employees = "~/Views/Home/Employees.cshtml";
             public readonly string GlobalPress = "~/Views/Home/GlobalPress.cshtml";
@@ -166,6 +170,12 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult GlobalPress()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GlobalPress);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Configure()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Configure);
             return callInfo;
         }
 

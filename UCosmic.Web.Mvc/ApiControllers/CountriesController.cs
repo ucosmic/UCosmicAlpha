@@ -38,6 +38,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var items = Mapper.Map<CountryApiModel[]>(entities);
             return items.ToArray();
-        } 
+        }
     }
 }

@@ -139,6 +139,7 @@
     <Compile Include="EntityFramework\DropCreateDbOnModelChange.cs" />
     <Compile Include="EntityFramework\Fluent\Activities.cs" />
     <Compile Include="EntityFramework\Fluent\Audits.cs" />
+    <Compile Include="EntityFramework\Fluent\Representatives.cs" />
     <Compile Include="EntityFramework\Fluent\Employees.cs" />
     <Compile Include="EntityFramework\Fluent\Files.cs" />
     <Compile Include="EntityFramework\Fluent\Identity.cs" />
