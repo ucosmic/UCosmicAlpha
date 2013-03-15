@@ -43,6 +43,11 @@ namespace UCosmic.Web.Mvc.Models
                         else if (s.OrderBy.Equals("username-desc", StringComparison.OrdinalIgnoreCase))
                             orderBy.Add(e => e.Name, OrderByDirection.Descending);
 
+                        else if (s.OrderBy.Equals("lastname-asc", StringComparison.OrdinalIgnoreCase))
+                            orderBy.Add(e => e.Person.LastName, OrderByDirection.Ascending);
+                        else if (s.OrderBy.Equals("lastname-desc", StringComparison.OrdinalIgnoreCase))
+                            orderBy.Add(e => e.Person.LastName, OrderByDirection.Descending);
+
                         return orderBy;
                     }))
                 ;

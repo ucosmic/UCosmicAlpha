@@ -39,6 +39,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var entities = _queryProcessor.Execute(query);
             var models = Mapper.Map<PageOfUserApiModel>(entities);
+            foreach (var model in models.Items)
+                model.RoleGrants = model.RoleGrants.OrderBy(x => x.RoleName).ToArray();
             return models;
         }
     }

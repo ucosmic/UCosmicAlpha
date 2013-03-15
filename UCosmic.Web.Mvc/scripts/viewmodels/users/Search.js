@@ -177,11 +177,19 @@ var ViewModels;
         Users.Search = Search;        
         var SearchResult = (function () {
             function SearchResult(values) {
+                this.$menu = ko.observable();
                 ko.mapping.fromJS(values, {
                 }, this);
                 this._setupPhotoComputeds();
                 this._setupNamingComputeds();
                 this._setupRoleGrantComputeds();
+                this.$menu.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoMenu({
+                            direction: 'bottom left'
+                        });
+                    }
+                });
             }
             SearchResult.prototype._setupPhotoComputeds = function () {
                 var _this = this;

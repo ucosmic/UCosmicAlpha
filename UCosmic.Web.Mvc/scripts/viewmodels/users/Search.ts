@@ -3,6 +3,7 @@
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
+/// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../PagedSearch.ts" />
 /// <reference path="../../app/Routes.ts" />
 
@@ -191,6 +192,8 @@ module ViewModels.Users {
         personDisplayName: KnockoutObservableString;
         roleGrants: KnockoutObservableArray;
 
+        $menu: KnockoutObservableJQuery = ko.observable();
+
         hasRoles: KnockoutComputed;
         hasNoRoles: KnockoutComputed;
         hasUniqueDisplayName: KnockoutComputed;
@@ -204,6 +207,14 @@ module ViewModels.Users {
             this._setupPhotoComputeds();
             this._setupNamingComputeds();
             this._setupRoleGrantComputeds();
+
+            this.$menu.subscribe((newValue: JQuery): void => {
+                if (newValue && newValue.length) {
+                    newValue.kendoMenu({
+                        direction: 'bottom left'
+                    });
+                }
+            });
         }
 
         private _setupPhotoComputeds(): void {

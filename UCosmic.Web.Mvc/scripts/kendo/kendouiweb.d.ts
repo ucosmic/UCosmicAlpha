@@ -4,6 +4,7 @@ interface JQuery {
     kendoDropDownList(arg1?: any): JQuery;
     kendoComboBox(arg1?: any): JQuery;
     kendoUpload(arg1?: any): JQuery;
+    kendoMenu(arg1?: any): JQuery;
 }
 
 declare module kendo.data {

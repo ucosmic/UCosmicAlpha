@@ -21,9 +21,11 @@
     <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
 
     <script type="text/javascript">
-        var viewModel = new ViewModels.Users.Search();
-        ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
-        viewModel.sammy.run();
+        $(function() {
+            var viewModel = new ViewModels.Users.Search();
+            ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
+            viewModel.sammy.run();
+        });
     </script>
 
 }
@@ -37,7 +39,7 @@
                     @ViewBag.Title
                 </h1>
             </header>
-            <div class="field" style="margin-bottom: 0;">
+            <div class="field">
                 <input type="hidden" data-bind="value: keyword" />
                 <input type="search" placeholder="Enter a user name, email address, or access grant" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
             </div>
@@ -58,28 +60,37 @@
                     <span data-bind="text: transitionedPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
+            <hr />
             <ol data-bind="foreach: items, visible: hasItems" style="display: none;">
-                <li>
+                <li class="user-item">
                     <div class="group">
                         <div class="on-left">
                             <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
                         </div>
-                        <div class="on-left" style="margin-left: 8px; width: 580px;">
-                            <div>
-                                <span data-bind="text: name" style="font-weight: bold; font-size: 18px;"></span>
-                                <span data-bind="visible: hasUniqueDisplayName">- <span data-bind="    text: personDisplayName" style="font-weight: normal; font-size: 18px;"></span>
-                                </span>
+                        <div class="on-left text-data">
+                            <div class="group">
+                                <div class="on-left">
+                                    <span data-bind="text: name" class="user-name"></span>
+                                    <span data-bind="visible: hasUniqueDisplayName">- <span data-bind="text: personDisplayName" class="display-name"></span>
+                                    </span>
+                                </div>
+                                <div class="on-right menu-box">
+                                    <ul data-bind="jqObservableElement: '$menu'">
+                                        <li>
+                                            <span style="display: none;">Action</span>
+                                            <ul>
+                                                <li>Impersonate</li>
+                                                <li>Manage Access Grants</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div style="margin-top: 2px;">
-                                <span class="branded-dark1 badge" data-bind="visible: hasNoRoles" style="display: none; margin-top: 2px; margin-bottom: 2px; margin-left: 0;">[No access grants]</span>
+                            <div class="roles">
+                                <span class="branded-dark1 badge" data-bind="visible: hasNoRoles" style="display: none;">[No access grants]</span>
                                 <span data-bind="visible: hasRoles, foreach: roleGrants">
-                                    <span class="branded-dark1 badge" data-bind="text: roleName" style="margin-top: 2px; margin-bottom: 2px; margin-left: 0;"></span>
+                                    <span class="branded-dark1 badge" data-bind="text: roleName"></span>
                                 </span>
-                                @*<ol data-bind="visible: hasRoles, foreach: roleGrants">
-                                    <li>
-                                        <span class="branded-dark1 badge" data-bind="text: roleName"></span>
-                                    </li>
-                                </ol>*@
                             </div>
                         </div>
                     </div>
@@ -95,3 +106,56 @@
         </aside>
     </form>
 </div>
+@section styles
+{
+    <style type="text/css">
+        .user-item .text-data {
+            margin-left: 8px;
+            width: 580px;
+        }
+        .user-item .text-data .user-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .user-item .text-data .display-name {
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .user-item .text-data .roles {
+            margin-top: 2px;
+        }
+        .user-item .text-data .roles .badge {
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-left: 0;
+            margin-right: 2px;
+            text-transform: none;
+        }
+        .user-item .menu-box ul.k-menu {
+            display: inline-block;
+            margin: -8px 0 0 0;
+            border: 0;
+            background: none;
+            background-image: none;
+            width: 16px;
+        }
+        .user-item .menu-box ul.k-menu > li {
+            border: 0;
+            width: 16px;
+        }
+            .user-item .menu-box ul.k-menu > li.k-state-hover, .user-item .menu-box ul.k-menu > li.k-state-hover:hover {
+                border: 0;
+                background: none;
+                background-image: none;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+            }
+        .user-item .menu-box .k-link {
+            padding: 0;
+        }
+        .user-item .menu-box .k-link .k-icon.k-i-arrow-s {
+            margin: 0;
+            cursor: pointer;
+        }
+    </style>
+}
