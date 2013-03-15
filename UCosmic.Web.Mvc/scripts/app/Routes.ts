@@ -272,15 +272,6 @@ module App.Routes {
 
         export module People {
             export module Photo {
-                //export function get (id: number): string {
-                //    var url = 'people/' + id + '/photo';
-                //    return makeUrl(url);
-                //}
-
-
-
-
-
                 export function get (id: number, maxSide?: number, imageResizeQuality?: string,
                     refresh?: bool): string;
 
@@ -329,13 +320,6 @@ module App.Routes {
                         url = url.substr(0, url.length - 1);
                     return url;
                 }
-
-
-
-
-
-
-
             }
             export module Names {
                 export class Salutations {
