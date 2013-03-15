@@ -13,6 +13,7 @@ namespace UCosmic.Domain.Files
         public int Length { get; protected internal set; }
         public string MimeType { get; protected internal set; }
         public string Name { get; protected internal set; }
+        public string Filename { get; protected internal set; }
     }
 
 
@@ -25,6 +26,7 @@ namespace UCosmic.Domain.Files
                 entity.Id,
                 entity.Length,
                 entity.Name,
+                entity.Filename,
                 entity.MimeType,
                 //file.Binary.Content, // this works, but unnecessarily bloats the database
             });

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
@@ -15,6 +13,7 @@ namespace UCosmic.Domain.Activities
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Values = new Collection<ActivityValues>();
             Tags = new Collection<ActivityTag>();
+            Documents = new Collection<ActivityDocument>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -26,6 +25,7 @@ namespace UCosmic.Domain.Activities
         public ActivityMode Mode { get { return ModeText.AsEnum<ActivityMode>(); } protected internal set { ModeText = value.AsSentenceFragment(); } }
 
         public virtual ICollection<ActivityValues> Values { get; protected internal set; }
-        public virtual ICollection<ActivityTag> Tags { get; protected set; }
+        public virtual ICollection<ActivityTag> Tags { get; protected internal set; }
+        public virtual ICollection<ActivityDocument> Documents { get; protected internal set; }
     }
 }

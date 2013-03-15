@@ -24,6 +24,11 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ActivityId)
                 .WillCascadeOnDelete(true);
 
+            HasMany(p => p.Documents)
+                .WithRequired(d => d.Activity)
+                .HasForeignKey(d => d.ActivityId)
+                .WillCascadeOnDelete(true);
+
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
 
             Ignore(p => p.Mode);
@@ -97,6 +102,19 @@ namespace UCosmic.EntityFramework
             HasRequired(p => p.Type)
                 .WithMany()
                 .HasForeignKey(d => d.TypeId)
+                .WillCascadeOnDelete(true);
+        }
+    }
+
+    public class ActivityDocumentOrm : RevisableEntityTypeConfiguration<ActivityDocument>
+    {
+        public ActivityDocumentOrm()
+        {
+            ToTable(typeof(ActivityDocument).Name, DbSchemaName.ActivitiesV2);
+
+            HasRequired(p => p.Document)
+                .WithMany()
+                .HasForeignKey(d => d.DocumentId)
                 .WillCascadeOnDelete(true);
         }
     }

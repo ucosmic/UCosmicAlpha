@@ -115,6 +115,7 @@
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
     <Compile Include="Domain\Activities\Commands\CopyMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
+    <Compile Include="Domain\Activities\Entities\ActivityDocument.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityLocation.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityMode.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTag.cs" />
@@ -191,6 +193,7 @@
     <Compile Include="Domain\Establishments\Validation\EstablishmentConstraints.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentNameWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\_Deprecated\ValidateEstablishment.cs" />
+    <Compile Include="Domain\Files\Commands\CreateLoadableFile.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
     <Compile Include="Domain\Files\Entities\LoadableFileBinary.cs" />
     <Compile Include="Domain\Files\Entities\LoadableFile.cs" />

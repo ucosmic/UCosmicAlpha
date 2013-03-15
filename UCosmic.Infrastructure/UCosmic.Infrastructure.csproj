@@ -173,6 +173,7 @@
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
+    <Compile Include="SeedData\FileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
@@ -213,6 +214,10 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="SeedData\SeedMediaFiles\1322FF22-E863-435E-929E-765EB95FB460.ppt" />
+    <None Include="SeedData\SeedMediaFiles\02E6D488-B3FA-4D79-848F-303779A53ABE.docx" />
+    <None Include="SeedData\SeedMediaFiles\817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf" />
+    <None Include="SeedData\SeedMediaFiles\10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UCosmic.Domain\UCosmic.Domain.csproj">
@@ -220,7 +225,17 @@
       <Name>UCosmic.Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SeedData\SeedMediaFiles\3D3C0976-5117-4D5A-AF25-1B53166C550C.wmv" />
+    <Content Include="SeedData\SeedMediaFiles\14E5C461-2E5E-4E63-9701-DC3F009AB98E.mov" />
+    <Content Include="SeedData\SeedMediaFiles\5FE682FD-F161-4669-A2C4-974F5B0F8BB1.mp4" />
+    <Content Include="SeedData\SeedMediaFiles\322BF184-32C3-49CA-8C97-18ABE32CFD8A.mp3" />
+    <Content Include="SeedData\SeedMediaFiles\E4E53300-08D3-47C0-954C-BF15EF54F0A3.tif" />
+    <Content Include="SeedData\SeedMediaFiles\C0DA4900-762B-4B26-AE03-843CBB7C0E7B.bmp" />
+    <Content Include="SeedData\SeedMediaFiles\5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912.gif" />
+    <Content Include="SeedData\SeedMediaFiles\EE23D741-C50D-40D5-8214-C18DF68CC6D3.jpg" />
+    <Content Include="SeedData\SeedMediaFiles\A44FAB3B-DEBA-4F14-8965-E379569066A9.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

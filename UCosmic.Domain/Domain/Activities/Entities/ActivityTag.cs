@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace UCosmic.Domain.Activities
+﻿namespace UCosmic.Domain.Activities
 {
     public class ActivityTag : RevisableEntity, IAmNumbered
     {
