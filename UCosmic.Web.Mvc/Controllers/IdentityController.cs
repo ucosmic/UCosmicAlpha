@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Web.Mvc;
@@ -17,14 +18,14 @@ namespace UCosmic.Web.Mvc.Controllers
         private readonly IStorePasswords _passwords;
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateSamlSignOnMetadata> _updateSamlMetadata;
-        private readonly IProvideSaml2Service _samlServiceProvider;
+        //private readonly IProvideSaml2Service _samlServiceProvider;
         private readonly IManageConfigurations _configurationManager;
 
         public IdentityController(ISignUsers userSigner
             , IStorePasswords passwords
             , IProcessQueries queryProcessor
             , IHandleCommands<UpdateSamlSignOnMetadata> updateSamlMetadata
-            , IProvideSaml2Service samlServiceProvider
+            //, IProvideSaml2Service samlServiceProvider
             , IManageConfigurations configurationManager
         )
         {
@@ -32,7 +33,7 @@ namespace UCosmic.Web.Mvc.Controllers
             _passwords = passwords;
             _queryProcessor = queryProcessor;
             _updateSamlMetadata = updateSamlMetadata;
-            _samlServiceProvider = samlServiceProvider;
+            //_samlServiceProvider = samlServiceProvider;
             _configurationManager = configurationManager;
         }
 
@@ -236,5 +237,58 @@ namespace UCosmic.Web.Mvc.Controllers
                 relativeUrl
                 ) : null;
         }
+
+        [POST("sign-in/as")]
+        [Authorize(Roles = RoleName.UserImpersonators)]
+        public virtual ActionResult SignOver(string userName)
+        {
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                var userToImpersonate = _queryProcessor.Execute(new UserByName(userName)
+                {
+                    EagerLoad = new Expression<Func<User, object>>[]
+                    {
+                        x => x.Grants.Select(y => y.Role),
+                    }
+                });
+                if (userToImpersonate != null)
+                {
+                    // cannot impersonate certain users when not already in that role
+                    ViewBag.UserToImpersonate = userName;
+                    if (userToImpersonate.IsInRole(RoleName.AuthenticationAgent) && !User.IsInRole(RoleName.AuthenticationAgent))
+                        ViewBag.AuthenticationAgentFail = new object();
+                    if (userToImpersonate.IsInRole(RoleName.AuthorizationAgent) && !User.IsInRole(RoleName.AuthorizationAgent))
+                        ViewBag.AuthorizationAgentFail = new object();
+                    if (userToImpersonate.IsInRole(RoleName.SecurityAdministrator) && !User.IsInRole(RoleName.SecurityAdministrator))
+                        ViewBag.SecurityAdministratorFail = new object();
+                    if (ViewBag.AuthenticationAgentFail != null ||
+                        ViewBag.AuthorizationAgentFail != null ||
+                        ViewBag.SecurityAdministratorFail != null)
+                        return View(MVC.Identity.Views.SignOverFail);
+
+                    // can only impersonate users that match your tenancy access
+                    if (!User.IsInRole(RoleName.AuthenticationAgent))
+                    {
+                        var tenantUsers = _queryProcessor.Execute(new MyUsersByKeyword(User) { PageSize = int.MaxValue });
+                        if (!tenantUsers.Any(x => x.Name.Equals(userName)))
+                        {
+                            ViewBag.TenantPricacyFail = new object();
+                            return View(MVC.Identity.Views.SignOverFail);
+                        }
+                    }
+
+                    var roleNames = _queryProcessor.Execute(new RolesGrantedTo(User.Identity.Name)).Select(x => x.Name);
+                    Session.UserImpersonating(User, roleNames);
+                    _userSigner.SignOn(userName);
+                    TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", userName));
+                    TempData.UserImpersonating(true);
+
+                    return RedirectToAction(MVC.MyProfile.Index());
+                }
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
     }
 }

@@ -36,8 +36,8 @@ namespace UCosmic.Domain.Identity
                 .EagerLoad(_entities, query.EagerLoad);
 
             // only return users controlled by the requesting principal
-            if (query.Principal.IsInRole(RoleName.SecurityAdministrator) && // tenant users only
-                !query.Principal.IsInRole(RoleName.AuthorizationAgent)) // agents are tenant agnostic
+            if (!query.Principal.IsInRole(RoleName.AuthenticationAgent) && // only agents are tenant agnostic
+                !query.Principal.IsInRole(RoleName.AuthorizationAgent)) // filter to the non-agent's tenant
             {
                 // get the user account & default affiliation for the requesting principal
                 var user = _queryProcessor.Execute(new UserByName(query.Principal.Identity.Name)

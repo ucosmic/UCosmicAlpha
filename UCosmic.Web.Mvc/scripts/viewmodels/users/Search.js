@@ -14,6 +14,7 @@ var ViewModels;
                 this.$historyJson = ko.observable();
                 this._history = ko.observableArray([]);
                 this._historyIndex = 0;
+                this.impersonateUserName = ko.observable();
                 this._init();
             }
             Search.prototype._init = function () {
@@ -45,13 +46,14 @@ var ViewModels;
                 return deferred;
             };
             Search.prototype._loadResults = function (results) {
+                var _this = this;
                 var resultsMapping = {
                     items: {
                         key: function (data) {
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new ViewModels.Users.SearchResult(options.data);
+                            return new ViewModels.Users.SearchResult(options.data, _this);
                         }
                     },
                     ignore: [
@@ -176,20 +178,15 @@ var ViewModels;
         })(ViewModels.PagedSearch);
         Users.Search = Search;        
         var SearchResult = (function () {
-            function SearchResult(values) {
+            function SearchResult(values, owner) {
                 this.$menu = ko.observable();
+                this._owner = owner;
                 ko.mapping.fromJS(values, {
                 }, this);
                 this._setupPhotoComputeds();
                 this._setupNamingComputeds();
                 this._setupRoleGrantComputeds();
-                this.$menu.subscribe(function (newValue) {
-                    if(newValue && newValue.length) {
-                        newValue.kendoMenu({
-                            direction: 'bottom left'
-                        });
-                    }
-                });
+                this._setupMenuSubscription();
             }
             SearchResult.prototype._setupPhotoComputeds = function () {
                 var _this = this;
@@ -211,6 +208,20 @@ var ViewModels;
                 this.hasNoRoles = ko.computed(function () {
                     return !_this.hasRoles();
                 });
+            };
+            SearchResult.prototype._setupMenuSubscription = function () {
+                this.$menu.subscribe(function (newValue) {
+                    if(newValue && newValue.length) {
+                        newValue.kendoMenu();
+                    }
+                });
+            };
+            SearchResult.prototype.impersonate = function () {
+                var form = this._owner.impersonateForm;
+                if(form) {
+                    this._owner.impersonateUserName(this.name());
+                    $(form).submit();
+                }
             };
             return SearchResult;
         })();

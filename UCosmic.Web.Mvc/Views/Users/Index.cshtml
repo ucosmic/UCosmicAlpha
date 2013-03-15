@@ -79,11 +79,11 @@
                                         <li>
                                             <span style="display: none;">Action</span>
                                             <ul>
-                                                @if (User.IsInAnyRole(RoleName.AuthenticationAgent, RoleName.EmployeeProfileManager))
+                                                @if (User.IsInAnyRole(RoleName.UserImpersonators))
                                                 {
-                                                    <li>Impersonate</li>
+                                                    <li data-bind="click: impersonate">Impersonate</li>
                                                 }
-                                                @if (User.IsInAnyRole(RoleName.AuthorizationAgent, RoleName.SecurityAdministrator))
+                                                @if (User.IsInAnyRole(RoleName.UserGrantors))
                                                 {
                                                     <li>Manage Access Grants</li>
                                                 }
@@ -110,6 +110,9 @@
                 @Html.Partial(MVC.Users.Views._SearchSideBar)
             </div>
         </aside>
+    </form>
+    <form action="@Url.Action(MVC.Identity.SignOver())" method="POST" data-bind="element: 'impersonateForm'">
+        <input type="hidden" name="userName" data-bind="value: impersonateUserName" />
     </form>
 </div>
 @section styles

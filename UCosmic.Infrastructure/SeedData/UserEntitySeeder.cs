@@ -69,7 +69,7 @@ namespace UCosmic.SeedData
                 { "www.usf.edu",          "@usf.edu"            },
                 { "www.uwo.ca",           "@uwo.ca"             },
             };
-            var managerRoles = new[] { RoleName.InstitutionalAgreementManager };
+            var managerRoles = new[] { RoleName.InstitutionalAgreementManager, RoleName.EmployeeProfileManager };
             var supervisorRoles = new[] { RoleName.InstitutionalAgreementSupervisor };
             var adminRoles = new[] { RoleName.SecurityAdministrator };
 

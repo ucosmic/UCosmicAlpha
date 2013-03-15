@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Unable to impersonate user";
+}
+
+@section bib
+{
+    <nav class="bib hide" data-current-bib="users">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}
+
+<div class="fixed content" data-current-module="admin">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    @if (ViewBag.AuthenticationAgentFail != null || ViewBag.AuthorizationAgentFail != null || ViewBag.SecurityAdministratorFail != null)
+    {
+        if (ViewBag.AuthenticationAgentFail != null)
+        {
+            <p>
+                UCosmic cannot allow you to impersonate <strong>@ViewBag.UserToImpersonate</strong> because that user has the <strong>Authentication Agent</strong> grant but you do not.
+            </p>
+        }
+        if (ViewBag.AuthorizationAgentFail != null)
+        {
+            <p>
+                UCosmic cannot allow you to impersonate <strong>@ViewBag.UserToImpersonate</strong> because that user has the <strong>Authorization Agent</strong> grant but you do not.
+            </p>
+        }
+        if (ViewBag.SecurityAdministratorFail != null)
+        {
+            <p>
+                UCosmic cannot allow you to impersonate <strong>@ViewBag.UserToImpersonate</strong> because that user has the <strong>Security Administrator</strong> grant but you do not.
+            </p>
+        }
+        <p>
+            Certain high-level administrative UCosmic users cannot be impersonated unless you have the same privileges as them. 
+        </p>
+    }
+    else if (ViewBag.TenantPricacyFail != null)
+    {
+        <p>
+            UCosmic cannot allow you to impersonate <strong>@ViewBag.UserToImpersonate</strong> because that user does not belong to your institution.
+        </p>
+    }
+</div>

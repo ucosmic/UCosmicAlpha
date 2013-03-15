@@ -27,6 +27,10 @@ var App;
                     return makeUrl('sign-out');
                 }
                 Identity.signOut = signOut;
+                function signOver() {
+                    return makeUrl('sign-in/as');
+                }
+                Identity.signOver = signOver;
             })(WebApi.Identity || (WebApi.Identity = {}));
             var Identity = WebApi.Identity;
             (function (Languages) {

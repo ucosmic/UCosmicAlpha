@@ -62,6 +62,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Unexpected = "Unexpected";
             public readonly string Throw = "Throw";
+            public readonly string BadRequest = "BadRequest";
             public readonly string Unauthorized = "Unauthorized";
             public readonly string Forbidden = "Forbidden";
             public readonly string NotFound = "NotFound";
@@ -72,6 +73,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Unexpected = "Unexpected";
             public const string Throw = "Throw";
+            public const string BadRequest = "BadRequest";
             public const string Unauthorized = "Unauthorized";
             public const string Forbidden = "Forbidden";
             public const string NotFound = "NotFound";
@@ -89,11 +91,13 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
+                public readonly string BadRequest = "BadRequest";
                 public readonly string Forbidden = "Forbidden";
                 public readonly string NotFound = "NotFound";
                 public readonly string Unauthorized = "Unauthorized";
             }
             public readonly string _Bib = "~/Views/Errors/_Bib.cshtml";
+            public readonly string BadRequest = "~/Views/Errors/BadRequest.cshtml";
             public readonly string Forbidden = "~/Views/Errors/Forbidden.cshtml";
             public readonly string NotFound = "~/Views/Errors/NotFound.cshtml";
             public readonly string Unauthorized = "~/Views/Errors/Unauthorized.cshtml";
@@ -114,6 +118,12 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Throw()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Throw);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult BadRequest()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.BadRequest);
             return callInfo;
         }
 

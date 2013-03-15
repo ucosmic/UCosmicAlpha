@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Principal;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using UCosmic.Web.Mvc.Models;
 
@@ -54,6 +57,44 @@ namespace UCosmic.Web.Mvc
             // deserialize & return the tenancy from json
             var tenancy = JsonConvert.DeserializeObject<Tenancy>(json);
             return tenancy;
+        }
+
+        private const string UserImpersonatingKey = "UserImpersonating";
+
+        public static void UserImpersonating(this HttpSessionStateBase session, IPrincipal principal, IEnumerable<string> roleNames = null)
+        {
+            if (principal == null)
+            {
+                session.Remove(UserImpersonatingKey);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(principal.Identity.Name))
+                    throw new ArgumentException("Anonymous users cannot impersonate.");
+
+                roleNames = roleNames ?? new string[0];
+                var sessionIdentity = new GenericIdentity(principal.Identity.Name);
+                var sessionPrincipal = new GenericPrincipal(sessionIdentity, roleNames.ToArray());
+                session[UserImpersonatingKey] = sessionPrincipal;
+            }
+        }
+
+        public static IPrincipal UserImpersonating(this HttpSessionStateBase session)
+        {
+            return session[UserImpersonatingKey] as IPrincipal;
+        }
+
+        public static void UserImpersonating(this TempDataDictionary tempData, bool isImpersonating)
+        {
+            tempData[UserImpersonatingKey] = isImpersonating;
+        }
+
+        public static bool UserImpersonating(this TempDataDictionary tempData)
+        {
+            var isImpersonatingAsObject = tempData[UserImpersonatingKey];
+            if (isImpersonatingAsObject is bool)
+                return (bool) isImpersonatingAsObject;
+            return false;
         }
     }
 }

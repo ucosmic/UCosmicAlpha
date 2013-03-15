@@ -2374,6 +2374,8 @@
     <Content Include="Views\Users\_SearchSideBar.cshtml" />
     <Content Include="Views\Shared\_ConfigurationSidebarNav.cshtml" />
     <Content Include="Views\Home\Configure.cshtml" />
+    <Content Include="Views\Errors\BadRequest.cshtml" />
+    <Content Include="Views\Identity\SignOverFail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

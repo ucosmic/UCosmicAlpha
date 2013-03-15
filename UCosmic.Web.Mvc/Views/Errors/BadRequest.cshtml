@@ -1,0 +1,23 @@
+﻿@using UCosmic.Web.Mvc.Models
+@{
+    ViewBag.Title = "400 - Bad Request";
+}
+@section bib
+{
+    <div class="bib" data-current-bib="errors">
+        @Html.Partial(MVC.Errors.Views._Bib)
+    </div>
+}
+
+<div class="fixed content" data-current-module="home">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <p>
+        The request sent to this page was not valid.
+    </p>
+    <p>
+        If you believe you have reached this page in error, please report your concerns using our 
+        @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData)) link.
+    </p>
+</div>

@@ -15,6 +15,8 @@ module ViewModels.Users {
         $historyJson: KnockoutObservableJQuery = ko.observable();
         private _history: KnockoutObservableStringArray = ko.observableArray([]);
         private _historyIndex: number = 0;
+        impersonateForm: Element;
+        impersonateUserName: KnockoutObservableString = ko.observable();
 
         constructor() {
             super();
@@ -56,11 +58,11 @@ module ViewModels.Users {
         private _loadResults(results: any): void {
             var resultsMapping = {
                 items: {
-                    key: function (data) {
+                    key: (data: any): any {
                         return ko.utils.unwrapObservable(data.id);
                     },
-                    create: function (options) {
-                        return new ViewModels.Users.SearchResult(options.data);
+                    create: (options: any): SearchResult => {
+                        return new ViewModels.Users.SearchResult(options.data, this);
                     }
                 },
                 ignore: ['pageSize', 'pageNumber']
@@ -185,7 +187,7 @@ module ViewModels.Users {
     }
     
     export class SearchResult {
-
+        private _owner: Search;
         id: KnockoutObservableNumber;
         personId: KnockoutObservableNumber;
         name: KnockoutObservableString;
@@ -199,7 +201,8 @@ module ViewModels.Users {
         hasUniqueDisplayName: KnockoutComputed;
         photoSrc: KnockoutComputed;
 
-        constructor(values: any) {
+        constructor(values: any, owner: Search) {
+            this._owner = owner;
 
             // map api data to observables
             ko.mapping.fromJS(values, {}, this);
@@ -207,14 +210,7 @@ module ViewModels.Users {
             this._setupPhotoComputeds();
             this._setupNamingComputeds();
             this._setupRoleGrantComputeds();
-
-            this.$menu.subscribe((newValue: JQuery): void => {
-                if (newValue && newValue.length) {
-                    newValue.kendoMenu({
-                        direction: 'bottom left'
-                    });
-                }
-            });
+            this._setupMenuSubscription();
         }
 
         private _setupPhotoComputeds(): void {
@@ -236,6 +232,22 @@ module ViewModels.Users {
             this.hasNoRoles = ko.computed((): bool => {
                 return !this.hasRoles();
             });
+        }
+
+        private _setupMenuSubscription(): void {
+            this.$menu.subscribe((newValue: JQuery): void => {
+                if (newValue && newValue.length) {
+                    newValue.kendoMenu();
+                }
+            });
+        }
+
+        impersonate(): void {
+            var form = this._owner.impersonateForm;
+            if (form) {
+                this._owner.impersonateUserName(this.name());
+                $(form).submit();
+            }
         }
     }
 }

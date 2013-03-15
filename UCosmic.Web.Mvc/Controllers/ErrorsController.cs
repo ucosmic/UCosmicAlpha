@@ -23,6 +23,13 @@ namespace UCosmic.Web.Mvc.Controllers
             throw ex;
         }
 
+        [GET("400")]
+        public virtual ActionResult BadRequest()
+        {
+            Response.StatusCode = 400;
+            return View();
+        }
+
         [GET("401")]
         public virtual ActionResult Unauthorized()
         {

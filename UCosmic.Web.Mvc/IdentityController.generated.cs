@@ -59,6 +59,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult SignOver()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOver);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public IdentityController Actions { get { return MVC.Identity; } }
@@ -78,6 +84,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string SignIn = "SignIn";
             public readonly string Tenantize = "Tenantize";
             public readonly string SignOut = "SignOut";
+            public readonly string SignOver = "SignOver";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -86,6 +93,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string SignIn = "SignIn";
             public const string Tenantize = "Tenantize";
             public const string SignOut = "SignOut";
+            public const string SignOver = "SignOver";
         }
 
 
@@ -114,6 +122,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string returnUrl = "returnUrl";
         }
+        static readonly ActionParamsClass_SignOver s_params_SignOver = new ActionParamsClass_SignOver();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_SignOver SignOverParams { get { return s_params_SignOver; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_SignOver
+        {
+            public readonly string userName = "userName";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -126,9 +142,11 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string SignIn = "SignIn";
                 public readonly string SignOut = "SignOut";
+                public readonly string SignOverFail = "SignOverFail";
             }
             public readonly string SignIn = "~/Views/Identity/SignIn.cshtml";
             public readonly string SignOut = "~/Views/Identity/SignOut.cshtml";
+            public readonly string SignOverFail = "~/Views/Identity/SignOverFail.cshtml";
         }
     }
 
@@ -162,6 +180,13 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOut);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult SignOver(string userName)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOver);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "userName", userName);
             return callInfo;
         }
 
