@@ -21,7 +21,7 @@
     <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
 
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             var viewModel = new ViewModels.Users.Search();
             ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
             viewModel.sammy.run();
@@ -67,36 +67,55 @@
                         <div class="on-left">
                             <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
                         </div>
-                        <div class="on-left text-data">
-                            <div class="group">
-                                <div class="on-left">
-                                    <span data-bind="text: name" class="user-name"></span>
-                                    <span data-bind="visible: hasUniqueDisplayName">- <span data-bind="text: personDisplayName" class="display-name"></span>
+                        <div class="on-left">
+                            <div class="text-data">
+                                <div class="group">
+                                    <div class="on-left">
+                                        <span data-bind="text: name" class="user-name"></span>
+                                        <span data-bind="visible: hasUniqueDisplayName">-
+                                            <span data-bind="text: personDisplayName" class="display-name"></span>
+                                        </span>
+                                    </div>
+                                    <div class="on-right menu-box">
+                                        <ul data-bind="jqObservableElement: '$menu'">
+                                            <li>
+                                                <span style="display: none;">Action</span>
+                                                <ul>
+                                                    @if (User.IsInAnyRole(RoleName.UserImpersonators))
+                                                    {
+                                                        <li data-bind="click: impersonate">Impersonate</li>
+                                                    }
+                                                    @if (User.IsInAnyRole(RoleName.UserGrantors))
+                                                    {
+                                                        <li data-bind="click: showRoleEditor, visible: !isEditingRoles()">Manage Access Grants</li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="roles">
+                                    <span class="branded-dark1 badge" data-bind="visible: hasNoRoles" style="display: none;">[No access grants]</span>
+                                    <span data-bind="visible: hasRoles, foreach: roleGrants">
+                                        <span class="branded-dark1 badge"><span data-bind="text: roleName"></span>
+                                            <img data-bind="visible: $parent.isEditingRoles()" title="Revoke this access grant"
+                                                src="~/images/icons/minus/minus-16-red-on-white.png" alt="" style="vertical-align: top; cursor: pointer; margin-left: 2px;" />
+                                        </span>
                                     </span>
                                 </div>
-                                <div class="on-right menu-box">
-                                    <ul data-bind="jqObservableElement: '$menu'">
-                                        <li>
-                                            <span style="display: none;">Action</span>
-                                            <ul>
-                                                @if (User.IsInAnyRole(RoleName.UserImpersonators))
-                                                {
-                                                    <li data-bind="click: impersonate">Impersonate</li>
-                                                }
-                                                @if (User.IsInAnyRole(RoleName.UserGrantors))
-                                                {
-                                                    <li>Manage Access Grants</li>
-                                                }
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
-                            <div class="roles">
-                                <span class="branded-dark1 badge" data-bind="visible: hasNoRoles" style="display: none;">[No access grants]</span>
-                                <span data-bind="visible: hasRoles, foreach: roleGrants">
-                                    <span class="branded-dark1 badge" data-bind="text: roleName"></span>
-                                </span>
+                            <div class="editor" data-bind="slideDownVisible: isEditingRoles">
+                                <div style="margin-top: 12px;">
+                                    <select>
+                                        <option>[Select access to grant...]</option>
+                                        <option>Role 1</option>
+                                        <option>Role 2</option>
+                                        <option>Role 3</option>
+                                    </select>
+                                </div>
+                                <div style="margin-top: 12px;">
+                                    <input type="button" value="I'm Finished" class="link" data-bind="click: hideRoleEditor"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,28 +137,30 @@
 @section styles
 {
     <style type="text/css">
-        .user-item .text-data {
+        .user-item .text-data, .user-item .editor {
             margin-left: 8px;
             width: 580px;
         }
-        .user-item .text-data .user-name {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .user-item .text-data .display-name {
-            font-size: 18px;
-            font-weight: normal;
-        }
-        .user-item .text-data .roles {
-            margin-top: 2px;
-        }
-        .user-item .text-data .roles .badge {
-            margin-top: 2px;
-            margin-bottom: 2px;
-            margin-left: 0;
-            margin-right: 2px;
-            text-transform: none;
-        }
+
+            .user-item .text-data .user-name {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .user-item .text-data .display-name {
+                font-size: 18px;
+                font-weight: normal;
+            }
+
+            .user-item .text-data .roles {
+                margin-top: 2px;
+            }
+
+                .user-item .text-data .roles .badge {
+                    margin: 2px 2px 2px 0;
+                    text-transform: none;
+                }
+
         .user-item .menu-box ul.k-menu {
             display: inline-block;
             margin: -8px 0 0 0;
@@ -148,23 +169,27 @@
             background-image: none;
             width: 16px;
         }
-        .user-item .menu-box ul.k-menu > li {
-            border: 0;
-            width: 16px;
-        }
-            .user-item .menu-box ul.k-menu > li.k-state-hover, .user-item .menu-box ul.k-menu > li.k-state-hover:hover {
+
+            .user-item .menu-box ul.k-menu > li {
                 border: 0;
-                background: none;
-                background-image: none;
-                -webkit-box-shadow: none;
-                box-shadow: none;
+                width: 16px;
             }
+
+                .user-item .menu-box ul.k-menu > li.k-state-hover, .user-item .menu-box ul.k-menu > li.k-state-hover:hover {
+                    border: 0;
+                    background: none;
+                    background-image: none;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                }
+
         .user-item .menu-box .k-link {
             padding: 0;
         }
-        .user-item .menu-box .k-link .k-icon.k-i-arrow-s {
-            margin: 0;
-            cursor: pointer;
-        }
+
+            .user-item .menu-box .k-link .k-icon.k-i-arrow-s {
+                margin: 0;
+                cursor: pointer;
+            }
     </style>
 }

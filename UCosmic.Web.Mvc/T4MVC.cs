@@ -3648,6 +3648,7 @@ namespace Links
                 private const string URLPATH = "~/images/icons/minus";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string minus_16_red_on_white_png = Url("minus-16-red-on-white.png");
                 public static readonly string minus_20_red_png = Url("minus-20-red.png");
                 public static readonly string minus_24_red_png = Url("minus-24-red.png");
             }

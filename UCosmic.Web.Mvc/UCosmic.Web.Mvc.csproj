@@ -796,6 +796,7 @@
     <Content Include="images\icons\edit\pencil-a-24.png" />
     <Content Include="images\icons\edit\pencil-a-64.png" />
     <Content Include="images\icons\help\question-mark-24-blue.png" />
+    <Content Include="images\icons\minus\minus-16-red-on-white.png" />
     <Content Include="images\icons\user\unisex-a-128.png" />
     <Content Include="images\icons\user\unisex-a-256.png" />
     <Content Include="images\placeholders\aqua-96x96.png" />

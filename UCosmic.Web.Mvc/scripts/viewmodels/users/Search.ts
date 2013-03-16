@@ -195,6 +195,7 @@ module ViewModels.Users {
         roleGrants: KnockoutObservableArray;
 
         $menu: KnockoutObservableJQuery = ko.observable();
+        isEditingRoles: KnockoutObservableBool = ko.observable(false);
 
         hasRoles: KnockoutComputed;
         hasNoRoles: KnockoutComputed;
@@ -248,6 +249,13 @@ module ViewModels.Users {
                 this._owner.impersonateUserName(this.name());
                 $(form).submit();
             }
+        }
+
+        showRoleEditor(): void {
+            this.isEditingRoles(true);
+        }
+        hideRoleEditor(): void {
+            this.isEditingRoles(false);
         }
     }
 }

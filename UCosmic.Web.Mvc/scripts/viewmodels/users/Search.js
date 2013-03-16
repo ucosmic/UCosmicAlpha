@@ -180,6 +180,7 @@ var ViewModels;
         var SearchResult = (function () {
             function SearchResult(values, owner) {
                 this.$menu = ko.observable();
+                this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
                 ko.mapping.fromJS(values, {
                 }, this);
@@ -222,6 +223,12 @@ var ViewModels;
                     this._owner.impersonateUserName(this.name());
                     $(form).submit();
                 }
+            };
+            SearchResult.prototype.showRoleEditor = function () {
+                this.isEditingRoles(true);
+            };
+            SearchResult.prototype.hideRoleEditor = function () {
+                this.isEditingRoles(false);
             };
             return SearchResult;
         })();
