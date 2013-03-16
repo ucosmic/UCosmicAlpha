@@ -200,7 +200,7 @@
     <Compile Include="Domain\Identity\Commands\ResetPassword.cs" />
     <Compile Include="Domain\Identity\Commands\SendConfirmEmailMessage.cs" />
     <Compile Include="Domain\Identity\Commands\SendEmailMessage.cs" />
-    <Compile Include="Domain\Identity\Commands\SendSignUpMessage.cs" />
+    <Compile Include="Domain\Identity\Commands\SendCreatePasswordMessage.cs" />
     <Compile Include="Domain\Identity\Commands\UpdateMyPreference.cs" />
     <Compile Include="Domain\Identity\Entities\Preference.cs" />
     <Compile Include="Domain\Identity\Queries\MyUsers.cs" />
