@@ -6,6 +6,7 @@
         customProfileTitle = tenancy.CustomProfileTitle;
     }
     ViewBag.Title = customProfileTitle;
+    var viewingUser = Session.UserImpersonating() ?? User;
 }
 
 @section styles
@@ -70,7 +71,7 @@
                                         <div class="on-left name-and-title">
                                             <div class="display-name" data-bind="text: displayName"></div>
                                             <div class="titles" data-bind="multilineText: jobTitles"></div>
-                                            @if (User.IsInRole(RoleName.EmployeeProfileManager))
+                                            @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
                                             {
                                                 <div class="admin-only">
                                                     <em><span data-bind="text: genderText"></span>, <span data-bind="text: isActiveText"></span></em>

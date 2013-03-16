@@ -84,17 +84,17 @@ namespace UCosmic.Web.Mvc
             return session[UserImpersonatingKey] as IPrincipal;
         }
 
-        public static void UserImpersonating(this TempDataDictionary tempData, bool isImpersonating)
-        {
-            tempData[UserImpersonatingKey] = isImpersonating;
-        }
+        //public static void UserImpersonating(this TempDataDictionary tempData, bool isImpersonating)
+        //{
+        //    tempData[UserImpersonatingKey] = isImpersonating;
+        //}
 
-        public static bool UserImpersonating(this TempDataDictionary tempData)
-        {
-            var isImpersonatingAsObject = tempData[UserImpersonatingKey];
-            if (isImpersonatingAsObject is bool)
-                return (bool) isImpersonatingAsObject;
-            return false;
-        }
+        //public static bool UserImpersonating(this TempDataDictionary tempData)
+        //{
+        //    var isImpersonatingAsObject = tempData[UserImpersonatingKey];
+        //    if (isImpersonatingAsObject is bool)
+        //        return (bool) isImpersonatingAsObject;
+        //    return false;
+        //}
     }
 }

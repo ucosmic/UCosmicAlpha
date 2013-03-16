@@ -238,12 +238,13 @@ namespace UCosmic.Web.Mvc.Controllers
                 ) : null;
         }
 
-        [POST("sign-in/as")]
+        [POST("sign-over")]
         [Authorize(Roles = RoleName.UserImpersonators)]
         public virtual ActionResult SignOver(string userName)
         {
             if (!string.IsNullOrWhiteSpace(userName))
             {
+                var userImpersonating = Session.UserImpersonating() ?? User;
                 var userToImpersonate = _queryProcessor.Execute(new UserByName(userName)
                 {
                     EagerLoad = new Expression<Func<User, object>>[]
@@ -255,11 +256,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 {
                     // cannot impersonate certain users when not already in that role
                     ViewBag.UserToImpersonate = userName;
-                    if (userToImpersonate.IsInRole(RoleName.AuthenticationAgent) && !User.IsInRole(RoleName.AuthenticationAgent))
+                    if (userToImpersonate.IsInRole(RoleName.AuthenticationAgent) && !userImpersonating.IsInRole(RoleName.AuthenticationAgent))
                         ViewBag.AuthenticationAgentFail = new object();
-                    if (userToImpersonate.IsInRole(RoleName.AuthorizationAgent) && !User.IsInRole(RoleName.AuthorizationAgent))
+                    if (userToImpersonate.IsInRole(RoleName.AuthorizationAgent) && !userImpersonating.IsInRole(RoleName.AuthorizationAgent))
                         ViewBag.AuthorizationAgentFail = new object();
-                    if (userToImpersonate.IsInRole(RoleName.SecurityAdministrator) && !User.IsInRole(RoleName.SecurityAdministrator))
+                    if (userToImpersonate.IsInRole(RoleName.SecurityAdministrator) && !userImpersonating.IsInRole(RoleName.SecurityAdministrator)
+                        && !userImpersonating.IsInRole(RoleName.AuthenticationAgent))
                         ViewBag.SecurityAdministratorFail = new object();
                     if (ViewBag.AuthenticationAgentFail != null ||
                         ViewBag.AuthorizationAgentFail != null ||
@@ -267,9 +269,9 @@ namespace UCosmic.Web.Mvc.Controllers
                         return View(MVC.Identity.Views.SignOverFail);
 
                     // can only impersonate users that match your tenancy access
-                    if (!User.IsInRole(RoleName.AuthenticationAgent))
+                    if (!userImpersonating.IsInRole(RoleName.AuthenticationAgent))
                     {
-                        var tenantUsers = _queryProcessor.Execute(new MyUsersByKeyword(User) { PageSize = int.MaxValue });
+                        var tenantUsers = _queryProcessor.Execute(new MyUsersByKeyword(userImpersonating) { PageSize = int.MaxValue });
                         if (!tenantUsers.Any(x => x.Name.Equals(userName)))
                         {
                             ViewBag.TenantPricacyFail = new object();
@@ -277,17 +279,33 @@ namespace UCosmic.Web.Mvc.Controllers
                         }
                     }
 
-                    var roleNames = _queryProcessor.Execute(new RolesGrantedTo(User.Identity.Name)).Select(x => x.Name);
-                    Session.UserImpersonating(User, roleNames);
+                    var roleNames = _queryProcessor.Execute(new RolesGrantedTo(userImpersonating.Identity.Name)).Select(x => x.Name);
+                    Session.UserImpersonating(userImpersonating, roleNames);
                     _userSigner.SignOn(userName);
                     TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", userName));
-                    TempData.UserImpersonating(true);
+                    //TempData.UserImpersonating(true);
 
-                    return RedirectToAction(MVC.MyProfile.Index());
+                    var returnUrl = Url.Action(MVC.MyProfile.Index());
+                    return RedirectToAction(MVC.Identity.Tenantize(returnUrl));
                 }
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        [GET("sign-over/undo")]
+        public virtual ActionResult UndoSignOver()
+        {
+            var userImpersonating = Session.UserImpersonating();
+            if (userImpersonating != null)
+            {
+                Session.UserImpersonating(null);
+                _userSigner.SignOn(userImpersonating.Identity.Name);
+                var returnUrl = Url.Action(MVC.Users.Index());
+                return RedirectToAction(MVC.Identity.Tenantize(returnUrl));
+            }
+            return RedirectToAction(MVC.MyProfile.Index());
         }
 
     }

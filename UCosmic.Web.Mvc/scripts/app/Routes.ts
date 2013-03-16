@@ -27,10 +27,6 @@ module App.Routes {
             export function signOut(): string {
                 return makeUrl('sign-out');
             }
-
-            export function signOver(): string {
-                return makeUrl('sign-in/as');
-            }
         }
 
         export module Languages {

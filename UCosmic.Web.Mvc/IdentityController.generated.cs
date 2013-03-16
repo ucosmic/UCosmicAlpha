@@ -85,6 +85,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Tenantize = "Tenantize";
             public readonly string SignOut = "SignOut";
             public readonly string SignOver = "SignOver";
+            public readonly string UndoSignOver = "UndoSignOver";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -94,6 +95,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Tenantize = "Tenantize";
             public const string SignOut = "SignOut";
             public const string SignOver = "SignOver";
+            public const string UndoSignOver = "UndoSignOver";
         }
 
 
@@ -187,6 +189,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignOver);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "userName", userName);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult UndoSignOver()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.UndoSignOver);
             return callInfo;
         }
 

@@ -26,7 +26,15 @@
                             ? tenancy.CustomProfileTitle : "My UCosmic Profile";
                         <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
 
-                        <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                        var userImpersonating = Session.UserImpersonating();
+                        if (userImpersonating != null)
+                        {
+                            <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                        }
                     }
                     else
                     {

@@ -1,4 +1,7 @@
-﻿<form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
+﻿@{
+    var viewingUser = Session.UserImpersonating() ?? User;
+}
+<form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
     <div class="field-table w870-l300-v570">
         <div class="field-row">
             <div class="field-label" style="padding-top: 0;">
@@ -126,7 +129,7 @@
                 <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
             </div>
         </div>
-        @if (User.IsInRole(RoleName.EmployeeProfileManager))
+        @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
         {
             <div class="field-row">
                 <div class="field-label">
