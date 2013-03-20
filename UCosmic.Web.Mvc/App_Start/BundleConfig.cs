@@ -19,10 +19,11 @@ namespace UCosmic.Web.Mvc
 #endif
 
             #region Default Bundles
-            //// jQuery
-            //bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-            //            "~/scripts/jquery/jquery-{version}.js"));
-            //
+#if DEBUG && OFFLINE
+            // jQuery
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+                        "~/scripts/jquery/jquery-{version}.js"));
+#endif
             //// jQuery UI
             //bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             //            "~/scripts/jquery/jquery-ui-{version}.js"));
