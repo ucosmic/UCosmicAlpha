@@ -27,6 +27,17 @@ var App;
                     return makeUrl('sign-out');
                 }
                 Identity.signOut = signOut;
+                (function (Roles) {
+                    function get(roleId) {
+                        var url = 'roles';
+                        if(roleId) {
+                            url += '/' + roleId;
+                        }
+                        return makeUrl(url);
+                    }
+                    Roles.get = get;
+                })(Identity.Roles || (Identity.Roles = {}));
+                var Roles = Identity.Roles;
             })(WebApi.Identity || (WebApi.Identity = {}));
             var Identity = WebApi.Identity;
             (function (Languages) {

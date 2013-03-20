@@ -85,7 +85,7 @@
                                                     {
                                                         <li data-bind="click: impersonate">Impersonate</li>
                                                     }
-                                                    @if (User.IsInAnyRole(RoleName.UserGrantors))
+                                                    @if (User.IsInAnyRole(RoleName.RoleGrantors))
                                                     {
                                                         <li data-bind="click: showRoleEditor, visible: !isEditingRoles()">Manage Access Grants</li>
                                                     }

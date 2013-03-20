@@ -13,7 +13,7 @@ namespace UCosmic
         public const string EmployeeProfileManager = "Employee Profile Manager"; // impersonate for own tenant
         public const string UserManagers = "Authentication Agent,Authorization Agent,Security Administrator,Employee Profile Manager";
         public const string UserImpersonators = "Authentication Agent,Employee Profile Manager";
-        public const string UserGrantors = "Authorization Agent,Security Administrator";
+        public const string RoleGrantors = "Authorization Agent,Security Administrator";
 
         public const string InstitutionalAgreementSupervisor = "Institutional Agreement Supervisor";
         public const string InstitutionalAgreementManager = "Institutional Agreement Manager";

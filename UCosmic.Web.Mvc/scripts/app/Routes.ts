@@ -27,6 +27,15 @@ module App.Routes {
             export function signOut(): string {
                 return makeUrl('sign-out');
             }
+
+            export module Roles {
+                export function get (roleId?: number): string {
+                    var url = 'roles';
+                    if (roleId)
+                        url += '/' + roleId;
+                    return makeUrl(url);
+                }
+            }
         }
 
         export module Languages {
