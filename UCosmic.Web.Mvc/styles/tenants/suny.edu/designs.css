@@ -169,6 +169,9 @@ body .required-field {
   font-size: xx-large;
   vertical-align: text-top;
   color: #004c93; }
+body .help-icon {
+  width: 16px;
+  height: 16px; }
 body .help-icon-position-on-required-field {
   position: relative;
   top: -30px;

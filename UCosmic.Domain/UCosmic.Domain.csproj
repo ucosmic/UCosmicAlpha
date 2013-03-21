@@ -61,6 +61,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
@@ -213,6 +214,8 @@
     <Compile Include="Domain\Identity\Queries\GenerateRandomSecret.cs" />
     <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />
+    <Compile Include="Domain\images\commands\CreateImage.cs" />
+    <Compile Include="Domain\images\entities\image.cs" />
     <Compile Include="Domain\People\Commands\DeleteMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyProfile.cs" />

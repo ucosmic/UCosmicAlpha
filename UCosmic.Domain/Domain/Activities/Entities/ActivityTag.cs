@@ -2,8 +2,8 @@
 {
     public class ActivityTag : RevisableEntity, IAmNumbered
     {
-        public virtual Activity Activity { get; protected internal set; }
-        public int ActivityId { get; protected internal set; }
+        public virtual ActivityValues ActivityValues { get; protected internal set; }
+        public int ActivityValuesId { get; protected internal set; }
 
         public int Number { get; protected internal set; }
         public string Text { get; protected internal set; }

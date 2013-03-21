@@ -19,16 +19,6 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ActivityId)
                 .WillCascadeOnDelete(true);
 
-            HasMany(p => p.Tags)
-                .WithRequired(d => d.Activity)
-                .HasForeignKey(d => d.ActivityId)
-                .WillCascadeOnDelete(true);
-
-            HasMany(p => p.Documents)
-                .WithRequired(d => d.Activity)
-                .HasForeignKey(d => d.ActivityId)
-                .WillCascadeOnDelete(true);
-
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
 
             Ignore(p => p.Mode);
@@ -47,6 +37,16 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(true);
 
             HasMany(p => p.Types)
+                .WithRequired(d => d.ActivityValues)
+                .HasForeignKey(d => d.ActivityValuesId)
+                .WillCascadeOnDelete(true);
+
+            HasMany(p => p.Tags)
+                .WithRequired(d => d.ActivityValues)
+                .HasForeignKey(d => d.ActivityValuesId)
+                .WillCascadeOnDelete(true);
+
+            HasMany(p => p.Documents)
                 .WithRequired(d => d.ActivityValues)
                 .HasForeignKey(d => d.ActivityValuesId)
                 .WillCascadeOnDelete(true);
@@ -112,10 +112,21 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(ActivityDocument).Name, DbSchemaName.ActivitiesV2);
 
-            HasRequired(p => p.Document)
+            HasOptional(p => p.File)
                 .WithMany()
-                .HasForeignKey(d => d.DocumentId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(p => p.FileId);
+
+            HasOptional(p => p.Image)
+                .WithMany()
+                .HasForeignKey(p => p.ImageId);
+
+            HasOptional(p => p.ProxyImage)
+                .WithMany()
+                .HasForeignKey(p => p.ProxyImageId);
+
+            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
+
+            Ignore(p => p.Mode);
         }
     }
 }

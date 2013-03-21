@@ -107,14 +107,14 @@ namespace UCosmic.Domain.Activities
             return queryable.Where(
                 a =>
                 a.ModeText == modeText &&
-                //a.Values.Title.Contains(keyword) ||
-                a.Person.DisplayName.Contains(keyword) ||
-                a.Tags.Any
-                (
-                    t =>
-                    t.ModeText == modeText &&
-                    t.Text.Contains(keyword)
-                )
+                a.Values.First(x => x.Mode == ActivityMode.Public).Title.Contains(keyword) ||
+                a.Person.DisplayName.Contains(keyword) // ||
+                //a.Tags.Any
+                //(
+                //    t =>
+                //    t.ModeText == modeText &&
+                //    t.Text.Contains(keyword)
+                //)
             );
         }
     }

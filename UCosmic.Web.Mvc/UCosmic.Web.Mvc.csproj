@@ -1760,6 +1760,8 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
+    <Content Include="scripts\oss\moment.js" />
+    <Content Include="scripts\oss\moment.min.js" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
     <Content Include="scripts\tinymce\license.txt" />
@@ -2014,6 +2016,9 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
+    <Content Include="scripts\viewmodels\activities\Activity.min.js.map">
+      <DependentUpon>Activity.js</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
@@ -2535,6 +2540,7 @@
     <Folder Include="content\mail\" />
     <Folder Include="scripts\viewmodels\people\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
+    <Folder Include="upload\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

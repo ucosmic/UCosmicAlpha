@@ -23,41 +23,41 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var activity = _entities.Get<Activity>()
-                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
-                {
-                    t => t.Tags
-                })
-                .ByUserNameAndNumber(ActivityMode.Draft.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
+            //var activity = _entities.Get<Activity>()
+            //    .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+            //    {
+            //        t => t.Tags
+            //    })
+            //    .ByUserNameAndNumber(ActivityMode.Draft.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
 
-            _entities.Purge(activity);
+            //_entities.Purge(activity);
 
-            activity = _entities.Get<Activity>()
-                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
-                {
-                    t => t.Tags
-                })
-                .ByUserNameAndNumber(ActivityMode.Public.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
+            //activity = _entities.Get<Activity>()
+            //    .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+            //    {
+            //        t => t.Tags
+            //    })
+            //    .ByUserNameAndNumber(ActivityMode.Public.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
 
-            _entities.Purge(activity);
+            //_entities.Purge(activity);
 
-            activity = _entities.Get<Activity>()
-                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
-                {
-                    t => t.Tags
-                })
-                .ByUserNameAndNumber(ActivityMode.AutoSaveDraft.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
+            //activity = _entities.Get<Activity>()
+            //    .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+            //    {
+            //        t => t.Tags
+            //    })
+            //    .ByUserNameAndNumber(ActivityMode.AutoSaveDraft.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
 
-            _entities.Purge(activity);
+            //_entities.Purge(activity);
 
-            activity = _entities.Get<Activity>()
-                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
-                {
-                    t => t.Tags
-                })
-                .ByUserNameAndNumber(ActivityMode.AutoSavePublic.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
+            //activity = _entities.Get<Activity>()
+            //    .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+            //    {
+            //        t => t.Tags
+            //    })
+            //    .ByUserNameAndNumber(ActivityMode.AutoSavePublic.AsSentenceFragment(), command.Principal.Identity.Name, command.Number);
 
-            _entities.Purge(activity);
+            //_entities.Purge(activity);
         }
     }
 }

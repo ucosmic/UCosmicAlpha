@@ -25,7 +25,7 @@
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activities-template">
     <tr class="hover-hilite"
-        data-bind="click: function (data, event) { $parent.editActivity(data, event, revisionId()); }"
+        data-bind="click: function (data, event) { $parent.editActivity(data, event, id()); }"
         href="@Url.Action(MVC.MyProfile.ActivityEdit())">
         <!-- Image -->
         <td>
@@ -34,15 +34,15 @@
         <!-- Description -->
         <td style="vertical-align: top">
             <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.activityTypesFormatted(values()[0].types())"></span>
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.activityTypesFormatted(values.types())"></span>
                 <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
             </div>
             <div class="ellipsis">
-                <span data-bind="text: values()[0].title()"></span>
+                <span data-bind="text: values.title()"></span>
             </div>
             <div class="ellipsis">
-                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values()[0].startsOn(), values()[0].endsOn())"></span>
-                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values()[0].locations())"></span>
+                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn())"></span>
+                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
             </div>
         </td>
         <!-- Remove Button -->

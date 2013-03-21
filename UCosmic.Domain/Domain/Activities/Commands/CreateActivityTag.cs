@@ -11,7 +11,7 @@ namespace UCosmic.Domain.Activities
             DomainType = ActivityTagDomainType.Custom;
         }
 
-        public int ActivityId { get; set; }
+        public int ActivityValuesId { get; set; }
         public int Number { get; set; }
         public string Text { get; set; }
         public ActivityTagDomainType DomainType { get; set; }
@@ -34,11 +34,11 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            Activity activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.ActivityId);
-            if (activity == null) { throw new Exception("Activity Id " + command.ActivityId.ToString() + " was not found"); }
+            ActivityValues activityValues = _entities.Get<ActivityValues>().SingleOrDefault(x => x.RevisionId == command.ActivityValuesId);
+            if (activityValues == null) { throw new Exception("Activity Values Id " + command.ActivityValuesId.ToString() + " was not found"); }
 
             Person person = _entities.Get<Person>()
-                                     .Single(p => p.RevisionId == activity.Person.RevisionId);
+                                     .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);
 
             var otherActivities = _entities.Get<Activity>()
                                            .WithPersonId(person.RevisionId)
@@ -46,7 +46,7 @@ namespace UCosmic.Domain.Activities
 
             var activityTag = new ActivityTag
             {
-                ActivityId = activity.RevisionId,
+                ActivityValuesId = activityValues.RevisionId,
                 Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
                 Text = command.Text,
                 DomainType = command.DomainType,

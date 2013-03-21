@@ -126,7 +126,7 @@ var ViewModels;
                 var locationName = "";
                 if(this.activityLocationsList != null) {
                     var i = 0;
-                    while((i < this.activityLocationsList.length) && (id != this.activityLocationsList[i].placeId)) {
+                    while((i < this.activityLocationsList.length) && (id != this.activityLocationsList[i].id)) {
                         i += 1;
                     }
                     if(i < this.activityLocationsList.length) {

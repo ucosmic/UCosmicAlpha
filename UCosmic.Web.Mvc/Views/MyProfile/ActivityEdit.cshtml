@@ -19,22 +19,22 @@
             activityViewModel.load()
                 .done(function () {
 
-                    ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
-
-                    $("#countrySelector").kendoMultiSelect({
-                        dataTextField: "officialName",
-                        dataValueField: "placeId",
-                        dataSource: activityViewModel.activityLocationsList,
-                        placeHolder: "[Select Country or Body of Water]"
-                    });
-
                     $("#fromDatePicker").kendoDatePicker();
                     $("#toDatePicker").kendoDatePicker();
+
+                    $("#countrySelector").kendoMultiSelect({
+                        dataTextField: "officialName()",
+                        dataValueField: "id()",
+                        dataSource: activityViewModel.locations(),
+                        //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
+                        change: function (event) { activityViewModel.updateLocations(event.sender.value()); },
+                        placeholder: "[Select Country or Body of Water]"
+                    });
 
                     tinyMCE.init({
                         // Example content CSS (should be your site CSS)
                         //content_css : 'css/content.css',
-                        content_css: "~/scripts/tinymce/css/content.css",
+                        content_css: "../../scripts/tinymce/css/content.css",
                         convert_urls: false,
 
                         // General options
@@ -59,22 +59,35 @@
                         theme_advanced_resize_horizontal: false,
                         theme_advanced_blockformats: 'h2,h3,p,blockquote',
 
-                        //save_enablewhendirty: true,
-                        //save_onsavecallback: 'onSavePluginCallback',
+                        save_enablewhendirty: true,
+                        save_onsavecallback: 'onSavePluginCallback',
 
                         // Drop lists for link/image/media/template dialogs
-                        // template_external_list_url: 'lists/template_list.js',
-                        // external_link_list_url: 'lists/link_list.js',
-                        // external_image_list_url: 'lists/image_list.js',
-                        // media_external_list_url: 'lists/media_list.js'
+                        template_external_list_url: 'lists/template_list.js',
+                        external_link_list_url: 'lists/link_list.js',
+                        external_image_list_url: 'lists/image_list.js',
+                        media_external_list_url: 'lists/media_list.js'
                     });
-                }) // done
-                .fail(function(jqXHR, textStatus, errorThrown) {
+
+                    ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
+
+                    /* KendoUI Bug? - Can't seem to preload locations unless I do this. */
+                    var countrySelector = $("#countrySelector").data("kendoMultiSelect");
+                    countrySelector.value(activityViewModel.selectedLocations());
+                    
+                    var datePicker = $("#fromDatePicker").data("kendoDatePicker");
+                    datePicker.value(activityViewModel.values.startsOn());
+                    
+                    datePicker = $("#toDatePicker").data("kendoDatePicker");
+                    datePicker.value(activityViewModel.values.endsOn());
+
+
+                })  // activityViewModel.load.done
+                .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
-                }); // fail
+                }); // activityViewModel.load.fail
 
         }); // function
-
 
     </script>
 }
@@ -103,41 +116,33 @@
 										<!-- TITLE -->
 										<td class="field-name">Title</td>
 										<td>
-											<span>
-												<textarea rows="1" style="width: 600px" placeholder="[Enter Title]"></textarea><label class="required-field">*</label>
-													<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/>
-											</span>
+										    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="text: values.title"></textarea>
+                                            <label class="required-field">*</label>
+										    <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/>
 										</td>
 									</tr>
 									<!-- COUNTRY -->
 									<tr>
 										<td class="field-name">Country/Location</td>
 									    <td>
-									            <span>
-									                <select id="countrySelector" style="vertical-align: middle; width: 600px"></select>
-									                <!-- <label class="required-field">*</label> -->
-									                <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position-on-required-field" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
-									            </span>
+									        <select id="countrySelector" style="width: 750px" data-bind="selectedOptions: selectedLocations"></select>
 									    </td>
 									</tr>
 									<!-- TYPE -->
 									<tr>
 										<td class="field-name">Types</td>
 									    <td>
-									        <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypesList }" />
+									        <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes() }" />
 									    </td>
 									</tr>
 									<!-- FROM and TO DATES -->
 									<tr>
-										<td class="field-name">From</td>
+										<td class="field-name">On/From</td>
 										<td>
-											<span>
-												<span>
-													<input id="fromDatePicker" style="height: 30px; vertical-align: middle"/>
-														<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position" data-bind="click: function (data, event) { help(data, event, null); }"/>
-												</span>
-												To&nbsp;<input id="toDatePicker" style="height: 30px; vertical-align: middle"/>
-											</span>
+											<input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
+										    To&nbsp;
+                                            <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
+                                            <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/>
 										</td>
 									</tr>
 								</tbody>
@@ -213,13 +218,13 @@
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-types-template">
     <li>
-        <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="attr: { value: id }"/><span data-bind="text: type"></span>
+        <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked"/><span data-bind="text: type()"></span>
     </li>
 </script>
 
 <script type="text/html" id="activity-document-template">
     <tr class="hover-hilite"
-        data-bind="click: function (data, event) { $parent.editActivity(data, event, revisionId()); }"
+        data-bind="click: function (data, event) { $parent.editActivity(data, event, id()); }"
         href="@Url.Action(MVC.MyProfile.ActivityEdit())">
         <!-- Image -->
         <td>
@@ -228,15 +233,15 @@
         <!-- Description -->
         <td style="vertical-align: top">
             <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.getTypeName(values()[0].typeId())"></span>
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.getTypeName(values.typeId())"></span>
                 <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
             </div>
             <div class="ellipsis">
-                <span data-bind="text: values()[0].title()"></span>
+                <span data-bind="text: values.title()"></span>
             </div>
             <div class="ellipsis">
-                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values()[0].startsOn(), values()[0].endsOn())"></span>
-                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values()[0].locations())"></span>
+                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn())"></span>
+                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
             </div>
         </td>
         <!-- Remove Button -->

@@ -206,7 +206,7 @@ module ViewModels.Activities {
             if (this.activityLocationsList != null) {
                 var i = 0;
                 while ((i < this.activityLocationsList.length) &&
-                       (id != this.activityLocationsList[i].placeId)) { i += 1 }
+                       (id != this.activityLocationsList[i].id)) { i += 1 }
 
                 if (i < this.activityLocationsList.length) {
                     locationName = this.activityLocationsList[i].officialName;
@@ -247,7 +247,7 @@ module ViewModels.Activities {
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityTypesFormatted(types: Service.ApiModels.IObservableActivityType[]): string {
+        activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string {
             var formattedTypes: string = "";
             var location: Service.ApiModels.IActivityLocation;
 
@@ -263,7 +263,7 @@ module ViewModels.Activities {
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityLocationsFormatted(locations: Service.ApiModels.IObservableActivityLocation[]): string {
+        activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string {
             var formattedLocations: string = "";
             var location: Service.ApiModels.IActivityLocation;
 

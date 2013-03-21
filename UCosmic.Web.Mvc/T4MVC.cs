@@ -1338,6 +1338,9 @@ namespace Links
             public static readonly string jquery_validate_unobtrusive_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.validate.unobtrusive.min.js") ? Url("jquery.validate.unobtrusive.min.js") : Url("jquery.validate.unobtrusive.js");
                           
             public static readonly string jquery_validate_unobtrusive_min_js = Url("jquery.validate.unobtrusive.min.js");
+            public static readonly string moment_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/moment.min.js") ? Url("moment.min.js") : Url("moment.js");
+                          
+            public static readonly string moment_min_js = Url("moment.min.js");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2559,6 +2562,7 @@ namespace Links
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
+                public static readonly string Activity_min_js_map = Url("Activity.min.js.map");
                 public static readonly string Activity_min_js = Url("Activity.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }

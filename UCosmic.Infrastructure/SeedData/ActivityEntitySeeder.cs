@@ -78,55 +78,6 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    /* ----- Add Tags ----- */
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        ActivityId = activity.RevisionId,
-                        Text = "Vietnam",
-                        DomainType = ActivityTagDomainType.Place,
-                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Vietnam").RevisionId,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        ActivityId = activity.RevisionId,
-                        Text = "India",
-                        DomainType = ActivityTagDomainType.Place,
-                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "India").RevisionId,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityTag.Handle(new CreateActivityTag
-                    {
-                        ActivityId = activity.RevisionId,
-                        Text = "India",
-                        DomainType = ActivityTagDomainType.Place,
-                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
-                        Mode = activity.Mode
-                    });
-
-                    /* ----- Add Documents ----- */
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "02E6D488-B3FA-4D79-848F-303779A53ABE.docx").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "1322FF22-E863-435E-929E-765EB95FB460.ppt").Id
-                    });
-
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
                         ActivityId = activity.RevisionId,
@@ -167,6 +118,58 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "Canada").RevisionId,
                     });
 
+                    /* ----- Add Tags ----- */
+
+                    _createActivityTag.Handle(new CreateActivityTag
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        Text = "Vietnam",
+                        DomainType = ActivityTagDomainType.Place,
+                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Vietnam").RevisionId,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityTag.Handle(new CreateActivityTag
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        Text = "India",
+                        DomainType = ActivityTagDomainType.Place,
+                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "India").RevisionId,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityTag.Handle(new CreateActivityTag
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        Text = "India",
+                        DomainType = ActivityTagDomainType.Place,
+                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
+                        Mode = activity.Mode
+                    });
+
+                    /* ----- Add Documents ----- */
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "02E6D488-B3FA-4D79-848F-303779A53ABE.docx").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "1322FF22-E863-435E-929E-765EB95FB460.ppt").Id,
+                        Mode = activity.Mode
+                    });
+
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 1
 
@@ -187,12 +190,6 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "14E5C461-2E5E-4E63-9701-DC3F009AB98E.mov").Id
-                    });
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
@@ -220,6 +217,13 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "14E5C461-2E5E-4E63-9701-DC3F009AB98E.mov").Id,
+                        Mode = activity.Mode
+                    });
+
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 2
 
@@ -240,30 +244,6 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "322BF184-32C3-49CA-8C97-18ABE32CFD8A.mp3").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "3D3C0976-5117-4D5A-AF25-1B53166C550C.wmv").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912.gif").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "5FE682FD-F161-4669-A2C4-974F5B0F8BB1.mp4").Id
-                    });
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
@@ -304,6 +284,34 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "322BF184-32C3-49CA-8C97-18ABE32CFD8A.mp3").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "3D3C0976-5117-4D5A-AF25-1B53166C550C.wmv").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "5FE682FD-F161-4669-A2C4-974F5B0F8BB1.mp4").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf").Id,
+                        Mode = activity.Mode
+                    });
+
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 3
 
@@ -324,36 +332,6 @@ namespace UCosmic.SeedData
                     _unitOfWork.SaveChanges();
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "A44FAB3B-DEBA-4F14-8965-E379569066A9.png").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B.bmp").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "E4E53300-08D3-47C0-954C-BF15EF54F0A3.tif").Id
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityId = activity.RevisionId,
-                        LoadableFileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "EE23D741-C50D-40D5-8214-C18DF68CC6D3.jpg").Id
-                    });
 
                     CreateActivityValues createActivityValuesCommand = new CreateActivityValues
                     {
@@ -378,6 +356,46 @@ namespace UCosmic.SeedData
                     {
                         ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912").Id,
+                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912_proxy").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "A44FAB3B-DEBA-4F14-8965-E379569066A9").Id,
+                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "A44FAB3B-DEBA-4F14-8965-E379569066A9_proxy").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B").Id,
+                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B_proxy").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "E4E53300-08D3-47C0-954C-BF15EF54F0A3").Id,
+                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "E4E53300-08D3-47C0-954C-BF15EF54F0A3_proxy").Id,
+                        Mode = activity.Mode
+                    });
+
+                    _createActivityDocument.Handle(new CreateActivityDocument
+                    {
+                        ActivityValuesId = activityValues.RevisionId,
+                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "EE23D741-C50D-40D5-8214-C18DF68CC6D3").Id,
+                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "EE23D741-C50D-40D5-8214-C18DF68CC6D3_proxy").Id,
+                        Mode = activity.Mode
                     });
 
                     _unitOfWork.SaveChanges();

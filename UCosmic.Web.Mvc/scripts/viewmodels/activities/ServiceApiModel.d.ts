@@ -8,46 +8,31 @@ module Service.ApiModels {
     }
 
     export interface IActivityLocation {
-        placeId: number;
+        id: number;
         isCountry: bool;
         isBodyOfWater: bool;
         isEarth: bool;
         officialName: string;
     }
 
-    export interface IObservableActivityLocation
-    {
-        revisionId: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        activityValuesId: KnockoutObservableNumber;
+    export interface IObservableValuesActivityLocation {
+        id: KnockoutObservableNumber;
         placeId: KnockoutObservableNumber;
     }
 
-    export interface IObservableActivityType
-    {
+    export interface IObservableActivityType {
         id: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        activityValuesId: KnockoutObservableNumber;
+        type: KnockoutObservableString;
+        checked: KnockoutComputed;
+    }
+
+    export interface IObservableValuesActivityType {
+        id: KnockoutObservableNumber;
         typeId: KnockoutObservableNumber;
     }
 
-    export interface IObservableActivityValues {
-        revisionId: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        activityId: KnockoutObservableNumber;
-        title: KnockoutObservableString;
-        content: KnockoutObservableString;
-        wtartsOn: KnockoutObservableDate;
-        endsOn: KnockoutObservableDate;
-        locations: KnockoutObservableArray;
-        types: KnockoutObservableArray;
-        modeText: KnockoutObservableString;
-    }
-
     export interface IObservableActivityTag {
-        revisionId: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        activityId: KnockoutObservableNumber;
+        id: KnockoutObservableNumber;
         number: KnockoutObservableNumber;
         text: KnockoutObservableString; 
         domainTypeText: KnockoutObservableString; 
@@ -56,15 +41,35 @@ module Service.ApiModels {
         isInstitution: KnockoutObservableBool;
     }
 
+    export interface IObservableActivityDocument
+    {
+        id: KnockoutObservableNumber;
+        fileId: KnockoutObservableNumber;
+        imageId: KnockoutObservableNumber;
+        proxyImageId: KnockoutObservableNumber;
+    }
+
+    export interface IObservableActivityValues {
+        id: KnockoutObservableNumber;
+        title: KnockoutObservableString;
+        content: KnockoutObservableString;
+        startsOn: KnockoutObservableDate;
+        endsOn: KnockoutObservableDate;
+        locations: KnockoutObservableArray;
+        types: KnockoutObservableArray;         // IObservableValuesActivityType
+        modeText: KnockoutObservableString;
+        tags: KnockoutObservableArray;
+        documents: KnockoutObservableArray;
+    }
+
     export interface IObservableActivity {
-        revisionId: KnockoutObservableNumber;
+        id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
         personId: KnockoutObservableNumber;
         number: KnockoutObservableNumber;
         entityId: KnockoutObservableString;     // guid converted to string
         modeText: KnockoutObservableString;
-        values: KnockoutObservableArray;
-        tags: KnockoutObservableArray;
+        values: IObservableActivityValues;      // only values for modeText
     }
 
     export interface IActivityPage {

@@ -64,7 +64,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/App.js",
                 "~/scripts/app/SideSwiper.js",
                 "~/scripts/app/Routes.js",
-                "~/scripts/viewmodels/Flasher.js"));
+                "~/scripts/viewmodels/Flasher.js",
+                "~/scripts/oss/moment.js"));
 
             // establishment search page
             bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
