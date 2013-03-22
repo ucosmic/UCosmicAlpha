@@ -69,9 +69,10 @@
                         media_external_list_url: 'lists/media_list.js'
                     });
 
+
                     ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
 
-                    /* KendoUI Bug? - Can't seem to preload locations unless I do this. */
+                    /* KendoUI Bug? - Can't seem to preload values unless I do this. */
                     var countrySelector = $("#countrySelector").data("kendoMultiSelect");
                     countrySelector.value(activityViewModel.selectedLocations());
                     
@@ -80,7 +81,6 @@
                     
                     datePicker = $("#toDatePicker").data("kendoDatePicker");
                     datePicker.value(activityViewModel.values.endsOn());
-
 
                 })  // activityViewModel.load.done
                 .fail(function(jqXhr, textStatus, errorThrown) {
@@ -118,7 +118,7 @@
 										<td>
 										    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="text: values.title"></textarea>
                                             <label class="required-field">*</label>
-										    <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/>
+										    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
 										</td>
 									</tr>
 									<!-- COUNTRY -->
@@ -136,39 +136,54 @@
 									    </td>
 									</tr>
 									<!-- FROM and TO DATES -->
-									<tr>
-										<td class="field-name">On/From</td>
-										<td>
-											<input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
-										    To&nbsp;
-                                            <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
-                                            <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/>
-										</td>
-									</tr>
+								    <tr>
+								        <td class="field-name">On/From</td>
+								        <td>
+								            <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
+								            To&nbsp;
+								            <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
+								            <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
+								        </td>
+								    </tr>
+								    <!-- FUNDING -->
+								    <tr>
+								        <td class="field-name">Funding</td>
+								        <td>
+								            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded"/>
+								            <span>External</span>
+								            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded"/>
+                                            <span>Internal</span>
+								        </td>
+								    </tr>
 								</tbody>
 							</table>
 							<!-- DESCRIPTION -->
 							<div style="margin-bottom: inherit">
 								<header style="margin-bottom: 4px">
 									<h2>Description</h2>
-									<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>
+									<!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/> -->
 								</header>
 								<textarea id="tinymce"></textarea>
 							</div>
 							<!-- TAGS -->
-							<div style="margin-bottom: inherit">
-								<header style="margin-bottom: 4px">
-									<h2>Tags</h2>
-								</header>
-								<span>
-									<span><textarea rows="1" style="vertical-align: middle; width: 200px" placeholder="[Enter Tag]"></textarea><img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon-position"/></span>
-									<input type="button" value="Add"/>
-									<textarea rows="1" disabled style="width: 500px; white-space: nowrap; overflow-x: auto; overflow-y: hidden"></textarea>
-								</span>
-							</div>
+							<div style="margin-bottom: 32px">
+							    <header style="margin-bottom: 10px">
+							        <h2>
+							            <span>Tags</span>
+							            <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" data-bind="click: function () { this.addingTag(true); }"/>
+							        </h2>
+							    </header>
+							    <div data-bind="visible: addingTag" style="width: 100%; margin-bottom: 16px">
+							        <textarea id="newTag" rows="1" style="width: 400px; white-space: nowrap; overflow: hidden" placeholder="[Enter Tag]" data-bind="value: newTag"></textarea>
+							        <input type="button" class="" value="Add" data-bind="click: function (item, event) { this.addTag(item, event); }"/>
+							        <input type="button" class="" value="Done" data-bind="click: function () { this.addingTag(false); }"/>
+							    </div>
+							    <div style="width: 100%; line-height: 150%; margin-bottom: inherit" data-bind="template: { name: 'tags-template', foreach: values.tags() }"></div>
+                            </div>
+
 							<!-- DOCUMENTS -->
 						    <div style="width: 100%; margin-bottom: inherit">
-						        <header style="margin-bottom: inherit">
+						        <header>
 						            <h2>
 						                <span>Documents</span>
 						                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function (data, event) { addDocument(data, event, null); }"/>
@@ -186,15 +201,13 @@
 						                        <th style="width: 5%"></th>
 						                    </tr>
 						                </thead>
-						                <!-- <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"> -->
-						                <tbody>
-						                </tbody>
+						                <tbody data-bind="template: { name: 'activity-document-template', foreach: values.documents }"></tbody>
 						            </table>
 						        </div>
 						    </div>
                             
 						    <!-- BUTTONS -->
-						    <div style="margin-bottom: inherit">
+						    <div style="margin-bottom: 32px">
 						        <span>
 						            <input type="button" value="Save as Draft"/>
 						            <input type="button" value="Save as Final"/>
@@ -203,7 +216,7 @@
 						    </div>
 
 						    <!-- LAST UPDATED -->
-							<div style="width: 33%; border-top: 1px; border-style: solid">
+							<div style="width: 33%; height: 1.5em; border-top: 1px; border-style: solid">
 								<span style="font-size:smaller; color:slategray">Last updated <label id="last-updated-date">00/00/0000</label> by <label id="last-updated-name">John Doe</label></span>
 							</div>
 						</div>
@@ -222,32 +235,40 @@
     </li>
 </script>
 
+<script type="text/html" id="tags-template">
+    &emsp;
+    <span style="white-space: nowrap">
+        <span data-bind="text: text()"></span>
+        <img src="../../images/icons/minus/minus-20-red.png" alt="Delete Tag" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }"/>
+    </span>
+</script>
+
 <script type="text/html" id="activity-document-template">
-    <tr class="hover-hilite"
-        data-bind="click: function (data, event) { $parent.editActivity(data, event, id()); }"
-        href="@Url.Action(MVC.MyProfile.ActivityEdit())">
-        <!-- Image -->
+    <tr class="hover-hilite">
+        <!-- Visible -->
         <td>
-            <img src="../../images/placeholders/blue-96x96.png" alt="image" width="96" height="96" />
+
         </td>
-        <!-- Description -->
-        <td style="vertical-align: top">
-            <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.getTypeName(values.typeId())"></span>
-                <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
-            </div>
-            <div class="ellipsis">
-                <span data-bind="text: values.title()"></span>
-            </div>
-            <div class="ellipsis">
-                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn())"></span>
-                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
-            </div>
+        <!-- Preview -->
+        <td>
+
+        </td>
+        <!-- Name -->
+        <td>
+
+        </td>
+        <!-- Type -->
+        <td>
+
+        </td>
+        <!-- Size -->
+        <td>
+
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Remove activity" data-bind="click: function (data, event) { $parent.deleteActivity(data, event, $parent); }, clickBubble: false">
-                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove activity" />
+            <a href="#" title="Remove document" data-bind="click: function (data, event) { $parent.deleteDocument(data, event, $parent); }, clickBubble: false">
+                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove document" />
             </a>
         </td>
     </tr>

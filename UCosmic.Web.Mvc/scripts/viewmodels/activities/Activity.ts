@@ -26,6 +26,12 @@ module ViewModels.Activities {
         /* Array of activity types displayed as list of checkboxes */
 	    activityTypes: KnockoutObservableArray = ko.observableArray();
 
+        /* True if adding new tag. */
+        addingTag: KnockoutObservableBool = ko.observable(false);
+
+        /* Data bound to new tag textArea */
+	    newTag: KnockoutObservableString = ko.observable();
+
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
@@ -85,18 +91,24 @@ module ViewModels.Activities {
                         locations: Service.ApiModels.IActivityLocation[],
                         data: Service.ApiModels.IObservableActivity): void => {
 
-                    ko.mapping.fromJS(locations, {}, this.locations);
-
+                    this.activityTypes = ko.mapping.fromJS(types);
+                    this.locations = ko.mapping.fromJS(locations);
+                    
+                    /* Although the MVC DateTime to JSON serializer will output an ISO compatible
+                        string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
+                        functions will accurately convert to Date.  So, we are using
+                        moment.js to handle the parsing and conversion.
+                    */
                     {
                         var mapping = {
                             'startsOn':{
                                 create: (options: any): KnockoutObservableDate => {
-                                    return ko.observable(moment(options.data).toDate());
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
                             },
                             'endsOn': {
                                 create: (options: any): KnockoutObservableDate => {
-                                    return ko.observable(moment(options.data).toDate());
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
                             }
                         };
@@ -104,7 +116,6 @@ module ViewModels.Activities {
                         ko.mapping.fromJS(data, mapping, this);
                     }
 
-                    ko.mapping.fromJS(types, {}, this.activityTypes);
                     
                     /* Initialize the list of selected locations with current locations in values. */
                     for (var i = 0; i < this.values.locations().length; i += 1) {
@@ -254,5 +265,61 @@ module ViewModels.Activities {
                 this.values.locations.push(location);
             }
         }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        addTag(item: any, event: Event): void {
+            var newText = this.newTag();
+            newText = (newText != null) ? newText.trim() : null;
+            if ((newText != null) &&
+                (newText.length != 0) &&
+                (!this.haveTag(newText))) {
+                var tag = {
+                    id: 0,
+                    number: 0,
+                    text: newText,
+                    domainTypeText: null,
+                    domainKey: null,
+                    modeText: this.modeText(),
+                    isInstitution: false
+                };
+                var observableTag = ko.mapping.fromJS(tag);
+                this.values.tags.push(observableTag);
+            }
+
+            this.newTag(null);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        removeTag(item: any, event: Event): void {
+            this.values.tags.remove(item);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        haveTag(text: string): bool {
+            return this.tagIndex(text) != -1;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        tagIndex(text: string): number {
+            var i = 0;
+            while ((i < this.values.tags().length) &&
+                    (text != this.values.tags()[i].text())) {
+                i += 1;
+            }
+            return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
+        }
+
 	}
 }

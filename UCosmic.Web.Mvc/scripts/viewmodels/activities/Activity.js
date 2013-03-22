@@ -6,6 +6,8 @@ var ViewModels;
                 this.locations = ko.observableArray();
                 this.selectedLocations = ko.observableArray();
                 this.activityTypes = ko.observableArray();
+                this.addingTag = ko.observable(false);
+                this.newTag = ko.observable();
                 this.id = ko.observable(activityId);
             }
             Activity.prototype.load = function () {
@@ -35,25 +37,23 @@ var ViewModels;
                     }
                 });
                 $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
-                    ko.mapping.fromJS(locations, {
-                    }, _this.locations);
+                    _this.activityTypes = ko.mapping.fromJS(types);
+                    _this.locations = ko.mapping.fromJS(locations);
  {
                         var mapping = {
                             'startsOn': {
                                 create: function (options) {
-                                    return ko.observable(moment(options.data).toDate());
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
                             },
                             'endsOn': {
                                 create: function (options) {
-                                    return ko.observable(moment(options.data).toDate());
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
                             }
                         };
                         ko.mapping.fromJS(data, mapping, _this);
                     }
-                    ko.mapping.fromJS(types, {
-                    }, _this.activityTypes);
                     for(var i = 0; i < _this.values.locations().length; i += 1) {
                         _this.selectedLocations.push(_this.values.locations()[i].placeId());
                     }
@@ -133,6 +133,37 @@ var ViewModels;
                     });
                     this.values.locations.push(location);
                 }
+            };
+            Activity.prototype.addTag = function (item, event) {
+                var newText = this.newTag();
+                newText = (newText != null) ? newText.trim() : null;
+                if((newText != null) && (newText.length != 0) && (!this.haveTag(newText))) {
+                    var tag = {
+                        id: 0,
+                        number: 0,
+                        text: newText,
+                        domainTypeText: null,
+                        domainKey: null,
+                        modeText: this.modeText(),
+                        isInstitution: false
+                    };
+                    var observableTag = ko.mapping.fromJS(tag);
+                    this.values.tags.push(observableTag);
+                }
+                this.newTag(null);
+            };
+            Activity.prototype.removeTag = function (item, event) {
+                this.values.tags.remove(item);
+            };
+            Activity.prototype.haveTag = function (text) {
+                return this.tagIndex(text) != -1;
+            };
+            Activity.prototype.tagIndex = function (text) {
+                var i = 0;
+                while((i < this.values.tags().length) && (text != this.values.tags()[i].text())) {
+                    i += 1;
+                }
+                return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
             };
             return Activity;
         })();

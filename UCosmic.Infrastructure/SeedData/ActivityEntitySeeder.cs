@@ -141,7 +141,7 @@ namespace UCosmic.SeedData
                     _createActivityTag.Handle(new CreateActivityTag
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        Text = "India",
+                        Text = "Japan",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
                         Mode = activity.Mode

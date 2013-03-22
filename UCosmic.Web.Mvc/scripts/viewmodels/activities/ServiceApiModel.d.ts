@@ -55,6 +55,8 @@ module Service.ApiModels {
         content: KnockoutObservableString;
         startsOn: KnockoutObservableDate;
         endsOn: KnockoutObservableDate;
+        wasExternallyFunded: KnockoutObservableBool;
+        wasinternallyFunded: KnockoutObservableBool;
         locations: KnockoutObservableArray;
         types: KnockoutObservableArray;         // IObservableValuesActivityType
         modeText: KnockoutObservableString;
