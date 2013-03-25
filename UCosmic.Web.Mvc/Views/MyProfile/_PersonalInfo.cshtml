@@ -12,9 +12,9 @@
                     <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
                 </div>
                 <div style="padding-left: 4px;">
-                    <div data-bind="visible: hasPhoto" style="padding-top: 4px;">
+                    <div data-bind="visible: hasPhoto" style="display: none; padding-top: 4px;">
                         <input type="button" value="Delete my photo" data-bind="click: startDeletingPhoto, attr: { disabled: photoDeleteSpinner.isVisible } " />
-                        <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                        <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" style="display: none;" />
                     </div>
                     <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
                         <div>
@@ -23,20 +23,20 @@
                             </p>
                         </div>
                     </div>
-                    <div data-bind="visible: isPhotoExtensionInvalid">
+                    <div data-bind="visible: isPhotoExtensionInvalid" style="display: none;">
                         <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
                             is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
                     </div>
-                    <div data-bind="visible: isPhotoTooManyBytes">
+                    <div data-bind="visible: isPhotoTooManyBytes" style="display: none;">
                         <span class="validationMessage">The photo &quot;<span data-bind="text: photoFileName"></span>&quot; 
                             is too large. Please choose a photo that is less than 1 megabyte in size.</span>
                     </div>
-                    <div data-bind="visible: isPhotoFailureUnexpected">
+                    <div data-bind="visible: isPhotoFailureUnexpected" style="display: none;">
                         <span class="validationMessage">UCosmic experienced an unexpected error managing your photo, please try again. 
                             If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
                         </span>
                     </div>
-                    <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px;">
+                    <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px; display: none;">
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                         <strong>Uploading...</strong>
                     </div>
@@ -104,7 +104,7 @@
                     data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
             </div>
         </div>
-        <div class="field-row" data-bind="visible: isFacultyRankEditable">
+        <div class="field-row" data-bind="visible: isFacultyRankEditable" style="display: none;">
             <div class="field-label">
                 <label>Faculty rank</label>
             </div>
@@ -167,8 +167,8 @@
                 &nbsp;&nbsp;&nbsp;
                 <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
                 &nbsp;&nbsp;&nbsp;
-                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
-                <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
+                <strong data-bind="visible: saveSpinner.isVisible" style="display: none;">Saving...</strong>
             </div>
         </div>
     </div>
