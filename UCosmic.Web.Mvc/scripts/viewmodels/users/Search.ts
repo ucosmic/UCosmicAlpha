@@ -21,6 +21,8 @@ module ViewModels.Users {
         constructor() {
             super();
             this._init();
+            this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
+            this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
         }
 
         private _init(): void {
@@ -216,7 +218,7 @@ module ViewModels.Users {
 
         private _setupPhotoComputeds(): void {
             this.photoSrc = ko.computed((): string => {
-                return App.Routes.WebApi.People.Photo.get(this.id(), 100);
+                return App.Routes.WebApi.People.Photo.get(this.personId(), 100);
             });
         }
 

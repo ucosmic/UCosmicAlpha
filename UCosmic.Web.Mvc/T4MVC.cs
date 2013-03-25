@@ -1266,6 +1266,8 @@ namespace Links
                 public static readonly string kendo_userevents_min_js = Url("kendo.userevents.min.js");
                 public static readonly string kendo_validator_min_js = Url("kendo.validator.min.js");
                 public static readonly string kendo_view_min_js = Url("kendo.view.min.js");
+                public static readonly string kendo_web_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/kendo.web.min.js") ? Url("kendo.web.min.js") : Url("kendo.web.js");
+                              
                 public static readonly string kendo_web_min_js = Url("kendo.web.min.js");
                 public static readonly string kendo_window_min_js = Url("kendo.window.min.js");
             }
@@ -3018,6 +3020,8 @@ namespace Links
                 public static readonly string kendo_black_min_css = Url("kendo.black.min.css");
                 public static readonly string kendo_blueopal_min_css = Url("kendo.blueopal.min.css");
                 public static readonly string kendo_bootstrap_min_css = Url("kendo.bootstrap.min.css");
+                public static readonly string kendo_common_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/kendo.common.min.css") ? Url("kendo.common.min.css") : Url("kendo.common.css");
+                     
                 public static readonly string kendo_common_min_css = Url("kendo.common.min.css");
                 public static readonly string kendo_dataviz_black_min_css = Url("kendo.dataviz.black.min.css");
                 public static readonly string kendo_dataviz_blueopal_min_css = Url("kendo.dataviz.blueopal.min.css");
@@ -3043,6 +3047,8 @@ namespace Links
                 public static readonly string kendo_moonlight_min_css = Url("kendo.moonlight.min.css");
                 public static readonly string kendo_rtl_min_css = Url("kendo.rtl.min.css");
                 public static readonly string kendo_silver_min_css = Url("kendo.silver.min.css");
+                public static readonly string kendo_uniform_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/kendo.uniform.min.css") ? Url("kendo.uniform.min.css") : Url("kendo.uniform.css");
+                     
                 public static readonly string kendo_uniform_min_css = Url("kendo.uniform.min.css");
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class Metro {

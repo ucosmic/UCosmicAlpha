@@ -19,6 +19,7 @@
                         <option value="lastname-asc">Sort by last name A-Z</option>
                         <option value="lastname-desc">Sort by last name Z-A</option>
                     </select>
+                    <input type="hidden" value="username-asc" data-bind="value: orderBy" />
                 </div>
                 <div class="field">
                     <select class="side" data-bind="value: pageSize">
@@ -29,6 +30,7 @@
                         <option value="100">Show 100 results per page</option>
                         @*<option value="@int.MaxValue">Show all results</option>*@
                     </select>
+                    <input type="hidden" value="5" data-bind="value: pageSize" />
                 </div>
                 <div class="field">
                     <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>

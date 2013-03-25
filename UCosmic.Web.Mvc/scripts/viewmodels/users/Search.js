@@ -16,6 +16,8 @@ var ViewModels;
                 this._historyIndex = 0;
                 this.impersonateUserName = ko.observable();
                 this._init();
+                this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
+                this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
             }
             Search.prototype._init = function () {
                 this._setupHistory();
@@ -192,7 +194,7 @@ var ViewModels;
             SearchResult.prototype._setupPhotoComputeds = function () {
                 var _this = this;
                 this.photoSrc = ko.computed(function () {
-                    return App.Routes.WebApi.People.Photo.get(_this.id(), 100);
+                    return App.Routes.WebApi.People.Photo.get(_this.personId(), 100);
                 });
             };
             SearchResult.prototype._setupNamingComputeds = function () {
