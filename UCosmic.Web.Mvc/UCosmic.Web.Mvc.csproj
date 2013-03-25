@@ -606,6 +606,7 @@
     <Content Include="content\kendo\2013.1.226\kendo.black.min.css" />
     <Content Include="content\kendo\2013.1.226\kendo.blueopal.min.css" />
     <Content Include="content\kendo\2013.1.226\kendo.bootstrap.min.css" />
+    <Content Include="content\kendo\2013.1.226\kendo.common.css" />
     <Content Include="content\kendo\2013.1.226\kendo.common.min.css" />
     <Content Include="content\kendo\2013.1.226\kendo.dataviz.black.min.css" />
     <Content Include="content\kendo\2013.1.226\kendo.dataviz.blueopal.min.css" />
@@ -631,6 +632,7 @@
     <Content Include="content\kendo\2013.1.226\kendo.moonlight.min.css" />
     <Content Include="content\kendo\2013.1.226\kendo.rtl.min.css" />
     <Content Include="content\kendo\2013.1.226\kendo.silver.min.css" />
+    <Content Include="content\kendo\2013.1.226\kendo.uniform.css" />
     <Content Include="content\kendo\2013.1.226\kendo.uniform.min.css" />
     <Content Include="content\kendo\2013.1.226\MetroBlack\editor.png" />
     <Content Include="content\kendo\2013.1.226\MetroBlack\imagebrowser.png" />
@@ -1745,6 +1747,7 @@
     <Content Include="scripts\kendo\2013.1.226\kendo.userevents.min.js" />
     <Content Include="scripts\kendo\2013.1.226\kendo.validator.min.js" />
     <Content Include="scripts\kendo\2013.1.226\kendo.view.min.js" />
+    <Content Include="scripts\kendo\2013.1.226\kendo.web.js" />
     <Content Include="scripts\kendo\2013.1.226\kendo.web.min.js" />
     <Content Include="scripts\kendo\2013.1.226\kendo.window.min.js" />
     <Content Include="scripts\kendo\kendo.all.d.ts" />
