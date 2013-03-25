@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Identity;
+
 namespace UCosmic.Web.Mvc.Models
 {
     public class Tenancy

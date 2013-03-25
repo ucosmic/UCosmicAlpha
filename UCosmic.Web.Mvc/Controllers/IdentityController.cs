@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -117,17 +118,16 @@ namespace UCosmic.Web.Mvc.Controllers
             var user = _queryProcessor.Execute(new UserByName(User.Identity.Name)
             {
                 EagerLoad = new Expression<Func<User, object>>[]
-                    {
-                        x => x.Person.Affiliations,
-                    },
+                {
+                    x => x.Person.Affiliations.Select(y => y.Establishment),
+                },
             });
             if (user == null) return new HttpNotFoundResult();
-
 
             var tenancy = Mapper.Map<Tenancy>(user);
 
             /* Set the anchor link text to the employee personal info controller. */
-            EmployeeModuleSettings employeeModuleSettings = _queryProcessor.Execute(
+            var employeeModuleSettings = _queryProcessor.Execute(
                 new EmployeeModuleSettingsByUserName(user.Name));
             if (employeeModuleSettings != null)
                 Mapper.Map(employeeModuleSettings, tenancy);
@@ -138,10 +138,10 @@ namespace UCosmic.Web.Mvc.Controllers
             TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", User.Identity.Name));
 
             if (string.IsNullOrWhiteSpace(returnUrl) || returnUrl == "/")
-            {
                 returnUrl = _userSigner.DefaultSignedOnUrl;
-            }
-            return Redirect(returnUrl);
+
+            //return Redirect(returnUrl);
+            return RedirectToAction(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl));
         }
 
         [GET("sign-out")]

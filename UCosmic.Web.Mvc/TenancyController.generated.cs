@@ -25,9 +25,6 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class TenancyController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public TenancyController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected TenancyController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
