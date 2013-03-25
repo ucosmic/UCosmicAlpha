@@ -282,6 +282,7 @@
     <Compile Include="ApiControllers\UsersController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
     <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />
     <Compile Include="Helpers\LocalApiEndpointAttribute.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />

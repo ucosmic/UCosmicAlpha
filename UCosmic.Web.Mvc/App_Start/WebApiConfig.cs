@@ -10,6 +10,8 @@ namespace UCosmic.Web.Mvc
     {
         public static void RegisterApi(HttpConfiguration config)
         {
+            config.Filters.Add(new ElmahHandleApiErrorAttribute());
+
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Add(new PlainTextFormatter());
             config.Formatters.Add(new ImageMediaFormatter());
