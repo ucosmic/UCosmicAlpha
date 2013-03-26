@@ -7,7 +7,7 @@ namespace UCosmic.EntityFramework
     {
         public ImageOrm()
         {
-            ToTable(typeof(Image).Name, DbSchemaName.Images);
+            ToTable(typeof(Image).Name, DbSchemaName.Files);
         }
     }
 

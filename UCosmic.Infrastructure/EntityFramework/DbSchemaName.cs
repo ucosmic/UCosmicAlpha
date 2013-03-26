@@ -13,6 +13,5 @@
         public const string ActivitiesV2 = "ActivitiesV2";
         public const string Employees = "Employees";
         public const string Representatives = "Representatives";
-        public const string Images = "Images";
     }
 }

@@ -109,6 +109,28 @@ namespace UCosmic.SeedData
                     Name = "Research Spreadsheet"
                 });
             }
+
+            fileName = "mkusenba-photo.jpg";
+            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            {
+                Seed(new CreateLoadableFile
+                {
+                    Path = basePath + fileName,
+                    MimeType = "image/jpg",
+                    Name = fileName
+                });
+            }
+
+            fileName = "billhogarth-photo.jpg";
+            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            {
+                Seed(new CreateLoadableFile
+                {
+                    Path = basePath + fileName,
+                    MimeType = "image/jpg",
+                    Name = fileName
+                });
+            }
         }
     }
 

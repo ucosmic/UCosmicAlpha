@@ -167,6 +167,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
     <Compile Include="Domain\Identity\Queries\RolesUnfiltered.cs" />
     <Compile Include="Domain\Identity\Queries\RolesByKeyword.cs" />
+    <Compile Include="Domain\People\Commands\UpdateMyPhotoId.cs" />
     <Compile Include="Domain\Representatives\Entities\RepModuleSettings.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategories.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />
