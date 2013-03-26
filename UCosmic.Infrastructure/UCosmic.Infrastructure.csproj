@@ -143,9 +143,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryData\AzureBlobStorage.cs" />
-    <Compile Include="BinaryData\IisFileStorage.cs" />
+    <Compile Include="BinaryData\AzureBlobBinaryDataStorage.cs" />
+    <Compile Include="BinaryData\BinaryDataStorageExtensions.cs" />
+    <Compile Include="BinaryData\IisFileSystemBinaryDataStorage.cs" />
+    <Compile Include="BinaryData\SimpleInjectorBinaryDataStorageRegistration.cs" />
     <Compile Include="Cache\AzureCacheProvider.cs" />
+    <Compile Include="Configuration\ConnectionStringKey.cs" />
     <Compile Include="Cqrs\BaseViewManager.cs" />
     <Compile Include="Cqrs\_Deprecated\_HybridMemoryAzureCacheProvider.cs" />
     <Compile Include="Cqrs\AzureCacheViewManager.cs" />

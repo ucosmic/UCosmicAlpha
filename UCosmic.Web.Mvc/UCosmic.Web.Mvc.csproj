@@ -281,7 +281,6 @@
     <Compile Include="ApiControllers\RolesController.cs" />
     <Compile Include="ApiControllers\UsersController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
-    <Compile Include="Controllers\TestBinaryDataStorageController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
     <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />
@@ -442,9 +441,6 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="TenancyController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TestBinaryDataStorageController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="UsersController.generated.cs">

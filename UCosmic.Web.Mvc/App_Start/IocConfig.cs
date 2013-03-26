@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
+using UCosmic.BinaryData;
 using UCosmic.Cache;
 using UCosmic.Configuration;
 using UCosmic.Cqrs;
@@ -13,7 +14,9 @@ using UCosmic.Logging;
 using UCosmic.Mail;
 using UCosmic.Saml;
 using UCosmic.Security;
+#if DEBUG && !AZURE
 using UCosmic.SeedData;
+#endif
 using UCosmic.WebApi;
 
 namespace UCosmic.Web.Mvc
@@ -58,6 +61,7 @@ namespace UCosmic.Web.Mvc
                 ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerKey.ToString()],
                 ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerSecret.ToString()]);
             container.RegisterElmahExceptionLogger();
+            container.RegisterBinaryDataStorage();
             container.RegisterEntityFramework();
             container.RegisterFluentValidation(Assembly.GetAssembly(typeof (IHandleCommands<>)));
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));

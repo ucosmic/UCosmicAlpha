@@ -6,22 +6,30 @@ using System.Web.Hosting;
 namespace UCosmic.BinaryData
 {
     // stores binary data as files on the local filesystem
-    public class IisFileStorage : IStoreBinaryData
+    public class IisFileSystemBinaryDataStorage : IStoreBinaryData
     {
-        private static string Root
+        private readonly string _root;
+
+        public IisFileSystemBinaryDataStorage(string appRelativeRoot)
         {
-            // store all binary data in App_Data subdirectory
-            get { return HostingEnvironment.MapPath("~/App_Data/binary-data"); }
+            appRelativeRoot = appRelativeRoot ?? "~/";
+            if (!appRelativeRoot.StartsWith("~/"))
+                throw new ArgumentException(string.Format(
+                    "The path '{0}' is not a valid app-relative root directory. App-relative directories begin with '~/'.",
+                        appRelativeRoot));
+            _root = HostingEnvironment.MapPath(appRelativeRoot);
         }
 
-        private static string GetFullPath(string relativePath)
+        private string GetFullPath(string relativePath)
         {
             // combine root with relative path for System.IO usage
-            return Path.Combine(Root, relativePath);
+            return Path.Combine(_root, relativePath);
         }
 
         public bool Exists(string path)
         {
+            path.ValidateAsBinaryStoragePath();
+
             // this does not work for directories, only files
             var fullPath = GetFullPath(path);
             var exists = File.Exists(fullPath);
@@ -30,6 +38,8 @@ namespace UCosmic.BinaryData
 
         public void Put(string path, byte[] data, bool overwrite = false)
         {
+            path.ValidateAsBinaryStoragePath();
+
             // disallow file replacement unless specified in method invocation
             if (!overwrite && Exists(path))
                 throw new InvalidOperationException(string.Format(
@@ -65,21 +75,24 @@ namespace UCosmic.BinaryData
 
         public byte[] Get(string path)
         {
-            var fullPath = GetFullPath(path);
+            path.ValidateAsBinaryStoragePath();
 
             // return null when file does not exist
             if (!Exists(path)) return null;
 
+            var fullPath = GetFullPath(path);
             var data = File.ReadAllBytes(fullPath);
             return data;
         }
 
         public void Delete(string path)
         {
+            path.ValidateAsBinaryStoragePath();
+
             // do nothing unless file exists
-            var fullPath = GetFullPath(path);
             if (!Exists(path)) return;
 
+            var fullPath = GetFullPath(path);
             File.Delete(fullPath);
         }
     }
