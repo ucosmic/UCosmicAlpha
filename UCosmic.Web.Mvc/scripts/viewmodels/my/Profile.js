@@ -155,7 +155,7 @@ var ViewModels;
                         App.flasher.flash(response);
                     }
                     _this.hasPhoto(false);
-                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
+                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
                 }).fail(function () {
                     _this.isPhotoFailureUnexpected(true);
                 });
@@ -279,7 +279,7 @@ var ViewModels;
                                         App.flasher.flash(e.response.message);
                                     }
                                     _this.hasPhoto(true);
-                                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, null, true));
+                                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
                                 }
                             },
                             error: function (e) {

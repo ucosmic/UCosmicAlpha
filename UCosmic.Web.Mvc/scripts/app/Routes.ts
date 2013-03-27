@@ -208,36 +208,33 @@ module App.Routes {
                     return get();
                 }
                 export module Photo {
-                    export function get (maxSide?: number, imageResizeQuality?: string,
-                        refresh?: bool): string;
+                    export function get (maxSide?: number, refresh?: bool): string;
 
                     export function get (maxWidth?: number, maxHeight?: number,
-                        imageResizeQuality?: string, refresh?: bool): string;
+                        refresh?: bool): string;
 
-                    export function get (arg1?: number, arg2?: any, arg3?: any, arg4?: any): string {
-                        if (arguments.length === 4
-                            || (arguments.length >= 2 && typeof arguments[1] === 'number')
-                            || (arguments.length >= 3 && typeof arguments[2] === 'string')
+                    export function get (arg1?: number, arg2?: any, arg3?: any): string {
+                        if (arguments.length === 3
+                            || (arguments.length == 2 && typeof arguments[1] === 'number')
                         ) {
-                            return getByMaxSides(arg1, arg2, arg3, arg4);
+                            return getByMaxSides(arg1, arg2, arg3);
                         }
-                        return getByMaxSide(arg1, arg2, arg3);
+                        return getByMaxSide(arg1, arg2);
                     }
 
-                    function getByMaxSide(maxSide?: number, imageResizeQuality?: string,
-                        refresh?: bool): string {
+                    function getByMaxSide(maxSide?: number, refresh?: bool): string {
                         var url = initializeGetUrl();
                         if (maxSide) url += 'maxSide=' + maxSide + '&';
-                        url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                        url = finalizeGetUrl(url, refresh);
                         return url;
                     }
 
                     function getByMaxSides(maxWidth?: number, maxHeight?: number,
-                        imageResizeQuality?: string, refresh?: bool): string {
+                        refresh?: bool): string {
                         var url = initializeGetUrl();
                         if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
                         if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
-                        url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                        url = finalizeGetUrl(url, refresh);
                         return url;
                     }
 
@@ -247,8 +244,7 @@ module App.Routes {
                         return url;
                     }
 
-                    function finalizeGetUrl(url: string, imageResizeQuality?: string, refresh?: bool): string {
-                        if (imageResizeQuality) url += 'quality=' + imageResizeQuality + '&';
+                    function finalizeGetUrl(url: string, refresh?: bool): string {
                         if (refresh) url += 'refresh=' + new Date().toUTCString() + '&';
                         if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
                             url = url.substr(0, url.length - 1);
@@ -281,36 +277,33 @@ module App.Routes {
 
         export module People {
             export module Photo {
-                export function get (id: number, maxSide?: number, imageResizeQuality?: string,
-                    refresh?: bool): string;
+                export function get (id: number, maxSide?: number, refresh?: bool): string;
 
                 export function get (id: number, maxWidth?: number, maxHeight?: number,
-                    imageResizeQuality?: string, refresh?: bool): string;
+                    refresh?: bool): string;
 
-                export function get (id: number, arg1?: number, arg2?: any, arg3?: any, arg4?: any): string {
-                    if (arguments.length === 5
-                        || (arguments.length >= 3 && typeof arguments[2] === 'number')
-                        || (arguments.length >= 4 && typeof arguments[3] === 'string')
+                export function get (id: number, arg1?: number, arg2?: any, arg3?: any): string {
+                    if (arguments.length === 4
+                        || (arguments.length === 3 && typeof arguments[2] === 'number')
                     ) {
-                        return getByMaxSides(id, arg1, arg2, arg3, arg4);
+                        return getByMaxSides(id, arg1, arg2, arg3);
                     }
-                    return getByMaxSide(id, arg1, arg2, arg3);
+                    return getByMaxSide(id, arg1, arg2);
                 }
 
-                function getByMaxSide(id: number, maxSide?: number, imageResizeQuality?: string,
-                    refresh?: bool): string {
+                function getByMaxSide(id: number, maxSide?: number, refresh?: bool): string {
                     var url = initializeGetUrl(id);
                     if (maxSide) url += 'maxSide=' + maxSide + '&';
-                    url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                    url = finalizeGetUrl(url, refresh);
                     return url;
                 }
 
                 function getByMaxSides(id: number, maxWidth?: number, maxHeight?: number,
-                    imageResizeQuality?: string, refresh?: bool): string {
+                    refresh?: bool): string {
                     var url = initializeGetUrl(id);
                     if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
                     if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
-                    url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                    url = finalizeGetUrl(url, refresh);
                     return url;
                 }
 
@@ -320,8 +313,7 @@ module App.Routes {
                     return url;
                 }
 
-                function finalizeGetUrl(url: string, imageResizeQuality?: string, refresh?: bool): string {
-                    if (imageResizeQuality) url += 'quality=' + imageResizeQuality + '&';
+                function finalizeGetUrl(url: string, refresh?: bool): string {
                     if (refresh) url += 'refresh=' + new Date().toUTCString() + '&';
                     if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
                         url = url.substr(0, url.length - 1);
@@ -411,10 +403,10 @@ module App.Routes {
         }
     }
 
-    export module Params {
-        export class ImageResizeQuality {
-            static THUMBNAIL: string = 'thumbnail';
-            static HIGH: string = 'high';
-        }
-    }
+    //export module Params {
+    //    export class ImageResizeQuality {
+    //        static THUMBNAIL: string = 'thumbnail';
+    //        static HIGH: string = 'high';
+    //    }
+    //}
 }

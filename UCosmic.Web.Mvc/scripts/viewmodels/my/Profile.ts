@@ -215,8 +215,7 @@ module ViewModels.My {
             .done((response: string, statusText: string, xhr: JQueryXHR): void => {
                 if (typeof response === 'string') App.flasher.flash(response);
                 this.hasPhoto(false);
-                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
-                    null, true));
+                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
             })
             .fail((): void => {
                 this.isPhotoFailureUnexpected(true);
@@ -351,8 +350,7 @@ module ViewModels.My {
                                     App.flasher.flash(e.response.message);
                                 }
                                 this.hasPhoto(true);
-                                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128,
-                                    null, true));
+                                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
                             }
                         },
                         error: (e: any): void => {

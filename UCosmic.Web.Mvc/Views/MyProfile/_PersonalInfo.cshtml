@@ -5,7 +5,9 @@
     <div class="field-table w870-l300-v570">
         <div class="field-row">
             <div class="field-label" style="padding-top: 0;">
-                <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
+                @* ReSharper disable Html.PathError *@
+                <img src="~/api/my/profile/photo?maxSide=128" alt="" data-bind="attr: { src: photoSrc }" />
+                @* ReSharper restore Html.PathError *@
             </div>
             <div class="field-input">
                 <div>
@@ -83,7 +85,7 @@
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[None]"
-                        data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
+                    data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">

@@ -20,21 +20,21 @@
 
     <script type="text/javascript">
 
-        $(function() {
+        $(function () {
             var profileViewModel = new ViewModels.My.Profile();
-            $(profileViewModel).on('ready', function() {
+            $(profileViewModel).on('ready', function () {
                 ko.applyBindings(profileViewModel, $('#my_profile')[0]);
 
                 var activitiesViewModel = new ViewModels.Activities.ActivityList(profileViewModel.personId);
                 activitiesViewModel.load()
-                    .done(function() {
+                    .done(function () {
                         ko.applyBindings(activitiesViewModel, $("#activities")[0]);
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
                         alert(textStatus + "|" + errorThrown);
-                    });                 
+                    });
             });
-            
+
             $('#tabstrip').kendoTabStrip({
                 animation: false
             }).show();
@@ -66,7 +66,9 @@
                                 <div class="card">
                                     <div class="group">
                                         <div class="on-left photo">
-                                            <img src="~/images/icons/user/unisex-a-128.png" alt="" data-bind="attr: { src: photoSrc }" />
+                                            @* ReSharper disable Html.PathError *@
+                                            <img src="~/api/my/profile/photo?maxSide=128" alt="" data-bind="attr: { src: photoSrc }" />
+                                            @* ReSharper restore Html.PathError *@
                                         </div>
                                         <div class="on-left name-and-title">
                                             <div class="display-name" data-bind="text: displayName"></div>
@@ -74,7 +76,7 @@
                                             @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
                                             {
                                                 <div class="admin-only">
-                                                    <em><span data-bind="text: genderText"></span>, <span data-bind="text: isActiveText"></span></em>
+                                                    <em><span data-bind="text: genderText"></span>, <span data-bind="    text: isActiveText"></span></em>
                                                 </div>
                                             }
                                         </div>

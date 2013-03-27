@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
+using AutoMapper;
+using ImageResizer;
 using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 
@@ -33,26 +35,27 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             });
 
-            Stream stream;
+            var stream = new MemoryStream(); // do not dispose, StreamContent will dispose internally
             var mimeType = "image/png";
+            var settings = Mapper.Map<ResizeSettings>(model);
 
             if (person.Photo != null)
             {
                 // resize the user's photo image
-                stream = person.Photo.Binary.Content.ResizeImage(model);
                 mimeType = person.Photo.MimeType;
+                ImageBuilder.Current.Build(new MemoryStream(person.Photo.Binary.Content), stream, settings, true);
             }
             else
             {
                 // otherwise, return the unisex photo
                 var relativePath = string.Format("~/{0}", Links.images.icons.user.unisex_a_128_png);
-                var absolutePath = Request.GetHttpContext().Server.MapPath(relativePath);
-                stream = absolutePath.ResizeImage(model);
+                ImageBuilder.Current.Build(relativePath, stream, settings);
             }
 
+            stream.Position = 0;
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StreamContent(stream),
+                Content = new StreamContent(stream), // will dispose the stream
             };
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             return response;

@@ -206,22 +206,22 @@ var App;
                     }
                     Profile.put = put;
                     (function (Photo) {
-                                                                        function get(arg1, arg2, arg3, arg4) {
-                            if(arguments.length === 4 || (arguments.length >= 2 && typeof arguments[1] === 'number') || (arguments.length >= 3 && typeof arguments[2] === 'string')) {
-                                return getByMaxSides(arg1, arg2, arg3, arg4);
+                                                                        function get(arg1, arg2, arg3) {
+                            if(arguments.length === 3 || (arguments.length == 2 && typeof arguments[1] === 'number')) {
+                                return getByMaxSides(arg1, arg2, arg3);
                             }
-                            return getByMaxSide(arg1, arg2, arg3);
+                            return getByMaxSide(arg1, arg2);
                         }
                         Photo.get = get;
-                        function getByMaxSide(maxSide, imageResizeQuality, refresh) {
+                        function getByMaxSide(maxSide, refresh) {
                             var url = initializeGetUrl();
                             if(maxSide) {
                                 url += 'maxSide=' + maxSide + '&';
                             }
-                            url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                            url = finalizeGetUrl(url, refresh);
                             return url;
                         }
-                        function getByMaxSides(maxWidth, maxHeight, imageResizeQuality, refresh) {
+                        function getByMaxSides(maxWidth, maxHeight, refresh) {
                             var url = initializeGetUrl();
                             if(maxWidth) {
                                 url += 'maxWidth=' + maxWidth + '&';
@@ -229,7 +229,7 @@ var App;
                             if(maxHeight) {
                                 url += 'maxHeight=' + maxHeight + '&';
                             }
-                            url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                            url = finalizeGetUrl(url, refresh);
                             return url;
                         }
                         function initializeGetUrl() {
@@ -237,10 +237,7 @@ var App;
                             url += '?';
                             return url;
                         }
-                        function finalizeGetUrl(url, imageResizeQuality, refresh) {
-                            if(imageResizeQuality) {
-                                url += 'quality=' + imageResizeQuality + '&';
-                            }
+                        function finalizeGetUrl(url, refresh) {
                             if(refresh) {
                                 url += 'refresh=' + new Date().toUTCString() + '&';
                             }
@@ -283,22 +280,22 @@ var App;
             var Users = WebApi.Users;
             (function (People) {
                 (function (Photo) {
-                                                            function get(id, arg1, arg2, arg3, arg4) {
-                        if(arguments.length === 5 || (arguments.length >= 3 && typeof arguments[2] === 'number') || (arguments.length >= 4 && typeof arguments[3] === 'string')) {
-                            return getByMaxSides(id, arg1, arg2, arg3, arg4);
+                                                            function get(id, arg1, arg2, arg3) {
+                        if(arguments.length === 4 || (arguments.length === 3 && typeof arguments[2] === 'number')) {
+                            return getByMaxSides(id, arg1, arg2, arg3);
                         }
-                        return getByMaxSide(id, arg1, arg2, arg3);
+                        return getByMaxSide(id, arg1, arg2);
                     }
                     Photo.get = get;
-                    function getByMaxSide(id, maxSide, imageResizeQuality, refresh) {
+                    function getByMaxSide(id, maxSide, refresh) {
                         var url = initializeGetUrl(id);
                         if(maxSide) {
                             url += 'maxSide=' + maxSide + '&';
                         }
-                        url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                        url = finalizeGetUrl(url, refresh);
                         return url;
                     }
-                    function getByMaxSides(id, maxWidth, maxHeight, imageResizeQuality, refresh) {
+                    function getByMaxSides(id, maxWidth, maxHeight, refresh) {
                         var url = initializeGetUrl(id);
                         if(maxWidth) {
                             url += 'maxWidth=' + maxWidth + '&';
@@ -306,7 +303,7 @@ var App;
                         if(maxHeight) {
                             url += 'maxHeight=' + maxHeight + '&';
                         }
-                        url = finalizeGetUrl(url, imageResizeQuality, refresh);
+                        url = finalizeGetUrl(url, refresh);
                         return url;
                     }
                     function initializeGetUrl(id) {
@@ -314,10 +311,7 @@ var App;
                         url += '?';
                         return url;
                     }
-                    function finalizeGetUrl(url, imageResizeQuality, refresh) {
-                        if(imageResizeQuality) {
-                            url += 'quality=' + imageResizeQuality + '&';
-                        }
+                    function finalizeGetUrl(url, refresh) {
                         if(refresh) {
                             url += 'refresh=' + new Date().toUTCString() + '&';
                         }
@@ -437,16 +431,6 @@ var App;
             var Establishments = Mvc.Establishments;
         })(Routes.Mvc || (Routes.Mvc = {}));
         var Mvc = Routes.Mvc;
-        (function (Params) {
-            var ImageResizeQuality = (function () {
-                function ImageResizeQuality() { }
-                ImageResizeQuality.THUMBNAIL = 'thumbnail';
-                ImageResizeQuality.HIGH = 'high';
-                return ImageResizeQuality;
-            })();
-            Params.ImageResizeQuality = ImageResizeQuality;            
-        })(Routes.Params || (Routes.Params = {}));
-        var Params = Routes.Params;
     })(App.Routes || (App.Routes = {}));
     var Routes = App.Routes;
 })(App || (App = {}));
