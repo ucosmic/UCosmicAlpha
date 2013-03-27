@@ -16,13 +16,12 @@ var ViewModels;
                 this._historyIndex = 0;
                 this.impersonateUserName = ko.observable();
                 this._init();
-                this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
-                this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
             }
             Search.prototype._init = function () {
                 this._setupHistory();
                 this._setupSammy();
                 this._setupQueryComputed();
+                this._setupPagingDefaults();
             };
             Search.prototype._pullResults = function () {
                 var _this = this;
@@ -134,6 +133,10 @@ var ViewModels;
                     }
                 });
             };
+            Search.prototype._setupPagingDefaults = function () {
+                this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
+                this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
+            };
             Search.prototype.nextPage = function () {
                 this._gotoPage(1);
             };
@@ -181,6 +184,8 @@ var ViewModels;
         Users.Search = Search;        
         var SearchResult = (function () {
             function SearchResult(values, owner) {
+                this.roleOptions = ko.observableArray();
+                this.selectedRoleOption = ko.observable();
                 this.$menu = ko.observable();
                 this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
@@ -205,11 +210,11 @@ var ViewModels;
             };
             SearchResult.prototype._setupRoleGrantComputeds = function () {
                 var _this = this;
-                this.hasRoles = ko.computed(function () {
+                this.hasGrants = ko.computed(function () {
                     return _this.roleGrants().length > 0;
                 });
-                this.hasNoRoles = ko.computed(function () {
-                    return !_this.hasRoles();
+                this.hasNoGrants = ko.computed(function () {
+                    return !_this.hasGrants();
                 });
             };
             SearchResult.prototype._setupMenuSubscription = function () {
@@ -219,6 +224,41 @@ var ViewModels;
                     }
                 });
             };
+            SearchResult.prototype._pullRoleOptions = function () {
+                var deferred = $.Deferred();
+                var queryParameters = {
+                    pageSize: Math.pow(2, 32) / 2 - 1,
+                    orderBy: 'name-asc'
+                };
+                $.get(App.Routes.WebApi.Identity.Roles.get(), queryParameters).done(function (response, statusText, xhr) {
+                    deferred.resolve(response, statusText, xhr);
+                }).fail(function (xhr, statusText, errorThrown) {
+                    deferred.reject(xhr, statusText, errorThrown);
+                });
+                return deferred;
+            };
+            SearchResult.prototype._loadRoleOptions = function (results) {
+                ko.mapping.fromJS(results.items, {
+                }, this.roleOptions);
+                for(var i = 0; i < this.roleOptions().length; i++) {
+                    var option = this.roleOptions()[i];
+                    for(var ii = 0; ii < this.roleGrants().length; ii++) {
+                        var grant = this.roleGrants()[ii];
+                        if(option.id() == grant.roleId()) {
+                            if(i === 0) {
+                                this.roleOptions.shift();
+                            } else {
+                                if(i == this.roleOptions().length) {
+                                    this.roleOptions.pop();
+                                } else {
+                                    this.roleOptions.splice(i, 1);
+                                }
+                            }
+                            i = -1;
+                        }
+                    }
+                }
+            };
             SearchResult.prototype.impersonate = function () {
                 var form = this._owner.impersonateForm;
                 if(form) {
@@ -227,7 +267,11 @@ var ViewModels;
                 }
             };
             SearchResult.prototype.showRoleEditor = function () {
+                var _this = this;
                 this.isEditingRoles(true);
+                this._pullRoleOptions().done(function (response) {
+                    _this._loadRoleOptions(response);
+                });
             };
             SearchResult.prototype.hideRoleEditor = function () {
                 this.isEditingRoles(false);

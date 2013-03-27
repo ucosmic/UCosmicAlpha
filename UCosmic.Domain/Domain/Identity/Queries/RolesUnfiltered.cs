@@ -40,8 +40,9 @@ namespace UCosmic.Domain.Identity
                 var rolesArray = rolesList.ToArray();
                 foreach (var role in rolesArray)
                 {
-                    if (role.Name.Contains("agent", StringComparison.OrdinalIgnoreCase) &&
-                        !query.Principal.IsInRole(role.Name))
+                    if (RoleName.NonTenantRoles.Contains(role.Name) ||
+                        (role.Name.Contains("agent", StringComparison.OrdinalIgnoreCase) &&
+                            !query.Principal.IsInRole(role.Name)))
                     {
                         rolesList.Remove(rolesList.Single(x => x.Name == role.Name));
                     }

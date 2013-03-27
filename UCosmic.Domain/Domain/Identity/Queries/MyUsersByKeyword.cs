@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 
@@ -37,6 +38,7 @@ namespace UCosmic.Domain.Identity
 
             var internalQueryable = _queryProcessor.Execute(internalQuery);
 
+            // filter by keyword
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
                 var loweredKeyword = query.Keyword.ToLower();
@@ -51,8 +53,25 @@ namespace UCosmic.Domain.Identity
                 );
             }
 
-
             var pagedResults = new PagedQueryResult<User>(internalQueryable, query.PageSize, query.PageNumber);
+
+            // only return role grants that the querying user is allowed to see
+            if (!query.Principal.IsInRole(RoleName.AuthorizationAgent))
+            {
+                foreach (var user in pagedResults.Items)
+                {
+                    var allGrants = user.Grants;
+                    var allowedGrants = new List<RoleGrant>();
+                    foreach (var grant in allGrants)
+                    {
+                        if (!RoleName.NonTenantRoles.Contains(grant.Role.Name))
+                        {
+                            allowedGrants.Add(grant);
+                        }
+                    }
+                    user.Grants = allowedGrants;
+                }
+            }
 
             return pagedResults;
         }

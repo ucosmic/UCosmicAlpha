@@ -6,6 +6,15 @@ namespace UCosmic
 {
     public static class RoleName
     {
+        public static string[] NonTenantRoles = new[]
+        {
+            AuthenticationAgent,
+            AuthorizationAgent,
+            EstablishmentLocationAgent,
+            EstablishmentAdministrator,
+            ElmahViewer,
+        };
+
         public const string RoleDelimiter = ",";
         public const string AuthenticationAgent = "Authentication Agent"; // impersonate regardless of tenant
         public const string AuthorizationAgent = "Authorization Agent"; // grant access regardless of tenant

@@ -15,6 +15,7 @@ namespace UCosmic.Web.Mvc.Models
         public class RoleGrant
         {
             public string Id { get; set; }
+            public int RoleId { get; set; }
             public string RoleName { get; set; }
             public string RoleDescription { get; set; }
         }
@@ -36,6 +37,7 @@ namespace UCosmic.Web.Mvc.Models
 
                 CreateMap<RoleGrant, UserApiModel.RoleGrant>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.RoleId, o => o.MapFrom(s => s.Role.RevisionId))
                 ;
             }
         }

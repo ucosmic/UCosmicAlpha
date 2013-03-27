@@ -21,14 +21,13 @@ module ViewModels.Users {
         constructor() {
             super();
             this._init();
-            this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
-            this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
         }
 
         private _init(): void {
             this._setupHistory();
             this._setupSammy();
             this._setupQueryComputed();
+            this._setupPagingDefaults();
         }
 
         private _pullResults(): JQueryDeferred {
@@ -148,6 +147,11 @@ module ViewModels.Users {
             });
         }
 
+        private _setupPagingDefaults(): void {
+            this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
+            this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
+        }
+
         nextPage(): void { // sync prev & next buttons with browser forward & back
             this._gotoPage(1);
         }
@@ -195,12 +199,14 @@ module ViewModels.Users {
         name: KnockoutObservableString;
         personDisplayName: KnockoutObservableString;
         roleGrants: KnockoutObservableArray;
+        roleOptions: KnockoutObservableArray = ko.observableArray();
+        selectedRoleOption: KnockoutObservableNumber = ko.observable();
 
         $menu: KnockoutObservableJQuery = ko.observable();
         isEditingRoles: KnockoutObservableBool = ko.observable(false);
 
-        hasRoles: KnockoutComputed;
-        hasNoRoles: KnockoutComputed;
+        hasGrants: KnockoutComputed;
+        hasNoGrants: KnockoutComputed;
         hasUniqueDisplayName: KnockoutComputed;
         photoSrc: KnockoutComputed;
 
@@ -229,11 +235,11 @@ module ViewModels.Users {
         }
 
         private _setupRoleGrantComputeds(): void {
-            this.hasRoles = ko.computed((): bool => {
+            this.hasGrants = ko.computed((): bool => {
                 return this.roleGrants().length > 0;
             });
-            this.hasNoRoles = ko.computed((): bool => {
-                return !this.hasRoles();
+            this.hasNoGrants = ko.computed((): bool => {
+                return !this.hasGrants();
             });
         }
 
@@ -243,6 +249,45 @@ module ViewModels.Users {
                     newValue.kendoMenu();
                 }
             });
+        }
+
+        private _pullRoleOptions(): JQueryDeferred {
+            var deferred = $.Deferred();
+            var queryParameters = {
+                pageSize: Math.pow(2,32) / 2 - 1, // equivalent to int.MaxValue
+                orderBy: 'name-asc'
+            };
+            $.get(App.Routes.WebApi.Identity.Roles.get(), queryParameters)
+            .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
+                deferred.resolve(response, statusText, xhr);
+            })
+            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                deferred.reject(xhr, statusText, errorThrown);
+            });
+            return deferred;
+        }
+
+        private _loadRoleOptions(results: any): void {
+            ko.mapping.fromJS(results.items, {}, this.roleOptions);
+            // remove roles that have already been granted
+            for (var i = 0; i < this.roleOptions().length; i++) {
+                var option = this.roleOptions()[i];
+                for (var ii = 0; ii < this.roleGrants().length; ii++) {
+                    var grant = this.roleGrants()[ii];
+                    if (option.id() == grant.roleId()) {
+                        if (i === 0) {
+                            this.roleOptions.shift();
+                        }
+                        else if (i == this.roleOptions().length) {
+                            this.roleOptions.pop();
+                        }
+                        else {
+                            this.roleOptions.splice(i, 1);
+                        }
+                        i = -1;
+                    }
+                }
+            }
         }
 
         impersonate(): void {
@@ -255,6 +300,10 @@ module ViewModels.Users {
 
         showRoleEditor(): void {
             this.isEditingRoles(true);
+            this._pullRoleOptions()
+            .done((response: any[]): void => {
+                this._loadRoleOptions(response);
+            });
         }
         hideRoleEditor(): void {
             this.isEditingRoles(false);

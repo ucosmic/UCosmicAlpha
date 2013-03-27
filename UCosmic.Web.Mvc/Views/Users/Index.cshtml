@@ -95,8 +95,8 @@
                                     </div>
                                 </div>
                                 <div class="roles">
-                                    <span class="branded-dark1 badge" data-bind="visible: hasNoRoles" style="display: none;">[No access grants]</span>
-                                    <span data-bind="visible: hasRoles, foreach: roleGrants">
+                                    <span class="branded-dark1 badge" data-bind="visible: hasNoGrants" style="display: none;">[No access grants]</span>
+                                    <span data-bind="visible: hasGrants, foreach: roleGrants">
                                         <span class="branded-dark1 badge"><span data-bind="text: roleName"></span>
                                             <img data-bind="visible: $parent.isEditingRoles()" title="Revoke this access grant"
                                                 src="~/images/icons/minus/minus-16-red-on-white.png" alt="" style="vertical-align: top; cursor: pointer; margin-left: 2px;" />
@@ -106,11 +106,8 @@
                             </div>
                             <div class="editor" data-bind="slideDownVisible: isEditingRoles" style="display: none;">
                                 <div style="margin-top: 12px;">
-                                    <select>
-                                        <option>[Select access to grant...]</option>
-                                        <option>Role 1</option>
-                                        <option>Role 2</option>
-                                        <option>Role 3</option>
+                                    <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: '[Select access to grant...]'">
+                                        <option>[Loading...]</option>
                                     </select>
                                 </div>
                                 <div style="margin-top: 12px;">
