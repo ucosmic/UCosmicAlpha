@@ -281,7 +281,9 @@ namespace UCosmic.Web.Mvc
             var domains = new[]
             {
                 "preview.ucosmic.com",
+                "preview-staging.ucosmic.com",
                 "alpha.ucosmic.com",
+                "alpha-staging.ucosmic.com",
                 "ucosmic-preview.cloudapp.net",
                 "ucosmic-playground.cloudapp.net",
                 string.Format("{0}.cloudapp.net", RoleEnvironment.DeploymentId),
