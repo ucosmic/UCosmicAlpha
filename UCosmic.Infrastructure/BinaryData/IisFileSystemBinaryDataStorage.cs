@@ -23,7 +23,10 @@ namespace UCosmic.BinaryData
         private string GetFullPath(string relativePath)
         {
             // combine root with relative path for System.IO usage
-            return Path.Combine(_root, relativePath);
+            while (relativePath.StartsWith("/"))
+                relativePath = relativePath.Substring(1);
+            var fullPath = Path.Combine(_root, relativePath);
+            return fullPath;
         }
 
         public bool Exists(string path)
