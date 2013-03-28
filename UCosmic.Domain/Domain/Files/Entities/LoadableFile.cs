@@ -27,6 +27,7 @@ namespace UCosmic.Domain.Files
             {
                 entity.Id,
                 entity.Length,
+                entity.Path,
                 entity.MimeType,
                 entity.Title,
                 entity.Name,

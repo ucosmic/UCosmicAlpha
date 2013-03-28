@@ -61,15 +61,18 @@ namespace UCosmic.Domain.People
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
+        private readonly IStoreBinaryData _binaryData;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdateMyPhotoCommand(ICommandEntities entities
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
+            , IStoreBinaryData binaryData
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _photoDeleteHandler = photoDeleteHandler;
+            _binaryData = binaryData;
             _unitOfWork = unitOfWork;
         }
 
@@ -91,18 +94,21 @@ namespace UCosmic.Domain.People
             });
 
             // create new file
+            var path = string.Format(Person.PhotoPathFormat, person.RevisionId, Guid.NewGuid());
             var loadableFile = new LoadableFile
             {
                 Name = command.Name,
+                Path = path,
                 Length = command.Content.Length,
                 MimeType = command.MimeType,
             };
             loadableFile.Binary = new LoadableFileBinary
             {
                 Owner = loadableFile,
-                Content = command.Content
+                //Content = command.Content
             };
             person.Photo = loadableFile;
+            _binaryData.Put(path, command.Content);
 
             // log audit
             var audit = new CommandEvent

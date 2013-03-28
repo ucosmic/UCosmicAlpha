@@ -42,13 +42,16 @@ namespace UCosmic.Domain.People
     public class HandleDeleteMyPhotoCommand : IHandleCommands<DeleteMyPhoto>
     {
         private readonly ICommandEntities _entities;
+        private readonly IStoreBinaryData _binaryData;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleDeleteMyPhotoCommand(ICommandEntities entities
+            , IStoreBinaryData binaryData
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
+            _binaryData = binaryData;
             _unitOfWork = unitOfWork;
         }
 
@@ -73,6 +76,12 @@ namespace UCosmic.Domain.People
 
             // unlink the photo before deleting
             person.Photo = null;
+
+            // delete the photo from binary storage (if it exists there)
+            if (!string.IsNullOrWhiteSpace(photo.Path))
+            {
+                _binaryData.Delete(photo.Path);
+            }
 
             // log audit
             var audit = new CommandEvent

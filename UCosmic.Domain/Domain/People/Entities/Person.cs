@@ -12,6 +12,8 @@ namespace UCosmic.Domain.People
 {
     public class Person : RevisableEntity
     {
+        internal const string PhotoPathFormat = "/person-photos/{0}/{1}";
+
         protected internal Person()
         {
             IsActive = true;

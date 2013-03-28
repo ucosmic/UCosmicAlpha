@@ -20,7 +20,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
 
-        public PeopleController(IProcessQueries queryProcessor, IStoreBinaryData binaryData)
+        public PeopleController(IProcessQueries queryProcessor
+            , IStoreBinaryData binaryData
+        )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
