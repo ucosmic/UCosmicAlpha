@@ -23,7 +23,7 @@ namespace UCosmic.BinaryData
                 throw new FormatException(exceptionMessage);
 
             // http://msdn.microsoft.com/en-us/library/windowsazure/dd135715.aspx
-            exceptionFormat = "Each directory in a path must be at least 3 characters long, can only contain " +
+            exceptionFormat = "The first directory in a path must be at least 3 characters long, can only contain " +
                 "numbers, lowercase letters and hypens, and each hyphen must be preceeded by at least one lowercase letter " +
                 "or number. Directories also must end with a lowercase letter or number (cannot end with a hyphen character).";
             exceptionMessage = string.Format(exceptionFormat, path);
@@ -31,24 +31,21 @@ namespace UCosmic.BinaryData
                 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
             var pathParts = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            var pathPart = pathParts.First();
-            //foreach (var pathPart in pathParts.Take(pathParts.Length - 1))
-            //{
-                if (pathPart.Length < 3) throw new FormatException(exceptionMessage);
-                if (pathPart.StartsWith("-") || pathPart.EndsWith("-"))
+            var containerName = pathParts.First();
+            if (containerName.Length < 3) throw new FormatException(exceptionMessage);
+            if (containerName.StartsWith("-") || containerName.EndsWith("-"))
+                throw new FormatException(exceptionMessage);
+            var pathPartChars = containerName.ToCharArray();
+            foreach (var pathPartChar in pathPartChars)
+                if (!validCharacters.Contains(pathPartChar))
                     throw new FormatException(exceptionMessage);
-                var pathPartChars = pathPart.ToCharArray();
-                foreach (var pathPartChar in pathPartChars)
-                    if (!validCharacters.Contains(pathPartChar))
-                        throw new FormatException(exceptionMessage);
-                var lastChar = pathPartChars[0];
-                foreach (var pathPartChar in pathPartChars.Skip(1))
-                {
-                    if (pathPartChar == '-' && lastChar == '-')
-                        throw new FormatException(exceptionMessage);
-                    lastChar = pathPartChar;
-                }
-            //}
+            var lastChar = pathPartChars[0];
+            foreach (var pathPartChar in pathPartChars.Skip(1))
+            {
+                if (pathPartChar == '-' && lastChar == '-')
+                    throw new FormatException(exceptionMessage);
+                lastChar = pathPartChar;
+            }
         }
     }
 }
