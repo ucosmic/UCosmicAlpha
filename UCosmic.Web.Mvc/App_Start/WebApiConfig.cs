@@ -14,7 +14,7 @@ namespace UCosmic.Web.Mvc
 
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Add(new PlainTextFormatter());
-            config.Formatters.Add(new ImageMediaFormatter());
+            config.Formatters.Add(new FileMediaFormatter());
 
 #if !DEBUG
             config.MessageHandlers.Add(new RequireHttpsMessageHandler());
