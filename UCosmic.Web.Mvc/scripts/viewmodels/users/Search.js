@@ -186,6 +186,10 @@ var ViewModels;
             function SearchResult(values, owner) {
                 this.roleOptions = ko.observableArray();
                 this.selectedRoleOption = ko.observable();
+                this.roleSpinner = new ViewModels.Spinner({
+                    delay: 400,
+                    isVisible: true
+                });
                 this.$menu = ko.observable();
                 this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
@@ -216,6 +220,9 @@ var ViewModels;
                 this.hasNoGrants = ko.computed(function () {
                     return !_this.hasGrants();
                 });
+                this.isRoleGrantDisabled = ko.computed(function () {
+                    return _this.roleSpinner.isVisible() || !_this.selectedRoleOption();
+                });
             };
             SearchResult.prototype._setupMenuSubscription = function () {
                 this.$menu.subscribe(function (newValue) {
@@ -225,6 +232,9 @@ var ViewModels;
                 });
             };
             SearchResult.prototype._pullRoleOptions = function () {
+                var _this = this;
+                this.selectedRoleOption(undefined);
+                this.roleSpinner.start();
                 var deferred = $.Deferred();
                 var queryParameters = {
                     pageSize: Math.pow(2, 32) / 2 - 1,
@@ -234,12 +244,12 @@ var ViewModels;
                     deferred.resolve(response, statusText, xhr);
                 }).fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);
+                }).always(function () {
+                    _this.roleSpinner.stop();
                 });
                 return deferred;
             };
             SearchResult.prototype._loadRoleOptions = function (results) {
-                ko.mapping.fromJS(results.items, {
-                }, this.roleOptions);
                 for(var i = 0; i < this.roleOptions().length; i++) {
                     var option = this.roleOptions()[i];
                     for(var ii = 0; ii < this.roleGrants().length; ii++) {
@@ -258,6 +268,8 @@ var ViewModels;
                         }
                     }
                 }
+                ko.mapping.fromJS(results.items, {
+                }, this.roleOptions);
             };
             SearchResult.prototype.impersonate = function () {
                 var form = this._owner.impersonateForm;
@@ -275,6 +287,17 @@ var ViewModels;
             };
             SearchResult.prototype.hideRoleEditor = function () {
                 this.isEditingRoles(false);
+            };
+            SearchResult.prototype.grantRole = function () {
+                var url = App.Routes.WebApi.Identity.Roles.Grants.put(this.selectedRoleOption(), this.id());
+                $.ajax({
+                    url: url,
+                    type: 'PUT'
+                }).done(function () {
+                    alert('done');
+                }).fail(function () {
+                    alert('fail');
+                });
             };
             return SearchResult;
         })();

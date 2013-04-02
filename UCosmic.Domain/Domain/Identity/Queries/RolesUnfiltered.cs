@@ -18,14 +18,10 @@ namespace UCosmic.Domain.Identity
     public class HandleRolesUnfilteredQuery : IHandleQueries<RolesUnfiltered, IQueryable<Role>>
     {
         private readonly IQueryEntities _entities;
-        private readonly IProcessQueries _queryProcessor;
 
-        public HandleRolesUnfilteredQuery(IQueryEntities entities
-            , IProcessQueries queryProcessor
-        )
+        public HandleRolesUnfilteredQuery(IQueryEntities entities)
         {
             _entities = entities;
-            _queryProcessor = queryProcessor;
         }
 
         public IQueryable<Role> Handle(RolesUnfiltered query)

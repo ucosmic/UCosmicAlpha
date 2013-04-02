@@ -36,6 +36,14 @@ var App;
                         return makeUrl(url);
                     }
                     Roles.get = get;
+                    (function (Grants) {
+                        function put(roleId, userId) {
+                            var url = 'roles/' + roleId + '/users/' + userId;
+                            return makeUrl(url);
+                        }
+                        Grants.put = put;
+                    })(Roles.Grants || (Roles.Grants = {}));
+                    var Grants = Roles.Grants;
                 })(Identity.Roles || (Identity.Roles = {}));
                 var Roles = Identity.Roles;
             })(WebApi.Identity || (WebApi.Identity = {}));

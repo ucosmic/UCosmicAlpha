@@ -8,7 +8,7 @@
 /// <reference path="../../app/Routes.ts" />
 
 module ViewModels.Users {
-    
+
     export class Search extends ViewModels.PagedSearch {
 
         sammy: Sammy.Application = Sammy();
@@ -191,7 +191,7 @@ module ViewModels.Users {
             }
         }
     }
-    
+
     export class SearchResult {
         private _owner: Search;
         id: KnockoutObservableNumber;
@@ -201,6 +201,8 @@ module ViewModels.Users {
         roleGrants: KnockoutObservableArray;
         roleOptions: KnockoutObservableArray = ko.observableArray();
         selectedRoleOption: KnockoutObservableNumber = ko.observable();
+        isRoleGrantDisabled: KnockoutComputed;
+        roleSpinner = new Spinner({ delay: 400, isVisible: true });
 
         $menu: KnockoutObservableJQuery = ko.observable();
         isEditingRoles: KnockoutObservableBool = ko.observable(false);
@@ -241,6 +243,9 @@ module ViewModels.Users {
             this.hasNoGrants = ko.computed((): bool => {
                 return !this.hasGrants();
             });
+            this.isRoleGrantDisabled = ko.computed((): bool => {
+                return this.roleSpinner.isVisible() || !this.selectedRoleOption();
+            });
         }
 
         private _setupMenuSubscription(): void {
@@ -252,9 +257,11 @@ module ViewModels.Users {
         }
 
         private _pullRoleOptions(): JQueryDeferred {
+            this.selectedRoleOption(undefined);
+            this.roleSpinner.start();
             var deferred = $.Deferred();
             var queryParameters = {
-                pageSize: Math.pow(2,32) / 2 - 1, // equivalent to int.MaxValue
+                pageSize: Math.pow(2, 32) / 2 - 1, // equivalent to int.MaxValue
                 orderBy: 'name-asc'
             };
             $.get(App.Routes.WebApi.Identity.Roles.get(), queryParameters)
@@ -263,12 +270,14 @@ module ViewModels.Users {
             })
             .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                 deferred.reject(xhr, statusText, errorThrown);
+            })
+            .always((): void => {
+                this.roleSpinner.stop();
             });
             return deferred;
         }
 
         private _loadRoleOptions(results: any): void {
-            ko.mapping.fromJS(results.items, {}, this.roleOptions);
             // remove roles that have already been granted
             for (var i = 0; i < this.roleOptions().length; i++) {
                 var option = this.roleOptions()[i];
@@ -288,6 +297,7 @@ module ViewModels.Users {
                     }
                 }
             }
+            ko.mapping.fromJS(results.items, {}, this.roleOptions);
         }
 
         impersonate(): void {
@@ -307,6 +317,20 @@ module ViewModels.Users {
         }
         hideRoleEditor(): void {
             this.isEditingRoles(false);
+        }
+
+        grantRole(): void {
+            var url = App.Routes.WebApi.Identity.Roles.Grants.put(this.selectedRoleOption(), this.id());
+            $.ajax({
+                url: url,
+                type: 'PUT'
+            })
+            .done((): void => {
+                alert('done');
+            })
+            .fail((): void => {
+                alert('fail');
+            });
         }
     }
 }

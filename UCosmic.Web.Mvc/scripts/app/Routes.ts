@@ -35,6 +35,13 @@ module App.Routes {
                         url += '/' + roleId;
                     return makeUrl(url);
                 }
+
+                export module Grants {
+                    export function put (roleId: number, userId: number): string {
+                        var url = 'roles/' + roleId + '/users/' + userId;
+                        return makeUrl(url);
+                    }
+                }
             }
         }
 
