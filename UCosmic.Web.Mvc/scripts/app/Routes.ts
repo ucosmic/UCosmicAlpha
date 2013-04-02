@@ -28,6 +28,22 @@ module App.Routes {
                 return makeUrl('sign-out');
             }
 
+            export module Users {
+                export function get (id?: number) {
+                    var url = 'users';
+                    if (id)
+                        url += '/' + id;
+                    return makeUrl(url);
+                }
+
+                export module Roles {
+                    export function get (userId: number): string {
+                        var url = 'users/' + userId + '/roles';
+                        return makeUrl(url);
+                    }
+                }
+            }
+
             export module Roles {
                 export function get (roleId?: number): string {
                     var url = 'roles';
@@ -40,6 +56,9 @@ module App.Routes {
                     export function put (roleId: number, userId: number): string {
                         var url = 'roles/' + roleId + '/users/' + userId;
                         return makeUrl(url);
+                    }
+                    export function del (roleId: number, userId: number): string {
+                        return put(roleId, userId);
                     }
                 }
             }
@@ -270,15 +289,6 @@ module App.Routes {
                         return makeUrl('my/profile/photo/kendo-remove');
                     }
                 }
-            }
-        }
-
-        export module Users {
-            export function get (id?: number) {
-                var url = 'users';
-                if (id)
-                    url += '/' + id;
-                return makeUrl(url);
             }
         }
 

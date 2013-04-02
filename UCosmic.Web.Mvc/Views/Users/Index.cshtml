@@ -16,8 +16,6 @@
 
     <script type="text/javascript" src="~/scripts/viewmodels/Spinner.js"></script>
 
-    <script type="text/javascript" src="~/scripts/viewmodels/Flasher.js"></script>
-
     <script type="text/javascript" src="~/scripts/viewmodels/PagedSearch.js"></script>
 
     <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
@@ -98,9 +96,9 @@
                                 </div>
                                 <div class="roles">
                                     <span class="branded-dark1 badge" data-bind="visible: hasNoGrants" style="display: none;">[No access grants]</span>
-                                    <span data-bind="visible: hasGrants, foreach: roleGrants">
-                                        <span class="branded-dark1 badge"><span data-bind="text: roleName"></span>
-                                            <img data-bind="visible: $parent.isEditingRoles()" title="Revoke this access grant"
+                                    <span data-bind="visible: hasGrants, foreach: roles">
+                                        <span class="branded-dark1 badge"><span data-bind="text: name"></span>
+                                            <img data-bind="visible: $parent.isEditingRoles(), click: revokeRole" title="Revoke this access grant"
                                                 src="~/images/icons/minus/minus-16-red-on-white.png" alt="" style="vertical-align: top; cursor: pointer; margin-left: 2px;" />
                                         </span>
                                     </span>

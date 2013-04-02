@@ -1,4 +1,10 @@
-﻿<nav class="side">
+﻿<div data-bind="with: flasherProxy" class="side flasher">
+    <div data-bind="slideDownVisible: isVisible, click: dismiss" class="content" title="Click to dismiss" style="display: none;">
+        <img class="closer" src="~/images/icons/closer/closer-16-dark.png" alt="" />
+        <span data-bind="text: text">Here is my flash feedback message</span>
+    </div>
+</div>
+<nav class="side">
     <ul class="top">
         <li>
             <a href="#" class="group">

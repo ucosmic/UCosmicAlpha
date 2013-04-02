@@ -54,24 +54,24 @@ namespace UCosmic.Domain.Identity
                     .WithMessage(MustFindRoleById.FailMessageFormat, x => x.RoleId)
             ;
             RuleFor(x => x)
-                .Must(x =>
+                .Must(command =>
                 {
                     var grantingUser = entities.Query<User>()
                         .EagerLoad(entities, new Expression<Func<User, object>>[]
                         {
-                            y => y.Grants,
+                            x => x.Grants,
                         })
-                        .Single(y => y.Name.Equals(x.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase));
+                        .Single(x => x.Name.Equals(command.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase));
 
                     if (!grantingUser.IsInRole(RoleName.AuthorizationAgent))
                     {
                         // do not let security admins add to non-tenant roles
-                        var roleToGrant = entities.Query<Role>().Single(y => y.RevisionId == x.RoleId);
+                        var roleToGrant = entities.Query<Role>().Single(x => x.RevisionId == command.RoleId);
                         if (RoleName.NonTenantRoles.Contains(roleToGrant.Name)) return false;
 
                         // do not let security admins grant to users outside of their tenancy
-                        var tenantUserIds = queryProcessor.Execute(new MyUsers(x.Principal)).Select(y => y.RevisionId);
-                        var userToGrant = entities.Query<User>().Single(y => y.RevisionId == x.UserId);
+                        var tenantUserIds = queryProcessor.Execute(new MyUsers(command.Principal)).Select(x => x.RevisionId);
+                        var userToGrant = entities.Query<User>().Single(x => x.RevisionId == command.UserId);
                         if (!tenantUserIds.Contains(userToGrant.RevisionId)) return false;
                     }
 

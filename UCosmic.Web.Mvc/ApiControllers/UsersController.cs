@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
+using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
@@ -40,7 +42,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var entities = _queryProcessor.Execute(query);
             var models = Mapper.Map<PageOfUserApiModel>(entities);
             foreach (var model in models.Items)
-                model.RoleGrants = model.RoleGrants.OrderBy(x => x.RoleName).ToArray();
+                model.Roles = model.Roles.OrderBy(x => x.Name).ToArray();
+            return models;
+        }
+
+        [GET("{userId}/roles")]
+        public IEnumerable<RoleApiModel> GetRoles(int userId)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var query = new RolesGrantedToUserId(User, userId);
+            var entities = _queryProcessor.Execute(query);
+            var models = Mapper.Map<RoleApiModel[]>(entities);
+
             return models;
         }
     }

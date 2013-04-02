@@ -173,6 +173,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Identity\Queries\RolesGrantedToUserId.cs" />
     <Compile Include="Domain\Identity\Queries\RolesUnfiltered.cs" />
     <Compile Include="Domain\Identity\Queries\RolesByKeyword.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
