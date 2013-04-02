@@ -2056,6 +2056,13 @@
     <Content Include="scripts\viewmodels\establishments\Location.min.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
+    <Content Include="scripts\viewmodels\representatives\RepModuleSettings.js">
+      <DependentUpon>RepModuleSettings.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\representatives\RepModuleSettings.min.js">
+      <DependentUpon>RepModuleSettings.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\my\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>
