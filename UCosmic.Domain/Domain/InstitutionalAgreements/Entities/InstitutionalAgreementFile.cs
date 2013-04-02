@@ -12,5 +12,6 @@
         public int Length { get; protected internal set; }
         public string MimeType { get; protected internal set; }
         public string Name { get; protected internal set; }
+        public string Path { get; protected internal set; }
     }
 }
