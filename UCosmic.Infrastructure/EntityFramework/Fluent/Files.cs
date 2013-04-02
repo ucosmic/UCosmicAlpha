@@ -36,4 +36,24 @@ namespace UCosmic.EntityFramework
             ;
         }
     }
+
+    public class ImageOrm : EntityTypeConfiguration<Image>
+    {
+        public ImageOrm()
+        {
+            ToTable(typeof(Image).Name, DbSchemaName.Files);
+
+            Property(p => p.Title).IsOptional().HasMaxLength(64);
+            Property(p => p.MimeType).IsRequired().HasMaxLength(256);
+        }
+    }
+
+    public class ProxyImageMimeTypeXRefOrm : EntityTypeConfiguration<ProxyImageMimeTypeXRef>
+    {
+        public ProxyImageMimeTypeXRefOrm()
+        {
+            ToTable(typeof(ProxyImageMimeTypeXRef).Name, DbSchemaName.Files);
+        }
+    }
+
 }

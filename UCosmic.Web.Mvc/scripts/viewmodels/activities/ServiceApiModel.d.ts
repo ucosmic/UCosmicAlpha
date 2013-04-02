@@ -46,7 +46,12 @@ module Service.ApiModels {
         id: KnockoutObservableNumber;
         fileId: KnockoutObservableNumber;
         imageId: KnockoutObservableNumber;
-        proxyImageId: KnockoutObservableNumber;
+        proxyWidth: KnockoutObservableNumber;
+        proxyHeight: KnockoutObservableNumber;
+        title: KnockoutObservableString;
+        visible: KnockoutObservableBool;
+        fileExt: KnockoutObservableString;
+        size: KnockoutObservableString;
     }
 
     export interface IObservableActivityValues {

@@ -120,11 +120,7 @@ namespace UCosmic.EntityFramework
                 .WithMany()
                 .HasForeignKey(p => p.ImageId);
 
-            HasOptional(p => p.ProxyImage)
-                .WithMany()
-                .HasForeignKey(p => p.ProxyImageId);
-
-            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
+            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(ActivityDocumentConstraints.ModeTextMaxLength);
 
             Ignore(p => p.Mode);
         }

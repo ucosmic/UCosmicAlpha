@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Security;
 using UCosmic.Domain.Files;
-using UCosmic.Domain.Images;
 
 namespace UCosmic.SeedData
 {

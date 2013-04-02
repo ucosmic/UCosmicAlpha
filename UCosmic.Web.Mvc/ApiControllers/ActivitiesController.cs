@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+using System.Configuration;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-using FluentValidation;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Employees;
+using UCosmic.Domain.Files;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
@@ -73,6 +73,57 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //}
 
             return Request.CreateResponse(HttpStatusCode.OK, "Activity " + id.ToString() + " was deleted successfully.");
+        }
+
+        [GET("docproxy/{docId}")]
+        public HttpResponseMessage GetDocProxy(int docId)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            ActivityDocument document = _queryProcessor.Execute(new ActivityDocumentById(docId));
+            byte[] contentData = null;
+
+            /* If the ActivityDocument has an image, resize and use. */
+            if (document.Image != null)
+            {
+                MemoryStream fullImageStream = new MemoryStream(document.Image.Data);
+                System.Drawing.Image fullImage = System.Drawing.Image.FromStream(fullImageStream);
+                Stream proxyStream = fullImage.ResizeImageConstrained(
+                    Int32.Parse(ConfigurationManager.AppSettings["ProxyImageHeight"]),
+                    Int32.Parse(ConfigurationManager.AppSettings["ProxyImageWidth"]),
+                    System.Drawing.Imaging.ImageFormat.Png);
+
+                System.Drawing.Image resizedImage = System.Drawing.Image.FromStream(proxyStream);
+                
+                MemoryStream stream = new MemoryStream();
+                resizedImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                contentData = stream.ToArray();
+            }
+            /* If the ActivityDocument has no image, let's use the mime type image proxy. */
+            else if (document.File != null)
+            {
+                UCosmic.Domain.Files.Image dbImage = _queryProcessor.Execute(new ProxyImageByMimeType(document.File.MimeType));
+                contentData = (dbImage != null) ? dbImage.Data : null;
+            }
+
+            /* Return the generic document proxy, if we haven't found one at this point. */
+            if (contentData == null)
+            {
+                UCosmic.Domain.Files.Image dbImage = _queryProcessor.Execute(new ImageByName("GenericDocument"));
+                contentData = (dbImage != null) ? dbImage.Data : null;
+            }
+
+            if (contentData != null)
+            {
+                response.Content = new ByteArrayContent(contentData);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(ConfigurationManager.AppSettings["ProxyImageMimeType"]);
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            else
+            {
+                response.StatusCode = HttpStatusCode.NotFound;
+            }
+
+            return response;
         }
     }
 }

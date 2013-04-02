@@ -362,6 +362,10 @@ module App.Routes {
                 return makeUrl('activities/page');
             }
 
+            export function getDocProxy (): string {
+                    return makeUrl('activities/docproxy');
+            }
+
             export class Locations {
                 static get (): string {
                     return makeUrl('activities/locations');
@@ -373,12 +377,30 @@ module App.Routes {
                     return makeUrl('activities/delete');
                 }
             }
+
+
         }
 
         export module Activity {
 
             export function get (): string {
                 return makeUrl('activity');
+            }
+
+            export function uploadDocument(): string {
+                return makeUrl('activity/upload');
+            }
+
+            export function validateUploadFileTypeByExtension(activityId: number): string {
+                return makeUrl('activity/' + activityId.toString() + '/validate-upload-filetype');
+            }
+
+            export function getDocuments(activityValuesId: number): string {
+                return makeUrl('activity/' + activityValuesId.toString() + '/documents');
+            }
+
+            export function deleteDocument(activityDocumentId: number): string {
+                return makeUrl('activity/' + activityDocumentId.toString() + '/document');
             }
         }
     }

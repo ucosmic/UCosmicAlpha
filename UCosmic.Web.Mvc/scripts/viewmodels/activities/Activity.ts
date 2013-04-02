@@ -32,6 +32,9 @@ module ViewModels.Activities {
         /* Data bound to new tag textArea */
 	    newTag: KnockoutObservableString = ko.observable();
 
+        /* True if uploading document. */
+        uploadingDocument: KnockoutObservableBool = ko.observable(false);
+
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
@@ -92,15 +95,25 @@ module ViewModels.Activities {
                         data: Service.ApiModels.IObservableActivity): void => {
 
                     this.activityTypes = ko.mapping.fromJS(types);
-                    this.locations = ko.mapping.fromJS(locations);
-                    
+                    this.locations = ko.mapping.fromJS(locations);   
+                                    
                     /* Although the MVC DateTime to JSON serializer will output an ISO compatible
                         string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
                         functions will accurately convert to Date.  So, we are using
                         moment.js to handle the parsing and conversion.
                     */
                     {
-                        var mapping = {
+                        var augmentedDocumentModel = function (data) {
+                            ko.mapping.fromJS(data, {}, this);
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocProxy() + data.id.toString());
+                        };
+                        
+                       var mapping = {
+                            'documents': {
+                                create: function (options: any) {
+                                    return new augmentedDocumentModel(options.data); 
+                                }
+                            },
                             'startsOn':{
                                 create: (options: any): KnockoutObservableDate => {
                                     return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
@@ -319,6 +332,98 @@ module ViewModels.Activities {
                 i += 1;
             }
             return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        validateUploadableFileTypeByExtension(activityId: number, inExtension: string): bool {
+            var valid = true;
+            var extension = inExtension;
+
+            if ((extension == null) ||
+                (extension.length == 0) ||
+                (extension.length > 255)) {
+                valid = false;
+            }
+            else {
+                if (extension[0] === ".") {
+                    extension = extension.substring(1);
+                }
+
+                jQuery.ajax({
+                       async: false,
+                        type: 'POST',
+                         url: App.Routes.WebApi.Activity.validateUploadFileTypeByExtension(activityId),
+                        data: ko.toJSON(extension),
+                    dataType: 'json',
+                 contentType: 'application/json',
+                     success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
+                         valid = true;
+                    },
+                       error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                           valid = false;
+                    }
+                });
+            }
+
+            return valid;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        loadDocuments(): void {
+            jQuery.ajax({
+                    type: 'GET',
+                     url: App.Routes.WebApi.Activity.getDocuments(this.values.id()),
+                dataType: 'json',
+                success: (documents: any, textStatus: string, jqXhr: JQueryXHR): void {
+
+                    /* TBD - This needs to be combined with the initial load mapping. */
+                    var augmentedDocumentModel = function (data) {
+                        ko.mapping.fromJS(data, {}, this);
+                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocProxy() + data.id.toString());
+                    };
+
+                    var mapping = {
+                        create: function (options: any) {
+                            return new augmentedDocumentModel(options.data);
+                        }
+                    };
+
+                    var observableDocs = ko.mapping.fromJS(documents, mapping);
+
+                    this.values.documents.removeAll();
+                    for (var i = 0; i < observableDocs().length; i += 1) {
+                        this.values.documents.push(observableDocs()[i]);
+                    }
+
+                },
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                        alert("Unable to update documents list. " + textStatus + "|" + errorThrown);
+                }
+            });
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        deleteDocument(item: any, event: any): void {
+            jQuery.ajax({
+                    type: 'DELETE',
+                        url: App.Routes.WebApi.Activity.deleteDocument(item.id()),
+                dataType: 'json',
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
+                        this.loadDocuments();
+                },
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                        alert("Unable to delete document. " + textStatus + "|" + errorThrown);
+                }
+            });
         }
 
 	}

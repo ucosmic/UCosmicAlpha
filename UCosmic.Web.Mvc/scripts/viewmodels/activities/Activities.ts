@@ -90,12 +90,25 @@ module ViewModels.Activities {
                     locations: Service.ApiModels.IActivityLocation[],
                          data: Service.ApiModels.IActivityPage): void => {
 
-                    debugger;
-
                     this.activityTypesList = types;
                     this.activityLocationsList = locations;
 
-                    ko.mapping.fromJS(data, {}, this);
+                    {
+                        var augmentedDocumentModel = function (data) {
+                            ko.mapping.fromJS(data, {}, this);
+                            this.proxyImageSource = App.Routes.WebApi.Activities.getDocProxy() + data.id.toString();
+                        };
+
+                        var mapping = {
+                            'documents': {
+                                create: function (options) {
+                                    return new augmentedDocumentModel(options.data); 
+                                }
+                            }
+                        };
+
+                        ko.mapping.fromJS(data, mapping, this);
+                    }
 
                     deferred.resolve();
                 })
@@ -154,7 +167,6 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         editActivity(data: any, event: any, activityId: number): void {
-
             var element = event.srcElement;
             var url = null;
 

@@ -123,6 +123,7 @@
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
@@ -135,7 +136,10 @@
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonIdMode.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityDocumentsById.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
+    <Compile Include="Domain\Activities\Validation\MustFindActivityDocumentById.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEntityId.cs" />
@@ -200,8 +204,12 @@
     <Compile Include="Domain\Establishments\_Deprecated\ValidateEstablishment.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableFile.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
+    <Compile Include="Domain\Files\Commands\CreateProxyImageMimeTypeXRef.cs" />
     <Compile Include="Domain\Files\Entities\LoadableFileBinary.cs" />
     <Compile Include="Domain\Files\Entities\LoadableFile.cs" />
+    <Compile Include="Domain\Files\Entities\ProxyImageMimeTypeXRef.cs" />
+    <Compile Include="Domain\Files\Queries\ProxyImageByMimeType.cs" />
+    <Compile Include="Domain\Files\Validation\MustBeOfFileType.cs" />
     <Compile Include="Domain\Identity\Commands\CreatePassword.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
     <Compile Include="Api\Validation\EntityWrapper.cs" />
@@ -218,8 +226,10 @@
     <Compile Include="Domain\Identity\Queries\GenerateRandomSecret.cs" />
     <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />
-    <Compile Include="Domain\images\commands\CreateImage.cs" />
-    <Compile Include="Domain\images\entities\image.cs" />
+    <Compile Include="Domain\Files\Commands\CreateImage.cs" />
+    <Compile Include="Domain\Files\Entities\Image.cs" />
+    <Compile Include="Domain\Files\Queries\ImageById.cs" />
+    <Compile Include="Domain\Files\Queries\ImageByName.cs" />
     <Compile Include="Domain\People\Commands\DeleteMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyProfile.cs" />

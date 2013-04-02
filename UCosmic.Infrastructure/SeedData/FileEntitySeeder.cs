@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using UCosmic.Domain.Files;
 
@@ -22,114 +23,182 @@ namespace UCosmic.SeedData
             string basePath = AppDomain.CurrentDomain.BaseDirectory +
                               @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\";
 
-            string fileName = "1322FF22-E863-435E-929E-765EB95FB460.ppt";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            string filename = "1322FF22-E863-435E-929E-765EB95FB460.ppt";
+            string name = Path.GetFileNameWithoutExtension(filename);
+            string extension = Path.GetExtension(filename).Substring(1);
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                Seed(new CreateLoadableFile
+                using (FileStream fileStream = File.OpenRead(basePath + filename))
                 {
-                    Path = basePath + fileName,
-                    MimeType = "application/vnd.ms-powerpoint",
-                    Name = "Comtean BVSR Presentation"
-                });
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "application/vnd.ms-powerpoint",
+                        Title = "Comtean BVSR Presentation"
+                    });
+                }
             }
 
-            fileName = "02E6D488-B3FA-4D79-848F-303779A53ABE.docx";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            filename = "02E6D488-B3FA-4D79-848F-303779A53ABE.docx";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename).Substring(1);
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                Seed(new CreateLoadableFile
+                using (FileStream fileStream = File.OpenRead(basePath + filename))
                 {
-                    Path = basePath + fileName,
-                    MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    Name = "Data Feed DOCX"
-                });
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        Title = "Data Feed DOCX"
+                    });
+                }
             }
 
-            fileName = "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            filename = "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename).Substring(1);
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                Seed(new CreateLoadableFile
+                using (FileStream fileStream = File.OpenRead(basePath + filename))
                 {
-                    Path = basePath + fileName,
-                    MimeType = "application/pdf",
-                    Name = "GIT Pro User PDF"
-                });
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "application/pdf",
+                        Title = "GIT Pro User PDF"
+                    });
+                }
             }
 
-            fileName = "3D3C0976-5117-4D5A-AF25-1B53166C550C.wmv";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            //filename = "3D3C0976-5117-4D5A-AF25-1B53166C550C.wmv";
+            //name = Path.GetFileNameWithoutExtension(filename);
+            //extension = Path.GetExtension(filename).Substring(1);
+            //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
+            //{
+            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    {
+            //        Seed(new CreateLoadableFile
+            //        {
+            //            SourceStream = fileStream,
+            //            Name = name,
+            //            Extension = extension,
+            //            MimeType = "video/x-ms-wmv",
+            //            Title = "Main WMV"
+            //        });
+            //    }
+            //}
+
+            //filename = "14E5C461-2E5E-4E63-9701-DC3F009AB98E.mov";
+            //name = Path.GetFileNameWithoutExtension(filename);
+            //extension = Path.GetExtension(filename).Substring(1);
+            //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
+            //{
+            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    {
+            //        Seed(new CreateLoadableFile
+            //        {
+            //            SourceStream = fileStream,
+            //            Name = name,
+            //            Extension = extension,
+            //            MimeType = "video/quicktime",
+            //            Title = "How I used QuickTime"
+            //        });
+            //    }
+            //}
+
+            //filename = "5FE682FD-F161-4669-A2C4-974F5B0F8BB1.mp4";
+            //name = Path.GetFileNameWithoutExtension(filename);
+            //extension = Path.GetExtension(filename).Substring(1);
+            //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
+            //{
+            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    {
+            //        Seed(new CreateLoadableFile
+            //        {
+            //            SourceStream = fileStream,
+            //            Name = name,
+            //            Extension = extension,
+            //            MimeType = "video/mp4",
+            //            Title = "Overview MPEG4 of where we were"
+            //        });
+            //    }
+            //}
+
+            //filename = "322BF184-32C3-49CA-8C97-18ABE32CFD8A.mp3";
+            //name = Path.GetFileNameWithoutExtension(filename);
+            //extension = Path.GetExtension(filename).Substring(1);
+            //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
+            //{
+            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    {
+            //        Seed(new CreateLoadableFile
+            //        {
+            //            SourceStream = fileStream,
+            //            Name = name,
+            //            Extension = extension,
+            //            MimeType = "audio/mpeg",
+            //            Title = "First audio MP3 of this group"
+            //        });
+            //    }
+            //}
+
+            filename = "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename).Substring(1);
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                Seed(new CreateLoadableFile
+                using (FileStream fileStream = File.OpenRead(basePath + filename))
                 {
-                    Path = basePath + fileName,
-                    MimeType = "video/x-ms-wmv",
-                    Name = "Main WMV"
-                });
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "application/vnd.ms-excel",
+                        Title = "Research Spreadsheet"
+                    });
+                }
             }
 
-            fileName = "14E5C461-2E5E-4E63-9701-DC3F009AB98E.mov";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            filename = "mkusenba-photo.jpg";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename).Substring(1);
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == filename) == 0)
             {
-                Seed(new CreateLoadableFile
+                using (FileStream fileStream = File.OpenRead(basePath + filename))
                 {
-                    Path = basePath + fileName,
-                    MimeType = "video/quicktime",
-                    Name = "How I used QuickTime"
-                });
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "image/jpg",
+                    });
+                }
             }
 
-            fileName = "5FE682FD-F161-4669-A2C4-974F5B0F8BB1.mp4";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
+            filename = "billhogarth-photo.jpg";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename).Substring(1);
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == filename) == 0)
             {
-                Seed(new CreateLoadableFile
+                using (FileStream fileStream = File.OpenRead(basePath + filename))
                 {
-                    Path = basePath + fileName,
-                    MimeType = "video/mp4",
-                    Name = "Overview MPEG4 of where we were"
-                });
-            }
-
-            fileName = "322BF184-32C3-49CA-8C97-18ABE32CFD8A.mp3";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
-            {
-                Seed(new CreateLoadableFile
-                {
-                    Path = basePath + fileName,
-                    MimeType = "audio/mpeg",
-                    Name = "First audio MP3 of this group"
-                });
-            }
-
-            fileName = "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
-            {
-                Seed(new CreateLoadableFile
-                {
-                    Path = basePath + fileName,
-                    MimeType = "application/vnd.ms-excel",
-                    Name = "Research Spreadsheet"
-                });
-            }
-
-            fileName = "mkusenba-photo.jpg";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
-            {
-                Seed(new CreateLoadableFile
-                {
-                    Path = basePath + fileName,
-                    MimeType = "image/jpg",
-                    Name = fileName
-                });
-            }
-
-            fileName = "billhogarth-photo.jpg";
-            if (_entities.Get<LoadableFile>().Count(x => x.Filename == fileName) == 0)
-            {
-                Seed(new CreateLoadableFile
-                {
-                    Path = basePath + fileName,
-                    MimeType = "image/jpg",
-                    Name = fileName
-                });
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "image/jpg",
+                    });
+                }
             }
         }
     }

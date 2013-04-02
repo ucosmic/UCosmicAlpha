@@ -8,6 +8,7 @@ var ViewModels;
                 this.activityTypes = ko.observableArray();
                 this.addingTag = ko.observable(false);
                 this.newTag = ko.observable();
+                this.uploadingDocument = ko.observable(false);
                 this.id = ko.observable(activityId);
             }
             Activity.prototype.load = function () {
@@ -40,7 +41,17 @@ var ViewModels;
                     _this.activityTypes = ko.mapping.fromJS(types);
                     _this.locations = ko.mapping.fromJS(locations);
  {
+                        var augmentedDocumentModel = function (data) {
+                            ko.mapping.fromJS(data, {
+                            }, this);
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocProxy() + data.id.toString());
+                        };
                         var mapping = {
+                            'documents': {
+                                create: function (options) {
+                                    return new augmentedDocumentModel(options.data);
+                                }
+                            },
                             'startsOn': {
                                 create: function (options) {
                                     return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
@@ -164,6 +175,74 @@ var ViewModels;
                     i += 1;
                 }
                 return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
+            };
+            Activity.prototype.validateUploadableFileTypeByExtension = function (activityId, inExtension) {
+                var valid = true;
+                var extension = inExtension;
+                if((extension == null) || (extension.length == 0) || (extension.length > 255)) {
+                    valid = false;
+                } else {
+                    if(extension[0] === ".") {
+                        extension = extension.substring(1);
+                    }
+                    jQuery.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: App.Routes.WebApi.Activity.validateUploadFileTypeByExtension(activityId),
+                        data: ko.toJSON(extension),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXhr) {
+                            valid = true;
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            valid = false;
+                        }
+                    });
+                }
+                return valid;
+            };
+            Activity.prototype.loadDocuments = function () {
+                var _this = this;
+                jQuery.ajax({
+                    type: 'GET',
+                    url: App.Routes.WebApi.Activity.getDocuments(this.values.id()),
+                    dataType: 'json',
+                    success: function (documents, textStatus, jqXhr) {
+                        var augmentedDocumentModel = function (data) {
+                            ko.mapping.fromJS(data, {
+                            }, this);
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocProxy() + data.id.toString());
+                        };
+                        var mapping = {
+                            create: function (options) {
+                                return new augmentedDocumentModel(options.data);
+                            }
+                        };
+                        var observableDocs = ko.mapping.fromJS(documents, mapping);
+                        _this.values.documents.removeAll();
+                        for(var i = 0; i < observableDocs().length; i += 1) {
+                            _this.values.documents.push(observableDocs()[i]);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        alert("Unable to update documents list. " + textStatus + "|" + errorThrown);
+                    }
+                });
+            };
+            Activity.prototype.deleteDocument = function (item, event) {
+                var _this = this;
+                jQuery.ajax({
+                    type: 'DELETE',
+                    url: App.Routes.WebApi.Activity.deleteDocument(item.id()),
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXhr) {
+                        _this.loadDocuments();
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        alert("Unable to delete document. " + textStatus + "|" + errorThrown);
+                    }
+                });
             };
             return Activity;
         })();

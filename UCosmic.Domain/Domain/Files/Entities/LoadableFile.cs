@@ -10,10 +10,11 @@ namespace UCosmic.Domain.Files
 
         public int Id { get; protected set; }
         public virtual LoadableFileBinary Binary { get; protected internal set; }
-        public int Length { get; protected internal set; }
+        public long Length { get; protected internal set; }
         public string MimeType { get; protected internal set; }
-        public string Name { get; protected internal set; }
-        public string Filename { get; protected internal set; }
+        public string Title { get; protected internal set; }
+        public string Name { get; protected internal set; }         // file name only
+        public string Extension { get; protected internal set; }    // extension only, no .
     }
 
 
@@ -25,9 +26,10 @@ namespace UCosmic.Domain.Files
             {
                 entity.Id,
                 entity.Length,
-                entity.Name,
-                entity.Filename,
                 entity.MimeType,
+                entity.Title,
+                entity.Name,
+                entity.Extension
                 //file.Binary.Content, // this works, but unnecessarily bloats the database
             });
             return state;

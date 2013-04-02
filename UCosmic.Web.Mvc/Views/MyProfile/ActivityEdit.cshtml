@@ -17,7 +17,7 @@
             var activityViewModel = new ViewModels.Activities.Activity(@Model);
 
             activityViewModel.load()
-                .done(function () {
+                .done(function() {
 
                     $("#fromDatePicker").kendoDatePicker();
                     $("#toDatePicker").kendoDatePicker();
@@ -27,7 +27,7 @@
                         dataValueField: "id()",
                         dataSource: activityViewModel.locations(),
                         //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
-                        change: function (event) { activityViewModel.updateLocations(event.sender.value()); },
+                        change: function(event) { activityViewModel.updateLocations(event.sender.value()); },
                         placeholder: "[Select Country or Body of Water]"
                     });
 
@@ -69,25 +69,51 @@
                         media_external_list_url: 'lists/media_list.js'
                     });
 
+                    $("#uploadFile").kendoUpload({
+                        multiple: false,
+                        showFileList: false,
+                        async: {
+                            saveUrl: App.Routes.WebApi.Activity.uploadDocument() + activityViewModel.id(),
+                            autoUpload: true
+                        },
+                        select: function(e) {
+                            var i = 0;
+                            var validFileType = true;
+                            while ((i < e.files.length) && validFileType) {
+                                var file = e.files[i];
+                                validFileType = activityViewModel.validateUploadableFileTypeByExtension(activityViewModel.id(), file.extension);
+                                if (!validFileType) {
+                                    e.preventDefault();
+                                }
+                                i += 1;
+                            }
+                        },
+                        success: function(e) {
+                                activityViewModel.uploadingDocument(false);
+                                activityViewModel.loadDocuments();
+                            }
+                    });
 
                     ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
 
                     /* KendoUI Bug? - Can't seem to preload values unless I do this. */
                     var countrySelector = $("#countrySelector").data("kendoMultiSelect");
                     countrySelector.value(activityViewModel.selectedLocations());
-                    
+
                     var datePicker = $("#fromDatePicker").data("kendoDatePicker");
                     datePicker.value(activityViewModel.values.startsOn());
-                    
+
                     datePicker = $("#toDatePicker").data("kendoDatePicker");
                     datePicker.value(activityViewModel.values.endsOn());
 
                 })  // activityViewModel.load.done
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
-                }); // activityViewModel.load.fail
+                });
+// activityViewModel.load.fail
 
-        }); // function
+        });
+// function
 
     </script>
 }
@@ -106,7 +132,8 @@
 				<div class="group">
 					<div class="on-left from-top" style="width: 100%;">
 						<header>
-							<h1>@ViewBag.Title</h1>
+						    <h1>@ViewBag.Title</h1>
+                            <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
 							<span class="on-right"><input type="button" value="Guide Me"/></span>
 						</header>
 						<div id="activity-edit" style="margin-bottom: 38px">
@@ -186,18 +213,21 @@
 						        <header>
 						            <h2>
 						                <span>Documents</span>
-						                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function (data, event) { addDocument(data, event, null); }"/>
+						                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function () { this.uploadingDocument(true); }"/>
 						            </h2>
 						        </header>
+						        <div data-bind="visible: uploadingDocument" style="margin-bottom: 16px">
+						            <input type="file" name="uploadFile" id="uploadFile"/>
+                                </div>
 						        <div>
 						            <table class="data">
 						                <thead>
 						                    <tr>
-						                        <th style="width: 5%">Visible</th>
-						                        <th style="width: 10%">Preview</th>
-						                        <th style="width: 60%">Name</th>
-						                        <th style="width: 10%">Type</th>
-						                        <th style="width: 10%">Size</th>
+						                        <th style="width: 10%; text-align: center">Preview</th>
+						                        <th style="width: 60%">Title</th>
+						                        <th style="width: 10%; text-align: center">Type</th>
+						                        <th style="width: 10%; text-align: center">Size</th>
+                                                <th style="width: 5%; text-align: center">Hide</th>
 						                        <th style="width: 5%"></th>
 						                    </tr>
 						                </thead>
@@ -211,8 +241,12 @@
 						        <span>
 						            <input type="button" value="Save as Draft"/>
 						            <input type="button" value="Save as Final"/>
-                                    <input type="button" value="Cancel" style="float: right"/>
+						            <input type="button" value="Cancel" style="float: right"/>
 						        </span>
+						    </div>
+                            
+						    <div style="margin-bottom: 32px">
+						        <a href="#">Request my profile be deleted</a>
 						    </div>
 
 						    <!-- LAST UPDATED -->
@@ -245,29 +279,29 @@
 
 <script type="text/html" id="activity-document-template">
     <tr class="hover-hilite">
-        <!-- Visible -->
-        <td>
-
-        </td>
         <!-- Preview -->
-        <td>
-
+        <td style="text-align: center">
+            <img data-bind="attr: { src: proxyImageSource, width: proxyWidth, height: proxyHeight }">
         </td>
-        <!-- Name -->
+        <!-- Title -->
         <td>
-
+            <span data-bind="text: title"></span>
         </td>
         <!-- Type -->
-        <td>
-
+        <td style="text-align: center">
+            <span data-bind="text: extension"></span>
         </td>
         <!-- Size -->
-        <td>
-
+        <td style="text-align: center">
+            <span data-bind="text: size"></span>
+        </td>
+        <!-- Visible -->
+        <td style="text-align: center">
+            <input type="checkbox" data-bind="checked: !visible"/>
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Remove document" data-bind="click: function (data, event) { $parent.deleteDocument(data, event, $parent); }, clickBubble: false">
+            <a href="#" title="Remove document" data-bind="click: function (item, event) { $parent.deleteDocument(item, event, 0); }, clickBubble: false">
                 <img src="../../images/icons/minus/minus-24-red.png" alt="Remove document" />
             </a>
         </td>

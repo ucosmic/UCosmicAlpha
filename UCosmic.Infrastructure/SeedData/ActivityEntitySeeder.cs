@@ -152,22 +152,25 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "02E6D488-B3FA-4D79-848F-303779A53ABE.docx").Id,
-                        Mode = activity.Mode
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "02E6D488-B3FA-4D79-848F-303779A53ABE").Id,
+                        Mode = activity.Mode,
+                        Title = "Dissertation Excerpt"
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls").Id,
-                        Mode = activity.Mode
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "10EC87BD-3A95-439D-807A-0F57C3F89C8A").Id,
+                        Mode = activity.Mode,
+                        Title = "Research Funding Breakdown" 
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "1322FF22-E863-435E-929E-765EB95FB460.ppt").Id,
-                        Mode = activity.Mode
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "1322FF22-E863-435E-929E-765EB95FB460").Id,
+                        Mode = activity.Mode,
+                        Title = "Conference Presentation"
                     });
 
                     _unitOfWork.SaveChanges();
@@ -217,12 +220,13 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "14E5C461-2E5E-4E63-9701-DC3F009AB98E.mov").Id,
-                        Mode = activity.Mode
-                    });
+                    //_createActivityDocument.Handle(new CreateActivityDocument
+                    //{
+                    //    ActivityValuesId = activityValues.RevisionId,
+                    //    FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "14E5C461-2E5E-4E63-9701-DC3F009AB98E").Id,
+                    //    Mode = activity.Mode,
+                    //    Title = "Village Teaching Session"
+                    //});
 
                     _unitOfWork.SaveChanges();
                 } // ACTIVITY 2
@@ -284,32 +288,36 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "322BF184-32C3-49CA-8C97-18ABE32CFD8A.mp3").Id,
-                        Mode = activity.Mode
-                    });
+                    //_createActivityDocument.Handle(new CreateActivityDocument
+                    //{
+                    //    ActivityValuesId = activityValues.RevisionId,
+                    //    FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "322BF184-32C3-49CA-8C97-18ABE32CFD8A").Id,
+                    //    Mode = activity.Mode,
+                    //    Title = "Wildlife Sounds Early 2000"
+                    //});
+
+                    //_createActivityDocument.Handle(new CreateActivityDocument
+                    //{
+                    //    ActivityValuesId = activityValues.RevisionId,
+                    //    FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "3D3C0976-5117-4D5A-AF25-1B53166C550C").Id,
+                    //    Mode = activity.Mode,
+                    //    Title = "Factory Activity"
+                    //});
+
+                    //_createActivityDocument.Handle(new CreateActivityDocument
+                    //{
+                    //    ActivityValuesId = activityValues.RevisionId,
+                    //    FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "5FE682FD-F161-4669-A2C4-974F5B0F8BB1").Id,
+                    //    Mode = activity.Mode,
+                    //    Title = "General Movie"
+                    //});
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "3D3C0976-5117-4D5A-AF25-1B53166C550C.wmv").Id,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "5FE682FD-F161-4669-A2C4-974F5B0F8BB1.mp4").Id,
-                        Mode = activity.Mode
-                    });
-
-                    _createActivityDocument.Handle(new CreateActivityDocument
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        FileId = _entities.Get<LoadableFile>().Single(x => x.Filename == "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf").Id,
-                        Mode = activity.Mode
+                        FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6").Id,
+                        Mode = activity.Mode,
+                        Title = "Make a contribution form"
                     });
 
                     _unitOfWork.SaveChanges();
@@ -361,41 +369,41 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912").Id,
-                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912_proxy").Id,
-                        Mode = activity.Mode
+                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912").Id,
+                        Mode = activity.Mode,
+                        Title = "Photo of the site"
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "A44FAB3B-DEBA-4F14-8965-E379569066A9").Id,
-                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "A44FAB3B-DEBA-4F14-8965-E379569066A9_proxy").Id,
-                        Mode = activity.Mode
+                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "A44FAB3B-DEBA-4F14-8965-E379569066A9").Id,
+                        Mode = activity.Mode,
+                        Title = "Grads working hard"
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B").Id,
-                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B_proxy").Id,
-                        Mode = activity.Mode
+                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B").Id,
+                        Mode = activity.Mode,
+                        Title = "Map of the incident"
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "E4E53300-08D3-47C0-954C-BF15EF54F0A3").Id,
-                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "E4E53300-08D3-47C0-954C-BF15EF54F0A3_proxy").Id,
-                        Mode = activity.Mode
+                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "E4E53300-08D3-47C0-954C-BF15EF54F0A3").Id,
+                        Mode = activity.Mode,
+                        Title = "Sunrise over the delta"
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "EE23D741-C50D-40D5-8214-C18DF68CC6D3").Id,
-                        ProxyImageId = _entities.Get<UCosmic.Domain.Images.Image>().Single(x => x.SourceId == "EE23D741-C50D-40D5-8214-C18DF68CC6D3_proxy").Id,
-                        Mode = activity.Mode
+                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "EE23D741-C50D-40D5-8214-C18DF68CC6D3").Id,
+                        Mode = activity.Mode,
+                        Title = "Me"
                     });
 
                     _unitOfWork.SaveChanges();

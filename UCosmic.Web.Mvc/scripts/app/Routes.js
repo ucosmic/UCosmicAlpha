@@ -381,6 +381,10 @@ var App;
                     return makeUrl('activities/page');
                 }
                 Activities.get = get;
+                function getDocProxy() {
+                    return makeUrl('activities/docproxy');
+                }
+                Activities.getDocProxy = getDocProxy;
                 var Locations = (function () {
                     function Locations() { }
                     Locations.get = function get() {
@@ -404,6 +408,22 @@ var App;
                     return makeUrl('activity');
                 }
                 Activity.get = get;
+                function uploadDocument() {
+                    return makeUrl('activity/upload');
+                }
+                Activity.uploadDocument = uploadDocument;
+                function validateUploadFileTypeByExtension(activityId) {
+                    return makeUrl('activity/' + activityId.toString() + '/validate-upload-filetype');
+                }
+                Activity.validateUploadFileTypeByExtension = validateUploadFileTypeByExtension;
+                function getDocuments(activityValuesId) {
+                    return makeUrl('activity/' + activityValuesId.toString() + '/documents');
+                }
+                Activity.getDocuments = getDocuments;
+                function deleteDocument(activityDocumentId) {
+                    return makeUrl('activity/' + activityDocumentId.toString() + '/document');
+                }
+                Activity.deleteDocument = deleteDocument;
             })(WebApi.Activity || (WebApi.Activity = {}));
             var Activity = WebApi.Activity;
         })(Routes.WebApi || (Routes.WebApi = {}));

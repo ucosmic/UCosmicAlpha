@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
+using FluentValidation;
 
 namespace UCosmic.Domain.Files
 {
     public class CreateLoadableFile
     {
-        public string Path { get; set; }
-        public string MimeType { get; set; }
+        public Stream SourceStream { get; set; }
         public string Name { get; set; }
+        public string Extension { get; set; }
+        public string MimeType { get; set; }
+        public string Title { get; set; }
 
         public LoadableFile CreatedLoadableFile { get; set; }
     }
@@ -23,32 +26,39 @@ namespace UCosmic.Domain.Files
             _unitOfWork = unitOfWork;
         }
 
+        public class ValidateCreateLoadableFileCommand : AbstractValidator<CreateLoadableFile>
+        {
+            public ValidateCreateLoadableFileCommand()
+            {
+                CascadeMode = CascadeMode.StopOnFirstFailure;
+
+                RuleFor(x => x.Extension)
+                    .MustBeOfFileType()
+                        .WithMessage(MustBeOfFileType.FailMessageFormat, x => x.Extension)
+                ;
+            }
+        }
+
         public void Handle(CreateLoadableFile command)
         {
             if (command == null) throw new ArgumentNullException("command");
-            if (!File.Exists(command.Path)) { throw new Exception(command.Path + " not found."); }
 
-            string name = command.Name;
-            string filename = null;
+            string title = command.Title;
             BinaryReader reader = null;
-            int length = 0;
+            long length = 0;
             byte[] contents = null;
 
             try
             {
-                FileInfo finfo = new FileInfo(command.Path);
-                filename = finfo.Name;
-
-                if (String.IsNullOrEmpty(command.Name))
+                if (String.IsNullOrEmpty(command.Title))
                 {
-                    name = filename;
+                    title = command.Name;
                 }
 
-                FileStream stream = new FileStream(command.Path, FileMode.Open, FileAccess.Read);
-                reader = new BinaryReader(stream);
-                if (stream.Length > Int32.MaxValue) { throw new Exception(command.Path + " is too large."); }
-                length = (int)stream.Length;
-                contents = reader.ReadBytes(length);
+                length = command.SourceStream.Length;
+                if (length > Int32.MaxValue) { throw new Exception(command.Name + "." + command.Extension + " is too large."); }
+                reader = new BinaryReader(command.SourceStream);
+                contents = reader.ReadBytes((int)length);
             }
             catch (Exception ex)
             {
@@ -63,8 +73,9 @@ namespace UCosmic.Domain.Files
             {
                 Length = length,
                 MimeType = command.MimeType,
-                Name = name,
-                Filename = filename
+                Title = title,
+                Name = command.Name,
+                Extension = command.Extension
             };
 
             loadableFile.Binary = new LoadableFileBinary

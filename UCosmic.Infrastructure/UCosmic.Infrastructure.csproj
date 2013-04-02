@@ -168,7 +168,6 @@
     <Compile Include="EntityFramework\Fluent\Employees.cs" />
     <Compile Include="EntityFramework\Fluent\Files.cs" />
     <Compile Include="EntityFramework\Fluent\Identity.cs" />
-    <Compile Include="EntityFramework\Fluent\Images.cs" />
     <Compile Include="EntityFramework\Fluent\InstitutionalAgreements.cs" />
     <Compile Include="EntityFramework\Fluent\People.cs" />
     <Compile Include="EntityFramework\IOptimizeDatabase.cs" />

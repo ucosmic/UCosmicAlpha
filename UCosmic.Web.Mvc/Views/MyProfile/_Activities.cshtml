@@ -8,10 +8,6 @@
         </h2>
     </header>
     <table class="data">
-        <colgroup>
-            <col style="width: 10%" />
-            <col style="width: 80%" />
-        </colgroup>
         <tbody data-bind="template: { name: 'activities-template', foreach: items }">
         </tbody>
     </table>
@@ -23,18 +19,22 @@
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="activities-documents-template">
+    <td style="width: 100px; text-align: center; border: 0">
+        <div><img data-bind="attr: { src: proxyImageSource, width: proxyWidth, height: proxyHeight }"></div>
+        <div><span style="font-size: small" data-bind="text: title"></span></div>
+    </td>
+</script>
+
 <script type="text/html" id="activities-template">
     <tr class="hover-hilite"
-        data-bind="click: function (data, event) { $parent.editActivity(data, event, id()); }"
+        data-bind="click: function (item, event) { $parent.editActivity(item, event, id()); }"
         href="@Url.Action(MVC.MyProfile.ActivityEdit())">
-        <!-- Image -->
-        <td>
-            <img src="../../images/placeholders/blue-96x96.png" alt="image" width="96" height="96" />
-        </td>
         <!-- Description -->
         <td style="vertical-align: top">
             <div style="height: 30px">
                 <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.activityTypesFormatted(values.types())"></span>
+                <!-- <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: formattedTypes"></span>  -->
                 <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
             </div>
             <div class="ellipsis">
@@ -44,6 +44,14 @@
                 <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn())"></span>
                 <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
             </div>
+            <div>
+                <table>
+                    <tbody class="data-items">
+                        <tr data-bind="template: { name: 'activities-documents-template', foreach: values.documents }">
+                        </tr>
+                    </tbody>
+                </table>
+			</div>
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">

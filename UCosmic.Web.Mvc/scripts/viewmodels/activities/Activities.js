@@ -44,12 +44,23 @@ var ViewModels;
                     dataType: 'json'
                 });
                 $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
-                    debugger;
-
                     _this.activityTypesList = types;
                     _this.activityLocationsList = locations;
-                    ko.mapping.fromJS(data, {
-                    }, _this);
+ {
+                        var augmentedDocumentModel = function (data) {
+                            ko.mapping.fromJS(data, {
+                            }, this);
+                            this.proxyImageSource = App.Routes.WebApi.Activities.getDocProxy() + data.id.toString();
+                        };
+                        var mapping = {
+                            'documents': {
+                                create: function (options) {
+                                    return new augmentedDocumentModel(options.data);
+                                }
+                            }
+                        };
+                        ko.mapping.fromJS(data, mapping, _this);
+                    }
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);

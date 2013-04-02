@@ -283,7 +283,7 @@ namespace UCosmic.SeedData
                             },
                         },
                 });
-                var photo = _entities.Get<LoadableFile>().Single(x => x.Filename == "mkusenba-photo.jpg");
+                var photo = _entities.Get<LoadableFile>().Single(x => x.Name == "mkusenba-photo" && x.Extension == "jpg");
                 _updatePhotoId.Handle(new UpdateMyPhotoId(new GenericPrincipal(new GenericIdentity(person.User.Name), null), photo.Id));
 
                 /* Affiliations set below. */
@@ -305,7 +305,7 @@ namespace UCosmic.SeedData
                                 },
                         },
                 });
-                photo = _entities.Get<LoadableFile>().Single(x => x.Filename == "billhogarth-photo.jpg");
+                photo = _entities.Get<LoadableFile>().Single(x => x.Name == "billhogarth-photo" && x.Extension == "jpg");
                 _updatePhotoId.Handle(new UpdateMyPhotoId(new GenericPrincipal(new GenericIdentity(person.User.Name), null), photo.Id));
                 /* Affiliations set below. */
             } /* USF People */

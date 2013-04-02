@@ -4,4 +4,9 @@
     {
         public const int TypeMaxLength = 128;
     }
+
+    public class ActivityDocumentConstraints
+    {
+        public const int ModeTextMaxLength = 20;
+    }
 }
