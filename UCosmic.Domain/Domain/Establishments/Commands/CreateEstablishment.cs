@@ -50,7 +50,7 @@ namespace UCosmic.Domain.Establishments
             // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.OfficialName)
                 .NotNull()
-                    .WithMessage("Establishment must have an official name")
+                    .WithMessage("Establishment must have an official name.")
                 .Must(x => officialNameValidator.Validate(x).IsValid)
                     .WithMessage("Establishment official name failed one or more validation rules.")
             ;

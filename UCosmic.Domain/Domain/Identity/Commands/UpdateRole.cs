@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -18,25 +17,16 @@ namespace UCosmic.Domain.Identity
         public IPrincipal Principal { get; private set; }
         public Guid EntityId { get; set; }
         public string Description { get; set; }
-        public IEnumerable<Guid> RevokedUserEntityIds { get; set; }
-        public IEnumerable<Guid> GrantedUserEntityIds { get; set; }
         public int ChangeCount { get; internal set; }
     }
 
     public class HandleUpdateRoleCommand : IHandleCommands<UpdateRole>
     {
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<RevokeRoleFromUser> _revokeHandler;
-        private readonly IHandleCommands<GrantRoleToUser> _grantHandler;
 
-        public HandleUpdateRoleCommand(ICommandEntities entities
-            , IHandleCommands<RevokeRoleFromUser> revokeHandler
-            , IHandleCommands<GrantRoleToUser> grantHandler
-        )
+        public HandleUpdateRoleCommand(ICommandEntities entities)
         {
             _entities = entities;
-            _revokeHandler = revokeHandler;
-            _grantHandler = grantHandler;
         }
 
         public void Handle(UpdateRole command)
@@ -61,23 +51,6 @@ namespace UCosmic.Domain.Identity
 
             if (entity.Description != command.Description) ++command.ChangeCount;
             entity.Description = command.Description;
-
-            if (command.RevokedUserEntityIds != null)
-                foreach (var revokedUserEntityId in command.RevokedUserEntityIds)
-                {
-                    var revoke = new RevokeRoleFromUser(entity.EntityId, revokedUserEntityId);
-                    _revokeHandler.Handle(revoke);
-                    if (revoke.IsNewlyRevoked) ++command.ChangeCount;
-                }
-
-            if (command.GrantedUserEntityIds != null)
-                foreach (var grantedUserEntityId in command.GrantedUserEntityIds)
-                {
-                    var grant = new GrantRoleToUser(entity, grantedUserEntityId);
-                    _grantHandler.Handle(grant);
-                    if (grant.IsNewlyGranted) ++command.ChangeCount;
-
-                }
 
             if (command.ChangeCount < 1) return;
 

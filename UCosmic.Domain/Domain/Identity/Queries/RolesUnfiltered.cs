@@ -29,20 +29,14 @@ namespace UCosmic.Domain.Identity
             var results = _entities.Query<Role>()
                 .EagerLoad(_entities, query.EagerLoad);
 
-            // only return agent roles when user is an authorization agent or when user is in the agent role
+            // only return agent roles when user is an authorization agent
             if (!query.Principal.IsInRole(RoleName.AuthorizationAgent))
             {
                 var rolesList = results.ToList();
                 var rolesArray = rolesList.ToArray();
                 foreach (var role in rolesArray)
-                {
-                    if (RoleName.NonTenantRoles.Contains(role.Name) ||
-                        (role.Name.Contains("agent", StringComparison.OrdinalIgnoreCase) &&
-                            !query.Principal.IsInRole(role.Name)))
-                    {
+                    if (RoleName.NonTenantRoles.Contains(role.Name))
                         rolesList.Remove(rolesList.Single(x => x.Name == role.Name));
-                    }
-                }
 
                 results = rolesList.AsQueryable();
             }
