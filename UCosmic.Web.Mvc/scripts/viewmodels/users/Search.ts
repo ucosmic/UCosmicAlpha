@@ -5,6 +5,7 @@
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../PagedSearch.ts" />
+/// <reference path="../Flasher.ts" />
 /// <reference path="../../app/Routes.ts" />
 
 module ViewModels.Users {
@@ -278,6 +279,7 @@ module ViewModels.Users {
         }
 
         private _loadRoleOptions(results: any): void {
+            ko.mapping.fromJS(results.items, {}, this.roleOptions);
             // remove roles that have already been granted
             for (var i = 0; i < this.roleOptions().length; i++) {
                 var option = this.roleOptions()[i];
@@ -297,7 +299,6 @@ module ViewModels.Users {
                     }
                 }
             }
-            ko.mapping.fromJS(results.items, {}, this.roleOptions);
         }
 
         impersonate(): void {
@@ -320,16 +321,21 @@ module ViewModels.Users {
         }
 
         grantRole(): void {
+            this.roleSpinner.start();
             var url = App.Routes.WebApi.Identity.Roles.Grants.put(this.selectedRoleOption(), this.id());
             $.ajax({
                 url: url,
                 type: 'PUT'
             })
-            .done((): void => {
+            .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
+                App.flasher.flash(response);
                 alert('done');
             })
-            .fail((): void => {
+            .fail((arg1: any, arg2, arg3): void => {
                 alert('fail');
+            })
+            .always(() => {
+                this.roleSpinner.stop();
             });
         }
     }

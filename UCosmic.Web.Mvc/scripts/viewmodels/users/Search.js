@@ -250,6 +250,8 @@ var ViewModels;
                 return deferred;
             };
             SearchResult.prototype._loadRoleOptions = function (results) {
+                ko.mapping.fromJS(results.items, {
+                }, this.roleOptions);
                 for(var i = 0; i < this.roleOptions().length; i++) {
                     var option = this.roleOptions()[i];
                     for(var ii = 0; ii < this.roleGrants().length; ii++) {
@@ -268,8 +270,6 @@ var ViewModels;
                         }
                     }
                 }
-                ko.mapping.fromJS(results.items, {
-                }, this.roleOptions);
             };
             SearchResult.prototype.impersonate = function () {
                 var form = this._owner.impersonateForm;
@@ -289,14 +289,19 @@ var ViewModels;
                 this.isEditingRoles(false);
             };
             SearchResult.prototype.grantRole = function () {
+                var _this = this;
+                this.roleSpinner.start();
                 var url = App.Routes.WebApi.Identity.Roles.Grants.put(this.selectedRoleOption(), this.id());
                 $.ajax({
                     url: url,
                     type: 'PUT'
-                }).done(function () {
+                }).done(function (response, textStatus, xhr) {
+                    App.flasher.flash(response);
                     alert('done');
-                }).fail(function () {
+                }).fail(function (arg1, arg2, arg3) {
                     alert('fail');
+                }).always(function () {
+                    _this.roleSpinner.stop();
                 });
             };
             return SearchResult;
