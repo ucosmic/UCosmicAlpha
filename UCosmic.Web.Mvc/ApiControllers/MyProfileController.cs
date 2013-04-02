@@ -18,17 +18,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class MyProfileController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
         private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
 
         public MyProfileController(IProcessQueries queryProcessor
+            , IStoreBinaryData binaryData
             , IHandleCommands<UpdateMyProfile> profileUpdateHandler
             , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
         )
         {
             _queryProcessor = queryProcessor;
+            _binaryData = binaryData;
             _profileUpdateHandler = profileUpdateHandler;
             _photoUpdateHandler = photoUpdateHandler;
             _photoDeleteHandler = photoDeleteHandler;
@@ -93,7 +96,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var person = _queryProcessor.Execute(new MyPerson(User));
                 personId = person.RevisionId;
             }
-            var peopleController = new PeopleController(_queryProcessor)
+            var peopleController = new PeopleController(_queryProcessor, _binaryData)
             {
                 Request = Request,
             };

@@ -31,8 +31,9 @@ namespace UCosmic.BinaryData
                 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
             var pathParts = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var pathPart in pathParts.Take(pathParts.Length - 1))
-            {
+            var pathPart = pathParts.First();
+            //foreach (var pathPart in pathParts.Take(pathParts.Length - 1))
+            //{
                 if (pathPart.Length < 3) throw new FormatException(exceptionMessage);
                 if (pathPart.StartsWith("-") || pathPart.EndsWith("-"))
                     throw new FormatException(exceptionMessage);
@@ -47,7 +48,7 @@ namespace UCosmic.BinaryData
                         throw new FormatException(exceptionMessage);
                     lastChar = pathPartChar;
                 }
-            }
+            //}
         }
     }
 }

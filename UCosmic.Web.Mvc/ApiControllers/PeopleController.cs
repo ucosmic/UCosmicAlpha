@@ -18,10 +18,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class PeopleController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IStoreBinaryData _binaryData;
 
-        public PeopleController(IProcessQueries queryProcessor)
+        public PeopleController(IProcessQueries queryProcessor, IStoreBinaryData binaryData)
         {
             _queryProcessor = queryProcessor;
+            _binaryData = binaryData;
         }
 
         [GET("{id}/photo")]
@@ -43,7 +45,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 // resize the user's photo image
                 mimeType = person.Photo.MimeType;
-                ImageBuilder.Current.Build(new MemoryStream(person.Photo.Binary.Content), stream, settings, true);
+                ImageBuilder.Current.Build(new MemoryStream(_binaryData.Get(person.Photo.Path)), stream, settings, true);
             }
             else
             {
