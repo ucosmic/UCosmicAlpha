@@ -224,7 +224,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(activityDocumentId));
 
-            var command = new DeleteActivityDocument(activityDocumentId);
+            var command = new DeleteActivityDocument(User, activityDocumentId);
 
             try
             {

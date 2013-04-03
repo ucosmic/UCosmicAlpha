@@ -140,6 +140,9 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsById.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityDocumentById.cs" />
+    <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEntityId.cs" />
