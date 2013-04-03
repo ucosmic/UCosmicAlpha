@@ -2674,6 +2674,17 @@ namespace Links
                 public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
             }
         
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class representatives {
+                private const string URLPATH = "~/scripts/viewmodels/representatives";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string RepModuleSettings_ts = Url("RepModuleSettings.ts");
+                public static readonly string RepModuleSettings_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RepModuleSettings.min.js") ? Url("RepModuleSettings.min.js") : Url("RepModuleSettings.js");
+                              
+                public static readonly string RepModuleSettings_min_js = Url("RepModuleSettings.min.js");
+            }
+        
             public static readonly string Spinner_ts = Url("Spinner.ts");
             public static readonly string Spinner_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Spinner.min.js") ? Url("Spinner.min.js") : Url("Spinner.js");
                           

@@ -191,6 +191,8 @@
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyPhotoId.cs" />
+    <Compile Include="Domain\Representatives\Commands\SeedRepModuleSettings.cs" />
+    <Compile Include="Domain\Representatives\Entities\EmailNotification.cs" />
     <Compile Include="Domain\Representatives\Entities\RepModuleSettings.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategories.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />

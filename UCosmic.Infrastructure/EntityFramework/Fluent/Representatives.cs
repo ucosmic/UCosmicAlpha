@@ -16,6 +16,7 @@ namespace UCosmic.EntityFramework
             ;
 
             Property(p => p.WelcomeMessage).HasColumnType("ntext").IsOptional();
+            //Property(p => p.EmailAddress).HasColumnType("ntext").IsOptional();
         }
     }
 }
