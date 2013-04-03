@@ -56,14 +56,7 @@ namespace UCosmic.Domain.Identity
             RuleFor(x => x)
                 .Must(command =>
                 {
-                    var grantingUser = entities.Query<User>()
-                        .EagerLoad(entities, new Expression<Func<User, object>>[]
-                        {
-                            x => x.Grants,
-                        })
-                        .Single(x => x.Name.Equals(command.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase));
-
-                    if (!grantingUser.IsInRole(RoleName.AuthorizationAgent))
+                    if (!command.Principal.IsInRole(RoleName.AuthorizationAgent))
                     {
                         // do not let security admins add to non-tenant roles
                         var roleToGrant = entities.Query<Role>().Single(x => x.RevisionId == command.RoleId);
