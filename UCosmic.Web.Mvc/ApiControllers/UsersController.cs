@@ -51,7 +51,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
-            var query = new RolesGrantedToUserId(User, userId);
+            var query = new RolesGrantedToUserId(User, userId)
+            {
+                OrderBy = new Dictionary<Expression<Func<Role, object>>, OrderByDirection>
+                {
+                    { x => x.Name, OrderByDirection.Ascending },
+                },
+            };
             var entities = _queryProcessor.Execute(query);
             var models = Mapper.Map<RoleApiModel[]>(entities);
 
