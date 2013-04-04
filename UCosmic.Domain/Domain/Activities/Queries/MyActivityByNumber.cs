@@ -5,9 +5,9 @@ namespace UCosmic.Domain.Activities
 {
     public class MyActivityByNumber : BaseEntityQuery<Activity>, IDefineQuery<Activity>
     {
-        public IPrincipal Principal { get; set; }
-        public int Number { get; set; }
-        public string ModeText { get; set; }
+        public IPrincipal Principal { get; private set; }
+        public int Number { get; private set; }
+        public string ModeText { get; private set; }
     }
 
     public class HandleMyActivityByNumberQuery : IHandleQueries<MyActivityByNumber, Activity>

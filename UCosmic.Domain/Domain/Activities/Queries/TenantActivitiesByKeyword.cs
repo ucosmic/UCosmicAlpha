@@ -4,10 +4,10 @@ namespace UCosmic.Domain.Activities
 {
     public class TenantActivitiesByKeyword : BaseEntitiesQuery<Activity>, IDefineQuery<PagedQueryResult<Activity>>
     {
-        public object Tenant { get; set; }
-        public string Keyword { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+        public object Tenant { get; private set; }
+        public string Keyword { get; private set; }
+        public int PageSize { get; private set; }
+        public int PageNumber { get; private set; }
     }
 
     public class HandleTenantActivitiesByKeywordQuery : IHandleQueries<TenantActivitiesByKeyword, PagedQueryResult<Activity>>

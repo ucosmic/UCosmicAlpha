@@ -284,51 +284,59 @@ module App.Routes {
             }
         }
 
-        export module Activities {
-
-            export function get (): string {
-                return makeUrl('activities/page');
+        export class Activities {
+            static getAllPaged(): string {
+                var url = makeUrl('activities/page');
+                url = url.substring(0, url.length - 1);
+                return url;
             }
 
-            export function getDocProxy (): string {
-                    return makeUrl('activities/docproxy');
+            static post(): string {
+                return makeUrl('activities');
             }
 
-            export class Locations {
-                static get (): string {
-                    return makeUrl('activities/locations');
-                }
+            static get(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString());
             }
 
-            export class Delete {
-                static get (): string {
-                    return makeUrl('activities/delete');
-                }
+            static put(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString());
             }
 
-
-        }
-
-        export module Activity {
-
-            export function get (): string {
-                return makeUrl('activity');
+            static del(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString());
             }
 
-            export function uploadDocument(): string {
-                return makeUrl('activity/upload');
+            static getDocuments(activityId: number, activityMode: string): string {
+                return makeUrl('activities/' + activityId.toString() + '/documents/' + activityMode);
             }
 
-            export function validateUploadFileTypeByExtension(activityId: number): string {
-                return makeUrl('activity/' + activityId.toString() + '/validate-upload-filetype');
+            static postDocument(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/documents');
             }
 
-            export function getDocuments(activityValuesId: number): string {
-                return makeUrl('activity/' + activityValuesId.toString() + '/documents');
+            static getDocument(activityId: number, documentId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
             }
 
-            export function deleteDocument(activityDocumentId: number): string {
-                return makeUrl('activity/' + activityDocumentId.toString() + '/document');
+            static putDocument(activityId: number, documentId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
+            }
+
+            static deleteDocument(activityId: number, documentId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
+            }
+
+            static validateUploadFileTypeByExtension(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/validate-upload-filetype');
+            }
+
+            static getDocumentProxyImage(activityId: number, documentId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString() + '/thumbnail');
+            }
+
+            static getLocations(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/locations');
             }
         }
     }

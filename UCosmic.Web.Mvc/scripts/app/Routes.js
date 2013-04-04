@@ -321,56 +321,52 @@ var App;
                 var ModuleSettings = Employees.ModuleSettings;
             })(WebApi.Employees || (WebApi.Employees = {}));
             var Employees = WebApi.Employees;
-            (function (Activities) {
-                function get() {
-                    return makeUrl('activities/page');
+            var Activities = (function () {
+                function Activities() { }
+                Activities.getAllPaged = function getAllPaged() {
+                    var url = makeUrl('activities/page');
+                    url = url.substring(0, url.length - 1);
+                    return url;
                 }
-                Activities.get = get;
-                function getDocProxy() {
-                    return makeUrl('activities/docproxy');
+                Activities.post = function post() {
+                    return makeUrl('activities');
                 }
-                Activities.getDocProxy = getDocProxy;
-                var Locations = (function () {
-                    function Locations() { }
-                    Locations.get = function get() {
-                        return makeUrl('activities/locations');
-                    }
-                    return Locations;
-                })();
-                Activities.Locations = Locations;                
-                var Delete = (function () {
-                    function Delete() { }
-                    Delete.get = function get() {
-                        return makeUrl('activities/delete');
-                    }
-                    return Delete;
-                })();
-                Activities.Delete = Delete;                
-            })(WebApi.Activities || (WebApi.Activities = {}));
-            var Activities = WebApi.Activities;
-            (function (Activity) {
-                function get() {
-                    return makeUrl('activity');
+                Activities.get = function get(activityId) {
+                    return makeUrl('activities/' + activityId.toString());
                 }
-                Activity.get = get;
-                function uploadDocument() {
-                    return makeUrl('activity/upload');
+                Activities.put = function put(activityId) {
+                    return makeUrl('activities/' + activityId.toString());
                 }
-                Activity.uploadDocument = uploadDocument;
-                function validateUploadFileTypeByExtension(activityId) {
-                    return makeUrl('activity/' + activityId.toString() + '/validate-upload-filetype');
+                Activities.del = function del(activityId) {
+                    return makeUrl('activities/' + activityId.toString());
                 }
-                Activity.validateUploadFileTypeByExtension = validateUploadFileTypeByExtension;
-                function getDocuments(activityValuesId) {
-                    return makeUrl('activity/' + activityValuesId.toString() + '/documents');
+                Activities.getDocuments = function getDocuments(activityId, activityMode) {
+                    return makeUrl('activities/' + activityId.toString() + '/documents/' + activityMode);
                 }
-                Activity.getDocuments = getDocuments;
-                function deleteDocument(activityDocumentId) {
-                    return makeUrl('activity/' + activityDocumentId.toString() + '/document');
+                Activities.postDocument = function postDocument(activityId) {
+                    return makeUrl('activities/' + activityId.toString() + '/documents');
                 }
-                Activity.deleteDocument = deleteDocument;
-            })(WebApi.Activity || (WebApi.Activity = {}));
-            var Activity = WebApi.Activity;
+                Activities.getDocument = function getDocument(activityId, documentId) {
+                    return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
+                }
+                Activities.putDocument = function putDocument(activityId, documentId) {
+                    return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
+                }
+                Activities.deleteDocument = function deleteDocument(activityId, documentId) {
+                    return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
+                }
+                Activities.validateUploadFileTypeByExtension = function validateUploadFileTypeByExtension(activityId) {
+                    return makeUrl('activities/' + activityId.toString() + '/validate-upload-filetype');
+                }
+                Activities.getDocumentProxyImage = function getDocumentProxyImage(activityId, documentId) {
+                    return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString() + '/thumbnail');
+                }
+                Activities.getLocations = function getLocations(activityId) {
+                    return makeUrl('activities/' + activityId.toString() + '/locations');
+                }
+                return Activities;
+            })();
+            WebApi.Activities = Activities;            
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
         (function (Mvc) {

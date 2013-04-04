@@ -34,10 +34,12 @@ namespace UCosmic.Domain.Activities
     public class HandleCreateActivityDocumentCommand : IHandleCommands<CreateActivityDocument>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateActivityDocumentCommand(ICommandEntities entities)
+        public HandleCreateActivityDocumentCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateActivityDocument command)
@@ -87,6 +89,7 @@ namespace UCosmic.Domain.Activities
             }
 
             _entities.Create(activityDocument);
+            _unitOfWork.SaveChanges();
 
             command.CreatedActivityDocument = activityDocument;
         }

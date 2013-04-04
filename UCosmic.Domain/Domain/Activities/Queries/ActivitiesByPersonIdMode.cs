@@ -5,10 +5,10 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivitiesByPersonIdMode : BaseEntitiesQuery<Activity>, IDefineQuery<PagedQueryResult<Activity>>
     {
-        public int PersonId { get; set; }
-        public string ModeText { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+        public int PersonId { get; private set; }
+        public string ModeText { get; private set; }
+        public int PageSize { get; private set; }
+        public int PageNumber { get; private set; }
     }
 
     public class HandleActivitiesByPersonIdModeQuery : IHandleQueries<ActivitiesByPersonIdMode, PagedQueryResult<Activity>>

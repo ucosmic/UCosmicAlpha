@@ -72,7 +72,7 @@
                         multiple: false,
                         showFileList: false,
                         async: {
-                            saveUrl: App.Routes.WebApi.Activity.uploadDocument() + activityViewModel.id(),
+                            saveUrl: App.Routes.WebApi.Activities.postDocument(activityViewModel.id()),
                             autoUpload: true
                         },
                         select: function(e) {

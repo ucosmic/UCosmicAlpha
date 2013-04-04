@@ -4,7 +4,12 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityByEntityId : BaseEntityQuery<Activity>, IDefineQuery<Activity>
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
+
+        public ActivityByEntityId(int inEntityId)
+        {
+            Id = inEntityId;
+        }
     }
 
     public class HandleActivityByEntityIdQuery : IHandleQueries<ActivityByEntityId, Activity>

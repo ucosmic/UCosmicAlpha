@@ -281,7 +281,6 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="ApiControllers\ActivitiesController.cs" />
-    <Compile Include="ApiControllers\ActivityController.cs" />
     <Compile Include="ApiControllers\GrantsController.cs" />
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />

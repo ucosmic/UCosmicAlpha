@@ -48,7 +48,7 @@ module ViewModels.Activities {
             var deferred: JQueryDeferred = $.Deferred();
 
             var locationsPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.Locations.get())
+            $.get(App.Routes.WebApi.Activities.getLocations(0))
                 .done((data: Service.ApiModels.IActivityLocation[], textStatus: string, jqXHR: JQueryXHR): void => {
                     locationsPact.resolve(data);
                 })
@@ -73,16 +73,13 @@ module ViewModels.Activities {
             activitiesSearchInput.pageNumber = 1;
             activitiesSearchInput.pageSize = 10;
 
-            $.ajax({
-                    type: "POST",
-                     url: App.Routes.WebApi.Activities.get(),
-                    data: activitiesSearchInput,
-                 success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXhr: JQueryXHR): void 
-                            { dataPact.resolve(data); },
-                   error: function  (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
-                            { dataPact.reject(jqXhr, textStatus, errorThrown); },
-                dataType: 'json'
-            });
+            $.get(App.Routes.WebApi.Activities.getAllPaged(), activitiesSearchInput)
+                .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
+                    { dataPact.resolve(data); }
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
+                });
             
             // only process after all requests have been resolved
             $.when(typesPact, locationsPact, dataPact)
@@ -96,7 +93,7 @@ module ViewModels.Activities {
                     {
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.getDocProxy() + data.id.toString();
+                            this.proxyImageSource = App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(),data.id);
                         };
 
                         var mapping = {
@@ -126,7 +123,7 @@ module ViewModels.Activities {
         deleteActivityById(activityId: number): void {
             $.ajax({
                 type: "DELETE",
-                url: App.Routes.WebApi.Activities.Delete.get() + activityId.toString(),
+                url: App.Routes.WebApi.Activities.del(activityId),
                 success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXHR: JQueryXHR): void
                     {
                         alert(textStatus);

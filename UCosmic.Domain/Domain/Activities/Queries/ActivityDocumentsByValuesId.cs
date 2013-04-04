@@ -5,7 +5,7 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityDocumentsByValuesId : BaseEntityQuery<ActivityDocument>, IDefineQuery<ActivityDocument[]>
     {
-        public int ValuesId { get; set; }
+        public int ValuesId { get; private set; }
 
         public ActivityDocumentsByValuesId(int inValuesId)
         {
