@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
+using FluentValidation;
 
 namespace UCosmic.Domain.Identity
 {
@@ -17,21 +18,47 @@ namespace UCosmic.Domain.Identity
         public int UserId { get; private set; }
     }
 
+    public class ValidateRolesGrantedToUserIdQuery : AbstractValidator<RolesGrantedToUserId>
+    {
+        public ValidateRolesGrantedToUserIdQuery(IProcessQueries queryProcessor)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.Principal)
+                .MustBeInAnyRole(RoleName.UserManagers)
+            ;
+
+            // only authorization agents can get roles for any user
+            When(x => !x.Principal.IsInRole(RoleName.AuthorizationAgent), () =>
+                RuleFor(x => x.UserId)
+                    .MustBeTenantUser(queryProcessor, x => x.Principal)
+                        .WithMessage(MustBeTenantUser<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.UserId)
+            );
+        }
+    }
+
     public class HandleRolesGrantedToUserIdQuery : IHandleQueries<RolesGrantedToUserId, Role[]>
     {
-        private readonly IQueryEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
 
-        public HandleRolesGrantedToUserIdQuery(IQueryEntities entities)
+        public HandleRolesGrantedToUserIdQuery(IProcessQueries queryProcessor)
         {
-            _entities = entities;
+            _queryProcessor = queryProcessor;
         }
 
         public Role[] Handle(RolesGrantedToUserId query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            return _entities.Query<Role>()
-                .EagerLoad(_entities, query.EagerLoad)
+            var internalQuery = new RolesUnfiltered(query.Principal)
+            {
+                EagerLoad = query.EagerLoad,
+                OrderBy = query.OrderBy,
+            };
+
+            var internalQueryable = _queryProcessor.Execute(internalQuery);
+
+            return internalQueryable
                 .Where(x => x.Grants.Any(y => y.User.RevisionId == query.UserId))
                 .ToArray()
             ;
