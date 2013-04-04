@@ -352,8 +352,8 @@ var ViewModels;
                             _this._loadRoleOptions(response);
                         });
                     });
-                }).fail(function (arg1, arg2, arg3) {
-                    alert('fail');
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    alert('fail ' + xhr.responseText);
                 });
             };
             return SearchResult;

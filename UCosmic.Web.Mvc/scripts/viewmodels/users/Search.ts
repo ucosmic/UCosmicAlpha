@@ -394,8 +394,8 @@ module ViewModels.Users {
                     });
                 });
             })
-            .fail((arg1: any, arg2, arg3): void => {
-                alert('fail');
+            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                alert('fail ' + xhr.responseText);
             });
         }
     }
