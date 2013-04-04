@@ -25,6 +25,8 @@ namespace UCosmic.Domain.Identity
 
         public User Handle(UserByName query)
         {
+            if (query == null) throw new ArgumentNullException("query");
+
             return _entities.Query<User>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .SingleOrDefault(x => x.Name.Equals(query.Name, StringComparison.OrdinalIgnoreCase))
