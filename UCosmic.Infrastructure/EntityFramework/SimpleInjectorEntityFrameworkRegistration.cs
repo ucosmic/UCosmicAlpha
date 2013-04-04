@@ -10,8 +10,8 @@
 #define GREENFIELD_CHANGES // uncomment this line to drop & create db only when the schema changes
 //#define GREENFIELD_ALWAYS // uncomment this line to drop & create db on every build
 //#define BROWNFIELD // uncomment this line to prevent db from being dropped & recreated
-#define SEED_SQL // uncomment this line to seed the database using SQL commands (faster)
-//#define SEED_ENTITIES // uncomment this line to seed the database using C# command invocations (slower)
+//#define SEED_SQL // uncomment this line to seed the database using SQL commands (faster)
+#define SEED_ENTITIES // uncomment this line to seed the database using C# command invocations (slower)
 #endif
 
 using System.Data.Entity;
