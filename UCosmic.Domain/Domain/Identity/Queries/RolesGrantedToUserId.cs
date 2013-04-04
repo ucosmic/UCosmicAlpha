@@ -31,8 +31,8 @@ namespace UCosmic.Domain.Identity
             // only authorization agents can get roles for any user
             When(x => !x.Principal.IsInRole(RoleName.AuthorizationAgent), () =>
                 RuleFor(x => x.UserId)
-                    .MustBeTenantUser(queryProcessor, x => x.Principal)
-                        .WithMessage(MustBeTenantUser<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.UserId)
+                    .MustBeTenantUserId(queryProcessor, x => x.Principal)
+                        .WithMessage(MustBeTenantUserId<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.UserId)
             );
         }
     }

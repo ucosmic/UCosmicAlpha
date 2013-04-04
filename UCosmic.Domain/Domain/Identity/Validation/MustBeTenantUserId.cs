@@ -6,14 +6,14 @@ using FluentValidation.Validators;
 
 namespace UCosmic.Domain.Identity
 {
-    public class MustBeTenantUser<T> : PropertyValidator
+    public class MustBeTenantUserId<T> : PropertyValidator
     {
         public const string FailMessageFormat = "User '{0}' is not authorized to perform the '{1}' action for user #{2}.";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, IPrincipal> _principal;
 
-        internal MustBeTenantUser(IProcessQueries queryProcessor, Func<T, IPrincipal> principal)
+        internal MustBeTenantUserId(IProcessQueries queryProcessor, Func<T, IPrincipal> principal)
             : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
@@ -38,12 +38,12 @@ namespace UCosmic.Domain.Identity
         }
     }
 
-    public static class MustBeTenantUserExtensions
+    public static class MustBeTenantUserIdExtensions
     {
-        public static IRuleBuilderOptions<T, int> MustBeTenantUser<T>
+        public static IRuleBuilderOptions<T, int> MustBeTenantUserId<T>
             (this IRuleBuilder<T, int> ruleBuilder, IProcessQueries queryProcessor, Func<T, IPrincipal> principal)
         {
-            return ruleBuilder.SetValidator(new MustBeTenantUser<T>(queryProcessor, principal));
+            return ruleBuilder.SetValidator(new MustBeTenantUserId<T>(queryProcessor, principal));
         }
     }
 }
