@@ -8,7 +8,8 @@ namespace UCosmic.Domain.Activities
 {
     public class MustOwnActivityDocument<T> : PropertyValidator
     {
-        public const string FailMessageFormat = "Command mutation violation by non-owner principal {0}";
+        public const string FailMessageFormat =
+            "User '{0}' is not authorized to perform this action on activity document #{1}.";
 
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _activityDocumentId;
@@ -36,7 +37,8 @@ namespace UCosmic.Domain.Activities
                                     .Where(x => x.Values.Any(
                                         y => y.Documents.Any(
                                             z => z.RevisionId == activityDocumentId)))
-                                    .SingleOrDefault(w => w.Person.User.Name == principle.Identity.Name);
+                                    .SingleOrDefault(w => w.Person.User.Name.Equals(principle.Identity.Name,
+                                                     StringComparison.OrdinalIgnoreCase));
 
             return activity != null;
         }
