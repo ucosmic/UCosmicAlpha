@@ -62,7 +62,7 @@ namespace UCosmic.Domain.Identity
 
                 // do not let security admins revoke from users outside of their tenancy
                 RuleFor(x => x.UserId)
-                    .MustBeTenantUser(entities, queryProcessor, x => x.Principal)
+                    .MustBeTenantUser(queryProcessor, x => x.Principal)
                         .WithMessage(MustBeTenantUser<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.UserId)
                 ;
             });
