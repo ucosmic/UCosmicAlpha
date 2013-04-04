@@ -26,10 +26,8 @@ namespace UCosmic.Domain.Identity
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            // principal must be authorized to revoke roles
             RuleFor(x => x.Principal)
-                .NotNull()
-                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+                // principal must be authorized to revoke roles
                 .MustBeInAnyRole(RoleName.RoleGrantors)
                     .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
@@ -51,17 +49,34 @@ namespace UCosmic.Domain.Identity
             RuleFor(x => x.RoleId)
                 .MustFindRoleById(entities)
                     .WithMessage(MustFindRoleById.FailMessageFormat, x => x.RoleId)
+
+                // each tenant must have at least one security admin
+                .MustNotRevokeOnlyGrant(queryProcessor, RoleName.SecurityAdministrator, x => x.Principal, x => x.UserId)
+                    .WithMessage(MustNotRevokeOnlyGrant<object>.FailMessageFormat, x => RoleName.SecurityAdministrator)
+
+                // system must always have at least one authorization agent
+                .MustNotRevokeOnlyGrant(queryProcessor, RoleName.AuthorizationAgent, x => x.Principal)
+                    .WithMessage(MustNotRevokeOnlyGrant<object>.FailMessageFormat, x => RoleName.AuthorizationAgent)
+
+                // cannot remove self from authorization agent role
+                .MustNotRevokeOwnGrant(queryProcessor, RoleName.AuthorizationAgent, x => x.Principal, x => x.UserId)
+                    .WithMessage(MustNotRevokeOwnGrant<object>.FailMessageFormat, x => RoleName.AuthorizationAgent)
             ;
+
             When(x => !x.Principal.IsInRole(RoleName.AuthorizationAgent), () =>
             {
-                // do not let security admins revoke non-tenant roles
                 RuleFor(x => x.RoleId)
+                    // do not let security admins revoke non-tenant roles
                     .MustBeTenantRole(entities)
                         .WithMessage(MustBeTenantRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.RoleId)
+
+                    // cannot remove self from security admin role
+                    .MustNotRevokeOwnGrant(queryProcessor, RoleName.SecurityAdministrator, x => x.Principal, x => x.UserId)
+                        .WithMessage(MustNotRevokeOwnGrant<object>.FailMessageFormat, x => RoleName.SecurityAdministrator)
                 ;
 
-                // do not let security admins revoke from users outside of their tenancy
                 RuleFor(x => x.UserId)
+                    // do not let security admins revoke from users outside of their tenancy
                     .MustBeTenantUserId(queryProcessor, x => x.Principal)
                         .WithMessage(MustBeTenantUserId<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.UserId)
                 ;

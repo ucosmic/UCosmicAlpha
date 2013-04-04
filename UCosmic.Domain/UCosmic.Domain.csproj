@@ -173,11 +173,15 @@
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Identity\Queries\RoleByName.cs" />
+    <Compile Include="Domain\Identity\Queries\RoleById.cs" />
     <Compile Include="Domain\Identity\Queries\UserById.cs" />
     <Compile Include="Domain\Identity\Queries\RolesGrantedToUserId.cs" />
     <Compile Include="Domain\Identity\Queries\RolesGrantedToUserName.cs" />
     <Compile Include="Domain\Identity\Queries\RolesUnfiltered.cs" />
     <Compile Include="Domain\Identity\Queries\RolesByKeyword.cs" />
+    <Compile Include="Domain\Identity\Validation\MustNotRevokeOwnGrant.cs" />
+    <Compile Include="Domain\Identity\Validation\MustNotRevokeOnlyGrant.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantUserId.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantUserName.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantRole.cs" />
