@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 #if AZURE
 using NGeo.Yahoo.PlaceFinder;
@@ -96,12 +97,21 @@ namespace UCosmic.Domain.Places
             int? woeId = null;
 
             // first, invoke geonames geocoder
-            var geoNames = _geoNames.FindNearbyPlaceName(new NearbyPlaceNameFinder
+            var retryCount = 0;
+            IEnumerable<Toponym> geoNames = null;
+            while (geoNames == null && retryCount < 6)
             {
-                Latitude = query.Coordinates.Latitude.Value,
-                Longitude = query.Coordinates.Longitude.Value,
-                Language = "en",
-            }).ToArray();
+                ++retryCount;
+                geoNames = _geoNames.FindNearbyPlaceName(new NearbyPlaceNameFinder
+                {
+                    Latitude = query.Coordinates.Latitude.Value,
+                    Longitude = query.Coordinates.Longitude.Value,
+                    Language = "en",
+                }).ToArray();
+            }
+            if (geoNames == null)
+                throw new ApplicationException("Querying GeoNames service resulted in null result.");
+            geoNames = geoNames.ToArray();
 
             foreach (var geoName in geoNames)
             {
