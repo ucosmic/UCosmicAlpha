@@ -16,5 +16,10 @@ namespace UCosmic.Domain.Identity
         public string Description { get; protected internal set; }
 
         public virtual ICollection<RoleGrant> Grants { get; protected internal set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
