@@ -27,12 +27,13 @@ namespace UCosmic.Domain.Identity
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            // principal must be authorized to grant roles
             RuleFor(x => x.Principal)
                 .NotNull()
                     .WithMessage(MustNotHaveNullPrincipal.FailMessage)
-                .Must(principal => principal.IsInAnyRole(RoleName.RoleGrantors))
-                    .WithMessage(MustBeAuthorized.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
+
+                // principal must be authorized to grant roles
+                .MustBeInAnyRole(RoleName.RoleGrantors)
+                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
             RuleFor(x => x.Principal.Identity.Name)
                 // principal.identity.name cannot be null or empty
@@ -53,26 +54,21 @@ namespace UCosmic.Domain.Identity
                 .MustFindRoleById(entities)
                     .WithMessage(MustFindRoleById.FailMessageFormat, x => x.RoleId)
             ;
-            RuleFor(x => x)
-                .Must(command =>
-                {
-                    if (!command.Principal.IsInRole(RoleName.AuthorizationAgent))
-                    {
-                        // do not let security admins add to non-tenant roles
-                        var roleToGrant = entities.Query<Role>().Single(x => x.RevisionId == command.RoleId);
-                        if (RoleName.NonTenantRoles.Contains(roleToGrant.Name)) return false;
 
-                        // do not let security admins grant to users outside of their tenancy
-                        var tenantUserIds = queryProcessor.Execute(new MyUsers(command.Principal)).Select(x => x.RevisionId);
-                        var userToGrant = entities.Query<User>().Single(x => x.RevisionId == command.UserId);
-                        if (!tenantUserIds.Contains(userToGrant.RevisionId)) return false;
-                    }
+            When(x => !x.Principal.IsInRole(RoleName.AuthorizationAgent), () =>
+            {
+                // do not let security admins grant non-tenant roles
+                RuleFor(x => x.RoleId)
+                    .MustBeTenantRole(entities)
+                        .WithMessage(MustBeTenantRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.RoleId)
+                ;
 
-                    return true;
-                })
-                .WithName(typeof(GrantRoleToUser).Name)
-                .WithMessage(MustBeAuthorized.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
-            ;
+                // do not let security admins grant to users outside of their tenancy
+                RuleFor(x => x.UserId)
+                    .MustBeTenantUser(entities, queryProcessor, x => x.Principal)
+                        .WithMessage(MustBeTenantUser<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.UserId)
+                ;
+            });
         }
     }
 
