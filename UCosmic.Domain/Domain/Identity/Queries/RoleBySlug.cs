@@ -27,6 +27,8 @@ namespace UCosmic.Domain.Identity
 
         public Role Handle(RoleBySlug query)
         {
+            if (query == null) throw new ArgumentNullException("query");
+
             return _entities.Query<Role>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .SingleOrDefault(x => x.Name.Equals(query.RoleName, StringComparison.OrdinalIgnoreCase))

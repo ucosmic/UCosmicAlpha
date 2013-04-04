@@ -32,6 +32,8 @@ namespace UCosmic.Domain.Identity
 
         public IQueryable<User> Handle(MyUsers query)
         {
+            if (query == null) throw new ArgumentNullException("query");
+
             var results = _entities.Query<User>()
                 .EagerLoad(_entities, query.EagerLoad);
 

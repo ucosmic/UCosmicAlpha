@@ -30,6 +30,8 @@ namespace UCosmic.Domain.Identity
 
         public PagedQueryResult<User> Handle(MyUsersByKeyword query)
         {
+            if (query == null) throw new ArgumentNullException("query");
+
             var internalQuery = new MyUsers(query.Principal)
             {
                 EagerLoad = query.EagerLoad,

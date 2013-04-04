@@ -26,6 +26,8 @@ namespace UCosmic.Domain.Identity
 
         public IQueryable<Role> Handle(RolesUnfiltered query)
         {
+            if (query == null) throw new ArgumentNullException("query");
+
             var results = _entities.Query<Role>()
                 .EagerLoad(_entities, query.EagerLoad);
 

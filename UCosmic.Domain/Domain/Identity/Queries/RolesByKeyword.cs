@@ -29,6 +29,8 @@ namespace UCosmic.Domain.Identity
 
         public PagedQueryResult<Role> Handle(RolesByKeyword query)
         {
+            if (query == null) throw new ArgumentNullException("query");
+
             var internalQuery = new RolesUnfiltered(query.Principal)
             {
                 EagerLoad = query.EagerLoad,
