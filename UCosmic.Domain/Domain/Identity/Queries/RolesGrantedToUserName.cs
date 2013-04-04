@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace UCosmic.Domain.Identity
 {
-    public class RolesGrantedTo : BaseEntitiesQuery<Role>, IDefineQuery<Role[]>
+    public class RolesGrantedToUserName : BaseEntitiesQuery<Role>, IDefineQuery<Role[]>
     {
-        public RolesGrantedTo(string userName)
+        public RolesGrantedToUserName(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 throw new ArgumentException("User name cannot be null or whitespace.", "userName");
@@ -16,7 +16,7 @@ namespace UCosmic.Domain.Identity
         public string UserName { get; private set; }
     }
 
-    public class HandleRolesGrantedToUserNameQuery : IHandleQueries<RolesGrantedTo, Role[]>
+    public class HandleRolesGrantedToUserNameQuery : IHandleQueries<RolesGrantedToUserName, Role[]>
     {
         private readonly IQueryEntities _entities;
 
@@ -25,7 +25,7 @@ namespace UCosmic.Domain.Identity
             _entities = entities;
         }
 
-        public Role[] Handle(RolesGrantedTo query)
+        public Role[] Handle(RolesGrantedToUserName query)
         {
             if (query == null) throw new ArgumentNullException("query");
 

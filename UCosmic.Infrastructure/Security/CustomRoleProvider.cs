@@ -22,7 +22,7 @@ namespace UCosmic.Security
                 var handler = new HandleRolesGrantedToUserNameQuery(entities);
 
                 // find roles granted to this user
-                var roles = handler.Handle(new RolesGrantedTo(userName));
+                var roles = handler.Handle(new RolesGrantedToUserName(userName));
 
                 // return the role names
                 var roleNames = roles.Select(role => role.Name)

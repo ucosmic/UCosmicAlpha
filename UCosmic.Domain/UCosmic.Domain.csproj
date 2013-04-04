@@ -174,6 +174,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
     <Compile Include="Domain\Identity\Queries\RolesGrantedToUserId.cs" />
+    <Compile Include="Domain\Identity\Queries\RolesGrantedToUserName.cs" />
     <Compile Include="Domain\Identity\Queries\RolesUnfiltered.cs" />
     <Compile Include="Domain\Identity\Queries\RolesByKeyword.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
@@ -403,7 +404,6 @@
     <Compile Include="Domain\Identity\Entities\RoleGrant.cs" />
     <Compile Include="Domain\Identity\Entities\SubjectNameIdentifier.cs" />
     <Compile Include="Domain\Identity\Entities\User.cs" />
-    <Compile Include="Domain\Identity\Queries\RolesGrantedTo.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreement.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementConfiguration.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementContact.cs" />
