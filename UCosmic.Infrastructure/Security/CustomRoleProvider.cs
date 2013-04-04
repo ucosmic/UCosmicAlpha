@@ -18,17 +18,13 @@ namespace UCosmic.Security
         {
             using (var entities = GetEntities())
             {
-                // create a new handler
-                var handler = new HandleRolesGrantedToUserNameQuery(entities);
-
-                // find roles granted to this user
-                var roles = handler.Handle(new RolesGrantedToUserName(userName));
-
-                // return the role names
-                var roleNames = roles.Select(role => role.Name)
+                return entities.Set<Role>()
+                    .AsNoTracking()
+                    .Where(x => x.Grants.Any(y => y.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)))
+                    .Select(x => x.Name)
                     .Distinct()
-                    .ToArray();
-                return roleNames;
+                    .ToArray()
+                ;
             }
         }
 

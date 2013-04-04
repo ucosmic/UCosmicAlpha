@@ -279,7 +279,7 @@ namespace UCosmic.Web.Mvc.Controllers
                         }
                     }
 
-                    var roleNames = _queryProcessor.Execute(new RolesGrantedToUserName(userImpersonating.Identity.Name)).Select(x => x.Name);
+                    var roleNames = _queryProcessor.Execute(new RolesGrantedToUserName(userImpersonating, userImpersonating.Identity.Name)).Select(x => x.Name);
                     Session.UserImpersonating(userImpersonating, roleNames);
                     _userSigner.SignOn(userName);
                     TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", userName));

@@ -179,6 +179,7 @@
     <Compile Include="Domain\Identity\Queries\RolesUnfiltered.cs" />
     <Compile Include="Domain\Identity\Queries\RolesByKeyword.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantUserId.cs" />
+    <Compile Include="Domain\Identity\Validation\MustBeTenantUserName.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeInAnyRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
