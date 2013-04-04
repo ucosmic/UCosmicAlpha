@@ -172,6 +172,7 @@
     <Compile Include="EntityFramework\Fluent\People.cs" />
     <Compile Include="EntityFramework\IOptimizeDatabase.cs" />
     <Compile Include="EntityFramework\SqlDatabaseOptimizer.cs" />
+    <Compile Include="FluentValidation\FluentValidationQueryDecorator.cs" />
     <Compile Include="FluentValidation\FluentValidationCommandDecorator.cs" />
     <Compile Include="FluentValidation\SimpleInjectorFluentValidationRegistration.cs" />
     <Compile Include="Configuration\AppSettingsKey.cs" />

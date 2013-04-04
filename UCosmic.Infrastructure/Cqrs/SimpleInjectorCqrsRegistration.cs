@@ -17,6 +17,8 @@ namespace UCosmic.Cqrs
             container.RegisterSingle<SimpleInjectorQueryProcessor>();
             container.Register<IProcessQueries>(container.GetInstance<SimpleInjectorQueryProcessor>);
             container.RegisterManyForOpenGeneric(typeof(IHandleQueries<,>), assemblies);
+            container.RegisterDecorator(typeof(IHandleQueries<,>),
+                typeof(FluentValidationQueryDecorator<,>));
         }
 
         public static void RegisterEventProcessor(this Container container, params Assembly[] assemblies)
