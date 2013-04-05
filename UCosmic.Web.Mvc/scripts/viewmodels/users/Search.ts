@@ -1,4 +1,5 @@
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
+/// <reference path="../../jquery/jqueryui-1.9.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
@@ -202,6 +203,7 @@ module ViewModels.Users {
         personDisplayName: KnockoutObservableString;
         roles: KnockoutObservableArray;
         roleOptions: KnockoutObservableArray = ko.observableArray();
+        roleOptionsCaption: KnockoutObservableString = ko.observable('[Loading...]');
         selectedRoleOption: KnockoutObservableNumber = ko.observable();
         isRoleGrantDisabled: KnockoutComputed;
         roleSpinner = new Spinner({ delay: 0, isVisible: true });
@@ -288,6 +290,11 @@ module ViewModels.Users {
 
         private _loadRoleOptions(results: any): void {
             ko.mapping.fromJS(results.items, {}, this.roleOptions);
+            this.roleOptionsCaption('[Select access to grant...]');
+            this._syncRoleOptions();
+        }
+
+        private _syncRoleOptions(): void {
             // remove roles that have already been granted
             for (var i = 0; i < this.roleOptions().length; i++) {
                 var option = this.roleOptions()[i];
@@ -362,6 +369,9 @@ module ViewModels.Users {
             })
             .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
                 App.flasher.flash(response);
+                this.roleOptions.remove((item: any): bool => {
+                    return item.id() == this.selectedRoleOption();
+                });
                 this.pullRoleGrants()
                 .done((response: any[]): void => {
                     this.loadRoleGrants(response);
@@ -373,6 +383,7 @@ module ViewModels.Users {
             })
             .fail((arg1: any, arg2, arg3): void => {
                 alert('fail');
+                this.roleSpinner.stop();
             });
         }
 
@@ -396,6 +407,7 @@ module ViewModels.Users {
             })
             .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                 alert('fail ' + xhr.responseText);
+                this.roleSpinner.stop();
             });
         }
     }
@@ -403,6 +415,7 @@ module ViewModels.Users {
     export class RoleGrant {
         private _owner: SearchResult;
         id: KnockoutObservableNumber;
+        $confirmPurgeDialog: JQuery;
 
         constructor(values: any, owner: SearchResult) {
             this._owner = owner;
@@ -412,7 +425,28 @@ module ViewModels.Users {
         }
 
         revokeRole(): void {
-            this._owner.revokeRole(this.id());
+            this.$confirmPurgeDialog.dialog({
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Yes, confirm delete',
+                        click: (): void => {
+                            this._owner.revokeRole(this.id());
+                            this.$confirmPurgeDialog.dialog('close');
+                        }
+                    },
+                    {
+                        text: 'No, cancel delete',
+                        click: (): void => {
+                            this.$confirmPurgeDialog.dialog('close');
+                        },
+                        'data-css-link': true
+                    }
+                ]
+            });
         }
     }
 }
