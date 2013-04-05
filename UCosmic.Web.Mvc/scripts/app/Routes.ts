@@ -41,6 +41,15 @@ module App.Routes {
                         var url = 'users/' + userId + '/roles';
                         return makeUrl(url);
                     }
+
+                    export function put(userId: number, roleId: number): string {
+                        var url = 'users/' + userId + '/roles/' + roleId;
+                        return makeUrl(url);
+                    }
+
+                    export function del(userId: number, roleId: number): string {
+                        return put(userId, roleId);
+                    }
                 }
             }
 
@@ -50,16 +59,6 @@ module App.Routes {
                     if (roleId)
                         url += '/' + roleId;
                     return makeUrl(url);
-                }
-
-                export module Grants {
-                    export function put (roleId: number, userId: number): string {
-                        var url = 'roles/' + roleId + '/users/' + userId;
-                        return makeUrl(url);
-                    }
-                    export function del (roleId: number, userId: number): string {
-                        return put(roleId, userId);
-                    }
                 }
             }
         }

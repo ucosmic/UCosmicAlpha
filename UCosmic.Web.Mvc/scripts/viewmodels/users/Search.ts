@@ -355,7 +355,7 @@ module ViewModels.Users {
 
         grantRole(): void {
             this.roleSpinner.start();
-            var url = App.Routes.WebApi.Identity.Roles.Grants.put(this.selectedRoleOption(), this.id());
+            var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
             $.ajax({
                 url: url,
                 type: 'PUT'
@@ -378,7 +378,7 @@ module ViewModels.Users {
 
         revokeRole(roleId: number): void {
             this.roleSpinner.start();
-            var url = App.Routes.WebApi.Identity.Roles.Grants.del(roleId, this.id());
+            var url = App.Routes.WebApi.Identity.Users.Roles.del(this.id(), roleId);
             $.ajax({
                 url: url,
                 type: 'DELETE'

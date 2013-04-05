@@ -42,6 +42,15 @@ var App;
                             return makeUrl(url);
                         }
                         Roles.get = get;
+                        function put(userId, roleId) {
+                            var url = 'users/' + userId + '/roles/' + roleId;
+                            return makeUrl(url);
+                        }
+                        Roles.put = put;
+                        function del(userId, roleId) {
+                            return put(userId, roleId);
+                        }
+                        Roles.del = del;
                     })(Users.Roles || (Users.Roles = {}));
                     var Roles = Users.Roles;
                 })(Identity.Users || (Identity.Users = {}));
@@ -55,18 +64,6 @@ var App;
                         return makeUrl(url);
                     }
                     Roles.get = get;
-                    (function (Grants) {
-                        function put(roleId, userId) {
-                            var url = 'roles/' + roleId + '/users/' + userId;
-                            return makeUrl(url);
-                        }
-                        Grants.put = put;
-                        function del(roleId, userId) {
-                            return put(roleId, userId);
-                        }
-                        Grants.del = del;
-                    })(Roles.Grants || (Roles.Grants = {}));
-                    var Grants = Roles.Grants;
                 })(Identity.Roles || (Identity.Roles = {}));
                 var Roles = Identity.Roles;
             })(WebApi.Identity || (WebApi.Identity = {}));
