@@ -10,19 +10,18 @@ namespace UCosmic.SeedData
     {
         struct FileMimeMapping
         {
-            public string fileName;
-            public string mimeType;
+            public string FileName;
+            public string MimeType;
         };
 
-        private ICommandEntities _entities;
+        private readonly ICommandEntities _entities;
 
-        public ImageEntitySeeder(IProcessQueries queryProcessor
-                                , IHandleCommands<CreateImage> createImage
+        public ImageEntitySeeder(IHandleCommands<CreateImage> createImage
                                 , IHandleCommands<CreateProxyImageMimeTypeXRef> createProxyImageMimeTypeXRef
                                 , ICommandEntities entities
                                 , IUnitOfWork unitOfWork
             )
-            : base(queryProcessor, createImage, createProxyImageMimeTypeXRef, unitOfWork)
+            : base(createImage, createProxyImageMimeTypeXRef, unitOfWork)
         {
             _entities = entities;
         }
@@ -34,22 +33,22 @@ namespace UCosmic.SeedData
             FileMimeMapping[] fileMimeMappings =
             {
                 /* NOTE: 'GenericDocument' name is used in controllers, if you change here, do a search. */
-                new FileMimeMapping { fileName = "GenericDocument.png",     mimeType = "text/plain" },
-                new FileMimeMapping { fileName = "PDFDocument.png",         mimeType = "application/pdf" },
-                new FileMimeMapping { fileName = "Word-2013.png",           mimeType = "application/msword" },
-                new FileMimeMapping { fileName = "Word-2013.png",           mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
-                new FileMimeMapping { fileName = "Powerpoint-2013.png",     mimeType = "application/vnd.ms-powerpoint" },
-                new FileMimeMapping { fileName = "Powerpoint-2013.png",     mimeType = "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+                new FileMimeMapping { FileName = "GenericDocument.png",     MimeType = "text/plain" },
+                new FileMimeMapping { FileName = "PDFDocument.png",         MimeType = "application/pdf" },
+                new FileMimeMapping { FileName = "Word-2013.png",           MimeType = "application/msword" },
+                new FileMimeMapping { FileName = "Word-2013.png",           MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+                new FileMimeMapping { FileName = "Powerpoint-2013.png",     MimeType = "application/vnd.ms-powerpoint" },
+                new FileMimeMapping { FileName = "Powerpoint-2013.png",     MimeType = "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
             };
 
             foreach (FileMimeMapping mapping in fileMimeMappings)
             {
-                string filePath = basePath + mapping.fileName;
+                string filePath = basePath + mapping.FileName;
                 FileInfo info = new FileInfo(filePath);
                 string name = info.Name.Substring(0, info.Name.IndexOf('.'));
                 if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
                 {
-                    using (Stream fileStream = File.OpenRead(basePath + mapping.fileName))
+                    using (Stream fileStream = File.OpenRead(basePath + mapping.FileName))
                     {
                         Image proxy = Seed(new CreateImage
                         {
@@ -66,7 +65,7 @@ namespace UCosmic.SeedData
 
                         Seed(new CreateProxyImageMimeTypeXRef
                         {
-                            MimeType = mapping.mimeType,
+                            MimeType = mapping.MimeType,
                             ImageId = proxy.Id
                         });
                     }
@@ -111,18 +110,15 @@ namespace UCosmic.SeedData
 
     public abstract class BaseImageEntitySeeder : ISeedData
     {
-        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateImage> _createImage;
         private readonly IHandleCommands<CreateProxyImageMimeTypeXRef> _createProxyImageMimeTypeXRef;
         private readonly IUnitOfWork _unitOfWork;
 
-        protected BaseImageEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateImage> createImage
+        protected BaseImageEntitySeeder(IHandleCommands<CreateImage> createImage
             , IHandleCommands<CreateProxyImageMimeTypeXRef> createProxyImageMimeTypeXRef
             , IUnitOfWork unitOfWork
         )
         {
-            _queryProcessor = queryProcessor;
             _createImage = createImage;
             _createProxyImageMimeTypeXRef = createProxyImageMimeTypeXRef;
             _unitOfWork = unitOfWork;

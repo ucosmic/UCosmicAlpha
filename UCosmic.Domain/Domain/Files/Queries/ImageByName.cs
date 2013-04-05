@@ -5,12 +5,12 @@ namespace UCosmic.Domain.Files
 {
     public class ImageByName : BaseEntityQuery<Image>, IDefineQuery<Image>
     {
-        public string name { get; set; }
+        public string Name { get; private set; }
 
         public ImageByName(string inName)
         {
             if (String.IsNullOrEmpty(inName)) throw new ArgumentNullException("inName");
-            name = inName;
+            Name = inName;
         }
     }
 
@@ -29,7 +29,7 @@ namespace UCosmic.Domain.Files
 
             return _entities.Query<Image>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault(i => i.Name == query.name);
+                .SingleOrDefault(i => i.Name == query.Name);
         }
     }
 }

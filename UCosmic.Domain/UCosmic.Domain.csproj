@@ -116,7 +116,6 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
-    <Compile Include="Domain\Activities\Commands\CopyMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />

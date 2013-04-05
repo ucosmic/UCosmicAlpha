@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Mvc;
 using Newtonsoft.Json;
 using UCosmic.Web.Mvc.Models;
 

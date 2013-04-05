@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
@@ -28,10 +26,19 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             ActivityValues activityValues = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.ActivityValuesId);
-            if (activityValues == null) { throw new Exception("ActivityValues Id " + command.ActivityValuesId.ToString() + " was not found."); }
+
+            if (activityValues == null)
+            {
+                // TODO: check this in command validator
+                throw new Exception(string.Format("ActivityValues Id '{0}' was not found.", command.ActivityValuesId));
+            }
 
             Place place = _entities.Get<Place>().Single(x => x.RevisionId == command.PlaceId);
-            if (place == null) { throw new Exception("Place Id " + command.PlaceId.ToString() + " was not found."); }
+            if (place == null)
+            {
+                // TODO: check this in command validator
+                throw new Exception(string.Format("Place Id '{0}' was not found.", command.PlaceId));
+            }
 
             var activityLocation = new ActivityLocation
             {

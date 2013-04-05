@@ -5,12 +5,12 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityDocumentById : BaseEntityQuery<ActivityDocument>, IDefineQuery<ActivityDocument>
     {
-        public int id;
+        public int Id { get; private set; }
 
         public ActivityDocumentById(int inId)
         {
             if (inId == 0) throw new ArgumentNullException("inId");
-            id = inId;
+            Id = inId;
         }
     }
 
@@ -29,7 +29,7 @@ namespace UCosmic.Domain.Activities
 
             var result = _entities.Query<ActivityDocument>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault(x => x.RevisionId == query.id)
+                .SingleOrDefault(x => x.RevisionId == query.Id)
             ;
 
             return result;

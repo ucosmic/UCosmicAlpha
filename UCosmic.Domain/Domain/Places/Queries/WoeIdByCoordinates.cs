@@ -81,7 +81,6 @@ namespace UCosmic.Domain.Places
 
         public HandleFakeWoeIdByCoordinatesQuery(IContainGeoNames geoNames
             , IContainGeoPlanet geoPlanet
-            , IProcessQueries queryProcessor
         )
         {
             _geoNames = geoNames;

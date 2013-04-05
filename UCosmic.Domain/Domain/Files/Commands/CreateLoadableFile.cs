@@ -45,8 +45,8 @@ namespace UCosmic.Domain.Files
 
             string title = command.Title;
             BinaryReader reader = null;
-            long length = 0;
-            byte[] contents = null;
+            long length;
+            byte[] contents;
 
             try
             {

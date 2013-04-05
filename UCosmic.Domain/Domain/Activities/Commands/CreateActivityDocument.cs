@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using FluentValidation;
 using UCosmic.Domain.Files;
@@ -48,7 +47,8 @@ namespace UCosmic.Domain.Activities
             ActivityValues activityValues = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.ActivityValuesId);
             if (activityValues == null)
             {
-                throw new Exception("ActivityValues Id " + command.ActivityValuesId.ToString() + " was not found.");
+                // TODO: check this in command validator
+                throw new Exception(string.Format("ActivityValues Id '{0}' was not found.", command.ActivityValuesId));
             }
 
             if (command.FileId.HasValue && (command.FileId.Value != 0))
@@ -56,16 +56,18 @@ namespace UCosmic.Domain.Activities
                 LoadableFile loadableFile = _entities.Get<LoadableFile>().Single(x => x.Id == command.FileId.Value);
                 if (loadableFile == null)
                 {
-                    throw new Exception("LoadableFile Id " + command.FileId.ToString() + " was not found.");
+                    // TODO: check this in command validator
+                    throw new Exception(string.Format("LoadableFile Id '{0}' was not found.", command.FileId));
                 }
             }
 
             if (command.ImageId.HasValue && (command.ImageId.Value != 0))
             {
-                UCosmic.Domain.Files.Image image = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Id == command.ImageId.Value);
+                Image image = _entities.Get<Image>().Single(x => x.Id == command.ImageId.Value);
                 if (image == null)
                 {
-                    throw new Exception("Image Id " + command.ImageId.ToString() + " was not found.");
+                    // TODO: check this in command validator
+                    throw new Exception(string.Format("Image Id '{0}' was not found.", command.ImageId));
                 }
             }
 

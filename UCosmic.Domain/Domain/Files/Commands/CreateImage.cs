@@ -5,7 +5,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using FluentValidation;
-using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.Files
 {
@@ -22,7 +21,7 @@ namespace UCosmic.Domain.Files
 
         public bool Constrained { get; set; }
 
-        public UCosmic.Domain.Files.Image CreatedImage { get; set; }
+        public Image CreatedImage { get; set; }
     }
 
     public class ValidateCreateImageCommand : AbstractValidator<CreateImage>
@@ -53,19 +52,17 @@ namespace UCosmic.Domain.Files
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            System.Drawing.Image unprocessedImage = null;
+            System.Drawing.Image unprocessedImage = System.Drawing.Image.FromStream(command.SourceStream);
 
-            unprocessedImage = System.Drawing.Image.FromStream(command.SourceStream);
-
-            System.Drawing.Imaging.ImageFormat toFormat = unprocessedImage.RawFormat;
+            ImageFormat toFormat; // = unprocessedImage.RawFormat;
 
             if (command.MimeType == "image/jpeg")
             {
-                toFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                toFormat = ImageFormat.Jpeg;
             }
             else if (command.MimeType == "image/png")
             {
-                toFormat = System.Drawing.Imaging.ImageFormat.Png;
+                toFormat = ImageFormat.Png;
             }
             else
             {
@@ -75,7 +72,7 @@ namespace UCosmic.Domain.Files
             byte[] processedImage =
                 Resize(unprocessedImage, command.Width, command.Height, toFormat, command.Constrained);
 
-            UCosmic.Domain.Files.Image image = new Image
+            Image image = new Image
             {
                 Data = processedImage,
                 Title = command.Title,
@@ -119,34 +116,27 @@ namespace UCosmic.Domain.Files
 
             int srcWidth = inSourceImage.Width;
             int srcHeight = inSourceImage.Height;
-            int dstWidth = 0;
-            int dstHeight = 0;
-            int dstCanvasWidth = 0;
-            int dstCanvasHeight = 0;
-            int x = 0;
-            int y = 0;
-            float scale = 0;
-            System.Drawing.Image destImage = null;
+            float scale;
 
             if (srcWidth > srcHeight)
             {
-                scale = (float)inDestCanvasWidth / (float)srcWidth;
+                scale = (float)inDestCanvasWidth / srcWidth;
             }
             else
             {
-                scale = (float)inDestCanvasHeight / (float)srcHeight;
+                scale = (float)inDestCanvasHeight / srcHeight;
             }
 
-            dstWidth = (int)((float)srcWidth * scale);
-            dstHeight = (int)((float)srcHeight * scale);
+            int dstWidth = (int)(srcWidth * scale);
+            int dstHeight = (int)(srcHeight * scale);
 
-            dstCanvasWidth = inConstrained ? inDestCanvasWidth : dstWidth;
-            dstCanvasHeight = inConstrained ? inDestCanvasHeight : dstHeight;
+            int dstCanvasWidth = inConstrained ? inDestCanvasWidth : dstWidth;
+            int dstCanvasHeight = inConstrained ? inDestCanvasHeight : dstHeight;
 
-            x = (dstCanvasWidth - dstWidth) / 2;
-            y = (dstCanvasHeight - dstHeight) / 2;
+            int x = (dstCanvasWidth - dstWidth) / 2;
+            int y = (dstCanvasHeight - dstHeight) / 2;
 
-            destImage = new Bitmap(dstCanvasWidth, dstCanvasHeight);
+            System.Drawing.Image destImage = new Bitmap(dstCanvasWidth, dstCanvasHeight);
 
             Graphics g = Graphics.FromImage(destImage);
             g.CompositingQuality = CompositingQuality.HighQuality;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
@@ -27,10 +26,18 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             ActivityValues activityValues = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.ActivityValuesId);
-            if (activityValues == null) { throw new Exception("ActivityValues Id " + command.ActivityValuesId.ToString() + " was not found."); }
+            if (activityValues == null)
+            {
+                // TODO: check this in command validator
+                throw new Exception(string.Format("ActivityValues Id '{0}' was not found.", command.ActivityValuesId));
+            }
 
             EmployeeActivityType employeeActivityType = _entities.Get<EmployeeActivityType>().Single(x => x.Id == command.EmployeeActivityTypeId);
-            if (employeeActivityType == null) { throw new Exception("EmployeeActivityType Id " + command.EmployeeActivityTypeId.ToString() + " was not found."); }
+            if (employeeActivityType == null)
+            {
+                // TODO: check this in command validator
+                throw new Exception(string.Format("EmployeeActivityType Id '{0}' was not found.", command.EmployeeActivityTypeId));
+            }
 
             var activityType = new ActivityType
             {

@@ -10,7 +10,7 @@ namespace UCosmic.Domain.Activities
         public virtual LoadableFile File { get; protected internal set; }
         public int? FileId { get; protected internal set; }
 
-        public virtual UCosmic.Domain.Files.Image Image { get; protected internal set; }
+        public virtual Image Image { get; protected internal set; }
         public int? ImageId { get; protected internal set; }
 
         public string ModeText { get; private set; }

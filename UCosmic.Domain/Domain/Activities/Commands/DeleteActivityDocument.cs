@@ -45,13 +45,16 @@ namespace UCosmic.Domain.Activities
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        //private readonly IProcessEvents _eventProcessor;
 
-        public HandleDeleteActivityDocumentCommand(ICommandEntities entities, IUnitOfWork unitOfWork, IProcessEvents eventProcessor)
+        public HandleDeleteActivityDocumentCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            //, IProcessEvents eventProcessor
+        )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            //_eventProcessor = eventProcessor;
         }
 
         public void Handle(DeleteActivityDocument command)
@@ -66,7 +69,7 @@ namespace UCosmic.Domain.Activities
 
             if (activityDocument.ImageId.HasValue && (activityDocument.ImageId.Value != 0))
             {
-                var image = _entities.Get<UCosmic.Domain.Files.Image>()
+                var image = _entities.Get<Image>()
                                      .SingleOrDefault(x => x.Id == activityDocument.ImageId.Value);
                 _entities.Purge(image);
             }

@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using UCosmic.Domain.Activities;
+﻿using UCosmic.Domain.Activities;
 
 namespace UCosmic.EntityFramework
 {

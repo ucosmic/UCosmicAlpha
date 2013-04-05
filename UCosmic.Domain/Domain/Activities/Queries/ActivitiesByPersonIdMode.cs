@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Principal;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
@@ -27,7 +24,7 @@ namespace UCosmic.Domain.Activities
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            IQueryable<Activity> results = null;
+            IQueryable<Activity> results;
 
             if (!String.IsNullOrEmpty(query.ModeText))
             {

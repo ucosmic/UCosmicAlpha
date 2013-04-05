@@ -5,12 +5,12 @@ namespace UCosmic.Domain.Files
 {
     public class ProxyImageByMimeType : BaseEntityQuery<Image>, IDefineQuery<Image>
     {
-        public string mimeType { get; set; }
+        public string MimeType { get; set; }
 
         public ProxyImageByMimeType(string inMimeType)
         {
             if (String.IsNullOrEmpty(inMimeType)) throw new ArgumentNullException("inMimeType");
-            mimeType = inMimeType;
+            MimeType = inMimeType;
         }
     }
 
@@ -28,7 +28,7 @@ namespace UCosmic.Domain.Files
             if (query == null) throw new ArgumentNullException("query");
 
             ProxyImageMimeTypeXRef xref = _entities.Query<ProxyImageMimeTypeXRef>()
-                .SingleOrDefault(i => i.MimeType == query.mimeType );
+                .SingleOrDefault(i => i.MimeType == query.MimeType);
 
             return xref != null
                        ? _entities.Query<Image>()

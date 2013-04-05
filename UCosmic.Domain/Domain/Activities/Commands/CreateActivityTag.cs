@@ -35,7 +35,11 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             ActivityValues activityValues = _entities.Get<ActivityValues>().SingleOrDefault(x => x.RevisionId == command.ActivityValuesId);
-            if (activityValues == null) { throw new Exception("Activity Values Id " + command.ActivityValuesId.ToString() + " was not found"); }
+            if (activityValues == null)
+            {
+                // TODO: check this in command validator
+                throw new Exception(string.Format("Activity Values Id '{0}' was not found", command.ActivityValuesId));
+            }
 
             Person person = _entities.Get<Person>()
                                      .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);

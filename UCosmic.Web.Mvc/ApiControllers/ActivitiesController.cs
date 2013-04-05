@@ -42,7 +42,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("locations")]
-        public ICollection<ActivityLocationNameApiModel> GetLocations()
+        public IEnumerable<ActivityLocationNameApiModel> GetLocations()
         {
             var activityPlaces = _queryProcessor.Execute(new FilteredPlaces
             {
@@ -51,7 +51,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 IsEarth = true
             });
 
-            var model = Mapper.Map<ICollection<Place>, ICollection<ActivityLocationNameApiModel>>(activityPlaces);
+            var model = Mapper.Map<ActivityLocationNameApiModel[]>(activityPlaces);
 
             return model;
         }        
@@ -72,7 +72,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //    return badRequest;
             //}
 
-            return Request.CreateResponse(HttpStatusCode.OK, "Activity " + id.ToString() + " was deleted successfully.");
+            return Request.CreateResponse(HttpStatusCode.OK, string.Format("Activity '{0}' was deleted successfully.", id));
         }
 
         [GET("docproxy/{docId}")]
@@ -101,14 +101,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             /* If the ActivityDocument has no image, let's use the mime type image proxy. */
             else if (document.File != null)
             {
-                UCosmic.Domain.Files.Image dbImage = _queryProcessor.Execute(new ProxyImageByMimeType(document.File.MimeType));
+                Image dbImage = _queryProcessor.Execute(new ProxyImageByMimeType(document.File.MimeType));
                 contentData = (dbImage != null) ? dbImage.Data : null;
             }
 
             /* Return the generic document proxy, if we haven't found one at this point. */
             if (contentData == null)
             {
-                UCosmic.Domain.Files.Image dbImage = _queryProcessor.Execute(new ImageByName("GenericDocument"));
+                Image dbImage = _queryProcessor.Execute(new ImageByName("GenericDocument"));
                 contentData = (dbImage != null) ? dbImage.Data : null;
             }
 

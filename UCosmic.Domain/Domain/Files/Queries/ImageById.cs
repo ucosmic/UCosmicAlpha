@@ -5,12 +5,12 @@ namespace UCosmic.Domain.Files
 {
     public class ImageById : BaseEntityQuery<Image>, IDefineQuery<Image>
     {
-        public int id { get; set; }
+        public int Id { get; private set; }
 
         public ImageById(int inId)
         {
             if (inId == 0) throw new ArgumentNullException("inId");
-            id = inId;
+            Id = inId;
         }
     }
 
@@ -29,7 +29,7 @@ namespace UCosmic.Domain.Files
 
             return _entities.Query<Image>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault(i => i.Id == query.id);
+                .SingleOrDefault(i => i.Id == query.Id);
         }
     }
 }

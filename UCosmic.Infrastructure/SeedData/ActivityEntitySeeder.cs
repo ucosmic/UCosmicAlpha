@@ -58,7 +58,7 @@ namespace UCosmic.SeedData
                     _queryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
-                CreateMyNewActivity createMyNewActivityCommand = null;
+                CreateMyNewActivity createMyNewActivityCommand;
 
 
                 // ACTIVITY 1
@@ -369,7 +369,7 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912").Id,
+                        ImageId = _entities.Get<Image>().Single(x => x.Name == "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912").Id,
                         Mode = activity.Mode,
                         Title = "Photo of the site"
                     });
@@ -377,7 +377,7 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "A44FAB3B-DEBA-4F14-8965-E379569066A9").Id,
+                        ImageId = _entities.Get<Image>().Single(x => x.Name == "A44FAB3B-DEBA-4F14-8965-E379569066A9").Id,
                         Mode = activity.Mode,
                         Title = "Grads working hard"
                     });
@@ -385,7 +385,7 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B").Id,
+                        ImageId = _entities.Get<Image>().Single(x => x.Name == "C0DA4900-762B-4B26-AE03-843CBB7C0E7B").Id,
                         Mode = activity.Mode,
                         Title = "Map of the incident"
                     });
@@ -393,7 +393,7 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "E4E53300-08D3-47C0-954C-BF15EF54F0A3").Id,
+                        ImageId = _entities.Get<Image>().Single(x => x.Name == "E4E53300-08D3-47C0-954C-BF15EF54F0A3").Id,
                         Mode = activity.Mode,
                         Title = "Sunrise over the delta"
                     });
@@ -401,7 +401,7 @@ namespace UCosmic.SeedData
                     _createActivityDocument.Handle(new CreateActivityDocument
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        ImageId = _entities.Get<UCosmic.Domain.Files.Image>().Single(x => x.Name == "EE23D741-C50D-40D5-8214-C18DF68CC6D3").Id,
+                        ImageId = _entities.Get<Image>().Single(x => x.Name == "EE23D741-C50D-40D5-8214-C18DF68CC6D3").Id,
                         Mode = activity.Mode,
                         Title = "Me"
                     });

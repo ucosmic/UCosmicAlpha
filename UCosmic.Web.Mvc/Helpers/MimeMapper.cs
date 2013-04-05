@@ -4,7 +4,7 @@ namespace UCosmic.Web.Mvc
 {
     public class MimeMapper
     {
-        private static Dictionary<string, string> ExtensionMap = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> ExtensionMap = new Dictionary<string, string>();
 
         static MimeMapper()
         {
@@ -209,9 +209,7 @@ namespace UCosmic.Web.Mvc
         {
             if (ExtensionMap.ContainsKey(fileExtension))
                 return ExtensionMap[fileExtension];
-            else
-                return ExtensionMap[".*"];
+            return ExtensionMap[".*"];
         }
-
     }
 }

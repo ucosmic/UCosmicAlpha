@@ -31,15 +31,15 @@ namespace UCosmic.Web.Mvc
 
                 if (srcWidth > srcHeight)
                 {
-                    scale = (float)inDestCanvasWidth / (float)srcWidth;
+                    scale = (float)inDestCanvasWidth / srcWidth;
                 }
                 else
                 {
-                    scale = (float)inDestCanvasHeight / (float)srcHeight;
+                    scale = (float)inDestCanvasHeight / srcHeight;
                 }
 
-                width = (int)((float)srcWidth * scale);
-                height = (int)((float)srcHeight * scale);
+                width = (int)(srcWidth * scale);
+                height = (int)(srcHeight * scale);
                 x = (inDestCanvasWidth - width) / 2;
                 y = (inDestCanvasHeight - height) / 2;
             }

@@ -7,13 +7,12 @@ namespace UCosmic.SeedData
 {
     public class FileEntitySeeder : BaseFileEntitySeeder
     {
-        private ICommandEntities _entities;
+        private readonly ICommandEntities _entities;
 
-        public FileEntitySeeder(IProcessQueries queryProcessor
-                                , IHandleCommands<CreateLoadableFile> createLoadableFile
+        public FileEntitySeeder(IHandleCommands<CreateLoadableFile> createLoadableFile
                                 , ICommandEntities entities
                                 , IUnitOfWork unitOfWork
-            ) : base(queryProcessor, createLoadableFile, unitOfWork)
+            ) : base(createLoadableFile, unitOfWork)
         {
             _entities = entities;
         }
@@ -25,7 +24,8 @@ namespace UCosmic.SeedData
 
             string filename = "1322FF22-E863-435E-929E-765EB95FB460.ppt";
             string name = Path.GetFileNameWithoutExtension(filename);
-            string extension = Path.GetExtension(filename).Substring(1);
+            string extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
                 using (FileStream fileStream = File.OpenRead(basePath + filename))
@@ -43,7 +43,8 @@ namespace UCosmic.SeedData
 
             filename = "02E6D488-B3FA-4D79-848F-303779A53ABE.docx";
             name = Path.GetFileNameWithoutExtension(filename);
-            extension = Path.GetExtension(filename).Substring(1);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
                 using (FileStream fileStream = File.OpenRead(basePath + filename))
@@ -61,7 +62,8 @@ namespace UCosmic.SeedData
 
             filename = "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf";
             name = Path.GetFileNameWithoutExtension(filename);
-            extension = Path.GetExtension(filename).Substring(1);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
                 using (FileStream fileStream = File.OpenRead(basePath + filename))
@@ -151,7 +153,8 @@ namespace UCosmic.SeedData
 
             filename = "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls";
             name = Path.GetFileNameWithoutExtension(filename);
-            extension = Path.GetExtension(filename).Substring(1);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
                 using (FileStream fileStream = File.OpenRead(basePath + filename))
@@ -169,7 +172,8 @@ namespace UCosmic.SeedData
 
             filename = "mkusenba-photo.jpg";
             name = Path.GetFileNameWithoutExtension(filename);
-            extension = Path.GetExtension(filename).Substring(1);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == filename) == 0)
             {
                 using (FileStream fileStream = File.OpenRead(basePath + filename))
@@ -186,7 +190,8 @@ namespace UCosmic.SeedData
 
             filename = "billhogarth-photo.jpg";
             name = Path.GetFileNameWithoutExtension(filename);
-            extension = Path.GetExtension(filename).Substring(1);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == filename) == 0)
             {
                 using (FileStream fileStream = File.OpenRead(basePath + filename))
@@ -205,16 +210,13 @@ namespace UCosmic.SeedData
 
     public abstract class BaseFileEntitySeeder : ISeedData
     {
-        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateLoadableFile> _createLoadableFile;
         private readonly IUnitOfWork _unitOfWork;
 
-        protected BaseFileEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateLoadableFile> createLoadableFile
+        protected BaseFileEntitySeeder(IHandleCommands<CreateLoadableFile> createLoadableFile
             , IUnitOfWork unitOfWork
         )
         {
-            _queryProcessor = queryProcessor;
             _createLoadableFile = createLoadableFile;
             _unitOfWork = unitOfWork;
         }

@@ -6,7 +6,7 @@ namespace UCosmic
 {
     public static class RoleName
     {
-        public static string[] NonTenantRoles = new[]
+        public static readonly string[] NonTenantRoles = new[]
         {
             AuthenticationAgent,
             AuthorizationAgent,

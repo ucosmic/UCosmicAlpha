@@ -8,10 +8,12 @@ namespace UCosmic.Domain.Activities
     {
         public ActivityValues()
         {
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Locations = new Collection<ActivityLocation>();
             Types = new Collection<ActivityType>();
             Tags = new Collection<ActivityTag>();
             Documents = new Collection<ActivityDocument>();
+            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         public void Set(ActivityValues v)

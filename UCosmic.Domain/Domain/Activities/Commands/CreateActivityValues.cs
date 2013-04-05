@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {
@@ -35,7 +31,11 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             Activity activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.ActivityId);
-            if (activity == null) { throw new Exception("Activity Id " + command.ActivityId.ToString() + " was not found"); }
+            if (activity == null)
+            {
+                // TODO: check this in command validator
+                throw new Exception(string.Format("Activity Id '{0}' was not found", command.ActivityId));
+            }
 
             var activityValues = new ActivityValues
             {

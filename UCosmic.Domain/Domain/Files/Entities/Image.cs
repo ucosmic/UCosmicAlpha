@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-
-namespace UCosmic.Domain.Files
+﻿namespace UCosmic.Domain.Files
 {
     public class Image : Entity
     {

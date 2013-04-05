@@ -9,6 +9,7 @@ namespace UCosmic.WebApi
 {
     public static class SimpleInjectorNGeoRegistration
     {
+#if AZURE
         public static void RegisterNGeo(this Container container, string geoNamesUserName, string geoPlanetAppId,
             string placeFinderConsumerKey, string placeFinderConsumerSecret)
         {
@@ -17,10 +18,17 @@ namespace UCosmic.WebApi
             container.RegisterPerWebRequest<IConsumeGeoPlanet, GeoPlanetClient>();
             container.RegisterPerWebRequest<IContainGeoPlanet>(() => new GeoPlanetContainer(geoPlanetAppId));
 
-#if AZURE
             container.RegisterPerWebRequest<IConsumePlaceFinder, PlaceFinderClient>();
             container.RegisterPerWebRequest<IContainPlaceFinder>(() => new PlaceFinderContainer(placeFinderConsumerKey, placeFinderConsumerSecret));
-#endif
         }
+#else
+        public static void RegisterNGeo(this Container container, string geoNamesUserName, string geoPlanetAppId)
+        {
+            container.RegisterPerWebRequest<IConsumeGeoNames, GeoNamesClient>();
+            container.RegisterPerWebRequest<IContainGeoNames>(() => new GeoNamesContainer(geoNamesUserName));
+            container.RegisterPerWebRequest<IConsumeGeoPlanet, GeoPlanetClient>();
+            container.RegisterPerWebRequest<IContainGeoPlanet>(() => new GeoPlanetContainer(geoPlanetAppId));
+        }
+#endif
     }
 }

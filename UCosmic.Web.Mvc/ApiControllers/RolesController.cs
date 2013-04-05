@@ -1,9 +1,6 @@
 ﻿using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using AttributeRouting.Web.Http;
 using AutoMapper;
-using FluentValidation;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 
@@ -14,10 +11,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
 
-        public RolesController(IProcessQueries queryProcessor
-            , IHandleCommands<GrantRoleToUser> grantRole
-            , IHandleCommands<RevokeRoleFromUser> revokeRole
-        )
+        public RolesController(IProcessQueries queryProcessor)
         {
             _queryProcessor = queryProcessor;
         }
