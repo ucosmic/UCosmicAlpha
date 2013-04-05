@@ -276,7 +276,6 @@
     <Compile Include="Domain\Identity\_Internal\QuerySubjectNameIdentifiers.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryUsers.cs" />
     <Compile Include="Domain\Identity\Queries\UserByName.cs" />
-    <Compile Include="Domain\Identity\Queries\RoleBySlug.cs" />
     <Compile Include="Domain\Identity\Commands\GrantRoleToUser.cs" />
     <Compile Include="Domain\Identity\Commands\RevokeRoleFromUser.cs" />
     <Compile Include="Domain\Identity\Commands\UpdateRole.cs" />

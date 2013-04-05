@@ -69,15 +69,15 @@ namespace UCosmic.SeedData
 
         protected void Seed(string roleName, string roleDescription)
         {
-            var role = _queryProcessor.Execute(new RoleBySlug(roleName.Replace(" ", "-")));
+            var identity = new GenericIdentity("ludwigd@uc.edu");
+            var principal = new GenericPrincipal(identity, new[] { RoleName.AuthorizationAgent });
+            var role = _queryProcessor.Execute(new RoleByName(principal, roleName));
             if (role == null)
             {
                 _createRole.Handle(new CreateRole(roleName) { Description = roleDescription, });
             }
             else
             {
-                var identity = new GenericIdentity(GetType().Name);
-                var principal = new GenericPrincipal(identity, new[] { RoleName.AuthorizationAgent });
                 _updateRole.Handle(new UpdateRole(principal)
                 {
                     EntityId = role.EntityId,

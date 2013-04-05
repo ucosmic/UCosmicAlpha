@@ -144,7 +144,7 @@ namespace UCosmic.SeedData
                     if (person.User.Grants.Select(g => g.Role.Name).Contains(roleName))
                         continue;
 
-                    var role = _queryProcessor.Execute(new RoleBySlug(roleName.Replace(" ", "-")));
+                    var role = _queryProcessor.Execute(new RoleByName(principal, roleName));
                     _grantRole.Handle(new GrantRoleToUser(principal, role.RevisionId, person.User.RevisionId));
                 }
             }
