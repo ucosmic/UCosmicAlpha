@@ -207,6 +207,10 @@ module ViewModels.Users {
         selectedRoleOption: KnockoutObservableNumber = ko.observable();
         isRoleGrantDisabled: KnockoutComputed;
         roleSpinner = new Spinner({ delay: 0, isVisible: true });
+        isRevokeError: KnockoutObservableBool = ko.observable();
+        revokeErrorText: KnockoutObservableString = ko.observable();
+        isGrantError: KnockoutObservableBool = ko.observable();
+        grantErrorText: KnockoutObservableString = ko.observable();
 
         $menu: KnockoutObservableJQuery = ko.observable();
         isEditingRoles: KnockoutObservableBool = ko.observable(false);
@@ -381,8 +385,9 @@ module ViewModels.Users {
                     });
                 });
             })
-            .fail((arg1: any, arg2, arg3): void => {
-                alert('fail');
+            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                this.isGrantError(true);
+                this.grantErrorText(xhr.responseText);
                 this.roleSpinner.stop();
             });
         }
@@ -406,9 +411,17 @@ module ViewModels.Users {
                 });
             })
             .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                alert('fail ' + xhr.responseText);
+                this.isRevokeError(true);
+                this.revokeErrorText(xhr.responseText);
                 this.roleSpinner.stop();
             });
+        }
+
+        dismissError(): void {
+            this.isRevokeError(false);
+            this.revokeErrorText(undefined);
+            this.isGrantError(false);
+            this.grantErrorText(undefined);
         }
     }
 
@@ -432,14 +445,14 @@ module ViewModels.Users {
                 modal: true,
                 buttons: [
                     {
-                        text: 'Yes, confirm delete',
+                        text: 'Yes, confirm revoke',
                         click: (): void => {
                             this._owner.revokeRole(this.id());
                             this.$confirmPurgeDialog.dialog('close');
                         }
                     },
                     {
-                        text: 'No, cancel delete',
+                        text: 'No, cancel revoke',
                         click: (): void => {
                             this.$confirmPurgeDialog.dialog('close');
                         },

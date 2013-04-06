@@ -87,7 +87,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             catch (ValidationException ex)
             {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest,
+                    ex.Errors.First().ErrorMessage, "text/plain");
                 return badRequest;
             }
 
@@ -109,7 +110,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             catch (ValidationException ex)
             {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest,
+                    ex.Errors.First().ErrorMessage, "text/plain");
                 return badRequest;
             }
 

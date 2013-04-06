@@ -193,6 +193,10 @@ var ViewModels;
                     delay: 0,
                     isVisible: true
                 });
+                this.isRevokeError = ko.observable();
+                this.revokeErrorText = ko.observable();
+                this.isGrantError = ko.observable();
+                this.grantErrorText = ko.observable();
                 this.$menu = ko.observable();
                 this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
@@ -341,8 +345,9 @@ var ViewModels;
                             _this._loadRoleOptions(response);
                         });
                     });
-                }).fail(function (arg1, arg2, arg3) {
-                    alert('fail');
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    _this.isGrantError(true);
+                    _this.grantErrorText(xhr.responseText);
                     _this.roleSpinner.stop();
                 });
             };
@@ -362,9 +367,16 @@ var ViewModels;
                         });
                     });
                 }).fail(function (xhr, textStatus, errorThrown) {
-                    alert('fail ' + xhr.responseText);
+                    _this.isRevokeError(true);
+                    _this.revokeErrorText(xhr.responseText);
                     _this.roleSpinner.stop();
                 });
+            };
+            SearchResult.prototype.dismissError = function () {
+                this.isRevokeError(false);
+                this.revokeErrorText(undefined);
+                this.isGrantError(false);
+                this.grantErrorText(undefined);
             };
             return SearchResult;
         })();
@@ -384,14 +396,14 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: 'Yes, confirm delete',
+                            text: 'Yes, confirm revoke',
                             click: function () {
                                 _this._owner.revokeRole(_this.id());
                                 _this.$confirmPurgeDialog.dialog('close');
                             }
                         }, 
                         {
-                            text: 'No, cancel delete',
+                            text: 'No, cancel revoke',
                             click: function () {
                                 _this.$confirmPurgeDialog.dialog('close');
                             },
