@@ -2131,11 +2131,18 @@
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\users\User.ts" />
     <Content Include="scripts\viewmodels\users\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\users\Search.min.js">
       <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\users\User.js">
+      <DependentUpon>User.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\users\User.min.js">
+      <DependentUpon>User.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentNameViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentUrlViewModel.js" />
@@ -2394,6 +2401,7 @@
     <Content Include="Views\Home\Configure.cshtml" />
     <Content Include="Views\Errors\BadRequest.cshtml" />
     <Content Include="Views\Identity\SignOverFail.cshtml" />
+    <Content Include="Views\Users\New.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -117,7 +117,7 @@
                             <div class="editor" data-bind="slideDownVisible: isEditingRoles" style="display: none;">
                                 <div style="margin-top: 12px; display: none;" data-bind="visible: isRevokeError">
                                     <span class="field-validation-error" data-bind="text: revokeErrorText"></span>
-                                    <a href="#/" data-bind="click: dismissError">OK</a>
+                                    <a href="#" data-bind="click: dismissError">OK</a>
                                 </div>
                                 <div style="margin-top: 12px;">
                                     <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: roleOptionsCaption">
@@ -128,7 +128,7 @@
                                 </div>
                                 <div style="margin-top: 12px; display: none;" data-bind="visible: isGrantError">
                                     <span class="field-validation-error" data-bind="text: grantErrorText"></span>
-                                    <a href="#/" data-bind="click: dismissError">OK</a>
+                                    <a href="#" data-bind="click: dismissError">OK</a>
                                 </div>
                                 <div style="margin-top: 12px;">
                                     <input type="button" value="I'm Finished" class="link" data-bind="click: hideRoleEditor" />

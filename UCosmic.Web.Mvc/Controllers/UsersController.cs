@@ -12,5 +12,9 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
+        public virtual ActionResult New()
+        {
+            return View();
+        }
     }
 }

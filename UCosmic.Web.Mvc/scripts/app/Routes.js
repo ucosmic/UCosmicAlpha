@@ -36,6 +36,12 @@ var App;
                         return makeUrl(url);
                     }
                     Users.get = get;
+                    function validateName(id) {
+                        id = id ? id : 0;
+                        var url = 'users/' + id + '/validate-name';
+                        return makeUrl(url);
+                    }
+                    Users.validateName = validateName;
                     (function (Roles) {
                         function get(userId) {
                             var url = 'users/' + userId + '/roles';

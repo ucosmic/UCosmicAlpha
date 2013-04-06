@@ -36,6 +36,12 @@ module App.Routes {
                     return makeUrl(url);
                 }
 
+                export function validateName (id?: number) {
+                    id = id ? id : 0;
+                    var url = 'users/' + id + '/validate-name';
+                    return makeUrl(url);
+                }
+
                 export module Roles {
                     export function get (userId: number): string {
                         var url = 'users/' + userId + '/roles';

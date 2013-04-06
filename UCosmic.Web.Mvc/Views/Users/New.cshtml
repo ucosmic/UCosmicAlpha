@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Create User";
+}
+
+@section bib
+{
+    <nav class="bib hide" data-current-bib="users">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}
+
+@section scripts
+{
+
+    <script type="text/javascript" src="~/scripts/app/Routes.js"></script>
+
+    <script type="text/javascript" src="~/scripts/viewmodels/Spinner.js"></script>
+
+    <script type="text/javascript" src="~/scripts/viewmodels/PagedSearch.js"></script>
+
+    <script type="text/javascript" src="~/scripts/viewmodels/users/User.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var viewModel = new ViewModels.Users.User();
+            ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
+        });
+    </script>
+
+}
+
+
+<div class="content fixed to-top" data-current-module="admin">
+    <form class="group" method="POST">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            <div>
+                <section class="fieldset">
+                    <header>
+                        <h2>
+                            <span>Username</span>
+                        </h2>
+                    </header>
+                    <div>
+                        <div class="field">
+                            <input type="text"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <footer>
+                <input type="submit" value="Save" />
+            </footer>
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @*sidebar here*@
+            </div>
+        </aside>
+    </form>
+</div>
+

@@ -61,12 +61,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string New = "New";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string New = "New";
         }
 
 
@@ -82,9 +84,11 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Index = "Index";
+                public readonly string New = "New";
             }
             public readonly string _SearchSideBar = "~/Views/Users/_SearchSideBar.cshtml";
             public readonly string Index = "~/Views/Users/Index.cshtml";
+            public readonly string New = "~/Views/Users/New.cshtml";
         }
     }
 
@@ -96,6 +100,12 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult New()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.New);
             return callInfo;
         }
 
