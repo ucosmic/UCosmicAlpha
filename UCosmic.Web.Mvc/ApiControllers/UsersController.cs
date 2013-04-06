@@ -8,6 +8,7 @@ using System.Web.Http;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 
@@ -117,6 +118,41 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Access was revoked successfully.");
             return response;
+        }
+
+        [POST("{userId}/validate-name")]
+        public HttpResponseMessage ValidateName(int userId, UserApiModel model)
+        {
+            System.Threading.Thread.Sleep(10000); // test api latency
+
+            model.Id = userId;
+
+            //ValidationResult validationResult;
+            //string propertyName;
+            //if (model.OwnerId < 1 || model.Id < 1)
+            //{
+            //    var command = new CreateEstablishmentName(User);
+            //    Mapper.Map(model, command);
+            //    validationResult = _createValidator.Validate(command);
+            //    propertyName = command.PropertyName(y => y.Text);
+            //}
+            //else
+            //{
+            //    var command = new UpdateEstablishmentName(User);
+            //    Mapper.Map(model, command);
+            //    validationResult = _updateValidator.Validate(command);
+            //    propertyName = command.PropertyName(y => y.Text);
+            //}
+
+            //Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
+            //if (validationResult.Errors.Any(forText))
+            //    return Request.CreateResponse(HttpStatusCode.BadRequest,
+            //        validationResult.Errors.First(forText).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.BadRequest,
+                string.Format("Username '{0}' is not valid.", model.Name), "text/plain");
+
+            //return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

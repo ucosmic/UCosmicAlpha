@@ -31,7 +31,7 @@
 
 
 <div class="content fixed to-top" data-current-module="admin">
-    <form class="group" method="POST">
+    <form class="group" method="POST" data-bind="submit: save, validationOptions: { decorateElement: true, errorClass: 'error' }">
         <div class="on-left from-top">
             <header>
                 <h1>
@@ -47,7 +47,7 @@
                     </header>
                     <div>
                         <div class="field">
-                            <input type="text"/>
+                            <input type="text" data-bind="value: name" />
                         </div>
                     </div>
                 </section>

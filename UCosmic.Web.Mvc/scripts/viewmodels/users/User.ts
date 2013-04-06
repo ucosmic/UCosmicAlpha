@@ -11,16 +11,13 @@ module ViewModels.Users {
         private _ruleName: string = 'validUserName';
         private _isAwaitingResponse: bool = false;
         async: bool = true;
-        message: string =  'error';
-        validator(val: string, vm: any, callback: KnockoutValidationAsyncCallback) {
-            if (!vm.isTextValidatableAsync()) {
-                callback(true);
-            }
-            else if (!this._isAwaitingResponse) {
+        message: string = 'error';
+        validator(val: string, vm: User, callback: KnockoutValidationAsyncCallback) {
+            if (!this._isAwaitingResponse) {
                 var route = App.Routes.WebApi.Identity.Users
                     .validateName(vm.id());
                 this._isAwaitingResponse = true;
-                $.post(route, vm.serializeData())
+                $.post(route, { name: vm.name() })
                 .always((): void => {
                     this._isAwaitingResponse = false;
                 })
@@ -32,15 +29,48 @@ module ViewModels.Users {
                 });
             }
         }
-        constructor () {
+        constructor() {
             ko.validation.rules[this._ruleName] = this;
             ko.validation.addExtender(this._ruleName);
         }
     }
     new UserNameValidator();
 
-    export class User {
+    export class User implements KnockoutValidationGroup {
 
+        id: KnockoutObservableNumber = ko.observable();
+        name: KnockoutObservableString = ko.observable();
 
+        isValid: () => bool;
+        errors: KnockoutValidationErrors;
+        isValidating: KnockoutComputed;
+
+        constructor() {
+
+            this.name.extend({
+                required: {
+                    message: 'Username is required.'
+                },
+                maxLength: 256,
+                validUserName: this
+            });
+
+            this.isValidating = ko.computed((): bool => {
+                return this.name.isValidating();
+            });
+
+            ko.validation.group(this);
+        }
+
+        save(): bool {
+            if (this.isValidating()) {
+                setTimeout((): bool => { this.save(); }, 50);
+                return false;
+            }
+
+            if (!this.isValid()) { // validate
+                this.errors.showAllMessages();
+            }
+        }
     }
 }
