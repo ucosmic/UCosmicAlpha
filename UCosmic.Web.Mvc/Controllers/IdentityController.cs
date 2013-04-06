@@ -251,8 +251,15 @@ namespace UCosmic.Web.Mvc.Controllers
                         x => x.Grants.Select(y => y.Role),
                     }
                 });
+
                 if (userToImpersonate != null)
                 {
+                    // do not allow users to impersonate themselves
+                    if (userImpersonating.Identity.Name.Equals(userToImpersonate.Name, StringComparison.OrdinalIgnoreCase))
+                        if (Request.UrlReferrer != null)
+                            return Redirect(Request.UrlReferrer.PathAndQuery);
+                        else RedirectToAction(MVC.MyProfile.Index());
+
                     // cannot impersonate certain users when not already in that role
                     ViewBag.UserToImpersonate = userName;
                     if (userToImpersonate.IsInRole(RoleName.AuthenticationAgent) && !userImpersonating.IsInRole(RoleName.AuthenticationAgent))
