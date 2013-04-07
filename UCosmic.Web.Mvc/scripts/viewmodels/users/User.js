@@ -37,6 +37,7 @@ var ViewModels;
                 var _this = this;
                 this.id = ko.observable();
                 this.name = ko.observable();
+                this.saveSpinner = new ViewModels.Spinner();
                 this.name.extend({
                     required: {
                         message: 'Username is required.'
@@ -51,6 +52,7 @@ var ViewModels;
             }
             User.prototype.save = function () {
                 var _this = this;
+                this.saveSpinner.start();
                 if(this.isValidating()) {
                     setTimeout(function () {
                         _this.save();
@@ -60,6 +62,7 @@ var ViewModels;
                 if(!this.isValid()) {
                     this.errors.showAllMessages();
                 }
+                this.saveSpinner.stop();
             };
             return User;
         })();

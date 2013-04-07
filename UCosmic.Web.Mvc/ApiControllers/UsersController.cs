@@ -21,15 +21,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<GrantRoleToUser> _grantRole;
         private readonly IHandleCommands<RevokeRoleFromUser> _revokeRole;
+        private readonly IValidator<CreateUser> _createValidator;
 
         public UsersController(IProcessQueries queryProcessor
             , IHandleCommands<GrantRoleToUser> grantRole
             , IHandleCommands<RevokeRoleFromUser> revokeRole
+            , IValidator<CreateUser> createValidator
         )
         {
             _queryProcessor = queryProcessor;
             _grantRole = grantRole;
             _revokeRole = revokeRole;
+            _createValidator = createValidator;
         }
 
         public PageOfUserApiModel GetAll([FromUri] UserSearchInputModel input)
@@ -123,36 +126,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{userId}/validate-name")]
         public HttpResponseMessage ValidateName(int userId, UserApiModel model)
         {
-            System.Threading.Thread.Sleep(10000); // test api latency
+            //System.Threading.Thread.Sleep(10000); // test api latency
 
             model.Id = userId;
 
-            //ValidationResult validationResult;
-            //string propertyName;
-            //if (model.OwnerId < 1 || model.Id < 1)
+            //if (model.Id < 1)
             //{
-            //    var command = new CreateEstablishmentName(User);
-            //    Mapper.Map(model, command);
-            //    validationResult = _createValidator.Validate(command);
-            //    propertyName = command.PropertyName(y => y.Text);
+                var command = new CreateUser(User, model.Name);
+                var validationResult = _createValidator.Validate(command);
+                var propertyName = command.PropertyName(y => y.Name);
             //}
             //else
             //{
             //    var command = new UpdateEstablishmentName(User);
             //    Mapper.Map(model, command);
             //    validationResult = _updateValidator.Validate(command);
-            //    propertyName = command.PropertyName(y => y.Text);
+            //    propertyName = command.PropertyName(y => y.Name);
             //}
 
-            //Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
-            //if (validationResult.Errors.Any(forText))
-            //    return Request.CreateResponse(HttpStatusCode.BadRequest,
-            //        validationResult.Errors.First(forText).ErrorMessage, "text/plain");
+            Func<ValidationFailure, bool> forName = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forName))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forName).ErrorMessage, "text/plain");
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest,
-                string.Format("Username '{0}' is not valid.", model.Name), "text/plain");
+            //return Request.CreateResponse(HttpStatusCode.BadRequest,
+            //    string.Format("Username '{0}' is not valid.", model.Name), "text/plain");
 
-            //return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

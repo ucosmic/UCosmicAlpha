@@ -4,6 +4,7 @@
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../Spinner.ts" />
 
 module ViewModels.Users {
 
@@ -41,6 +42,8 @@ module ViewModels.Users {
         id: KnockoutObservableNumber = ko.observable();
         name: KnockoutObservableString = ko.observable();
 
+        saveSpinner = new Spinner();
+
         isValid: () => bool;
         errors: KnockoutValidationErrors;
         isValidating: KnockoutComputed;
@@ -63,6 +66,9 @@ module ViewModels.Users {
         }
 
         save(): bool {
+
+            this.saveSpinner.start();
+
             if (this.isValidating()) {
                 setTimeout((): bool => { this.save(); }, 50);
                 return false;
@@ -71,6 +77,8 @@ module ViewModels.Users {
             if (!this.isValid()) { // validate
                 this.errors.showAllMessages();
             }
+
+            this.saveSpinner.stop();
         }
     }
 }
