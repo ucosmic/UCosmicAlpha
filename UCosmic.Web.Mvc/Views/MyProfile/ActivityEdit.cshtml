@@ -1,4 +1,6 @@
-﻿@{
+﻿@model UCosmic.Web.Mvc.Models.ActivityModel
+
+@{
     ViewBag.Title = "My International Activity";
 }
 
@@ -13,85 +15,18 @@
     <script type="text/javascript">
 
         $(function() {
-            var activityViewModel = new ViewModels.Activities.Activity(@Model);
-
+            var activityId = @Model.ActivityId;
+            var activityViewModel = new ViewModels.Activities.Activity(activityId);
             activityViewModel.load()
-                .done(function() {
-
-                    $("#fromDatePicker").kendoDatePicker();
-                    $("#toDatePicker").kendoDatePicker();
-
-                    $("#countrySelector").kendoMultiSelect({
-                        dataTextField: "officialName()",
-                        dataValueField: "id()",
-                        dataSource: activityViewModel.locations(),
-                        //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
-                        change: function(event) { activityViewModel.updateLocations(event.sender.value()); },
-                        placeholder: "[Select Country or Body of Water]"
-                    });
-
-                    tinyMCE.init({
-                        // Example content CSS (should be your site CSS)
-                        //content_css : 'css/content.css',
-                        content_css: "../../scripts/tinymce/css/content.css",
-                        convert_urls: false,
-
-                        // General options
-                        theme: 'advanced',
-                        mode: 'exact',
-                        elements: 'tinymce',
-                        height: '300',
-                        width: '100%',
-                        verify_html: true,
-                        plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
-
-                        // Theme options
-                        theme_advanced_buttons1: 'save,undo,redo,restoredraft,|,formatselect,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
-                        theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
-                        theme_advanced_buttons3: '',
-
-                        theme_advanced_toolbar_location: 'top',
-                        theme_advanced_toolbar_align: 'left',
-                        theme_advanced_statusbar_location: 'bottom',
-                        theme_advanced_resizing: true,
-                        theme_advanced_resizing_max_height: '580',
-                        theme_advanced_resize_horizontal: false,
-                        theme_advanced_blockformats: 'h2,h3,p,blockquote',
-
-                        save_enablewhendirty: true,
-                        save_onsavecallback: 'onSavePluginCallback',
-
-                        // Drop lists for link/image/media/template dialogs
-                        template_external_list_url: 'lists/template_list.js',
-                        external_link_list_url: 'lists/link_list.js',
-                        external_image_list_url: 'lists/image_list.js',
-                        media_external_list_url: 'lists/media_list.js'
-                    });
-
-                    $("#uploadFile").kendoUpload({
-                        multiple: false,
-                        showFileList: false,
-                        async: {
-                            saveUrl: App.Routes.WebApi.Activities.postDocument(activityViewModel.id()),
-                            autoUpload: true
-                        },
-                        select: function(e) {
-                            var i = 0;
-                            var validFileType = true;
-                            while ((i < e.files.length) && validFileType) {
-                                var file = e.files[i];
-                                validFileType = activityViewModel.validateUploadableFileTypeByExtension(activityViewModel.id(), file.extension);
-                                if (!validFileType) {
-                                    e.preventDefault();
-                                }
-                                i += 1;
-                            }
-                        },
-                        success: function(e) {
-                                activityViewModel.uploadingDocument(false);
-                                activityViewModel.loadDocuments();
-                            }
-                    });
+                .done(function () {
+                    
+                    activityViewModel.setupWidgets("fromDatePicker"
+                                                   ,"toDatePicker"
+                                                   ,"countrySelector"
+                                                   ,"uploadFile"
+                                                   ,"newTag");
+                    
+                    activityViewModel.setupValidation();
 
                     ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
 
@@ -104,15 +39,11 @@
 
                     datePicker = $("#toDatePicker").data("kendoDatePicker");
                     datePicker.value(activityViewModel.values.endsOn());
-
-                })  // activityViewModel.load.done
-                .fail(function(jqXhr, textStatus, errorThrown) {
+                })
+                .fail(function (jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
                 });
-// activityViewModel.load.fail
-
         });
-// function
 
     </script>
 }
@@ -140,23 +71,23 @@
 								<tbody>
 									<tr>
 										<!-- TITLE -->
-										<td class="field-name">Title</td>
+										<td class="required-field-name">Title</td>
 										<td>
 										    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="text: values.title"></textarea>
-                                            <label class="required-field">*</label>
+                                            <!--<label class="required-field">*</label>-->
 										    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
 										</td>
 									</tr>
 									<!-- COUNTRY -->
 									<tr>
-										<td class="field-name">Country/Location</td>
+										<td class="required-field-name">Country/Location</td>
 									    <td>
-									        <select id="countrySelector" style="width: 750px" data-bind="selectedOptions: selectedLocations"></select>
+									        <select id="countrySelector" style="width: 750px; overflow-y:auto" data-bind="selectedOptions: selectedLocations"></select>
 									    </td>
 									</tr>
 									<!-- TYPE -->
 									<tr>
-										<td class="field-name">Types</td>
+										<td class="required-field-name">Types</td>
 									    <td>
 									        <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes() }" />
 									    </td>
@@ -166,7 +97,7 @@
 								        <td class="field-name">On/From</td>
 								        <td>
 								            <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
-								            To&nbsp;
+								            &nbsp;&nbsp;To&nbsp;
 								            <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
 								            <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
 								        </td>
@@ -200,7 +131,7 @@
 							        </h2>
 							    </header>
 							    <div data-bind="visible: addingTag" style="width: 100%; margin-bottom: 16px">
-							        <textarea id="newTag" rows="1" style="width: 400px; white-space: nowrap; overflow: hidden" placeholder="[Enter Tag]" data-bind="value: newTag"></textarea>
+							        <input id="newTag" style="width: 400px; white-space: nowrap; overflow: hidden" data-bind="value: newTag"/>
 							        <input type="button" class="" value="Add" data-bind="click: function (item, event) { this.addTag(item, event); }"/>
 							        <input type="button" class="" value="Done" data-bind="click: function () { this.addingTag(false); }"/>
 							    </div>
@@ -238,9 +169,9 @@
 						    <!-- BUTTONS -->
 						    <div style="margin-bottom: 32px">
 						        <span>
-						            <input type="button" value="Save as Draft"/>
-						            <input type="button" value="Save as Final"/>
-						            <input type="button" value="Cancel" style="float: right"/>
+						            <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Draft'); }"/>
+						            <input type="button" value="Save as Final" data-bind="click: function (item, event) { save(item, event, 'Final'); }"/>
+						            <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }"/>
 						        </span>
 						    </div>
                             
@@ -277,7 +208,7 @@
 </script>
 
 <script type="text/html" id="activity-document-template">
-    <tr class="hover-hilite">
+    <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
             <img data-bind="attr: { src: proxyImageSource, width: proxyWidth, height: proxyHeight }">

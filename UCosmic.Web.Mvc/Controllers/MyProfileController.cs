@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using UCosmic.Web.Mvc.Models;
 using AttributeRouting.Web.Mvc;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -20,10 +21,11 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        [GET("my/activity/{activityId?}")]
-        public virtual ActionResult ActivityEdit(int? activityId)
+        [GET("my/activity/{activityId}")]
+        public virtual ActionResult ActivityEdit(int activityId)
         {
-            return View(activityId);
+            var model = new ActivityModel { ActivityId = activityId };
+            return View(model);
         }
     }
 }

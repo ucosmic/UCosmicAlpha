@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
@@ -20,6 +21,12 @@ namespace UCosmic.Web.Mvc.Models
         public bool IsCountry { get; set; }
         public bool IsBodyOfWater { get; set; }
         public bool IsEarth { get; set; }
+        public string OfficialName { get; set; }
+    }
+
+    public class ActivityInstitutionApiModel
+    {
+        public int Id { get; set; }
         public string OfficialName { get; set; }
     }
 
@@ -123,6 +130,9 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId));
 
                 CreateMap<ActivityLocation, ActivityLocationApiModel>()
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId));
+
+                CreateMap<Establishment, ActivityInstitutionApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId));
 
                 CreateMap<Activity, ActivityApiModel>()

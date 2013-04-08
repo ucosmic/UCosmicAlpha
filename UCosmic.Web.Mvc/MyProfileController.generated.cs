@@ -120,7 +120,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult ActivityEdit(int? activityId)
+        public override System.Web.Mvc.ActionResult ActivityEdit(int activityId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "activityId", activityId);

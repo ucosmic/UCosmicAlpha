@@ -297,6 +297,7 @@
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
+    <Compile Include="Models\Identity\ActivityModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
     <Compile Include="Models\Users\RoleApiModel.cs" />
     <Compile Include="Models\Users\UserSearchInputModel.cs" />
@@ -2025,6 +2026,7 @@
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\content.css" />
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\img\button_bg.png" />
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\ui.css" />
+    <Content Include="scripts\tinymce\tinymce.d.ts" />
     <Content Include="scripts\tinymce\tiny_mce.js" />
     <Content Include="scripts\tinymce\tiny_mce_popup.js" />
     <Content Include="scripts\tinymce\tiny_mce_src.js" />

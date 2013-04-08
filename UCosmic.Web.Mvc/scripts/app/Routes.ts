@@ -295,7 +295,7 @@ module App.Routes {
                 return makeUrl('activities');
             }
 
-            static get(activityId: number): string {
+            static get (activityId: number): string {
                 return makeUrl('activities/' + activityId.toString());
             }
 
@@ -338,6 +338,10 @@ module App.Routes {
             static getLocations(activityId: number): string {
                 return makeUrl('activities/' + activityId.toString() + '/locations');
             }
+
+            static getInstitutions(activityId: number): string {
+                return makeUrl('activities/' + activityId.toString() + '/institutions');
+            }
         }
     }
 
@@ -358,6 +362,12 @@ module App.Routes {
                 if (params) url += '?' + $.param(params);
                 return url;
             }
+        }
+        
+        export module Profile {
+            export function activityEdit(activityId: string) {
+                var url = makeUrl('my/activity/');
+                return url + activityId.toString();
         }
 
         export module Identity {

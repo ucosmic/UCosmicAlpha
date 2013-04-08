@@ -110,11 +110,7 @@ var ViewModels;
                     url = element.attributes["href"].value;
                 }
                 if(url != null) {
-                    if(activityId == null) {
-                        location.href = url;
-                    } else {
-                        location.href = url + activityId.toString();
-                    }
+                    location.href = url;
                 }
             };
             ActivityList.prototype.getTypeName = function (id) {

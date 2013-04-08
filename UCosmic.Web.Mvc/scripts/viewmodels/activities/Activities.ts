@@ -176,12 +176,7 @@ module ViewModels.Activities {
             }
 
             if (url != null) {
-                if (activityId == null) {
-                    location.href = url;
-                }
-                else {
-                    location.href = url + activityId.toString();
-                }
+                location.href = url;
             }
         }
         

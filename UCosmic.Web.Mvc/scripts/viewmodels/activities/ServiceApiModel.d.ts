@@ -15,9 +15,19 @@ module Service.ApiModels {
         officialName: string;
     }
 
+    export interface IInstitution {
+        id: number;
+        officialName: string;
+    }
+
     export interface IObservableValuesActivityLocation {
         id: KnockoutObservableNumber;
         placeId: KnockoutObservableNumber;
+    }
+
+    export interface IObservableInstitution {
+        id: KnockoutObservableNumber;
+        officialName: KnockoutObservableString;
     }
 
     export interface IObservableActivityType {

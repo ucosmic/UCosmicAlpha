@@ -13,6 +13,7 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
@@ -141,7 +142,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
 
             var model = Mapper.Map<ActivityLocationNameApiModel[]>(activityPlaces);
+            return model;
+        }
 
+        // --------------------------------------------------------------------------------
+        /*
+         * Get all establishment institutions (category code 'INST')
+        */
+        // --------------------------------------------------------------------------------
+        [GET("{activityId}/institutions")]
+        public ICollection<ActivityInstitutionApiModel> GetInstitutions(int activityId)
+        {
+            var institutions = _queryProcessor.Execute(new EstablishmentsByType("INST"));
+
+            var model = Mapper.Map<ICollection<Establishment>, ICollection<ActivityInstitutionApiModel>>(institutions);
             return model;
         }
 

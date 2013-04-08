@@ -46,21 +46,32 @@ body {
 
         td.field-name {
             padding-left: 4px;
-						padding-right: 4px;
-						padding-top: 16px;
-						padding-bottom: 16px;
-						text-align: right;
+			padding-right: 4px;
+			padding-top: 16px;
+			padding-bottom: 16px;
+			text-align: right;
             vertical-align: middle;
         }
 
-				td {
+        td.required-field-name {
             padding-left: 4px;
-						padding-right: 4px;
-						padding-top: 16px;
-						padding-bottom: 16px;
-						text-align: left;
+            padding-right: 4px;
+			padding-top: 16px;
+			padding-bottom: 16px;
+			text-align: right;
+            text-decoration: underline;
+            text-decoration-color: #f00;
             vertical-align: middle;
-				}
+        }
+
+        td {
+            padding-left: 4px;
+			padding-right: 4px;
+			padding-top: 16px;
+			padding-bottom: 16px;
+			text-align: left;
+            vertical-align: middle;
+		}
     }
 
     ul.data, ol.data {
@@ -336,6 +347,11 @@ body {
         right: 20px;
         width: 16px;
         height: 16px;
+    }
+
+    .required {
+        text-decoration-color: #f00;
+        text-decoration: underline;
     }
 
     small {

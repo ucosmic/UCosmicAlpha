@@ -5,29 +5,119 @@ var ViewModels;
             function Activity(activityId) {
                 this.locations = ko.observableArray();
                 this.selectedLocations = ko.observableArray();
+                this.institutions = ko.observableArray();
                 this.activityTypes = ko.observableArray();
                 this.addingTag = ko.observable(false);
                 this.newTag = ko.observable();
                 this.uploadingDocument = ko.observable(false);
-                this.id = ko.observable(activityId);
+                this.inititializationErrors = "";
+                this._initialize(activityId);
             }
+            Activity.prototype._initialize = function (activityId) {
+                this.id = ko.observable(activityId);
+            };
+            Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
+                var _this = this;
+                $("#" + fromDatePickerId).kendoDatePicker();
+                $("#" + toDatePickerId).kendoDatePicker();
+                $("#" + countrySelectorId).kendoMultiSelect({
+                    dataTextField: "officialName()",
+                    dataValueField: "id()",
+                    dataSource: this.locations(),
+                    change: function (event) {
+                        this.updateLocations(event.sender.value());
+                    },
+                    placeholder: "[Select Country/Location, Body of Water or Global]"
+                });
+                tinyMCE.init({
+                    content_css: "../../scripts/tinymce/css/content.css",
+                    convert_urls: false,
+                    theme: 'advanced',
+                    mode: 'exact',
+                    elements: 'tinymce',
+                    height: '300',
+                    width: '100%',
+                    verify_html: true,
+                    plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
+                    theme_advanced_buttons1: 'save,undo,redo,restoredraft,|,formatselect,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
+                    theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
+                    theme_advanced_buttons3: '',
+                    theme_advanced_toolbar_location: 'top',
+                    theme_advanced_toolbar_align: 'left',
+                    theme_advanced_statusbar_location: 'bottom',
+                    theme_advanced_resizing: true,
+                    theme_advanced_resizing_max_height: '580',
+                    theme_advanced_resize_horizontal: false,
+                    theme_advanced_blockformats: 'h2,h3,p,blockquote',
+                    save_enablewhendirty: true,
+                    save_onsavecallback: 'onSavePluginCallback',
+                    template_external_list_url: 'lists/template_list.js',
+                    external_link_list_url: 'lists/link_list.js',
+                    external_image_list_url: 'lists/image_list.js',
+                    media_external_list_url: 'lists/media_list.js'
+                });
+                $("#" + uploadFileId).kendoUpload({
+                    multiple: false,
+                    showFileList: false,
+                    async: {
+                        saveUrl: App.Routes.WebApi.Activities.postDocument(this.id()),
+                        autoUpload: true
+                    },
+                    select: function (e) {
+                        var i = 0;
+                        var validFileType = true;
+                        while((i < e.files.length) && validFileType) {
+                            var file = e.files[i];
+                            validFileType = _this.validateUploadableFileTypeByExtension(_this.id(), file.extension);
+                            if(!validFileType) {
+                                e.preventDefault();
+                            }
+                            i += 1;
+                        }
+                    },
+                    success: function (e) {
+                        _this.uploadingDocument(false);
+                        _this.loadDocuments();
+                    }
+                });
+                $("#" + newTagId).kendoAutoComplete({
+                    dataTextField: "officialName()",
+                    dataValueField: "id()",
+                    dataSource: this.institutions(),
+                    placeholder: "[Enter tag]"
+                });
+                return true;
+            };
+            Activity.prototype.setupValidation = function () {
+                this.values.title.extend({
+                    required: true
+                });
+                ko.validation.group(this);
+                return true;
+            };
             Activity.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.getLocations(0)).done(function (data, textStatus, jqXHR) {
+                var locationsPact = jQuery.Deferred();
+                jQuery.get(App.Routes.WebApi.Activities.getLocations(0)).done(function (data, textStatus, jqXHR) {
                     locationsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
+                var institutionsPact = jQuery.Deferred();
+                jQuery.get(App.Routes.WebApi.Activities.getInstitutions(0)).done(function (data, textStatus, jqXHR) {
+                    institutionsPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    institutionsPact.reject(jqXHR, textStatus, errorThrown);
+                });
+                var typesPact = jQuery.Deferred();
+                jQuery.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                var dataPact = $.Deferred();
-                $.ajax({
+                var dataPact = jQuery.Deferred();
+                jQuery.ajax({
                     type: "GET",
                     url: App.Routes.WebApi.Activities.get(this.id()),
                     success: function (data, textStatus, jqXhr) {
@@ -37,9 +127,10 @@ var ViewModels;
                         dataPact.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
-                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
+                jQuery.when(institutionsPact, typesPact, locationsPact, dataPact).done(function (institutions, types, locations, data) {
                     _this.activityTypes = ko.mapping.fromJS(types);
                     _this.locations = ko.mapping.fromJS(locations);
+                    _this.institutions = ko.mapping.fromJS(institutions);
  {
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
@@ -76,6 +167,16 @@ var ViewModels;
                     deferred.reject(xhr, textStatus, errorThrown);
                 });
                 return deferred;
+            };
+            Activity.prototype.save = function (item, event, mode) {
+                if(this.isValid()) {
+                    debugger;
+
+                }
+                return true;
+            };
+            Activity.prototype.cancel = function (item, event, mode) {
+                return true;
             };
             Activity.prototype.addActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);

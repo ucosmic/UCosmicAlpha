@@ -2513,6 +2513,7 @@ namespace Links
                           
             public static readonly string tiny_mce_src_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/tiny_mce_src.min.js") ? Url("tiny_mce_src.min.js") : Url("tiny_mce_src.js");
                           
+            public static readonly string tinymce_d_ts = Url("tinymce.d.ts");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class utils {
                 private const string URLPATH = "~/scripts/tinymce/utils";

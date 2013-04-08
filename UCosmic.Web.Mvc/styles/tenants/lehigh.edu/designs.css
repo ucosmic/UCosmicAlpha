@@ -35,6 +35,15 @@ body table.activity {
     padding-bottom: 16px;
     text-align: right;
     vertical-align: middle; }
+  body table.activity td.required-field-name {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: right;
+    text-decoration: underline;
+    text-decoration-color: #f00;
+    vertical-align: middle; }
   body table.activity td {
     padding-left: 4px;
     padding-right: 4px;
@@ -230,6 +239,5 @@ body .help-icon-position {
   right: 20px;
   width: 16px;
   height: 16px; }
-body small {
-  font-size: smaller; }
+  text-decoration: underline; }
 
