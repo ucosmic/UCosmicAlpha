@@ -205,6 +205,7 @@ module ViewModels.Users {
         roleOptions: KnockoutObservableArray = ko.observableArray();
         roleOptionsCaption: KnockoutObservableString = ko.observable('[Loading...]');
         selectedRoleOption: KnockoutObservableNumber = ko.observable();
+        $roleSelect: KnockoutObservableJQuery = ko.observable();
         isRoleGrantDisabled: KnockoutComputed;
         roleSpinner = new Spinner({ delay: 0, isVisible: true });
         isRevokeError: KnockoutObservableBool = ko.observable();
@@ -261,6 +262,12 @@ module ViewModels.Users {
             this.isRoleGrantDisabled = ko.computed((): bool => {
                 return this.roleSpinner.isVisible() || !this.selectedRoleOption();
             });
+            this.selectedRoleOption.subscribe((newValue: any): void => {
+                // make sure this is an int, not a string
+                if (newValue && typeof (newValue) === 'string') {
+                    this.selectedRoleOption(parseInt(newValue));
+                }
+            });
         }
 
         private _setupMenuSubscription(): void {
@@ -296,6 +303,30 @@ module ViewModels.Users {
             ko.mapping.fromJS(results.items, {}, this.roleOptions);
             this.roleOptionsCaption('[Select access to grant...]');
             this._syncRoleOptions();
+            if (this.$roleSelect && this.$roleSelect().length) {
+                var roleOptions: any[] = this.roleOptions();
+                var roleData = [];
+                roleData.push({
+                    name: this.roleOptionsCaption()
+                })
+                for (var i = 0; i < roleOptions.length; i++) {
+                    roleData.push({
+                        id: roleOptions[i].id(),
+                        name: roleOptions[i].name(),
+                        description: roleOptions[i].description()
+                    });
+                }
+                this.$roleSelect().kendoDropDownList({
+                    height: 300,
+                    dataSource: roleData,
+                    dataTextField: 'name',
+                    dataValueField: 'id',
+                    template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' + 
+                        '#} else {#<div>${ data.name }</div>\r\n #}#' + 
+                        '#if (data.description) {# <div>${ data.description }</div> #}#'
+
+                });
+            }
         }
 
         private _syncRoleOptions(): void {

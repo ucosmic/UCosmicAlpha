@@ -189,6 +189,7 @@ var ViewModels;
                 this.roleOptions = ko.observableArray();
                 this.roleOptionsCaption = ko.observable('[Loading...]');
                 this.selectedRoleOption = ko.observable();
+                this.$roleSelect = ko.observable();
                 this.roleSpinner = new ViewModels.Spinner({
                     delay: 0,
                     isVisible: true
@@ -236,6 +237,11 @@ var ViewModels;
                 this.isRoleGrantDisabled = ko.computed(function () {
                     return _this.roleSpinner.isVisible() || !_this.selectedRoleOption();
                 });
+                this.selectedRoleOption.subscribe(function (newValue) {
+                    if(newValue && typeof (newValue) === 'string') {
+                        _this.selectedRoleOption(parseInt(newValue));
+                    }
+                });
             };
             SearchResult.prototype._setupMenuSubscription = function () {
                 this.$menu.subscribe(function (newValue) {
@@ -267,6 +273,27 @@ var ViewModels;
                 }, this.roleOptions);
                 this.roleOptionsCaption('[Select access to grant...]');
                 this._syncRoleOptions();
+                if(this.$roleSelect && this.$roleSelect().length) {
+                    var roleOptions = this.roleOptions();
+                    var roleData = [];
+                    roleData.push({
+                        name: this.roleOptionsCaption()
+                    });
+                    for(var i = 0; i < roleOptions.length; i++) {
+                        roleData.push({
+                            id: roleOptions[i].id(),
+                            name: roleOptions[i].name(),
+                            description: roleOptions[i].description()
+                        });
+                    }
+                    this.$roleSelect().kendoDropDownList({
+                        height: 300,
+                        dataSource: roleData,
+                        dataTextField: 'name',
+                        dataValueField: 'id',
+                        template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' + '#} else {#<div>${ data.name }</div>\r\n #}#' + '#if (data.description) {# <div>${ data.description }</div> #}#'
+                    });
+                }
             };
             SearchResult.prototype._syncRoleOptions = function () {
                 for(var i = 0; i < this.roleOptions().length; i++) {
