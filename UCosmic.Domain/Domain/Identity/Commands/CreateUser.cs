@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
@@ -129,7 +131,7 @@ namespace UCosmic.Domain.Identity
                              x =>
                              x.EmailDomains.Any(y => y.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)));
 
-            var entity = new User
+            var user = new User
             {
                 Name = command.Name,
                 Person = new Person
@@ -146,7 +148,21 @@ namespace UCosmic.Domain.Identity
                 },
             };
 
-            _entities.Create(entity);
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.Name,
+                    command.PersonDisplayName,
+                }),
+                NewState = user.ToJsonAudit(),
+            };
+
+            _entities.Create(audit);
+            _entities.Create(user);
             _unitOfWork.SaveChanges();
         }
     }

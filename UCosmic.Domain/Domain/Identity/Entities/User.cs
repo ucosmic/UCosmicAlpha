@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Identity
@@ -33,6 +34,23 @@ namespace UCosmic.Domain.Identity
         public override string ToString()
         {
             return Name;
+        }
+    }
+
+
+    internal static class UserSerializer
+    {
+        internal static string ToJsonAudit(this User entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = entity.RevisionId,
+                PersonId = entity.Person.RevisionId,
+                entity.EduPersonTargetedId,
+                entity.Name,
+                entity.IsRegistered,
+            });
+            return state;
         }
     }
 }
