@@ -20,28 +20,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateUser> _createUser;
-        private readonly IHandleCommands<GrantRoleToUser> _grantRole;
-        private readonly IHandleCommands<RevokeRoleFromUser> _revokeRole;
         private readonly IValidator<CreateUser> _createValidator;
-        private readonly IValidator<GrantRoleToUser> _grantValidator;
-        private readonly IValidator<RevokeRoleFromUser> _revokeValidator;
 
         public UsersController(IProcessQueries queryProcessor
             , IHandleCommands<CreateUser> createUser
-            , IHandleCommands<GrantRoleToUser> grantRole
-            , IHandleCommands<RevokeRoleFromUser> revokeRole
             , IValidator<CreateUser> createValidator
-            , IValidator<GrantRoleToUser> grantValidator
-            , IValidator<RevokeRoleFromUser> revokeValidator
         )
         {
             _queryProcessor = queryProcessor;
             _createUser = createUser;
-            _grantRole = grantRole;
-            _revokeRole = revokeRole;
             _createValidator = createValidator;
-            _grantValidator = grantValidator;
-            _revokeValidator = revokeValidator;
         }
 
         public PageOfUserApiModel GetAll([FromUri] UserSearchInputModel input)
