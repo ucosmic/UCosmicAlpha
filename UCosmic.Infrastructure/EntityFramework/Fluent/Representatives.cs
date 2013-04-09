@@ -15,6 +15,12 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(true)
             ;
 
+            HasMany(p => p.ApplicationRecipients)
+                .WithRequired(d => d.Owner)
+                .HasForeignKey(d => d.OwnerId)
+                .WillCascadeOnDelete(true)
+            ;
+
             Property(p => p.WelcomeMessage).HasColumnType("ntext").IsOptional();
             //Property(p => p.EmailAddress).HasColumnType("ntext").IsOptional();
         }

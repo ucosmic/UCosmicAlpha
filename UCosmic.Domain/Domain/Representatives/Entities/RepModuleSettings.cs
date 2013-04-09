@@ -9,9 +9,9 @@ namespace UCosmic.Domain.Representatives
         {
         }
 
-        public virtual int Id { get; set; }
+        public int Id { get; protected set; }
         public string WelcomeMessage { get; protected internal set; }
-        public virtual Establishment Owner { get; set; }
+        public virtual Establishment Owner { get; protected internal set; }
         public virtual ICollection<ApplicationRecipient> ApplicationRecipients { get; protected internal set; }
     }
 }
