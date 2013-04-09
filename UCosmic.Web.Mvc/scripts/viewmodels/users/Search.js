@@ -216,12 +216,46 @@ var ViewModels;
             return RoleGrantValidator;
         })();        
         new RoleGrantValidator();
+        var RoleRevokeValidator = (function () {
+            function RoleRevokeValidator() {
+                this._ruleName = 'validRoleRevoke';
+                this._isAwaitingResponse = false;
+                this.async = true;
+                this.message = 'error';
+                ko.validation.rules[this._ruleName] = this;
+                ko.validation.addExtender(this._ruleName);
+            }
+            RoleRevokeValidator.prototype.validator = function (val, vm, callback) {
+                var _this = this;
+                if(!vm.roleToRevoke()) {
+                    callback(true);
+                    return;
+                }
+                if(!this._isAwaitingResponse) {
+                    var route = App.Routes.WebApi.Identity.Users.Roles.validateRevoke(vm.id(), vm.roleToRevoke());
+                    this._isAwaitingResponse = true;
+                    $.post(route).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
+                        });
+                    });
+                }
+            };
+            return RoleRevokeValidator;
+        })();        
+        new RoleRevokeValidator();
         var SearchResult = (function () {
             function SearchResult(values, owner) {
                 var _this = this;
                 this.roleOptions = ko.observableArray();
                 this.roleOptionsCaption = ko.observable('[Loading...]');
                 this.selectedRoleOption = ko.observable();
+                this.roleToRevoke = ko.observable();
                 this.$roleSelect = ko.observable();
                 this.roleSpinner = new ViewModels.Spinner({
                     delay: 0,
@@ -289,8 +323,14 @@ var ViewModels;
                 this.selectedRoleOption.extend({
                     validRoleGrant: this
                 });
+                this.roleToRevoke.extend({
+                    validRoleRevoke: this
+                });
                 this.isValidating = ko.computed(function () {
-                    return _this.name.isValidating();
+                    return _this.selectedRoleOption.isValidating() || _this.roleToRevoke.isValidating();
+                });
+                this.selectedRoleOption.subscribe(function (newValue) {
+                    _this.roleToRevoke(undefined);
                 });
                 ko.validation.group(this);
             };
@@ -396,11 +436,13 @@ var ViewModels;
                 });
             };
             SearchResult.prototype.hideRoleEditor = function () {
+                this.roleToRevoke(undefined);
                 this.isEditingRoles(false);
             };
             SearchResult.prototype.grantRole = function () {
                 var _this = this;
                 this.roleSpinner.start();
+                this.roleToRevoke(undefined);
                 if(this.isValidating()) {
                     setTimeout(function () {
                         _this.grantRole();
@@ -409,6 +451,7 @@ var ViewModels;
                 }
                 if(!this.isValid()) {
                     this.errors.showAllMessages();
+                    this.roleSpinner.stop();
                     return false;
                 }
                 var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
@@ -435,12 +478,25 @@ var ViewModels;
             SearchResult.prototype.revokeRole = function (roleId) {
                 var _this = this;
                 this.roleSpinner.start();
+                this.roleToRevoke(roleId);
+                if(this.isValidating()) {
+                    setTimeout(function () {
+                        _this.revokeRole(roleId);
+                    }, 50);
+                    return false;
+                }
+                if(!this.isValid()) {
+                    this.errors.showAllMessages();
+                    this.roleSpinner.stop();
+                    return false;
+                }
                 var url = App.Routes.WebApi.Identity.Users.Roles.del(this.id(), roleId);
                 $.ajax({
                     url: url,
                     type: 'DELETE'
                 }).done(function (response, textStatus, xhr) {
                     App.flasher.flash(response);
+                    _this.roleToRevoke(undefined);
                     _this.pullRoleGrants().done(function (response) {
                         _this.loadRoleGrants(response);
                         _this._pullRoleOptions().done(function (response) {
@@ -449,7 +505,7 @@ var ViewModels;
                     });
                 }).fail(function (xhr, textStatus, errorThrown) {
                     _this.isRevokeError(true);
-                    _this.revokeErrorText(xhr.responseText);
+                    _this.grantErrorText('An unexpected error occurred while trying to revoke access.');
                     _this.roleSpinner.stop();
                 });
             };

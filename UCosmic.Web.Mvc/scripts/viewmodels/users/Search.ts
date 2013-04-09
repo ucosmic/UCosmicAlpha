@@ -229,6 +229,39 @@ module ViewModels.Users {
     }
     new RoleGrantValidator();
 
+    class RoleRevokeValidator implements KnockoutValidationAsyncRuleDefinition {
+        private _ruleName: string = 'validRoleRevoke';
+        private _isAwaitingResponse: bool = false;
+        async: bool = true;
+        message: string = 'error';
+        validator(val: string, vm: SearchResult, callback: KnockoutValidationAsyncCallback) {
+            if (!vm.roleToRevoke()) {
+                callback(true);
+                return;
+            }
+            if (!this._isAwaitingResponse) {
+                var route = App.Routes.WebApi.Identity.Users.Roles
+                    .validateRevoke(vm.id(), vm.roleToRevoke());
+                this._isAwaitingResponse = true;
+                $.post(route)
+                .always((): void => {
+                    this._isAwaitingResponse = false;
+                })
+                .done((): void => {
+                    callback(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    callback({ isValid: false, message: xhr.responseText });
+                });
+            }
+        }
+        constructor() {
+            ko.validation.rules[this._ruleName] = this;
+            ko.validation.addExtender(this._ruleName);
+        }
+    }
+    new RoleRevokeValidator();
+
     export class SearchResult implements KnockoutValidationGroup {
         private _owner: Search;
         id: KnockoutObservableNumber;
@@ -239,6 +272,7 @@ module ViewModels.Users {
         roleOptions: KnockoutObservableArray = ko.observableArray();
         roleOptionsCaption: KnockoutObservableString = ko.observable('[Loading...]');
         selectedRoleOption: KnockoutObservableNumber = ko.observable();
+        roleToRevoke: KnockoutObservableNumber = ko.observable();
         $roleSelect: KnockoutObservableJQuery = ko.observable();
         isRoleGrantDisabled: KnockoutComputed;
         roleSpinner = new Spinner({ delay: 0, isVisible: true });
@@ -323,8 +357,17 @@ module ViewModels.Users {
                 validRoleGrant: this
             });
 
+            this.roleToRevoke.extend({
+                validRoleRevoke: this
+            });
+
             this.isValidating = ko.computed((): bool => {
-                return this.name.isValidating();
+                return this.selectedRoleOption.isValidating()
+                    || this.roleToRevoke.isValidating();
+            });
+
+            this.selectedRoleOption.subscribe((newValue: number): void => {
+                this.roleToRevoke(undefined);
             });
 
             ko.validation.group(this);
@@ -444,11 +487,13 @@ module ViewModels.Users {
             });
         }
         hideRoleEditor(): void {
+            this.roleToRevoke(undefined);
             this.isEditingRoles(false);
         }
 
         grantRole(): bool {
             this.roleSpinner.start();
+            this.roleToRevoke(undefined);
 
             if (this.isValidating()) {
                 setTimeout((): bool => { this.grantRole(); }, 50);
@@ -457,6 +502,7 @@ module ViewModels.Users {
 
             if (!this.isValid()) { // validate
                 this.errors.showAllMessages();
+                this.roleSpinner.stop();
                 return false;
             }
 
@@ -486,8 +532,22 @@ module ViewModels.Users {
             });
         }
 
-        revokeRole(roleId: number): void {
+        revokeRole(roleId: number): bool {
             this.roleSpinner.start();
+
+            this.roleToRevoke(roleId);
+
+            if (this.isValidating()) {
+                setTimeout((): bool => { this.revokeRole(roleId); }, 50);
+                return false;
+            }
+
+            if (!this.isValid()) { // validate
+                this.errors.showAllMessages();
+                this.roleSpinner.stop();
+                return false;
+            }
+
             var url = App.Routes.WebApi.Identity.Users.Roles.del(this.id(), roleId);
             $.ajax({
                 url: url,
@@ -495,6 +555,7 @@ module ViewModels.Users {
             })
             .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
                 App.flasher.flash(response);
+                this.roleToRevoke(undefined);
                 this.pullRoleGrants()
                 .done((response: any[]): void => {
                     this.loadRoleGrants(response);
@@ -506,7 +567,7 @@ module ViewModels.Users {
             })
             .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                 this.isRevokeError(true);
-                this.revokeErrorText(xhr.responseText);
+                this.grantErrorText('An unexpected error occurred while trying to revoke access.');
                 this.roleSpinner.stop();
             });
         }

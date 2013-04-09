@@ -119,6 +119,7 @@
                                     <span class="field-validation-error" data-bind="text: revokeErrorText"></span>
                                     <a href="#" data-bind="click: dismissError">OK</a>
                                 </div>
+                                <input type="hidden" data-bind="value: roleToRevoke"/>
                                 <div class="row">
                                     <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: roleOptionsCaption, jqObservableElement: '$roleSelect'">
                                         <option>[Loading...]</option>
