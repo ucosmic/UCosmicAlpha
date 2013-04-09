@@ -25,9 +25,6 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class UsersController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public UsersController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected UsersController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -44,6 +41,12 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Created()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Created);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public UsersController Actions { get { return MVC.Users; } }
@@ -62,6 +65,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string New = "New";
+            public readonly string Created = "Created";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -69,9 +73,18 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string New = "New";
+            public const string Created = "Created";
         }
 
 
+        static readonly ActionParamsClass_Created s_params_Created = new ActionParamsClass_Created();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Created CreatedParams { get { return s_params_Created; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Created
+        {
+            public readonly string location = "location";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -106,6 +119,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult New()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.New);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Created(string location)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Created);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "location", location);
             return callInfo;
         }
 

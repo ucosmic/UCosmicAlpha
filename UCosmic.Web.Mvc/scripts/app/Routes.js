@@ -36,6 +36,10 @@ var App;
                         return makeUrl(url);
                     }
                     Users.get = get;
+                    function post() {
+                        return makeUrl('users');
+                    }
+                    Users.post = post;
                     function validateName(id) {
                         id = id ? id : 0;
                         var url = 'users/' + id + '/validate-name';
@@ -482,6 +486,18 @@ var App;
                 Establishments.created = created;
             })(Mvc.Establishments || (Mvc.Establishments = {}));
             var Establishments = Mvc.Establishments;
+            (function (Identity) {
+                (function (Users) {
+                    function created(location) {
+                        var url = makeUrl('users/created');
+                        url += '?location=' + location;
+                        return url;
+                    }
+                    Users.created = created;
+                })(Identity.Users || (Identity.Users = {}));
+                var Users = Identity.Users;
+            })(Mvc.Identity || (Mvc.Identity = {}));
+            var Identity = Mvc.Identity;
         })(Routes.Mvc || (Routes.Mvc = {}));
         var Mvc = Routes.Mvc;
     })(App.Routes || (App.Routes = {}));

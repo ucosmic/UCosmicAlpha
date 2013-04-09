@@ -37,7 +37,11 @@ var ViewModels;
                 var _this = this;
                 this.id = ko.observable();
                 this.name = ko.observable();
-                this.saveSpinner = new ViewModels.Spinner();
+                this.saveSpinner = new ViewModels.Spinner({
+                    delay: 200,
+                    isVisible: false
+                });
+                this.errorMessage = ko.observable();
                 this.name.extend({
                     required: {
                         message: 'Username is required.'
@@ -64,6 +68,15 @@ var ViewModels;
                     this.saveSpinner.stop();
                     return false;
                 }
+                var url = App.Routes.WebApi.Identity.Users.post();
+                var data = {
+                    name: this.name()
+                };
+                $.post(url, data).done(function (response, statusText, xhr) {
+                    window.location.href = App.Routes.Mvc.Identity.Users.created(xhr.getResponseHeader('Location'));
+                }).fail(function (xhr, statusText, errorThrown) {
+                    _this.errorMessage('An unexpected error occurred while trying to create this user.');
+                });
                 this.saveSpinner.stop();
             };
             return User;

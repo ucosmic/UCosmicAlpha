@@ -31,9 +31,12 @@ module App.Routes {
             export module Users {
                 export function get (id?: number) {
                     var url = 'users';
-                    if (id)
-                        url += '/' + id;
+                    if (id) url += '/' + id;
                     return makeUrl(url);
+                }
+
+                export function post () {
+                    return makeUrl('users');
                 }
 
                 export function validateName (id?: number) {
@@ -453,6 +456,16 @@ module App.Routes {
                 var url = makeUrl('establishments/created');
                 url += '?location=' + location;
                 return url;
+            }
+        }
+
+        export module Identity {
+            export module Users {
+                export function created(location: string) {
+                    var url = makeUrl('users/created');
+                    url += '?location=' + location;
+                    return url;
+                }
             }
         }
     }

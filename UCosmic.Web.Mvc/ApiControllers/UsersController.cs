@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -19,6 +20,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class UsersController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<CreateUser> _createUser;
         private readonly IHandleCommands<GrantRoleToUser> _grantRole;
         private readonly IHandleCommands<RevokeRoleFromUser> _revokeRole;
         private readonly IValidator<CreateUser> _createValidator;
@@ -26,6 +28,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IValidator<RevokeRoleFromUser> _revokeValidator;
 
         public UsersController(IProcessQueries queryProcessor
+            , IHandleCommands<CreateUser> createUser
             , IHandleCommands<GrantRoleToUser> grantRole
             , IHandleCommands<RevokeRoleFromUser> revokeRole
             , IValidator<CreateUser> createValidator
@@ -34,6 +37,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         )
         {
             _queryProcessor = queryProcessor;
+            _createUser = createUser;
             _grantRole = grantRole;
             _revokeRole = revokeRole;
             _createValidator = createValidator;
@@ -63,6 +67,58 @@ namespace UCosmic.Web.Mvc.ApiControllers
             foreach (var model in models.Items)
                 model.Roles = model.Roles.OrderBy(x => x.Name).ToArray();
             return models;
+        }
+
+        [GET("{userId}")]
+        public UserApiModel GetOne(int userId)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var entity = _queryProcessor.Execute(new UserById(userId)
+            {
+                EagerLoad = new Expression<Func<User, object>>[]
+                {
+                    x => x.Person,
+                    x => x.Grants.Select(y => y.Role),
+                }
+            });
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<UserApiModel>(entity);
+            return model;
+        }
+
+        [POST("")]
+        public HttpResponseMessage Create(UserApiModel model)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var command = new CreateUser(User, model.Name)
+            {
+                PersonDisplayName = model.PersonDisplayName,
+            };
+
+            try
+            {
+                _createUser.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest,
+                    ex.Errors.First().ErrorMessage, "text/plain");
+                return badRequest;
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "User was successfully created.");
+            var url = Url.Link(null, new
+            {
+                controller = "Users",
+                action = "GetOne",
+                userId = command.CreatedUserId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+
+            return response;
         }
 
         [GET("{userId}/roles")]

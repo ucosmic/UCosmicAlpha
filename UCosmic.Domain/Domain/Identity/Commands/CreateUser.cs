@@ -26,6 +26,7 @@ namespace UCosmic.Domain.Identity
         public IPrincipal Principal { get; private set; }
         public string Name { get; private set; }
         public string PersonDisplayName { get; set; }
+        public int CreatedUserId { get; internal set; }
     }
 
     public class ValidateCreateUserCommand : AbstractValidator<CreateUser>
@@ -164,6 +165,8 @@ namespace UCosmic.Domain.Identity
             _entities.Create(audit);
             _entities.Create(user);
             _unitOfWork.SaveChanges();
+
+            command.CreatedUserId = user.RevisionId;
         }
     }
 }

@@ -55,6 +55,9 @@
             <footer>
                 <input type="submit" value="Save" />
                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible"/>
+                <div data-bind="visible: errorMessage">
+                    <span class="field-validation-error" data-bind="text: errorMessage"></span>
+                </div>
             </footer>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

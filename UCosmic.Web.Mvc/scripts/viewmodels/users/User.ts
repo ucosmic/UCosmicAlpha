@@ -42,7 +42,8 @@ module ViewModels.Users {
         id: KnockoutObservableNumber = ko.observable();
         name: KnockoutObservableString = ko.observable();
 
-        saveSpinner = new Spinner();
+        saveSpinner = new Spinner({ delay: 200, isVisible: false });
+        errorMessage: KnockoutObservableString = ko.observable();
 
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -79,6 +80,21 @@ module ViewModels.Users {
                 this.saveSpinner.stop();
                 return false;
             }
+
+            var url = App.Routes.WebApi.Identity.Users.post();
+            var data = {
+                name: this.name()
+            };
+
+            $.post(url, data)
+            .done((response: string, statusText: string, xhr: JQueryXHR): void {
+                // redirect to search
+                window.location.href = App.Routes.Mvc.Identity.Users
+                    .created(xhr.getResponseHeader('Location'));
+            })
+            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                this.errorMessage('An unexpected error occurred while trying to create this user.');
+            });
 
             this.saveSpinner.stop();
         }

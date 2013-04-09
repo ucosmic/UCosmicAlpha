@@ -180,7 +180,7 @@
 
     <script type="text/javascript">
         ko.applyBindings(App.flasher, $('.flasher')[0]);
-        App.flasher.text('@TempData["Flasher"]');
+        App.flasher.text('@Html.Raw(TempData.Flash().Replace("'", "\\'"))');
         App.Routes.applicationPath = '@Request.ApplicationPath';
         App.Routes.WebApi.urlPrefix = 'api';
 
