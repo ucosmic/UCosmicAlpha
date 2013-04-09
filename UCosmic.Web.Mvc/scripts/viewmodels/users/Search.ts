@@ -323,7 +323,7 @@ module ViewModels.Users {
                     dataValueField: 'id',
                     template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' + 
                         '#} else {#<div>${ data.name }</div>\r\n #}#' + 
-                        '#if (data.description) {# <div>${ data.description }</div> #}#'
+                        '#if (data.description) {# <div><small>${ data.description }</small></div> #}#'
 
                 });
             }

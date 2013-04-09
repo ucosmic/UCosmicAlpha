@@ -184,4 +184,6 @@ body .help-icon-position {
   right: 20px;
   width: 16px;
   height: 16px; }
+body small {
+  font-size: smaller; }
 

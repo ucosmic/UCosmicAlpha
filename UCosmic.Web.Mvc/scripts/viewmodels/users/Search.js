@@ -291,7 +291,7 @@ var ViewModels;
                         dataSource: roleData,
                         dataTextField: 'name',
                         dataValueField: 'id',
-                        template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' + '#} else {#<div>${ data.name }</div>\r\n #}#' + '#if (data.description) {# <div>${ data.description }</div> #}#'
+                        template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' + '#} else {#<div>${ data.name }</div>\r\n #}#' + '#if (data.description) {# <div><small>${ data.description }</small></div> #}#'
                     });
                 }
             };

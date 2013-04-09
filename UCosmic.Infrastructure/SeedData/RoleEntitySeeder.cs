@@ -17,13 +17,13 @@ namespace UCosmic.SeedData
         public void Seed()
         {
             Seed(RoleName.SecurityAdministrator,
-                "Security Administrators can control the roles and role grants to users within their organization."
+                "Security Administrators can grant and revoke access privileges to and from users within their organization."
             );
             Seed(RoleName.AuthenticationAgent,
-                "Authentication Agents can sign on as any user, regardless of establishment."
+                "Authentication Agents can sign on as any user, regardless of organization."
             );
             Seed(RoleName.AuthorizationAgent,
-                "Authorization Agents can control the roles and role grants to any user, regardless of establishment."
+                "Authorization Agents can grant and revoke access privileges to any user, regardless of organization."
             );
             Seed(RoleName.InstitutionalAgreementManager,
                 "Institutional Agreement Managers can add, edit, and otherwise manage institutional agreements for their institutions. " +
@@ -34,16 +34,16 @@ namespace UCosmic.SeedData
                 "and can also edit the settings for the Institutional Agreement Module."
             );
             Seed(RoleName.EstablishmentLocationAgent,
-                "Establishment Location Agents can modify location information for any establishment."
+                "Establishment Location Agents can modify location information for any organization."
             );
             Seed(RoleName.EstablishmentAdministrator,
-                "Establishment Administrators can add, edit, and otherwise manage shared establishment data."
+                "Establishment Administrators can add, edit, and otherwise manage global establishment data."
             );
             Seed(RoleName.ElmahViewer,
                 "Elmah Viewers can view the ELMAH error logs."
             );
             Seed(RoleName.EmployeeProfileManager,
-                "Employee Profile Managers can view private information about employees."
+                "Employee Profile Managers can view private information about employees and sign on as those employees to manage their data."
             );
         }
     }
