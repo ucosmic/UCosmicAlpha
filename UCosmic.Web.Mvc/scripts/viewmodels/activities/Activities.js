@@ -14,7 +14,7 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.getLocations(0)).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
                     locationsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
@@ -31,7 +31,7 @@ var ViewModels;
                 activitiesSearchInput.orderBy = "";
                 activitiesSearchInput.pageNumber = 1;
                 activitiesSearchInput.pageSize = 10;
-                $.get(App.Routes.WebApi.Activities.getAllPaged(), activitiesSearchInput).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Activities.get(), activitiesSearchInput).done(function (data, textStatus, jqXHR) {
  {
                         dataPact.resolve(data);
                     }
@@ -47,7 +47,7 @@ var ViewModels;
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(), data.id);
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id);
                         };
                         var mapping = {
                             'documents': {

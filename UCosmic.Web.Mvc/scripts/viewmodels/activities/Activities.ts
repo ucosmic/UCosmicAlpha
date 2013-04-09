@@ -48,7 +48,7 @@ module ViewModels.Activities {
             var deferred: JQueryDeferred = $.Deferred();
 
             var locationsPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.getLocations(0))
+            $.get(App.Routes.WebApi.Activities.Locations.get())
                 .done((data: Service.ApiModels.IActivityLocation[], textStatus: string, jqXHR: JQueryXHR): void => {
                     locationsPact.resolve(data);
                 })
@@ -73,7 +73,7 @@ module ViewModels.Activities {
             activitiesSearchInput.pageNumber = 1;
             activitiesSearchInput.pageSize = 10;
 
-            $.get(App.Routes.WebApi.Activities.getAllPaged(), activitiesSearchInput)
+            $.get(App.Routes.WebApi.Activities.get(), activitiesSearchInput)
                 .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
                     { dataPact.resolve(data); }
                 })
@@ -93,7 +93,7 @@ module ViewModels.Activities {
                     {
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(),data.id);
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id);
                         };
 
                         var mapping = {

@@ -49,15 +49,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _validateLoadableFile = validateLoadableFile;
             _createLoadableFile = createLoadableFile; 
             _createActivityDocument = createActivityDocument;
-            _deleteActivityDocument = deleteActivityDocument;        }
+            _deleteActivityDocument = deleteActivityDocument; 
+        }
 
         // --------------------------------------------------------------------------------
         /*
          * Get a page of activities
         */
         // --------------------------------------------------------------------------------
-        [GET("page")]
-        public PageOfActivityApiModel GetPage([FromUri] ActivitySearchInputModel input)
+        [GET("")]
+        public PageOfActivityApiModel Get([FromUri] ActivitySearchInputModel input)
         {
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
 
@@ -85,8 +86,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create an activity
         */
         // --------------------------------------------------------------------------------
-        [POST("{activityId}")]
-        public HttpResponseMessage Post(int activityId)
+        [POST("")]
+        public HttpResponseMessage Post()
         {
             return Request.CreateResponse(HttpStatusCode.NotImplemented);
         }
@@ -118,7 +119,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get all activity documents
         */
         // --------------------------------------------------------------------------------
-        [GET("{activityId}/documents/{activityMode}")]
+        [GET("{activityId}/documents")]
         public ICollection<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
         {
             ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
@@ -128,35 +129,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Get all activity locations
+         * Get activity document
         */
         // --------------------------------------------------------------------------------
-        [GET("{activityId}/locations")]
-         public ICollection<ActivityLocationNameApiModel> GetLocations(int activityId)
+        [GET("{activityId}/documents/{documentId}")]
+        public ActivityDocumentApiModel GetDocuments(int activityId, int documentId)
         {
-            var activityPlaces = _queryProcessor.Execute(new FilteredPlaces
-            {
-                IsCountry = true,
-                //IsBodyOfWater = true,
-                IsEarth = true
-            });
-
-            var model = Mapper.Map<ActivityLocationNameApiModel[]>(activityPlaces);
-            return model;
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Get all establishment institutions (category code 'INST')
-        */
-        // --------------------------------------------------------------------------------
-        [GET("{activityId}/institutions")]
-        public ICollection<ActivityInstitutionApiModel> GetInstitutions(int activityId)
-        {
-            var institutions = _queryProcessor.Execute(new EstablishmentsByType("INST"));
-
-            var model = Mapper.Map<ICollection<Establishment>, ICollection<ActivityInstitutionApiModel>>(institutions);
-            return model;
+            return null;
         }
 
         // --------------------------------------------------------------------------------
@@ -270,17 +249,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Get activity document
-        */
-        // --------------------------------------------------------------------------------
-        [GET("{activityId}/documents/{documentId}")]
-        public ActivityDocumentApiModel GetDocuments(int activityId, int documentId)
-        {
-            return null;
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
          * Update activity document
          * (Might need to use POST here)
         */
@@ -321,8 +289,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Validate activity document type
         */
         // --------------------------------------------------------------------------------
-        [POST("{activityid}/validate-upload-filetype")]
-        public HttpResponseMessage PostValidateUploadFiletype(int activityid, [FromBody] string extension)
+        [POST("{activityid}/documents/validate-upload-filetype")]
+        public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] string extension)
         {
             CreateImage createImageCommand = new CreateImage { Extension = extension };
             var createImageValidationResult = _validateImage.Validate(createImageCommand);

@@ -60,7 +60,7 @@ var ViewModels;
                     multiple: false,
                     showFileList: false,
                     async: {
-                        saveUrl: App.Routes.WebApi.Activities.postDocument(this.id()),
+                        saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id()),
                         autoUpload: true
                     },
                     select: function (e) {
@@ -99,13 +99,13 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 var locationsPact = jQuery.Deferred();
-                jQuery.get(App.Routes.WebApi.Activities.getLocations(0)).done(function (data, textStatus, jqXHR) {
+                jQuery.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
                     locationsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 var institutionsPact = jQuery.Deferred();
-                jQuery.get(App.Routes.WebApi.Activities.getInstitutions(0)).done(function (data, textStatus, jqXHR) {
+                jQuery.get(App.Routes.WebApi.Activities.Institutions.get()).done(function (data, textStatus, jqXHR) {
                     institutionsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     institutionsPact.reject(jqXHR, textStatus, errorThrown);
@@ -135,7 +135,7 @@ var ViewModels;
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(), data.id));
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id));
                         };
                         var mapping = {
                             'documents': {
@@ -289,7 +289,7 @@ var ViewModels;
                     jQuery.ajax({
                         async: false,
                         type: 'POST',
-                        url: App.Routes.WebApi.Activities.validateUploadFileTypeByExtension(activityId),
+                        url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(activityId),
                         data: ko.toJSON(extension),
                         dataType: 'json',
                         contentType: 'application/json',
@@ -307,13 +307,13 @@ var ViewModels;
                 var _this = this;
                 jQuery.ajax({
                     type: 'GET',
-                    url: App.Routes.WebApi.Activities.getDocuments(this.id(), this.modeText()),
+                    url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
                     dataType: 'json',
                     success: function (documents, textStatus, jqXhr) {
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(), data.id));
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id));
                         };
                         var mapping = {
                             create: function (options) {
@@ -335,7 +335,7 @@ var ViewModels;
                 var _this = this;
                 jQuery.ajax({
                     type: 'DELETE',
-                    url: App.Routes.WebApi.Activities.deleteDocument(this.id(), item.id()),
+                    url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id()),
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.loadDocuments();

@@ -284,63 +284,72 @@ module App.Routes {
             }
         }
 
-        export class Activities {
-            static getAllPaged(): string {
-                var url = makeUrl('activities/page');
-                url = url.substring(0, url.length - 1);
+        export module Activities {
+            export function get (activityId?: number): string {
+                var url = makeUrl('activities');
+                if (activityId) {
+                    url += '/' + activityId;
+                }
                 return url;
             }
 
-            static post(): string {
+            export function post(): string {
                 return makeUrl('activities');
             }
 
-            static get (activityId: number): string {
-                return makeUrl('activities/' + activityId.toString());
+            export function put(activityId: number): string {
+                return makeUrl('activities/' + activityId);
             }
 
-            static put(activityId: number): string {
-                return makeUrl('activities/' + activityId.toString());
+            export function del(activityId: number): string {
+                return makeUrl('activities/' + activityId);
             }
 
-            static del(activityId: number): string {
-                return makeUrl('activities/' + activityId.toString());
+            export module Documents {
+                export function get(activityId: number, documentId?: number, activityMode?: string): string {
+                    var url = makeUrl('activities/' + activityId + '/documents');
+                    if (documentId) {
+                        url += '/' + documentId;
+                    }
+                    else if (activityId) {
+                        url += '/?activityMode=' + activityMode;
+                    }
+                    return url;
+                }
+
+                export function post(activityId: number): string {
+                    return makeUrl('activities/' + activityId + '/documents');
+                }
+
+                export function put(activityId: number, documentId: number): string {
+                    return makeUrl('activities/' + activityId + '/documents/' + documentId);
+                }
+
+                export function del(activityId: number, documentId: number): string {
+                    return makeUrl('activities/' + activityId + '/documents/' + documentId);
+                }
+
+                export function validateFileExtensions(activityId: number): string {
+                    return makeUrl('activities/' + activityId + '/documents/validate-upload-filetype');
+                }
+
+                export module Thumbnail {
+                    export function get(activityId: number, documentId: number): string {
+                        return makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
+                    }
+                }
             }
 
-            static getDocuments(activityId: number, activityMode: string): string {
-                return makeUrl('activities/' + activityId.toString() + '/documents/' + activityMode);
+            export module Locations {
+                export function get(): string {
+                    return makeUrl('activity-locations');
+                }
             }
 
-            static postDocument(activityId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/documents');
-            }
-
-            static getDocument(activityId: number, documentId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
-            }
-
-            static putDocument(activityId: number, documentId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
-            }
-
-            static deleteDocument(activityId: number, documentId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString());
-            }
-
-            static validateUploadFileTypeByExtension(activityId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/validate-upload-filetype');
-            }
-
-            static getDocumentProxyImage(activityId: number, documentId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/documents/' + documentId.toString() + '/thumbnail');
-            }
-
-            static getLocations(activityId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/locations');
-            }
-
-            static getInstitutions(activityId: number): string {
-                return makeUrl('activities/' + activityId.toString() + '/institutions');
+            export module Institutions {
+                export function get(): string {
+                    return makeUrl('activity-institutions');
+                }
             }
         }
     }
@@ -367,7 +376,7 @@ module App.Routes {
         export module Profile {
             export function activityEdit(activityId: string) {
                 var url = makeUrl('my/activity/');
-                return url + activityId.toString();
+                return url + activityId;
         }
 
         export module Identity {

@@ -127,7 +127,7 @@ module ViewModels.Activities {
                 multiple: false,
                 showFileList: false,
                 async: {
-                    saveUrl: App.Routes.WebApi.Activities.postDocument(this.id()),
+                    saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id()),
                     autoUpload: true
                 },
                 select: (e: any): void => {
@@ -187,7 +187,7 @@ module ViewModels.Activities {
             var deferred: JQueryDeferred = $.Deferred();
 
             var locationsPact = jQuery.Deferred();
-            jQuery.get(App.Routes.WebApi.Activities.getLocations(0))
+            jQuery.get(App.Routes.WebApi.Activities.Locations.get())
                 .done((data: Service.ApiModels.IActivityLocation[], textStatus: string, jqXHR: JQueryXHR): void => {
                     locationsPact.resolve(data);
                 })
@@ -196,7 +196,7 @@ module ViewModels.Activities {
                 });
 
             var institutionsPact = jQuery.Deferred();
-            jQuery.get(App.Routes.WebApi.Activities.getInstitutions(0))
+            jQuery.get(App.Routes.WebApi.Activities.Institutions.get())
                 .done((data: Service.ApiModels.IInstitution[], textStatus: string, jqXHR: JQueryXHR): void => {
                     institutionsPact.resolve(data);
                 })
@@ -243,7 +243,7 @@ module ViewModels.Activities {
                     {
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(),data.id));
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id));
                         };
                         
                        var mapping = {
@@ -513,7 +513,7 @@ module ViewModels.Activities {
                 jQuery.ajax({
                        async: false,
                         type: 'POST',
-                         url: App.Routes.WebApi.Activities.validateUploadFileTypeByExtension(activityId),
+                         url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(activityId),
                         data: ko.toJSON(extension),
                     dataType: 'json',
                  contentType: 'application/json',
@@ -536,14 +536,14 @@ module ViewModels.Activities {
         loadDocuments(): void {
             jQuery.ajax({
                     type: 'GET',
-                     url: App.Routes.WebApi.Activities.getDocuments(this.id(),this.modeText()),
+                     url: App.Routes.WebApi.Activities.Documents.get(this.id(),null,this.modeText()),
                 dataType: 'json',
                 success: (documents: any, textStatus: string, jqXhr: JQueryXHR): void {
 
                     /* TBD - This needs to be combined with the initial load mapping. */
                     var augmentedDocumentModel = function (data) {
                         ko.mapping.fromJS(data, {}, this);
-                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.getDocumentProxyImage(this.id(),data.id));
+                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id));
                     };
 
                     var mapping = {
@@ -573,7 +573,7 @@ module ViewModels.Activities {
         deleteDocument(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
             jQuery.ajax({
                     type: 'DELETE',
-                        url: App.Routes.WebApi.Activities.deleteDocument(this.id(),item.id()),
+                        url: App.Routes.WebApi.Activities.Documents.del(this.id(),item.id()),
                 dataType: 'json',
                     success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
                         this.loadDocuments();
