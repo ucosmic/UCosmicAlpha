@@ -135,7 +135,7 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivitiesByPersonIdMode.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
@@ -147,7 +147,6 @@
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEntityId.cs" />
-    <Compile Include="Domain\Activities\Queries\MyActivityByNumber.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivities.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Commands\DeleteEmployee.cs" />

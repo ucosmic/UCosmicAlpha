@@ -62,7 +62,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
 
-            ActivitiesByPersonIdMode query = Mapper.Map<ActivitySearchInputModel, ActivitiesByPersonIdMode>(input);
+            ActivitiesByPersonId query = Mapper.Map<ActivitySearchInputModel, ActivitiesByPersonId>(input);
             PagedQueryResult<Activity> activities = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfActivityApiModel>(activities);
             return model;

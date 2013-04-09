@@ -139,7 +139,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.Values, o => o.MapFrom(s => s.Values.First(a => a.Mode == s.Mode)));
 
-                CreateMap<ActivitySearchInputModel, ActivitiesByPersonIdMode>()
+                CreateMap<ActivitySearchInputModel, ActivitiesByPersonId>()
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
                     .ForMember(d => d.ModeText, o => o.Ignore());
 
