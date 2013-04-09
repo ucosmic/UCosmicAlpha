@@ -2133,11 +2133,18 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\User.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\users\SearchResult.ts" />
     <Content Include="scripts\viewmodels\users\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\users\Search.min.js">
       <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\users\SearchResult.js">
+      <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\users\SearchResult.min.js">
+      <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\users\User.js">
       <DependentUpon>User.ts</DependentUpon>

@@ -2687,6 +2687,10 @@ namespace Links
                 public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
                               
                 public static readonly string Search_min_js = Url("Search.min.js");
+                public static readonly string SearchResult_ts = Url("SearchResult.ts");
+                public static readonly string SearchResult_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchResult.min.js") ? Url("SearchResult.min.js") : Url("SearchResult.js");
+                              
+                public static readonly string SearchResult_min_js = Url("SearchResult.min.js");
                 public static readonly string User_ts = Url("User.ts");
                 public static readonly string User_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/User.min.js") ? Url("User.min.js") : Url("User.js");
                               

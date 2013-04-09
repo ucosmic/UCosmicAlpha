@@ -20,6 +20,8 @@
 
     <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
 
+    <script type="text/javascript" src="~/scripts/viewmodels/users/SearchResult.js"></script>
+
     <script type="text/javascript">
         $(function () {
             var viewModel = new ViewModels.Users.Search();
@@ -101,7 +103,7 @@
                                         <div data-bind="visible: hasGrants, foreach: roles">
                                             <span class="branded-dark1 badge"><span data-bind="text: name"></span>
                                                 <img data-bind="visible: $parent.isEditingRoles(), click: revokeRole" title="Revoke this access grant"
-                                                     src="~/images/icons/minus/minus-16-red-on-white.png" alt="Revoke this access grant" class="revoke-button" />
+                                                    src="~/images/icons/minus/minus-16-red-on-white.png" alt="Revoke this access grant" class="revoke-button" />
                                             </span>
                                             <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
                                                 <div>
@@ -124,7 +126,7 @@
                                         <span class="field-validation-error" data-bind="text: revokeErrorText"></span>
                                         <a href="#" data-bind="click: dismissError">OK</a>
                                     </div>
-                                    <input type="hidden" data-bind="value: roleToRevoke"/>
+                                    <input type="hidden" data-bind="value: roleToRevoke" />
                                     <div class="row">
                                         <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: roleOptionsCaption, jqObservableElement: '$roleSelect'">
                                             <option>[Loading...]</option>
@@ -167,9 +169,10 @@
             width: 580px;
         }
 
-        .user-item .editor .row {
-            margin-top: 12px;
-        }
+            .user-item .editor .row {
+                margin-top: 12px;
+            }
+
             .user-item .text-data .user-name {
                 font-size: 18px;
                 font-weight: bold;
@@ -189,11 +192,11 @@
                     text-transform: none;
                 }
 
-                .user-item .text-data .roles .badge img.revoke-button {
-                    vertical-align: top;
-                    cursor: pointer;
-                    margin-left: 2px;
-                }
+                    .user-item .text-data .roles .badge img.revoke-button {
+                        vertical-align: top;
+                        cursor: pointer;
+                        margin-left: 2px;
+                    }
 
         .user-item .menu-box ul.k-menu {
             display: inline-block;
