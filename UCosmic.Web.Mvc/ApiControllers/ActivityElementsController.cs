@@ -41,15 +41,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Get all establishment institutions (category code 'INST')
+         * Get all establishments by keyword
         */
         // --------------------------------------------------------------------------------
-        [GET("activity-institutions")]
-        public ICollection<ActivityInstitutionApiModel> GetActivityInstitutions()
+        [GET("activity-establishments")]
+        public IEnumerable<ActivityEstablishmentApiModel> GetActivityInstitutions(string keyword)
         {
-            var institutions = _queryProcessor.Execute(new EstablishmentsByType("INST"));
+            var pagedEstablishments = _queryProcessor.Execute(new EstablishmentViewsByKeyword
+            {
+                Keyword = keyword,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            });
 
-            var model = Mapper.Map<ICollection<Establishment>, ICollection<ActivityInstitutionApiModel>>(institutions);
+            var model = Mapper.Map<IEnumerable<EstablishmentView>, IEnumerable<ActivityEstablishmentApiModel>>(pagedEstablishments.Items);
             return model;
         }
     }

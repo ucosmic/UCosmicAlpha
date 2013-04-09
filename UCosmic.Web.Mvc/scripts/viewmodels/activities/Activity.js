@@ -5,7 +5,6 @@ var ViewModels;
             function Activity(activityId) {
                 this.locations = ko.observableArray();
                 this.selectedLocations = ko.observableArray();
-                this.institutions = ko.observableArray();
                 this.activityTypes = ko.observableArray();
                 this.addingTag = ko.observable(false);
                 this.newTag = ko.observable();
@@ -81,10 +80,23 @@ var ViewModels;
                     }
                 });
                 $("#" + newTagId).kendoAutoComplete({
-                    dataTextField: "officialName()",
-                    dataValueField: "id()",
-                    dataSource: this.institutions(),
-                    placeholder: "[Enter tag]"
+                    minLength: 3,
+                    placeholder: "[Enter tag]",
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: function (options) {
+                                $.ajax({
+                                    url: App.Routes.WebApi.Activities.Establishments.get(options.data.filter.filters[0].value),
+                                    success: function (result) {
+                                        options.success(result);
+                                    }
+                                });
+                            }
+                        }
+                    })
                 });
                 return true;
             };
@@ -98,26 +110,20 @@ var ViewModels;
             Activity.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                var locationsPact = jQuery.Deferred();
-                jQuery.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
+                var locationsPact = $.Deferred();
+                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
                     locationsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                var institutionsPact = jQuery.Deferred();
-                jQuery.get(App.Routes.WebApi.Activities.Institutions.get()).done(function (data, textStatus, jqXHR) {
-                    institutionsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    institutionsPact.reject(jqXHR, textStatus, errorThrown);
-                });
-                var typesPact = jQuery.Deferred();
-                jQuery.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
+                var typesPact = $.Deferred();
+                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                var dataPact = jQuery.Deferred();
-                jQuery.ajax({
+                var dataPact = $.Deferred();
+                $.ajax({
                     type: "GET",
                     url: App.Routes.WebApi.Activities.get(this.id()),
                     success: function (data, textStatus, jqXhr) {
@@ -127,10 +133,9 @@ var ViewModels;
                         dataPact.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
-                jQuery.when(institutionsPact, typesPact, locationsPact, dataPact).done(function (institutions, types, locations, data) {
+                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
                     _this.activityTypes = ko.mapping.fromJS(types);
                     _this.locations = ko.mapping.fromJS(locations);
-                    _this.institutions = ko.mapping.fromJS(institutions);
  {
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
@@ -286,7 +291,7 @@ var ViewModels;
                     if(extension[0] === ".") {
                         extension = extension.substring(1);
                     }
-                    jQuery.ajax({
+                    $.ajax({
                         async: false,
                         type: 'POST',
                         url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(activityId),
@@ -305,7 +310,7 @@ var ViewModels;
             };
             Activity.prototype.loadDocuments = function () {
                 var _this = this;
-                jQuery.ajax({
+                $.ajax({
                     type: 'GET',
                     url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
                     dataType: 'json',
@@ -333,7 +338,7 @@ var ViewModels;
             };
             Activity.prototype.deleteDocument = function (item, event) {
                 var _this = this;
-                jQuery.ajax({
+                $.ajax({
                     type: 'DELETE',
                     url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id()),
                     dataType: 'json',

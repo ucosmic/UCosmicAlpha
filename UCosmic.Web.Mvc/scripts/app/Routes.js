@@ -387,13 +387,14 @@ var App;
                     Locations.get = get;
                 })(Activities.Locations || (Activities.Locations = {}));
                 var Locations = Activities.Locations;
-                (function (Institutions) {
-                    function get() {
-                        return makeUrl('activity-institutions');
+                (function (Establishments) {
+                    function get(keyword) {
+                        var url = makeUrl('activity-establishments');
+                        return url + "?keyword=" + keyword;
                     }
-                    Institutions.get = get;
-                })(Activities.Institutions || (Activities.Institutions = {}));
-                var Institutions = Activities.Institutions;
+                    Establishments.get = get;
+                })(Activities.Establishments || (Activities.Establishments = {}));
+                var Establishments = Activities.Establishments;
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
         })(Routes.WebApi || (Routes.WebApi = {}));

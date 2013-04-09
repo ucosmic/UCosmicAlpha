@@ -346,9 +346,10 @@ module App.Routes {
                 }
             }
 
-            export module Institutions {
-                export function get(): string {
-                    return makeUrl('activity-institutions');
+            export module Establishments {
+                export function get(keyword: string): string {
+                    var url = makeUrl('activity-establishments');
+                    return url + "?keyword=" + keyword;
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace UCosmic.Web.Mvc.Models
         public string OfficialName { get; set; }
     }
 
-    public class ActivityInstitutionApiModel
+    public class ActivityEstablishmentApiModel
     {
         public int Id { get; set; }
         public string OfficialName { get; set; }
@@ -132,8 +132,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<ActivityLocation, ActivityLocationApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId));
 
-                CreateMap<Establishment, ActivityInstitutionApiModel>()
-                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId));
+                CreateMap<EstablishmentView, ActivityEstablishmentApiModel>();
 
                 CreateMap<Activity, ActivityApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))

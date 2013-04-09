@@ -25,7 +25,7 @@ module ViewModels.Activities {
 	    selectedLocations: KnockoutObservableArray = ko.observableArray();
 
         /* Array of all institutions offered in Tag autocomplete. */
-	    institutions: KnockoutObservableArray = ko.observableArray();
+	    //institutions: KnockoutObservableArray = ko.observableArray();
 
         /* Array of activity types displayed as list of checkboxes */
 	    activityTypes: KnockoutObservableArray = ko.observableArray();
@@ -68,15 +68,15 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------   
         setupWidgets(fromDatePickerId: string,
-                      toDatePickerId: string,
-                      countrySelectorId: string,
-                      uploadFileId: string,
-                      newTagId: string): bool {
+            toDatePickerId: string,
+            countrySelectorId: string,
+            uploadFileId: string,
+            newTagId: string): bool {
 
-            $("#"+fromDatePickerId).kendoDatePicker();
-            $("#"+toDatePickerId).kendoDatePicker();
+            $("#" + fromDatePickerId).kendoDatePicker();
+            $("#" + toDatePickerId).kendoDatePicker();
 
-            $("#"+countrySelectorId).kendoMultiSelect({
+            $("#" + countrySelectorId).kendoMultiSelect({
                 dataTextField: "officialName()",
                 dataValueField: "id()",
                 dataSource: this.locations(),
@@ -123,7 +123,7 @@ module ViewModels.Activities {
                 media_external_list_url: 'lists/media_list.js'
             });
 
-            $("#"+uploadFileId).kendoUpload({
+            $("#" + uploadFileId).kendoUpload({
                 multiple: false,
                 showFileList: false,
                 async: {
@@ -142,17 +142,31 @@ module ViewModels.Activities {
                         i += 1;
                     }
                 },
-                success: (e: any): void =>  {
+                success: (e: any): void => {
                     this.uploadingDocument(false);
                     this.loadDocuments();
                 }
             });
 
-            $("#"+newTagId).kendoAutoComplete({
-                dataTextField: "officialName()",
-                dataValueField: "id()",
-                dataSource: this.institutions(),
-                placeholder: "[Enter tag]"
+            $("#" + newTagId).kendoAutoComplete({
+                minLength: 3,
+                placeholder: "[Enter tag]",
+                dataTextField: "officialName",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: function(options) {
+                            debugger;
+                            $.ajax({
+                                url: App.Routes.WebApi.Activities.Establishments.get(options.data.filter.filters[0].value),
+                                success: (result: any): void => {
+                                    options.success(result);
+                                }
+                            });
+                        }
+                    }
+                })  
             });
 
             return true;
@@ -186,8 +200,8 @@ module ViewModels.Activities {
         load(): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
-            var locationsPact = jQuery.Deferred();
-            jQuery.get(App.Routes.WebApi.Activities.Locations.get())
+            var locationsPact = $.Deferred();
+            $.get(App.Routes.WebApi.Activities.Locations.get())
                 .done((data: Service.ApiModels.IActivityLocation[], textStatus: string, jqXHR: JQueryXHR): void => {
                     locationsPact.resolve(data);
                 })
@@ -195,17 +209,17 @@ module ViewModels.Activities {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
-            var institutionsPact = jQuery.Deferred();
-            jQuery.get(App.Routes.WebApi.Activities.Institutions.get())
-                .done((data: Service.ApiModels.IInstitution[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    institutionsPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    institutionsPact.reject(jqXHR, textStatus, errorThrown);
-                });
+            //var institutionsPact = $.Deferred();
+            //$.get(App.Routes.WebApi.Activities.Institutions.get())
+            //    .done((data: Service.ApiModels.IInstitution[], textStatus: string, jqXHR: JQueryXHR): void => {
+            //        institutionsPact.resolve(data);
+            //    })
+            //    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+            //        institutionsPact.reject(jqXHR, textStatus, errorThrown);
+            //    });
 
-            var typesPact = jQuery.Deferred();
-            jQuery.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+            var typesPact = $.Deferred();
+            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
                 .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
                     typesPact.resolve(data);
                 })
@@ -213,9 +227,9 @@ module ViewModels.Activities {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
-            var dataPact = jQuery.Deferred();
+            var dataPact = $.Deferred();
 
-            jQuery.ajax({
+            $.ajax({
                     type: "GET",
                      url: App.Routes.WebApi.Activities.get(this.id()),
                  success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXhr: JQueryXHR): void 
@@ -225,15 +239,15 @@ module ViewModels.Activities {
             });
             
             // only process after all requests have been resolved
-            jQuery.when(institutionsPact, typesPact, locationsPact, dataPact)
-                .done( (institutions: Service.ApiModels.IInstitution[],
+            $.when( /*institutionsPact,*/ typesPact, locationsPact, dataPact)
+                .done( (/*institutions: Service.ApiModels.IInstitution[],*/
                         types: Service.ApiModels.IEmployeeActivityType[],
                         locations: Service.ApiModels.IActivityLocation[], 
                         data: Service.ApiModels.IObservableActivity): void => {
 
                     this.activityTypes = ko.mapping.fromJS(types);
                     this.locations = ko.mapping.fromJS(locations);
-                    this.institutions = ko.mapping.fromJS(institutions);
+                    //this.institutions = ko.mapping.fromJS(institutions);
                                     
                     /* Although the MVC DateTime to JSON serializer will output an ISO compatible
                         string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
@@ -510,7 +524,7 @@ module ViewModels.Activities {
                     extension = extension.substring(1);
                 }
 
-                jQuery.ajax({
+                $.ajax({
                        async: false,
                         type: 'POST',
                          url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(activityId),
@@ -534,7 +548,7 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         loadDocuments(): void {
-            jQuery.ajax({
+            $.ajax({
                     type: 'GET',
                      url: App.Routes.WebApi.Activities.Documents.get(this.id(),null,this.modeText()),
                 dataType: 'json',
@@ -571,7 +585,7 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         deleteDocument(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
-            jQuery.ajax({
+            $.ajax({
                     type: 'DELETE',
                         url: App.Routes.WebApi.Activities.Documents.del(this.id(),item.id()),
                 dataType: 'json',
