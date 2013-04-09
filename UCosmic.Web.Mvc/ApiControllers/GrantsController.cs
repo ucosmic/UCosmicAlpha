@@ -56,7 +56,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [PUT("users/{userId}/roles/{roleId}")]
+        [PUT("users/{userId}/roles/{roleId}", ActionPrecedence = 1)]
+        [PUT("roles/{roleId}/users/{userId}", ActionPrecedence = 2)]
         public HttpResponseMessage PutInRole(int userId, int roleId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -78,7 +79,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [DELETE("users/{userId}/roles/{roleId}")]
+        [DELETE("users/{userId}/roles/{roleId}", ActionPrecedence = 1)]
+        [DELETE("roles/{roleId}/users/{userId}", ActionPrecedence = 2)]
         public HttpResponseMessage DeleteFromRole(int userId, int roleId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -100,7 +102,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [POST("users/{userId}/roles/{roleId}/validate-grant")]
+        [POST("users/{userId}/roles/{roleId}/validate-grant", ActionPrecedence = 1)]
+        [POST("roles/{roleId}/users/{userId}/validate-grant", ActionPrecedence = 2)]
         public HttpResponseMessage ValidateGrant(int userId, int roleId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -115,7 +118,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [POST("users/{userId}/roles/{roleId}/validate-revoke")]
+        [POST("users/{userId}/roles/{roleId}/validate-revoke", ActionPrecedence = 1)]
+        [POST("roles/{roleId}/users/{userId}/validate-revoke", ActionPrecedence = 2)]
         public HttpResponseMessage ValidateRevoke(int userId, int roleId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
