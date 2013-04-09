@@ -110,6 +110,18 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/activities/Activity.js",
                 "~/scripts/tinymce/tiny_mce.js"));
 
+            // user search page
+            bundles.Add(new ScriptBundle("~/bundles/users").Include(
+                "~/scripts/viewmodels/Spinner.js",
+                "~/scripts/viewmodels/PagedSearch.js",
+                "~/scripts/viewmodels/users/SearchResult.js",
+                "~/scripts/viewmodels/users/Search.js"));
+
+            // user create form
+            bundles.Add(new ScriptBundle("~/bundles/users/create").Include(
+                "~/scripts/viewmodels/Spinner.js",
+                "~/scripts/viewmodels/users/User.js"));
+
             // bootstrap css bundles
             var tenants = new[]
             {

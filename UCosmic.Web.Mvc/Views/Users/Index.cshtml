@@ -12,18 +12,10 @@
 @section scripts
 {
 
-    <script type="text/javascript" src="~/scripts/app/Routes.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/Spinner.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/PagedSearch.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/users/Search.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/users/SearchResult.js"></script>
+    @Scripts.Render("~/bundles/users")
 
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             var viewModel = new ViewModels.Users.Search();
             ko.applyBindings(viewModel, $('[data-current-module=admin]')[0]);
             viewModel.sammy.run();
@@ -126,7 +118,6 @@
                                         <span class="field-validation-error" data-bind="text: revokeErrorText"></span>
                                         <a href="#" data-bind="click: dismissError">OK</a>
                                     </div>
-                                    <input type="hidden" data-bind="value: roleToRevoke" />
                                     <div class="row">
                                         <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: roleOptionsCaption, jqObservableElement: '$roleSelect'">
                                             <option>[Loading...]</option>

@@ -12,13 +12,7 @@
 @section scripts
 {
 
-    <script type="text/javascript" src="~/scripts/app/Routes.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/Spinner.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/PagedSearch.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/users/User.js"></script>
+    @Scripts.Render("~/bundles/users/create")
 
     <script type="text/javascript">
         $(function () {
@@ -28,7 +22,6 @@
     </script>
 
 }
-
 
 <div class="content fixed to-top" data-current-module="admin">
     <form class="group" method="POST" data-bind="submit: save, validationOptions: { decorateElement: true, errorClass: 'error' }">
