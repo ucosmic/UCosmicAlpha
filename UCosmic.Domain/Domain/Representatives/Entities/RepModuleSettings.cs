@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UCosmic.Domain.Establishments;
+
 namespace UCosmic.Domain.Representatives
 {
     public class RepModuleSettings : Entity
@@ -8,9 +9,9 @@ namespace UCosmic.Domain.Representatives
         {
         }
 
-        public int Id { get; protected internal set; }
+        public virtual int Id { get; set; }
         public string WelcomeMessage { get; protected internal set; }
         public virtual Establishment Owner { get; set; }
-
+        public virtual ICollection<ApplicationRecipient> ApplicationRecipients { get; protected internal set; }
     }
 }
