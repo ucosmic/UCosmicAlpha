@@ -3,6 +3,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 
 namespace UCosmic.Domain.Identity
 {
@@ -92,19 +94,32 @@ namespace UCosmic.Domain.Identity
                 {
                     r => r.Grants,
                 })
-                .SingleOrDefault(x => x.RevisionId == command.RoleId);
-            if (role == null)
-                throw new InvalidOperationException(string.Format(MustFindRoleById.FailMessageFormat, command.RoleId));
+                .Single(x => x.RevisionId == command.RoleId);
 
             var grant = role.Grants.SingleOrDefault(x => x.User.RevisionId == command.UserId);
             if (grant != null) return;
 
-            var user = _entities.Get<User>().SingleOrDefault(x => x.RevisionId == command.UserId);
+            var user = _entities.Get<User>().Single(x => x.RevisionId == command.UserId);
             grant = new RoleGrant
             {
                 Role = role,
                 User = user,
             };
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.UserId,
+                    command.RoleId,
+                }),
+                NewState = grant.ToJsonAudit(),
+            };
+
+            _entities.Create(audit);
             _entities.Create(grant);
             _unitOfWork.SaveChanges();
         }

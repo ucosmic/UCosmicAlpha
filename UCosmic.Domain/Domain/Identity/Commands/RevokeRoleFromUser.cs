@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 
 namespace UCosmic.Domain.Identity
 {
@@ -104,6 +106,21 @@ namespace UCosmic.Domain.Identity
                 g.User.RevisionId == command.UserId);
 
             if (grant == null) return;
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.UserId,
+                    command.RoleId,
+                }),
+                PreviousState = grant.ToJsonAudit(),
+            };
+
+            _entities.Create(audit);
             _entities.Purge(grant);
             _unitOfWork.SaveChanges();
         }
