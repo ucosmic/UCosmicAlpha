@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -64,8 +63,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var entities = _queryProcessor.Execute(query);
             var models = Mapper.Map<PageOfUserApiModel>(entities);
-            foreach (var model in models.Items)
-                model.Roles = model.Roles.OrderBy(x => x.Name).ToArray();
+            if (User.IsInAnyRole(RoleName.RoleGrantors))
+                foreach (var model in models.Items)
+                    model.Roles = model.Roles.OrderBy(x => x.Name).ToArray();
+            else
+                foreach (var model in models.Items)
+                    model.Roles = Enumerable.Empty<RoleApiModel>();
             return models;
         }
 
@@ -84,6 +87,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var model = Mapper.Map<UserApiModel>(entity);
+            if (!User.IsInAnyRole(RoleName.RoleGrantors))
+                model.Roles = Enumerable.Empty<RoleApiModel>();
             return model;
         }
 
@@ -119,102 +124,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             response.Headers.Location = new Uri(url);
 
             return response;
-        }
-
-        [GET("{userId}/roles")]
-        public IEnumerable<RoleApiModel> GetRoles(int userId)
-        {
-            //System.Threading.Thread.Sleep(2000); // test api latency
-
-            var query = new RolesGrantedToUserId(User, userId)
-            {
-                OrderBy = new Dictionary<Expression<Func<Role, object>>, OrderByDirection>
-                {
-                    { x => x.Name, OrderByDirection.Ascending },
-                },
-            };
-            var entities = _queryProcessor.Execute(query);
-            var models = Mapper.Map<RoleApiModel[]>(entities);
-
-            return models;
-        }
-
-        [PUT("{userId}/roles/{roleId}")]
-        [Authorize(Roles = RoleName.RoleGrantors)]
-        public HttpResponseMessage PutInRole(int userId, int roleId)
-        {
-            //System.Threading.Thread.Sleep(2000); // test api latency
-
-            var command = new GrantRoleToUser(User, roleId, userId);
-
-            try
-            {
-                _grantRole.Handle(command);
-            }
-            catch (ValidationException ex)
-            {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest,
-                    ex.Errors.First().ErrorMessage, "text/plain");
-                return badRequest;
-            }
-
-            var response = Request.CreateResponse(HttpStatusCode.OK, "Access was granted successfully.");
-            return response;
-        }
-
-        [DELETE("{userId}/roles/{roleId}")]
-        [Authorize(Roles = RoleName.RoleGrantors)]
-        public HttpResponseMessage DeleteFromRole(int userId, int roleId)
-        {
-            //System.Threading.Thread.Sleep(2000); // test api latency
-
-            var command = new RevokeRoleFromUser(User, roleId, userId);
-
-            try
-            {
-                _revokeRole.Handle(command);
-            }
-            catch (ValidationException ex)
-            {
-                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest,
-                    ex.Errors.First().ErrorMessage, "text/plain");
-                return badRequest;
-            }
-
-            var response = Request.CreateResponse(HttpStatusCode.OK, "Access was revoked successfully.");
-            return response;
-        }
-
-        [POST("{userId}/roles/{roleId}/validate-grant")]
-        [Authorize(Roles = RoleName.RoleGrantors)]
-        public HttpResponseMessage ValidateGrant(int userId, int roleId)
-        {
-            //System.Threading.Thread.Sleep(2000); // test api latency
-
-            var command = new GrantRoleToUser(User, roleId, userId);
-            var validationResult = _grantValidator.Validate(command);
-
-            if (validationResult.Errors.Any())
-                return Request.CreateResponse(HttpStatusCode.BadRequest,
-                    validationResult.Errors.First().ErrorMessage, "text/plain");
-
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        [POST("{userId}/roles/{roleId}/validate-revoke")]
-        [Authorize(Roles = RoleName.RoleGrantors)]
-        public HttpResponseMessage ValidateRevoke(int userId, int roleId)
-        {
-            //System.Threading.Thread.Sleep(2000); // test api latency
-
-            var command = new RevokeRoleFromUser(User, roleId, userId);
-            var validationResult = _revokeValidator.Validate(command);
-
-            if (validationResult.Errors.Any())
-                return Request.CreateResponse(HttpStatusCode.BadRequest,
-                    validationResult.Errors.First().ErrorMessage, "text/plain");
-
-            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [POST("{userId}/validate-name")]
