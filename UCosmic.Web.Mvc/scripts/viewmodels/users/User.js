@@ -61,6 +61,7 @@ var ViewModels;
                 }
                 if(!this.isValid()) {
                     this.errors.showAllMessages();
+                    return false;
                 }
                 this.saveSpinner.stop();
             };

@@ -76,6 +76,7 @@ module ViewModels.Users {
 
             if (!this.isValid()) { // validate
                 this.errors.showAllMessages();
+                return false;
             }
 
             this.saveSpinner.stop();

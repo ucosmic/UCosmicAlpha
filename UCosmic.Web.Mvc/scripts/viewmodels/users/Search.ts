@@ -3,6 +3,7 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../PagedSearch.ts" />
@@ -195,7 +196,40 @@ module ViewModels.Users {
         }
     }
 
-    export class SearchResult {
+    class RoleGrantValidator implements KnockoutValidationAsyncRuleDefinition {
+        private _ruleName: string = 'validRoleGrant';
+        private _isAwaitingResponse: bool = false;
+        async: bool = true;
+        message: string = 'error';
+        validator(val: string, vm: SearchResult, callback: KnockoutValidationAsyncCallback) {
+            if (!vm.selectedRoleOption()) {
+                callback(true);
+                return;
+            }
+            if (!this._isAwaitingResponse) {
+                var route = App.Routes.WebApi.Identity.Users.Roles
+                    .validateGrant(vm.id(), vm.selectedRoleOption());
+                this._isAwaitingResponse = true;
+                $.post(route)
+                .always((): void => {
+                    this._isAwaitingResponse = false;
+                })
+                .done((): void => {
+                    callback(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    callback({ isValid: false, message: xhr.responseText });
+                });
+            }
+        }
+        constructor() {
+            ko.validation.rules[this._ruleName] = this;
+            ko.validation.addExtender(this._ruleName);
+        }
+    }
+    new RoleGrantValidator();
+
+    export class SearchResult implements KnockoutValidationGroup {
         private _owner: Search;
         id: KnockoutObservableNumber;
         personId: KnockoutObservableNumber;
@@ -221,6 +255,10 @@ module ViewModels.Users {
         hasUniqueDisplayName: KnockoutComputed;
         photoSrc: KnockoutComputed;
 
+        isValid: () => bool;
+        errors: KnockoutValidationErrors;
+        isValidating: KnockoutComputed;
+
         constructor(values: any, owner: Search) {
             this._owner = owner;
 
@@ -238,6 +276,7 @@ module ViewModels.Users {
             this._setupNamingComputeds();
             this._setupRoleGrantComputeds();
             this._setupMenuSubscription();
+            this._setupValidation();
         }
 
         private _setupPhotoComputeds(): void {
@@ -276,6 +315,19 @@ module ViewModels.Users {
                     newValue.kendoMenu();
                 }
             });
+        }
+
+        private _setupValidation(): void {
+
+            this.selectedRoleOption.extend({
+                validRoleGrant: this
+            });
+
+            this.isValidating = ko.computed((): bool => {
+                return this.name.isValidating();
+            });
+
+            ko.validation.group(this);
         }
 
         private _pullRoleOptions(): JQueryDeferred {
@@ -395,8 +447,19 @@ module ViewModels.Users {
             this.isEditingRoles(false);
         }
 
-        grantRole(): void {
+        grantRole(): bool {
             this.roleSpinner.start();
+
+            if (this.isValidating()) {
+                setTimeout((): bool => { this.grantRole(); }, 50);
+                return false;
+            }
+
+            if (!this.isValid()) { // validate
+                this.errors.showAllMessages();
+                return false;
+            }
+
             var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
             $.ajax({
                 url: url,
@@ -418,7 +481,7 @@ module ViewModels.Users {
             })
             .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                 this.isGrantError(true);
-                this.grantErrorText(xhr.responseText);
+                this.grantErrorText('An unexpected error occurred while trying to grant access.');
                 this.roleSpinner.stop();
             });
         }

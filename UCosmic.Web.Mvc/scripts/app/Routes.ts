@@ -56,6 +56,16 @@ module App.Routes {
                     export function del(userId: number, roleId: number): string {
                         return put(userId, roleId);
                     }
+
+                    export function validateGrant(userId: number, roleId: number) {
+                        var url = 'users/' + userId + '/roles/' + roleId + '/validate-grant';
+                        return makeUrl(url);
+                    }
+
+                    export function validateRevoke(userId: number, roleId: number) {
+                        var url = 'users/' + userId + '/roles/' + roleId + '/validate-revoke';
+                        return makeUrl(url);
+                    }
                 }
             }
 

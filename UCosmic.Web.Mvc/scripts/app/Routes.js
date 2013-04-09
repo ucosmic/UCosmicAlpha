@@ -57,6 +57,16 @@ var App;
                             return put(userId, roleId);
                         }
                         Roles.del = del;
+                        function validateGrant(userId, roleId) {
+                            var url = 'users/' + userId + '/roles/' + roleId + '/validate-grant';
+                            return makeUrl(url);
+                        }
+                        Roles.validateGrant = validateGrant;
+                        function validateRevoke(userId, roleId) {
+                            var url = 'users/' + userId + '/roles/' + roleId + '/validate-revoke';
+                            return makeUrl(url);
+                        }
+                        Roles.validateRevoke = validateRevoke;
                     })(Users.Roles || (Users.Roles = {}));
                     var Roles = Users.Roles;
                 })(Identity.Users || (Identity.Users = {}));

@@ -22,17 +22,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<GrantRoleToUser> _grantRole;
         private readonly IHandleCommands<RevokeRoleFromUser> _revokeRole;
         private readonly IValidator<CreateUser> _createValidator;
+        private readonly IValidator<GrantRoleToUser> _grantValidator;
+        private readonly IValidator<RevokeRoleFromUser> _revokeValidator;
 
         public UsersController(IProcessQueries queryProcessor
             , IHandleCommands<GrantRoleToUser> grantRole
             , IHandleCommands<RevokeRoleFromUser> revokeRole
             , IValidator<CreateUser> createValidator
+            , IValidator<GrantRoleToUser> grantValidator
+            , IValidator<RevokeRoleFromUser> revokeValidator
         )
         {
             _queryProcessor = queryProcessor;
             _grantRole = grantRole;
             _revokeRole = revokeRole;
             _createValidator = createValidator;
+            _grantValidator = grantValidator;
+            _revokeValidator = revokeValidator;
         }
 
         public PageOfUserApiModel GetAll([FromUri] UserSearchInputModel input)
@@ -123,6 +129,38 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
+        [POST("{userId}/roles/{roleId}/validate-grant")]
+        [Authorize(Roles = RoleName.RoleGrantors)]
+        public HttpResponseMessage ValidateGrant(int userId, int roleId)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var command = new GrantRoleToUser(User, roleId, userId);
+            var validationResult = _grantValidator.Validate(command);
+
+            if (validationResult.Errors.Any())
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First().ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [POST("{userId}/roles/{roleId}/validate-revoke")]
+        [Authorize(Roles = RoleName.RoleGrantors)]
+        public HttpResponseMessage ValidateRevoke(int userId, int roleId)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var command = new RevokeRoleFromUser(User, roleId, userId);
+            var validationResult = _revokeValidator.Validate(command);
+
+            if (validationResult.Errors.Any())
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First().ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
         [POST("{userId}/validate-name")]
         public HttpResponseMessage ValidateName(int userId, UserApiModel model)
         {
@@ -130,27 +168,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             model.Id = userId;
 
-            //if (model.Id < 1)
-            //{
-                var command = new CreateUser(User, model.Name);
-                var validationResult = _createValidator.Validate(command);
-                var propertyName = command.PropertyName(y => y.Name);
-            //}
-            //else
-            //{
-            //    var command = new UpdateEstablishmentName(User);
-            //    Mapper.Map(model, command);
-            //    validationResult = _updateValidator.Validate(command);
-            //    propertyName = command.PropertyName(y => y.Name);
-            //}
+            var command = new CreateUser(User, model.Name);
+            var validationResult = _createValidator.Validate(command);
+            var propertyName = command.PropertyName(y => y.Name);
 
             Func<ValidationFailure, bool> forName = x => x.PropertyName == propertyName;
             if (validationResult.Errors.Any(forName))
                 return Request.CreateResponse(HttpStatusCode.BadRequest,
                     validationResult.Errors.First(forName).ErrorMessage, "text/plain");
-
-            //return Request.CreateResponse(HttpStatusCode.BadRequest,
-            //    string.Format("Username '{0}' is not valid.", model.Name), "text/plain");
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

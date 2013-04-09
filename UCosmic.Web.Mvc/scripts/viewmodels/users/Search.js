@@ -183,6 +183,39 @@ var ViewModels;
             return Search;
         })(ViewModels.PagedSearch);
         Users.Search = Search;        
+        var RoleGrantValidator = (function () {
+            function RoleGrantValidator() {
+                this._ruleName = 'validRoleGrant';
+                this._isAwaitingResponse = false;
+                this.async = true;
+                this.message = 'error';
+                ko.validation.rules[this._ruleName] = this;
+                ko.validation.addExtender(this._ruleName);
+            }
+            RoleGrantValidator.prototype.validator = function (val, vm, callback) {
+                var _this = this;
+                if(!vm.selectedRoleOption()) {
+                    callback(true);
+                    return;
+                }
+                if(!this._isAwaitingResponse) {
+                    var route = App.Routes.WebApi.Identity.Users.Roles.validateGrant(vm.id(), vm.selectedRoleOption());
+                    this._isAwaitingResponse = true;
+                    $.post(route).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
+                        });
+                    });
+                }
+            };
+            return RoleGrantValidator;
+        })();        
+        new RoleGrantValidator();
         var SearchResult = (function () {
             function SearchResult(values, owner) {
                 var _this = this;
@@ -213,6 +246,7 @@ var ViewModels;
                 this._setupNamingComputeds();
                 this._setupRoleGrantComputeds();
                 this._setupMenuSubscription();
+                this._setupValidation();
             }
             SearchResult.prototype._setupPhotoComputeds = function () {
                 var _this = this;
@@ -249,6 +283,16 @@ var ViewModels;
                         newValue.kendoMenu();
                     }
                 });
+            };
+            SearchResult.prototype._setupValidation = function () {
+                var _this = this;
+                this.selectedRoleOption.extend({
+                    validRoleGrant: this
+                });
+                this.isValidating = ko.computed(function () {
+                    return _this.name.isValidating();
+                });
+                ko.validation.group(this);
             };
             SearchResult.prototype._pullRoleOptions = function () {
                 var _this = this;
@@ -357,6 +401,16 @@ var ViewModels;
             SearchResult.prototype.grantRole = function () {
                 var _this = this;
                 this.roleSpinner.start();
+                if(this.isValidating()) {
+                    setTimeout(function () {
+                        _this.grantRole();
+                    }, 50);
+                    return false;
+                }
+                if(!this.isValid()) {
+                    this.errors.showAllMessages();
+                    return false;
+                }
                 var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
                 $.ajax({
                     url: url,
@@ -374,7 +428,7 @@ var ViewModels;
                     });
                 }).fail(function (xhr, textStatus, errorThrown) {
                     _this.isGrantError(true);
-                    _this.grantErrorText(xhr.responseText);
+                    _this.grantErrorText('An unexpected error occurred while trying to grant access.');
                     _this.roleSpinner.stop();
                 });
             };
