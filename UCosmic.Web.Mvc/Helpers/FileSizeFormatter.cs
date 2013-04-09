@@ -13,25 +13,25 @@ namespace UCosmic.Web.Mvc
             }
             if (size < Math.Pow(1024, 2))
             {
-                return (size / 1024).ToString("F0") + " Kb";
+                return string.Format("{0:F0} Kb", size/1024);
             }
             if (size < Math.Pow(1024, 3))
             {
-                return (size / Math.Pow(1024, 2)).ToString("F0") + " Mb";
+                return string.Format("{0:F0} Mb", size / Math.Pow(1024, 2));
             }
             if (size < Math.Pow(1024, 4))
             {
-                return (size / Math.Pow(1024, 3)).ToString("F0") + " Gb";
+                return string.Format("{0:F0} Gb", size / Math.Pow(1024, 3));
             }
             if (size < Math.Pow(1024, 5))
             {
-                return (size / Math.Pow(1024, 4)).ToString("F0") + " Tb";
+                return string.Format("{0:F0} Tb", size / Math.Pow(1024, 4));
             }
             if (size < Math.Pow(1024, 6))
             {
-                return (size / Math.Pow(1024, 5)).ToString("F0") + " Pb";
+                return string.Format("{0:F0} Pb", size / Math.Pow(1024, 5));
             }
-            return (size / Math.Pow(1024, 6)).ToString("F0") + " Eb";
+            return string.Format("{0:F0} Eb", size / Math.Pow(1024, 6));
         }
     }
 }

@@ -56,7 +56,10 @@ namespace UCosmic.Domain.Files
                 }
 
                 length = command.SourceStream.Length;
-                if (length > Int32.MaxValue) { throw new Exception(command.Name + "." + command.Extension + " is too large."); }
+                if (length > Int32.MaxValue)
+                {
+                    throw new Exception(string.Format("{0}.{1} is too large.", command.Name, command.Extension));
+                }
                 reader = new BinaryReader(command.SourceStream);
                 contents = reader.ReadBytes((int)length);
             }

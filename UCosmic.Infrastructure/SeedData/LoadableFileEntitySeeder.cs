@@ -28,7 +28,7 @@ namespace UCosmic.SeedData
             extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                using (FileStream fileStream = File.OpenRead(basePath + filename))
+                using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,filename)))
                 {
                     Seed(new CreateLoadableFile
                     {
@@ -47,7 +47,7 @@ namespace UCosmic.SeedData
             extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                using (FileStream fileStream = File.OpenRead(basePath + filename))
+                using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, filename)))
                 {
                     Seed(new CreateLoadableFile
                     {
@@ -66,7 +66,7 @@ namespace UCosmic.SeedData
             extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                using (FileStream fileStream = File.OpenRead(basePath + filename))
+                using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, filename)))
                 {
                     Seed(new CreateLoadableFile
                     {
@@ -84,7 +84,7 @@ namespace UCosmic.SeedData
             //extension = Path.GetExtension(filename).Substring(1);
             //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             //{
-            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,filename)))
             //    {
             //        Seed(new CreateLoadableFile
             //        {
@@ -102,7 +102,7 @@ namespace UCosmic.SeedData
             //extension = Path.GetExtension(filename).Substring(1);
             //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             //{
-            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,filename)))
             //    {
             //        Seed(new CreateLoadableFile
             //        {
@@ -120,7 +120,7 @@ namespace UCosmic.SeedData
             //extension = Path.GetExtension(filename).Substring(1);
             //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             //{
-            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,filename)))
             //    {
             //        Seed(new CreateLoadableFile
             //        {
@@ -138,7 +138,7 @@ namespace UCosmic.SeedData
             //extension = Path.GetExtension(filename).Substring(1);
             //if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             //{
-            //    using (FileStream fileStream = File.OpenRead(basePath + filename))
+            //    using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,filename)))
             //    {
             //        Seed(new CreateLoadableFile
             //        {
@@ -157,7 +157,7 @@ namespace UCosmic.SeedData
             extension = extension != null ? extension.Substring(1) : null;
             if (_entities.Get<LoadableFile>().Count(x => x.Name == name) == 0)
             {
-                using (FileStream fileStream = File.OpenRead(basePath + filename))
+                using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, filename)))
                 {
                     Seed(new CreateLoadableFile
                     {
@@ -166,6 +166,42 @@ namespace UCosmic.SeedData
                         Extension = extension,
                         MimeType = "application/vnd.ms-excel",
                         Title = "Research Spreadsheet"
+                    });
+                }
+            }
+
+            filename = "mkusenba-photo.jpg";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == filename) == 0)
+            {
+                using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, filename)))
+                {
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "image/jpg",
+                    });
+                }
+            }
+
+            filename = "billhogarth-photo.jpg";
+            name = Path.GetFileNameWithoutExtension(filename);
+            extension = Path.GetExtension(filename);
+            extension = extension != null ? extension.Substring(1) : null;
+            if (_entities.Get<LoadableFile>().Count(x => x.Name == filename) == 0)
+            {
+                using (FileStream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, filename)))
+                {
+                    Seed(new CreateLoadableFile
+                    {
+                        SourceStream = fileStream,
+                        Name = name,
+                        Extension = extension,
+                        MimeType = "image/jpg",
                     });
                 }
             }

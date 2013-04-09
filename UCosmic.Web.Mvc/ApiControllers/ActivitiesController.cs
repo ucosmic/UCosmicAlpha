@@ -13,9 +13,7 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Files;
-using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers

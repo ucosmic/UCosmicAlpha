@@ -28,7 +28,8 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            string basePath = AppDomain.CurrentDomain.BaseDirectory + @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\";
+            string basePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                                            @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\");
 
             FileMimeMapping[] fileMimeMappings =
             {
@@ -43,12 +44,12 @@ namespace UCosmic.SeedData
 
             foreach (FileMimeMapping mapping in fileMimeMappings)
             {
-                string filePath = basePath + mapping.FileName;
+                string filePath = string.Format("{0}{1}", basePath, mapping.FileName);
                 FileInfo info = new FileInfo(filePath);
                 string name = info.Name.Substring(0, info.Name.IndexOf('.'));
                 if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
                 {
-                    using (Stream fileStream = File.OpenRead(basePath + mapping.FileName))
+                    using (Stream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, mapping.FileName)))
                     {
                         Image proxy = Seed(new CreateImage
                         {
@@ -83,12 +84,12 @@ namespace UCosmic.SeedData
 
             foreach (string fileName in fileNames)
             {
-                string filePath = basePath + fileName;
+                string filePath = string.Format("{0}{1}", basePath, fileName);
                 FileInfo info = new FileInfo(filePath);
                 string name = info.Name.Substring(0, info.Name.IndexOf('.'));
                 if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
                 {
-                    using (Stream fileStream = File.OpenRead(basePath + fileName))
+                    using (Stream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,fileName)))
                     {
                         Seed(new CreateImage
                         {
