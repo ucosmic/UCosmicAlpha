@@ -37,11 +37,11 @@ module App.Routes {
                     return makeUrl(url);
                 }
 
-                export function post () {
+                export function post() {
                     return makeUrl('users');
                 }
 
-                export function validateName (id?: number) {
+                export function validateName(id?: number) {
                     id = id ? id : 0;
                     var url = 'users/' + id + '/validate-name';
                     return makeUrl(url);
@@ -129,12 +129,12 @@ module App.Routes {
                 return get(establishmentId);
             }
 
-            export function validateCeebCode (establishmentId: number): string {
-                    return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
+            export function validateCeebCode(establishmentId: number): string {
+                return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
             }
 
-            export function validateUCosmicCode (establishmentId: number): string {
-                    return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
+            export function validateUCosmicCode(establishmentId: number): string {
+                return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
             }
 
             export class Names {
@@ -306,7 +306,7 @@ module App.Routes {
             }
 
             export module Documents {
-                export function get(activityId: number, documentId?: number, activityMode?: string): string {
+                export function get (activityId: number, documentId?: number, activityMode?: string): string {
                     var url = makeUrl('activities/' + activityId + '/documents');
                     if (documentId) {
                         url += '/' + documentId;
@@ -334,22 +334,15 @@ module App.Routes {
                 }
 
                 export module Thumbnail {
-                    export function get(activityId: number, documentId: number): string {
+                    export function get (activityId: number, documentId: number): string {
                         return makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
                     }
                 }
             }
 
             export module Locations {
-                export function get(): string {
+                export function get (): string {
                     return makeUrl('activity-locations');
-                }
-            }
-
-            export module Establishments {
-                export function get(keyword: string): string {
-                    var url = makeUrl('activity-establishments');
-                    return url + "?keyword=" + keyword;
                 }
             }
         }
@@ -373,12 +366,6 @@ module App.Routes {
                 return url;
             }
         }
-        
-        export module Profile {
-            export function activityEdit(activityId: string) {
-                var url = makeUrl('my/activity/');
-                return url + activityId;
-        }
 
         export module Identity {
             export module Users {
@@ -389,12 +376,19 @@ module App.Routes {
                 }
             }
         }
-    }
 
-    //export module Params {
-    //    export class ImageResizeQuality {
-    //        static THUMBNAIL: string = 'thumbnail';
-    //        static HIGH: string = 'high';
-    //    }
-    //}
+        export module Profile {
+            export function activityEdit(activityId: string) {
+                var url = makeUrl('my/activity/');
+                return url + activityId;
+            }
+        }
+
+        //export module Params {
+        //    export class ImageResizeQuality {
+        //        static THUMBNAIL: string = 'thumbnail';
+        //        static HIGH: string = 'high';
+        //    }
+        //}
+    }
 }

@@ -24,9 +24,6 @@ module ViewModels.Activities {
         /* Array of placeIds of selected locations. */
 	    selectedLocations: KnockoutObservableArray = ko.observableArray();
 
-        /* Array of all institutions offered in Tag autocomplete. */
-	    //institutions: KnockoutObservableArray = ko.observableArray();
-
         /* Array of activity types displayed as list of checkboxes */
 	    activityTypes: KnockoutObservableArray = ko.observableArray();
 
@@ -71,7 +68,7 @@ module ViewModels.Activities {
             toDatePickerId: string,
             countrySelectorId: string,
             uploadFileId: string,
-            newTagId: string): bool {
+            newTagId: string): void {
 
             $("#" + fromDatePickerId).kendoDatePicker();
             $("#" + toDatePickerId).kendoDatePicker();
@@ -81,7 +78,7 @@ module ViewModels.Activities {
                 dataValueField: "id()",
                 dataSource: this.locations(),
                 //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
-                change: function (event) { this.updateLocations(event.sender.value()); },
+                change: (event: any) => { this.updateLocations(event.sender.value()); },
                 placeholder: "[Select Country/Location, Body of Water or Global]"
             });
 
@@ -156,32 +153,30 @@ module ViewModels.Activities {
                 dataSource: new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
-                        read: function(options) {
-                            debugger;
+                        read: function (options) {
                             $.ajax({
-                                url: App.Routes.WebApi.Activities.Establishments.get(options.data.filter.filters[0].value),
-                                success: (result: any): void => {
-                                    options.success(result);
+                                url: App.Routes.WebApi.Establishments.get(),
+                                data: { keyword: options.data.filter.filters[0].value },
+                                success: (results: any): void => {
+                                    options.success(results.items);
                                 }
                             });
                         }
                     }
                 })  
             });
-
-            return true;
         }
 
         // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------
-        setupValidation(): bool {
-            this.values.title.extend({ required: true });
+        setupValidation(): void {
+            this.values.title.extend({ required: true, minLength: 1 });
+
+            this.selectedLocations.extend({ minLength: 1 });
 
             ko.validation.group(this);
-
-            return true;
         }
 
         // --------------------------------------------------------------------------------
@@ -189,7 +184,6 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------  
         constructor(activityId: number) {
-
             this._initialize(activityId);
         }
 
@@ -208,15 +202,6 @@ module ViewModels.Activities {
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
-
-            //var institutionsPact = $.Deferred();
-            //$.get(App.Routes.WebApi.Activities.Institutions.get())
-            //    .done((data: Service.ApiModels.IInstitution[], textStatus: string, jqXHR: JQueryXHR): void => {
-            //        institutionsPact.resolve(data);
-            //    })
-            //    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-            //        institutionsPact.reject(jqXHR, textStatus, errorThrown);
-            //    });
 
             var typesPact = $.Deferred();
             $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
@@ -239,15 +224,13 @@ module ViewModels.Activities {
             });
             
             // only process after all requests have been resolved
-            $.when( /*institutionsPact,*/ typesPact, locationsPact, dataPact)
-                .done( (/*institutions: Service.ApiModels.IInstitution[],*/
-                        types: Service.ApiModels.IEmployeeActivityType[],
+            $.when( typesPact, locationsPact, dataPact)
+                .done( (types: Service.ApiModels.IEmployeeActivityType[],
                         locations: Service.ApiModels.IActivityLocation[], 
                         data: Service.ApiModels.IObservableActivity): void => {
 
                     this.activityTypes = ko.mapping.fromJS(types);
                     this.locations = ko.mapping.fromJS(locations);
-                    //this.institutions = ko.mapping.fromJS(institutions);
                                     
                     /* Although the MVC DateTime to JSON serializer will output an ISO compatible
                         string, we are not guarenteed that a browser's Date(string) or Date.parse(string)

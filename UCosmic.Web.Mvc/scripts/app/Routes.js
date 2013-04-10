@@ -387,14 +387,6 @@ var App;
                     Locations.get = get;
                 })(Activities.Locations || (Activities.Locations = {}));
                 var Locations = Activities.Locations;
-                (function (Establishments) {
-                    function get(keyword) {
-                        var url = makeUrl('activity-establishments');
-                        return url + "?keyword=" + keyword;
-                    }
-                    Establishments.get = get;
-                })(Activities.Establishments || (Activities.Establishments = {}));
-                var Establishments = Activities.Establishments;
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
         })(Routes.WebApi || (Routes.WebApi = {}));
@@ -421,7 +413,7 @@ var App;
                 }
                 Establishments.created = created;
             })(Mvc.Establishments || (Mvc.Establishments = {}));
-	    var Establishments = Mvc.Establishments;
+            var Establishments = Mvc.Establishments;
             (function (Identity) {
                 (function (Users) {
                     function created(params) {

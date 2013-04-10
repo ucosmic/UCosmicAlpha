@@ -19,7 +19,6 @@
             var activityViewModel = new ViewModels.Activities.Activity(activityId);
             activityViewModel.load()
                 .done(function () {
-                    
                     activityViewModel.setupWidgets("fromDatePicker"
                                                    ,"toDatePicker"
                                                    ,"countrySelector"
@@ -73,7 +72,7 @@
 										<!-- TITLE -->
 										<td class="required-field-name">Title</td>
 										<td>
-										    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="text: values.title"></textarea>
+										    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="value: values.title"></textarea>
                                             <!--<label class="required-field">*</label>-->
 										    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
 										</td>

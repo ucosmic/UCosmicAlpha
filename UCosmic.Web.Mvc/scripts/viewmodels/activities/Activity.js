@@ -24,7 +24,7 @@ var ViewModels;
                     dataValueField: "id()",
                     dataSource: this.locations(),
                     change: function (event) {
-                        this.updateLocations(event.sender.value());
+                        _this.updateLocations(event.sender.value());
                     },
                     placeholder: "[Select Country/Location, Body of Water or Global]"
                 });
@@ -89,23 +89,28 @@ var ViewModels;
                         transport: {
                             read: function (options) {
                                 $.ajax({
-                                    url: App.Routes.WebApi.Activities.Establishments.get(options.data.filter.filters[0].value),
-                                    success: function (result) {
-                                        options.success(result);
+                                    url: App.Routes.WebApi.Establishments.get(),
+                                    data: {
+                                        keyword: options.data.filter.filters[0].value
+                                    },
+                                    success: function (results) {
+                                        options.success(results.items);
                                     }
                                 });
                             }
                         }
                     })
                 });
-                return true;
             };
             Activity.prototype.setupValidation = function () {
                 this.values.title.extend({
-                    required: true
+                    required: true,
+                    minLength: 1
+                });
+                this.selectedLocations.extend({
+                    minLength: 1
                 });
                 ko.validation.group(this);
-                return true;
             };
             Activity.prototype.load = function () {
                 var _this = this;
