@@ -238,6 +238,70 @@ body {
         }
     }
 
+    .user-item {
+
+        .text-data {
+            margin-left: 8px;
+            width: 580px;
+            .user-name {
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .display-name {
+                font-size: 18px;
+                font-weight: normal;
+            }
+            .roles {
+                margin-top: 2px;
+                .badge {
+                    margin: 2px 2px 2px 0;
+                    text-transform: none;
+                    img.revoke-button {
+                        vertical-align: top;
+                        cursor: pointer;
+                        margin-left: 2px;
+                    }
+                }
+            }
+        }
+
+        .editor {
+            margin-left: 8px;
+            width: 580px;
+            .row {
+                margin-top: 12px;
+            }
+        }
+
+        .menu-box {
+            ul.k-menu {
+                display: inline-block;
+                margin: -8px 0 0 0;
+                border: 0;
+                background: none;
+                background-image: none;
+                width: 16px;
+                > li {
+                    border: 0;
+                    width: 16px;
+                    &.k-state-hover, &.k-state-hover:hover {
+                        border: 0;
+                        background: none;
+                        background-image: none;
+                        @include no-box-shadow;
+                    }
+                }
+            }
+            .k-link {
+                padding: 0;
+                .k-icon.k-i-arrow-s {
+                    margin: 0;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
     .ellipsis {
         white-space: nowrap;
         overflow: hidden;

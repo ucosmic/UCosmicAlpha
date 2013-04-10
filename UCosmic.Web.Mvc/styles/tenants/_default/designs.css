@@ -157,6 +157,51 @@ body .profile-tabs.k-tabstrip {
     padding: 8px;
     border-width: 0;
     border-top-width: 1px; }
+body .user-item .text-data {
+  margin-left: 8px;
+  width: 580px; }
+  body .user-item .text-data .user-name {
+    font-size: 18px;
+    font-weight: bold; }
+  body .user-item .text-data .display-name {
+    font-size: 18px;
+    font-weight: normal; }
+  body .user-item .text-data .roles {
+    margin-top: 2px; }
+    body .user-item .text-data .roles .badge {
+      margin: 2px 2px 2px 0;
+      text-transform: none; }
+      body .user-item .text-data .roles .badge img.revoke-button {
+        vertical-align: top;
+        cursor: pointer;
+        margin-left: 2px; }
+body .user-item .editor {
+  margin-left: 8px;
+  width: 580px; }
+  body .user-item .editor .row {
+    margin-top: 12px; }
+body .user-item .menu-box ul.k-menu {
+  display: inline-block;
+  margin: -8px 0 0 0;
+  border: 0;
+  background: none;
+  background-image: none;
+  width: 16px; }
+  body .user-item .menu-box ul.k-menu > li {
+    border: 0;
+    width: 16px; }
+    body .user-item .menu-box ul.k-menu > li.k-state-hover, body .user-item .menu-box ul.k-menu > li.k-state-hover:hover {
+      border: 0;
+      background: none;
+      background-image: none;
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none; }
+body .user-item .menu-box .k-link {
+  padding: 0; }
+  body .user-item .menu-box .k-link .k-icon.k-i-arrow-s {
+    margin: 0;
+    cursor: pointer; }
 body .ellipsis {
   white-space: nowrap;
   overflow: hidden;
