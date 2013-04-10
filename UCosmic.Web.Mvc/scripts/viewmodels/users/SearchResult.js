@@ -103,7 +103,9 @@ var ViewModels;
             SearchResult.prototype._setupPhotoComputeds = function () {
                 var _this = this;
                 this.photoSrc = ko.computed(function () {
-                    return App.Routes.WebApi.People.Photo.get(_this.personId(), 100);
+                    return App.Routes.WebApi.People.Photo.get(_this.personId(), {
+                        maxSide: 100
+                    });
                 });
             };
             SearchResult.prototype._setupNamingComputeds = function () {

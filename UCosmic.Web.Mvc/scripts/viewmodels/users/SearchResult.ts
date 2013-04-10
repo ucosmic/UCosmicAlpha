@@ -132,7 +132,7 @@ module ViewModels.Users {
 
         private _setupPhotoComputeds(): void {
             this.photoSrc = ko.computed((): string => {
-                return App.Routes.WebApi.People.Photo.get(this.personId(), 100);
+                return App.Routes.WebApi.People.Photo.get(this.personId(), { maxSide: 100 });
             });
         }
 

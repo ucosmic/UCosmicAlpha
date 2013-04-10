@@ -259,49 +259,15 @@ var App;
             var My = WebApi.My;
             (function (People) {
                 (function (Photo) {
-                                                            function get(id, arg1, arg2, arg3) {
-                        if(arguments.length === 4 || (arguments.length === 3 && typeof arguments[2] === 'number')) {
-                            return getByMaxSides(id, arg1, arg2, arg3);
+                    function get(personId, params) {
+                        var url = 'people/' + personId + '/photo';
+                        url = makeUrl(url);
+                        if(params) {
+                            url += '?' + $.param(params);
                         }
-                        return getByMaxSide(id, arg1, arg2);
+                        return url;
                     }
                     Photo.get = get;
-                    function getByMaxSide(id, maxSide, refresh) {
-                        var url = initializeGetUrl(id);
-                        if(maxSide) {
-                            url += 'maxSide=' + maxSide + '&';
-                        }
-                        url = finalizeGetUrl(url, refresh);
-                        return url;
-                    }
-                    function getByMaxSides(id, maxWidth, maxHeight, refresh) {
-                        var url = initializeGetUrl(id);
-                        if(maxWidth) {
-                            url += 'maxWidth=' + maxWidth + '&';
-                        }
-                        if(maxHeight) {
-                            url += 'maxHeight=' + maxHeight + '&';
-                        }
-                        url = finalizeGetUrl(url, refresh);
-                        return url;
-                    }
-                    function initializeGetUrl(id) {
-                        var url = makeUrl('people/' + id + '/photo/');
-                        url += '?';
-                        return url;
-                    }
-                    function finalizeGetUrl(url, refresh) {
-                        if(refresh) {
-                            url += 'refresh=' + new Date().toUTCString() + '&';
-                        }
-                        if(url.lastIndexOf('&') === url.length - 1) {
-                            url = url.substr(0, url.length - 1);
-                        }
-                        if(url.lastIndexOf('?') === url.length - 1) {
-                            url = url.substr(0, url.length - 1);
-                        }
-                        return url;
-                    }
                 })(People.Photo || (People.Photo = {}));
                 var Photo = People.Photo;
                 (function (Names) {

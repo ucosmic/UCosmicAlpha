@@ -242,48 +242,11 @@ module App.Routes {
 
         export module People {
             export module Photo {
-                export function get (id: number, maxSide?: number, refresh?: bool): string;
 
-                export function get (id: number, maxWidth?: number, maxHeight?: number,
-                    refresh?: bool): string;
-
-                export function get (id: number, arg1?: number, arg2?: any, arg3?: any): string {
-                    if (arguments.length === 4
-                        || (arguments.length === 3 && typeof arguments[2] === 'number')
-                    ) {
-                        return getByMaxSides(id, arg1, arg2, arg3);
-                    }
-                    return getByMaxSide(id, arg1, arg2);
-                }
-
-                function getByMaxSide(id: number, maxSide?: number, refresh?: bool): string {
-                    var url = initializeGetUrl(id);
-                    if (maxSide) url += 'maxSide=' + maxSide + '&';
-                    url = finalizeGetUrl(url, refresh);
-                    return url;
-                }
-
-                function getByMaxSides(id: number, maxWidth?: number, maxHeight?: number,
-                    refresh?: bool): string {
-                    var url = initializeGetUrl(id);
-                    if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
-                    if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
-                    url = finalizeGetUrl(url, refresh);
-                    return url;
-                }
-
-                function initializeGetUrl(id: number): string {
-                    var url = makeUrl('people/' + id + '/photo/');
-                    url += '?';
-                    return url;
-                }
-
-                function finalizeGetUrl(url: string, refresh?: bool): string {
-                    if (refresh) url += 'refresh=' + new Date().toUTCString() + '&';
-                    if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
-                        url = url.substr(0, url.length - 1);
-                    if (url.lastIndexOf('?') === url.length - 1) // strip trailing question mark
-                        url = url.substr(0, url.length - 1);
+                export function get(personId: number, params?: any): string {
+                    var url = 'people/' + personId + '/photo';
+                    url = makeUrl(url);
+                    if (params) url += '?' + $.param(params);
                     return url;
                 }
             }
