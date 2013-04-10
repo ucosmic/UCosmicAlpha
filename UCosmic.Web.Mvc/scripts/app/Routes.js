@@ -231,49 +231,14 @@ var App;
                     }
                     Profile.put = put;
                     (function (Photo) {
-                                                                        function get(arg1, arg2, arg3) {
-                            if(arguments.length === 3 || (arguments.length == 2 && typeof arguments[1] === 'number')) {
-                                return getByMaxSides(arg1, arg2, arg3);
+                        function get(params) {
+                            var url = post();
+                            if(params) {
+                                url += '?' + $.param(params);
                             }
-                            return getByMaxSide(arg1, arg2);
+                            return url;
                         }
                         Photo.get = get;
-                        function getByMaxSide(maxSide, refresh) {
-                            var url = initializeGetUrl();
-                            if(maxSide) {
-                                url += 'maxSide=' + maxSide + '&';
-                            }
-                            url = finalizeGetUrl(url, refresh);
-                            return url;
-                        }
-                        function getByMaxSides(maxWidth, maxHeight, refresh) {
-                            var url = initializeGetUrl();
-                            if(maxWidth) {
-                                url += 'maxWidth=' + maxWidth + '&';
-                            }
-                            if(maxHeight) {
-                                url += 'maxHeight=' + maxHeight + '&';
-                            }
-                            url = finalizeGetUrl(url, refresh);
-                            return url;
-                        }
-                        function initializeGetUrl() {
-                            var url = makeUrl('my/profile/photo');
-                            url += '?';
-                            return url;
-                        }
-                        function finalizeGetUrl(url, refresh) {
-                            if(refresh) {
-                                url += 'refresh=' + new Date().toUTCString() + '&';
-                            }
-                            if(url.lastIndexOf('&') === url.length - 1) {
-                                url = url.substr(0, url.length - 1);
-                            }
-                            if(url.lastIndexOf('?') === url.length - 1) {
-                                url = url.substr(0, url.length - 1);
-                            }
-                            return url;
-                        }
                         function post() {
                             return makeUrl('my/profile/photo');
                         }

@@ -10,7 +10,9 @@ var ViewModels;
                 this.isPhotoFailureUnexpected = ko.observable(false);
                 this.photoFileExtension = ko.observable();
                 this.photoFileName = ko.observable();
-                this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get(128));
+                this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get({
+                    maxSide: 128
+                }));
                 this.photoUploadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
                 this.photoDeleteSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
                 this.isDisplayNameDerived = ko.observable();
@@ -155,7 +157,10 @@ var ViewModels;
                         App.flasher.flash(response);
                     }
                     _this.hasPhoto(false);
-                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
+                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get({
+                        maxSide: 128,
+                        refresh: new Date().toUTCString()
+                    }));
                 }).fail(function () {
                     _this.isPhotoFailureUnexpected(true);
                 });
@@ -279,7 +284,10 @@ var ViewModels;
                                         App.flasher.flash(e.response.message);
                                     }
                                     _this.hasPhoto(true);
-                                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
+                                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get({
+                                        maxSide: 128,
+                                        refresh: new Date().toUTCString()
+                                    }));
                                 }
                             },
                             error: function (e) {

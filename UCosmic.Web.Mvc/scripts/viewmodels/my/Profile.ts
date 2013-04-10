@@ -25,7 +25,7 @@ module ViewModels.My {
         photoFileExtension: KnockoutObservableString = ko.observable();
         photoFileName: KnockoutObservableString = ko.observable();
         photoSrc: KnockoutObservableString = ko.observable(
-            App.Routes.WebApi.My.Profile.Photo.get(128));
+            App.Routes.WebApi.My.Profile.Photo.get({ maxSide: 128 }));
         photoUploadSpinner = new Spinner(new SpinnerOptions(400));
         photoDeleteSpinner = new Spinner(new SpinnerOptions(400));
 
@@ -215,7 +215,8 @@ module ViewModels.My {
             .done((response: string, statusText: string, xhr: JQueryXHR): void => {
                 if (typeof response === 'string') App.flasher.flash(response);
                 this.hasPhoto(false);
-                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
+                this.photoSrc(App.Routes.WebApi.My.Profile.Photo
+                    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
             })
             .fail((): void => {
                 this.isPhotoFailureUnexpected(true);
@@ -350,7 +351,8 @@ module ViewModels.My {
                                     App.flasher.flash(e.response.message);
                                 }
                                 this.hasPhoto(true);
-                                this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get(128, true));
+                                this.photoSrc(App.Routes.WebApi.My.Profile.Photo
+                                    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
                             }
                         },
                         error: (e: any): void => {

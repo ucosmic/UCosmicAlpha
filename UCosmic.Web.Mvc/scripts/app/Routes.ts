@@ -1,3 +1,5 @@
+/// <reference path="../jquery/jquery-1.8.d.ts" />
+
 module App.Routes {
 
     export var applicationPath: string = '/';
@@ -75,8 +77,7 @@ module App.Routes {
             export module Roles {
                 export function get (roleId?: number): string {
                     var url = 'roles';
-                    if (roleId)
-                        url += '/' + roleId;
+                    if (roleId) url += '/' + roleId;
                     return makeUrl(url);
                 }
             }
@@ -116,8 +117,7 @@ module App.Routes {
 
             export function get (establishmentId?: number): string {
                 var url = 'establishments';
-                if (establishmentId)
-                    url += '/' + establishmentId;
+                if (establishmentId) url += '/' + establishmentId;
                 return makeUrl(url);
             }
 
@@ -141,8 +141,7 @@ module App.Routes {
 
                 static get (establishmentId: number, establishmentNameId?: number): string {
                     var url = 'establishments/' + establishmentId + '/names';
-                    if (establishmentNameId)
-                        url += '/' + establishmentNameId;
+                    if (establishmentNameId) url += '/' + establishmentNameId;
                     return makeUrl(url);
                 }
 
@@ -169,8 +168,7 @@ module App.Routes {
 
                 static get (establishmentId: number, establishmentUrlId?: number): string {
                     var url = 'establishments/' + establishmentId + '/urls';
-                    if (establishmentUrlId)
-                        url += '/' + establishmentUrlId;
+                    if (establishmentUrlId) url += '/' + establishmentUrlId;
                     return makeUrl(url);
                 }
 
@@ -209,8 +207,7 @@ module App.Routes {
 
                 static get (id?: number): string {
                     var url = 'establishment-categories';
-                    if (id)
-                        url += '/' + id;
+                    if (id) url += '/' + id;
                     return makeUrl(url);
                 }
             }
@@ -225,51 +222,11 @@ module App.Routes {
                     return get();
                 }
                 export module Photo {
-                    export function get (maxSide?: number, refresh?: bool): string;
-
-                    export function get (maxWidth?: number, maxHeight?: number,
-                        refresh?: bool): string;
-
-                    export function get (arg1?: number, arg2?: any, arg3?: any): string {
-                        if (arguments.length === 3
-                            || (arguments.length == 2 && typeof arguments[1] === 'number')
-                        ) {
-                            return getByMaxSides(arg1, arg2, arg3);
-                        }
-                        return getByMaxSide(arg1, arg2);
-                    }
-
-                    function getByMaxSide(maxSide?: number, refresh?: bool): string {
-                        var url = initializeGetUrl();
-                        if (maxSide) url += 'maxSide=' + maxSide + '&';
-                        url = finalizeGetUrl(url, refresh);
+                    export function get(params?: any): string {
+                        var url = post();
+                        if (params) url += '?' + $.param(params);
                         return url;
                     }
-
-                    function getByMaxSides(maxWidth?: number, maxHeight?: number,
-                        refresh?: bool): string {
-                        var url = initializeGetUrl();
-                        if (maxWidth) url += 'maxWidth=' + maxWidth + '&';
-                        if (maxHeight) url += 'maxHeight=' + maxHeight + '&';
-                        url = finalizeGetUrl(url, refresh);
-                        return url;
-                    }
-
-                    function initializeGetUrl(): string {
-                        var url = makeUrl('my/profile/photo');
-                        url += '?';
-                        return url;
-                    }
-
-                    function finalizeGetUrl(url: string, refresh?: bool): string {
-                        if (refresh) url += 'refresh=' + new Date().toUTCString() + '&';
-                        if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
-                            url = url.substr(0, url.length - 1);
-                        if (url.lastIndexOf('?') === url.length - 1) // strip trailing question mark
-                            url = url.substr(0, url.length - 1);
-                        return url;
-                    }
-
                     export function post() {
                         return makeUrl('my/profile/photo');
                     }
