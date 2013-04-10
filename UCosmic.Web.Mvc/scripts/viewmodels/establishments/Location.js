@@ -75,9 +75,9 @@ var ViewModels;
                     }
                 });
                 ko.computed(function () {
-                    $.get(App.Routes.WebApi.Places.get({
+                    $.get(App.Routes.WebApi.Places.get(), {
                         isContinent: true
-                    })).done(function (response) {
+                    }).done(function (response) {
                         _this.continents(response);
                     });
                 }).extend({
@@ -95,9 +95,9 @@ var ViewModels;
                     return _this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
                 });
                 ko.computed(function () {
-                    $.get(App.Routes.WebApi.Places.get({
+                    $.get(App.Routes.WebApi.Places.get(), {
                         isCountry: true
-                    })).done(function (response) {
+                    }).done(function (response) {
                         _this.countries(response);
                         if(_this._countryId) {
                             var countryId = _this._countryId;
@@ -268,7 +268,7 @@ var ViewModels;
                 });
                 this.$mapCanvas().on('marker_dragend marker_created', function () {
                     var latLng = _this.mapTools().markerLatLng();
-                    var route = App.Routes.WebApi.Places.get(latLng.lat(), latLng.lng());
+                    var route = App.Routes.WebApi.Places.ByCoordinates.get(latLng.lat(), latLng.lng());
                     _this.loadSpinner.start();
                     $.get(route).done(function (response) {
                         if(response && response.length) {
@@ -357,14 +357,15 @@ var ViewModels;
             };
             Location.prototype.loadAdmin1s = function (countryId) {
                 var _this = this;
-                var admin1Url = App.Routes.WebApi.Places.get({
-                    isAdmin1: true,
-                    parentId: countryId
-                });
+                var admin1Url = App.Routes.WebApi.Places.get();
                 this.admin1sLoading(true);
                 $.ajax({
                     type: 'GET',
                     url: admin1Url,
+                    data: {
+                        isAdmin1: true,
+                        parentId: countryId
+                    },
                     cache: false
                 }).done(function (results) {
                     _this.admin1s(results);
@@ -376,13 +377,14 @@ var ViewModels;
             };
             Location.prototype.loadAdmin2s = function (admin1Id) {
                 var _this = this;
-                var admin2Url = App.Routes.WebApi.Places.get({
-                    isAdmin2: true,
-                    parentId: admin1Id
-                });
+                var admin2Url = App.Routes.WebApi.Places.get();
                 this.admin2sLoading(true);
                 $.ajax({
                     type: 'GET',
+                    data: {
+                        isAdmin2: true,
+                        parentId: admin1Id
+                    },
                     url: admin2Url,
                     cache: false
                 }).done(function (results) {
@@ -395,13 +397,14 @@ var ViewModels;
             };
             Location.prototype.loadAdmin3s = function (admin2Id) {
                 var _this = this;
-                var admin3Url = App.Routes.WebApi.Places.get({
-                    isAdmin3: true,
-                    parentId: admin2Id
-                });
+                var admin3Url = App.Routes.WebApi.Places.get();
                 this.admin3sLoading(true);
                 $.ajax({
                     type: 'GET',
+                    data: {
+                        isAdmin3: true,
+                        parentId: admin2Id
+                    },
                     url: admin3Url,
                     cache: false
                 }).done(function (results) {

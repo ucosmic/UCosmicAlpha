@@ -120,7 +120,7 @@ module ViewModels.Establishments {
 
             // continents section
             ko.computed((): void => {
-                $.get(App.Routes.WebApi.Places.get({ isContinent: true }))
+                $.get(App.Routes.WebApi.Places.get(), { isContinent: true })
                 .done((response: Places.IServerApiModel[]): void => {
                     this.continents(response);
                 });
@@ -138,7 +138,7 @@ module ViewModels.Establishments {
                 return this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
             });
             ko.computed((): void => {
-                $.get(App.Routes.WebApi.Places.get({ isCountry: true }))
+                $.get(App.Routes.WebApi.Places.get(), { isCountry: true })
                 .done((response: Places.IServerApiModel[]): void => {
                     this.countries(response);
                     if (this._countryId) {
@@ -334,7 +334,8 @@ module ViewModels.Establishments {
 
             this.$mapCanvas().on('marker_dragend marker_created', (): void => {
                 var latLng = this.mapTools().markerLatLng();
-                var route = App.Routes.WebApi.Places.get(latLng.lat(), latLng.lng());
+                var route = App.Routes.WebApi.Places.ByCoordinates
+                    .get(latLng.lat(), latLng.lng());
                 this.loadSpinner.start();
                 $.get(route)
                 .done((response: Places.IServerApiModel[]): void => {
@@ -431,11 +432,12 @@ module ViewModels.Establishments {
         private loadAdmin1s(countryId: number): void {
             //this.admin1s([]);
             var admin1Url = App.Routes.WebApi.Places
-                .get({ isAdmin1: true, parentId: countryId });
+                .get();
             this.admin1sLoading(true);
             $.ajax({
                 type: 'GET',
                 url: admin1Url,
+                data: { isAdmin1: true, parentId: countryId },
                 cache: false
             }).done((results: Places.IServerApiModel[]) => {
                 this.admin1s(results);
@@ -448,10 +450,11 @@ module ViewModels.Establishments {
         private loadAdmin2s(admin1Id: number): void {
             //this.admin2s([]);
             var admin2Url = App.Routes.WebApi.Places
-                .get({ isAdmin2: true, parentId: admin1Id });
+                .get();
             this.admin2sLoading(true);
             $.ajax({
                 type: 'GET',
+                data: { isAdmin2: true, parentId: admin1Id },
                 url: admin2Url,
                 cache: false,
             }).done((results: Places.IServerApiModel[]) => {
@@ -465,10 +468,11 @@ module ViewModels.Establishments {
         private loadAdmin3s(admin2Id: number): void {
             //this.admin3s([]);
             var admin3Url = App.Routes.WebApi.Places
-                .get({ isAdmin3: true, parentId: admin2Id });
+                .get();
             this.admin3sLoading(true);
             $.ajax({
                 type: 'GET',
+                data: { isAdmin3: true, parentId: admin2Id },
                 url: admin3Url,
                 cache: false
             }).done((results: Places.IServerApiModel[]) => {

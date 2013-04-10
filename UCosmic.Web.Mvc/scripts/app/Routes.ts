@@ -98,44 +98,17 @@ module App.Routes {
 
         export module Places {
 
-            export interface IFilterPlaces {
-                parentId?: number;
-                isContinent?: bool;
-                isCountry?: bool;
-                isAdmin1?: bool;
-                isAdmin2?: bool;
-                isAdmin3?: bool;
-            }
-
-            export function get (args: IFilterPlaces): string;
-
-            export function get (latitude: number, longitude: number): string;
-
-            export function get (arg1: any, arg2?: number): string {
-                if (!arg2 || typeof arg2 !== 'number')
-                    return getByFilterArgs(arg1);
-                else
-                    return getByLatLng(arg1, arg2);
-            }
-
-            function getByFilterArgs(args: IFilterPlaces): string {
-                var url = makeUrl('places');
-                url = url.substr(0, url.length - 1); // strip trailing slash
-                url += '?';
-                if (args.parentId) url += 'parentId=' + args.parentId + '&';
-                if (args.isContinent) url += 'isContinent=' + args.isContinent + '&';
-                if (args.isCountry) url += 'isCountry=' + args.isCountry + '&';
-                if (args.isAdmin1) url += 'isAdmin1=' + args.isAdmin1 + '&';
-                if (args.isAdmin2) url += 'isAdmin2=' + args.isAdmin2 + '&';
-                if (args.isAdmin3) url += 'isAdmin3=' + args.isAdmin3 + '&';
-                if (url.lastIndexOf('&') === url.length - 1) // strip trailing amphersand
-                    url = url.substr(0, url.length - 1);
-                return url;
-            }
-
-            function getByLatLng(latitude: number, longitude: number): string {
-                var url = 'places/by-coordinates/' + latitude + '/' + longitude;
+            export function get(placeId?: number): string {
+                var url = 'places';
+                if (placeId) url += '/' + placeId;
                 return makeUrl(url);
+            }
+
+            export module ByCoordinates {
+                export function get(latitude: number, longitude: number): string {
+                    var url = 'places/by-coordinates/' + latitude + '/' + longitude;
+                    return makeUrl(url);
+                }
             }
         }
 

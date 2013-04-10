@@ -11,7 +11,7 @@ using PlaceByWoeId = UCosmic.Domain.Places.PlaceByWoeId;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [LocalApiEndpoint]
+    [Authorize]
     [DefaultApiHttpRouteConvention]
     public class PlacesController : ApiController
     {

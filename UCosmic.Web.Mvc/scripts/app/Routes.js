@@ -103,45 +103,22 @@ var App;
             })(WebApi.Countries || (WebApi.Countries = {}));
             var Countries = WebApi.Countries;
             (function (Places) {
-                                                function get(arg1, arg2) {
-                    if(!arg2 || typeof arg2 !== 'number') {
-                        return getByFilterArgs(arg1);
-                    } else {
-                        return getByLatLng(arg1, arg2);
+                function get(placeId) {
+                    var url = 'places';
+                    if(placeId) {
+                        url += '/' + placeId;
                     }
-                }
-                Places.get = get;
-                function getByFilterArgs(args) {
-                    var url = makeUrl('places');
-                    url = url.substr(0, url.length - 1);
-                    url += '?';
-                    if(args.parentId) {
-                        url += 'parentId=' + args.parentId + '&';
-                    }
-                    if(args.isContinent) {
-                        url += 'isContinent=' + args.isContinent + '&';
-                    }
-                    if(args.isCountry) {
-                        url += 'isCountry=' + args.isCountry + '&';
-                    }
-                    if(args.isAdmin1) {
-                        url += 'isAdmin1=' + args.isAdmin1 + '&';
-                    }
-                    if(args.isAdmin2) {
-                        url += 'isAdmin2=' + args.isAdmin2 + '&';
-                    }
-                    if(args.isAdmin3) {
-                        url += 'isAdmin3=' + args.isAdmin3 + '&';
-                    }
-                    if(url.lastIndexOf('&') === url.length - 1) {
-                        url = url.substr(0, url.length - 1);
-                    }
-                    return url;
-                }
-                function getByLatLng(latitude, longitude) {
-                    var url = 'places/by-coordinates/' + latitude + '/' + longitude;
                     return makeUrl(url);
                 }
+                Places.get = get;
+                (function (ByCoordinates) {
+                    function get(latitude, longitude) {
+                        var url = 'places/by-coordinates/' + latitude + '/' + longitude;
+                        return makeUrl(url);
+                    }
+                    ByCoordinates.get = get;
+                })(Places.ByCoordinates || (Places.ByCoordinates = {}));
+                var ByCoordinates = Places.ByCoordinates;
             })(WebApi.Places || (WebApi.Places = {}));
             var Places = WebApi.Places;
             (function (Establishments) {
