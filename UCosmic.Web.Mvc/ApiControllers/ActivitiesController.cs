@@ -98,6 +98,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId)
         {
+            /* TBD
+             * update the owning activity from downstream aggregate mutation commands
+             * in commands that mutate an entity under the activity aggregate
+             * update those 2 fields on the owning Activity
+             * document.Owner.UpdatedOn = DateTime.UtcNow;
+             * document.Owner.UpdatedBy = command.Principal.Identity.Name;
+             */
             return Request.CreateResponse(HttpStatusCode.NotImplemented);
         }
 

@@ -38,7 +38,11 @@ namespace UCosmic.Domain.Activities
             {
                 PersonId = person.RevisionId,
                 Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
-                Mode = command.ModeText.AsEnum<ActivityMode>()
+                Mode = command.ModeText.AsEnum<ActivityMode>(),
+
+                CreatedByPrincipal = person.DisplayName,
+                UpdatedByPrincipal = person.DisplayName,
+                UpdatedOnUtc = DateTime.UtcNow
             };
 
             if (command.EntityId != null)

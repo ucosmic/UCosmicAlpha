@@ -179,8 +179,13 @@
 						    </div>
 
 						    <!-- LAST UPDATED -->
-							<div style="width: 33%; height: 1.5em; border-top: 1px; border-style: solid">
-								<span style="font-size:smaller; color:slategray">Last updated <label id="last-updated-date">00/00/0000</label> by <label id="last-updated-name">John Doe</label></span>
+							<div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
+							    <span style="font-size:smaller; color:slategray">
+							        <span>Last updated</span>
+							        <label id="last-updated-date" data-bind="text: moment(whenLastUpdated()).toDate()"></label>
+							        <span> by </span>
+                                    <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
+							    </span>
 							</div>
 						</div>
 					</div>

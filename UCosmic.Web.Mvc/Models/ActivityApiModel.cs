@@ -88,6 +88,8 @@ namespace UCosmic.Web.Mvc.Models
         public Guid EntityId { get; set; }
         public string ModeText { get; protected set; }
         public ActivityValuesApiModel Values { get; set; }         // only Values with same mode as Activity
+        public DateTime? WhenLastUpdated { get; set; }
+        public string WhoLastUpdated { get; set; }
     }
 
     public class ActivitySearchInputModel
@@ -136,7 +138,9 @@ namespace UCosmic.Web.Mvc.Models
 
                 CreateMap<Activity, ActivityApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
-                    .ForMember(d => d.Values, o => o.MapFrom(s => s.Values.First(a => a.Mode == s.Mode)));
+                    .ForMember(d => d.Values, o => o.MapFrom(s => s.Values.First(a => a.Mode == s.Mode)))
+                    .ForMember(d => d.WhenLastUpdated, o => o.MapFrom(s => s.UpdatedOnUtc))
+                    .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal));
 
                 CreateMap<ActivitySearchInputModel, ActivitiesByPersonId>()
                     .ForMember(d => d.EagerLoad, o => o.Ignore())

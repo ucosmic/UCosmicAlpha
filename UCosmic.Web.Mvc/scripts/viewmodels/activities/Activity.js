@@ -91,7 +91,9 @@ var ViewModels;
                                 $.ajax({
                                     url: App.Routes.WebApi.Establishments.get(),
                                     data: {
-                                        keyword: options.data.filter.filters[0].value
+                                        keyword: options.data.filter.filters[0].value,
+                                        pageNumber: 1,
+                                        pageSize: 2147483647
                                     },
                                     success: function (results) {
                                         options.success(results.items);

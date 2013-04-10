@@ -153,11 +153,13 @@ module ViewModels.Activities {
                 dataSource: new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
-                        read: function (options) {
+                        read: (options: any):void {
                             $.ajax({
                                 url: App.Routes.WebApi.Establishments.get(),
-                                data: { keyword: options.data.filter.filters[0].value },
-                                success: (results: any): void => {
+                                data: { keyword: options.data.filter.filters[0].value,
+                                        pageNumber: 1,
+                                        pageSize: 2147483647 /* C# Int32.Max */ },
+                                success: (results: any): void {
                                     options.success(results.items);
                                 }
                             });
