@@ -392,7 +392,7 @@ module ViewModels.Establishments {
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         // redirect to show
                         window.location.href = App.Routes.Mvc.Establishments
-                            .created(xhr.getResponseHeader('Location'));
+                            .created({ location: xhr.getResponseHeader('Location') });
                     })
                     .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                         this.createSpinner.stop();

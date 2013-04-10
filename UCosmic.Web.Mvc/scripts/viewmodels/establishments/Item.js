@@ -318,7 +318,9 @@ var ViewModels;
                         data.location = location.serializeData();
                         this.createSpinner.start();
                         $.post(url, data).done(function (response, statusText, xhr) {
-                            window.location.href = App.Routes.Mvc.Establishments.created(xhr.getResponseHeader('Location'));
+                            window.location.href = App.Routes.Mvc.Establishments.created({
+                                location: xhr.getResponseHeader('Location')
+                            });
                         }).fail(function (xhr, statusText, errorThrown) {
                             _this.createSpinner.stop();
                             if(xhr.status === 400) {

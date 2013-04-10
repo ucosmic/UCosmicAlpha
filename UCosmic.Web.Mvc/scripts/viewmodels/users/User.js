@@ -73,7 +73,9 @@ var ViewModels;
                     name: this.name()
                 };
                 $.post(url, data).done(function (response, statusText, xhr) {
-                    window.location.href = App.Routes.Mvc.Identity.Users.created(xhr.getResponseHeader('Location'));
+                    window.location.href = App.Routes.Mvc.Identity.Users.created({
+                        location: xhr.getResponseHeader('Location')
+                    });
                 }).fail(function (xhr, statusText, errorThrown) {
                     _this.errorMessage('An unexpected error occurred while trying to create this user.');
                 });

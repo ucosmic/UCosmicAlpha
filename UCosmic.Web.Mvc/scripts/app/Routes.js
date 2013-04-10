@@ -386,9 +386,11 @@ var App;
                     return makeUrl('establishments/' + establishmentId);
                 }
                 Establishments.show = show;
-                function created(location) {
+                function created(params) {
                     var url = makeUrl('establishments/created');
-                    url += '?location=' + location;
+                    if(params) {
+                        url += '?' + $.param(params);
+                    }
                     return url;
                 }
                 Establishments.created = created;
@@ -396,9 +398,11 @@ var App;
             var Establishments = Mvc.Establishments;
             (function (Identity) {
                 (function (Users) {
-                    function created(location) {
+                    function created(params) {
                         var url = makeUrl('users/created');
-                        url += '?location=' + location;
+                        if(params) {
+                            url += '?' + $.param(params);
+                        }
                         return url;
                     }
                     Users.created = created;

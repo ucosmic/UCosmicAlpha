@@ -345,18 +345,18 @@ module App.Routes {
             export function show(establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);
             }
-            export function created(location: string) {
+            export function created(params?: any) {
                 var url = makeUrl('establishments/created');
-                url += '?location=' + location;
+                if (params) url += '?' + $.param(params);
                 return url;
             }
         }
 
         export module Identity {
             export module Users {
-                export function created(location: string) {
+                export function created(params?: any) {
                     var url = makeUrl('users/created');
-                    url += '?location=' + location;
+                    if (params) url += '?' + $.param(params);
                     return url;
                 }
             }

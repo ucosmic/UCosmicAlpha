@@ -90,7 +90,7 @@ module ViewModels.Users {
             .done((response: string, statusText: string, xhr: JQueryXHR): void {
                 // redirect to search
                 window.location.href = App.Routes.Mvc.Identity.Users
-                    .created(xhr.getResponseHeader('Location'));
+                    .created({ location: xhr.getResponseHeader('Location') });
             })
             .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                 this.errorMessage('An unexpected error occurred while trying to create this user.');
