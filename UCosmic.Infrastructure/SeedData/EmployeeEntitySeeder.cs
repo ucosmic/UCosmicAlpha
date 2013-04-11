@@ -65,10 +65,10 @@ namespace UCosmic.SeedData
                 EmployeeActivityTypes = new Collection<EmployeeActivityType>
                 {
                     new EmployeeActivityType {Type = "Conference"},
-                    new EmployeeActivityType {Type = "Research or Creative Endeavors"},
-                    new EmployeeActivityType {Type = "Teaching and Mentoring"},
-                    new EmployeeActivityType {Type = "Professional Service, Consulting and Development"},
-                    new EmployeeActivityType {Type = "Awards and Honors"}
+                    new EmployeeActivityType {Type = "Research or Creative Endeavor"},
+                    new EmployeeActivityType {Type = "Teaching or Mentoring"},
+                    new EmployeeActivityType {Type = "Professional Development, Service or Consulting"},
+                    new EmployeeActivityType {Type = "Award or Honor"}
                 }
             });
         }
@@ -109,10 +109,10 @@ namespace UCosmic.SeedData
                 EmployeeActivityTypes = new Collection<EmployeeActivityType>
                 {
                     new EmployeeActivityType {Type = "Conference"},
-                    new EmployeeActivityType {Type = "Research or Creative Endeavors"},
-                    new EmployeeActivityType {Type = "Teaching and Mentoring"},
-                    new EmployeeActivityType {Type = "Professional Service, Consulting and Development"},
-                    new EmployeeActivityType {Type = "Awards and Honors"}
+                    new EmployeeActivityType {Type = "Research or Creative Endeavor"},
+                    new EmployeeActivityType {Type = "Teaching or Mentoring"},
+                    new EmployeeActivityType {Type = "Professional Development, Service or Consulting"},
+                    new EmployeeActivityType {Type = "Award or Honor"}
                 },
                 OfferCountry = true,
                 OfferActivityTypes = true,

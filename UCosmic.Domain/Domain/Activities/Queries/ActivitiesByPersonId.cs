@@ -26,6 +26,16 @@ namespace UCosmic.Domain.Activities
 
             IQueryable<Activity> results;
 
+            /* Order as follows:
+             *  If date(s) exist, order by:
+             *      if toDate exists, sort most recent first
+             *      else, use fromData
+             *  then by Type using order in employee module
+             *  then alphabetically by title
+             *  
+             *  activities with no dates are listed last
+             */
+
             results = _entities.Query<Activity>()
                         .WithPersonId(query.PersonId)
                         .WithMode(query.ModeText)

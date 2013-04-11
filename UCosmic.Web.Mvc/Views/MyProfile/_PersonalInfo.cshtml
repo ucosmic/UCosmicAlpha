@@ -72,7 +72,7 @@
         </div>
         <div class="field-row">
             <div class="field-label">
-                <label>First name</label>
+                <label>First Name</label>
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[Please enter your first name here]"
@@ -81,7 +81,7 @@
         </div>
         <div class="field-row">
             <div class="field-label">
-                <label>Middle name or initial</label>
+                <label>Middle Name or Initial</label>
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[None]"
@@ -90,7 +90,7 @@
         </div>
         <div class="field-row">
             <div class="field-label">
-                <label>Last name</label>
+                <label>Last Name</label>
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[Please enter your last name here]"
@@ -108,7 +108,7 @@
         </div>
         <div class="field-row" data-bind="visible: isFacultyRankEditable" style="display: none;">
             <div class="field-label">
-                <label>Faculty rank</label>
+                <label>Faculty Rank</label>
             </div>
             <div class="field-input">
                 <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
@@ -160,6 +160,7 @@
                         <input type="checkbox" data-bind="checked: isActive" />
                         This profile is currently active.
                     </label>
+                    <span style="float: right"><a href="#">Request my profile be deleted</a></span>
                 </div>
             </div>
         }

@@ -39,9 +39,12 @@ body table.activity {
     padding-top: 16px;
     padding-bottom: 16px;
     text-align: right;
-    text-decoration: underline;
-    text-decoration-color: #f00;
     vertical-align: middle; }
+  body table.activity td.required-field-name::after {
+    content: "*";
+    font-size: large;
+    vertical-align: text-top;
+    color: #F00; }
   body table.activity td {
     padding-left: 4px;
     padding-right: 4px;
@@ -217,11 +220,6 @@ body .ellipsis {
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis; }
-body .required-field {
-  font-family: sans-serif;
-  font-size: xx-large;
-  vertical-align: text-top;
-  color: #3333ff; }
 body .help-icon {
   width: 16px;
   height: 16px; }
@@ -239,7 +237,7 @@ body .help-icon-position {
   height: 16px; }
 body small {
   font-size: smaller; }
-body .required {
-  text-decoration-color: #f00;
-  text-decoration: underline; }
+body .example {
+  font-size: smaller;
+  font-color: #777; }
 

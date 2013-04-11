@@ -9,6 +9,7 @@ var ViewModels;
                 this.addingTag = ko.observable(false);
                 this.newTag = ko.observable();
                 this.uploadingDocument = ko.observable(false);
+                this.isOnGoing = ko.observable(false);
                 this.inititializationErrors = "";
                 this._initialize(activityId);
             }

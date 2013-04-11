@@ -1,4 +1,4 @@
-﻿@model UCosmic.Web.Mvc.Models.ActivityModel
+﻿ @model UCosmic.Web.Mvc.Models.ActivityModel
 
 @{
     ViewBag.Title = "My International Activity";
@@ -70,10 +70,9 @@
 								<tbody>
 									<tr>
 										<!-- TITLE -->
-										<td class="required-field-name">Title</td>
+									    <td class="required-field-name">Title</td>
 										<td>
 										    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="value: values.title"></textarea>
-                                            <!--<label class="required-field">*</label>-->
 										    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
 										</td>
 									</tr>
@@ -93,12 +92,22 @@
 									</tr>
 									<!-- FROM and TO DATES -->
 								    <tr>
-								        <td class="field-name">On/From</td>
+								        <td class="field-name" style="vertical-align: top">On/From</td>
 								        <td>
 								            <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
-								            &nbsp;&nbsp;To&nbsp;
-								            <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
-								            <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
+								            <span>
+								                &emsp;
+								                <input id="ongoingCheckbox" type="checkbox" data-bind="checked: isOnGoing"/>
+								                &nbsp;On-going&nbsp;
+								            </span>
+								            <span data-bind="visible: !isOnGoing()">
+								                &nbsp;&nbsp;To&nbsp;
+								                <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
+								                <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->  
+								            </span>
+								            <div class="example" style="margin-top: 8px">
+								                <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
+								            </div>
 								        </td>
 								    </tr>
 								    <!-- FUNDING -->
@@ -141,7 +150,7 @@
 						    <div style="width: 100%; margin-bottom: inherit">
 						        <header>
 						            <h2>
-						                <span>Documents</span>
+						                <span>Shared Documents</span>
 						                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function () { this.uploadingDocument(true); }"/>
 						            </h2>
 						        </header>
@@ -153,10 +162,10 @@
 						                <thead>
 						                    <tr>
 						                        <th style="width: 10%; text-align: center">Preview</th>
-						                        <th style="width: 60%">Title</th>
+						                        <th style="width: 65%">Title</th>
 						                        <th style="width: 10%; text-align: center">Type</th>
 						                        <th style="width: 10%; text-align: center">Size</th>
-                                                <th style="width: 5%; text-align: center">Hide</th>
+                                                <!--<th style="width: 5%; text-align: center">Hide</th>-->
 						                        <th style="width: 5%"></th>
 						                    </tr>
 						                </thead>
@@ -172,10 +181,6 @@
 						            <input type="button" value="Save as Final" data-bind="click: function (item, event) { save(item, event, 'Final'); }"/>
 						            <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }"/>
 						        </span>
-						    </div>
-                            
-						    <div style="margin-bottom: 32px">
-						        <a href="#">Request my profile be deleted</a>
 						    </div>
 
 						    <!-- LAST UPDATED -->
@@ -215,7 +220,7 @@
     <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
-            <img data-bind="attr: { src: proxyImageSource, width: proxyWidth, height: proxyHeight }">
+            <img alt="thumbnail" data-bind="attr: { src: proxyImageSource, width: proxyWidth, height: proxyHeight }">
         </td>
         <!-- Title -->
         <td>
@@ -230,9 +235,9 @@
             <span data-bind="text: size"></span>
         </td>
         <!-- Visible -->
-        <td style="text-align: center">
+        <!--<td style="text-align: center">
             <input type="checkbox" data-bind="checked: !visible"/>
-        </td>
+        </td>-->
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
             <a href="#" title="Remove document" data-bind="click: function (item, event) { $parent.deleteDocument(item, event, 0); }, clickBubble: false">

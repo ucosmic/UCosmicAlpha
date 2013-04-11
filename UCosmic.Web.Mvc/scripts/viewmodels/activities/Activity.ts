@@ -36,6 +36,9 @@ module ViewModels.Activities {
         /* True if uploading document. */
         uploadingDocument: KnockoutObservableBool = ko.observable(false);
 
+        /* True if activity is on-going (no end date specified) */
+        isOnGoing: KnockoutObservableBool = ko.observable(false);
+
         /* Initialization errors. */
         inititializationErrors: string = "";
 
