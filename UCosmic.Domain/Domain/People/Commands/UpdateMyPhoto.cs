@@ -95,19 +95,14 @@ namespace UCosmic.Domain.People
 
             // create new file
             var path = string.Format(Person.PhotoPathFormat, person.RevisionId, Guid.NewGuid());
-            var loadableFile = new LoadableFile
+            var externalFile = new ExternalFile
             {
                 Name = command.Name,
                 Path = path,
                 Length = command.Content.Length,
                 MimeType = command.MimeType,
             };
-            loadableFile.Binary = new LoadableFileBinary
-            {
-                Owner = loadableFile,
-                //Content = command.Content
-            };
-            person.Photo = loadableFile;
+            person.Photo = externalFile;
             _binaryData.Put(path, command.Content);
 
             // log audit
@@ -122,11 +117,11 @@ namespace UCosmic.Domain.People
                     command.Name,
                     command.MimeType,
                 }),
-                NewState = loadableFile.ToJsonAudit(),
+                NewState = externalFile.ToJsonAudit(),
             };
 
             // push to database
-            _entities.Create(loadableFile);
+            _entities.Create(externalFile);
             _entities.Update(person);
             _entities.Create(audit);
             if (!command.NoCommit)

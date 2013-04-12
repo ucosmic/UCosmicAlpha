@@ -10,23 +10,26 @@ namespace UCosmic.SeedData
         private readonly IQueryEntities _entities;
         private readonly DevelopmentSqlSeeder _sqlSeeder;
         private readonly MemberEntitySeeder _memberEntitySeeder;
-        private readonly FileEntitySeeder _fileEntitySeeder;
+        private readonly LoadableFileEntitySeeder _loadableFileEntitySeeder;
         private readonly ImageEntitySeeder _imageEntitySeeder;
+        private readonly ExternalFileEntitySeeder _externalFileEntitySeeder;
 
         public CompositeSqlSeeder(IUnitOfWork unitOfWork
             , IQueryEntities entities
             , DevelopmentSqlSeeder sqlSeeder
             , MemberEntitySeeder memberEntitySeeder
-            , FileEntitySeeder fileEntitySeeder
+            , LoadableFileEntitySeeder loadableFileEntitySeeder
             , ImageEntitySeeder imageEntitySeeder
+            , ExternalFileEntitySeeder externalFileEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
             _entities = entities;
             _sqlSeeder = sqlSeeder;
             _memberEntitySeeder = memberEntitySeeder;
-            _fileEntitySeeder = fileEntitySeeder;
+            _loadableFileEntitySeeder = loadableFileEntitySeeder;
             _imageEntitySeeder = imageEntitySeeder;
+            _externalFileEntitySeeder = externalFileEntitySeeder;
         }
 
         public void Seed()
@@ -35,7 +38,7 @@ namespace UCosmic.SeedData
             var files = _entities.Query<LoadableFile>();
             if (!files.Any())
             {
-                _fileEntitySeeder.Seed();
+                _loadableFileEntitySeeder.Seed();
                 _unitOfWork.SaveChanges();
             }
 
@@ -48,6 +51,8 @@ namespace UCosmic.SeedData
 
             _sqlSeeder.Seed();
             _unitOfWork.SaveChanges();
+
+            _externalFileEntitySeeder.Seed();
 
             var members = Membership.GetAllUsers().Cast<MembershipUser>();
             if (!members.Any()) _memberEntitySeeder.Seed();

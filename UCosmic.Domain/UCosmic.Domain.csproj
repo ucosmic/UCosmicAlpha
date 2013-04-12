@@ -95,6 +95,7 @@
     <Compile Include="Api\Validation\MustBePositivePrimaryKey.cs" />
     <Compile Include="Api\_Etc\IConsumeHttp.cs" />
     <Compile Include="Api\_Etc\ISendMail.cs" />
+    <Compile Include="Api\_Extensions\ByteExtensions.cs" />
     <Compile Include="Api\_Extensions\EnumExtensions.cs" />
     <Compile Include="Api\Events\BaseEvent.cs" />
     <Compile Include="Api\Events\IDefineEvent.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Files\Entities\ExternalFile.cs" />
     <Compile Include="Domain\Identity\Commands\CreateUser.cs" />
     <Compile Include="Domain\Identity\Queries\RoleByName.cs" />
     <Compile Include="Domain\Identity\Queries\RoleById.cs" />
@@ -190,7 +192,6 @@
     <Compile Include="Domain\Identity\Validation\MustBeInAnyRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
-    <Compile Include="Domain\People\Commands\UpdateMyPhotoId.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
     <Compile Include="Domain\Representatives\Entities\RepModuleSettings.cs" />

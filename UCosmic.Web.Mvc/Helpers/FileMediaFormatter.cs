@@ -89,7 +89,7 @@ namespace UCosmic.Web.Mvc
 
                         using (var imgStream = fileContent.ReadAsStreamAsync().Result)
                         {
-                            var imageBuffer = ReadFully(imgStream);
+                            var imageBuffer = imgStream.ReadFully();
                             var result = new FileMedia(fileName, mediaType, imageBuffer);
                             fileMedias.Add(result);
                         }
@@ -107,20 +107,6 @@ namespace UCosmic.Web.Mvc
             });
 
             return taskCompletionSource.Task;
-        }
-
-        private static byte[] ReadFully(Stream input)
-        {
-            var buffer = new byte[16*1024];
-            using (var memoryStream = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    memoryStream.Write(buffer, 0, read);
-                }
-                return memoryStream.ToArray();
-            }
         }
     }
 

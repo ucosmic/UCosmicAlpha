@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 EagerLoad = new Expression<Func<Person, object>>[]
                 {
-                    x => x.Photo.Binary,
+                    x => x.Photo,
                 }
             });
 

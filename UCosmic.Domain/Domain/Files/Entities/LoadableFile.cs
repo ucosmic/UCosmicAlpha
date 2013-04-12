@@ -15,7 +15,6 @@ namespace UCosmic.Domain.Files
         public string Title { get; protected internal set; }
         public string Name { get; protected internal set; }         // file name only
         public string Extension { get; protected internal set; }    // extension only, no .
-        public string Path { get; protected internal set; }    // key for IStoreBinaryData
     }
 
 
@@ -27,7 +26,6 @@ namespace UCosmic.Domain.Files
             {
                 entity.Id,
                 entity.Length,
-                entity.Path,
                 entity.MimeType,
                 entity.Title,
                 entity.Name,

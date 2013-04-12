@@ -37,6 +37,16 @@ namespace UCosmic.EntityFramework
         }
     }
 
+    public class ExternalFileOrm : EntityTypeConfiguration<ExternalFile>
+    {
+        public ExternalFileOrm()
+        {
+            ToTable(typeof(ExternalFile).Name, DbSchemaName.Files);
+
+            Property(p => p.MimeType).IsRequired().HasMaxLength(256);
+        }
+    }
+
     public class ImageOrm : EntityTypeConfiguration<Image>
     {
         public ImageOrm()
@@ -55,5 +65,4 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(ProxyImageMimeTypeXRef).Name, DbSchemaName.Files);
         }
     }
-
 }

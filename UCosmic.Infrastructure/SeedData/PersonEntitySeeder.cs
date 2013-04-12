@@ -1,8 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Files;
 using UCosmic.Domain.People;
 
 namespace UCosmic.SeedData
@@ -10,21 +10,18 @@ namespace UCosmic.SeedData
     public class PersonEntitySeeder : BasePersonEntitySeeder
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<UpdateMyPhotoId> _updatePhotoId;
+        private readonly IHandleCommands<UpdateMyPhoto> _updatePhoto;
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
             , IHandleCommands<CreateAffiliation> createAffiliation
-            , IHandleCommands<UpdateMyPhotoId> updatePhotoId
-            , ICommandEntities entities
+            , IHandleCommands<UpdateMyPhoto> updatePhoto
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createPerson, createAffiliation, unitOfWork)
         {
             _queryProcessor = queryProcessor;
-            _entities = entities;
-            _updatePhotoId = updatePhotoId;
+            _updatePhoto = updatePhoto;
         }
 
         public override void Seed()
@@ -283,8 +280,19 @@ namespace UCosmic.SeedData
                             },
                         },
                 });
-                var photo = _entities.Get<LoadableFile>().Single(x => x.Name == "mkusenba-photo" && x.Extension == "jpg");
-                _updatePhotoId.Handle(new UpdateMyPhotoId(new GenericPrincipal(new GenericIdentity(person.User.Name), null), photo.Id));
+                var fileName = "mkusenba-photo.jpg";
+                var principal = new GenericPrincipal(new GenericIdentity(person.User.Name), null);
+                using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
+                    @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\", fileName)))
+                {
+                    var content = fileStream.ReadFully();
+                    _updatePhoto.Handle(new UpdateMyPhoto(principal)
+                    {
+                        Content = content,
+                        MimeType = "image/jpg",
+                        Name = fileName,
+                    });
+                }
 
                 /* Affiliations set below. */
 
@@ -305,8 +313,20 @@ namespace UCosmic.SeedData
                                 },
                         },
                 });
-                photo = _entities.Get<LoadableFile>().Single(x => x.Name == "billhogarth-photo" && x.Extension == "jpg");
-                _updatePhotoId.Handle(new UpdateMyPhotoId(new GenericPrincipal(new GenericIdentity(person.User.Name), null), photo.Id));
+                fileName = "billhogarth-photo.jpg";
+                principal = new GenericPrincipal(new GenericIdentity(person.User.Name), null);
+                using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
+                    @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\", fileName)))
+                {
+                    var content = fileStream.ReadFully();
+                    _updatePhoto.Handle(new UpdateMyPhoto(principal)
+                    {
+                        Content = content,
+                        MimeType = "image/jpg",
+                        Name = fileName,
+                    });
+                }
+
                 /* Affiliations set below. */
             } /* USF People */
 
@@ -369,7 +389,7 @@ namespace UCosmic.SeedData
             return person;
         }
     }
-    
+
     public class AffiliationEntitySeeder : BaseAffiliationEntitySeeder
     {
         private readonly ICommandEntities _entities;
@@ -405,7 +425,7 @@ namespace UCosmic.SeedData
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                 });
-                
+
                 /* ------------------------------------------------------------------------ */
                 person = _entities.Get<Person>()
                     .SingleOrDefault(x => x.FirstName == "Margaret" && x.LastName == "Kusenbach");

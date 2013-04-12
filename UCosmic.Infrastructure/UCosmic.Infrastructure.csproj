@@ -199,11 +199,12 @@
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
-    <Compile Include="SeedData\FileEntitySeeder.cs" />
+    <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
     <Compile Include="SeedData\ImageEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementEntitySeeder.cs" />
     <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
+    <Compile Include="SeedData\LoadableFileEntitySeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />
     <Compile Include="WebApi\SimpleInjectorNGeoRegistration.cs" />
     <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />

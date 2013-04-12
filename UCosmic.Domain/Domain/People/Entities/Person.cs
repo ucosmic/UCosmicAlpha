@@ -33,7 +33,7 @@ namespace UCosmic.Domain.People
         public string LastName { get; protected internal set; }
         public string Suffix { get; protected internal set; }
         public string Gender { get; protected internal set; }
-        public virtual LoadableFile Photo { get; protected internal set; }
+        public virtual ExternalFile Photo { get; protected internal set; }
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
         public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
     
