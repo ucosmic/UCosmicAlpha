@@ -143,8 +143,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal));
 
                 CreateMap<ActivitySearchInputModel, ActivitiesByPersonId>()
-                    .ForMember(d => d.EagerLoad, o => o.Ignore())
-                    .ForMember(d => d.ModeText, o => o.Ignore());
+                    .ForMember(d => d.EagerLoad, o => o.Ignore());
 
                 CreateMap<Place, ActivityLocationNameApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))

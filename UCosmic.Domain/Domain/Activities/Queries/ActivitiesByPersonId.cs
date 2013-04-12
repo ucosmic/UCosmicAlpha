@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace UCosmic.Domain.Activities
 {
     public class ActivitiesByPersonId : BaseEntitiesQuery<Activity>, IDefineQuery<PagedQueryResult<Activity>>
     {
         public int PersonId { get; set; }
-        public string ModeText { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
     }
@@ -36,33 +33,30 @@ namespace UCosmic.Domain.Activities
              *  activities with no dates are listed last
              */
 
-            /* TBD - If I run each query separately,I get the correct results.  However,
-             * when I .Concat the results, the undated activities are appeneded, but the
-             * sort order of both results has changed.
-             */
-
             IQueryable<Activity> undatedResults = _entities.Query<Activity>()
                                                            .Where(
                                                                a =>
-                                                               !a.Values.FirstOrDefault().StartsOn.HasValue &&
-                                                               !a.Values.FirstOrDefault().EndsOn.HasValue)
+                                                               a.Values.Any(v => (v.ModeText == a.ModeText) && 
+                                                               !v.StartsOn.HasValue && !v.EndsOn.HasValue)
+                                                            )
                                                            .WithPersonId(query.PersonId)
-                                                           .WithMode(query.ModeText)
-                                                           .OrderBy(a => a.Values.FirstOrDefault().Title);
+                                                           .OrderBy(a => a.Values.FirstOrDefault().Title)
+                                                           .ToArray().AsQueryable();
 
             IQueryable<Activity> results = _entities.Query<Activity>()
                                                     .Where(
                                                         a =>
-                                                        (a.Values.FirstOrDefault().StartsOn.HasValue) ||
-                                                        (a.Values.FirstOrDefault().EndsOn.HasValue))
+                                                        a.Values.Any(v => (v.ModeText == a.ModeText) && 
+                                                        (v.StartsOn.HasValue || v.EndsOn.HasValue))
+                                                    )
                                                     .WithPersonId(query.PersonId)
-                                                    .WithMode(query.ModeText)
                                                     .OrderByDescending(
                                                         a =>
                                                         a.Values.FirstOrDefault().EndsOn.HasValue
                                                             ? a.Values.FirstOrDefault().EndsOn.Value
                                                             : a.Values.FirstOrDefault().StartsOn.Value)
                                                     .ThenBy(a => a.Values.FirstOrDefault().Title)
+                                                    .ToArray().AsQueryable()
                                                     .Concat(undatedResults);
 
             var pagedResults = new PagedQueryResult<Activity>(results, query.PageSize, query.PageNumber);
