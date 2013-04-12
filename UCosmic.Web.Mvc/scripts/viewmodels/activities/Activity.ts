@@ -586,5 +586,27 @@ module ViewModels.Activities {
             });
         }
 
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        startDocumentTitleEdit(item: any, event: any): void {
+            var textElement = event.target;
+            $(textElement).hide();
+            var inputElement = $(textElement).siblings("#documentTitleInput")[0];
+            $(inputElement).show();
+            $(inputElement).focusout(event, this.endDocumentTitleEdit);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        endDocumentTitleEdit(event: any): void {
+            var inputElement = event.target;
+            $(inputElement).hide();
+            var textElement = $(inputElement).siblings("#documentTitle")[0];
+            $(textElement).show();
+        }
 	}
 }

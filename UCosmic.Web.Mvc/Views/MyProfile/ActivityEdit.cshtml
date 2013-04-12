@@ -222,7 +222,14 @@
         </td>
         <!-- Title -->
         <td>
-            <span data-bind="text: title"></span>
+            <span style="display: inline"
+                  id="documentTitle"
+                  data-bind="text: title, click: function (item, event) { $parent.startDocumentTitleEdit(item, event); }">
+            </span>
+            <input type="text"
+                   id="documentTitleInput"
+                   style="display: none"
+                   data-bind="value: title"/>
         </td>
         <!-- Type -->
         <td style="text-align: center">

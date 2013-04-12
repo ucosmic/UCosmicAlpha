@@ -358,6 +358,19 @@ var ViewModels;
                     }
                 });
             };
+            Activity.prototype.startDocumentTitleEdit = function (item, event) {
+                var textElement = event.target;
+                $(textElement).hide();
+                var inputElement = $(textElement).siblings("#documentTitleInput")[0];
+                $(inputElement).show();
+                $(inputElement).focusout(event, this.endDocumentTitleEdit);
+            };
+            Activity.prototype.endDocumentTitleEdit = function (event) {
+                var inputElement = event.target;
+                $(inputElement).hide();
+                var textElement = $(inputElement).siblings("#documentTitle")[0];
+                $(textElement).show();
+            };
             return Activity;
         })();
         Activities.Activity = Activity;        
