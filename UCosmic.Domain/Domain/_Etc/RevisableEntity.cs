@@ -10,8 +10,6 @@ namespace UCosmic.Domain
             EntityId = Guid.NewGuid();
             CreatedOnUtc = DateTime.UtcNow;
             CreatedByPrincipal = Thread.CurrentPrincipal.Identity.Name;
-            //UpdatedOnUtc = CreatedOnUtc;
-            //UpdatedByPrincipal = CreatedByPrincipal;
             IsCurrent = true;
         }
 

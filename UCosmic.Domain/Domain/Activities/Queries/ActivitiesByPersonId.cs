@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {
@@ -32,6 +33,8 @@ namespace UCosmic.Domain.Activities
              *  
              *  activities with no dates are listed last
              */
+
+            var employeeActivityTypesList = _entities.Query<EmployeeActivityType>().ToArray().AsQueryable();
 
             IQueryable<Activity> undatedResults = _entities.Query<Activity>()
                                                            .Where(
