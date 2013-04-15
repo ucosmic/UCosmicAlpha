@@ -175,24 +175,6 @@ select.inline {
 }
 
 a.button {
-    @include border-box;
-    height: 38px;
-    display: inline-block;
-    @include border-radius(8px);
-    border: solid 1px #ccc;
-    padding: 8px 10px 8px 8px;
-    @include font-height(16px, 20px);
-    @include linear-bg-gradient(270deg, #dddddd, 0, #bbbbbb, 100%);
-    color: #333 !important;
-    @include font-arial;
-    font-weight: bold;
-    text-decoration: none !important;
-    &:hover {
-        @include linear-bg-gradient(270deg, #cccccc, 0, #aaaaaa, 100%);
-    }
-    &:active {
-        @include linear-bg-gradient(270deg, #aaaaaa, 0, #cccccc, 100%);
-    }
     > .text {
         display: inline-block;
         line-height: 20px;
@@ -216,7 +198,7 @@ a.button {
     }
 }
 
-button, input[type=submit], input[type=reset], input[type=button] {
+button, input[type=submit], input[type=reset], input[type=button], a.button {
     margin: 0 12px 0 0;
     @include border-radius(4px);
     padding: 6px 12px;

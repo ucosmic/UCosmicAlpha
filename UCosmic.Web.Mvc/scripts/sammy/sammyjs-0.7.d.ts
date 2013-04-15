@@ -127,6 +127,12 @@ module Sammy {
 
         new (app, verb, path, params, target);
 
+        app: Application;
+        verb: string;
+        path: string;
+        params: Object;
+        target: any;
+
         $element(): JQuery;
         engineFor(engine: any): any;
         eventNamespace(): string;

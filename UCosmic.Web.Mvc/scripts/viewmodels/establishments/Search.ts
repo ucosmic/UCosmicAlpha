@@ -23,76 +23,17 @@ module ViewModels.Establishments {
         constructor () {
             super();
 
-            // countries dropdown
             this._setupCountryDropDown();
-
-            // paging subscriptions
             this._setupPagingSubscriptions();
-
-            // lensing
             this._setupLensing();
-
-            // sammy
-            var self = this;
-            this.sammy.before(/\#\/page\/(.*)/, function () {
-                if (self.nextForceDisabled() || self.prevForceDisabled())
-                    return false;
-
-                var pageNumber = this.params['pageNumber'];
-
-                // make sure the viewmodel pagenumber is in sync with the route
-                if (pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber()))
-                    self.pageNumber(parseInt(pageNumber));
-                return true;
-            });
-
-            this.sammy.get('#/page/:pageNumber/', function () {
-                var trail = self.trail(),
-                    clone;
-                if (trail.length > 0 && trail[trail.length - 1] === this.path) return;
-                if (trail.length > 1 && trail[trail.length - 2] === this.path) {
-                    // swipe backward
-                    trail.pop();
-                    self.swipeCallback = function () {
-                        clone = self.$itemsPage.clone(true)
-                            .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                        clone.appendTo(self.$itemsPage.parent());
-                        self.$itemsPage.attr('data-side-swiper', 'off').hide();
-                        self.lockAnimation();
-                        $(window).scrollTop(0);
-                        self.sideSwiper.prev(1, function () {
-                            self.$itemsPage.siblings().remove();
-                            self.unlockAnimation();
-                        });
-                    };
-                    return;
-                } else if (trail.length > 0) {
-                    // swipe forward
-                    self.swipeCallback = function () {
-                        clone = self.$itemsPage.clone(true)
-                            .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                        clone.insertBefore(self.$itemsPage);
-                        self.$itemsPage.attr('data-side-swiper', 'off').hide();
-                        self.lockAnimation();
-                        $(window).scrollTop(0);
-                        self.sideSwiper.next(1, function () {
-                            self.unlockAnimation();
-                        });
-                    };
-                }
-                trail.push(this.path);
-            });
-
-            // match /establishments or /establishments/
-            this.sammy.get('/establishments[\/]?', function () {
-                this.app.setLocation('#/page/1/');
-            });
+            this._setupSammy();
 
             ko.computed((): void => {
                 this.requestResults();
             }).extend({ throttle: 1 });
         }
 
+        // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {
 
@@ -116,6 +57,7 @@ module ViewModels.Establishments {
             .extend({ throttle: 1 });
         }
 
+        // paging subscriptions
         private _setupPagingSubscriptions(): void {
             // whenever pageNumber changes, set the location for sammy
             this.pageNumber.subscribe((newValue: number) => {
@@ -123,6 +65,7 @@ module ViewModels.Establishments {
             });
         }
 
+        // lensing
         private _setupLensing(): void {
             this.changeLens = (lens: Lens): void => {
                 this.lens(lens.value);
@@ -131,6 +74,68 @@ module ViewModels.Establishments {
 
         // sammy & URL hashing
         sammy: Sammy.Application = Sammy();
+
+        private _setupSammy(): void {
+            var self = this;
+            this.sammy.before(/\#\/(page|parent\/page)\/(.*)\//, function () {
+                if (self.nextForceDisabled() || self.prevForceDisabled())
+                    return false;
+
+                var pageNumber = this.params['pageNumber'];
+
+                // make sure the viewmodel pagenumber is in sync with the route
+                if (pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber()))
+                    self.pageNumber(parseInt(pageNumber));
+                return true;
+            });
+
+            this.sammy.get('#/page/:pageNumber/', function () {
+                self.getPage(this);
+            });
+
+            // match /establishments or /establishments/
+            this.sammy.get('/establishments[\/]?', function () {
+                this.app.setLocation('#/page/1/');
+            });
+        }
+
+        getPage(sammyContext: Sammy.EventContext): void {
+            var trail = this.trail(),
+                clone;
+            if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path) return;
+            if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
+                // swipe backward
+                trail.pop();
+                this.swipeCallback = (): void => {
+                    clone = this.$itemsPage.clone(true)
+                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                    clone.appendTo(this.$itemsPage.parent());
+                    this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                    this.lockAnimation();
+                    $(window).scrollTop(0);
+                    this.sideSwiper.prev(1, (): void => {
+                        this.$itemsPage.siblings().remove();
+                        this.unlockAnimation();
+                    });
+                };
+                return;
+            } else if (trail.length > 0) {
+                // swipe forward
+                this.swipeCallback = (): void => {
+                    clone = this.$itemsPage.clone(true)
+                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                    clone.insertBefore(this.$itemsPage);
+                    this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                    this.lockAnimation();
+                    $(window).scrollTop(0);
+                    this.sideSwiper.next(1, (): void => {
+                        this.unlockAnimation();
+                    });
+                };
+            }
+            trail.push(sammyContext.path);
+        }
+
         setLocation(): void {
             var location = '#/page/' + this.pageNumber() + '/';
             if (this.sammy.getLocation() !== location)

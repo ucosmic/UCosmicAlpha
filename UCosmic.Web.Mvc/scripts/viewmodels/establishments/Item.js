@@ -441,6 +441,8 @@ var ViewModels;
                         self.parentSearch.sammy.run();
                         self.parentSearch.pageNumber(1);
                         self.parentSearch.transitionedPageNumber(1);
+                    } else {
+                        self.parentSearch.getPage(this.params['pageNumber']);
                     }
                 });
                 this.sammy.get('/establishments/:establishmentId/', function () {

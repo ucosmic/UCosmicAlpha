@@ -203,57 +203,26 @@ select.inline {
   background-image: linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dbdbdb', EndColorStr='#f2f2f2'); }
 
-a.button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 38px;
+a.button > .text {
   display: inline-block;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-  border: solid 1px #ccc;
-  padding: 8px 10px 8px 8px;
-  font-size: 16px;
   line-height: 20px;
-  background-image: -webkit-linear-gradient(270deg, #dddddd 0, #bbbbbb 100%);
-  background-image: -moz-linear-gradient(270deg, #dddddd 0, #bbbbbb 100%);
-  background-image: linear-gradient(270deg, #dddddd 0, #bbbbbb 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dddddd', EndColorStr='#bbbbbb');
-  color: #333 !important;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  text-decoration: none !important; }
-  a.button:hover {
-    background-image: -webkit-linear-gradient(270deg, #cccccc 0, #aaaaaa 100%);
-    background-image: -moz-linear-gradient(270deg, #cccccc 0, #aaaaaa 100%);
-    background-image: linear-gradient(270deg, #cccccc 0, #aaaaaa 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#cccccc', EndColorStr='#aaaaaa'); }
-  a.button:active {
-    background-image: -webkit-linear-gradient(270deg, #aaaaaa 0, #cccccc 100%);
-    background-image: -moz-linear-gradient(270deg, #aaaaaa 0, #cccccc 100%);
-    background-image: linear-gradient(270deg, #aaaaaa 0, #cccccc 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#aaaaaa', EndColorStr='#cccccc'); }
-  a.button > .text {
-    display: inline-block;
-    line-height: 20px;
-    vertical-align: middle; }
-  a.button > i.green.plus {
-    display: inline-block;
-    vertical-align: middle;
-    width: 24px;
-    height: 24px;
-    margin: -2px 0 0 -2px;
-    background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
-  a.button > i.red.closer {
-    display: inline-block;
-    vertical-align: middle;
-    width: 24px;
-    height: 24px;
-    margin: -2px 0 0 -2px;
-    background-image: url(../../../images/icons/closer/closer-24-red-disc.png); }
+  vertical-align: middle; }
+a.button > i.green.plus {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  margin: -2px 0 0 -2px;
+  background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
+a.button > i.red.closer {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  margin: -2px 0 0 -2px;
+  background-image: url(../../../images/icons/closer/closer-24-red-disc.png); }
 
-button, input[type=submit], input[type=reset], input[type=button] {
+button, input[type=submit], input[type=reset], input[type=button], a.button {
   margin: 0 12px 0 0;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -266,13 +235,13 @@ button, input[type=submit], input[type=reset], input[type=button] {
   opacity: 0.9;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
-  button:hover, input[type=submit]:hover, input[type=reset]:hover, input[type=button]:hover {
+  button:hover, input[type=submit]:hover, input[type=reset]:hover, input[type=button]:hover, a.button:hover {
     cursor: pointer;
     -moz-opacity: 1;
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
-  button[disabled], button[disabled=true], input[type=submit][disabled], input[type=submit][disabled=true], input[type=reset][disabled], input[type=reset][disabled=true], input[type=button][disabled], input[type=button][disabled=true] {
+  button[disabled], button[disabled=true], input[type=submit][disabled], input[type=submit][disabled=true], input[type=reset][disabled], input[type=reset][disabled=true], input[type=button][disabled], input[type=button][disabled=true], a.button[disabled], a.button[disabled=true] {
     cursor: not-allowed !important;
     -moz-opacity: 0.5;
     opacity: 0.5;
