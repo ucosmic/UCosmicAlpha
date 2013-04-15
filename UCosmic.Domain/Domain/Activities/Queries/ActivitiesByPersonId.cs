@@ -44,6 +44,7 @@ namespace UCosmic.Domain.Activities
                                                             )
                                                            .WithPersonId(query.PersonId)
                                                            .OrderBy(a => a.Values.FirstOrDefault().Title)
+                                                           //.ThenBy(x => x.Values.FirstOrDefault().Types.Select(y => y.Type).OrderBy(y => y.Rank).FirstOrDefault())
                                                            .ToArray().AsQueryable();
 
             IQueryable<Activity> results = _entities.Query<Activity>()
@@ -59,6 +60,7 @@ namespace UCosmic.Domain.Activities
                                                             ? a.Values.FirstOrDefault().EndsOn.Value
                                                             : a.Values.FirstOrDefault().StartsOn.Value)
                                                     .ThenBy(a => a.Values.FirstOrDefault().Title)
+                                                    //.ThenBy(x => x.Values.FirstOrDefault().Types.Select(y => y.Type).OrderBy(y => y.Rank).FirstOrDefault())
                                                     .ToArray().AsQueryable()
                                                     .Concat(undatedResults);
 

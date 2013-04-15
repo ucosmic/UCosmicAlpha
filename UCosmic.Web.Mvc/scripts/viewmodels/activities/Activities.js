@@ -161,11 +161,15 @@ var ViewModels;
             ActivityList.prototype.activityTypesFormatted = function (types) {
                 var formattedTypes = "";
                 var location;
-                for(var i = 0; i < types.length; i += 1) {
-                    if(i > 0) {
-                        formattedTypes += ", ";
+                for(var i = 0; i < this.activityTypesList.length; i += 1) {
+                    for(var j = 0; j < types.length; j += 1) {
+                        if(types[j].typeId() == this.activityTypesList[i].id) {
+                            if(formattedTypes.length > 0) {
+                                formattedTypes += "; ";
+                            }
+                            formattedTypes += this.activityTypesList[i].type;
+                        }
                     }
-                    formattedTypes += this.getTypeName(types[i].typeId());
                 }
                 return formattedTypes;
             };

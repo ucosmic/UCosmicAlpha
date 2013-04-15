@@ -255,9 +255,16 @@ module ViewModels.Activities {
             var formattedTypes: string = "";
             var location: Service.ApiModels.IActivityLocation;
 
-            for (var i = 0; i < types.length; i += 1) {
-                if (i > 0) { formattedTypes += ", "; }
-                formattedTypes += this.getTypeName(types[i].typeId());
+            /* ----- Assemble in sorted order ----- */
+            for (var i = 0; i < this.activityTypesList.length; i += 1) {
+                for (var j = 0; j < types.length; j += 1)
+                {
+                    if (types[j].typeId() == this.activityTypesList[i].id)
+                    {
+                        if (formattedTypes.length > 0) { formattedTypes += "; "; }
+                        formattedTypes += this.activityTypesList[i].type;
+                    }
+                }
             }
 
             return formattedTypes;

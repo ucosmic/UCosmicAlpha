@@ -398,7 +398,17 @@ var ViewModels;
                         $(inputElement).removeAttr("disabled");
                         var textElement = $(inputElement).siblings("#documentTitle")[0];
                         $(textElement).show();
-                        alert("Unable to rename document. " + textStatus + "|" + errorThrown);
+                        $("#documentRenameErrorDialog > #message")[0].innerText = jqXhr.responseText;
+                        $("#documentRenameErrorDialog").dialog({
+                            modal: true,
+                            resizable: false,
+                            width: 400,
+                            buttons: {
+                                Ok: function () {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
                     }
                 });
             };

@@ -5,6 +5,7 @@ module Service.ApiModels {
     export interface IEmployeeActivityType {
         id: number;
         type: string;
+        rank: number;
     }
 
     export interface IActivityLocation {
