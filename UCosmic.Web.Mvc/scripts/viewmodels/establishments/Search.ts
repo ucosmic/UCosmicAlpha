@@ -18,35 +18,19 @@ interface Lens {
 
 module ViewModels.Establishments {
 
-  // comment
     export class Search extends ViewModels.PagedSearch {
 
         constructor () {
             super();
 
             // countries dropdown
-            ko.computed((): void => {
-                var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-                $.get(App.Routes.WebApi.Countries.get())
-                .done((response: Places.IServerCountryApiModel[]): void => {
-                    var emptyValue = new Places.ServerCountryApiModel('-1', '[Without country]');
-                    response.splice(response.length, 0, emptyValue);
-                    this.countries(response);
-                    if (lastCountryCode && lastCountryCode !== this.countryCode())
-                        this.countryCode(lastCountryCode);
-                });
-            })
-            .extend({ throttle: 1 });
+            this._setupCountryDropDown();
 
             // paging subscriptions
-            this.pageNumber.subscribe((newValue: number) => {
-                this.setLocation();
-            });
+            this._setupPagingSubscriptions();
 
             // lensing
-            this.changeLens = (lens: Lens): void => {
-                this.lens(lens.value);
-            };
+            this._setupLensing();
 
             // sammy
             var self = this;
@@ -107,6 +91,42 @@ module ViewModels.Establishments {
             ko.computed((): void => {
                 this.requestResults();
             }).extend({ throttle: 1 });
+        }
+
+        private _setupCountryDropDown(): void {
+            ko.computed((): void => {
+
+                // populate countryCode based on last value when paging backwards
+                var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
+
+                $.get(App.Routes.WebApi.Countries.get()) // hit the API
+                .done((response: Places.IServerCountryApiModel[]): void => {
+                    // setup empty value
+                    var emptyValue = new Places
+                        .ServerCountryApiModel('-1', '[Without country]');
+                    response.splice(response.length, 0, emptyValue);
+
+                    this.countries(response); // push into observable array
+
+                    // restore selected value when paging backwards
+                    if (lastCountryCode && lastCountryCode !== this.countryCode())
+                        this.countryCode(lastCountryCode);
+                });
+            })
+            .extend({ throttle: 1 });
+        }
+
+        private _setupPagingSubscriptions(): void {
+            // whenever pageNumber changes, set the location for sammy
+            this.pageNumber.subscribe((newValue: number) => {
+                this.setLocation();
+            });
+        }
+
+        private _setupLensing(): void {
+            this.changeLens = (lens: Lens): void => {
+                this.lens(lens.value);
+            };
         }
 
         // sammy & URL hashing

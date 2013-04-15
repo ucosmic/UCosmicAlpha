@@ -117,6 +117,14 @@ var ViewModels;
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
                 this.urlsSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, true));
+                this.sideSwiper = new App.SideSwiper({
+                    frameWidth: 980,
+                    speed: 'fast',
+                    root: '#establishment_page'
+                });
+                this.parentSearch = new Establishments.Search();
+                this.sammy = Sammy();
+                this._findingParent = false;
                 this.id = id || 0;
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
@@ -178,6 +186,7 @@ var ViewModels;
                 }, function (xhr, textStatus, errorThrown) {
                 });
                 ko.validation.group(this);
+                this._setupSammy();
             }
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
@@ -415,6 +424,35 @@ var ViewModels;
                 this._loadScalars().done(function (response) {
                     _this._pullScalars(response);
                 });
+            };
+            Item.prototype._setupSammy = function () {
+                var _this = this;
+                var self = this;
+                this.parentSearch.setLocation = function () {
+                    var location = '#/parent/page/' + _this.parentSearch.pageNumber() + '/';
+                    if(_this.parentSearch.sammy.getLocation() !== location) {
+                        _this.parentSearch.sammy.setLocation(location);
+                    }
+                };
+                this.sammy.get('/#/parent/page/:pageNumber/', function () {
+                    if(!self._findingParent) {
+                        self._findingParent = true;
+                        self.sideSwiper.next();
+                        self.parentSearch.sammy.run();
+                        self.parentSearch.pageNumber(1);
+                        self.parentSearch.transitionedPageNumber(1);
+                    }
+                });
+                this.sammy.get('/establishments/:establishmentId/', function () {
+                    if(self._findingParent) {
+                        self.sideSwiper.prev();
+                        self._findingParent = false;
+                    }
+                });
+            };
+            Item.prototype.clickToDoSomething = function () {
+                this.sideSwiper.next();
+                return true;
             };
             return Item;
         })();

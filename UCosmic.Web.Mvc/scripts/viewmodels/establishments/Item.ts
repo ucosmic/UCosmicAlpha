@@ -5,6 +5,7 @@
 /// <reference path="../../google/google.maps.d.ts" />
 /// <reference path="../../google/ToolsOverlay.ts" />
 /// <reference path="../../app/App.ts" />
+/// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
@@ -13,6 +14,8 @@
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
 /// <reference path="Location.ts" />
+/// <reference path="Search.ts" />
+/// <reference path="SearchResult.ts" />
 
 module ViewModels.Establishments {
 
@@ -213,6 +216,8 @@ module ViewModels.Establishments {
                 });
 
             ko.validation.group(this);
+
+            this._setupSammy();
         }
 
         //#region Names
@@ -501,6 +506,48 @@ module ViewModels.Establishments {
             this._loadScalars().done((response: IServerApiScalarModel): void => {
                 this._pullScalars(response);
             });
+        }
+
+        sideSwiper = new App.SideSwiper({
+            frameWidth: 980, speed: 'fast', root: '#establishment_page'});
+        parentSearch = new Search();
+        sammy: Sammy.Application = Sammy();
+        private _findingParent: bool = false;
+
+        private _setupSammy(): void {
+            var self = this;
+
+            this.parentSearch.setLocation = (): void => {
+                var location = '#/parent/page/' + this.parentSearch.pageNumber() + '/';
+                if (this.parentSearch.sammy.getLocation() !== location)
+                    this.parentSearch.sammy.setLocation(location);
+            }
+
+            this.sammy.get('/#/parent/page/:pageNumber/', function () {
+                if (!self._findingParent){
+                    //alert('going to parent using sammy');
+                    self._findingParent = true;
+                    self.sideSwiper.next();
+                    self.parentSearch.sammy.run();
+                    self.parentSearch.pageNumber(1);
+                    self.parentSearch.transitionedPageNumber(1);
+                }
+            });
+
+            this.sammy.get('/establishments/:establishmentId/', function () {
+                //alert('hit base route');
+                if (self._findingParent) {
+                    //alert('going back from parent using sammy');
+                    self.sideSwiper.prev();
+                    self._findingParent = false;
+                }
+            });
+        }
+
+        clickToDoSomething(): bool {
+            //alert('doing something');
+            this.sideSwiper.next();
+            return true;
         }
     }
 }

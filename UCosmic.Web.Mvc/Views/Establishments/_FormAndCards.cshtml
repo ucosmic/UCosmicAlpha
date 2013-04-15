@@ -9,7 +9,7 @@
                     <header>
                         <h2>
                             <span>Classification &amp; Identifier Codes</span>
-                            <a href="#/classification/edit/" title="Edit classification & identifier codes" data-bind="visible: !isEditingTypeId(), click: clickToEditTypeId" style="display: none;">
+                            <a href="#/" title="Edit classification & identifier codes" data-bind="visible: !isEditingTypeId(), click: clickToEditTypeId" style="display: none;">
                                 <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit classification & identifier codes" />
                             </a>
                         </h2>
@@ -51,12 +51,68 @@
                             <div class="field-unlabeled-input">
                                 <input type="button" value="Save" data-bind="click: clickToSaveTypeId, attr: { disabled: typeIdSaveSpinner.isVisible() || typeIdValidatingSpinner.isVisible() }" />
                                 &nbsp;&nbsp;&nbsp;
-                                <a href="#/cancel-classification-edit/" data-bind="click: clickToCancelTypeIdEdit">Cancel</a>
+                                <a href="#/" data-bind="click: clickToCancelTypeIdEdit">Cancel</a>
                                 &nbsp;&nbsp;&nbsp;
                                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: typeIdSaveSpinner.isVisible" />
                                 <strong data-bind="visible: typeIdSaveSpinner.isVisible">Saving...</strong>
                                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: typeIdValidatingSpinner.isVisible" />
                                 <strong data-bind="visible: typeIdValidatingSpinner.isVisible">Validating...</strong>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="fieldset">
+                    <header>
+                        <h2>
+                            <span>Parent Organization</span>
+                            <a href="#/parent/page/1/" title="Edit parent organization" data-xbind="visible: !isEditingTypeId(), click: clickToDoSomething" style="xdisplay: none;">
+                                <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit parent organization" />
+                            </a>
+                        </h2>
+                    </header>
+                    <div class="field-table w690-l190-v500">
+                        <div class="field-row">
+                            <div class="field-label">
+                                <label>Field #1</label>
+                            </div>
+                            <div class="field-input">
+                                <div class="text-box when-hovered" data-xbind="text: typeText, click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                                <select data-xbind="foreach: categories, value: typeId, visible: isEditingTypeId" style="display: none;">
+                                    <option data-xbind="visible: $index() == 0 && !$parent.id, text: $parent.typeEmptyText" style="display: none;" value="">[Loading...]</option>
+                                    <optgroup label="" data-xbind="attr: { label: text }, foreach: types">
+                                        <option data-xbind="attr: { value: id }, text: text"></option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field-label">
+                                <label>Field #2</label>
+                            </div>
+                            <div class="field-input">
+                                <div class="text-box when-hovered" data-xbind="text: ceebCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                                <input type="text" data-xbind="value: ceebCode, valueUpdate: 'afterkeydown', visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field-label">
+                                <label>Field #3</label>
+                            </div>
+                            <div class="field-input">
+                                <div class="text-box when-hovered" data-xbind="text: uCosmicCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                                <input type="text" data-xbind="value: uCosmicCode, valueUpdate: 'afterkeydown', visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+                            </div>
+                        </div>
+                        <div class="field-row" data-xbind="visible: id && isEditingTypeId" style="display: none;">
+                            <div class="field-unlabeled-input">
+                                <input type="button" value="Save" data-xbind="click: clickToSaveTypeId, attr: { disabled: typeIdSaveSpinner.isVisible() || typeIdValidatingSpinner.isVisible() }" />
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="#/cancel-classification-edit/" data-xbind="click: clickToCancelTypeIdEdit">Cancel</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-xbind="visible: typeIdSaveSpinner.isVisible" />
+                                <strong data-xbind="visible: typeIdSaveSpinner.isVisible">Saving...</strong>
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-xbind="visible: typeIdValidatingSpinner.isVisible" />
+                                <strong data-xbind="visible: typeIdValidatingSpinner.isVisible">Validating...</strong>
                             </div>
                         </div>
                     </div>

@@ -80,8 +80,11 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/establishments/item").Include(
                 "~/scripts/google/ToolsOverlay.js",
                 "~/scripts/viewmodels/Spinner.js",
+                "~/scripts/viewmodels/PagedSearch.js",
                 "~/scripts/viewmodels/languages/ServerApiModel.js",
                 "~/scripts/viewmodels/places/ServerApiModel.js",
+                "~/scripts/viewmodels/establishments/SearchResult.js",
+                "~/scripts/viewmodels/establishments/Search.js",
                 "~/scripts/viewmodels/establishments/Name.js",
                 "~/scripts/viewmodels/establishments/Url.js",
                 "~/scripts/viewmodels/establishments/Location.js",

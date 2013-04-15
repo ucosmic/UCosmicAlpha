@@ -58,25 +58,9 @@ var ViewModels;
                         'pageNumber'
                     ]
                 };
-                ko.computed(function () {
-                    var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
-                        var emptyValue = new ViewModels.Places.ServerCountryApiModel('-1', '[Without country]');
-                        response.splice(response.length, 0, emptyValue);
-                        _this.countries(response);
-                        if(lastCountryCode && lastCountryCode !== _this.countryCode()) {
-                            _this.countryCode(lastCountryCode);
-                        }
-                    });
-                }).extend({
-                    throttle: 1
-                });
-                this.pageNumber.subscribe(function (newValue) {
-                    _this.setLocation();
-                });
-                this.changeLens = function (lens) {
-                    _this.lens(lens.value);
-                };
+                this._setupCountryDropDown();
+                this._setupPagingSubscriptions();
+                this._setupLensing();
                 var self = this;
                 this.sammy.before(/\#\/page\/(.*)/, function () {
                     if(self.nextForceDisabled() || self.prevForceDisabled()) {
@@ -132,6 +116,34 @@ var ViewModels;
                     throttle: 1
                 });
             }
+            Search.prototype._setupCountryDropDown = function () {
+                var _this = this;
+                ko.computed(function () {
+                    var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
+                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                        var emptyValue = new ViewModels.Places.ServerCountryApiModel('-1', '[Without country]');
+                        response.splice(response.length, 0, emptyValue);
+                        _this.countries(response);
+                        if(lastCountryCode && lastCountryCode !== _this.countryCode()) {
+                            _this.countryCode(lastCountryCode);
+                        }
+                    });
+                }).extend({
+                    throttle: 1
+                });
+            };
+            Search.prototype._setupPagingSubscriptions = function () {
+                var _this = this;
+                this.pageNumber.subscribe(function (newValue) {
+                    _this.setLocation();
+                });
+            };
+            Search.prototype._setupLensing = function () {
+                var _this = this;
+                this.changeLens = function (lens) {
+                    _this.lens(lens.value);
+                };
+            };
             Search.prototype.setLocation = function () {
                 var location = '#/page/' + this.pageNumber() + '/';
                 if(this.sammy.getLocation() !== location) {
