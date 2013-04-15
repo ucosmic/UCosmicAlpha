@@ -1,11 +1,14 @@
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="Search.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 
 module ViewModels.Establishments {
 
     export class SearchResult {
+
+        private _owner: Search;
 
         // computed observables
         nullDisplayCountryName: KnockoutComputed;
@@ -13,7 +16,9 @@ module ViewModels.Establishments {
         officialNameMatchesTranslation: KnockoutComputed;
         officialNameDoesNotMatchTranslation: KnockoutComputed;
 
-        constructor (values: IServerApiFlatModel) {
+        constructor (values: IServerApiFlatModel, owner: Search) {
+
+            this._owner = owner;
 
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);
@@ -63,14 +68,7 @@ module ViewModels.Establishments {
 
         // navigate to detail page
         clickAction(viewModel: SearchResult, e: JQueryEventObject): void {
-            var href, $target = $(e.target);
-            while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-                $target = $target.parent();
-            }
-            if ($target.length) {
-                href = $target.attr('href') || $target.attr('data-href');
-                location.href = href.replace('/0/', '/' + this.id() + '/');
-            }
+            this._owner.clickAction(viewModel, e);
         }
 
         // open official URL page

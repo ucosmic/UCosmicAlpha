@@ -20,7 +20,7 @@ module ViewModels.Establishments {
 
     export class Search extends ViewModels.PagedSearch {
 
-        constructor () {
+        constructor (public initDefaultPageRoute?: bool = true) {
             super();
 
             this._setupCountryDropDown();
@@ -74,29 +74,26 @@ module ViewModels.Establishments {
 
         // sammy & URL hashing
         sammy: Sammy.Application = Sammy();
+        sammyBeforeRoute: any = /\#\/page\/(.*)\//;
+        sammyGetPageRoute: any = '#/page/:pageNumber/';
+        sammyDefaultPageRoute: any = '/establishments[\/]?';
 
         private _setupSammy(): void {
             var self = this;
-            this.sammy.before(/\#\/(page|parent\/page)\/(.*)\//, function () {
-                if (self.nextForceDisabled() || self.prevForceDisabled())
-                    return false;
-
-                var pageNumber = this.params['pageNumber'];
-
-                // make sure the viewmodel pagenumber is in sync with the route
-                if (pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber()))
-                    self.pageNumber(parseInt(pageNumber));
-                return true;
+            self.sammy.before(self.sammyBeforeRoute, function () {
+                self.beforePage(this);
             });
 
-            this.sammy.get('#/page/:pageNumber/', function () {
+            self.sammy.get(self.sammyGetPageRoute, function () {
                 self.getPage(this);
             });
 
-            // match /establishments or /establishments/
-            this.sammy.get('/establishments[\/]?', function () {
-                this.app.setLocation('#/page/1/');
-            });
+            if (self.initDefaultPageRoute) {
+                // match /establishments or /establishments/
+                self.sammy.get(self.sammyDefaultPageRoute, function () {
+                    self.initPageHash(this);
+                });
+            }
         }
 
         getPage(sammyContext: Sammy.EventContext): void {
@@ -134,6 +131,22 @@ module ViewModels.Establishments {
                 };
             }
             trail.push(sammyContext.path);
+        }
+
+        beforePage(sammyContext: Sammy.EventContext): bool {
+            if (this.nextForceDisabled() || this.prevForceDisabled())
+                return false;
+
+            var pageNumber = sammyContext.params['pageNumber'];
+
+            // make sure the viewmodel pagenumber is in sync with the route
+            if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
+                this.pageNumber(parseInt(pageNumber));
+            return true;
+        }
+
+        initPageHash(sammyContext: Sammy.EventContext): void {
+            sammyContext.app.setLocation('#/page/1/');
         }
 
         setLocation(): void {
@@ -181,7 +194,8 @@ module ViewModels.Establishments {
                     return ko.utils.unwrapObservable(data.id);
                 },
                 create: function (options) {
-                    return new ViewModels.Establishments.SearchResult(options.data);
+                    return new ViewModels.Establishments
+                        .SearchResult(options.data, options.parent);
                 }
             },
             ignore: ['pageSize', 'pageNumber']
@@ -224,6 +238,18 @@ module ViewModels.Establishments {
         // go to add new
         gotoAddNew(): bool {
             return true;
+        }
+
+        // click item
+        clickAction(viewModel: SearchResult, e: JQueryEventObject): void {
+            var href, $target = $(e.target);
+            while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
+                $target = $target.parent();
+            }
+            if ($target.length) {
+                href = $target.attr('href') || $target.attr('data-href');
+                location.href = href.replace('/0/', '/' + viewModel.id() + '/');
+            }
         }
     }
 }

@@ -8,10 +8,15 @@ var ViewModels;
     (function (Establishments) {
         var Search = (function (_super) {
             __extends(Search, _super);
-            function Search() {
+            function Search(initDefaultPageRoute) {
+                if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
                 var _this = this;
                         _super.call(this);
+                this.initDefaultPageRoute = initDefaultPageRoute;
                 this.sammy = Sammy();
+                this.sammyBeforeRoute = /\#\/page\/(.*)\//;
+                this.sammyGetPageRoute = '#/page/:pageNumber/';
+                this.sammyDefaultPageRoute = '/establishments[\/]?';
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
                 this.lenses = ko.observableArray([
@@ -50,7 +55,7 @@ var ViewModels;
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new ViewModels.Establishments.SearchResult(options.data);
+                            return new ViewModels.Establishments.SearchResult(options.data, options.parent);
                         }
                     },
                     ignore: [
@@ -98,22 +103,17 @@ var ViewModels;
             };
             Search.prototype._setupSammy = function () {
                 var self = this;
-                this.sammy.before(/\#\/(page|parent\/page)\/(.*)\//, function () {
-                    if(self.nextForceDisabled() || self.prevForceDisabled()) {
-                        return false;
-                    }
-                    var pageNumber = this.params['pageNumber'];
-                    if(pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber())) {
-                        self.pageNumber(parseInt(pageNumber));
-                    }
-                    return true;
+                self.sammy.before(self.sammyBeforeRoute, function () {
+                    self.beforePage(this);
                 });
-                this.sammy.get('#/page/:pageNumber/', function () {
+                self.sammy.get(self.sammyGetPageRoute, function () {
                     self.getPage(this);
                 });
-                this.sammy.get('/establishments[\/]?', function () {
-                    this.app.setLocation('#/page/1/');
-                });
+                if(self.initDefaultPageRoute) {
+                    self.sammy.get(self.sammyDefaultPageRoute, function () {
+                        self.initPageHash(this);
+                    });
+                }
             };
             Search.prototype.getPage = function (sammyContext) {
                 var _this = this;
@@ -150,6 +150,19 @@ var ViewModels;
                     }
                 }
                 trail.push(sammyContext.path);
+            };
+            Search.prototype.beforePage = function (sammyContext) {
+                if(this.nextForceDisabled() || this.prevForceDisabled()) {
+                    return false;
+                }
+                var pageNumber = sammyContext.params['pageNumber'];
+                if(pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber())) {
+                    this.pageNumber(parseInt(pageNumber));
+                }
+                return true;
+            };
+            Search.prototype.initPageHash = function (sammyContext) {
+                sammyContext.app.setLocation('#/page/1/');
             };
             Search.prototype.setLocation = function () {
                 var location = '#/page/' + this.pageNumber() + '/';
@@ -199,6 +212,16 @@ var ViewModels;
             };
             Search.prototype.gotoAddNew = function () {
                 return true;
+            };
+            Search.prototype.clickAction = function (viewModel, e) {
+                var href, $target = $(e.target);
+                while($target.length && !$target.attr('href') && !$target.attr('data-href')) {
+                    $target = $target.parent();
+                }
+                if($target.length) {
+                    href = $target.attr('href') || $target.attr('data-href');
+                    location.href = href.replace('/0/', '/' + viewModel.id() + '/');
+                }
             };
             return Search;
         })(ViewModels.PagedSearch);

@@ -510,25 +510,36 @@ module ViewModels.Establishments {
 
         sideSwiper = new App.SideSwiper({
             frameWidth: 980, speed: 'fast', root: '#establishment_page'});
-        parentSearch = new Search();
+        parentSearch = new Search(false);
         sammy: Sammy.Application = Sammy();
         private _findingParent: bool = false;
+        parentEstablishment: SearchResult;
 
         private _setupSammy(): void {
             var self = this;
 
+            this.parentSearch.sammyBeforeRoute = /\#\/select-parent\/page\/(.*)\//;
+            this.parentSearch.sammyGetPageRoute = '#/select-parent/page/:pageNumber/';
+            this.parentSearch.initDefaultPageRoute = false;
             this.parentSearch.setLocation = (): void => {
-                var location = '#/parent/page/' + this.parentSearch.pageNumber() + '/';
+                var location = '#/select-parent/page/' + this.parentSearch.pageNumber() + '/';
                 if (this.parentSearch.sammy.getLocation() !== location)
                     this.parentSearch.sammy.setLocation(location);
             }
 
-            this.sammy.get('/#/parent/page/:pageNumber/', function () {
+            this.parentSearch.clickAction = (viewModel: SearchResult, e: JQueryEventObject): void => {
+                //alert('intercepted click action');
+                this.parentEstablishment = viewModel;
+                this.sammy.setLocation('/establishments/' + this.id + '/');
+            }
+
+            this.parentSearch.sammy.run();
+
+            this.sammy.get('/#/select-parent/page/:pageNumber/', function () {
                 if (!self._findingParent){
                     //alert('going to parent using sammy');
                     self._findingParent = true;
                     self.sideSwiper.next();
-                    self.parentSearch.sammy.run();
                     self.parentSearch.pageNumber(1);
                     self.parentSearch.transitionedPageNumber(1);
                 }

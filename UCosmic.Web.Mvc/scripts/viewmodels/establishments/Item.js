@@ -122,7 +122,7 @@ var ViewModels;
                     speed: 'fast',
                     root: '#establishment_page'
                 });
-                this.parentSearch = new Establishments.Search();
+                this.parentSearch = new Establishments.Search(false);
                 this.sammy = Sammy();
                 this._findingParent = false;
                 this.id = id || 0;
@@ -428,17 +428,24 @@ var ViewModels;
             Item.prototype._setupSammy = function () {
                 var _this = this;
                 var self = this;
+                this.parentSearch.sammyBeforeRoute = /\#\/select-parent\/page\/(.*)\//;
+                this.parentSearch.sammyGetPageRoute = '#/select-parent/page/:pageNumber/';
+                this.parentSearch.initDefaultPageRoute = false;
                 this.parentSearch.setLocation = function () {
-                    var location = '#/parent/page/' + _this.parentSearch.pageNumber() + '/';
+                    var location = '#/select-parent/page/' + _this.parentSearch.pageNumber() + '/';
                     if(_this.parentSearch.sammy.getLocation() !== location) {
                         _this.parentSearch.sammy.setLocation(location);
                     }
                 };
-                this.sammy.get('/#/parent/page/:pageNumber/', function () {
+                this.parentSearch.clickAction = function (viewModel, e) {
+                    _this.parentEstablishment = viewModel;
+                    _this.sammy.setLocation('/establishments/' + _this.id + '/');
+                };
+                this.parentSearch.sammy.run();
+                this.sammy.get('/#/select-parent/page/:pageNumber/', function () {
                     if(!self._findingParent) {
                         self._findingParent = true;
                         self.sideSwiper.next();
-                        self.parentSearch.sammy.run();
                         self.parentSearch.pageNumber(1);
                         self.parentSearch.transitionedPageNumber(1);
                     } else {

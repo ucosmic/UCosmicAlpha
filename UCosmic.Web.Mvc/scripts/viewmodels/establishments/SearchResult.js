@@ -2,8 +2,9 @@ var ViewModels;
 (function (ViewModels) {
     (function (Establishments) {
         var SearchResult = (function () {
-            function SearchResult(values) {
+            function SearchResult(values, owner) {
                 var _this = this;
+                this._owner = owner;
                 ko.mapping.fromJS(values, {
                 }, this);
                 this.nullDisplayCountryName = ko.computed(function () {
@@ -36,14 +37,7 @@ var ViewModels;
                 });
             }
             SearchResult.prototype.clickAction = function (viewModel, e) {
-                var href, $target = $(e.target);
-                while($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-                    $target = $target.parent();
-                }
-                if($target.length) {
-                    href = $target.attr('href') || $target.attr('data-href');
-                    location.href = href.replace('/0/', '/' + this.id() + '/');
-                }
+                this._owner.clickAction(viewModel, e);
             };
             SearchResult.prototype.openOfficialUrl = function (viewModel, e) {
                 e.stopPropagation();
