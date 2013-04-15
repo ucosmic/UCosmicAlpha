@@ -30,6 +30,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<CreateLoadableFile> _createLoadableFile;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
+        private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
 
         public ActivitiesController(IProcessQueries queryProcessor
                                   , IHandleCommands<UpdateActivity> profileUpdateHandler
@@ -38,7 +39,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                   , IValidator<CreateLoadableFile> validateLoadableFile
                                   , IHandleCommands<CreateLoadableFile> createLoadableFile
                                   , IHandleCommands<CreateActivityDocument> createActivityDocument
-                                  , IHandleCommands<DeleteActivityDocument> deleteActivityDocument )            
+                                  , IHandleCommands<DeleteActivityDocument> deleteActivityDocument 
+                                  , IHandleCommands<RenameActivityDocument> renameActivityDocument )
         {
             _queryProcessor = queryProcessor;
             _profileUpdateHandler = profileUpdateHandler;
@@ -47,7 +49,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _validateLoadableFile = validateLoadableFile;
             _createLoadableFile = createLoadableFile; 
             _createActivityDocument = createActivityDocument;
-            _deleteActivityDocument = deleteActivityDocument; 
+            _deleteActivityDocument = deleteActivityDocument;
+            _renameActivityDocument = renameActivityDocument;
         }
 
         // --------------------------------------------------------------------------------
@@ -287,6 +290,31 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             return Request.CreateResponse(HttpStatusCode.OK,
                 string.Format("Activity document id '{0}' was successfully deleted.", documentId.ToString()));
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Rename activity document
+        */
+        // --------------------------------------------------------------------------------
+        [PUT("{activityId}/documents/{documentId}/title")]
+        public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
+        {
+            ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
+
+            var command = new RenameActivityDocument(User, documentId, newTitle);
+
+            try
+            {
+                _renameActivityDocument.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK,
+                string.Format("Activity document id '{0}' was successfully renamed.", documentId.ToString()));
         }
 
         // --------------------------------------------------------------------------------

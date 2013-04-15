@@ -359,17 +359,48 @@ var ViewModels;
                 });
             };
             Activity.prototype.startDocumentTitleEdit = function (item, event) {
+                var _this = this;
                 var textElement = event.target;
                 $(textElement).hide();
+                this.previousDocumentTitle = item.title();
                 var inputElement = $(textElement).siblings("#documentTitleInput")[0];
                 $(inputElement).show();
-                $(inputElement).focusout(event, this.endDocumentTitleEdit);
+                $(inputElement).focusout(event, function (event) {
+                    _this.endDocumentTitleEdit(item, event);
+                });
+                $(inputElement).keypress(event, function (event) {
+                    if(event.which == 13) {
+                        inputElement.blur();
+                    }
+                });
             };
-            Activity.prototype.endDocumentTitleEdit = function (event) {
+            Activity.prototype.endDocumentTitleEdit = function (item, event) {
+                var _this = this;
                 var inputElement = event.target;
-                $(inputElement).hide();
-                var textElement = $(inputElement).siblings("#documentTitle")[0];
-                $(textElement).show();
+                $(inputElement).unbind("focusout");
+                $(inputElement).unbind("keypress");
+                $(inputElement).attr("disabled", "disabled");
+                $.ajax({
+                    type: 'PUT',
+                    url: App.Routes.WebApi.Activities.Documents.rename(this.id(), item.id()),
+                    data: ko.toJSON(item.title()),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXhr) {
+                        $(inputElement).hide();
+                        $(inputElement).removeAttr("disabled");
+                        var textElement = $(inputElement).siblings("#documentTitle")[0];
+                        $(textElement).show();
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        item.title(_this.previousDocumentTitle);
+                        $(inputElement).hide();
+                        $(inputElement).removeAttr("disabled");
+                        var textElement = $(inputElement).siblings("#documentTitle")[0];
+                        $(textElement).show();
+                        alert("Unable to rename document. " + textStatus + "|" + errorThrown);
+                    }
+                });
             };
             return Activity;
         })();

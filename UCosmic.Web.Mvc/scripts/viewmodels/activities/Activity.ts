@@ -22,7 +22,7 @@ module ViewModels.Activities {
 	    locations: KnockoutObservableArray = ko.observableArray();
 
         /* Array of placeIds of selected locations. */
-	    selectedLocations: KnockoutObservableArray = ko.observableArray();
+        selectedLocations: KnockoutObservableArray = ko.observableArray();
 
         /* Array of activity types displayed as list of checkboxes */
 	    activityTypes: KnockoutObservableArray = ko.observableArray();
@@ -31,13 +31,16 @@ module ViewModels.Activities {
         addingTag: KnockoutObservableBool = ko.observable(false);
 
         /* Data bound to new tag textArea */
-	    newTag: KnockoutObservableString = ko.observable();
+        newTag: KnockoutObservableString = ko.observable();
 
         /* True if uploading document. */
         uploadingDocument: KnockoutObservableBool = ko.observable(false);
 
         /* True if activity is on-going (no end date specified) */
         isOnGoing: KnockoutObservableBool = ko.observable(false);
+
+        /* Old document name - used during document rename. */
+        previousDocumentTitle: string;
 
         /* Initialization errors. */
         inititializationErrors: string = "";
@@ -590,23 +593,47 @@ module ViewModels.Activities {
         /*
         */
         // --------------------------------------------------------------------------------
-        startDocumentTitleEdit(item: any, event: any): void {
+        startDocumentTitleEdit(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
             var textElement = event.target;
             $(textElement).hide();
+            this.previousDocumentTitle = item.title();
             var inputElement = $(textElement).siblings("#documentTitleInput")[0];
             $(inputElement).show();
-            $(inputElement).focusout(event, this.endDocumentTitleEdit);
+            $(inputElement).focusout(event, (event: any): void => { this.endDocumentTitleEdit(item, event); } );
+            $(inputElement).keypress(event, (event: any): void => { if (event.which == 13) { inputElement.blur();  } } );
         }
 
         // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------
-        endDocumentTitleEdit(event: any): void {
+        endDocumentTitleEdit(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
             var inputElement = event.target;
-            $(inputElement).hide();
-            var textElement = $(inputElement).siblings("#documentTitle")[0];
-            $(textElement).show();
+            $(inputElement).unbind("focusout");
+            $(inputElement).unbind("keypress");
+            $(inputElement).attr("disabled", "disabled");
+
+            $.ajax({
+                       type: 'PUT',
+                        url: App.Routes.WebApi.Activities.Documents.rename(this.id(), item.id()),
+                       data: ko.toJSON(item.title()),
+                contentType: 'application/json',
+                   dataType: 'json',
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
+                        $(inputElement).hide();
+                        $(inputElement).removeAttr("disabled");
+                        var textElement = $(inputElement).siblings("#documentTitle")[0];
+                        $(textElement).show();
+                    },
+                     error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                        item.title(this.previousDocumentTitle);
+                        $(inputElement).hide();
+                        $(inputElement).removeAttr("disabled");
+                        var textElement = $(inputElement).siblings("#documentTitle")[0];
+                        $(textElement).show();
+                        alert("Unable to rename document. " + textStatus + "|" + errorThrown);
+                    }
+            });
         }
 	}
 }

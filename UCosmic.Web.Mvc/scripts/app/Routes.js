@@ -367,6 +367,10 @@ var App;
                         return makeUrl('activities/' + activityId + '/documents/' + documentId);
                     }
                     Documents.del = del;
+                    function rename(activityId, documentId) {
+                        return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
+                    }
+                    Documents.rename = rename;
                     function validateFileExtensions(activityId) {
                         return makeUrl('activities/' + activityId + '/documents/validate-upload-filetype');
                     }

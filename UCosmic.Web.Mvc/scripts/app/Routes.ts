@@ -329,6 +329,10 @@ module App.Routes {
                     return makeUrl('activities/' + activityId + '/documents/' + documentId);
                 }
 
+                export function rename(activityId: number, documentId: number): string {
+                    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
+                }
+
                 export function validateFileExtensions(activityId: number): string {
                     return makeUrl('activities/' + activityId + '/documents/validate-upload-filetype');
                 }
