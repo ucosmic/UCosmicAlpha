@@ -445,6 +445,7 @@ var ViewModels;
                 this.sammy.get('/#/select-parent/page/:pageNumber/', function () {
                     if(!self._findingParent) {
                         self._findingParent = true;
+                        self._parentScrollTop = App.WindowScroller.getTop();
                         self.sideSwiper.next();
                         self.parentSearch.pageNumber(1);
                         self.parentSearch.transitionedPageNumber(1);
@@ -454,7 +455,9 @@ var ViewModels;
                 });
                 this.sammy.get('/establishments/:establishmentId/', function () {
                     if(self._findingParent) {
-                        self.sideSwiper.prev();
+                        self.sideSwiper.prev(1, function () {
+                            App.WindowScroller.setTop(self._parentScrollTop);
+                        });
                         self._findingParent = false;
                     }
                 });

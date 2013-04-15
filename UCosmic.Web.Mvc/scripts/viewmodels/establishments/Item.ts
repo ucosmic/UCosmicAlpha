@@ -514,6 +514,7 @@ module ViewModels.Establishments {
         sammy: Sammy.Application = Sammy();
         private _findingParent: bool = false;
         parentEstablishment: SearchResult;
+        private _parentScrollTop: number;
 
         private _setupSammy(): void {
             var self = this;
@@ -539,6 +540,7 @@ module ViewModels.Establishments {
                 if (!self._findingParent){
                     //alert('going to parent using sammy');
                     self._findingParent = true;
+                    self._parentScrollTop = App.WindowScroller.getTop();
                     self.sideSwiper.next();
                     self.parentSearch.pageNumber(1);
                     self.parentSearch.transitionedPageNumber(1);
@@ -552,7 +554,10 @@ module ViewModels.Establishments {
                 //alert('hit base route');
                 if (self._findingParent) {
                     //alert('going back from parent using sammy');
-                    self.sideSwiper.prev();
+                    self.sideSwiper.prev(1, (): void => {
+                        //alert('finished swiping back');
+                        App.WindowScroller.setTop(self._parentScrollTop);
+                    });
                     self._findingParent = false;
                 }
             });
