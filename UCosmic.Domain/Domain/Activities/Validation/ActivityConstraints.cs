@@ -8,5 +8,6 @@
     public class ActivityDocumentConstraints
     {
         public const int ModeTextMaxLength = 20;
+        public const int MaxTitleLength = 64;
     }
 }

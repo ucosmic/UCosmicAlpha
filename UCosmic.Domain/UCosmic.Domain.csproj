@@ -126,6 +126,7 @@
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityDocument.cs" />
