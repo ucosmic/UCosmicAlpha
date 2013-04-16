@@ -218,6 +218,7 @@ module ViewModels.Establishments {
             ko.validation.group(this);
 
             this._setupSammy();
+            this._setupParentComputeds();
         }
 
         //#region Names
@@ -513,7 +514,8 @@ module ViewModels.Establishments {
         parentSearch = new Search(false);
         sammy: Sammy.Application = Sammy();
         private _findingParent: bool = false;
-        parentEstablishment: SearchResult;
+        parentEstablishment: KnockoutObservableAny = ko.observable();
+        parentId: KnockoutObservableNumber = ko.observable();
         private _parentScrollTop: number;
 
         private _setupSammy(): void {
@@ -529,8 +531,8 @@ module ViewModels.Establishments {
             }
 
             this.parentSearch.clickAction = (viewModel: SearchResult, e: JQueryEventObject): void => {
-                //alert('intercepted click action');
-                this.parentEstablishment = viewModel;
+                this.parentEstablishment(viewModel);
+                this.parentId(viewModel.id());
                 this.sammy.setLocation('/establishments/' + this.id + '/');
             }
 
@@ -538,7 +540,6 @@ module ViewModels.Establishments {
 
             this.sammy.get('/#/select-parent/page/:pageNumber/', function () {
                 if (!self._findingParent){
-                    //alert('going to parent using sammy');
                     self._findingParent = true;
                     self._parentScrollTop = App.WindowScroller.getTop();
                     self.sideSwiper.next();
@@ -551,11 +552,8 @@ module ViewModels.Establishments {
             });
 
             this.sammy.get('/establishments/:establishmentId/', function () {
-                //alert('hit base route');
                 if (self._findingParent) {
-                    //alert('going back from parent using sammy');
                     self.sideSwiper.prev(1, (): void => {
-                        //alert('finished swiping back');
                         App.WindowScroller.setTop(self._parentScrollTop);
                     });
                     self._findingParent = false;
@@ -563,10 +561,12 @@ module ViewModels.Establishments {
             });
         }
 
-        clickToDoSomething(): bool {
-            //alert('doing something');
-            this.sideSwiper.next();
-            return true;
+        hasParent: KnockoutComputed;
+        private _setupParentComputeds(): void {
+            var parentId = this.parentId();
+            this.hasParent = ko.computed((): bool => {
+                return this.parentId() !== undefined && this.parentId() > 0;
+            });
         }
     }
 }

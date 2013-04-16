@@ -125,6 +125,8 @@ var ViewModels;
                 this.parentSearch = new Establishments.Search(false);
                 this.sammy = Sammy();
                 this._findingParent = false;
+                this.parentEstablishment = ko.observable();
+                this.parentId = ko.observable();
                 this.id = id || 0;
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
@@ -187,6 +189,7 @@ var ViewModels;
                 });
                 ko.validation.group(this);
                 this._setupSammy();
+                this._setupParentComputeds();
             }
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
@@ -438,7 +441,8 @@ var ViewModels;
                     }
                 };
                 this.parentSearch.clickAction = function (viewModel, e) {
-                    _this.parentEstablishment = viewModel;
+                    _this.parentEstablishment(viewModel);
+                    _this.parentId(viewModel.id());
                     _this.sammy.setLocation('/establishments/' + _this.id + '/');
                 };
                 this.parentSearch.sammy.run();
@@ -462,9 +466,12 @@ var ViewModels;
                     }
                 });
             };
-            Item.prototype.clickToDoSomething = function () {
-                this.sideSwiper.next();
-                return true;
+            Item.prototype._setupParentComputeds = function () {
+                var _this = this;
+                var parentId = this.parentId();
+                this.hasParent = ko.computed(function () {
+                    return _this.parentId() !== undefined && _this.parentId() > 0;
+                });
             };
             return Item;
         })();
