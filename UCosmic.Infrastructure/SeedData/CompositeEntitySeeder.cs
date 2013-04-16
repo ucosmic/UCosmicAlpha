@@ -6,7 +6,7 @@
         private readonly CoreSqlSeeder _coreSqlSeeder;
         //private readonly LanguageEntitySeeder _languageEntitySeeder; //
         //private readonly LanguageSqlSeeder _languageSqlSeeder; //
-        //private readonly PlaceByGeoPlanetEntitySeeder _placeByGeoPlanetEntitySeeder; //
+        //private readonly CountryAndAdmin1ByGeoPlanetEntitySeeder _countryAndAdmin1ByGeoPlanetEntitySeeder; //
         private readonly RoleEntitySeeder _roleEntitySeeder;
         private readonly EstablishmentEntitySeeder _establishmentEntitySeeder;
         private readonly EmailTemplateEntitySeeder _emailTemplateEntitySeeder;
@@ -26,7 +26,7 @@
             , CoreSqlSeeder coreSqlSeeder
             //, LanguageEntitySeeder languageEntitySeeder // this or CoreSqlSeeder
             //, LanguageSqlSeeder languageSqlSeeder // this or CoreSqlSeeder
-            //, PlaceByGeoPlanetEntitySeeder placeByGeoPlanetEntitySeeder // this or CoreSqlSeeder
+            //, CountryAndAdmin1ByGeoPlanetEntitySeeder countryAndAdmin1ByGeoPlanetEntitySeeder // this or CoreSqlSeeder
             , RoleEntitySeeder roleEntitySeeder
             , EstablishmentEntitySeeder establishmentEntitySeeder
             , EmailTemplateEntitySeeder emailTemplateEntitySeeder
@@ -47,7 +47,7 @@
             _coreSqlSeeder = coreSqlSeeder;
             //_languageSqlSeeder = languageSqlSeeder; // this or CoreSqlSeeder
             //_languageEntitySeeder = languageEntitySeeder; // this or CoreSqlSeeder
-            //_placeByGeoPlanetEntitySeeder = placeByGeoPlanetEntitySeeder; // this or CoreSqlSeeder
+            //_countryAndAdmin1ByGeoPlanetEntitySeeder = countryAndAdmin1ByGeoPlanetEntitySeeder; // this or CoreSqlSeeder
             _roleEntitySeeder = roleEntitySeeder;
             _establishmentEntitySeeder = establishmentEntitySeeder;
             _employeeModuleSettingsEntitySeeder = employeeModuleSettingsEntitySeeder;
@@ -68,7 +68,7 @@
         {
             //_languageEntitySeeder.Seed(); // this or CoreSqlSeeder
             //_languageSqlSeeder.Seed(); // this or CoreSqlSeeder
-            //_placeByGeoPlanetEntitySeeder.Seed(); // this or CoreSqlSeeder
+            //_countryAndAdmin1ByGeoPlanetEntitySeeder.Seed(); // this or CoreSqlSeeder
             _coreSqlSeeder.Seed();
 
             /* Note these lines are order dependent. */

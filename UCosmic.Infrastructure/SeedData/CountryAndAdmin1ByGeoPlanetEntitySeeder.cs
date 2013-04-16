@@ -6,13 +6,13 @@ using Place = UCosmic.Domain.Places.Place;
 
 namespace UCosmic.SeedData
 {
-    public class PlaceByGeoPlanetEntitySeeder : ISeedData
+    public class CountryAndAdmin1ByGeoPlanetEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IContainGeoPlanet _geoPlanet;
 
-        public PlaceByGeoPlanetEntitySeeder(IProcessQueries queryProcessor
+        public CountryAndAdmin1ByGeoPlanetEntitySeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IContainGeoPlanet geoPlanet
         )
