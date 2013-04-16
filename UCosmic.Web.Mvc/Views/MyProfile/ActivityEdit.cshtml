@@ -34,10 +34,10 @@
                     countrySelector.value(activityViewModel.selectedLocations());
 
                     var datePicker = $("#fromDatePicker").data("kendoDatePicker");
-                    datePicker.value(activityViewModel.values.startsOn());
+                    datePicker.value(activityViewModel.values().startsOn());
 
                     datePicker = $("#toDatePicker").data("kendoDatePicker");
-                    datePicker.value(activityViewModel.values.endsOn());
+                    datePicker.value(activityViewModel.values().endsOn());
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
@@ -76,7 +76,7 @@
                                         <!-- TITLE -->
                                         <td class="required-field-name">Title</td>
                                         <td>
-                                            <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="value: values.title"></textarea>
+                                            <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="value: values().title"></textarea>
                                             <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
                                         </td>
                                     </tr>
@@ -98,7 +98,7 @@
                                     <tr>
                                         <td class="field-name" style="vertical-align: top">On/From</td>
                                         <td>
-                                            <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
+                                            <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values().startsOn"/>
                                             <span>
                                                 &emsp;
                                                 <input id="ongoingCheckbox" type="checkbox" data-bind="checked: isOnGoing"/>
@@ -106,7 +106,7 @@
                                             </span>
                                             <span data-bind="visible: !isOnGoing()">
                                                 &nbsp;&nbsp;To&nbsp;
-                                                <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
+                                                <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values().endsOn"/>
                                                 <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->  
                                             </span>
                                             <div class="example" style="margin-top: 8px">
@@ -118,9 +118,9 @@
                                     <tr>
                                         <td class="field-name">Funding</td>
                                         <td>
-                                            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded"/>
+                                            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values().wasExternallyFunded"/>
                                             <span>External</span>
-                                            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded"/>
+                                            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values().wasInternallyFunded"/>
                                             <span>Internal</span>
                                         </td>
                                     </tr>
@@ -147,7 +147,7 @@
                                     <input type="button" class="" value="Add" data-bind="click: function (item, event) { this.addTag(item, event); }"/>
                                     <input type="button" class="" value="Done" data-bind="click: function () { this.addingTag(false); }"/>
                                 </div>
-                                <div style="width: 100%; line-height: 150%; margin-bottom: inherit" data-bind="template: { name: 'tags-template', foreach: values.tags() }"></div>
+                                <div style="width: 100%; line-height: 150%; margin-bottom: inherit" data-bind="template: { name: 'tags-template', foreach: values().tags() }"></div>
                             </div>
 
                             <!-- DOCUMENTS -->
@@ -173,7 +173,7 @@
                                                 <th style="width: 5%"></th>
                                             </tr>
                                         </thead>
-                                        <tbody data-bind="template: { name: 'activity-document-template', foreach: values.documents }"></tbody>
+                                        <tbody data-bind="template: { name: 'activity-document-template', foreach: values().documents }"></tbody>
                                     </table>
                                 </div>
                             </div>

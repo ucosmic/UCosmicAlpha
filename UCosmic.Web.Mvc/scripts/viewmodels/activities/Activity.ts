@@ -16,7 +16,7 @@ module ViewModels.Activities {
     /* 
     */
     // ================================================================================
-	export class Activity implements Service.ApiModels.IObservableActivity, KnockoutValidationGroup {
+	export class Activity implements Service.ApiModels.IObservableActivity {
 
         /* Array of all locations offered in Country/Location multiselect. */
 	    locations: KnockoutObservableArray = ko.observableArray();
@@ -45,10 +45,6 @@ module ViewModels.Activities {
         /* Initialization errors. */
         inititializationErrors: string = "";
 
-        /* KnockoutValidation declaration. */
-        isValid: () => bool;
-        errors: KnockoutValidationErrors;
-
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
@@ -56,7 +52,8 @@ module ViewModels.Activities {
         number: KnockoutObservableNumber;
         entityId: KnockoutObservableString;     // guid converted to string
         modeText: KnockoutObservableString;
-        values: Service.ApiModels.IObservableActivityValues;          // only values for modeText
+        values: KnockoutObservableAny;          // only values for modeText
+
 
         // --------------------------------------------------------------------------------
         /*
@@ -162,12 +159,12 @@ module ViewModels.Activities {
                         read: (options: any):void {
                             $.ajax({
                                 url: App.Routes.WebApi.Establishments.get(),
-                                data: { keyword: options.data.filter.filters[0].value,
+                               data: { keyword: options.data.filter.filters[0].value,
                                         pageNumber: 1,
                                         pageSize: 2147483647 /* C# Int32.Max */ },
-                                success: (results: any): void {
-                                    options.success(results.items);
-                                }
+                               success: (results: any): void {
+                                   options.success(results.items);
+                               }
                             });
                         }
                     }
@@ -180,11 +177,21 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         setupValidation(): void {
-            this.values.title.extend({ required: true, minLength: 1 });
 
-            this.selectedLocations.extend({ minLength: 1 });
+            ko.validation.rules['atLeast'] = {
+                validator: (val: any, otherVal: any): bool => {
+                    return  val.length >= otherVal;
+                },
+                message: 'At least {0} must be selected'
+            }
 
-            ko.validation.group(this);
+            ko.validation.registerExtenders();
+
+            this.values().title.extend({ required: true, minLength: 1, maxLength: 64 });
+            this.values().locations.extend({ atLeast: 1 });
+            this.values().types.extend({ atLeast: 1 });
+
+            ko.validation.group(this.values);
         }
 
         // --------------------------------------------------------------------------------
@@ -250,14 +257,14 @@ module ViewModels.Activities {
                             ko.mapping.fromJS(data, {}, this);
                             this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id));
                         };
-                        
+
                        var mapping = {
-                            'documents': {
-                                create: function (options: any) {
-                                    return new augmentedDocumentModel(options.data); 
+                             'documents': {
+                                create: (options: any): KnockoutObservableAny => {
+                                    return new augmentedDocumentModel(options.data);
                                 }
                             },
-                            'startsOn':{
+                            'startsOn': {
                                 create: (options: any): KnockoutObservableDate => {
                                     return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
@@ -269,13 +276,45 @@ module ViewModels.Activities {
                             }
                         };
 
+                       //var mapping = {
+                       //     'values': {
+                       //         create: (options: any): KnockoutObservableAny => {
+                       //             var augmentedDocumentModel = function (data) {
+                       //                 ko.mapping.fromJS(data, {}, this);
+                       //                 this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id));
+                       //             };
+
+                       //             var mapping = {
+                       //                 'documents': {
+                       //                     create: (options: any): KnockoutObservableAny => {
+                       //                         return new augmentedDocumentModel(options.data);
+                       //                     }
+                       //                 },
+                       //                 'startsOn': {
+                       //                     create: (options: any): KnockoutObservableDate => {
+                       //                         return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                       //                     }
+                       //                 },
+                       //                 'endsOn': {
+                       //                     create: (options: any): KnockoutObservableDate => {
+                       //                         return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                       //                     }
+                       //                 }
+                       //             }
+
+                       //             var values = ko.mapping.fromJS(options.data, mapping);
+                       //             return ko.observable(values);
+                       //         }
+                       //     }
+                       // };
+
                         ko.mapping.fromJS(data, mapping, this);
                     }
 
                     
                     /* Initialize the list of selected locations with current locations in values. */
-                    for (var i = 0; i < this.values.locations().length; i += 1) {
-                        this.selectedLocations.push(this.values.locations()[i].placeId());
+                    for (var i = 0; i < this.values().locations().length; i += 1) {
+                        this.selectedLocations.push(this.values().locations()[i].placeId());
                     }
 
                     /* Check the activity types checkboxes if the activity type exists in values. */
@@ -297,8 +336,10 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         save(item: any, event: any, mode: string): bool {
-            if (this.isValid()) {
-                debugger;
+            debugger;
+            
+            if (!this.values.isValid()) {
+                this.values.errors.showAllMessages();
             }
             return true;
         }
@@ -320,7 +361,7 @@ module ViewModels.Activities {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex == -1) {
                 var newActivityType: KnockoutObservableAny = ko.mapping.fromJS({ id: 0, typeId: activityTypeId });
-                this.values.types.push(newActivityType);
+                this.values().types.push(newActivityType);
             }
         }
 
@@ -331,8 +372,8 @@ module ViewModels.Activities {
         removeActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex != -1) {
-                var activityType = this.values.types()[existingIndex];
-                this.values.types.remove(activityType);
+                var activityType = this.values().types()[existingIndex];
+                this.values().types.remove(activityType);
             }
         }
 
@@ -354,12 +395,12 @@ module ViewModels.Activities {
         getActivityTypeIndexById(activityTypeId: number): number {
             var index: number = -1;
 
-            if ((this.values.types != null) && (this.values.types().length > 0)) {
+            if ((this.values().types != null) && (this.values().types().length > 0)) {
                 var i = 0;
-                while ((i < this.values.types().length) &&
-                       (activityTypeId != this.values.types()[i].typeId())) { i += 1 }
+                while ((i < this.values().types().length) &&
+                       (activityTypeId != this.values().types()[i].typeId())) { i += 1 }
 
-                if (i < this.values.types().length) {
+                if (i < this.values().types().length) {
                     index = i;
                 }
             }
@@ -435,10 +476,10 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         updateLocations(locations: Array): void {
-            this.values.locations = ko.observableArray();
+            this.values().locations.removeAll();
             for (var i = 0; i < locations.length; i += 1) {
                 var location = ko.mapping.fromJS({ id: 0, placeId: locations[i] });
-                this.values.locations.push(location);
+                this.values().locations.push(location);
             }
         }
 
@@ -462,7 +503,7 @@ module ViewModels.Activities {
                     isInstitution: false
                 };
                 var observableTag = ko.mapping.fromJS(tag);
-                this.values.tags.push(observableTag);
+                this.values().tags.push(observableTag);
             }
 
             this.newTag(null);
@@ -473,7 +514,7 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         removeTag(item: any, event: Event): void {
-            this.values.tags.remove(item);
+            this.values().tags.remove(item);
         }
 
         // --------------------------------------------------------------------------------
@@ -490,11 +531,11 @@ module ViewModels.Activities {
         // --------------------------------------------------------------------------------
         tagIndex(text: string): number {
             var i = 0;
-            while ((i < this.values.tags().length) &&
-                    (text != this.values.tags()[i].text())) {
+            while ((i < this.values().tags().length) &&
+                    (text != this.values().tags()[i].text())) {
                 i += 1;
             }
-            return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
+            return ((this.values().tags().length > 0) && (i < this.values().tags().length)) ? i : -1;
         }
 
         // --------------------------------------------------------------------------------
@@ -559,9 +600,9 @@ module ViewModels.Activities {
 
                     var observableDocs = ko.mapping.fromJS(documents, mapping);
 
-                    this.values.documents.removeAll();
+                    this.values().documents.removeAll();
                     for (var i = 0; i < observableDocs().length; i += 1) {
-                        this.values.documents.push(observableDocs()[i]);
+                        this.values().documents.push(observableDocs()[i]);
                     }
 
                 },

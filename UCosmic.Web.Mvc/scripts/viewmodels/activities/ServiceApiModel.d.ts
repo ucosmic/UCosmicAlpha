@@ -87,7 +87,7 @@ module Service.ApiModels {
         number: KnockoutObservableNumber;
         entityId: KnockoutObservableString;     // guid converted to string
         modeText: KnockoutObservableString;
-        values: IObservableActivityValues;      // only values for modeText
+        values: KnockoutObservableAny;      // only values for modeText
     }
 
     export interface IActivityPage {
