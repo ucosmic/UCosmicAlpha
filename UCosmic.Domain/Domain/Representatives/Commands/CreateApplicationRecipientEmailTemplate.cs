@@ -22,7 +22,7 @@ namespace UCosmic.Domain.Representatives
         {
             if(command == null) throw new ArgumentNullException("command");
 
-            var entity = new ApplicationRecipeintEmailTemplate
+            var entity = new EmailTemplate
             {
                 RecipientAddress = command.RecipientAddress,
                 EmailSubject = command.EmailSubject,

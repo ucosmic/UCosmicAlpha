@@ -4,5 +4,6 @@ namespace UCosmic.Domain.Establishments
     {
         CreatePasswordConfirmation,
         ResetPasswordConfirmation,
+        RepresentativeApplicationReceivedNotification
     }
 }
