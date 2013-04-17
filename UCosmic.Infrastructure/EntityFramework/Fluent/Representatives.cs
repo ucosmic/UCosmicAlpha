@@ -25,4 +25,12 @@ namespace UCosmic.EntityFramework
             //Property(p => p.EmailAddress).HasColumnType("ntext").IsOptional();
         }
     }
+
+    public class ApplicationRecipientOrm : EntityTypeConfiguration<ApplicationRecipient>
+    {
+        public ApplicationRecipientOrm()
+        {
+            ToTable(typeof(ApplicationRecipient).Name, DbSchemaName.Representatives);
+        }
+    }
 }
