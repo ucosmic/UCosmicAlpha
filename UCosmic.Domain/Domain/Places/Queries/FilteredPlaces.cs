@@ -8,7 +8,7 @@ namespace UCosmic.Domain.Places
         public int? ParentId { get; set; }
         public bool? IsCountry { get; set; }
         public bool? IsContinent { get; set; }
-        //public bool? IsBodyOfWater { get; set; }
+        public bool? IsWater { get; set; }
         public bool? IsEarth { get; set; }
         public bool? IsAdmin1 { get; set; }
         public bool? IsAdmin2 { get; set; }
@@ -49,6 +49,9 @@ namespace UCosmic.Domain.Places
 
             if (query.IsAdmin3.HasValue)
                 results = results.Where(x => x.IsAdmin3 == query.IsAdmin3.Value);
+
+            if (query.IsWater.HasValue)
+                results = results.Where(x => x.IsWater == query.IsWater.Value);
 
             results = results.OrderBy(query.OrderBy);
 
