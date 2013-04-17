@@ -42,6 +42,14 @@ namespace UCosmic.Domain.Activities
             );
         }
 
+        internal static Activity ById(this IQueryable<Activity> queryable, int id)
+        {
+            return queryable.SingleOrDefault(
+                a =>
+                a.RevisionId == id
+            );
+        }
+
         internal static IQueryable<Activity> WithTenant(this IQueryable<Activity> queryable, object tenant)
         {
             var tenantId = tenant as int?;

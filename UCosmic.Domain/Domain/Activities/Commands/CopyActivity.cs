@@ -1,0 +1,54 @@
+﻿using System;
+using System.Linq;
+
+
+namespace UCosmic.Domain.Activities
+{
+    public class CopyActivity
+    {
+        public int Id { get; set; }
+        public ActivityMode Mode { get; set; }
+
+        public Activity CreatedActivity { get; set; }
+    }
+
+    public class HandleCopyActivityCommand : IHandleCommands<CopyActivity>
+    {
+        private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
+
+        public HandleCopyActivityCommand( ICommandEntities entities,
+                                          IUnitOfWork unitOfWork,
+                                          IHandleCommands<CreateMyNewActivity> createActivity)
+        {
+            _entities = entities;
+            _unitOfWork = unitOfWork;
+            _createActivity = createActivity;
+        }
+
+        public void Handle(CopyActivity command)
+        {
+            if (command == null) throw new ArgumentNullException("command");
+
+            var sourceActivity = _entities.Get<Activity>().Single(x => x.RevisionId == command.Id);
+            if (sourceActivity == null)
+            {
+                var message = string.Format("Activity Id {0} not found.", command.Id);
+                throw new Exception(message);
+            }
+
+            var createActivityCommand = new CreateMyNewActivity
+            {
+                User = sourceActivity.Person.User,
+                ModeText = command.Mode.AsSentenceFragment()
+            };
+
+            _createActivity.Handle(createActivityCommand);
+  
+            _unitOfWork.SaveChanges();
+
+            command.CreatedActivity = createActivityCommand.CreatedActivity;
+        }
+    }
+}

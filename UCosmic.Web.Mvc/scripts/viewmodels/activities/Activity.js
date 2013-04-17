@@ -193,10 +193,9 @@ var ViewModels;
                 return deferred;
             };
             Activity.prototype.save = function (item, event, mode) {
-                debugger;
-
                 if(!this.values.isValid()) {
-                    this.values.errors.showAllMessages();
+                    debugger;
+
                 }
                 return true;
             };

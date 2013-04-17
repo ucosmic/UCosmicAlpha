@@ -65,6 +65,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -117,6 +118,8 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
+    <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
@@ -137,6 +140,8 @@
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityByEditSourceEntityId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />

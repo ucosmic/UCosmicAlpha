@@ -19,6 +19,7 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(true);
 
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
+            Property(p => p.EditSourceId).IsOptional();
 
             Ignore(p => p.Mode);
         }

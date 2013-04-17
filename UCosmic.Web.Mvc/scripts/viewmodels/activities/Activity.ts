@@ -52,7 +52,8 @@ module ViewModels.Activities {
         number: KnockoutObservableNumber;
         entityId: KnockoutObservableString;     // guid converted to string
         modeText: KnockoutObservableString;
-        values: KnockoutObservableAny;          // only values for modeText
+        //values: KnockoutObservableAny;          // only values for modeText
+        values: Service.ApiModels.IObservableActivityValues;          // only values for modeText
 
 
         // --------------------------------------------------------------------------------
@@ -336,10 +337,8 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         save(item: any, event: any, mode: string): bool {
-            debugger;
-            
             if (!this.values.isValid()) {
-                this.values.errors.showAllMessages();
+                debugger;
             }
             return true;
         }

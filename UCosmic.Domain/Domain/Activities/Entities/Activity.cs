@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UCosmic.Domain.People;
 
@@ -23,5 +24,7 @@ namespace UCosmic.Domain.Activities
         public ActivityMode Mode { get { return ModeText.AsEnum<ActivityMode>(); } protected internal set { ModeText = value.AsSentenceFragment(); } }
 
         public virtual ICollection<ActivityValues> Values { get; protected internal set; }
+
+        public int? EditSourceId { get; protected set; }
     }
 }

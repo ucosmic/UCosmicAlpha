@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
@@ -15,6 +16,7 @@ using FluentValidation;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
 using UCosmic.Web.Mvc.Models;
+using Image = UCosmic.Domain.Files.Image;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -31,6 +33,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
+        private readonly IHandleCommands<CopyDeepActivity> _copyDeepActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
                                   , IHandleCommands<UpdateActivity> profileUpdateHandler
@@ -40,7 +43,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                   , IHandleCommands<CreateLoadableFile> createLoadableFile
                                   , IHandleCommands<CreateActivityDocument> createActivityDocument
                                   , IHandleCommands<DeleteActivityDocument> deleteActivityDocument 
-                                  , IHandleCommands<RenameActivityDocument> renameActivityDocument )
+                                  , IHandleCommands<RenameActivityDocument> renameActivityDocument
+                                  , IHandleCommands<CopyDeepActivity> copyDeepActivity )
         {
             _queryProcessor = queryProcessor;
             _profileUpdateHandler = profileUpdateHandler;
@@ -51,6 +55,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _createActivityDocument = createActivityDocument;
             _deleteActivityDocument = deleteActivityDocument;
             _renameActivityDocument = renameActivityDocument;
+            _copyDeepActivity = copyDeepActivity;
         }
 
         // --------------------------------------------------------------------------------
@@ -65,6 +70,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             ActivitiesByPersonId query = Mapper.Map<ActivitySearchInputModel, ActivitiesByPersonId>(input);
             PagedQueryResult<Activity> activities = _queryProcessor.Execute(query);
+            if (activities == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
             var model = Mapper.Map<PageOfActivityApiModel>(activities);
             return model;
         }
@@ -78,7 +88,62 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public ActivityApiModel Get(int activityId)
         {
             Activity activity = _queryProcessor.Execute( new ActivityByEntityId(activityId) );
+            if (activity == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
             var model = Mapper.Map<ActivityApiModel>(activity);
+            return model;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Get an activity copy for editing (or recover edit copy)
+        */
+        // --------------------------------------------------------------------------------
+        [GET("{activityId}/edit")]
+        public ActivityApiModel GetEdit(int activityId)
+        {
+            /* Get the activity we want to edit */
+            Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
+            if (activity == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            /* Search for an "in progress edit" activity.  This can happen if the user
+             * navigates away from Activity Edit page before saving. */
+            Activity editActivity = _queryProcessor.Execute(new ActivityByEditSourceEntityId(activity.RevisionId));
+            if (editActivity == null)
+            {
+                try
+                {
+                    /* There's no "in progress edit" record, so we make a copy of the
+                     * activity and set it to edit mode. */
+                    //CopyDeepActivity copyDeepActivityCommand = new CopyDeepActivity(activity)
+                    //{
+                    //    Id = activity.RevisionId,
+                    //    Mode = Activity.ToEditMode(activity.Mode)
+                    //};
+
+                    //_copyDeepActivity.Handle(copyDeepActivityCommand);
+
+                    //editActivity = copyDeepActivityCommand.createdActivity;
+                }
+                catch (Exception ex)
+                {
+                    var responseMessage = new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.InternalServerError,
+                        Content = new StringContent(ex.ToString()),
+                        ReasonPhrase = "Error preparing activity for edit"
+                    };
+                    throw new HttpResponseException(responseMessage);
+                }
+            }
+
+            var model = Mapper.Map<ActivityApiModel>(editActivity);
             return model;
         }
 
@@ -131,6 +196,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public ICollection<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
         {
             ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
+            if ((documents == null) || (documents.Length == 0))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            
             var model = Mapper.Map<ICollection<ActivityDocumentApiModel>>(documents);
             return model;
         }
@@ -143,7 +213,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{activityId}/documents/{documentId}")]
         public ActivityDocumentApiModel GetDocuments(int activityId, int documentId)
         {
-            return null;
+            throw new HttpResponseException(HttpStatusCode.NotImplemented);
         }
 
         // --------------------------------------------------------------------------------
@@ -166,7 +236,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     if (t.IsFaulted || t.IsCanceled)
                     {
-                        Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
+                        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
+                    }
+
+                    Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
+                    if (activity == null)
+                    {
+                        string message = string.Format("Activity Id {0} not found", activityId);
+                        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
                     }
 
                     foreach (var item in provider.Contents)
@@ -185,7 +262,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         else
                         {
                             // TBD - convert mime type to file extension
-                            Request.CreateResponse(HttpStatusCode.InternalServerError, "Unsupported file type.");
+                            throw new HttpResponseException(HttpStatusCode.InternalServerError);
                         }
 
                         try
@@ -214,7 +291,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 {
                                     ActivityValuesId = activityId,
                                     ImageId = createImageCommand.CreatedImage.Id,
-                                    Mode = ActivityMode.AutoSave,
+                                    Mode = activity.Mode,
                                     Title = name
                                 };
                             }
@@ -235,7 +312,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 {
                                     ActivityValuesId = activityId,
                                     FileId = createLoadableFileCommand.CreatedLoadableFile.Id,
-                                    Mode = ActivityMode.AutoSave,
+                                    Mode = activity.Mode,
                                     Title = name
                                 };
                             }

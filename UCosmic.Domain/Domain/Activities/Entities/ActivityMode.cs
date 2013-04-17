@@ -5,6 +5,10 @@
         Draft = 1,
         Public = 2,
         Protected = 3,
-        AutoSave = 4
+
+        EditMode = 10,
+        EditDraft = EditMode + Draft,
+        EditPublic = EditMode + Public,
+        EditProtected = EditMode + Protected
     }
 }
