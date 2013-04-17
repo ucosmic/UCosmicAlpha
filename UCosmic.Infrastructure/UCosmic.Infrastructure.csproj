@@ -85,9 +85,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NGeo, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NGeo.1.8.1.0\lib\net40\NGeo.dll</HintPath>
+      <HintPath>..\packages\NGeo.1.9.0.0\lib\net40\NGeo.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -199,6 +199,8 @@
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
+    <Compile Include="SeedData\WaterBodiesByGeoPlanetEntitySeeder.cs" />
+    <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
     <Compile Include="SeedData\ImageEntitySeeder.cs" />
@@ -231,7 +233,6 @@
     <Compile Include="SeedData\LanguageEntitySeeder.cs" />
     <Compile Include="SeedData\LanguageSqlSeeder.cs" />
     <Compile Include="SeedData\MemberEntitySeeder.cs" />
-    <Compile Include="SeedData\PlaceByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\SqlSeeder.cs" />
     <Compile Include="WebApi\WebRequestHttpConsumer.cs" />
   </ItemGroup>

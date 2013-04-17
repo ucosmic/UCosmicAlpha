@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace UCosmic.Domain.Places
 {
@@ -35,7 +36,8 @@ namespace UCosmic.Domain.Places
         public bool IsEarth { get; protected internal set; }
         public bool IsContinent { get; protected internal set; }
         public bool IsCountry { get; protected internal set; }
-        //public bool IsBodyOfWater { get; protected internal set; }
+        public bool IsWater { get; protected internal set; }
+        public bool IsRegion { get; protected internal set; }
         public bool IsAdmin1 { get; protected internal set; }
         public bool IsAdmin2 { get; protected internal set; }
         public bool IsAdmin3 { get; protected internal set; }
@@ -44,6 +46,35 @@ namespace UCosmic.Domain.Places
         {
             return OfficialName;
         }
+    }
 
+    internal static class PlaceSerializer
+    {
+        internal static string ToJsonAudit(this Place entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                Id = entity.RevisionId,
+                CenterLatitude = entity.Center.Latitude,
+                CenterLongitude = entity.Center.Longitude,
+                BoxNorthEastLatitude = entity.BoundingBox.Northeast.Latitude,
+                BoxNorthEastLongitude = entity.BoundingBox.Northeast.Longitude,
+                BoxSouthWestLatitude = entity.BoundingBox.Southwest.Latitude,
+                BoxSouthWestLongitude = entity.BoundingBox.Southwest.Longitude,
+                entity.OfficialName,
+                ParentId = entity.Parent != null ? entity.Parent.RevisionId : (int?)null,
+                GeoNamesToponymId = entity.GeoNamesToponym != null ? entity.GeoNamesToponym.GeoNameId : (int?)null,
+                GeoPlanetWoeId = entity.GeoPlanetPlace != null ? entity.GeoPlanetPlace.WoeId : (int?)null,
+                entity.IsEarth,
+                entity.IsContinent,
+                entity.IsCountry,
+                entity.IsWater,
+                entity.IsRegion,
+                entity.IsAdmin1,
+                entity.IsAdmin2,
+                entity.IsAdmin3,
+            });
+            return state;
+        }
     }
 }

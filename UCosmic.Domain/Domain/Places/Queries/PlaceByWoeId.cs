@@ -5,12 +5,14 @@ namespace UCosmic.Domain.Places
 {
     public class PlaceByWoeId : BaseEntityQuery<Place>, IDefineQuery<Place>
     {
-        public PlaceByWoeId(int woeId)
+        public PlaceByWoeId(int woeId, int? geoNameId = null)
         {
             WoeId = woeId;
+            GeoNameId = geoNameId;
         }
 
         public int WoeId { get; private set; }
+        public int? GeoNameId { get; private set; }
     }
 
     public class HandlePlaceByWoeIdQuery : IHandleQueries<PlaceByWoeId, Place>
@@ -18,15 +20,18 @@ namespace UCosmic.Domain.Places
         private static readonly object Lock = new object();
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<UpdatePlaceHierarchy> _updateHierarchy;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandlePlaceByWoeIdQuery(IProcessQueries queryProcessor
             , ICommandEntities entities
+            , IHandleCommands<UpdatePlaceHierarchy> updateHierarchy
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _queryProcessor = queryProcessor;
+            _updateHierarchy = updateHierarchy;
             _unitOfWork = unitOfWork;
         }
 
@@ -37,15 +42,13 @@ namespace UCosmic.Domain.Places
             lock (Lock)
             {
                 // first look in the db
-                //var place = _places.FindOne(PlaceBy.WoeId(woeId).ForInsertOrUpdate());
                 var place = _entities.Get<Place>()
                     .EagerLoad(_entities, query.EagerLoad)
                     .ByWoeId(query.WoeId)
                 ;
                 if (place != null) return place;
 
-                // load toponym from storage
-                //var woe = _geoPlanetPlaces.FindOne(woeId);
+                // load WOE from storage
                 var woe = _queryProcessor.Execute(new SingleGeoPlanetPlace(query.WoeId));
 
                 // convert to entity
@@ -58,12 +61,10 @@ namespace UCosmic.Domain.Places
                 // try to match to geonames
                 if (place.GeoNamesToponym == null && place.GeoPlanetPlace != null)
                 {
-                    //var geoNameId = _geoPlanetPlaces.FindGeoNameId(place.GeoPlanetPlace.WoeId);
-                    var geoNameId = _queryProcessor.Execute(
+                    var geoNameId = query.GeoNameId ?? _queryProcessor.Execute(
                         new GeoNameIdByWoeId(place.GeoPlanetPlace.WoeId));
                     if (geoNameId.HasValue)
                     {
-                        //place.GeoNamesToponym = _toponyms.FindOne(geoNameId.Value);
                         place.GeoNamesToponym = _queryProcessor.Execute(
                             new SingleGeoNamesToponym(geoNameId.Value));
                         if (place.GeoNamesToponym != null)
@@ -76,7 +77,6 @@ namespace UCosmic.Domain.Places
                 // configure hierarchy
                 if (woe.Parent != null)
                 {
-                    //place.Parent = FromWoeId(woe.Parent.WoeId);
                     place.Parent = Handle(new PlaceByWoeId(woe.Parent.WoeId));
                 }
 
@@ -93,7 +93,6 @@ namespace UCosmic.Domain.Places
                                         g.Feature.ClassCode == GeoNamesFeatureClassEnum.Area.GetCode());
                         if (geoNamesContinent != null)
                         {
-                            //place.Parent = FromGeoNameId(geoNamesContinent.GeoNameId);
                             place.Parent = _queryProcessor.Execute(
                                 new PlaceByGeoNameId(geoNamesContinent.GeoNameId));
                         }
@@ -104,45 +103,25 @@ namespace UCosmic.Domain.Places
                             .FirstOrDefault(c => c.Type.Code == (int)GeoPlanetPlaceTypeEnum.Continent);
                         if (geoPlanetContinent != null)
                         {
-                            //place.Parent = FromWoeId(geoPlanetContinent.WoeId);
                             place.Parent = Handle(new PlaceByWoeId(geoPlanetContinent.WoeId));
                         }
                     }
                 }
 
-                // when no parent exists, map continent to earth
-                else if (woe.IsContinent)
+                // when no parent exists, map continents & bodies of water to earth
+                else if (woe.IsContinent || woe.IsWater)
                 {
-                    //place.Parent = FromWoeId(GeoPlanetPlace.EarthWoeId);
                     place.Parent = Handle(new PlaceByWoeId(GeoPlanetPlace.EarthWoeId));
                 }
 
                 // map ancestors
-                DeriveNodes(place);
+                _updateHierarchy.Handle(new UpdatePlaceHierarchy(place));
 
                 // add to db & save
                 _entities.Create(place);
                 _unitOfWork.SaveChanges();
 
                 return place;
-            }
-        }
-
-        private void DeriveNodes(Place entity)
-        {
-            entity.Ancestors.ToList().ForEach(node =>
-                _entities.Purge(node));
-
-            var separation = 1;
-            var parent = entity.Parent;
-            while (parent != null)
-            {
-                entity.Ancestors.Add(new PlaceNode
-                {
-                    Ancestor = parent,
-                    Separation = separation++,
-                });
-                parent = parent.Parent;
             }
         }
     }

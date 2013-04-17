@@ -16,15 +16,18 @@ namespace UCosmic.Domain.Places
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<UpdatePlaceHierarchy> _updateHierarchy;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandlePlaceByGeoNameIdQuery(IProcessQueries queryProcessor
             , ICommandEntities entities
+            , IHandleCommands<UpdatePlaceHierarchy> updateHierarchy
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _queryProcessor = queryProcessor;
+            _updateHierarchy = updateHierarchy;
             _unitOfWork = unitOfWork;
         }
 
@@ -59,6 +62,9 @@ namespace UCosmic.Domain.Places
                 place.GeoPlanetPlace = _queryProcessor.Execute(
                     new SingleGeoPlanetPlaceByGeoNameId(place.GeoNamesToponym.GeoNameId));
             }
+
+            // map ancestors
+            _updateHierarchy.Handle(new UpdatePlaceHierarchy(place));
 
             // add to db & save
             _entities.Create(place);

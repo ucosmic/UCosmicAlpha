@@ -10,9 +10,11 @@ namespace UCosmic.Domain.Places
         public SingleGeoPlanetPlace(int woeId)
         {
             WoeId = woeId;
+            Ignores = new List<GeoPlanetPlace>();
         }
 
         public int WoeId { get; private set; }
+        internal List<GeoPlanetPlace> Ignores { get; set; }
     }
 
     public class HandleSingleGeoPlanetPlaceQuery : IHandleQueries<SingleGeoPlanetPlace, GeoPlanetPlace>
@@ -46,7 +48,11 @@ namespace UCosmic.Domain.Places
             // map parent
             var ancestors = _geoPlanet.Ancestors(query.WoeId, RequestView.Long);
             if (ancestors != null && ancestors.Items.Count > 0)
-                place.Parent = Handle(new SingleGeoPlanetPlace(ancestors.First().WoeId));
+            {
+                var ancestor = ancestors.FirstOrDefault(x => !query.Ignores.Select(y => y.WoeId).Contains(x.WoeId));
+                if (ancestor != null)
+                    place.Parent = Handle(new SingleGeoPlanetPlace(ancestor.WoeId));
+            }
 
             // add all belongtos
             place.BelongTos = place.BelongTos ?? new List<GeoPlanetPlaceBelongTo>();
@@ -54,12 +60,19 @@ namespace UCosmic.Domain.Places
             if (geoPlanetBelongTos != null && geoPlanetBelongTos.Items.Count > 0)
             {
                 var rank = 0;
-                foreach (var geoPlanetBelongTo in geoPlanetBelongTos.Items)
+                foreach (var geoPlanetBelongTo in geoPlanetBelongTos.Items
+                    .Where(x => !query.Ignores.Select(y => y.WoeId).Contains(x.WoeId)))
                 {
                     place.BelongTos.Add(new GeoPlanetPlaceBelongTo
                     {
                         Rank = rank++,
-                        BelongsTo = Handle(new SingleGeoPlanetPlace(geoPlanetBelongTo.WoeId))
+                        BelongsTo = Handle(new SingleGeoPlanetPlace(geoPlanetBelongTo.WoeId)
+                        {
+                            Ignores = new List<GeoPlanetPlace>
+                            {
+                                place,
+                            },
+                        })
                     });
                 }
             }

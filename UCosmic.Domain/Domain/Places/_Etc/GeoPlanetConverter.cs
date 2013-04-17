@@ -121,6 +121,8 @@ namespace UCosmic.Domain.Places
                     //    s.Type.Code == 9))
                     //.ForMember(d => d.IsAdmin3, o => o.ResolveUsing(s =>
                     //    s.Type.Code == 10))
+                    .ForMember(d => d.IsWater, o => o.MapFrom(s => s.IsWater))
+                    .ForMember(d => d.IsRegion, o => o.Ignore())
                     .ForMember(d => d.Parent, o => o.Ignore())
                     .ForMember(d => d.Children, o => o.Ignore())
                     .ForMember(d => d.Ancestors, o => o.Ignore())

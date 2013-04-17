@@ -43,12 +43,12 @@ namespace UCosmic.SeedData
             //{
             //    "United States", "China", "United Kingdom", "Peru", "South Africa", "Australia", "India", "Egypt",
             //};
-            var countriesToImport = new[]
-            {
-                "United States", "China", "United Kingdom",
-            };
+            //var countriesToImport = new[]
+            //{
+            //    "United States", "China", "United Kingdom",
+            //};
             var geoPlanetCountries = _geoPlanet.Countries()
-                .Where(c => countriesToImport.Contains(c.Name))
+                //.Where(c => countriesToImport.Contains(c.Name))
                 .OrderBy(c => c.Name)
                 .ToArray()
             ;
@@ -58,20 +58,20 @@ namespace UCosmic.SeedData
                 Debug.Assert(country != null);
             }
 
-            foreach (var geoPlanetCountry in geoPlanetCountries)
-            {
-                var geoPlanetStates = _geoPlanet.States(geoPlanetCountry.WoeId)
-                    .OrderBy(s => s.Name)
-                    .Take(5)
-                    .ToArray()
-                ;
-                if (!geoPlanetStates.Any()) continue;
-                foreach (var geoPlanetState in geoPlanetStates)
-                {
-                    var state = _queryProcessor.Execute(new PlaceByWoeId(geoPlanetState.WoeId));
-                    Debug.Assert(state != null);
-                }
-            }
+            //foreach (var geoPlanetCountry in geoPlanetCountries)
+            //{
+            //    var geoPlanetStates = _geoPlanet.States(geoPlanetCountry.WoeId)
+            //        .OrderBy(s => s.Name)
+            //        .Take(5)
+            //        .ToArray()
+            //    ;
+            //    if (!geoPlanetStates.Any()) continue;
+            //    foreach (var geoPlanetState in geoPlanetStates)
+            //    {
+            //        var state = _queryProcessor.Execute(new PlaceByWoeId(geoPlanetState.WoeId));
+            //        Debug.Assert(state != null);
+            //    }
+            //}
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using NGeo.GeoNames;
@@ -19,7 +20,6 @@ namespace UCosmic.Domain.Places
     {
         private readonly ICommandEntities _entities;
         private readonly IContainGeoNames _geoNames;
-        private ReadOnlyCollection<Country> _geoNamesCountries;
 
         public HandleSingleGeoNamesToponymQuery(ICommandEntities entities
             , IContainGeoNames geoNames
@@ -50,7 +50,7 @@ namespace UCosmic.Domain.Places
                 toponym.Parent = Handle(new SingleGeoNamesToponym(
                     geoNamesHierarchy.Items[geoNamesHierarchy.Items.Count - 2].GeoNameId));
 
-            //// ensure no duplicate features or time zones are added to the db
+            // ensure no duplicate features or time zones are added to the db
             toponym.Feature.Class = new HandleSingleGeoNamesFeatureClassQuery(_entities)
                 .Handle(new SingleGeoNamesFeatureClass(toponym.Feature.ClassCode))
                 ?? toponym.Feature.Class;
@@ -64,8 +64,8 @@ namespace UCosmic.Domain.Places
                 ?? toponym.TimeZone;
 
             // map country
-            _geoNamesCountries = _geoNamesCountries ?? _geoNames.Countries();
-            var geoNamesCountry = _geoNamesCountries.SingleOrDefault(c => c.GeoNameId == query.GeoNameId);
+            var geoNamesCountries = GetGeoNamesCountries(_geoNames);
+            var geoNamesCountry = geoNamesCountries.SingleOrDefault(c => c.GeoNameId == query.GeoNameId);
             if (geoNamesCountry != null)
                 toponym.AsCountry = geoNamesCountry.ToEntity();
 
@@ -94,6 +94,18 @@ namespace UCosmic.Domain.Places
                 });
                 parent = parent.Parent;
             }
+        }
+
+        private static DateTime _geoNamesCountriesUpdated = DateTime.UtcNow;
+        private static ReadOnlyCollection<Country> _geoNamesCountriesCache;
+        private static IEnumerable<Country> GetGeoNamesCountries(IContainGeoNames geoNames)
+        {
+            if (_geoNamesCountriesCache == null || _geoNamesCountriesUpdated.AddDays(1) < DateTime.UtcNow)
+            {
+                _geoNamesCountriesCache = geoNames.Countries();
+                _geoNamesCountriesUpdated = DateTime.UtcNow;
+            }
+            return _geoNamesCountriesCache;
         }
     }
 }

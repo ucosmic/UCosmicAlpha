@@ -50,9 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NGeo, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NGeo.1.8.1.0\lib\net40\NGeo.dll</HintPath>
+      <HintPath>..\packages\NGeo.1.9.0.0\lib\net40\NGeo.dll</HintPath>
     </Reference>
     <Reference Include="Pluralize">
       <HintPath>..\packages\Pluralizer.0.3.0.1\lib\net40\Pluralize.dll</HintPath>
@@ -194,6 +194,8 @@
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
+    <Compile Include="Domain\Places\Commands\UpdatePlaceGeoNamesReference.cs" />
+    <Compile Include="Domain\Places\Commands\UpdatePlaceHierarchy.cs" />
     <Compile Include="Domain\Representatives\Entities\RepModuleSettings.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategories.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByOfficialName.cs" />
