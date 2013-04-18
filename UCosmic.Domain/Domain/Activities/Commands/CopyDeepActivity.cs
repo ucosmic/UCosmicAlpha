@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Transactions;
+using System.Linq;
 
 
 namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivity
     {
-        public int Id { get; protected set; }
-        public ActivityMode Mode { get; protected set; }
-
+        public int Id { get; set; }
+        public ActivityMode Mode { get; set; }
+        public int? EditSourceId { get; set; }
+        public bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
     }
 
@@ -16,53 +17,69 @@ namespace UCosmic.Domain.Activities
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHandleCommands<CopyActivity> _copyActivity; 
+        private readonly IHandleCommands<CopyActivity> _copyActivity;
+        private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues; 
 
         public HandleCopyDeepActivityCommand( ICommandEntities entities,
                                               IUnitOfWork unitOfWork,
-                                              IHandleCommands<CopyActivity> copyActivity )
+                                              IHandleCommands<CopyActivity> copyActivity,
+                                              IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _copyActivity = copyActivity;
+            _copyDeepActivityValues = copyDeepActivityValues;
         }
 
         public void Handle(CopyDeepActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            using (var transaction = new TransactionScope())
+            var sourceActivity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.Id);
+            if (sourceActivity == null)
             {
-                try
-                {
+                var message = string.Format("Activity Id {0} not found.", command.Id);
+                throw new Exception(message);
+            }
 
-                    /* ----- Copy Activity ----- */
-                    //var copyActivityCommand = new CopyActivity
-                    //{
-                    //    Id = command.Id,
-                    //    Mode = command.Mode
-                    //};
+            /* ----- Copy Activity ----- */
+            var copyActivityCommand = new CopyActivity
+            {
+                Id = sourceActivity.RevisionId,
+                Mode = command.Mode,
+                EditSourceId = command.EditSourceId,
+                NoCommit = true
+            };
 
-                    //_copyActivity.Handle(copyActivityCommand);
+            _copyActivity.Handle(copyActivityCommand);
 
-                    //Activity activity = copyActivityCommand.CreatedActivity;
+            var activityCopy = copyActivityCommand.CreatedActivity;
 
-                    ///* ----- Copy Activity Values ----- */
-                    //CopyDeepActivityValues copyDeepActivityValuesCommand = new CopyDeepActivityValues
-                    //{
-                    //    ActivityId = activity.RevisionId,
-                    //    Mode = activity.Mode
-                    //};
+            /* ----- Copy Activity Values ----- */
+            var modeText = command.Mode.AsSentenceFragment();
+            var activityValues = sourceActivity.Values.FirstOrDefault(x => x.ModeText == modeText);
+            if (activityValues == null)
+            {
+                var message = string.Format("Cannot find ActivityValues Mode {0} for Activity Id {1}", modeText,
+                                               sourceActivity.RevisionId);
+                throw new Exception(message);
+            }
 
-                    //_copyDeepActivityValues.Handle(copyDeepActivityValuesCommand);
+            var copyDeepActivityValuesCommand = new CopyDeepActivityValues
+            {
+                ActivityId = activityCopy.RevisionId,
+                Id = activityValues.RevisionId,
+                Mode = activityCopy.Mode,
+                NoCommit = true
+            };
 
-                    //_unitOfWork.SaveChanges();
-                    //command.CreatedActivity = activity;
-                }
-                catch (Exception ex)
-                {
+            _copyDeepActivityValues.Handle(copyDeepActivityValuesCommand);
 
-                }
+            command.CreatedActivity = activityCopy;
+
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
             }
         }
     }

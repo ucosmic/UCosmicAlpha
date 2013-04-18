@@ -10,6 +10,7 @@ namespace UCosmic.Domain.Activities
         public Guid? EntityId { get; set; }
         public User User { get; set; }
         public string ModeText { get; set; }
+        public int? EditSourceId { get; set; }
 
         public Activity CreatedActivity { get; internal set; }
     }
@@ -39,6 +40,7 @@ namespace UCosmic.Domain.Activities
                 PersonId = person.RevisionId,
                 Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
                 Mode = command.ModeText.AsEnum<ActivityMode>(),
+                EditSourceId = command.EditSourceId,
 
                 CreatedByPrincipal = person.DisplayName,
                 UpdatedByPrincipal = person.DisplayName,

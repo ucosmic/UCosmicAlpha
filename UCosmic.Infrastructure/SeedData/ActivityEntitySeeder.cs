@@ -279,7 +279,7 @@ namespace UCosmic.SeedData
                     _createActivityType.Handle(new CreateActivityType
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honors")).Id
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honor")).Id
                     });
 
                     _createActivityLocation.Handle(new CreateActivityLocation
@@ -443,7 +443,7 @@ namespace UCosmic.SeedData
                     _createActivityType.Handle(new CreateActivityType
                     {
                         ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Awards")).Id
+                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Award")).Id
                     });
 
                     _createActivityLocation.Handle(new CreateActivityLocation

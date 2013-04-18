@@ -188,9 +188,9 @@ module ViewModels.Activities {
 
             ko.validation.registerExtenders();
 
-            this.values().title.extend({ required: true, minLength: 1, maxLength: 64 });
-            this.values().locations.extend({ atLeast: 1 });
-            this.values().types.extend({ atLeast: 1 });
+            this.values.title.extend({ required: true, minLength: 1, maxLength: 64 });
+            this.values.locations.extend({ atLeast: 1 });
+            this.values.types.extend({ atLeast: 1 });
 
             ko.validation.group(this.values);
         }
@@ -314,8 +314,8 @@ module ViewModels.Activities {
 
                     
                     /* Initialize the list of selected locations with current locations in values. */
-                    for (var i = 0; i < this.values().locations().length; i += 1) {
-                        this.selectedLocations.push(this.values().locations()[i].placeId());
+                    for (var i = 0; i < this.values.locations().length; i += 1) {
+                        this.selectedLocations.push(this.values.locations()[i].placeId());
                     }
 
                     /* Check the activity types checkboxes if the activity type exists in values. */
@@ -337,9 +337,6 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         save(item: any, event: any, mode: string): bool {
-            if (!this.values.isValid()) {
-                debugger;
-            }
             return true;
         }
  
@@ -360,7 +357,7 @@ module ViewModels.Activities {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex == -1) {
                 var newActivityType: KnockoutObservableAny = ko.mapping.fromJS({ id: 0, typeId: activityTypeId });
-                this.values().types.push(newActivityType);
+                this.values.types.push(newActivityType);
             }
         }
 
@@ -371,8 +368,8 @@ module ViewModels.Activities {
         removeActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex != -1) {
-                var activityType = this.values().types()[existingIndex];
-                this.values().types.remove(activityType);
+                var activityType = this.values.types()[existingIndex];
+                this.values.types.remove(activityType);
             }
         }
 
@@ -394,12 +391,12 @@ module ViewModels.Activities {
         getActivityTypeIndexById(activityTypeId: number): number {
             var index: number = -1;
 
-            if ((this.values().types != null) && (this.values().types().length > 0)) {
+            if ((this.values.types != null) && (this.values.types().length > 0)) {
                 var i = 0;
-                while ((i < this.values().types().length) &&
-                       (activityTypeId != this.values().types()[i].typeId())) { i += 1 }
+                while ((i < this.values.types().length) &&
+                       (activityTypeId != this.values.types()[i].typeId())) { i += 1 }
 
-                if (i < this.values().types().length) {
+                if (i < this.values.types().length) {
                     index = i;
                 }
             }
@@ -475,10 +472,10 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         updateLocations(locations: Array): void {
-            this.values().locations.removeAll();
+            this.values.locations.removeAll();
             for (var i = 0; i < locations.length; i += 1) {
                 var location = ko.mapping.fromJS({ id: 0, placeId: locations[i] });
-                this.values().locations.push(location);
+                this.values.locations.push(location);
             }
         }
 
@@ -502,7 +499,7 @@ module ViewModels.Activities {
                     isInstitution: false
                 };
                 var observableTag = ko.mapping.fromJS(tag);
-                this.values().tags.push(observableTag);
+                this.values.tags.push(observableTag);
             }
 
             this.newTag(null);
@@ -513,7 +510,7 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         removeTag(item: any, event: Event): void {
-            this.values().tags.remove(item);
+            this.values.tags.remove(item);
         }
 
         // --------------------------------------------------------------------------------
@@ -530,11 +527,11 @@ module ViewModels.Activities {
         // --------------------------------------------------------------------------------
         tagIndex(text: string): number {
             var i = 0;
-            while ((i < this.values().tags().length) &&
-                    (text != this.values().tags()[i].text())) {
+            while ((i < this.values.tags().length) &&
+                    (text != this.values.tags()[i].text())) {
                 i += 1;
             }
-            return ((this.values().tags().length > 0) && (i < this.values().tags().length)) ? i : -1;
+            return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
         }
 
         // --------------------------------------------------------------------------------
@@ -599,9 +596,9 @@ module ViewModels.Activities {
 
                     var observableDocs = ko.mapping.fromJS(documents, mapping);
 
-                    this.values().documents.removeAll();
+                    this.values.documents.removeAll();
                     for (var i = 0; i < observableDocs().length; i += 1) {
-                        this.values().documents.push(observableDocs()[i]);
+                        this.values.documents.push(observableDocs()[i]);
                     }
 
                 },

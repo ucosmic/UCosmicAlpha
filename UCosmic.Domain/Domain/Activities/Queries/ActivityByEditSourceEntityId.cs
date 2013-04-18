@@ -3,26 +3,26 @@ using System.Linq;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityByEditSourceEntityId : BaseEntityQuery<Activity>, IDefineQuery<Activity>
+    public class ActivityByEditSourceId : BaseEntityQuery<Activity>, IDefineQuery<Activity>
     {
         public int Id { get; private set; }
 
-        public ActivityByEditSourceEntityId(int inId)
+        public ActivityByEditSourceId(int inId)
         {
             Id = inId;
         }
     }
 
-    public class HandleActivityByEditSourceEntityIdQuery : IHandleQueries<ActivityByEditSourceEntityId, Activity>
+    public class HandleActivityByEditSourceIdQuery : IHandleQueries<ActivityByEditSourceId, Activity>
     {
         private readonly IQueryEntities _entities;
 
-        public HandleActivityByEditSourceEntityIdQuery(IQueryEntities entities)
+        public HandleActivityByEditSourceIdQuery(IQueryEntities entities)
         {
             _entities = entities;
         }
 
-        public Activity Handle(ActivityByEditSourceEntityId query)
+        public Activity Handle(ActivityByEditSourceId query)
         {
             if (query == null) throw new ArgumentNullException("query");
 

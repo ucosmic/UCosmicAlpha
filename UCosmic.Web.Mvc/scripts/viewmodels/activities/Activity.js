@@ -113,15 +113,15 @@ var ViewModels;
                     message: 'At least {0} must be selected'
                 };
                 ko.validation.registerExtenders();
-                this.values().title.extend({
+                this.values.title.extend({
                     required: true,
                     minLength: 1,
                     maxLength: 64
                 });
-                this.values().locations.extend({
+                this.values.locations.extend({
                     atLeast: 1
                 });
-                this.values().types.extend({
+                this.values.types.extend({
                     atLeast: 1
                 });
                 ko.validation.group(this.values);
@@ -180,8 +180,8 @@ var ViewModels;
                         };
                         ko.mapping.fromJS(data, mapping, _this);
                     }
-                    for(var i = 0; i < _this.values().locations().length; i += 1) {
-                        _this.selectedLocations.push(_this.values().locations()[i].placeId());
+                    for(var i = 0; i < _this.values.locations().length; i += 1) {
+                        _this.selectedLocations.push(_this.values.locations()[i].placeId());
                     }
                     for(var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
@@ -193,10 +193,6 @@ var ViewModels;
                 return deferred;
             };
             Activity.prototype.save = function (item, event, mode) {
-                if(!this.values.isValid()) {
-                    debugger;
-
-                }
                 return true;
             };
             Activity.prototype.cancel = function (item, event, mode) {
@@ -209,14 +205,14 @@ var ViewModels;
                         id: 0,
                         typeId: activityTypeId
                     });
-                    this.values().types.push(newActivityType);
+                    this.values.types.push(newActivityType);
                 }
             };
             Activity.prototype.removeActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);
                 if(existingIndex != -1) {
-                    var activityType = this.values().types()[existingIndex];
-                    this.values().types.remove(activityType);
+                    var activityType = this.values.types()[existingIndex];
+                    this.values.types.remove(activityType);
                 }
             };
             Activity.prototype.getTypeName = function (id) {
@@ -229,12 +225,12 @@ var ViewModels;
             };
             Activity.prototype.getActivityTypeIndexById = function (activityTypeId) {
                 var index = -1;
-                if((this.values().types != null) && (this.values().types().length > 0)) {
+                if((this.values.types != null) && (this.values.types().length > 0)) {
                     var i = 0;
-                    while((i < this.values().types().length) && (activityTypeId != this.values().types()[i].typeId())) {
+                    while((i < this.values.types().length) && (activityTypeId != this.values.types()[i].typeId())) {
                         i += 1;
                     }
-                    if(i < this.values().types().length) {
+                    if(i < this.values.types().length) {
                         index = i;
                     }
                 }
@@ -261,13 +257,13 @@ var ViewModels;
                 return def;
             };
             Activity.prototype.updateLocations = function (locations) {
-                this.values().locations.removeAll();
+                this.values.locations.removeAll();
                 for(var i = 0; i < locations.length; i += 1) {
                     var location = ko.mapping.fromJS({
                         id: 0,
                         placeId: locations[i]
                     });
-                    this.values().locations.push(location);
+                    this.values.locations.push(location);
                 }
             };
             Activity.prototype.addTag = function (item, event) {
@@ -284,22 +280,22 @@ var ViewModels;
                         isInstitution: false
                     };
                     var observableTag = ko.mapping.fromJS(tag);
-                    this.values().tags.push(observableTag);
+                    this.values.tags.push(observableTag);
                 }
                 this.newTag(null);
             };
             Activity.prototype.removeTag = function (item, event) {
-                this.values().tags.remove(item);
+                this.values.tags.remove(item);
             };
             Activity.prototype.haveTag = function (text) {
                 return this.tagIndex(text) != -1;
             };
             Activity.prototype.tagIndex = function (text) {
                 var i = 0;
-                while((i < this.values().tags().length) && (text != this.values().tags()[i].text())) {
+                while((i < this.values.tags().length) && (text != this.values.tags()[i].text())) {
                     i += 1;
                 }
-                return ((this.values().tags().length > 0) && (i < this.values().tags().length)) ? i : -1;
+                return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
             };
             Activity.prototype.validateUploadableFileTypeByExtension = function (activityId, inExtension) {
                 var valid = true;
@@ -345,9 +341,9 @@ var ViewModels;
                             }
                         };
                         var observableDocs = ko.mapping.fromJS(documents, mapping);
-                        _this.values().documents.removeAll();
+                        _this.values.documents.removeAll();
                         for(var i = 0; i < observableDocs().length; i += 1) {
-                            _this.values().documents.push(observableDocs()[i]);
+                            _this.values.documents.push(observableDocs()[i]);
                         }
                     },
                     error: function (jqXhr, textStatus, errorThrown) {

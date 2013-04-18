@@ -8,7 +8,8 @@ namespace UCosmic.Domain.Activities
     {
         public int Id { get; set; }
         public ActivityMode Mode { get; set; }
-
+        public int? EditSourceId { get; set; }
+        public bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
     }
 
@@ -41,14 +42,18 @@ namespace UCosmic.Domain.Activities
             var createActivityCommand = new CreateMyNewActivity
             {
                 User = sourceActivity.Person.User,
-                ModeText = command.Mode.AsSentenceFragment()
+                ModeText = command.Mode.AsSentenceFragment(),
+                EditSourceId = command.EditSourceId
             };
 
             _createActivity.Handle(createActivityCommand);
-  
-            _unitOfWork.SaveChanges();
 
             command.CreatedActivity = createActivityCommand.CreatedActivity;
+
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
         }
     }
 }

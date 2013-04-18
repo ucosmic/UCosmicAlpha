@@ -8,13 +8,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.UI.WebControls;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
+using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 using Image = UCosmic.Domain.Files.Image;
 
@@ -34,6 +34,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
         private readonly IHandleCommands<CopyDeepActivity> _copyDeepActivity;
+        private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
+        private readonly IHandleCommands<DeleteActivity> _deleteActivity;
+        private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
                                   , IHandleCommands<UpdateActivity> profileUpdateHandler
@@ -44,7 +47,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                   , IHandleCommands<CreateActivityDocument> createActivityDocument
                                   , IHandleCommands<DeleteActivityDocument> deleteActivityDocument 
                                   , IHandleCommands<RenameActivityDocument> renameActivityDocument
-                                  , IHandleCommands<CopyDeepActivity> copyDeepActivity )
+                                  , IHandleCommands<CopyDeepActivity> copyDeepActivity
+                                  , IHandleCommands<CreateMyNewActivity> createActivity
+                                  , IHandleCommands<DeleteActivity> deleteActivity
+                                  , IHandleCommands<UpdateActivity> updateActivity )
         {
             _queryProcessor = queryProcessor;
             _profileUpdateHandler = profileUpdateHandler;
@@ -56,6 +62,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _deleteActivityDocument = deleteActivityDocument;
             _renameActivityDocument = renameActivityDocument;
             _copyDeepActivity = copyDeepActivity;
+            _createActivity = createActivity;
+            _deleteActivity = deleteActivity;
+            _updateActivity = updateActivity;
         }
 
         // --------------------------------------------------------------------------------
@@ -68,8 +77,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
 
-            ActivitiesByPersonId query = Mapper.Map<ActivitySearchInputModel, ActivitiesByPersonId>(input);
-            PagedQueryResult<Activity> activities = _queryProcessor.Execute(query);
+            var query = Mapper.Map<ActivitySearchInputModel, ActivitiesByPersonId>(input);
+            var activities = _queryProcessor.Execute(query);
             if (activities == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -87,7 +96,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{activityId}")]
         public ActivityApiModel Get(int activityId)
         {
-            Activity activity = _queryProcessor.Execute( new ActivityByEntityId(activityId) );
+            var activity = _queryProcessor.Execute( new ActivityByEntityId(activityId) );
             if (activity == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -106,7 +115,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public ActivityApiModel GetEdit(int activityId)
         {
             /* Get the activity we want to edit */
-            Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
+            var activity = _queryProcessor.Execute(new ActivityById(activityId));
             if (activity == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -114,29 +123,29 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             /* Search for an "in progress edit" activity.  This can happen if the user
              * navigates away from Activity Edit page before saving. */
-            Activity editActivity = _queryProcessor.Execute(new ActivityByEditSourceEntityId(activity.RevisionId));
+            var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
             if (editActivity == null)
             {
                 try
                 {
-                    /* There's no "in progress edit" record, so we make a copy of the
+                /* There's no "in progress edit" record, so we make a copy of the
                      * activity and set it to edit mode. */
-                    //CopyDeepActivity copyDeepActivityCommand = new CopyDeepActivity(activity)
-                    //{
-                    //    Id = activity.RevisionId,
-                    //    Mode = Activity.ToEditMode(activity.Mode)
-                    //};
+                    var copyDeepActivityCommand = new CopyDeepActivity
+                    {
+                        Id = activity.RevisionId,
+                        EditSourceId = activity.RevisionId
+                    };
 
-                    //_copyDeepActivity.Handle(copyDeepActivityCommand);
+                    _copyDeepActivity.Handle(copyDeepActivityCommand);
 
-                    //editActivity = copyDeepActivityCommand.createdActivity;
+                    editActivity = copyDeepActivityCommand.CreatedActivity;
                 }
                 catch (Exception ex)
                 {
                     var responseMessage = new HttpResponseMessage
                     {
                         StatusCode = HttpStatusCode.InternalServerError,
-                        Content = new StringContent(ex.ToString()),
+                        Content = new StringContent(ex.Message),
                         ReasonPhrase = "Error preparing activity for edit"
                     };
                     throw new HttpResponseException(responseMessage);
@@ -155,7 +164,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post()
         {
-            return Request.CreateResponse(HttpStatusCode.NotImplemented);
+            var createActivityCommand = new CreateMyNewActivity
+            {
+                User = _queryProcessor.Execute( new UserByName(User.Identity.Name) ),
+                ModeText = ActivityMode.Draft.AsSentenceFragment()
+            };
+
+            var model = Mapper.Map<ActivityApiModel>(createActivityCommand.CreatedActivity);
+            return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 
         // --------------------------------------------------------------------------------
@@ -178,13 +194,78 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
+         * Update an activity, copying the Edit mode Activity to corresponding non-Edit
+         * mode Activity.  The activityId must be of that of an Activity in "edit mode".
+        */
+        // --------------------------------------------------------------------------------
+        [PUT("{activityId}/edit")]
+        public HttpResponseMessage PutEdit(int activityId)
+        {
+            try
+            {
+                var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activityId));
+                if (editActivity == null)
+                {
+                    var message = string.Format("Activity Id {0} not found.", activityId);
+                    throw new Exception(message);
+                }
+
+                if (!editActivity.EditSourceId.HasValue)
+                {
+                    var message = string.Format("Activity Id {0} is not being edited.", activityId);
+                    throw new Exception(message);
+                }
+
+                var updateActivityCommand = new UpdateActivity
+                {
+                    Id = editActivity.EditSourceId.Value,
+                    ModeText = editActivity.ModeText,
+                    Values = editActivity.Values,
+                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedBy = User
+                };
+
+                _updateActivity.Handle(updateActivityCommand);
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Activity update error"
+                };
+                throw new HttpResponseException(responseMessage);    
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
          * Delete an activity
         */
         // --------------------------------------------------------------------------------
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {
-            return Request.CreateResponse(HttpStatusCode.NotImplemented);
+            try
+            {
+                var deleteActivityCommand = new DeleteActivity(User, activityId);
+                _deleteActivity.Handle(deleteActivityCommand);
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Activity delete error"
+                };
+                throw new HttpResponseException(responseMessage);               
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // --------------------------------------------------------------------------------

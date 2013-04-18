@@ -120,12 +120,14 @@
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
     <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\CopyDeepActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\DeleteActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />

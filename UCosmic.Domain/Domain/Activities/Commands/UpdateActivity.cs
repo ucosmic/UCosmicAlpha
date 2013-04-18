@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Principal;
 
 /*
  * Activity Functions
@@ -62,7 +64,11 @@ namespace UCosmic.Domain.Activities
 {
     public class UpdateActivity : DraftMyActivity
     {
+        public int Id { get; set; }
         public string ModeText { get; set; }
+        public ICollection<ActivityValues> Values { get; set; }
+        public DateTime UpdatedOn { get; set; }
+        public IPrincipal UpdatedBy { get; set; }
     }
 
     public class HandleUpdateMyActivityCommand : IHandleCommands<UpdateActivity>
