@@ -7,7 +7,7 @@ using Place = UCosmic.Domain.Places.Place;
 
 namespace UCosmic.SeedData
 {
-    public class WaterBodiesByGeoPlanetEntitySeeder : ISeedData
+    public class WaterBodiesByGeoServicesEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
@@ -15,7 +15,7 @@ namespace UCosmic.SeedData
         private readonly IContainGeoNames _geoNames;
         private readonly IHandleCommands<UpdatePlaceGeoNamesReference> _updateGeoName;
 
-        public WaterBodiesByGeoPlanetEntitySeeder(IProcessQueries queryProcessor
+        public WaterBodiesByGeoServicesEntitySeeder(IProcessQueries queryProcessor
             , IQueryEntities entities
             , IContainGeoPlanet geoPlanet
             , IContainGeoNames geoNames

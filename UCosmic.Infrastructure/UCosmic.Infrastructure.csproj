@@ -199,7 +199,6 @@
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
-    <Compile Include="SeedData\WaterBodiesByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
@@ -208,6 +207,7 @@
     <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\LoadableFileEntitySeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />
+    <Compile Include="SeedData\WaterBodiesByGeoServicesEntitySeeder.cs" />
     <Compile Include="WebApi\SimpleInjectorNGeoRegistration.cs" />
     <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />
     <Compile Include="SeedData\EstablishmentEntitySeeder.cs" />
