@@ -216,11 +216,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     throw new Exception(message);
                 }
 
-                var updateActivityCommand = new UpdateActivity
+                var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value)
                 {
-                    Id = editActivity.EditSourceId.Value,
                     ModeText = editActivity.ModeText,
-                    Values = editActivity.Values,
+                    Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText),
                     UpdatedOn = DateTime.UtcNow,
                     UpdatedBy = User
                 };

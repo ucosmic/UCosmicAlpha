@@ -8,8 +8,8 @@ namespace UCosmic.Domain.Activities
     {
         public int ActivityValuesId { get; set; }
         public int PlaceId { get; set; }
-
-        public ActivityLocation CreatedActivityLocation { get; protected internal set; }
+        public bool NoCommit { get; set; }
+        public ActivityLocation CreatedActivityLocation { get; set; }
     }
 
     public class HandleCreateActivityLocationCommand : IHandleCommands<CreateActivityLocation>
@@ -46,12 +46,12 @@ namespace UCosmic.Domain.Activities
                 PlaceId = place.RevisionId,
             };
 
-            _entities.Create(activityLocation);
-
-            //activityValues.Locations.Add(activityLocation);
-            //_entities.Update(activityValues);
-
             command.CreatedActivityLocation = activityLocation;
+
+            if (!command.NoCommit)
+            {
+                _entities.Create(activityLocation);
+            }
         }
     }
 }

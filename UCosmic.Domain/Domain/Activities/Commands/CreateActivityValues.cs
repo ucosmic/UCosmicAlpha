@@ -13,7 +13,7 @@ namespace UCosmic.Domain.Activities
         public ActivityMode Mode { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
-
+        public bool NoCommit { get; set; }
         public ActivityValues CreatedActivityValues { get; protected internal set; }
     }
 
@@ -49,12 +49,12 @@ namespace UCosmic.Domain.Activities
                 WasInternallyFunded = command.WasInternallyFunded
             };
 
-            _entities.Create(activityValues);
-
-            //activity.Values.Add(activityValues);
-            //_entities.Update(activity);
-
             command.CreatedActivityValues = activityValues;
+
+            if (!command.NoCommit)
+            {
+                _entities.Create(activityValues);
+            }
         }
     }
 }
