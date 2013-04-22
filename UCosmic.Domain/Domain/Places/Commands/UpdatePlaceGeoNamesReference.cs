@@ -69,7 +69,11 @@ namespace UCosmic.Domain.Places
 
             if (command.GeoNameId.HasValue)
             {
-                var geoNamesEntity = _queryProcessor.Execute(new SingleGeoNamesToponym(command.GeoNameId.Value));
+                var geoNamesEntity = _queryProcessor.Execute(
+                    new SingleGeoNamesToponym(command.GeoNameId.Value)
+                    {
+                        NoCommit = true,
+                    });
                 place.GeoNamesToponym = geoNamesEntity;
             }
             else

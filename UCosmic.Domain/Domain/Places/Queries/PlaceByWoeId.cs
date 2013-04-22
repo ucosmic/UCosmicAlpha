@@ -66,7 +66,10 @@ namespace UCosmic.Domain.Places
                     if (geoNameId.HasValue)
                     {
                         place.GeoNamesToponym = _queryProcessor.Execute(
-                            new SingleGeoNamesToponym(geoNameId.Value));
+                            new SingleGeoNamesToponym(geoNameId.Value)
+                            {
+                                NoCommit = true,
+                            });
                         if (place.GeoNamesToponym != null)
                         {
                             place.Names = place.GeoNamesToponym.AlternateNames.ToEntities(_entities);

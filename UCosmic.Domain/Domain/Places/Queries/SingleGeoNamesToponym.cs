@@ -14,19 +14,23 @@ namespace UCosmic.Domain.Places
         }
 
         public int GeoNameId { get; private set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class HandleSingleGeoNamesToponymQuery : IHandleQueries<SingleGeoNamesToponym, GeoNamesToponym>
     {
         private readonly ICommandEntities _entities;
         private readonly IContainGeoNames _geoNames;
+        private readonly IUnitOfWork _unitOfWork;
 
         public HandleSingleGeoNamesToponymQuery(ICommandEntities entities
             , IContainGeoNames geoNames
+            , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _geoNames = geoNames;
+            _unitOfWork = unitOfWork;
         }
 
         public GeoNamesToponym Handle(SingleGeoNamesToponym query)
@@ -74,6 +78,7 @@ namespace UCosmic.Domain.Places
 
             // add to db and save
             _entities.Create(toponym);
+            if (!query.NoCommit) _unitOfWork.SaveChanges();
 
             return toponym;
         }

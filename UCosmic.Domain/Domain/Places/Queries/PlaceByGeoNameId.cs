@@ -44,7 +44,10 @@ namespace UCosmic.Domain.Places
 
             // load toponym from storage
             var toponym = _queryProcessor.Execute(
-                new SingleGeoNamesToponym(query.GeoNameId));
+                new SingleGeoNamesToponym(query.GeoNameId)
+                {
+                    NoCommit = true,
+                });
 
             // convert toponym to place
             place = toponym.ToPlace();
