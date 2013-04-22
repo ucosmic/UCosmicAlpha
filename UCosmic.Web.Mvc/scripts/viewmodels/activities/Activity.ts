@@ -453,7 +453,7 @@ module ViewModels.Activities {
                 read: (): bool => {
                     return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
                 },
-                write: function (checked) {
+                write: function (checked) => {
                     if (checked) {
                         this.addActivityType(this.activityTypes()[activityTypeIndex].id());
                     } else {

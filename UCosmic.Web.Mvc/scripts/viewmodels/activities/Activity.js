@@ -247,9 +247,9 @@ var ViewModels;
                     },
                     write: function (checked) {
                         if(checked) {
-                            this.addActivityType(this.activityTypes()[activityTypeIndex].id());
+                            _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
                         } else {
-                            this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
+                            _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
                         }
                     },
                     owner: this
