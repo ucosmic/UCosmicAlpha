@@ -199,6 +199,7 @@
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
+    <Compile Include="SeedData\RegionsByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />

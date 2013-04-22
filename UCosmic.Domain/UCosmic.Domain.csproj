@@ -209,6 +209,7 @@
     <Compile Include="Domain\Identity\Validation\MustBeInAnyRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
+    <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlaceGeoNamesReference.cs" />

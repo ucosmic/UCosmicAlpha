@@ -13,20 +13,17 @@ namespace UCosmic.SeedData
         private readonly IQueryEntities _entities;
         private readonly IContainGeoPlanet _geoPlanet;
         private readonly IContainGeoNames _geoNames;
-        private readonly IHandleCommands<UpdatePlaceGeoNamesReference> _updateGeoName;
 
         public WaterBodiesByGeoServicesEntitySeeder(IProcessQueries queryProcessor
             , IQueryEntities entities
             , IContainGeoPlanet geoPlanet
             , IContainGeoNames geoNames
-            , IHandleCommands<UpdatePlaceGeoNamesReference> updateGeoName
         )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
             _geoPlanet = geoPlanet;
             _geoNames = geoNames;
-            _updateGeoName = updateGeoName;
         }
 
         public void Seed()

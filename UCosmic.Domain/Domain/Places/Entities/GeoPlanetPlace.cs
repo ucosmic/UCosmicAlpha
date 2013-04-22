@@ -58,6 +58,7 @@ namespace UCosmic.Domain.Places
         public bool IsContinent { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Continent; } }
         public bool IsCountry { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Country; } }
         public bool IsWater { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Sea || Type.Code == (int)GeoPlanetPlaceTypeEnum.Ocean; } }
+        public bool IsRegion { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Supername; } }
         public bool IsAdmin1 { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Admin1; } }
         public bool IsAdmin2 { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Admin2; } }
         public bool IsAdmin3 { get { return Type.Code == (int)GeoPlanetPlaceTypeEnum.Admin3; } }
