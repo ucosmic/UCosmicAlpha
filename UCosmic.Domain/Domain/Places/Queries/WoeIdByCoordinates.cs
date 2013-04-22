@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-#if AZURE
-using NGeo.Yahoo.PlaceFinder;
-#else
 using System.Text;
 using NGeo.GeoNames;
 using NGeo.Yahoo.GeoPlanet;
+#if AZURE
+using NGeo.Yahoo.PlaceFinder;
 #endif
 
 namespace UCosmic.Domain.Places
@@ -23,13 +22,20 @@ namespace UCosmic.Domain.Places
 
 #if AZURE
 
-        public class HandlePaidWoeIdByCoordinatesQuery : IHandleQueries<WoeIdByCoordinates, int>
+    public class HandlePaidWoeIdByCoordinatesQuery : IHandleQueries<WoeIdByCoordinates, int>
     {
         private readonly IContainPlaceFinder _placeFinder;
+        private readonly IContainGeoNames _geoNames;
+        private readonly IContainGeoPlanet _geoPlanet;
 
-        public HandlePaidWoeIdByCoordinatesQuery(IContainPlaceFinder placeFinder)
+        public HandlePaidWoeIdByCoordinatesQuery(IContainPlaceFinder placeFinder
+            , IContainGeoNames geoNames
+            , IContainGeoPlanet geoPlanet
+        )
         {
             _placeFinder = placeFinder;
+            _geoNames = geoNames;
+            _geoPlanet = geoPlanet;
         }
 
         public int Handle(WoeIdByCoordinates query)
@@ -63,8 +69,15 @@ namespace UCosmic.Domain.Places
             if (!woeId.HasValue && placeFinderResult != null)
             {
                 var freeformText = string.Format("{0} {1}", placeFinderResult.CityName, placeFinderResult.CountryName);
-                var result = _placeFinder.Find(new PlaceByFreeformText(freeformText)).FirstOrDefault();
-                if (result != null) woeId = result.WoeId;
+                if (!string.IsNullOrWhiteSpace(freeformText))
+                {
+                    var result = _placeFinder.Find(new PlaceByFreeformText(freeformText)).FirstOrDefault();
+                    if (result != null) woeId = result.WoeId;
+                }
+                else
+                {
+                    woeId = HandleFakeWoeIdByCoordinatesInternal.Handle(query, _geoNames, _geoPlanet);
+                }
             }
 
             if (woeId.HasValue) return woeId.Value;
@@ -90,6 +103,17 @@ namespace UCosmic.Domain.Places
         public int Handle(WoeIdByCoordinates query)
         {
             if (query == null) throw new ArgumentNullException("query");
+
+            return HandleFakeWoeIdByCoordinatesInternal.Handle(query, _geoNames, _geoPlanet);
+        }
+    }
+
+#endif
+
+    internal static class HandleFakeWoeIdByCoordinatesInternal
+    {
+        internal static int Handle(WoeIdByCoordinates query, IContainGeoNames geoNamesContainer, IContainGeoPlanet geoPlanetContainer)
+        {
             if (!query.Coordinates.Latitude.HasValue) throw new ArgumentException("Query's Coordinates.Latitude is null.");
             if (!query.Coordinates.Longitude.HasValue) throw new ArgumentException("Query's Coordinates.Longitude is null.");
 
@@ -101,7 +125,7 @@ namespace UCosmic.Domain.Places
             while (geoNames == null && retryCount < 6)
             {
                 ++retryCount;
-                geoNames = _geoNames.FindNearbyPlaceName(new NearbyPlaceNameFinder
+                geoNames = geoNamesContainer.FindNearbyPlaceName(new NearbyPlaceNameFinder
                 {
                     Latitude = query.Coordinates.Latitude.Value,
                     Longitude = query.Coordinates.Longitude.Value,
@@ -115,11 +139,11 @@ namespace UCosmic.Domain.Places
             foreach (var geoName in geoNames)
             {
                 // try to concord with woeid
-                var concordance = _geoPlanet.Concordance(ConcordanceNamespace.GeoNames, geoName.GeoNameId);
+                var concordance = geoPlanetContainer.Concordance(ConcordanceNamespace.GeoNames, geoName.GeoNameId);
                 if (concordance == null || concordance.WoeId <= 0) continue;
 
                 // make sure place exists
-                var geoPlanetPlace = _geoPlanet.Place(concordance.WoeId);
+                var geoPlanetPlace = geoPlanetContainer.Place(concordance.WoeId);
                 if (geoPlanetPlace == null) continue;
 
                 woeId = concordance.WoeId;
@@ -140,7 +164,7 @@ namespace UCosmic.Domain.Places
                         searchText.Append(" " + geoName.Admin1Name);
                     searchText.Append(", " + geoName.CountryName);
 
-                    var geoPlanetPlaces = _geoPlanet.Places(searchText.ToString())
+                    var geoPlanetPlaces = geoPlanetContainer.Places(searchText.ToString())
                         .Where(x => x.WoeId > 0).ToArray();
 
                     NGeo.Yahoo.GeoPlanet.Place geoPlanetPlace = null;
@@ -176,7 +200,4 @@ namespace UCosmic.Domain.Places
                 : GeoPlanetPlace.EarthWoeId;
         }
     }
-
-#endif
-
 }

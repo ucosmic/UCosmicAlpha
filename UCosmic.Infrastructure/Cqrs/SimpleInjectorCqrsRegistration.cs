@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
-using System.Runtime.Caching;
 using SimpleInjector;
 using SimpleInjector.Extensions;
 using UCosmic.FluentValidation;
 #if AZURE
 using System;
 using Microsoft.ApplicationServer.Caching;
+#else
+using System.Runtime.Caching;
 #endif
 
 namespace UCosmic.Cqrs
@@ -54,12 +55,13 @@ namespace UCosmic.Cqrs
             container.RegisterMemoryViewManager();
 #endif
         }
-
+#if !AZURE
         private static void RegisterMemoryViewManager(this Container container)
         {
             container.RegisterSingle(() => new MemoryViewManager(MemoryCache.Default));
             container.RegisterSingle<IManageViews>(container.GetInstance<MemoryViewManager>);
         }
+#endif
 
 #if AZURE
         private static void RegisterAzureCacheViewManager(this Container container)
