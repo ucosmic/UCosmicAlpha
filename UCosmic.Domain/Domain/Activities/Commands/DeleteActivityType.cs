@@ -2,17 +2,16 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
-using UCosmic.Domain.Files;
 
 namespace UCosmic.Domain.Activities
 {
-    public class DeleteActivityDocument
+    public class DeleteActivityType
     {
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
         public bool NoCommit { get; set; }
 
-        public DeleteActivityDocument(IPrincipal principal, int id)
+        public DeleteActivityType(IPrincipal principal, int id)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
@@ -20,35 +19,35 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class ValidateDeleteActivityDocumentCommand : AbstractValidator<DeleteActivityDocument>
+    public class ValidateDeleteActivityTypeCommand : AbstractValidator<DeleteActivityType>
     {
-        public ValidateDeleteActivityDocumentCommand(IQueryEntities entities)
+        public ValidateDeleteActivityTypeCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
                 .MustOwnActivityDocument(entities, x => x.Id)
-                .WithMessage(MustOwnActivityDocument<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
+                .WithMessage(MustOwnActivityType<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityDocument id", x => x.Id)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityType id", x => x.Id)
 
                 // id must exist in the database
                 .MustFindActivityDocumentById(entities)
-                    .WithMessage(MustFindActivityDocumentById.FailMessageFormat, x => x.Id)
+                    .WithMessage(MustFindActivityTypeById.FailMessageFormat, x => x.Id)
             ;
         }
     }
 
-    public class HandleDeleteActivityDocumentCommand : IHandleCommands<DeleteActivityDocument>
+    public class HandleDeleteActivityTypeCommand : IHandleCommands<DeleteActivityType>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         //private readonly IProcessEvents _eventProcessor;
 
-        public HandleDeleteActivityDocumentCommand(ICommandEntities entities
+        public HandleDeleteActivityTypeCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
             //, IProcessEvents eventProcessor
         )
@@ -58,29 +57,13 @@ namespace UCosmic.Domain.Activities
             //_eventProcessor = eventProcessor;
         }
 
-        public void Handle(DeleteActivityDocument command)
+        public void Handle(DeleteActivityType command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
             // load target
-            var activityDocument = _entities.Get<ActivityDocument>()
-                .SingleOrDefault(x => x.RevisionId == command.Id)
-            ;
-            if (activityDocument == null) return; // delete idempotently
-
-            if (activityDocument.ImageId.HasValue && (activityDocument.ImageId.Value != 0))
-            {
-                var image = _entities.Get<Image>()
-                                     .SingleOrDefault(x => x.Id == activityDocument.ImageId.Value);
-                _entities.Purge(image);
-            }
-
-            if (activityDocument.FileId.HasValue && (activityDocument.FileId.Value != 0))
-            {
-                var loadableFile = _entities.Get<LoadableFile>()
-                                     .SingleOrDefault(x => x.Id == activityDocument.FileId.Value);
-                _entities.Purge(loadableFile);                
-            }
+            var activityType = _entities.Get<ActivityType>().SingleOrDefault(x => x.RevisionId == command.Id);
+            if (activityType == null) return; // delete idempotently
 
             // TBD
             // log audit
@@ -93,12 +76,13 @@ namespace UCosmic.Domain.Activities
             //};
 
             //_entities.Create(audit);
-            _entities.Purge(activityDocument);
+            _entities.Purge(activityType);
 
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
             }
+
             //_eventProcessor.Raise(new EstablishmentChanged());
         }
     }

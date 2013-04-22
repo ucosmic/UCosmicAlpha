@@ -6,21 +6,21 @@ using FluentValidation.Validators;
 
 namespace UCosmic.Domain.Activities
 {
-    public class MustOwnActivityLocation<T> : PropertyValidator
+    public class MustOwnActivityType<T> : PropertyValidator
     {
         public const string FailMessageFormat =
             "User '{0}' is not authorized to perform this action on activity document #{1}.";
 
         private readonly IQueryEntities _entities;
-        private readonly Func<T, int> _activityLocationId;
+        private readonly Func<T, int> _activityTypeId;
 
-        internal MustOwnActivityLocation(IQueryEntities entities, Func<T, int> activityLocationId)
+        internal MustOwnActivityType(IQueryEntities entities, Func<T, int> activityTypeId)
             : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
 
             _entities = entities;
-            _activityLocationId = activityLocationId;
+            _activityTypeId = activityTypeId;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
@@ -31,12 +31,12 @@ namespace UCosmic.Domain.Activities
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var principle = (IPrincipal)context.PropertyValue;
-            var activityDocumentId = _activityLocationId != null ? _activityLocationId((T)context.Instance) : (int?)null;
+            var activityTypeId = _activityTypeId != null ? _activityTypeId((T)context.Instance) : (int?)null;
 
             var activity = _entities.Query<Activity>()
                                     .Where(x => x.Values.Any(
-                                        y => y.Locations.Any(
-                                            z => z.RevisionId == activityDocumentId)))
+                                        y => y.Types.Any(
+                                            z => z.RevisionId == activityTypeId)))
                                     .SingleOrDefault(w => w.Person.User.Name.Equals(principle.Identity.Name,
                                                      StringComparison.OrdinalIgnoreCase));
 
@@ -44,12 +44,12 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public static class MustOwnActivityLocationExtensions
+    public static class MustOwnActivityTypeExtensions
     {
-        public static IRuleBuilderOptions<T, IPrincipal> MustOwnActivityLocation<T>
-            (this IRuleBuilder<T, IPrincipal> ruleBuilder, IQueryEntities entities, Func<T, int> activityLocationId)
+        public static IRuleBuilderOptions<T, IPrincipal> MustOwnActivityType<T>
+            (this IRuleBuilder<T, IPrincipal> ruleBuilder, IQueryEntities entities, Func<T, int> activityTypeId)
         {
-            return ruleBuilder.SetValidator(new MustOwnActivityLocation<T>(entities, activityLocationId));
+            return ruleBuilder.SetValidator(new MustOwnActivityType<T>(entities, activityTypeId));
         }
     }
 }

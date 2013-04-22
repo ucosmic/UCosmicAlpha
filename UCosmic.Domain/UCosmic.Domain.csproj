@@ -130,10 +130,15 @@
     <Compile Include="Domain\Activities\Commands\DeleteActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\DeleteActivityTag.cs" />
+    <Compile Include="Domain\Activities\Commands\DeleteActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\UpdateActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\UpdateActivityDocument.cs" />
+    <Compile Include="Domain\Activities\Commands\UpdateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityDocument.cs" />
@@ -153,12 +158,16 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityLocationById.cs" />
+    <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
+    <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Domain\Activities\Validation\MustOwnActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Validation\MustOwnActivityTag.cs" />
+    <Compile Include="Domain\Activities\Validation\MustOwnActivityType.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivityValues.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />

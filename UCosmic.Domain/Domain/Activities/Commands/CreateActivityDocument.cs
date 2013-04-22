@@ -7,11 +7,6 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateActivityDocument
     {
-        public CreateActivityDocument()
-        {
-            Visible = true;
-        }
-
         public Guid? EntityId { get; set; }
         public int ActivityValuesId { get; set; }
         public int? FileId { get; set; }
@@ -19,8 +14,15 @@ namespace UCosmic.Domain.Activities
         public ActivityMode Mode { get; set; }
         public string Title { get; set; }
         public bool Visible { get; set; }
+        public bool NoCommit { get; set; }
 
         public ActivityDocument CreatedActivityDocument { get; protected internal set; }
+
+        public CreateActivityDocument()
+        {
+            Visible = true;
+        }
+
     }
 
     public class ValidateCreateActivityDocumentCommand : AbstractValidator<CreateActivityDocument>
@@ -88,10 +90,14 @@ namespace UCosmic.Domain.Activities
                 activityDocument.EntityId = command.EntityId.Value;
             }
 
-            _entities.Create(activityDocument);
-            _unitOfWork.SaveChanges();
-
             command.CreatedActivityDocument = activityDocument;
+
+            _entities.Create(activityDocument);
+
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
         }
     }
 }

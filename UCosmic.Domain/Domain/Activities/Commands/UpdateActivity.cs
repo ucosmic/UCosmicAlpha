@@ -11,17 +11,17 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; protected set; }
         public int Id { get; protected set; }
+        public DateTime UpdatedOn { get; protected set; }
         public string ModeText { get; set; }
         public ActivityValues Values { get; set; }
-        public DateTime UpdatedOn { get; set; }
-        public IPrincipal UpdatedBy { get; set; }
         public bool NoCommit { get; set; }
 
-        public UpdateActivity(IPrincipal principal, int id)
+        public UpdateActivity(IPrincipal principal, int id, DateTime updatedOn)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
             Id = id;
+            UpdatedOn = updatedOn;
         }
     }
 
@@ -78,11 +78,13 @@ namespace UCosmic.Domain.Activities
 
             /* Update fields */
             activity.Mode = command.ModeText.AsEnum<ActivityMode>();
-            activity.UpdatedOnUtc = command.UpdatedOn;
-            activity.UpdatedByPrincipal = command.UpdatedBy.Identity.Name;
+            activity.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
+            activity.UpdatedByPrincipal = command.Principal.Identity.Name;
 
             /* Update activity values (for this mode) */
-            var updateActivityValuesCommand = new UpdateActivityValues(command.Principal, activityValues.RevisionId)
+            var updateActivityValuesCommand = new UpdateActivityValues(command.Principal,
+                                                                       activityValues.RevisionId,
+                                                                       command.UpdatedOn)
             {
                 Title = command.Values.Title,
                 Content = command.Values.Content,
@@ -95,8 +97,6 @@ namespace UCosmic.Domain.Activities
                 Types = command.Values.Types,
                 Tags = command.Values.Tags,
                 Documents = command.Values.Documents,
-                UpdatedOn = command.UpdatedOn,
-                UpdatedBy = command.UpdatedBy,
                 NoCommit = true
             };
 

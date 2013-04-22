@@ -7,8 +7,8 @@ namespace UCosmic.Domain.Activities
 {
     public class DeleteActivityLocation
     {
-        public IPrincipal Principal { get; protected internal set; }
-        public int Id { get; protected internal set; }
+        public IPrincipal Principal { get; protected set; }
+        public int Id { get; protected set; }
         public bool NoCommit { get; set; }
 
         public DeleteActivityLocation(IPrincipal principal, int id)

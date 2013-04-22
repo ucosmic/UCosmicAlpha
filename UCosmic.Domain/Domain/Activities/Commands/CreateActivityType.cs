@@ -8,6 +8,7 @@ namespace UCosmic.Domain.Activities
     {
         public int ActivityValuesId { get; set; }
         public int EmployeeActivityTypeId { get; set; }
+        public bool NoCommit { get; set; }
 
         public ActivityType CreatedActivityType { get; protected internal set; }
     }
@@ -15,10 +16,12 @@ namespace UCosmic.Domain.Activities
     public class HandleCreateActivityTypeCommand : IHandleCommands<CreateActivityType>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateActivityTypeCommand(ICommandEntities entities)
+        public HandleCreateActivityTypeCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateActivityType command)
@@ -45,9 +48,14 @@ namespace UCosmic.Domain.Activities
                 TypeId = employeeActivityType.Id,
             };
 
+            command.CreatedActivityType = activityType;
+
             _entities.Create(activityType);
 
-            command.CreatedActivityType = activityType;
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
         }
     }
 }
