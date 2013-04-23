@@ -4,12 +4,12 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.SeedData
 {
-    public class RegionsByGeoPlanetEntitySeeder : ISeedData
+    public class RegionsByGeoServicesEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
 
-        public RegionsByGeoPlanetEntitySeeder(IProcessQueries queryProcessor
+        public RegionsByGeoServicesEntitySeeder(IProcessQueries queryProcessor
             , IQueryEntities entities
         )
         {

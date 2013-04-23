@@ -7,7 +7,8 @@
         //private readonly LanguageEntitySeeder _languageEntitySeeder;
         //private readonly LanguageSqlSeeder _languageSqlSeeder;
         //private readonly CountryAndAdmin1ByGeoPlanetEntitySeeder _countryAndAdmin1ByGeoPlanetEntitySeeder;
-        //private readonly WaterBodiesByGeoServicesEntitySeeder _waterBodiesByGeoServicesEntitySeeder;
+        private readonly WaterBodiesByGeoServicesEntitySeeder _waterBodiesByGeoServicesEntitySeeder;
+        private readonly RegionsByGeoServicesEntitySeeder _regionsByGeoServicesEntitySeeder;
         private readonly RoleEntitySeeder _roleEntitySeeder;
         private readonly EstablishmentEntitySeeder _establishmentEntitySeeder;
         private readonly EmailTemplateEntitySeeder _emailTemplateEntitySeeder;
@@ -28,7 +29,8 @@
             //, LanguageEntitySeeder languageEntitySeeder // this or CoreSqlSeeder
             //, LanguageSqlSeeder languageSqlSeeder // this or CoreSqlSeeder
             //, CountryAndAdmin1ByGeoPlanetEntitySeeder countryAndAdmin1ByGeoPlanetEntitySeeder // this or CoreSqlSeeder
-            //, WaterBodiesByGeoServicesEntitySeeder waterBodiesByGeoServicesEntitySeeder // this or CoreSqlSeeder
+            , WaterBodiesByGeoServicesEntitySeeder waterBodiesByGeoServicesEntitySeeder // this or CoreSqlSeeder
+            , RegionsByGeoServicesEntitySeeder regionsByGeoServicesEntitySeeder // this or CoreSqlSeeder
             , RoleEntitySeeder roleEntitySeeder
             , EstablishmentEntitySeeder establishmentEntitySeeder
             , EmailTemplateEntitySeeder emailTemplateEntitySeeder
@@ -50,11 +52,12 @@
             //_languageSqlSeeder = languageSqlSeeder; // this or CoreSqlSeeder
             //_languageEntitySeeder = languageEntitySeeder; // this or CoreSqlSeeder
             //_countryAndAdmin1ByGeoPlanetEntitySeeder = countryAndAdmin1ByGeoPlanetEntitySeeder; // this or CoreSqlSeeder
-            //_waterBodiesByGeoServicesEntitySeeder = waterBodiesByGeoServicesEntitySeeder; // this or CoreSqlSeeder
+            _waterBodiesByGeoServicesEntitySeeder = waterBodiesByGeoServicesEntitySeeder; // this or CoreSqlSeeder
+            _regionsByGeoServicesEntitySeeder = regionsByGeoServicesEntitySeeder; // this or CoreSqlSeeder
             _roleEntitySeeder = roleEntitySeeder;
             _establishmentEntitySeeder = establishmentEntitySeeder;
             _employeeModuleSettingsEntitySeeder = employeeModuleSettingsEntitySeeder;
-            _employeeEntitySeeder = employeeEntitySeeder; 
+            _employeeEntitySeeder = employeeEntitySeeder;
             _emailTemplateEntitySeeder = emailTemplateEntitySeeder;
             _personEntitySeeder = personEntitySeeder;
             _userEntitySeeder = userEntitySeeder;
@@ -69,11 +72,12 @@
 
         public void Seed()
         {
+            _coreSqlSeeder.Seed();
             //_languageEntitySeeder.Seed(); // this or CoreSqlSeeder
             //_languageSqlSeeder.Seed(); // this or CoreSqlSeeder
             //_countryAndAdmin1ByGeoPlanetEntitySeeder.Seed(); // this or CoreSqlSeeder
-            //_waterBodiesByGeoServicesEntitySeeder.Seed(); // this or CoreSqlSeeder
-            _coreSqlSeeder.Seed();
+            _waterBodiesByGeoServicesEntitySeeder.Seed(); // this or CoreSqlSeeder
+            _regionsByGeoServicesEntitySeeder.Seed(); // this or CoreSqlSeeder
 
             /* Note these lines are order dependent. */
             _roleEntitySeeder.Seed();
