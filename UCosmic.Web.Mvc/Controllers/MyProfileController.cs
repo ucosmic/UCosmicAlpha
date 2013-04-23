@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using UCosmic.Domain.Activities;
 using UCosmic.Web.Mvc.Models;
 using AttributeRouting.Web.Mvc;
 

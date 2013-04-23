@@ -8,9 +8,11 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-module ViewModels.Activities {
+module ViewModels.Activities
+    {
 
-    export class ActivitySearchInput {
+    export class ActivitySearchInput
+    {
         personId: number;
         orderBy: string;
         pageSize: number;
@@ -21,12 +23,13 @@ module ViewModels.Activities {
     /* 
     */
     // ================================================================================
-	export class ActivityList implements KnockoutValidationGroup {
+    export class ActivityList implements KnockoutValidationGroup
+    {
 
-	    activityLocationsList: Service.ApiModels.IActivityLocation[];
-	    activityTypesList: Service.ApiModels.IEmployeeActivityType[];
+        activityLocationsList: Service.ApiModels.IActivityLocation[];
+        activityTypesList: Service.ApiModels.IEmployeeActivityType[];
 
-	    personId: number;
+        personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
@@ -36,7 +39,8 @@ module ViewModels.Activities {
         /* 
         */
         // --------------------------------------------------------------------------------                        
-        constructor(personId: number) {
+        constructor(personId: number)
+        {
             this.personId = personId;
         }
 
@@ -44,7 +48,8 @@ module ViewModels.Activities {
         /* 
         */
         // --------------------------------------------------------------------------------
-        load(): JQueryPromise {
+        load(): JQueryPromise
+        {
             var deferred: JQueryDeferred = $.Deferred();
 
             var locationsPact = $.Deferred();
@@ -66,8 +71,8 @@ module ViewModels.Activities {
                 });
 
             var dataPact = $.Deferred();
-            var activitiesSearchInput: ActivitySearchInput = new ActivitySearchInput(); 
-            
+            var activitiesSearchInput: ActivitySearchInput = new ActivitySearchInput();
+
             activitiesSearchInput.personId = this.personId;
             activitiesSearchInput.orderBy = "";
             activitiesSearchInput.pageNumber = 1;
@@ -80,26 +85,28 @@ module ViewModels.Activities {
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     { dataPact.reject(jqXhr, textStatus, errorThrown); }
                 });
-            
+
             // only process after all requests have been resolved
             $.when(typesPact, locationsPact, dataPact)
-                .done( (types: Service.ApiModels.IEmployeeActivityType[],
+                .done((types: Service.ApiModels.IEmployeeActivityType[],
                     locations: Service.ApiModels.IActivityLocation[],
-                         data: Service.ApiModels.IActivityPage): void => {
+                    data: Service.ApiModels.IActivityPage): void => {
 
                     this.activityTypesList = types;
                     this.activityLocationsList = locations;
 
                     {
-                        var augmentedDocumentModel = function (data) {
+                        var augmentedDocumentModel = function (data)
+                        {
                             ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id);
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id);
                         };
 
                         var mapping = {
                             'documents': {
-                                create: function (options) {
-                                    return new augmentedDocumentModel(options.data); 
+                                create: function (options)
+                                {
+                                    return new augmentedDocumentModel(options.data);
                                 }
                             }
                         };
@@ -109,7 +116,7 @@ module ViewModels.Activities {
 
                     deferred.resolve();
                 })
-                .fail( (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     deferred.reject(xhr, textStatus, errorThrown);
                 });
 
@@ -124,14 +131,14 @@ module ViewModels.Activities {
             $.ajax({
                 type: "DELETE",
                 url: App.Routes.WebApi.Activities.del(activityId),
-                success: function (data: Service.ApiModels.IActivityPage, textStatus: string, jqXHR: JQueryXHR): void
-                    {
-                        alert(textStatus);
-                    },
-                error: function (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void
-                    {
-                        alert(textStatus);
-                    }
+                success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
+                {
+                    alert(textStatus);
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                {
+                    alert(textStatus);
+                }
             });
         }
 
@@ -139,23 +146,26 @@ module ViewModels.Activities {
         /*  
         */
         // --------------------------------------------------------------------------------
-        deleteActivity(data:any, event:any, viewModel: any): void {
-             $("#confirmActivityDeleteDialog").dialog({
+        deleteActivity(data: any, event: any, viewModel: any): void {
+            debugger;
+            $("#confirmActivityDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
                 resizable: false,
                 modal: true,
                 buttons: [
-                            { text: "Yes, confirm delete", click: function(): void {
-                                viewModel.deleteActivityById(data.revisionId());
-                                $(this).dialog("close");
+                            {
+                                text: "Yes, confirm delete", click: function (): void {
+                                    viewModel.deleteActivityById(data.id());
+                                    $(this).dialog("close");
                                 }
                             },
-                            { text: "No, cancel delete", click: function(): void {
-                                $(this).dialog("close");
+                            {
+                                text: "No, cancel delete", click: function (): void {
+                                    $(this).dialog("close");
                                 }
                             },
-                        ]
+                ]
             });
         }
 
@@ -167,32 +177,57 @@ module ViewModels.Activities {
             var element = event.srcElement;
             var url = null;
 
-            while ((element != null) && (element.nodeName != 'TR')) {
+            while ((element != null) && (element.nodeName != 'TR'))
+            {
                 element = element.parentElement;
             }
 
-            if (element != null) {
+            if (element != null)
+            {
                 url = element.attributes["href"].value;
             }
 
-            if (url != null) {
+            if (url != null)
+            {
                 location.href = url;
             }
         }
-        
+
         // --------------------------------------------------------------------------------
         /*  
         */
         // --------------------------------------------------------------------------------
-        getTypeName(id: number): string {
+        newActivity(data: any, event: any): void {
+            $.ajax({
+                type: "POST",
+                url: App.Routes.WebApi.Activities.post(),
+                success: (newActivityId: string, textStatus: string, jqXHR: JQueryXHR): void =>
+                {
+                    location.href = App.Routes.Mvc.Profile.activityEdit(newActivityId);
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                {
+                    alert(textStatus + "|" + errorThrown);
+                }
+            });
+        }
+
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        getTypeName(id: number): string
+        {
             var typeName: string = "";
 
-            if (this.activityTypesList != null) {
+            if (this.activityTypesList != null)
+            {
                 var i = 0;
                 while ((i < this.activityTypesList.length) &&
                        (id != this.activityTypesList[i].id)) { i += 1 }
 
-                if (i < this.activityTypesList.length) {
+                if (i < this.activityTypesList.length)
+                {
                     typeName = this.activityTypesList[i].type;
                 }
             }
@@ -204,15 +239,18 @@ module ViewModels.Activities {
         /*  
         */
         // --------------------------------------------------------------------------------
-        getLocationName(id: number): string {
+        getLocationName(id: number): string
+        {
             var locationName: string = "";
 
-            if (this.activityLocationsList != null) {
+            if (this.activityLocationsList != null)
+            {
                 var i = 0;
                 while ((i < this.activityLocationsList.length) &&
                        (id != this.activityLocationsList[i].id)) { i += 1 }
 
-                if (i < this.activityLocationsList.length) {
+                if (i < this.activityLocationsList.length)
+                {
                     locationName = this.activityLocationsList[i].officialName;
                 }
             }
@@ -224,23 +262,29 @@ module ViewModels.Activities {
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityDatesFormatted(startsOnStr: string, endsOnStr: string): string {
+        activityDatesFormatted(startsOnStr: string, endsOnStr: string): string
+        {
             var formattedDateRange: string = "";
             var startsOn = (startsOnStr != null) ? new Date(startsOnStr) : null;
             var endsOn = (endsOnStr != null) ? new Date(endsOnStr) : null;
 
-            if (startsOn == null) {
-                if (endsOn != null) {
+            if (startsOn == null)
+            {
+                if (endsOn != null)
+                {
                     formattedDateRange = endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
                 }
-            } else {
+            } else
+            {
                 formattedDateRange = startsOn.getMonth() + "/" + startsOn.getDate() + "/" + startsOn.getFullYear();
-                if (endsOn != null) {
+                if (endsOn != null)
+                {
                     formattedDateRange += " - " + endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
                 }
             }
 
-            if (formattedDateRange.length > 0) {
+            if (formattedDateRange.length > 0)
+            {
                 formattedDateRange += "\xa0\xa0";
             }
 
@@ -251,12 +295,14 @@ module ViewModels.Activities {
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string {
+        activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string
+        {
             var formattedTypes: string = "";
             var location: Service.ApiModels.IActivityLocation;
 
             /* ----- Assemble in sorted order ----- */
-            for (var i = 0; i < this.activityTypesList.length; i += 1) {
+            for (var i = 0; i < this.activityTypesList.length; i += 1)
+            {
                 for (var j = 0; j < types.length; j += 1)
                 {
                     if (types[j].typeId() == this.activityTypesList[i].id)
@@ -269,21 +315,23 @@ module ViewModels.Activities {
 
             return formattedTypes;
         }
-        
+
         // --------------------------------------------------------------------------------
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string {
+        activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string
+        {
             var formattedLocations: string = "";
             var location: Service.ApiModels.IActivityLocation;
 
-            for (var i = 0; i < locations.length; i += 1) {
+            for (var i = 0; i < locations.length; i += 1)
+            {
                 if (i > 0) { formattedLocations += ", "; }
                 formattedLocations += this.getLocationName(locations[i].placeId());
             }
 
             return formattedLocations;
         }
-	}
+    }
 }

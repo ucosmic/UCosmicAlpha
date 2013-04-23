@@ -34,7 +34,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
         private readonly IHandleCommands<CopyDeepActivity> _copyDeepActivity;
-        private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
+        private readonly IHandleCommands<CreateDeepActivity> _createDeepActivity;
         private readonly IHandleCommands<DeleteActivity> _deleteActivity;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
@@ -48,7 +48,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                   , IHandleCommands<DeleteActivityDocument> deleteActivityDocument 
                                   , IHandleCommands<RenameActivityDocument> renameActivityDocument
                                   , IHandleCommands<CopyDeepActivity> copyDeepActivity
-                                  , IHandleCommands<CreateMyNewActivity> createActivity
+                                  , IHandleCommands<CreateDeepActivity> createDeepActivity
                                   , IHandleCommands<DeleteActivity> deleteActivity
                                   , IHandleCommands<UpdateActivity> updateActivity )
         {
@@ -62,7 +62,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _deleteActivityDocument = deleteActivityDocument;
             _renameActivityDocument = renameActivityDocument;
             _copyDeepActivity = copyDeepActivity;
-            _createActivity = createActivity;
+            _createDeepActivity = createDeepActivity;
             _deleteActivity = deleteActivity;
             _updateActivity = updateActivity;
         }
@@ -130,11 +130,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                 /* There's no "in progress edit" record, so we make a copy of the
                      * activity and set it to edit mode. */
-                    var copyDeepActivityCommand = new CopyDeepActivity
-                    {
-                        Id = activity.RevisionId,
-                        EditSourceId = activity.RevisionId
-                    };
+                    var copyDeepActivityCommand = new CopyDeepActivity(activity.RevisionId,
+                                                                       activity.Mode,
+                                                                       activity.RevisionId);
 
                     _copyDeepActivity.Handle(copyDeepActivityCommand);
 
@@ -164,13 +162,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post()
         {
-            var createActivityCommand = new CreateMyNewActivity
-            {
-                User = _queryProcessor.Execute( new UserByName(User.Identity.Name) ),
-                ModeText = ActivityMode.Draft.AsSentenceFragment()
-            };
+            var createDeepActivityCommand =
+                new CreateDeepActivity(_queryProcessor.Execute(new UserByName(User.Identity.Name)),
+                                       ActivityMode.Draft.AsSentenceFragment());
+            _createDeepActivity.Handle(createDeepActivityCommand);
 
-            var model = Mapper.Map<ActivityApiModel>(createActivityCommand.CreatedActivity);
+            var model = createDeepActivityCommand.CreatedActivity.RevisionId;
             return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 

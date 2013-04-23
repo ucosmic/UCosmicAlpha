@@ -334,6 +334,12 @@ var App;
                     return makeUrl('activities');
                 }
                 Activities.post = post;
+                function getEdit(activityId) {
+                    var url = makeUrl('activities');
+                    url += activityId + "/edit";
+                    return url;
+                }
+                Activities.getEdit = getEdit;
                 function put(activityId) {
                     return makeUrl('activities/' + activityId);
                 }

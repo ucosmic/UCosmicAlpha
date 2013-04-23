@@ -144,7 +144,7 @@ var ViewModels;
                 var dataPact = $.Deferred();
                 $.ajax({
                     type: "GET",
-                    url: App.Routes.WebApi.Activities.get(this.id()),
+                    url: App.Routes.WebApi.Activities.getEdit(this.id()),
                     success: function (data, textStatus, jqXhr) {
                         dataPact.resolve(data);
                     },

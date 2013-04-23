@@ -297,6 +297,12 @@ module App.Routes {
                 return makeUrl('activities');
             }
 
+            export function getEdit (activityId: number): string {
+                var url = makeUrl('activities');
+                url += activityId + "/edit";
+                return url;
+            }
+
             export function put(activityId: number): string {
                 return makeUrl('activities/' + activityId);
             }

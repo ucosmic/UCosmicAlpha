@@ -77,6 +77,8 @@ var ViewModels;
                 });
             };
             ActivityList.prototype.deleteActivity = function (data, event, viewModel) {
+                debugger;
+
                 $("#confirmActivityDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
                     width: 'auto',
@@ -86,7 +88,7 @@ var ViewModels;
                         {
                             text: "Yes, confirm delete",
                             click: function () {
-                                viewModel.deleteActivityById(data.revisionId());
+                                viewModel.deleteActivityById(data.id());
                                 $(this).dialog("close");
                             }
                         }, 
@@ -112,6 +114,18 @@ var ViewModels;
                 if(url != null) {
                     location.href = url;
                 }
+            };
+            ActivityList.prototype.newActivity = function (data, event) {
+                $.ajax({
+                    type: "POST",
+                    url: App.Routes.WebApi.Activities.post(),
+                    success: function (newActivityId, textStatus, jqXHR) {
+                        location.href = App.Routes.Mvc.Profile.activityEdit(newActivityId);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(textStatus + "|" + errorThrown);
+                    }
+                });
             };
             ActivityList.prototype.getTypeName = function (id) {
                 var typeName = "";
