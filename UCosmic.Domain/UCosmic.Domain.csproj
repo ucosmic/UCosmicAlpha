@@ -121,17 +121,20 @@
     <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivityValues.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateDeepActivity..cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateDeepActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\DeleteActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
+    <Compile Include="Domain\Employees\Validation\MustFindEmployeeActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">
       <SubType>Code</SubType>

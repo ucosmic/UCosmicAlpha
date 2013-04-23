@@ -50,14 +50,12 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var createActivityValuesCommand = new CreateActivityValues
+            var createActivityValuesCommand = new CreateActivityValues(command.ActivityId,command.Mode)
             {
-                ActivityId = command.ActivityId,
                 Title = sourceActivityValues.Title,
                 Content = sourceActivityValues.Content,
                 StartsOn = sourceActivityValues.StartsOn,
                 EndsOn = sourceActivityValues.EndsOn,
-                Mode = sourceActivityValues.Mode,
                 WasExternallyFunded = sourceActivityValues.WasExternallyFunded,
                 WasInternallyFunded = sourceActivityValues.WasInternallyFunded
             };
@@ -66,7 +64,7 @@ namespace UCosmic.Domain.Activities
 
             ActivityValues activityValuesCopy = createActivityValuesCommand.CreatedActivityValues;
 
-            foreach (var location in activityValuesCopy.Locations)
+            foreach (var location in sourceActivityValues.Locations)
             {
                 _createActivityLocation.Handle(new CreateActivityLocation
                 {
@@ -75,16 +73,12 @@ namespace UCosmic.Domain.Activities
                 });                
             }
 
-            foreach (var type in activityValuesCopy.Types)
+            foreach (var type in sourceActivityValues.Types)
             {
-                _createActivityType.Handle(new CreateActivityType
-                {
-                    ActivityValuesId = activityValuesCopy.RevisionId,
-                    EmployeeActivityTypeId = type.TypeId
-                });                
+                _createActivityType.Handle(new CreateActivityType(activityValuesCopy.RevisionId, type.TypeId));
             }
 
-            foreach (var tag in activityValuesCopy.Tags)
+            foreach (var tag in sourceActivityValues.Tags)
             {
                 _createActivityTag.Handle(new CreateActivityTag
                 {
@@ -96,7 +90,7 @@ namespace UCosmic.Domain.Activities
                 });                
             }
 
-            foreach (var document in activityValuesCopy.Documents)
+            foreach (var document in sourceActivityValues.Documents)
             {
                 _createActivityDocument.Handle(new CreateActivityDocument
                 {

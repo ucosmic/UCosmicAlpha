@@ -1,45 +1,65 @@
 ﻿using System;
-using System.Linq;
+using FluentValidation;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityValues
     {
-        public int ActivityId { get; set; }
+        public int ActivityId { get; protected set; }
+        public ActivityMode Mode { get; protected set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
-        public ActivityMode Mode { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
         public bool NoCommit { get; set; }
         public ActivityValues CreatedActivityValues { get; protected internal set; }
+
+        public CreateActivityValues(int activityId, ActivityMode mode)
+        {
+            ActivityId = activityId;
+            Mode = mode;
+        }
+    }
+
+    public class ValidateCreateActivityValuesCommand : AbstractValidator<CreateActivityValues>
+    {
+        public ValidateCreateActivityValuesCommand(IQueryEntities entities)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.ActivityId)
+                // activity id must be within valid range
+                .GreaterThanOrEqualTo(1)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.ActivityId)
+
+                // activity id must exist in the database
+                .MustFindActivityById(entities)
+                    .WithMessage(MustFindActivityById.FailMessageFormat, x => x.ActivityId)
+            ;
+        }
     }
 
     public class HandleCreateActivityValuesCommand : IHandleCommands<CreateActivityValues>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateActivityValuesCommand(ICommandEntities entities)
+        public HandleCreateActivityValuesCommand(ICommandEntities entities,
+                                                 IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateActivityValues command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            Activity activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.ActivityId);
-            if (activity == null)
-            {
-                // TODO: check this in command validator
-                throw new Exception(string.Format("Activity Id '{0}' was not found", command.ActivityId));
-            }
-
             var activityValues = new ActivityValues
             {
-                ActivityId = activity.RevisionId,
+                ActivityId = command.ActivityId,
                 Title = command.Title,
                 Content = command.Content,
                 StartsOn = command.StartsOn,
@@ -49,12 +69,14 @@ namespace UCosmic.Domain.Activities
                 WasInternallyFunded = command.WasInternallyFunded
             };
 
-            command.CreatedActivityValues = activityValues;
+            _entities.Create(activityValues);
 
             if (!command.NoCommit)
             {
-                _entities.Create(activityValues);
+                _unitOfWork.SaveChanges();
             }
+
+            command.CreatedActivityValues = activityValues;
         }
     }
 }

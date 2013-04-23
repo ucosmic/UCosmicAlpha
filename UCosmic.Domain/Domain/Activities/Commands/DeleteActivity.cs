@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
-using UCosmic.Domain.Files;
 
 namespace UCosmic.Domain.Activities
 {
@@ -10,6 +9,7 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
+        public bool NoCommit { get; set; }
 
         public DeleteActivity(IPrincipal principal, int id)
         {
@@ -27,7 +27,7 @@ namespace UCosmic.Domain.Activities
 
             RuleFor(x => x.Principal)
                 .MustOwnActivityDocument(entities, x => x.Id)
-                ;//.WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
+                    .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
                 // id must be within valid range
@@ -35,8 +35,8 @@ namespace UCosmic.Domain.Activities
                     .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
 
                 // id must exist in the database
-                //.MustFindActivityById(entities)
-                //    .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id)
+                .MustFindActivityById(entities)
+                    .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id)
             ;
         }
     }
@@ -61,25 +61,15 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // load target
-            //var activityDocument = _entities.Get<ActivityDocument>()
-            //    .SingleOrDefault(x => x.RevisionId == command.Id)
-            //;
-            //if (activityDocument == null) return; // delete idempotently
+            var activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.Id);
+            if (activity == null) return;
 
-            //if (activityDocument.ImageId.HasValue && (activityDocument.ImageId.Value != 0))
-            //{
-            //    var image = _entities.Get<Image>()
-            //                         .SingleOrDefault(x => x.Id == activityDocument.ImageId.Value);
-            //    _entities.Purge(image);
-            //}
+            _entities.Purge(activity);
 
-            //if (activityDocument.FileId.HasValue && (activityDocument.FileId.Value != 0))
-            //{
-            //    var loadableFile = _entities.Get<LoadableFile>()
-            //                         .SingleOrDefault(x => x.Id == activityDocument.FileId.Value);
-            //    _entities.Purge(loadableFile);
-            //}
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
 
             // TBD
             // log audit
@@ -90,10 +80,8 @@ namespace UCosmic.Domain.Activities
             //    Value = JsonConvert.SerializeObject(new { command.Id }),
             //    PreviousState = activityDocument.ToJsonAudit(),
             //};
-
             //_entities.Create(audit);
-            //_entities.Purge(activityDocument);
-            //_unitOfWork.SaveChanges();
+
             //_eventProcessor.Raise(new EstablishmentChanged());
         }
     }

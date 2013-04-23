@@ -25,14 +25,6 @@ namespace UCosmic.Domain.Activities
 
     }
 
-    public class ValidateCreateActivityDocumentCommand : AbstractValidator<CreateActivityDocument>
-    {
-        public ValidateCreateActivityDocumentCommand()
-        {
-            CascadeMode = CascadeMode.StopOnFirstFailure;
-        }
-    }
-
     public class HandleCreateActivityDocumentCommand : IHandleCommands<CreateActivityDocument>
     {
         private readonly ICommandEntities _entities;
@@ -44,23 +36,35 @@ namespace UCosmic.Domain.Activities
             _unitOfWork = unitOfWork;
         }
 
+        public class ValidateCreateActivityDocumentCommand : AbstractValidator<CreateActivityDocument>
+        {
+            public ValidateCreateActivityDocumentCommand(IQueryEntities entities)
+            {
+                CascadeMode = CascadeMode.StopOnFirstFailure;
+
+                RuleFor(x => x.ActivityValuesId)
+                    // activity id must be within valid range
+                    .GreaterThanOrEqualTo(1)
+                        .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityValues id", x => x.ActivityValuesId)
+
+                    // activity id must exist in the database
+                    .MustFindActivityValuesById(entities)
+                        .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
+                ;
+            }
+        }
         public void Handle(CreateActivityDocument command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            ActivityValues activityValues = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.ActivityValuesId);
-            if (activityValues == null)
-            {
-                // TODO: check this in command validator
-                throw new Exception(string.Format("ActivityValues Id '{0}' was not found.", command.ActivityValuesId));
-            }
+            var activityValues = _entities.Get<ActivityValues>()
+                .Single(x => x.RevisionId == command.ActivityValuesId);
 
             if (command.FileId.HasValue && (command.FileId.Value != 0))
             {
                 LoadableFile loadableFile = _entities.Get<LoadableFile>().Single(x => x.Id == command.FileId.Value);
                 if (loadableFile == null)
                 {
-                    // TODO: check this in command validator
                     throw new Exception(string.Format("LoadableFile Id '{0}' was not found.", command.FileId));
                 }
             }
@@ -70,7 +74,6 @@ namespace UCosmic.Domain.Activities
                 Image image = _entities.Get<Image>().Single(x => x.Id == command.ImageId.Value);
                 if (image == null)
                 {
-                    // TODO: check this in command validator
                     throw new Exception(string.Format("Image Id '{0}' was not found.", command.ImageId));
                 }
             }

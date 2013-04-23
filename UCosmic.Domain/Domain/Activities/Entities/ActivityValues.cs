@@ -8,7 +8,7 @@ namespace UCosmic.Domain.Activities
     {
         protected bool Equals(ActivityValues other)
         {
-            return  string.Equals(Title, other.Title) &&
+            return string.Equals(Title, other.Title) &&
                     string.Equals(Content, other.Content) &&
                     StartsOn.Equals(other.StartsOn) &&
                     EndsOn.Equals(other.EndsOn) &&
@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Activities
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((ActivityValues) obj);
+            return Equals((ActivityValues)obj);
         }
 
         public override int GetHashCode()
@@ -34,16 +34,16 @@ namespace UCosmic.Domain.Activities
             unchecked
             {
                 int hashCode = (Title != null ? Title.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Content != null ? Content.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ StartsOn.GetHashCode();
-                hashCode = (hashCode*397) ^ EndsOn.GetHashCode();
-                hashCode = (hashCode*397) ^ (Locations != null ? Locations.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Types != null ? Types.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Tags != null ? Tags.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Documents != null ? Documents.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ WasExternallyFunded.GetHashCode();
-                hashCode = (hashCode*397) ^ WasInternallyFunded.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Content != null ? Content.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ StartsOn.GetHashCode();
+                hashCode = (hashCode * 397) ^ EndsOn.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Locations != null ? Locations.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Types != null ? Types.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Tags != null ? Tags.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Documents != null ? Documents.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ WasExternallyFunded.GetHashCode();
+                hashCode = (hashCode * 397) ^ WasInternallyFunded.GetHashCode();
                 return hashCode;
             }
         }

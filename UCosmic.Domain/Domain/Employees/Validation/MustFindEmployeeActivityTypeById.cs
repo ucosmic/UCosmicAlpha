@@ -3,15 +3,15 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace UCosmic.Domain.Activities
+namespace UCosmic.Domain.Employees
 {
-    public class MustFindActivityValuesById : PropertyValidator
+    public class MustFindEmployeeActivityTypeById : PropertyValidator
     {
-        public const string FailMessageFormat = "ActivityValues with id '{0}' does not exist.";
+        public const string FailMessageFormat = "EmployeeActivityType with id '{0}' does not exist.";
 
         private readonly IQueryEntities _entities;
 
-        internal MustFindActivityValuesById(IQueryEntities entities)
+        internal MustFindEmployeeActivityTypeById(IQueryEntities entities)
             : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
@@ -27,19 +27,19 @@ namespace UCosmic.Domain.Activities
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var value = (int)context.PropertyValue;
 
-            var entity = _entities.Query<ActivityValues>()
-                .SingleOrDefault(x => x.RevisionId == value);
+            var entity = _entities.Query<EmployeeActivityType>()
+                .SingleOrDefault(x => x.Id == value);
 
             return entity != null;
         }
     }
 
-    public static class MustFindActivityValuesByIdExtensions
+    public static class MustFindEmployeeActivityTypeByIdExtensions
     {
-        public static IRuleBuilderOptions<T, int> MustFindActivityValuesById<T>
+        public static IRuleBuilderOptions<T, int> MustFindEmployeeActivityTypeById<T>
             (this IRuleBuilder<T, int> ruleBuilder, IQueryEntities entities)
         {
-            return ruleBuilder.SetValidator(new MustFindActivityValuesById(entities));
+            return ruleBuilder.SetValidator(new MustFindEmployeeActivityTypeById(entities));
         }
     }
 }

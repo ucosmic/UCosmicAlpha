@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentValidation;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
@@ -23,6 +24,24 @@ namespace UCosmic.Domain.Activities
         public ActivityTag CreatedActivityTag { get; protected internal set; }
     }
 
+    public class ValidateCreateActivityTagCommand : AbstractValidator<CreateActivityTag>
+    {
+        public ValidateCreateActivityTagCommand(IQueryEntities entities)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.ActivityValuesId)
+                // activity id must be within valid range
+                .GreaterThanOrEqualTo(1)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityValues id", x => x.ActivityValuesId)
+
+                // activity id must exist in the database
+                .MustFindActivityValuesById(entities)
+                    .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
+            ;
+        }
+    }
+
     public class HandleCreateActivityTagCommand : IHandleCommands<CreateActivityTag>
     {
         private readonly ICommandEntities _entities;
@@ -38,15 +57,11 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var activityValues = _entities.Get<ActivityValues>().SingleOrDefault(x => x.RevisionId == command.ActivityValuesId);
-            if (activityValues == null)
-            {
-                // TODO: check this in command validator
-                throw new Exception(string.Format("ActivityValues Id '{0}' was not found", command.ActivityValuesId));
-            }
+            var activityValues = _entities.Get<ActivityValues>()
+                .SingleOrDefault(x => x.RevisionId == command.ActivityValuesId);
 
             var person = _entities.Get<Person>()
-                                     .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);
+                .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);
 
             var otherActivities = _entities.Get<Activity>()
                                            .WithPersonId(person.RevisionId)
@@ -62,7 +77,6 @@ namespace UCosmic.Domain.Activities
                 Mode = command.Mode
             };
 
-            command.CreatedActivityTag = activityTag;
 
             _entities.Create(activityTag);
 
@@ -70,6 +84,8 @@ namespace UCosmic.Domain.Activities
             {
                 _unitOfWork.SaveChanges();
             }
+
+            command.CreatedActivityTag = activityTag;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace UCosmic.Domain.Activities
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
 
-        public HandleCopyActivityCommand( ICommandEntities entities,
+        public HandleCopyActivityCommand(ICommandEntities entities,
                                           IUnitOfWork unitOfWork,
                                           IHandleCommands<CreateMyNewActivity> createActivity)
         {
@@ -39,10 +39,9 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var createActivityCommand = new CreateMyNewActivity
+            var createActivityCommand = new CreateMyNewActivity(sourceActivity.Person.User,
+                                                                command.Mode.AsSentenceFragment())
             {
-                User = sourceActivity.Person.User,
-                ModeText = command.Mode.AsSentenceFragment(),
                 EditSourceId = command.EditSourceId
             };
 

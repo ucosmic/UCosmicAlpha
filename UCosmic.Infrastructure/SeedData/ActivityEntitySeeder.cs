@@ -66,11 +66,9 @@ namespace UCosmic.SeedData
                 bool activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity
+                    createMyNewActivityCommand = new CreateMyNewActivity(user, ActivityMode.Draft.AsSentenceFragment())
                     {
-                        EntityId = entityId,
-                        User = user,
-                        ModeText = ActivityMode.Draft.AsSentenceFragment()
+                        EntityId = entityId
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -78,15 +76,13 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues
+                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(activity.RevisionId,activity.Mode)
                     {
-                        ActivityId = activity.RevisionId,
                         Title =
                             "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
                         Content =
                             "Permian/Triassic (P/Tr) Boundary Global Events—The P/Tr boundary represents the largest mass extinction in Earth history, yet its causes remain uncertain. I am investigating critical questions related to the extent and intensity of Permo-Triassic deep-ocean anoxia, patterns of upwelling of toxic sulfidic waters onto shallow-marine shelves and platforms, and the relationship of such events to global C-isotopic excursions and the delayed recovery of marine biotas during the Early Triassic. I am working on the P/Tr boundary globally.",
-                        StartsOn = new DateTime(2003, 3, 1),
-                        Mode = activity.Mode
+                        StartsOn = new DateTime(2003, 3, 1)
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -94,17 +90,11 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id
-                    });
-                
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id
-                    });
+                    _createActivityType.Handle(new CreateActivityType(activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id ));
+
+                    _createActivityType.Handle(new CreateActivityType(activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id ));
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
@@ -162,7 +152,7 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileId = _entities.Get<LoadableFile>().Single(x => x.Name == "10EC87BD-3A95-439D-807A-0F57C3F89C8A").Id,
                         Mode = activity.Mode,
-                        Title = "Research Funding Breakdown" 
+                        Title = "Research Funding Breakdown"
                     });
 
                     _createActivityDocument.Handle(new CreateActivityDocument
@@ -182,11 +172,9 @@ namespace UCosmic.SeedData
                 activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity
+                    createMyNewActivityCommand = new CreateMyNewActivity(user, ActivityMode.Draft.AsSentenceFragment())
                     {
-                        EntityId = entityId,
-                        User = user,
-                        ModeText = ActivityMode.Draft.AsSentenceFragment()
+                        EntityId = entityId
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -194,13 +182,11 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues
+                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(activity.RevisionId, activity.Mode)
                     {
-                        ActivityId = activity.RevisionId,
                         Title = "Professional Development Program for Teachers of English at Shandong University",
                         Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
-                        StartsOn = new DateTime(2003, 6, 1),
-                        Mode = activity.Mode
+                        StartsOn = new DateTime(2003, 6, 1)
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -208,12 +194,9 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Service")).Id
-                    });
-            
+                    _createActivityType.Handle(new CreateActivityType(activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Service")).Id ));
+
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
                         ActivityValuesId = activityValues.RevisionId,
@@ -237,11 +220,9 @@ namespace UCosmic.SeedData
                 activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity
+                    createMyNewActivityCommand = new CreateMyNewActivity(user, ActivityMode.Draft.AsSentenceFragment())
                     {
-                        EntityId = entityId,
-                        User = user,
-                        ModeText = ActivityMode.Draft.AsSentenceFragment()
+                        EntityId = entityId
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -249,14 +230,12 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues
+                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(activity.RevisionId, activity.Mode)
                     {
-                        ActivityId = activity.RevisionId,
                         Title = "Workshop Preparation: Air pollution and Chinese Historic Site",
                         Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
                         StartsOn = new DateTime(2006, 10, 9),
-                        EndsOn = new DateTime(2006, 10, 10),
-                        Mode = activity.Mode
+                        EndsOn = new DateTime(2006, 10, 10)
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -264,23 +243,14 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference")).Id
-                    });
+                    _createActivityType.Handle(new CreateActivityType(activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference")).Id ));
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id
-                    });
+                    _createActivityType.Handle(new CreateActivityType( activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id ));
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honor")).Id
-                    });
+                    _createActivityType.Handle(new CreateActivityType(activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honor")).Id ));
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
@@ -329,11 +299,9 @@ namespace UCosmic.SeedData
                 activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity
+                    createMyNewActivityCommand = new CreateMyNewActivity(user, ActivityMode.Draft.AsSentenceFragment())
                     {
-                        EntityId = entityId,
-                        User = user,
-                        ModeText = ActivityMode.Draft.AsSentenceFragment()
+                        EntityId = entityId
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -341,12 +309,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues
+                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(activity.RevisionId, activity.Mode)
                     {
-                        ActivityId = activity.RevisionId,
                         Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
-                        Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music",
-                        Mode = activity.Mode
+                        Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music"
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -354,11 +320,8 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative")).Id
-                    });
+                    _createActivityType.Handle(new CreateActivityType(activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative")).Id ));
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {
@@ -415,11 +378,9 @@ namespace UCosmic.SeedData
                 activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity
+                    createMyNewActivityCommand = new CreateMyNewActivity(user, ActivityMode.Draft.AsSentenceFragment())
                     {
-                        EntityId = entityId,
-                        User = user,
-                        ModeText = ActivityMode.Draft.AsSentenceFragment()
+                        EntityId = entityId
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -427,12 +388,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues
+                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(activity.RevisionId, activity.Mode)
                     {
-                        ActivityId = activity.RevisionId,
                         Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
-                        Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students.",
-                        Mode = activity.Mode
+                        Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students."
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -440,11 +399,8 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        EmployeeActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Award")).Id
-                    });
+                    _createActivityType.Handle(new CreateActivityType( activityValues.RevisionId,
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Award")).Id ));
 
                     _createActivityLocation.Handle(new CreateActivityLocation
                     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentValidation;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
@@ -21,24 +22,43 @@ namespace UCosmic.Domain.Activities
             _entities = entities;
         }
 
+        public class ValidateCreateActivityLocationCommand : AbstractValidator<CreateActivityLocation>
+        {
+            public ValidateCreateActivityLocationCommand(IQueryEntities entities)
+            {
+                CascadeMode = CascadeMode.StopOnFirstFailure;
+
+                RuleFor(x => x.ActivityValuesId)
+                    // activity id must be within valid range
+                    .GreaterThanOrEqualTo(1)
+                        .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityValues id", x => x.ActivityValuesId)
+
+                    // activity id must exist in the database
+                    .MustFindActivityValuesById(entities)
+                        .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
+                ;
+
+                RuleFor(x => x.PlaceId)
+                    // place id must be within valid range
+                    .GreaterThanOrEqualTo(1)
+                        .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "PlaceId id", x => x.PlaceId)
+
+                    // place id must exist in the database
+                    .MustFindPlaceById(entities)
+                        .WithMessage(MustFindPlaceById.FailMessageFormat, x => x.PlaceId)
+                ;
+            }
+        }
+
         public void Handle(CreateActivityLocation command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            ActivityValues activityValues = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.ActivityValuesId);
+            var activityValues = _entities.Get<ActivityValues>()
+                .Single(x => x.RevisionId == command.ActivityValuesId);
 
-            if (activityValues == null)
-            {
-                // TODO: check this in command validator
-                throw new Exception(string.Format("ActivityValues Id '{0}' was not found.", command.ActivityValuesId));
-            }
-
-            Place place = _entities.Get<Place>().Single(x => x.RevisionId == command.PlaceId);
-            if (place == null)
-            {
-                // TODO: check this in command validator
-                throw new Exception(string.Format("Place Id '{0}' was not found.", command.PlaceId));
-            }
+            var place = _entities.Get<Place>()
+                .Single(x => x.RevisionId == command.PlaceId);
 
             var activityLocation = new ActivityLocation
             {

@@ -196,10 +196,8 @@ namespace UCosmic.Domain.Activities
                 var targetType = target.Types.SingleOrDefault(x => x.TypeId == type.TypeId);
                 if (targetType == null)
                 {
-                    var createActivityType = new CreateActivityType
+                    var createActivityType = new CreateActivityType(target.RevisionId, type.TypeId)
                     {
-                        ActivityValuesId = target.RevisionId,
-                        EmployeeActivityTypeId = type.TypeId,
                         NoCommit = true
                     };
 

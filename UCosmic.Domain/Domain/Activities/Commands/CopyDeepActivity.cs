@@ -1,16 +1,41 @@
 ﻿using System;
 using System.Linq;
+using FluentValidation;
 
 
 namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivity
     {
-        public int Id { get; set; }
-        public ActivityMode Mode { get; set; }
-        public int? EditSourceId { get; set; }
+        public int Id { get; protected set; }
+        public ActivityMode Mode { get; protected set; }
+        public int? EditSourceId { get; protected set; }
         public bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
+
+        public CopyDeepActivity(int id, ActivityMode mode, int? editSourceId = null)
+        {
+            Id = id;
+            Mode = mode;
+            EditSourceId = editSourceId;
+        }
+    }
+
+    public class ValidateCopyDeepActivityCommand : AbstractValidator<CopyDeepActivity>
+    {
+        public ValidateCopyDeepActivityCommand(IQueryEntities entities)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.Id)
+                // id must be within valid range
+                .GreaterThanOrEqualTo(1)
+                .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
+
+                // id must exist in the database
+                .MustFindActivityDocumentById(entities)
+                .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
+        }
     }
 
     public class HandleCopyDeepActivityCommand : IHandleCommands<CopyDeepActivity>
@@ -36,11 +61,6 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             var sourceActivity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.Id);
-            if (sourceActivity == null)
-            {
-                var message = string.Format("Activity Id {0} not found.", command.Id);
-                throw new Exception(message);
-            }
 
             /* ----- Copy Activity ----- */
             var copyActivityCommand = new CopyActivity
