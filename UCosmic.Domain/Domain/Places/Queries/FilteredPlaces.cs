@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UCosmic.Domain.Places
@@ -13,6 +14,8 @@ namespace UCosmic.Domain.Places
         public bool? IsAdmin1 { get; set; }
         public bool? IsAdmin2 { get; set; }
         public bool? IsAdmin3 { get; set; }
+        public IEnumerable<int> WoeIds { get; set; }
+        public IEnumerable<int> GeoNameIds { get; set; }
     }
 
     public class HandleFilteredPlacesQuery : IHandleQueries<FilteredPlaces, Place[]>
@@ -52,6 +55,12 @@ namespace UCosmic.Domain.Places
 
             if (query.IsWater.HasValue)
                 results = results.Where(x => x.IsWater == query.IsWater.Value);
+
+            if (query.WoeIds != null && query.WoeIds.Any())
+                results = results.Where(x => x.GeoPlanetPlace != null && query.WoeIds.Contains(x.GeoPlanetPlace.WoeId));
+
+            if (query.GeoNameIds != null && query.GeoNameIds.Any())
+                results = results.Where(x => x.GeoNamesToponym != null && query.GeoNameIds.Contains(x.GeoNamesToponym.GeoNameId));
 
             results = results.OrderBy(query.OrderBy);
 
