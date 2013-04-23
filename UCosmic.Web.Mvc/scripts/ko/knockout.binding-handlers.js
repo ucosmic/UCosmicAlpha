@@ -37,13 +37,11 @@ ko.bindingHandlers.slideDownVisible = {
         var value = ko.utils.unwrapObservable(valueAccessor());
         if(value && !$(element).is(':visible')) {
             $(element).slideDown('fast');
-        } else {
-            if(!value) {
-                if($(element).is(':animated')) {
-                    $(element).hide();
-                } else {
-                    $(element).slideUp('fast');
-                }
+        } else if(!value) {
+            if($(element).is(':animated')) {
+                $(element).hide();
+            } else {
+                $(element).slideUp('fast');
             }
         }
     }
@@ -54,10 +52,8 @@ ko.bindingHandlers.fadeVisible = {
         var isCurrentlyVisible = !(element.style.display == "none");
         if(value && !isCurrentlyVisible) {
             $(element).fadeIn();
-        } else {
-            if((!value) && isCurrentlyVisible) {
-                $(element).fadeOut();
-            }
+        } else if((!value) && isCurrentlyVisible) {
+            $(element).fadeOut();
         }
     }
 };
