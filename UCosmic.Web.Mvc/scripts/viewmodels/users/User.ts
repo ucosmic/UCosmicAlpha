@@ -87,7 +87,7 @@ module ViewModels.Users {
             };
 
             $.post(url, data)
-            .done((response: string, statusText: string, xhr: JQueryXHR): void {
+            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
                 // redirect to search
                 window.location.href = App.Routes.Mvc.Identity.Users
                     .created({ location: xhr.getResponseHeader('Location') });

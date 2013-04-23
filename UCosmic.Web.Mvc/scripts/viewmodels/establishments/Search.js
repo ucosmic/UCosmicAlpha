@@ -135,19 +135,17 @@ var ViewModels;
                         });
                     };
                     return;
-                } else {
-                    if(trail.length > 0) {
-                        this.swipeCallback = function () {
-                            clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                            clone.insertBefore(_this.$itemsPage);
-                            _this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                            _this.lockAnimation();
-                            $(window).scrollTop(0);
-                            _this.sideSwiper.next(1, function () {
-                                _this.unlockAnimation();
-                            });
-                        };
-                    }
+                } else if(trail.length > 0) {
+                    this.swipeCallback = function () {
+                        clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                        clone.insertBefore(_this.$itemsPage);
+                        _this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                        _this.lockAnimation();
+                        $(window).scrollTop(0);
+                        _this.sideSwiper.next(1, function () {
+                            _this.unlockAnimation();
+                        });
+                    };
                 }
                 trail.push(sammyContext.path);
             };

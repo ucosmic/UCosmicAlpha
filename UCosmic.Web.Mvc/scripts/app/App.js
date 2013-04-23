@@ -10,16 +10,16 @@ var App;
             };
             $(window).off('scroll', trackTop);
             $(window).on('scroll', trackTop);
-        }
+        };
         WindowScroller.getTop = function getTop() {
             return $(window).scrollTop();
-        }
+        };
         WindowScroller.setTop = function setTop(value) {
             $(window).scrollTop(value);
-        }
+        };
         WindowScroller.restoreTop = function restoreTop() {
             $(window).scrollTop($(WindowScroller.scrollTopTrackerId).val());
-        }
+        };
         return WindowScroller;
     })();
     App.WindowScroller = WindowScroller;    
@@ -48,20 +48,18 @@ var App;
                                 bottom: ''
                             });
                         }
-                    } else {
-                        if(windowScrollTop <= anchorOffsetTop) {
-                            $content.css({
-                                position: 'relative',
-                                top: '',
-                                bottom: ''
-                            });
-                        }
+                    } else if(windowScrollTop <= anchorOffsetTop) {
+                        $content.css({
+                            position: 'relative',
+                            top: '',
+                            bottom: ''
+                        });
                     }
                 };
                 $window.scroll(update).resize(update);
                 update();
             });
-        }
+        };
         return SidebarFixedScroller;
     })();    
     $(function () {
@@ -113,7 +111,7 @@ var App;
                     }
                 }
             }
-        }
+        };
         return Obtruder;
     })();
     App.Obtruder = Obtruder;    

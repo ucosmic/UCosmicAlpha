@@ -157,13 +157,13 @@ module ViewModels.Activities {
                 dataSource: new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
-                        read: (options: any):void {
+                        read: (options: any):void => {
                             $.ajax({
                                 url: App.Routes.WebApi.Establishments.get(),
                                data: { keyword: options.data.filter.filters[0].value,
                                         pageNumber: 1,
                                         pageSize: 2147483647 /* C# Int32.Max */ },
-                               success: (results: any): void {
+                               success: (results: any): void => {
                                    options.success(results.items);
                                }
                             });
@@ -450,7 +450,7 @@ module ViewModels.Activities {
         // --------------------------------------------------------------------------------
         defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine {
             var def: KnockoutComputedDefine = {
-                read: (): bool {
+                read: (): bool => {
                     return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
                 },
                 write: function (checked) {
@@ -559,10 +559,10 @@ module ViewModels.Activities {
                         data: ko.toJSON(extension),
                     dataType: 'json',
                  contentType: 'application/json',
-                     success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
+                     success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                          valid = true;
                     },
-                       error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                       error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                            valid = false;
                     }
                 });
@@ -580,7 +580,7 @@ module ViewModels.Activities {
                     type: 'GET',
                      url: App.Routes.WebApi.Activities.Documents.get(this.id(),null,this.modeText()),
                 dataType: 'json',
-                success: (documents: any, textStatus: string, jqXhr: JQueryXHR): void {
+                success: (documents: any, textStatus: string, jqXhr: JQueryXHR): void => {
 
                     /* TBD - This needs to be combined with the initial load mapping. */
                     var augmentedDocumentModel = function (data) {
@@ -602,7 +602,7 @@ module ViewModels.Activities {
                     }
 
                 },
-                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                         alert("Unable to update documents list. " + textStatus + "|" + errorThrown);
                 }
             });
@@ -617,10 +617,10 @@ module ViewModels.Activities {
                     type: 'DELETE',
                         url: App.Routes.WebApi.Activities.Documents.del(this.id(),item.id()),
                 dataType: 'json',
-                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                         this.loadDocuments();
                 },
-                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                         alert("Unable to delete document. " + textStatus + "|" + errorThrown);
                 }
             });
@@ -656,13 +656,13 @@ module ViewModels.Activities {
                        data: ko.toJSON(item.title()),
                 contentType: 'application/json',
                    dataType: 'json',
-                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void {
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                         $(inputElement).hide();
                         $(inputElement).removeAttr("disabled");
                         var textElement = $(inputElement).siblings("#documentTitle")[0];
                         $(textElement).show();
                     },
-                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void {
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                         item.title(this.previousDocumentTitle);
                         $(inputElement).hide();
                         $(inputElement).removeAttr("disabled");

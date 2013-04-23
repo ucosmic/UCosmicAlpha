@@ -140,7 +140,7 @@ module ViewModels.Establishments {
             });
 
             // official name cannot be former name
-            this.isOfficialName.subscribe((newValue: bool): void {
+            this.isOfficialName.subscribe((newValue: bool): void => {
                 if (newValue) this.isFormerName(false);
             });
 

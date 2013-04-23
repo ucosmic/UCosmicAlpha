@@ -28,21 +28,19 @@ var ViewModels;
                 var _this = this;
                 if(!vm.isTextValidatableAsync()) {
                     callback(true);
-                } else {
-                    if(!this._isAwaitingResponse) {
-                        var route = App.Routes.WebApi.Establishments.Names.validateText(vm.ownerId(), vm.id());
-                        this._isAwaitingResponse = true;
-                        $.post(route, vm.serializeData()).always(function () {
-                            _this._isAwaitingResponse = false;
-                        }).done(function () {
-                            callback(true);
-                        }).fail(function (xhr) {
-                            callback({
-                                isValid: false,
-                                message: xhr.responseText
-                            });
+                } else if(!this._isAwaitingResponse) {
+                    var route = App.Routes.WebApi.Establishments.Names.validateText(vm.ownerId(), vm.id());
+                    this._isAwaitingResponse = true;
+                    $.post(route, vm.serializeData()).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
                         });
-                    }
+                    });
                 }
             };
             return EstablishmentNameTextValidator;
@@ -171,25 +169,21 @@ var ViewModels;
                 if(!this.isValid()) {
                     this.saveEditorClicked = false;
                     this.errors.showAllMessages();
-                } else {
-                    if(!this.text.isValidating()) {
-                        this.saveEditorClicked = false;
-                        this.saveSpinner.start();
-                        if(this.id()) {
-                            $.ajax({
-                                url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
-                                type: 'PUT',
-                                data: this.serializeData()
-                            }).done(this.mutationSuccess).fail(this.mutationError);
-                        } else {
-                            if(this.owner.id) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
-                                    type: 'POST',
-                                    data: this.serializeData()
-                                }).done(this.mutationSuccess).fail(this.mutationError);
-                            }
-                        }
+                } else if(!this.text.isValidating()) {
+                    this.saveEditorClicked = false;
+                    this.saveSpinner.start();
+                    if(this.id()) {
+                        $.ajax({
+                            url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
+                            type: 'PUT',
+                            data: this.serializeData()
+                        }).done(this.mutationSuccess).fail(this.mutationError);
+                    } else if(this.owner.id) {
+                        $.ajax({
+                            url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
+                            type: 'POST',
+                            data: this.serializeData()
+                        }).done(this.mutationSuccess).fail(this.mutationError);
                     }
                 }
                 return false;

@@ -64,7 +64,7 @@ module ViewModels.Users {
         private _loadResults(results: any): void {
             var resultsMapping = {
                 items: {
-                    key: (data: any): any {
+                    key: (data: any): any => {
                         return ko.utils.unwrapObservable(data.id);
                     },
                     create: (options: any): SearchResult => {

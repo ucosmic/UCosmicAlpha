@@ -135,10 +135,8 @@ var ViewModels;
                             }
                         ]
                     });
-                } else {
-                    if(confirm('Are you sure you want to delete your profile photo?')) {
-                        this._deletePhoto();
-                    }
+                } else if(confirm('Are you sure you want to delete your profile photo?')) {
+                    this._deletePhoto();
                 }
             };
             Profile.prototype._deletePhoto = function () {
@@ -264,11 +262,9 @@ var ViewModels;
                                     if(!isExtensionAllowed) {
                                         e.preventDefault();
                                         _this.isPhotoExtensionInvalid(true);
-                                    } else {
-                                        if(e.files[index].rawFile.size > (1024 * 1024)) {
-                                            e.preventDefault();
-                                            _this.isPhotoTooManyBytes(true);
-                                        }
+                                    } else if(e.files[index].rawFile.size > (1024 * 1024)) {
+                                        e.preventDefault();
+                                        _this.isPhotoTooManyBytes(true);
                                     }
                                 });
                                 if(!e.isDefaultPrevented()) {
@@ -304,12 +300,10 @@ var ViewModels;
                                 }
                                 if(e.XMLHttpRequest.status === 415) {
                                     _this.isPhotoExtensionInvalid(true);
+                                } else if(e.XMLHttpRequest.status === 413) {
+                                    _this.isPhotoTooManyBytes(true);
                                 } else {
-                                    if(e.XMLHttpRequest.status === 413) {
-                                        _this.isPhotoTooManyBytes(true);
-                                    } else {
-                                        _this.isPhotoFailureUnexpected(true);
-                                    }
+                                    _this.isPhotoFailureUnexpected(true);
                                 }
                             }
                         });
@@ -334,13 +328,11 @@ var ViewModels;
                         }).done(function (result) {
                             _this.displayName(result);
                         });
-                    } else {
-                        if(_this._isInitialized) {
-                            if(!_this._userDisplayName) {
-                                _this._userDisplayName = _this.displayName();
-                            }
-                            _this.displayName(_this._userDisplayName);
+                    } else if(_this._isInitialized) {
+                        if(!_this._userDisplayName) {
+                            _this._userDisplayName = _this.displayName();
                         }
+                        _this.displayName(_this._userDisplayName);
                     }
                 }).extend({
                     throttle: 400

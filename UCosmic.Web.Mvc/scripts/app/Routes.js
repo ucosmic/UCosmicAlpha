@@ -154,19 +154,19 @@ var App;
                             url += '/' + establishmentNameId;
                         }
                         return makeUrl(url);
-                    }
+                    };
                     Names.post = function post(establishmentId) {
                         return Names.get(establishmentId);
-                    }
+                    };
                     Names.put = function put(establishmentId, establishmentNameId) {
                         return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId);
-                    }
+                    };
                     Names.del = function del(establishmentId, establishmentNameId) {
                         return Names.put(establishmentId, establishmentNameId);
-                    }
+                    };
                     Names.validateText = function validateText(establishmentId, establishmentNameId) {
                         return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId + '/validate-text');
-                    }
+                    };
                     return Names;
                 })();
                 Establishments.Names = Names;                
@@ -178,19 +178,19 @@ var App;
                             url += '/' + establishmentUrlId;
                         }
                         return makeUrl(url);
-                    }
+                    };
                     Urls.post = function post(establishmentId) {
                         return Urls.get(establishmentId);
-                    }
+                    };
                     Urls.put = function put(establishmentId, establishmentUrlId) {
                         return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId);
-                    }
+                    };
                     Urls.del = function del(establishmentId, establishmentUrlId) {
                         return Urls.put(establishmentId, establishmentUrlId);
-                    }
+                    };
                     Urls.validateValue = function validateValue(establishmentId, establishmentUrlId) {
                         return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/validate-value');
-                    }
+                    };
                     return Urls;
                 })();
                 Establishments.Urls = Urls;                
@@ -199,10 +199,10 @@ var App;
                     Locations.get = function get(establishmentId) {
                         var url = 'establishments/' + establishmentId + '/location';
                         return makeUrl(url);
-                    }
+                    };
                     Locations.put = function put(establishmentId) {
                         return Locations.get(establishmentId);
-                    }
+                    };
                     return Locations;
                 })();
                 Establishments.Locations = Locations;                
@@ -214,7 +214,7 @@ var App;
                             url += '/' + id;
                         }
                         return makeUrl(url);
-                    }
+                    };
                     return Categories;
                 })();
                 Establishments.Categories = Categories;                
@@ -275,7 +275,7 @@ var App;
                         function Salutations() { }
                         Salutations.get = function get() {
                             return makeUrl('person-names/salutations');
-                        }
+                        };
                         return Salutations;
                     })();
                     Names.Salutations = Salutations;                    
@@ -283,7 +283,7 @@ var App;
                         function Suffixes() { }
                         Suffixes.get = function get() {
                             return makeUrl('person-names/suffixes');
-                        }
+                        };
                         return Suffixes;
                     })();
                     Names.Suffixes = Suffixes;                    
@@ -291,7 +291,7 @@ var App;
                         function DeriveDisplayName() { }
                         DeriveDisplayName.get = function get() {
                             return makeUrl('person-names/derive-display-name');
-                        }
+                        };
                         return DeriveDisplayName;
                     })();
                     Names.DeriveDisplayName = DeriveDisplayName;                    
@@ -305,7 +305,7 @@ var App;
                         function FacultyRanks() { }
                         FacultyRanks.get = function get() {
                             return makeUrl('my/employee-module-settings/faculty-ranks');
-                        }
+                        };
                         return FacultyRanks;
                     })();
                     ModuleSettings.FacultyRanks = FacultyRanks;                    
@@ -313,7 +313,7 @@ var App;
                         function ActivityTypes() { }
                         ActivityTypes.get = function get() {
                             return makeUrl('my/employee-module-settings/activity-types');
-                        }
+                        };
                         return ActivityTypes;
                     })();
                     ModuleSettings.ActivityTypes = ActivityTypes;                    
@@ -347,10 +347,8 @@ var App;
                         var url = makeUrl('activities/' + activityId + '/documents');
                         if(documentId) {
                             url += '/' + documentId;
-                        } else {
-                            if(activityId) {
-                                url += '/?activityMode=' + activityMode;
-                            }
+                        } else if(activityId) {
+                            url += '/?activityMode=' + activityMode;
                         }
                         return url;
                     }

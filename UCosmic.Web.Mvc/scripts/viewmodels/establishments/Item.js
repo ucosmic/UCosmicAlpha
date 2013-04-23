@@ -26,10 +26,8 @@ var ViewModels;
                             message: xhr.responseText
                         });
                     });
-                } else {
-                    if(!this._isAwaitingResponse || this._isOk(vm)) {
-                        callback(true);
-                    }
+                } else if(!this._isAwaitingResponse || this._isOk(vm)) {
+                    callback(true);
                 }
             };
             CeebCodeValidator.prototype._isValidatable = function (vm) {
@@ -71,10 +69,8 @@ var ViewModels;
                             message: xhr.responseText
                         });
                     });
-                } else {
-                    if(!this._isAwaitingResponse || this._isOk(vm)) {
-                        callback(true);
-                    }
+                } else if(!this._isAwaitingResponse || this._isOk(vm)) {
+                    callback(true);
                 }
             };
             UCosmicCodeValidator.prototype._isValidatable = function (vm) {

@@ -54,10 +54,8 @@ var ViewModels;
                 this.isEditing.subscribe(function (newValue) {
                     if(newValue) {
                         _this.mapTools().showMarkerTools();
-                    } else {
-                        if(_this.isEditable()) {
-                            _this.mapTools().hideMarkerTools();
-                        }
+                    } else if(_this.isEditable()) {
+                        _this.mapTools().hideMarkerTools();
                     }
                 });
             }
@@ -133,18 +131,16 @@ var ViewModels;
                             _this.continentId(country.parentId);
                             _this.loadAdmin1s(country.id);
                         }
-                    } else {
-                        if(!newValue && _this.countries().length > 0) {
-                            _this.map.setCenter(new gm.LatLng(0, 0));
-                            if(_this.allowCountryFitBounds) {
-                                _this.map.setZoom(1);
-                            } else {
-                                setTimeout(function () {
-                                    _this.allowCountryFitBounds = true;
-                                }, 1000);
-                            }
-                            _this.continentId(null);
+                    } else if(!newValue && _this.countries().length > 0) {
+                        _this.map.setCenter(new gm.LatLng(0, 0));
+                        if(_this.allowCountryFitBounds) {
+                            _this.map.setZoom(1);
+                        } else {
+                            setTimeout(function () {
+                                _this.allowCountryFitBounds = true;
+                            }, 1000);
                         }
+                        _this.continentId(null);
                     }
                 });
                 this.admin1OptionsCaption = ko.computed(function () {
@@ -299,10 +295,8 @@ var ViewModels;
             Location.prototype.loadMapZoom = function (response) {
                 if(response.googleMapZoomLevel && response.center && response.center.hasValue) {
                     this.map.setZoom(response.googleMapZoomLevel);
-                } else {
-                    if(response.box.hasValue) {
-                        this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
-                    }
+                } else if(response.box.hasValue) {
+                    this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
                 }
                 if(response.googleMapZoomLevel && response.googleMapZoomLevel > 1) {
                     this.map.setZoom(response.googleMapZoomLevel);
@@ -466,26 +460,16 @@ var ViewModels;
                 }
                 if(this.subAdmins().length) {
                     placeId = this.subAdmins()[this.subAdmins().length - 1].id;
-                } else {
-                    if(this.admin3Id()) {
-                        placeId = this.admin3Id();
-                    } else {
-                        if(this.admin2Id()) {
-                            placeId = this.admin2Id();
-                        } else {
-                            if(this.admin1Id()) {
-                                placeId = this.admin1Id();
-                            } else {
-                                if(this.countryId()) {
-                                    placeId = this.countryId();
-                                } else {
-                                    if(this.continentId()) {
-                                        placeId = this.continentId();
-                                    }
-                                }
-                            }
-                        }
-                    }
+                } else if(this.admin3Id()) {
+                    placeId = this.admin3Id();
+                } else if(this.admin2Id()) {
+                    placeId = this.admin2Id();
+                } else if(this.admin1Id()) {
+                    placeId = this.admin1Id();
+                } else if(this.countryId()) {
+                    placeId = this.countryId();
+                } else if(this.continentId()) {
+                    placeId = this.continentId();
                 }
                 var js = {
                     center: center,

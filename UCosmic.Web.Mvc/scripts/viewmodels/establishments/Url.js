@@ -26,21 +26,19 @@ var ViewModels;
                 var _this = this;
                 if(!vm.isValueValidatableAsync()) {
                     callback(true);
-                } else {
-                    if(!this._isAwaitingResponse && vm.value()) {
-                        var route = App.Routes.WebApi.Establishments.Urls.validateValue(vm.ownerId(), vm.id());
-                        this._isAwaitingResponse = true;
-                        $.post(route, vm.serializeData()).always(function () {
-                            _this._isAwaitingResponse = false;
-                        }).done(function () {
-                            callback(true);
-                        }).fail(function (xhr) {
-                            callback({
-                                isValid: false,
-                                message: xhr.responseText
-                            });
+                } else if(!this._isAwaitingResponse && vm.value()) {
+                    var route = App.Routes.WebApi.Establishments.Urls.validateValue(vm.ownerId(), vm.id());
+                    this._isAwaitingResponse = true;
+                    $.post(route, vm.serializeData()).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
                         });
-                    }
+                    });
                 }
             };
             return EstablishmentUrlValueValidator;
@@ -186,25 +184,21 @@ var ViewModels;
                 if(!this.isValid()) {
                     this.saveEditorClicked = false;
                     this.errors.showAllMessages();
-                } else {
-                    if(!this.value.isValidating()) {
-                        this.saveEditorClicked = false;
-                        this.saveSpinner.start();
-                        if(this.id()) {
-                            $.ajax({
-                                url: App.Routes.WebApi.Establishments.Urls.put(this.owner.id, this.id()),
-                                type: 'PUT',
-                                data: this.serializeData()
-                            }).done(this.mutationSuccess).fail(this.mutationError);
-                        } else {
-                            if(this.owner.id) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Establishments.Urls.post(this.owner.id),
-                                    type: 'POST',
-                                    data: this.serializeData()
-                                }).done(this.mutationSuccess).fail(this.mutationError);
-                            }
-                        }
+                } else if(!this.value.isValidating()) {
+                    this.saveEditorClicked = false;
+                    this.saveSpinner.start();
+                    if(this.id()) {
+                        $.ajax({
+                            url: App.Routes.WebApi.Establishments.Urls.put(this.owner.id, this.id()),
+                            type: 'PUT',
+                            data: this.serializeData()
+                        }).done(this.mutationSuccess).fail(this.mutationError);
+                    } else if(this.owner.id) {
+                        $.ajax({
+                            url: App.Routes.WebApi.Establishments.Urls.post(this.owner.id),
+                            type: 'POST',
+                            data: this.serializeData()
+                        }).done(this.mutationSuccess).fail(this.mutationError);
                     }
                 }
                 return false;

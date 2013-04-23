@@ -134,7 +134,7 @@ module ViewModels.Establishments {
             });
 
             // official URL cannot be former URL
-            this.isOfficialUrl.subscribe((newValue: bool): void {
+            this.isOfficialUrl.subscribe((newValue: bool): void => {
                 if (newValue) this.isFormerUrl(false);
             });
 

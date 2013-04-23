@@ -159,10 +159,8 @@ var App;
                             }
                         ]
                     });
-                } else {
-                    if(confirm('Are you sure you want to remove this placemark?')) {
-                        this.destroyMarker();
-                    }
+                } else if(confirm('Are you sure you want to remove this placemark?')) {
+                    this.destroyMarker();
                 }
             };
             ToolsOverlay.prototype.destroyMarker = function () {

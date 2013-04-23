@@ -207,12 +207,10 @@ var ViewModels;
                         if(option.id() == grant.id()) {
                             if(i === 0) {
                                 this.roleOptions.shift();
+                            } else if(i == this.roleOptions().length) {
+                                this.roleOptions.pop();
                             } else {
-                                if(i == this.roleOptions().length) {
-                                    this.roleOptions.pop();
-                                } else {
-                                    this.roleOptions.splice(i, 1);
-                                }
+                                this.roleOptions.splice(i, 1);
                             }
                             i = -1;
                         }
