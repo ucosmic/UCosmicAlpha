@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Activities
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnActivityDocument(entities, x => x.Id)
+                .MustOwnActivityTag(entities, x => x.Id)
                 .WithMessage(MustOwnActivityTag<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
@@ -35,7 +35,7 @@ namespace UCosmic.Domain.Activities
                     .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityTag id", x => x.Id)
 
                 // id must exist in the database
-                .MustFindActivityDocumentById(entities)
+                .MustFindActivityTagById(entities)
                     .WithMessage(MustFindActivityTagById.FailMessageFormat, x => x.Id)
             ;
         }

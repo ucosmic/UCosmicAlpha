@@ -129,12 +129,11 @@ module ViewModels.Activities
         // --------------------------------------------------------------------------------
         deleteActivityById(activityId: number): void {
             $.ajax({
+                async: false,
                 type: "DELETE",
                 url: App.Routes.WebApi.Activities.del(activityId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    alert(textStatus);
-                },
+                { },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
                 {
                     alert(textStatus);
@@ -147,7 +146,6 @@ module ViewModels.Activities
         */
         // --------------------------------------------------------------------------------
         deleteActivity(data: any, event: any, viewModel: any): void {
-            debugger;
             $("#confirmActivityDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
@@ -158,6 +156,9 @@ module ViewModels.Activities
                                 text: "Yes, confirm delete", click: function (): void {
                                     viewModel.deleteActivityById(data.id());
                                     $(this).dialog("close");
+
+                                    /* TBD - Don't reload page. */
+                                    location.href = App.Routes.Mvc.My.Profile.get();
                                 }
                             },
                             {
@@ -203,7 +204,7 @@ module ViewModels.Activities
                 url: App.Routes.WebApi.Activities.post(),
                 success: (newActivityId: string, textStatus: string, jqXHR: JQueryXHR): void =>
                 {
-                    location.href = App.Routes.Mvc.Profile.activityEdit(newActivityId);
+                    location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
                 },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
                 {

@@ -177,16 +177,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [PUT("{activityId}")]
-        public HttpResponseMessage Put(int activityId)
+        public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
-            /* TBD
-             * update the owning activity from downstream aggregate mutation commands
-             * in commands that mutate an entity under the activity aggregate
-             * update those 2 fields on the owning Activity
-             * document.Owner.UpdatedOn = DateTime.UtcNow;
-             * document.Owner.UpdatedBy = command.Principal.Identity.Name;
-             */
-            return Request.CreateResponse(HttpStatusCode.NotImplemented);
+            try
+            {
+                //var activity = Mapper.Map<Activity>(model);
+                //if (activity != null)
+                //{
+                //    var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, DateTime.Now)
+                //    {
+                //        ModeText = activity.ModeText,
+                //        Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText)
+                //    };
+                //    _updateActivity.Handle(updateActivityCommand);
+                //}
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Activity update error"
+                };
+                throw new HttpResponseException(responseMessage);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // --------------------------------------------------------------------------------
@@ -196,11 +213,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [PUT("{activityId}/edit")]
-        public HttpResponseMessage PutEdit(int activityId)
+        public HttpResponseMessage PutEdit(int activityId, [FromBody] string mode)
         {
             try
             {
-                var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activityId));
+                var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
                 if (editActivity == null)
                 {
                     var message = string.Format("Activity Id {0} not found.", activityId);
@@ -215,11 +232,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                 var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, DateTime.Now)
                 {
-                    ModeText = editActivity.ModeText,
+                    ModeText = mode,
                     Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
                 };
-
                 _updateActivity.Handle(updateActivityCommand);
+
+                var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
+                _deleteActivity.Handle(deleteActivityCommand);
             }
             catch (Exception ex)
             {

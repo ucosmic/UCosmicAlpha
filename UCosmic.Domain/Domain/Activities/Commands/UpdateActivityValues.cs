@@ -22,8 +22,6 @@ namespace UCosmic.Domain.Activities
         public virtual ICollection<ActivityType> Types { get; set; }
         public virtual ICollection<ActivityTag> Tags { get; set; }
         public virtual ICollection<ActivityDocument> Documents { get; set; }
-
-        public IPrincipal UpdatedBy { get; set; }
         public bool NoCommit { get; set; }
 
         public UpdateActivityValues(IPrincipal principal, int id, DateTime updatedOn)
@@ -86,7 +84,7 @@ namespace UCosmic.Domain.Activities
                 CascadeMode = CascadeMode.StopOnFirstFailure;
 
                 RuleFor(x => x.Principal)
-                    .MustOwnActivityDocument(entities, x => x.Id)
+                    .MustOwnActivityValues(entities, x => x.Id)
                     .WithMessage(MustOwnActivityValues<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
                 RuleFor(x => x.Id)
@@ -95,7 +93,7 @@ namespace UCosmic.Domain.Activities
                         .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityValues id", x => x.Id)
 
                     // id must exist in the database
-                    .MustFindActivityDocumentById(entities)
+                    .MustFindActivityValuesById(entities)
                         .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.Id)
                 ;
             }
@@ -139,13 +137,11 @@ namespace UCosmic.Domain.Activities
             target.WasExternallyFunded = command.WasExternallyFunded;
             target.WasInternallyFunded = command.WasInternallyFunded;
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
-            target.UpdatedByPrincipal = command.UpdatedBy.Identity.Name;
 
             /* ----- Activity Locations ----- */
 
-            /* Run through all new locations and attempt to find same in target.  If found,
-             * update.  If not, create. */
-            foreach (var location in command.Locations)
+            /* Run through all new locations and attempt to find same in target.  If not found, create.*/
+            foreach (var location in command.Locations.ToList())
             {
                 var targetLocation = target.Locations.SingleOrDefault(x => x.PlaceId == location.PlaceId);
                 if (targetLocation == null)
@@ -159,22 +155,11 @@ namespace UCosmic.Domain.Activities
 
                     _createActivityLocation.Handle(createActivityLocation);
                 }
-                else
-                {
-                    var updateActivityLocation = new UpdateActivityLocation(command.UpdatedBy,
-                                                                            target.RevisionId,
-                                                                            command.UpdatedOn)
-                    {
-                        NoCommit = true
-                    };
-                    _updateActivityLocation.Handle(updateActivityLocation);
-                }
-
             }
 
             /* Delete activity locations. Run through the targets list of locations and try to find
                 a matching one in the updated list.  If not found, it must have been deleted. */
-            foreach (var location in target.Locations)
+            foreach (var location in target.Locations.ToList())
             {
                 var updateLocation = command.Locations.SingleOrDefault(x => x.PlaceId == location.PlaceId);
                 if (updateLocation == null)
@@ -191,7 +176,7 @@ namespace UCosmic.Domain.Activities
 
             /* ----- Activity Types ----- */
 
-            foreach (var type in command.Types)
+            foreach (var type in command.Types.ToList())
             {
                 var targetType = target.Types.SingleOrDefault(x => x.TypeId == type.TypeId);
                 if (targetType == null)
@@ -203,20 +188,9 @@ namespace UCosmic.Domain.Activities
 
                     _createActivityType.Handle(createActivityType);
                 }
-                else
-                {
-                    var updateActivityType = new UpdateActivityType(command.Principal,
-                                                                    targetType.RevisionId,
-                                                                    command.UpdatedOn)
-                    {
-                        TypeId = type.TypeId,
-                        NoCommit = true
-                    };
-                    _updateActivityType.Handle(updateActivityType);
-                }
             }
 
-            foreach (var type in target.Types)
+            foreach (var type in target.Types.ToList())
             {
                 var updateType = command.Types.SingleOrDefault(x => x.TypeId == type.TypeId);
                 if (updateType == null)
@@ -232,7 +206,7 @@ namespace UCosmic.Domain.Activities
             /* ----- Activity Tags ----- */
 
             /* Activity tags are not updated.  They either exist or not. */
-            foreach (var tag in command.Tags)
+            foreach (var tag in command.Tags.ToList())
             {
                 var targetTag = target.Tags.SingleOrDefault(x => x.Text == tag.Text);
                 if (targetTag == null)
@@ -251,7 +225,7 @@ namespace UCosmic.Domain.Activities
                 }
             }
 
-            foreach (var tag in target.Tags)
+            foreach (var tag in target.Tags.ToList())
             {
                 var updateTag = command.Tags.SingleOrDefault(x => x.Text == tag.Text);
                 if (updateTag == null)
@@ -266,7 +240,7 @@ namespace UCosmic.Domain.Activities
 
             /* ----- Activity Documents ----- */
 
-            foreach (var document in command.Documents)
+            foreach (var document in command.Documents.ToList())
             {
                 ActivityDocument targetDocument = null;
 
@@ -310,7 +284,7 @@ namespace UCosmic.Domain.Activities
                 }
             }
 
-            foreach (var document in target.Documents)
+            foreach (var document in target.Documents.ToList())
             {
                 ActivityDocument updateDocument = null;
 
@@ -323,7 +297,7 @@ namespace UCosmic.Domain.Activities
                     updateDocument = command.Documents.SingleOrDefault(x => x.ImageId == document.ImageId);
                 }
 
-                if (updateDocument != null)
+                if (updateDocument == null)
                 {
                     var deleteActivityDocumentCommand = new DeleteActivityDocument(command.Principal, document.RevisionId)
                     {

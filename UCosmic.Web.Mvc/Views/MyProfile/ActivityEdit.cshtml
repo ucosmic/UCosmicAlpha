@@ -102,10 +102,10 @@
                                             <span>
                                                 &emsp;
                                                 <input id="ongoingCheckbox" type="checkbox" data-bind="checked: isOnGoing"/>
-                                                &nbsp;On-going&nbsp;
+                                                <span>&nbsp;On-going&nbsp;</span>
                                             </span>
                                             <span data-bind="visible: !isOnGoing()">
-                                                &nbsp;&nbsp;To&nbsp;
+                                                <span>&nbsp;&nbsp;To&nbsp;</span>
                                                 <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
                                                 <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->  
                                             </span>
@@ -202,6 +202,12 @@
 <!-- JQUERY DIALOGS -->
 <div id="documentRenameErrorDialog" title="Error Renaming Document">
     <span id="message" style="float: left"></span>
+</div>
+
+<div id="cancelConfirmDialog" title="Confirm Cancel">
+    <div>By cancelling, you will lose all changes.</div>
+    <br/>
+    <div style="font-weight: bold">Are you sure you want to Cancel editing this Activity?</div>
 </div>  
 
 
@@ -260,9 +266,9 @@
 
 <script type="text/html" id="buttons-template">
     <span>
-        <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Draft'); }"/>
-        <input type="button" value="Save as Final" data-bind="click: function (item, event) { save(item, event, 'Final'); }"/>
+        <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Draft'); }, clickBubble: false"/>
+        <input type="button" value="Save as Final" data-bind="click: function (item, event) { save(item, event, 'Final'); }, clickBubble: false"/>
         <input type="button" value="Guide Me" style="margin-left: 50px"/>
-        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }"/>
+        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
     </span>
 </script>

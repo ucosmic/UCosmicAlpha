@@ -192,11 +192,68 @@ var ViewModels;
                 });
                 return deferred;
             };
+            Activity.prototype.autoSave = function (item, event) {
+                var model = ko.mapping.toJS(this);
+                $.ajax({
+                    async: false,
+                    type: 'PUT',
+                    url: App.Routes.WebApi.Activities.put(item.id()),
+                    data: model,
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXhr) {
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        alert(textStatus + "; " + errorThrown);
+                    }
+                });
+                ;
+                location.href = App.Routes.Mvc.My.Profile.get();
+            };
             Activity.prototype.save = function (item, event, mode) {
-                return true;
+                this.autoSave(item, event);
+                $.ajax({
+                    async: false,
+                    type: 'PUT',
+                    url: App.Routes.WebApi.Activities.putEdit(item.id()),
+                    data: ko.toJSON(mode),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data, textStatus, jqXhr) {
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        alert(textStatus + "; " + errorThrown);
+                    }
+                });
+                ;
+                location.href = App.Routes.Mvc.My.Profile.get();
             };
             Activity.prototype.cancel = function (item, event, mode) {
-                return true;
+                $("#cancelConfirmDialog").dialog({
+                    modal: true,
+                    resizable: false,
+                    width: 450,
+                    buttons: {
+                        "Do not cancel": function () {
+                            $(this).dialog("close");
+                        },
+                        "Cancel and lose changes": function () {
+                            $.ajax({
+                                async: false,
+                                type: 'DELETE',
+                                url: App.Routes.WebApi.Activities.del(item.id()),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (data, textStatus, jqXhr) {
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    alert(textStatus + "; " + errorThrown);
+                                }
+                            });
+                            $(this).dialog("close");
+                            location.href = App.Routes.Mvc.My.Profile.get();
+                        }
+                    }
+                });
             };
             Activity.prototype.addActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);

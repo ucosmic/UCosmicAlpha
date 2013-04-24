@@ -347,19 +347,83 @@ module ViewModels.Activities
         /*  
         */
         // --------------------------------------------------------------------------------
-        save(item: any, event: any, mode: string): bool
+        autoSave(item: any, event: any): void
         {
-            return true;
+            var model = ko.mapping.toJS(this);
+            $.ajax({
+                async: false,
+                type: 'PUT',
+                url: App.Routes.WebApi.Activities.put(item.id()),
+                data: model,
+                dataType: 'json',
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                },
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    alert(textStatus+"; "+errorThrown);
+                }
+            });;
+
+            location.href = App.Routes.Mvc.My.Profile.get();
         }
 
         // --------------------------------------------------------------------------------
         /*  
         */
         // --------------------------------------------------------------------------------
-        cancel(item: any, event: any, mode: string): bool
+        save(item: any, event: any, mode: string): void
         {
+            this.autoSave(item, event);
 
-            return true;
+            $.ajax({
+                async: false,
+                type: 'PUT',
+                url: App.Routes.WebApi.Activities.putEdit(item.id()),
+                data: ko.toJSON(mode),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                },
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    alert(textStatus+"; "+errorThrown);
+                }
+            });;
+
+            location.href = App.Routes.Mvc.My.Profile.get();
+        }
+
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        cancel(item: any, event: any, mode: string): void
+        {
+            $("#cancelConfirmDialog").dialog({
+                modal: true,
+                resizable: false,
+                width: 450,
+                buttons: {
+                    "Do not cancel": function() {
+                        $(this).dialog("close");
+                    },
+                    "Cancel and lose changes": function() {
+                        $.ajax({
+                            async: false,
+                            type: 'DELETE',
+                            url: App.Routes.WebApi.Activities.del(item.id()),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                            },
+                            error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                                alert(textStatus+"; "+errorThrown);
+                            }
+                        });
+
+                        $(this).dialog("close");
+                        location.href = App.Routes.Mvc.My.Profile.get();
+                    }
+                }
+            });
         }
 
         // --------------------------------------------------------------------------------

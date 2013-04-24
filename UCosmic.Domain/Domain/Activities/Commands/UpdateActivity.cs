@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -32,7 +33,7 @@ namespace UCosmic.Domain.Activities
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnActivityDocument(entities, x => x.Id)
+                .MustOwnActivity(entities, x => x.Id)
                 .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
@@ -41,7 +42,7 @@ namespace UCosmic.Domain.Activities
                 .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
 
                 // id must exist in the database
-                .MustFindActivityDocumentById(entities)
+                .MustFindActivityById(entities)
                 .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
         }
     }
@@ -93,10 +94,10 @@ namespace UCosmic.Domain.Activities
                 Mode = command.Values.Mode,
                 WasExternallyFunded = command.Values.WasExternallyFunded,
                 WasInternallyFunded = command.Values.WasInternallyFunded,
-                Locations = command.Values.Locations,
-                Types = command.Values.Types,
-                Tags = command.Values.Tags,
-                Documents = command.Values.Documents,
+                Locations = command.Values.Locations ?? new Collection<ActivityLocation>(),
+                Types = command.Values.Types ?? new Collection<ActivityType>(),
+                Tags = command.Values.Tags ?? new Collection<ActivityTag>(),
+                Documents = command.Values.Documents ?? new Collection<ActivityDocument>(),
                 NoCommit = true
             };
 

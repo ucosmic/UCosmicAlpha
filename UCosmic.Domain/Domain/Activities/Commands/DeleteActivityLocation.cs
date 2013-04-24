@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Activities
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnActivityDocument(entities, x => x.Id)
+                .MustOwnActivityLocation(entities, x => x.Id)
                 .WithMessage(MustOwnActivityLocation<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
@@ -35,7 +35,7 @@ namespace UCosmic.Domain.Activities
                     .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityLocation id", x => x.Id)
 
                 // id must exist in the database
-                .MustFindActivityDocumentById(entities)
+                .MustFindActivityLocationById(entities)
                     .WithMessage(MustFindActivityLocationById.FailMessageFormat, x => x.Id)
             ;
         }

@@ -40,7 +40,8 @@ namespace UCosmic.Domain.Activities
                                                            .Where(
                                                                a =>
                                                                a.Values.Any(v => (v.ModeText == a.ModeText) && 
-                                                               !v.StartsOn.HasValue && !v.EndsOn.HasValue)
+                                                               !v.StartsOn.HasValue && !v.EndsOn.HasValue) &&
+                                                               (a.EditSourceId == null)
                                                             )
                                                            .WithPersonId(query.PersonId)
                                                            .OrderBy(a => a.Values.FirstOrDefault().Title)
@@ -51,7 +52,8 @@ namespace UCosmic.Domain.Activities
                                                     .Where(
                                                         a =>
                                                         a.Values.Any(v => (v.ModeText == a.ModeText) && 
-                                                        (v.StartsOn.HasValue || v.EndsOn.HasValue))
+                                                        (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
+                                                        (a.EditSourceId == null)
                                                     )
                                                     .WithPersonId(query.PersonId)
                                                     .OrderByDescending(

@@ -298,13 +298,15 @@ module App.Routes {
             }
 
             export function getEdit (activityId: number): string {
-                var url = makeUrl('activities');
-                url += activityId + "/edit";
-                return url;
+                return makeUrl('activities/' + activityId + "/edit");
             }
 
             export function put(activityId: number): string {
                 return makeUrl('activities/' + activityId);
+            }
+
+            export function putEdit(activityId: number): string {
+                return makeUrl('activities/' + activityId + "/edit");
             }
 
             export function del(activityId: number): string {
@@ -387,10 +389,19 @@ module App.Routes {
             }
         }
 
-        export module Profile {
-            export function activityEdit(activityId: string) {
-                var url = makeUrl('my/activity/');
-                return url + activityId;
+        export module My
+        {
+            export module Profile
+            {
+                export function get ()
+                {
+                    return makeUrl('my/profile');
+                }
+                export function activityEdit(activityId: string)
+                {
+                    var url = makeUrl('my/activity/');
+                    return url + activityId;
+                }
             }
         }
 

@@ -66,10 +66,10 @@ var ViewModels;
             };
             ActivityList.prototype.deleteActivityById = function (activityId) {
                 $.ajax({
+                    async: false,
                     type: "DELETE",
                     url: App.Routes.WebApi.Activities.del(activityId),
                     success: function (data, textStatus, jqXHR) {
-                        alert(textStatus);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert(textStatus);
@@ -77,8 +77,6 @@ var ViewModels;
                 });
             };
             ActivityList.prototype.deleteActivity = function (data, event, viewModel) {
-                debugger;
-
                 $("#confirmActivityDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
                     width: 'auto',
@@ -90,6 +88,7 @@ var ViewModels;
                             click: function () {
                                 viewModel.deleteActivityById(data.id());
                                 $(this).dialog("close");
+                                location.href = App.Routes.Mvc.My.Profile.get();
                             }
                         }, 
                         {
@@ -120,7 +119,7 @@ var ViewModels;
                     type: "POST",
                     url: App.Routes.WebApi.Activities.post(),
                     success: function (newActivityId, textStatus, jqXHR) {
-                        location.href = App.Routes.Mvc.Profile.activityEdit(newActivityId);
+                        location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert(textStatus + "|" + errorThrown);

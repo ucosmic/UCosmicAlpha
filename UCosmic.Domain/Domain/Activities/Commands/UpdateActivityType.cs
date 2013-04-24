@@ -10,10 +10,10 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; protected set; }
         public int Id { get; protected set; }
         public DateTime UpdatedOn { get; protected set; }
-        public int TypeId { get; set; }
+        public int TypeId { get; protected set; }
         public bool NoCommit { get; set; }
 
-        public UpdateActivityType(IPrincipal principal, int id, DateTime updatedOn)
+        public UpdateActivityType(IPrincipal principal, int id, DateTime updatedOn, int typeId)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             if (updatedOn == null) { throw new ArgumentNullException("updatedOn"); }
@@ -21,6 +21,7 @@ namespace UCosmic.Domain.Activities
             Principal = principal;
             Id = id;
             UpdatedOn = updatedOn.ToUniversalTime();
+            TypeId = typeId;
         }
     }
 
@@ -46,7 +47,7 @@ namespace UCosmic.Domain.Activities
                 CascadeMode = CascadeMode.StopOnFirstFailure;
 
                 RuleFor(x => x.Principal)
-                    .MustOwnActivityDocument(entities, x => x.Id)
+                    .MustOwnActivityType(entities, x => x.Id)
                     .WithMessage(MustOwnActivityType<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
                 RuleFor(x => x.Id)
@@ -55,7 +56,7 @@ namespace UCosmic.Domain.Activities
                         .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityType id", x => x.Id)
 
                     // id must exist in the database
-                    .MustFindActivityDocumentById(entities)
+                    .MustFindActivityTypeById(entities)
                         .WithMessage(MustFindActivityTypeById.FailMessageFormat, x => x.Id)
                 ;
             }

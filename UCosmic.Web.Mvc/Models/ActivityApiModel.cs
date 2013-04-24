@@ -151,6 +151,45 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
 
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                //CreateMap<ActivityDocumentApiModel, ActivityDocument>()
+                //    .ForMember(d => d.RevisionId,
+                //               o => o.MapFrom(s => s.Id))
+                //    .ForMember(d => d.File.Title,
+                //               o => o.MapFrom(s => s.Title ?? ((s.File != null) ? s.File.Title : s.Image.Title)))
+                //    .ForMember(d => d.File.Title,
+                //               o => o.MapFrom(s => s.Title ?? ((s.File != null) ? s.File.Title : s.Image.Title)))
+                //     .ForMember(d => d.Extension,
+                //               o => o.MapFrom(s => (s.File != null) ? s.File.Extension : s.Image.Extension))
+                //    .ForMember(d => d.Size,
+                //               o => o.MapFrom(s => (s.File != null) ? s.File.Length.ToFileSize() : s.Image.Size.ToFileSize()));
+                
+                //CreateMap<ActivityTypeApiModel, ActivityType>()
+                //    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id));
+
+                //CreateMap<ActivityTagApiModel, ActivityTag>()
+                //    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id));
+
+                //CreateMap<ActivityValuesApiModel, ActivityValues>()
+                //    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id));
+
+                //CreateMap<ActivityLocationApiModel, ActivityLocation>()
+                //    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id));
+
+                //CreateMap<ActivityEstablishmentApiModel, EstablishmentView>();
+
+                //CreateMap<ActivityApiModel, Activity>()
+                //    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
+                //    .ForMember(d => d.Values.First(a => a.Mode == d.Mode), o => o.MapFrom(s => s.Values))
+                //    .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.WhenLastUpdated))
+                //    .ForMember(d => d.UpdatedByPrincipal, o => o.MapFrom(s => s.WhoLastUpdated));
+                //;
+            }
+        }
+
         public class PagedQueryResultToPageOfItemsProfiler : Profile
         {
             protected override void Configure()

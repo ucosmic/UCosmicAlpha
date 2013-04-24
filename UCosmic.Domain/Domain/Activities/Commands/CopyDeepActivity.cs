@@ -33,7 +33,7 @@ namespace UCosmic.Domain.Activities
                 .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
 
                 // id must exist in the database
-                .MustFindActivityDocumentById(entities)
+                .MustFindActivityById(entities)
                 .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
         }
     }
