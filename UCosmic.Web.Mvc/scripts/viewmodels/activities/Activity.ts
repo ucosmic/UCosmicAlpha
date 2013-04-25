@@ -57,7 +57,6 @@ module ViewModels.Activities
         //values: KnockoutObservableAny;          // only values for modeText
         values: Service.ApiModels.IObservableActivityValues;          // only values for modeText
 
-
         // --------------------------------------------------------------------------------
         /*
         */
@@ -350,6 +349,10 @@ module ViewModels.Activities
         autoSave(item: any, event: any): void
         {
             var model = ko.mapping.toJS(this);
+
+            model.values.startsOn = moment(model.values.startsOn).format();
+            model.values.endsOn = moment(model.values.endsOn).format();
+
             $.ajax({
                 async: false,
                 type: 'PUT',

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -9,16 +10,16 @@ namespace UCosmic.Domain.Activities
         protected bool Equals(ActivityValues other)
         {
             return string.Equals(Title, other.Title) &&
-                    string.Equals(Content, other.Content) &&
-                    StartsOn.Equals(other.StartsOn) &&
-                    EndsOn.Equals(other.EndsOn) &&
-                    Equals(Locations, other.Locations) &&
-                    Equals(Types, other.Types) &&
-                    Equals(Tags, other.Tags) &&
-                    Equals(Documents, other.Documents) &&
-                    string.Equals(ModeText, other.ModeText) &&
-                    WasExternallyFunded.Equals(other.WasExternallyFunded) &&
-                    WasInternallyFunded.Equals(other.WasInternallyFunded);
+                   string.Equals(Content, other.Content) &&
+                   StartsOn.Equals(other.StartsOn) &&
+                   EndsOn.Equals(other.EndsOn) &&
+                   Locations.OrderBy(a => a.PlaceId).SequenceEqual(other.Locations.OrderBy(b => b.PlaceId)) &&
+                   Types.OrderBy(a => a.TypeId).SequenceEqual(other.Types.OrderBy(b => b.TypeId)) &&
+                   Tags.OrderBy(a => a.Text).SequenceEqual(other.Tags.OrderBy(b => b.Text)) &&
+                   Documents.OrderBy(a => a.Title).SequenceEqual(other.Documents.OrderBy(b => b.Title)) &&
+                   string.Equals(ModeText, other.ModeText) &&
+                   WasExternallyFunded.Equals(other.WasExternallyFunded) &&
+                   WasInternallyFunded.Equals(other.WasInternallyFunded);
         }
 
         public override bool Equals(object obj)
@@ -51,6 +52,7 @@ namespace UCosmic.Domain.Activities
 
         public ActivityValues()
         {
+            _mode = ActivityMode.Draft;
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Locations = new Collection<ActivityLocation>();
             Types = new Collection<ActivityType>();
@@ -87,8 +89,9 @@ namespace UCosmic.Domain.Activities
         public virtual ICollection<ActivityType> Types { get; protected internal set; }
         public virtual ICollection<ActivityTag> Tags { get; protected internal set; }
         public virtual ICollection<ActivityDocument> Documents { get; protected internal set; }
-        public string ModeText { get; private set; }
-        public ActivityMode Mode { get { return ModeText.AsEnum<ActivityMode>(); } protected internal set { ModeText = value.AsSentenceFragment(); } }
+        private ActivityMode _mode;
+        public string ModeText { get { return _mode.AsSentenceFragment(); } set { _mode = value.AsEnum<ActivityMode>(); } }
+        public ActivityMode Mode { get { return _mode; } set { _mode = value; } }
         public bool? WasExternallyFunded { get; protected internal set; }
         public bool? WasInternallyFunded { get; protected internal set; }
     }

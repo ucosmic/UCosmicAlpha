@@ -179,18 +179,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
+            if ((activityId == 0) || (model == null)) return Request.CreateResponse(HttpStatusCode.InternalServerError);
+
+            var activity = Mapper.Map<Activity>(model);
             try
             {
-                //var activity = Mapper.Map<Activity>(model);
-                //if (activity != null)
-                //{
-                //    var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, DateTime.Now)
-                //    {
-                //        ModeText = activity.ModeText,
-                //        Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText)
-                //    };
-                //    _updateActivity.Handle(updateActivityCommand);
-                //}
+                var updateActivityCommand = new UpdateActivity(User,
+                                                               activity.RevisionId,
+                                                               DateTime.Now,
+                                                               activity.ModeText)
+                {
+                    Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText)
+                };
+                _updateActivity.Handle(updateActivityCommand);
             }
             catch (Exception ex)
             {
@@ -230,9 +231,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     throw new Exception(message);
                 }
 
-                var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, DateTime.Now)
+                var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, DateTime.Now, mode)
                 {
-                    ModeText = mode,
                     Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
                 };
                 _updateActivity.Handle(updateActivityCommand);

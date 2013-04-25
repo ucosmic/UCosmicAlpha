@@ -150,7 +150,6 @@
     <Compile Include="Domain\Activities\Entities\ActivityTag.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
-    <Compile Include="Domain\Activities\Entities\DraftedTag.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEditSourceEntityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityById.cs" />

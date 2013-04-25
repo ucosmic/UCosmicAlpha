@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
@@ -13,16 +14,18 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; protected set; }
         public int Id { get; protected set; }
         public DateTime UpdatedOn { get; protected set; }
-        public string ModeText { get; set; }
+        public string ModeText { get; protected set; }
+        public int Number { get; set; }
         public ActivityValues Values { get; set; }
         public bool NoCommit { get; set; }
 
-        public UpdateActivity(IPrincipal principal, int id, DateTime updatedOn)
+        public UpdateActivity(IPrincipal principal, int id, DateTime updatedOn, string modeText)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
             Id = id;
             UpdatedOn = updatedOn;
+            ModeText = modeText;
         }
     }
 
@@ -64,27 +67,30 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             /* Retrieve the activity to update. */
-            var activity = _entities.Get<Activity>().Single(a => a.RevisionId == command.Id);
+            var target = _entities.Get<Activity>().Single(a => a.RevisionId == command.Id);
 
-            /* Retrieve the activty values of the same mode. */
-            var activityValues = _entities.Get<ActivityValues>()
-                                    .Single(v => (v.RevisionId == command.Id) && (v.ModeText == command.ModeText));
+            /* Retrieve the target activty values of the same mode. */
+            var targetActivityValues = _entities.Get<ActivityValues>()
+                                            .Single(v => (v.ActivityId == target.RevisionId) && 
+                                                         (v.ModeText == command.ModeText));
+
 
             /* If target fields equal new field values, we do not proceed. */
-            if ((activity.ModeText == command.ModeText) &&
-                (activityValues.Equals(command.Values)))
+            if ( (target.ModeText == command.ModeText) &&
+                 (targetActivityValues.Equals(command.Values)) )
             {
                 return;
             }
 
             /* Update fields */
-            activity.Mode = command.ModeText.AsEnum<ActivityMode>();
-            activity.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
-            activity.UpdatedByPrincipal = command.Principal.Identity.Name;
+            target.ModeText = command.ModeText;
+            target.Number = command.Number;
+            target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
+            target.UpdatedByPrincipal = command.Principal.Identity.Name;
 
             /* Update activity values (for this mode) */
             var updateActivityValuesCommand = new UpdateActivityValues(command.Principal,
-                                                                       activityValues.RevisionId,
+                                                                       targetActivityValues.RevisionId,
                                                                        command.UpdatedOn)
             {
                 Title = command.Values.Title,
@@ -105,7 +111,7 @@ namespace UCosmic.Domain.Activities
 
             if (!command.NoCommit)
             {
-                _entities.Update(activity);
+                _entities.Update(target);
             }
         }
     }

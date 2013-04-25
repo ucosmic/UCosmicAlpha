@@ -194,6 +194,8 @@ var ViewModels;
             };
             Activity.prototype.autoSave = function (item, event) {
                 var model = ko.mapping.toJS(this);
+                model.values.startsOn = moment(model.values.startsOn).format();
+                model.values.endsOn = moment(model.values.endsOn).format();
                 $.ajax({
                     async: false,
                     type: 'PUT',
