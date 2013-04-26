@@ -338,6 +338,10 @@ var App;
                     return makeUrl('activities/' + activityId + "/edit");
                 }
                 Activities.getEdit = getEdit;
+                function getEditState(activityId) {
+                    return makeUrl('activities/' + activityId + "/edit-state");
+                }
+                Activities.getEditState = getEditState;
                 function put(activityId) {
                     return makeUrl('activities/' + activityId);
                 }

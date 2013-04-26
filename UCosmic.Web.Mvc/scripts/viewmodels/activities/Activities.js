@@ -102,7 +102,30 @@ var ViewModels;
                 });
             };
             ActivityList.prototype.editActivity = function (data, event, activityId) {
-                var element = event.srcElement;
+                $.ajax({
+                    type: "GET",
+                    url: App.Routes.WebApi.Activities.getEditState(activityId),
+                    success: function (editState, textStatus, jqXHR) {
+                        if(editState.isInEdit) {
+                            $("#activityBeingEditedDialog").dialog({
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    Ok: function () {
+                                        $(this).dialog("close");
+                                        return;
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(textStatus + "|" + errorThrown);
+                    }
+                });
+                var element = event.target;
                 var url = null;
                 while((element != null) && (element.nodeName != 'TR')) {
                     element = element.parentElement;

@@ -7,19 +7,29 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityValues : RevisableEntity
     {
+        protected bool EqualsNullableBool(bool? a, bool? b)
+        {
+            if (!a.HasValue && !b.HasValue) return true;
+            if (!a.HasValue && !b.Value) return true;
+            if (!b.HasValue && !a.Value) return true;
+            return a == b;
+        }
+
         protected bool Equals(ActivityValues other)
         {
-            return string.Equals(Title, other.Title) &&
-                   string.Equals(Content, other.Content) &&
-                   StartsOn.Equals(other.StartsOn) &&
-                   EndsOn.Equals(other.EndsOn) &&
-                   Locations.OrderBy(a => a.PlaceId).SequenceEqual(other.Locations.OrderBy(b => b.PlaceId)) &&
-                   Types.OrderBy(a => a.TypeId).SequenceEqual(other.Types.OrderBy(b => b.TypeId)) &&
-                   Tags.OrderBy(a => a.Text).SequenceEqual(other.Tags.OrderBy(b => b.Text)) &&
-                   Documents.OrderBy(a => a.Title).SequenceEqual(other.Documents.OrderBy(b => b.Title)) &&
-                   string.Equals(ModeText, other.ModeText) &&
-                   WasExternallyFunded.Equals(other.WasExternallyFunded) &&
-                   WasInternallyFunded.Equals(other.WasInternallyFunded);
+            bool equal = true;
+            equal &= Equals(Title, other.Title);
+            equal &= string.Equals(Content, other.Content);
+            equal &= StartsOn.Equals(other.StartsOn);
+            equal &= EndsOn.Equals(other.EndsOn);
+            equal &= Locations.OrderBy(a => a.PlaceId).SequenceEqual(other.Locations.OrderBy(b => b.PlaceId));
+            equal &= Types.OrderBy(a => a.TypeId).SequenceEqual(other.Types.OrderBy(b => b.TypeId));
+            equal &= Tags.OrderBy(a => a.Text).SequenceEqual(other.Tags.OrderBy(b => b.Text));
+            equal &= Documents.OrderBy(a => a.Title).SequenceEqual(other.Documents.OrderBy(b => b.Title));
+            equal &= string.Equals(ModeText, other.ModeText);
+            equal &= EqualsNullableBool(WasExternallyFunded, other.WasExternallyFunded);
+            equal &= EqualsNullableBool(WasInternallyFunded, other.WasInternallyFunded);
+            return equal;
         }
 
         public override bool Equals(object obj)

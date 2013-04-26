@@ -301,6 +301,10 @@ module App.Routes {
                 return makeUrl('activities/' + activityId + "/edit");
             }
 
+            export function getEditState (activityId: number): string {
+                return makeUrl('activities/' + activityId + "/edit-state");
+            }
+
             export function put(activityId: number): string {
                 return makeUrl('activities/' + activityId);
             }

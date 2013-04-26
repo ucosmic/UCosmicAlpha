@@ -10,9 +10,12 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-module ViewModels.Activities
-    {
+interface KnockoutBindingHandlers {
+	tinymce: KnockoutBindingHandler;
+}
 
+module ViewModels.Activities
+{
     // ================================================================================
     /* 
     */
@@ -46,6 +49,11 @@ module ViewModels.Activities
 
         /* Initialization errors. */
         inititializationErrors: string = "";
+
+				/* TinyMCE binding handler stuff */
+				instances_by_id: any;	// needed for referencing instances during updates.
+				init_queue: any;			// jQuery deferred object used for creating TinyMCE instances synchronously
+				init_queue_next: any;
 
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
@@ -107,6 +115,7 @@ module ViewModels.Activities
                 theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
                 theme_advanced_buttons3: '',
 
+								theme_advanced_font_sizes: "10px,12px,14px,16px,24px",
                 theme_advanced_toolbar_location: 'top',
                 theme_advanced_toolbar_align: 'left',
                 theme_advanced_statusbar_location: 'bottom',
@@ -125,58 +134,235 @@ module ViewModels.Activities
                 media_external_list_url: 'lists/media_list.js'
             });
 
-            $("#" + uploadFileId).kendoUpload({
-                multiple: false,
-                showFileList: false,
-                async: {
-                    saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id()),
-                    autoUpload: true
-                },
-                select: (e: any): void => {
-                    var i = 0;
-                    var validFileType = true;
-                    while ((i < e.files.length) && validFileType)
-                    {
-                        var file = e.files[i];
-                        validFileType = this.validateUploadableFileTypeByExtension(this.id(), file.extension);
-                        if (!validFileType)
-                        {
-                            e.preventDefault();
-                        }
-                        i += 1;
-                    }
-                },
-                success: (e: any): void => {
-                    this.uploadingDocument(false);
-                    this.loadDocuments();
-                }
-            });
+						/* http://jsfiddle.net/rniemeyer/GwkRQ/ */
+						/* DCC - This will load the text but its not updating when text changes. */
+            //ko.bindingHandlers.tinymce = {
+            //	init: function (element, valueAccessor, allBindingsAccessor, context)
+            //	{
+            //		var options = allBindingsAccessor().tinymceOptions || {};
+            //		var modelValue = valueAccessor();
 
-            $("#" + newTagId).kendoAutoComplete({
-                minLength: 3,
-                placeholder: "[Enter tag]",
-                dataTextField: "officialName",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    serverFiltering: true,
-                    transport: {
-                        read: (options: any): void => {
-                            $.ajax({
-                                url: App.Routes.WebApi.Establishments.get(),
-                                data: {
-                                    keyword: options.data.filter.filters[0].value,
-                                    pageNumber: 1,
-                                    pageSize: 2147483647 /* C# Int32.Max */
-                                },
-                                success: (results: any): void => {
-                                    options.success(results.items);
-                                }
-                            });
-                        }
-                    }
-                })
-            });
-        }
+            //		//handle edits made in the editor
+            //		options.setup = function (ed)
+            //		{
+            //			ed.onChange.add(function (ed, l)
+            //			{
+            //				if (ko.isWriteableObservable(modelValue))
+            //				{
+            //					modelValue(l.content);
+            //				}
+            //			});
+            //		};
+
+            		//handle destroying an editor (based on what jQuery plugin does)
+            		//ko.utils.domNodeDisposal.addDisposeCallback(element, function ()
+            		//{
+            		//	$(element).parent().find("textarea.mceEditor").each(function (i, node)
+            		//	{
+            		//		var ed = tinyMCE.get(node.id.replace(/_parent$/, ""));
+            		//		if (ed)
+            		//		{
+            		//			ed.remove();
+            		//		}
+            		//	});
+            		//});
+
+
+            //		$(element).tinymce(options);
+
+            //	},
+            //	update: function (element, valueAccessor, allBindingsAccessor, context)
+            //	{
+            //		//handle programmatic updates to the observable
+            //		var value = ko.utils.unwrapObservable(valueAccessor());
+            //		$(element).html(value);
+            //	}
+            //};
+
+						/* From: https://github.com/SteveSanderson/knockout/wiki/Bindings---tinyMCE */
+						this.instances_by_id = {};		 // needed for referencing instances during updates.
+						this.init_queue = $.Deferred() // jQuery deferred object used for creating TinyMCE instances synchronously
+						this.init_queue_next = this.init_queue;
+							ko.bindingHandlers.tinymce = {
+								init: function (element, valueAccessor, allBindingsAccessor, context)
+								{
+									var init_arguments = arguments;
+									var options = allBindingsAccessor().tinymceOptions || {};
+									var modelValue = valueAccessor();
+									var value = ko.utils.unwrapObservable(valueAccessor());
+									var el = $(element);
+
+									options.setup = function (ed)
+									{
+										ed.onChange.add(function (editor, l)
+										{ //handle edits made in the editor. Updates after an undo point is reached.
+											if (ko.isWriteableObservable(modelValue))
+											{
+												modelValue(l.content);
+											}
+										});
+
+										//This is required if you want the HTML Edit Source button to work correctly
+										ed.onBeforeSetContent.add(function (editor, l)
+										{
+											if (ko.isWriteableObservable(modelValue))
+											{
+												modelValue(l.content);
+											}
+										});
+
+										ed.onPaste.add(function (ed, evt)
+										{ // The paste event for the mouse paste fix.
+											var doc = ed.getDoc();
+
+											if (ko.isWriteableObservable(modelValue))
+											{
+												setTimeout(function () { modelValue(ed.getContent({ format: 'raw' })); }, 10);
+											}
+
+										});
+
+										ed.onInit.add(function (ed, evt)
+										{ // Make sure observable is updated when leaving editor.
+											var doc = ed.getDoc();
+											tinyMCE.dom.Event.add(doc, 'blur', function (e)
+											{
+												if (ko.isWriteableObservable(modelValue))
+												{
+													modelValue(ed.getContent({ format: 'raw' }));
+												}
+											});
+										});
+
+									};
+
+									//handle destroying an editor (based on what jQuery plugin does)
+									ko.utils.domNodeDisposal.addDisposeCallback(element, function ()
+									{
+										$(element).parent().find("span.mceEditor,div.mceEditor").each(function (i, node)
+										{
+											var tid = node.id.replace(/_parent$/, '');
+											var ed = tinyMCE.get(tid);
+											if (ed)
+											{
+												ed.remove();
+												// remove referenced instance if possible.
+												if (this.instances_by_id[tid])
+												{
+													delete this.instances_by_id[tid];
+												}
+											}
+										});
+									});
+
+									// TinyMCE attaches to the element by DOM id, so we need to make one for the element if it doesn't have one already.
+									if (!element.id)
+									{
+										element.id = tinyMCE.DOM.uniqueId();
+									}
+
+									// create each tinyMCE instance synchronously. This addresses an issue when working with foreach bindings
+									this.init_queue_next = this.init_queue_next.pipe(function ()
+									{
+										var defer = $.Deferred();
+										var init_options = $.extend({}, options, {
+											mode: 'none',
+											init_instance_callback: function (instance)
+											{
+												this.instances_by_id[element.id] = instance;
+												ko.bindingHandlers.tinymce.update.apply(undefined, init_arguments);
+												defer.resolve(element.id);
+												if (options.hasOwnProperty("init_instance_callback"))
+												{
+													options.init_instance_callback(instance);
+												}
+											}
+										});
+										setTimeout(function ()
+										{
+											tinyMCE.init(init_options);
+											setTimeout(function ()
+											{
+												tinyMCE.execCommand("mceAddControl", true, element.id);
+											}, 0);
+										}, 0);
+										return defer.promise();
+									});
+									el.val(value);
+								},
+								update: function (element, valueAccessor, allBindingsAccessor, context)
+								{
+									var el = $(element);
+									var value = ko.utils.unwrapObservable(valueAccessor());
+									var id = el.attr('id');
+
+									//handle programmatic updates to the observable
+									// also makes sure it doesn't update it if it's the same.
+									// otherwise, it will reload the instance, causing the cursor to jump.
+									if (id !== undefined && id !== '' && this.instances_by_id.hasOwnProperty(id))
+									{
+										var content = this.instances_by_id[id].getContent({ format: 'raw' });
+										if (content !== value)
+										{
+											el.val(value);
+										}
+									}
+								}
+							};
+
+
+							$("#" + uploadFileId).kendoUpload({
+								multiple: false,
+								showFileList: false,
+								async: {
+									saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id()),
+									autoUpload: true
+								},
+								select: (e: any): void => {
+									var i = 0;
+									var validFileType = true;
+									while ((i < e.files.length) && validFileType)
+									{
+										var file = e.files[i];
+										validFileType = this.validateUploadableFileTypeByExtension(this.id(), file.extension);
+										if (!validFileType)
+										{
+											e.preventDefault();
+										}
+										i += 1;
+									}
+								},
+								success: (e: any): void => {
+									this.uploadingDocument(false);
+									this.loadDocuments();
+								}
+							});
+
+							$("#" + newTagId).kendoAutoComplete({
+								minLength: 3,
+								placeholder: "[Enter tag]",
+								dataTextField: "officialName",
+								dataValueField: "id",
+								dataSource: new kendo.data.DataSource({
+									serverFiltering: true,
+									transport: {
+										read: (options: any): void => {
+											$.ajax({
+												url: App.Routes.WebApi.Establishments.get(),
+												data: {
+													keyword: options.data.filter.filters[0].value,
+													pageNumber: 1,
+													pageSize: 2147483647 /* C# Int32.Max */
+												},
+												success: (results: any): void => {
+													options.success(results.items);
+												}
+											});
+										}
+									}
+								})
+							});
+						}
 
         // --------------------------------------------------------------------------------
         /*

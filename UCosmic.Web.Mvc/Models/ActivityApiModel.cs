@@ -71,8 +71,8 @@ namespace UCosmic.Web.Mvc.Models
         public ICollection<ActivityDocumentApiModel> Documents { get; set; }    // only Documents with same mode as Activity
         public string ModeText { get; set; }
         public string Version { get; set; }
-        public bool WasExternallyFunded { get; set; }
-        public bool WasInternallyFunded { get; set; }
+        public bool? WasExternallyFunded { get; set; }
+        public bool? WasInternallyFunded { get; set; }
     }
 
     public class ActivityDocumentApiModel
@@ -109,6 +109,13 @@ namespace UCosmic.Web.Mvc.Models
         public string OrderBy { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+    }
+
+    public class ActivityEditState
+    {
+        public bool IsInEdit { get; set; }
+        public string EditingUserName { get; set; }
+        public string EditingUserEmail { get; set; }
     }
 
     public class PageOfActivityApiModel : PageOf<ActivityApiModel> { }

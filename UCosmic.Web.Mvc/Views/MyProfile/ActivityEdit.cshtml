@@ -132,7 +132,7 @@
                                     <h2>Description</h2>
                                     <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/> -->
                                 </header>
-                                <textarea id="tinymce"></textarea>
+                                <textarea id="tinymce" data-bind="tinymce: values.content"></textarea>
                             </div>
                             <!-- TAGS -->
                             <div style="margin-bottom: 32px">
@@ -200,15 +200,22 @@
 
                   
 <!-- JQUERY DIALOGS -->
-<div id="documentRenameErrorDialog" title="Error Renaming Document">
+<div id="documentRenameErrorDialog" style="visibility: hidden" title="Error Renaming Document">
     <span id="message" style="float: left"></span>
 </div>
 
-<div id="cancelConfirmDialog" title="Confirm Cancel">
+<div id="cancelConfirmDialog" style="visibility: hidden" title="Confirm Cancel">
     <div>By cancelling, you will lose all changes.</div>
     <br/>
     <div style="font-weight: bold">Are you sure you want to Cancel editing this Activity?</div>
-</div>  
+</div>
+
+<div id="activityBeingEditedDialog" style="visibility: hidden" title="Error Renaming Document">
+    <div>The activity cannot be edited at this time because it is in use by:</div>
+    <br/>
+    <div id="editingUserName" style="text-align: center"></div>
+    <a id="editingUserEmail" style="text-align: center"></a>
+</div>
 
 
 <!-- KNOCKOUT TEMPLATES -->

@@ -175,7 +175,34 @@ module ViewModels.Activities
         */
         // --------------------------------------------------------------------------------
         editActivity(data: any, event: any, activityId: number): void {
-            var element = event.srcElement;
+
+            $.ajax({
+                type: "GET",
+                url: App.Routes.WebApi.Activities.getEditState(activityId),
+                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
+                {
+                    if (editState.isInEdit) {
+											$("#activityBeingEditedDialog").dialog({
+													dialogClass: 'jquery-ui',
+													width: 'auto',
+													resizable: false,
+													modal: true,
+													buttons: {
+														Ok: function() {
+															$(this).dialog("close");
+															return;
+														}
+													}
+											});
+										}
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                {
+                    alert(textStatus + "|" + errorThrown);
+                }
+            });
+
+            var element = event.target;
             var url = null;
 
             while ((element != null) && (element.nodeName != 'TR'))

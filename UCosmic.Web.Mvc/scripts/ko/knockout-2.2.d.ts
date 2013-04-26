@@ -290,6 +290,7 @@ interface KnockoutStatic {
     toJSON(viewModel: any, replacer?: Function, space?: any): string;
     toJS(viewModel: any): any;
     isObservable(instance: any): bool;
+	  isWriteableObservable(instance: any): bool;
     dataFor(node: any): any;
     removeNode(node: Element);
     cleanNode(node: Element);

@@ -156,6 +156,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
+         * Get an activity's edit state.
+        */
+        // --------------------------------------------------------------------------------
+        [GET("{activityId}/edit-state")]
+        public ActivityEditState GetEditState(int activityId)
+        {
+            /* Get the activity we want to edit */
+            var activity = _queryProcessor.Execute(new ActivityById(activityId));
+            if (activity == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            var editState = new ActivityEditState();
+
+            editState.IsInEdit = activity.EditSourceId.HasValue;
+
+            // TBD
+            editState.EditingUserName = "";
+            editState.EditingUserEmail = "";
+
+            return editState;
+        }
+
+
+        // --------------------------------------------------------------------------------
+        /*
          * Create an activity
         */
         // --------------------------------------------------------------------------------
