@@ -602,7 +602,7 @@ body .ui-dialog {
         border-radius: 4px;
         padding: 6px 12px;
         font-family: Arial, Helvetica, sans-serif;
-        color: #e00122;
+        color: white;
         background: black; }
         body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button .ui-button-text {
           padding: 0;
