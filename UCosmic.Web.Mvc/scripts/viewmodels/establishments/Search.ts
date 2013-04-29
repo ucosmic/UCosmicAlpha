@@ -163,9 +163,9 @@ module ViewModels.Establishments {
         lenses: KnockoutObservableArray = ko.observableArray([
             { text: 'Table', value: 'table' },
             { text: 'List', value: 'list' },
-            { text: 'Grid', value: 'grid' },
-            { text: 'Map', value: 'map' },
-            { text: 'Tree', value: 'tree' }
+            //{ text: 'Grid', value: 'grid' },
+            //{ text: 'Map', value: 'map' },
+            //{ text: 'Tree', value: 'tree' }
         ]);
         lens: KnockoutObservableString = ko.observable();
         changeLens: (lens: Lens) => void;

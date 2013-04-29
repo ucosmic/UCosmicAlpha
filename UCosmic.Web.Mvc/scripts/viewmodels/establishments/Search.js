@@ -28,18 +28,7 @@ var ViewModels;
                         text: 'List',
                         value: 'list'
                     }, 
-                    {
-                        text: 'Grid',
-                        value: 'grid'
-                    }, 
-                    {
-                        text: 'Map',
-                        value: 'map'
-                    }, 
-                    {
-                        text: 'Tree',
-                        value: 'tree'
-                    }
+                    
                 ]);
                 this.lens = ko.observable();
                 this.$itemsPage = undefined;
