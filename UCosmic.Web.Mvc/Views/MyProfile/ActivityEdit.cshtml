@@ -132,7 +132,8 @@
                                     <h2>Description</h2>
                                     <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/> -->
                                 </header>
-                                <textarea id="tinymce" data-bind="tinymce: values.content"></textarea>
+                                <!--<textarea id="tinymce" data-bind="tinymce: values.content, tinymceOptions: { theme: 'advanced' }"></textarea>-->
+                                <textarea id="description" rows="8" data-bind="value: values.content"></textarea>
                             </div>
                             <!-- TAGS -->
                             <div style="margin-bottom: 32px">

@@ -40,6 +40,8 @@ namespace UCosmic.SeedData
                 new FileMimeMapping { FileName = "Word-2013.png",           MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
                 new FileMimeMapping { FileName = "Powerpoint-2013.png",     MimeType = "application/vnd.ms-powerpoint" },
                 new FileMimeMapping { FileName = "Powerpoint-2013.png",     MimeType = "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+                new FileMimeMapping { FileName = "Excel-2013.png",          MimeType = "application/vnd.ms-excel" },
+                new FileMimeMapping { FileName = "Excel-2013.png",          MimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
             };
 
             foreach (FileMimeMapping mapping in fileMimeMappings)

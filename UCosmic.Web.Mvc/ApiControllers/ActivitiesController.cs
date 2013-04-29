@@ -350,6 +350,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
+            Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
+            if (activity == null)
+            {
+                //string message = string.Format("Activity Id {0} not found", activityId);
+                //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            }
+
             var provider = new MultipartMemoryStreamProvider();
 
             var task = Request.Content.ReadAsMultipartAsync(provider).
@@ -360,12 +368,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
                     }
 
-                    Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
-                    if (activity == null)
-                    {
-                        string message = string.Format("Activity Id {0} not found", activityId);
-                        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
-                    }
+                    //Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
+                    //if (activity == null)
+                    //{
+                    //    string message = string.Format("Activity Id {0} not found", activityId);
+                    //    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
+                    //}
 
                     foreach (var item in provider.Contents)
                     {

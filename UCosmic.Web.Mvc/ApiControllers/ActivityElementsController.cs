@@ -28,14 +28,40 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("activity-locations")]
         public ICollection<ActivityLocationNameApiModel> GetActivityLocations()
         {
-            var activityPlaces = _queryProcessor.Execute(new FilteredPlaces
+            var locations = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsCountry = true }));
+            var water = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsWater = true }));
+            var global = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { WoeIds = new int[] { 1 } }));
+            var regions = new List<Place>(_queryProcessor.Execute(new FilteredPlaces
             {
-                IsCountry = true,
-                //IsBodyOfWater = true,
-                IsEarth = true
-            });
+                WoeIds = new int[]
+                {
+                    24865670, // Africa
+                    28289421, // Antarctic
+                    24865672, // North America
+                    24865706, // Caribbean
+                    55949061, // Central Asia
+                    55949062, // South Asia
+                    28289414, // South East Asia
+                    28289416, // East Asia
+                    28289415, // Western Asia
+                    24865716, // Latin America
+                    24865707, // Central America
+                    24865673, // South America
+                    24865721, // Middle East
+                    24865722, // North Africa
+                    55949070, // Oceania
+                    55949067, // Northern Europe
+                    55949066, // Southern Europe
+                    28289419, // Eastern Europe
+                    28289418, // Western Europe
+                }
+            }));
 
-            var model = Mapper.Map<ActivityLocationNameApiModel[]>(activityPlaces);
+            locations.AddRange(water);
+            locations.AddRange(global);
+            locations.AddRange(regions);
+
+            var model = Mapper.Map<ActivityLocationNameApiModel[]>(locations.ToArray());
             return model;
         }
 

@@ -175,7 +175,6 @@ module ViewModels.Activities
         */
         // --------------------------------------------------------------------------------
         editActivity(data: any, event: any, activityId: number): void {
-
             $.ajax({
                 type: "GET",
                 url: App.Routes.WebApi.Activities.getEditState(activityId),
