@@ -6,6 +6,7 @@ namespace UCosmic.Web.Mvc.Models
     public class EstablishmentApiScalarModel
     {
         public int Id { get; set; }
+        public int? ParentId { get; set; }
         public int TypeId { get; set; }
         public string UCosmicCode { get; set; }
         public string CeebCode { get; set; }
@@ -19,6 +20,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<Establishment, EstablishmentApiScalarModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.ParentId, o => o.MapFrom(s => s.Parent != null ? s.Parent.RevisionId : (int?)null))
                     .ForMember(d => d.TypeId, o => o.MapFrom(s => s.Type.RevisionId))
                     .ForMember(d => d.CeebCode, o => o.MapFrom(s => s.CollegeBoardDesignatedIndicator))
                 ;

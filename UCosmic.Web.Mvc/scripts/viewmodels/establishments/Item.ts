@@ -564,9 +564,27 @@ module ViewModels.Establishments {
         hasParent: KnockoutComputed;
         private _setupParentComputeds(): void {
             var parentId = this.parentId();
+
             this.hasParent = ko.computed((): bool => {
                 return this.parentId() !== undefined && this.parentId() > 0;
             });
+
+            this.parentId.subscribe((newValue: number): void => {
+                if (!newValue) {
+                    this.parentEstablishment(undefined);
+                }
+                else {
+                    var url = App.Routes.WebApi.Establishments.get();
+                    $.get(url, { id: newValue })
+                    .done((response: any): void => {
+                        if (response && response.items && response.items.length) {
+                            var parent = response.items[0];
+                            this.parentEstablishment(new SearchResult(parent, this.parentSearch));
+                        }
+                    });
+                }
+            });
+
         }
     }
 }

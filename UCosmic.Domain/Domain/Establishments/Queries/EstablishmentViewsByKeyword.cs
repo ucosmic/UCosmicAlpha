@@ -5,6 +5,7 @@ namespace UCosmic.Domain.Establishments
 {
     public class EstablishmentViewsByKeyword : BaseViewsQuery<EstablishmentView>, IDefineQuery<PagedQueryResult<EstablishmentView>>
     {
+        public int? Id { get; set; }
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
         public int PageSize { get; set; }
@@ -53,6 +54,9 @@ namespace UCosmic.Domain.Establishments
                     || x.UCosmicCode.Contains(query.Keyword, ordinalIgnoreCase)
                 );
             }
+
+            if (query.Id.HasValue)
+                view = view.Where(x => x.Id == query.Id.Value);
 
             view = view.OrderBy(query.OrderBy);
 

@@ -468,6 +468,21 @@ var ViewModels;
                 this.hasParent = ko.computed(function () {
                     return _this.parentId() !== undefined && _this.parentId() > 0;
                 });
+                this.parentId.subscribe(function (newValue) {
+                    if(!newValue) {
+                        _this.parentEstablishment(undefined);
+                    } else {
+                        var url = App.Routes.WebApi.Establishments.get();
+                        $.get(url, {
+                            id: newValue
+                        }).done(function (response) {
+                            if(response && response.items && response.items.length) {
+                                var parent = response.items[0];
+                                _this.parentEstablishment(new Establishments.SearchResult(parent, _this.parentSearch));
+                            }
+                        });
+                    }
+                });
             };
             return Item;
         })();

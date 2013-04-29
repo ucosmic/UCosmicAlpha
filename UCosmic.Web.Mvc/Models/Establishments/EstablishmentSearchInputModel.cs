@@ -14,6 +14,7 @@ namespace UCosmic.Web.Mvc.Models
             PageNumber = 1;
         }
 
+        public int? Id { get; set; }
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
         public string OrderBy { get; set; }
