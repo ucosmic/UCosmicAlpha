@@ -201,6 +201,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateEstablishmentHierarchy.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
+    <Compile Include="Domain\Establishments\Validation\MustNotHaveCyclicHierarchy.cs" />
     <Compile Include="Domain\Files\Entities\ExternalFile.cs" />
     <Compile Include="Domain\Identity\Commands\CreateUser.cs" />
     <Compile Include="Domain\Identity\Queries\RoleByName.cs" />

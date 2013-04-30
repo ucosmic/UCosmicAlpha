@@ -66,18 +66,8 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
 
                 // cannot have cyclic establishment hierarchies
-                .Must((command, parentId) =>
-                {
-                    // cannot have any offspring as parent
-                    var offspringIds = entities.Query<Establishment>()
-                        .Where(x => x.Ancestors.Any(y => y.Ancestor.RevisionId == command.Id))
-                        .Select(x => x.RevisionId).ToList();
-                    offspringIds.Add(command.Id); // cannot have self as parent
-
-                    return parentId.HasValue && !offspringIds.Contains(parentId.Value);
-                })
+                .MustNotHaveCyclicHierarchy(entities, x => x.Id)
                 .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
-                    .WithMessage("Cyclic redundancy check failed.")
             ;
 
             // type id must exist
