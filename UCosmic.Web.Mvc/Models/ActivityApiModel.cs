@@ -6,8 +6,6 @@ using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Files;
-using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
@@ -156,7 +154,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<ActivityTag, ActivityTagApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
-                    .ForMember(d => d.DomainTypeText, o => o.MapFrom(s => s.DomainType.AsSentenceFragment()))
+                    .ForMember(d => d.DomainTypeText, o => o.MapFrom(s => s.DomainTypeText))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
                     ;
 
@@ -293,7 +291,7 @@ namespace UCosmic.Web.Mvc.Models
                     //.ForMember(d => d.Image, o => o.ResolveUsing<ImageResolver>())
                     .ForMember(d => d.Image, o => o.Ignore())
                     .ForMember(d => d.ImageId, o => o.MapFrom(s => s.ImageId))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.EntityId, o => o.Ignore())
                     .ForMember(d => d.ActivityValues, o => o.Ignore())
                     .ForMember(d => d.ActivityValuesId, o => o.Ignore())
@@ -311,7 +309,7 @@ namespace UCosmic.Web.Mvc.Models
                     //.ForMember(d => d.Type, o => o.ResolveUsing<TypeResolver>())
                     .ForMember(d => d.Type, o => o.Ignore())
                     .ForMember(d => d.TypeId, o => o.MapFrom(s => s.TypeId))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.EntityId, o => o.Ignore())
                     .ForMember(d => d.ActivityValues, o => o.Ignore())
                     .ForMember(d => d.ActivityValuesId, o => o.Ignore())
@@ -328,8 +326,10 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Mode, o => o.Ignore())
-                    .ForMember(d => d.DomainType, o => o.MapFrom(s => s.DomainTypeText.AsEnum<ActivityTagDomainType>()))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.DomainTypeText, o => o.MapFrom(s => s.DomainTypeText))
+                    .ForMember(d => d.DomainType, o => o.Ignore())
+                    .ForMember(d => d.DomainKey, o => o.MapFrom(s => s.DomainKey))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.EntityId, o => o.Ignore())
                     .ForMember(d => d.ActivityValues, o => o.Ignore())
                     .ForMember(d => d.ActivityValuesId, o => o.Ignore())
@@ -347,7 +347,7 @@ namespace UCosmic.Web.Mvc.Models
                     //.ForMember(d => d.Place, o => o.ResolveUsing<PlaceResolver>())
                     .ForMember(d => d.Place, o => o.Ignore())
                     .ForMember(d => d.PlaceId, o => o.MapFrom(s => s.PlaceId))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.EntityId, o => o.Ignore())
                     .ForMember(d => d.ActivityValues, o => o.Ignore())
                     .ForMember(d => d.ActivityValuesId, o => o.Ignore())
@@ -364,7 +364,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Mode, o => o.Ignore())
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.Activity, o => o.Ignore())
                     .ForMember(d => d.ActivityId, o => o.Ignore())
                     .ForMember(d => d.EntityId, o => o.Ignore())
@@ -387,7 +387,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Values, o => o.ResolveUsing<ActivityValuesResolver>())
                     .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.WhenLastUpdated))
                     .ForMember(d => d.UpdatedByPrincipal, o => o.MapFrom(s => s.WhoLastUpdated))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.EditSourceId, o => o.Ignore())
                     .ForMember(d => d.CreatedOnUtc, o => o.Ignore())
                     .ForMember(d => d.CreatedByPrincipal, o => o.Ignore())

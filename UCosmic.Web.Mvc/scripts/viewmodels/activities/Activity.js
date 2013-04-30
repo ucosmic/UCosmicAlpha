@@ -21,8 +21,7 @@ var ViewModels;
                 $("#" + fromDatePickerId).kendoDatePicker();
                 $("#" + toDatePickerId).kendoDatePicker();
                 $("#" + countrySelectorId).kendoMultiSelect({
-                    dataTextField: "officialName()",
-                    dataValueField: "id()",
+                    dataTextField: "officialName",
                     dataSource: this.locations(),
                     change: function (event) {
                         _this.updateLocations(event.sender.value());
@@ -57,7 +56,6 @@ var ViewModels;
                     minLength: 3,
                     placeholder: "[Enter tag]",
                     dataTextField: "officialName",
-                    dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
                         serverFiltering: true,
                         transport: {
@@ -75,7 +73,15 @@ var ViewModels;
                                 });
                             }
                         }
-                    })
+                    }),
+                    select: function (e) {
+                        var me = $("#" + newTagId).data("kendoAutoComplete");
+                        var dataItem = me.dataItem(e.item.index());
+                        _this.newEstablishment = {
+                            officialName: dataItem.officialName,
+                            id: dataItem.id
+                        };
+                    }
                 });
             };
             Activity.prototype.setupValidation = function () {
@@ -240,7 +246,8 @@ var ViewModels;
                 if(existingIndex == -1) {
                     var newActivityType = ko.mapping.fromJS({
                         id: 0,
-                        typeId: activityTypeId
+                        typeId: activityTypeId,
+                        version: ""
                     });
                     this.values.types.push(newActivityType);
                 }
@@ -298,23 +305,38 @@ var ViewModels;
                 for(var i = 0; i < locations.length; i += 1) {
                     var location = ko.mapping.fromJS({
                         id: 0,
-                        placeId: locations[i]
+                        placeId: locations[i],
+                        version: ""
                     });
                     this.values.locations.push(location);
                 }
             };
             Activity.prototype.addTag = function (item, event) {
-                var newText = this.newTag();
+                debugger;
+
+                var newText = null;
+                var domainTypeText = "Custom";
+                var domainKey = null;
+                var isInstitution = false;
+                if(this.newEstablishment == null) {
+                    newText = this.newTag();
+                } else {
+                    newText = this.newEstablishment.officialName;
+                    domainTypeText = "Establishment";
+                    domainKey = this.newEstablishment.id;
+                    isInstitution = true;
+                    this.newEstablishment = null;
+                }
                 newText = (newText != null) ? newText.trim() : null;
                 if((newText != null) && (newText.length != 0) && (!this.haveTag(newText))) {
                     var tag = {
                         id: 0,
                         number: 0,
                         text: newText,
-                        domainTypeText: null,
-                        domainKey: null,
+                        domainTypeText: domainTypeText,
+                        domainKey: domainKey,
                         modeText: this.modeText(),
-                        isInstitution: false
+                        isInstitution: isInstitution
                     };
                     var observableTag = ko.mapping.fromJS(tag);
                     this.values.tags.push(observableTag);

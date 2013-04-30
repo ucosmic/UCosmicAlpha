@@ -38,6 +38,7 @@ module ViewModels.Activities
 
         /* Data bound to new tag textArea */
         newTag: KnockoutObservableString=ko.observable();
+        newEstablishment: any;
 
         /* True if uploading document. */
         uploadingDocument: KnockoutObservableBool=ko.observable(false);
@@ -88,8 +89,7 @@ module ViewModels.Activities
             $("#"+toDatePickerId).kendoDatePicker();
 
             $("#"+countrySelectorId).kendoMultiSelect({
-                dataTextField: "officialName()",
-                dataValueField: "id()",
+                dataTextField: "officialName",
                 dataSource: this.locations(),
                 //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
                 change: (event: any)=> { this.updateLocations(event.sender.value()); },
@@ -296,7 +296,6 @@ module ViewModels.Activities
                 minLength: 3,
                 placeholder: "[Enter tag]",
                 dataTextField: "officialName",
-                dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
@@ -314,7 +313,12 @@ module ViewModels.Activities
                             });
                         }
                     }
-                })
+                }),
+                select: (e: any): void => {
+                    var me = $("#"+newTagId).data("kendoAutoComplete");
+                    var dataItem=me.dataItem(e.item.index());
+                    this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
+                }
             });
         }
 
@@ -475,11 +479,11 @@ module ViewModels.Activities
 
                               this.values.content.subscribe((newValue: string): void => {
                                   setTimeout((): void => {
-                                      alert('This alert was triggered by a subscription to ' +
-                                          'the "values.content" observable. Its new value is:\n\n' +
-                                          newValue + '\n\nAdditionally, the textarea value is:\n\n' +
+                                      alert('This alert was triggered by a subscription to '+
+                                          'the "values.content" observable. Its new value is:\n\n'+
+                                          newValue+'\n\nAdditionally, the textarea value is:\n\n'+
                                           $('#mce_0').val());
-                                  }, 100);
+                                  },100);
                               });
 
                               deferred.resolve();
@@ -588,7 +592,7 @@ module ViewModels.Activities
             var existingIndex: number=this.getActivityTypeIndexById(activityTypeId);
             if(existingIndex==-1)
             {
-                var newActivityType: KnockoutObservableAny=ko.mapping.fromJS({ id: 0,typeId: activityTypeId });
+                var newActivityType: KnockoutObservableAny=ko.mapping.fromJS({ id: 0,typeId: activityTypeId,version: "" });
                 this.values.types.push(newActivityType);
             }
         }
@@ -709,24 +713,38 @@ module ViewModels.Activities
 
         // --------------------------------------------------------------------------------
         /*
-                    Rebuild values.location with supplied (non-observable) array.
-            */
+            Rebuild values.location with supplied (non-observable) array.
+        */
         // --------------------------------------------------------------------------------
         updateLocations(locations: Array): void {
             this.values.locations.removeAll();
             for(var i=0;i<locations.length;i+=1)
             {
-                var location=ko.mapping.fromJS({ id: 0,placeId: locations[i] });
+                var location=ko.mapping.fromJS({ id: 0,placeId: locations[i],version: "" });
                 this.values.locations.push(location);
             }
         }
 
         // --------------------------------------------------------------------------------
         /*
-            */
+        */
         // --------------------------------------------------------------------------------
         addTag(item: any,event: Event): void {
-            var newText=this.newTag();
+            debugger;
+            var newText: string = null;
+            var domainTypeText: string="Custom";
+            var domainKey: number = null;
+            var isInstitution: bool = false;         
+            if( this.newEstablishment == null) {
+                newText = this.newTag();
+            }
+            else  {
+                newText = this.newEstablishment.officialName;
+                domainTypeText = "Establishment";
+                domainKey = this.newEstablishment.id;
+                isInstitution = true;
+                this.newEstablishment = null;
+            }
             newText=(newText!=null)?newText.trim():null;
             if((newText!=null)&&
                           (newText.length!=0)&&
@@ -736,10 +754,10 @@ module ViewModels.Activities
                     id: 0,
                     number: 0,
                     text: newText,
-                    domainTypeText: null,
-                    domainKey: null,
+                    domainTypeText: domainTypeText,
+                    domainKey: domainKey,
                     modeText: this.modeText(),
-                    isInstitution: false
+                    isInstitution: isInstitution
                 };
                 var observableTag=ko.mapping.fromJS(tag);
                 this.values.tags.push(observableTag);

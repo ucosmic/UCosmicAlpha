@@ -16,10 +16,13 @@ namespace UCosmic.Domain.Activities
     public class HandleCreateActivityLocationCommand : IHandleCommands<CreateActivityLocation>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateActivityLocationCommand(ICommandEntities entities)
+        public HandleCreateActivityLocationCommand(ICommandEntities entities,
+                                                   IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
         public class ValidateCreateActivityLocationCommand : AbstractValidator<CreateActivityLocation>
@@ -66,12 +69,14 @@ namespace UCosmic.Domain.Activities
                 PlaceId = place.RevisionId,
             };
 
-            command.CreatedActivityLocation = activityLocation;
+            _entities.Create(activityLocation);
 
             if (!command.NoCommit)
             {
-                _entities.Create(activityLocation);
+                _unitOfWork.SaveChanges();
             }
+
+            command.CreatedActivityLocation = activityLocation;
         }
     }
 }

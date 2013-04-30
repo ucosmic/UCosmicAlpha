@@ -93,14 +93,14 @@ namespace UCosmic.Domain.Activities
                 activityDocument.EntityId = command.EntityId.Value;
             }
 
-            command.CreatedActivityDocument = activityDocument;
-
             _entities.Create(activityDocument);
 
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
             }
+
+            command.CreatedActivityDocument = activityDocument;
         }
     }
 }
