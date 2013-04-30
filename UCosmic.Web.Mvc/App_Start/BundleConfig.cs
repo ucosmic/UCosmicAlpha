@@ -111,7 +111,6 @@ namespace UCosmic.Web.Mvc
             // activity edit
             bundles.Add(new ScriptBundle("~/bundles/activity").Include(
                 "~/scripts/viewmodels/activities/Activity.js",
-                "~/scripts/oss/jquery.tinymce.js",
                 "~/scripts/tinymce/tiny_mce.js"));
 
             // user search page

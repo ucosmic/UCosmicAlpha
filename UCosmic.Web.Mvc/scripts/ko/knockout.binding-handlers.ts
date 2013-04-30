@@ -1,7 +1,6 @@
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 /// <reference path="knockout-2.2.d.ts" />
 /// <reference path="../tinymce/tinymce.d.ts" />
-/// <reference path="../oss/jquery.tinymce.d.ts" />
 
 interface KnockoutBindingHandlers {
     element: KnockoutBindingHandler;
