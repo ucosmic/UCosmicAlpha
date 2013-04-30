@@ -459,6 +459,23 @@ var App;
             var My = Mvc.My;
         })(Routes.Mvc || (Routes.Mvc = {}));
         var Mvc = Routes.Mvc;
+        (function (Content) {
+            function makeUrl(relativeUrl) {
+                var url = Routes.applicationPath + relativeUrl;
+                if(!hasTrailingSlash(url)) {
+                    url = url + '/';
+                }
+                return url;
+            }
+            function styles(relativePath) {
+                var url = 'styles';
+                url = makeUrl(url);
+                url += relativePath;
+                return url;
+            }
+            Content.styles = styles;
+        })(Routes.Content || (Routes.Content = {}));
+        var Content = Routes.Content;
     })(App.Routes || (App.Routes = {}));
     var Routes = App.Routes;
 })(App || (App = {}));

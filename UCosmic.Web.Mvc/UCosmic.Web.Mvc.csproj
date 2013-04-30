@@ -1812,7 +1812,6 @@
     <Content Include="scripts\tinymce\plugins\autoresize\editor_plugin_src.js" />
     <Content Include="scripts\tinymce\plugins\autosave\editor_plugin.js" />
     <Content Include="scripts\tinymce\plugins\autosave\editor_plugin_src.js" />
-    <Content Include="scripts\tinymce\plugins\autosave\langs\en.js" />
     <Content Include="scripts\tinymce\plugins\bbcode\editor_plugin.js" />
     <Content Include="scripts\tinymce\plugins\bbcode\editor_plugin_src.js" />
     <Content Include="scripts\tinymce\plugins\contextmenu\editor_plugin.js" />
@@ -1925,6 +1924,7 @@
     <Content Include="scripts\tinymce\plugins\style\js\props.js" />
     <Content Include="scripts\tinymce\plugins\style\langs\en_dlg.js" />
     <Content Include="scripts\tinymce\plugins\style\props.htm" />
+    <Content Include="scripts\tinymce\plugins\style\readme.txt" />
     <Content Include="scripts\tinymce\plugins\tabfocus\editor_plugin.js" />
     <Content Include="scripts\tinymce\plugins\tabfocus\editor_plugin_src.js" />
     <Content Include="scripts\tinymce\plugins\table\cell.htm" />
@@ -1948,6 +1948,9 @@
     <Content Include="scripts\tinymce\plugins\template\js\template.js" />
     <Content Include="scripts\tinymce\plugins\template\langs\en_dlg.js" />
     <Content Include="scripts\tinymce\plugins\template\template.htm" />
+    <Content Include="scripts\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="scripts\tinymce\plugins\visualblocks\editor_plugin.js" />
+    <Content Include="scripts\tinymce\plugins\visualblocks\editor_plugin_src.js" />
     <Content Include="scripts\tinymce\plugins\visualchars\editor_plugin.js" />
     <Content Include="scripts\tinymce\plugins\visualchars\editor_plugin_src.js" />
     <Content Include="scripts\tinymce\plugins\wordcount\editor_plugin.js" />
@@ -2366,6 +2369,7 @@
     <None Include="styles\_deprecated\screen-ie8.css" />
     <None Include="styles\_deprecated\screen.css" />
     <None Include="styles\_resharper-unused.css" />
+    <Content Include="styles\tinymce.css" />
     <Content Include="T4MVC.tt.settings.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -2582,7 +2586,9 @@
     <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

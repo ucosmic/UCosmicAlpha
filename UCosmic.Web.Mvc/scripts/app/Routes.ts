@@ -416,4 +416,20 @@ module App.Routes {
         //    }
         //}
     }
+
+    export module Content {
+
+        function makeUrl(relativeUrl: string): string {
+            var url = Routes.applicationPath + relativeUrl;
+            if (!hasTrailingSlash(url)) url = url + '/';
+            return url;
+        }
+
+        export function styles(relativePath: string) {
+            var url = 'styles';
+            url = makeUrl(url);
+            url += relativePath;
+            return url;
+        }
+    }
 }

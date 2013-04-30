@@ -1,0 +1,6 @@
+﻿/*
+    tinyMCE style overrides go here. Do not edit default tinyMCE themes.
+*/
+body, td, pre {
+    font-size: 16px;
+}
