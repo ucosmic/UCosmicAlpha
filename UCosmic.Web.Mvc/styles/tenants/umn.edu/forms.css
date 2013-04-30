@@ -223,26 +223,26 @@ a.button > i.red.closer {
   margin: -2px 0 0 -2px;
   background-image: url(../../../images/icons/closer/closer-24-red-disc.png); }
 
-button, input[type=submit], input[type=reset], input[type=button], a.button {
+button, input[type=submit], input[type=reset], input[type=button], a.button, a.button:visited {
   margin: 0 12px 0 0;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   padding: 6px 12px;
   font-family: Arial, Helvetica, sans-serif;
-  color: #ffcc33;
+  color: #ffcc33 !important;
   background-color: #7a0019;
   -moz-opacity: 0.9;
   opacity: 0.9;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
-  button:hover, input[type=submit]:hover, input[type=reset]:hover, input[type=button]:hover, a.button:hover {
+  button:hover, input[type=submit]:hover, input[type=reset]:hover, input[type=button]:hover, a.button:hover, a.button:visited:hover {
     cursor: pointer;
     -moz-opacity: 1;
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); }
-  button[disabled], button[disabled=true], input[type=submit][disabled], input[type=submit][disabled=true], input[type=reset][disabled], input[type=reset][disabled=true], input[type=button][disabled], input[type=button][disabled=true], a.button[disabled], a.button[disabled=true] {
+  button[disabled], button[disabled=true], input[type=submit][disabled], input[type=submit][disabled=true], input[type=reset][disabled], input[type=reset][disabled=true], input[type=button][disabled], input[type=button][disabled=true], a.button[disabled], a.button[disabled=true], a.button:visited[disabled], a.button:visited[disabled=true] {
     cursor: not-allowed !important;
     -moz-opacity: 0.5;
     opacity: 0.5;

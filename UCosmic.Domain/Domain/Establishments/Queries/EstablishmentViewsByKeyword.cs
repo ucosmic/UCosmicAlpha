@@ -25,7 +25,13 @@ namespace UCosmic.Domain.Establishments
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var view = _projector.GetView().AsQueryable();
+            var possibleNullView = _projector.GetView();
+            if (possibleNullView == null)
+            {
+                System.Threading.Thread.Sleep(1000);
+                return Handle(query);
+            }
+            var view = possibleNullView.AsQueryable();
             const StringComparison ordinalIgnoreCase = StringComparison.OrdinalIgnoreCase;
             
             // when the query's country code is empty string, match all establishments regardless of country.

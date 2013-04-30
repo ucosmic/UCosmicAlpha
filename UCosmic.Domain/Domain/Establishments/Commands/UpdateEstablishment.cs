@@ -59,11 +59,26 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("User '{0}' is not authorized to execute this command.")
             ;
 
-            // parent id must exist when passed
             RuleFor(x => x.ParentId)
+                // parent id must exist when passed
                 .MustFindEstablishmentById(entities)
                 .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
-                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId);
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
+
+                // cannot have cyclic establishment hierarchies
+                .Must((command, parentId) =>
+                {
+                    // cannot have any offspring as parent
+                    var offspringIds = entities.Query<Establishment>()
+                        .Where(x => x.Ancestors.Any(y => y.Ancestor.RevisionId == command.Id))
+                        .Select(x => x.RevisionId).ToList();
+                    offspringIds.Add(command.Id); // cannot have self as parent
+
+                    return parentId.HasValue && !offspringIds.Contains(parentId.Value);
+                })
+                .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
+                    .WithMessage("Cyclic redundancy check failed.")
+            ;
 
             // type id must exist
             RuleFor(x => x.TypeId)
@@ -93,15 +108,18 @@ namespace UCosmic.Domain.Establishments
     public class HandleUpdateEstablishmentCommand : IHandleCommands<UpdateEstablishment>
     {
         private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
 
         public HandleUpdateEstablishmentCommand(ICommandEntities entities
+            , IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy
             , IUnitOfWork unitOfWork
             , IProcessEvents eventProcessor
         )
         {
             _entities = entities;
+            _updateHierarchy = updateHierarchy;
             _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
         }
@@ -155,6 +173,8 @@ namespace UCosmic.Domain.Establishments
             }
             entity.CollegeBoardDesignatedIndicator = command.CeebCode;
             entity.UCosmicCode = command.UCosmicCode;
+
+            // update parent
             if (parentChanged)
                 entity.Parent = command.ParentId.HasValue
                     ? _entities.Get<Establishment>().Single(x => x.RevisionId == command.ParentId)
@@ -163,6 +183,9 @@ namespace UCosmic.Domain.Establishments
             audit.NewState = entity.ToJsonAudit();
             _entities.Create(audit);
             _entities.Update(entity);
+
+            // update hierarchy
+            _updateHierarchy.Handle(new UpdateEstablishmentHierarchy(entity));
 
             if (command.NoCommit) return;
             _unitOfWork.SaveChanges();
