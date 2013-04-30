@@ -38,6 +38,7 @@ namespace UCosmic.Domain.Activities
     public class HandleUpdateActivityValuesCommand : IHandleCommands<UpdateActivityValues>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
         private readonly IHandleCommands<UpdateActivityLocation> _updateActivityLocation;
         private readonly IHandleCommands<DeleteActivityLocation> _deleteActivityLocation;
@@ -51,6 +52,7 @@ namespace UCosmic.Domain.Activities
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
 
         public HandleUpdateActivityValuesCommand(ICommandEntities entities,
+                                                 IUnitOfWork unitOfWork,
                                                  IHandleCommands<CreateActivityLocation> createActivityLocation,
                                                  IHandleCommands<UpdateActivityLocation> updateActivityLocation,
                                                  IHandleCommands<DeleteActivityLocation> deleteActivityLocation,
@@ -64,6 +66,7 @@ namespace UCosmic.Domain.Activities
                                                  IHandleCommands<DeleteActivityDocument> deleteActivityDocument )
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
             _createActivityLocation = createActivityLocation;
             _updateActivityLocation = updateActivityLocation;
             _deleteActivityLocation = deleteActivityLocation;
@@ -307,10 +310,11 @@ namespace UCosmic.Domain.Activities
                 }
             }
 
+            _entities.Update(target);
 
             if (!command.NoCommit)
             {
-                _entities.Update(target);
+                _unitOfWork.SaveChanges();
             }
         }
     }

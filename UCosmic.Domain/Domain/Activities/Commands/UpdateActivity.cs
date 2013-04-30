@@ -53,12 +53,15 @@ namespace UCosmic.Domain.Activities
     public class HandleUpdateMyActivityCommand : IHandleCommands<UpdateActivity>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities,
+                                             IUnitOfWork unitOfWork,
                                              IHandleCommands<UpdateActivityValues> updateActivityValues)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
         }
 
@@ -71,13 +74,13 @@ namespace UCosmic.Domain.Activities
 
             /* Retrieve the target activty values of the same mode. */
             var targetActivityValues = _entities.Get<ActivityValues>()
-                                            .Single(v => (v.ActivityId == target.RevisionId) && 
-                                                         (v.ModeText == command.ModeText));
+                                                .Single(v => (v.ActivityId == target.RevisionId) &&
+                                                             (v.ModeText == command.ModeText));
 
 
             /* If target fields equal new field values, we do not proceed. */
-            if ( (target.ModeText == command.ModeText) &&
-                 (targetActivityValues.Equals(command.Values)) )
+            if ((target.ModeText == command.ModeText) &&
+                (targetActivityValues.Equals(command.Values)))
             {
                 return;
             }
@@ -109,9 +112,11 @@ namespace UCosmic.Domain.Activities
 
             _updateActivityValues.Handle(updateActivityValuesCommand);
 
+            _entities.Update(target);
+
             if (!command.NoCommit)
             {
-                _entities.Update(target);
+                _unitOfWork.SaveChanges();
             }
         }
     }
