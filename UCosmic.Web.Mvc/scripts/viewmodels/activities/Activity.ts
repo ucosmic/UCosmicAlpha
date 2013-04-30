@@ -10,10 +10,10 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-interface KnockoutBindingHandlers
-{
-    tinymce: KnockoutBindingHandler;
-}
+//interface KnockoutBindingHandlers
+//{
+//    tinymce: KnockoutBindingHandler;
+//}
 
 module ViewModels.Activities
     {
@@ -52,9 +52,9 @@ module ViewModels.Activities
         inititializationErrors: string="";
 
         /* TinyMCE binding handler stuff */
-        instances_by_id: any;	// needed for referencing instances during updates.
-        init_queue: any;			// jQuery deferred object used for creating TinyMCE instances synchronously
-        init_queue_next: any;
+        //instances_by_id: any;	// needed for referencing instances during updates.
+        //init_queue: any;			// jQuery deferred object used for creating TinyMCE instances synchronously
+        //init_queue_next: any;
 
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
@@ -96,174 +96,174 @@ module ViewModels.Activities
                 placeholder: "[Select Country/Location, Body of Water or Global]"
             });
 
-            tinyMCE.init({
-                content_css: "scripts/tinymce/css/content.css",
-                convert_urls: false,
+            //tinyMCE.init({
+            //    content_css: "scripts/tinymce/css/content.css",
+            //    convert_urls: false,
 
-                // General options
-                theme: 'advanced',
-                mode: 'exact',
-                elements: 'tinymce',
-                height: '300',
-                width: '100%',
-                verify_html: true,
-                plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
+            //    // General options
+            //    theme: 'advanced',
+            //    mode: 'exact',
+            //    elements: 'tinymce',
+            //    height: '300',
+            //    width: '100%',
+            //    verify_html: true,
+            //    plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
 
-                // Theme options
-                theme_advanced_buttons1: 'undo,redo,restoredraft,|,formatselect,fontsizeselect ,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
-                theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
-                theme_advanced_buttons3: '',
+            //    // Theme options
+            //    theme_advanced_buttons1: 'undo,redo,restoredraft,|,formatselect,fontsizeselect ,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
+            //    theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
+            //    theme_advanced_buttons3: '',
 
-                theme_advanced_font_sizes: "10px,12px,14px,16px,24px",
-                theme_advanced_toolbar_location: 'top',
-                theme_advanced_toolbar_align: 'left',
-                theme_advanced_statusbar_location: 'bottom',
-                theme_advanced_resizing: true,
-                theme_advanced_resizing_max_height: '580',
-                theme_advanced_resize_horizontal: false,
-                theme_advanced_blockformats: 'h2,h3,p,blockquote',
+            //    theme_advanced_font_sizes: "10px,12px,14px,16px,24px",
+            //    theme_advanced_toolbar_location: 'top',
+            //    theme_advanced_toolbar_align: 'left',
+            //    theme_advanced_statusbar_location: 'bottom',
+            //    theme_advanced_resizing: true,
+            //    theme_advanced_resizing_max_height: '580',
+            //    theme_advanced_resize_horizontal: false,
+            //    theme_advanced_blockformats: 'h2,h3,p,blockquote',
 
-                save_enablewhendirty: true,
+            //    save_enablewhendirty: true,
 
-                // Drop lists for link/image/media/template dialogs
-                template_external_list_url: 'lists/template_list.js',
-                external_link_list_url: 'lists/link_list.js',
-                external_image_list_url: 'lists/image_list.js',
-                media_external_list_url: 'lists/media_list.js'
-            });
+            //    // Drop lists for link/image/media/template dialogs
+            //    template_external_list_url: 'lists/template_list.js',
+            //    external_link_list_url: 'lists/link_list.js',
+            //    external_image_list_url: 'lists/image_list.js',
+            //    media_external_list_url: 'lists/media_list.js'
+            //});
 
 
-            /* From: https://github.com/SteveSanderson/knockout/wiki/Bindings---tinyMCE */
-            /* Typscripted by DCC */
-            this.instances_by_id={};		 // needed for referencing instances during updates.
-            this.init_queue=$.Deferred() // jQuery deferred object used for creating TinyMCE instances synchronously
-            this.init_queue_next=this.init_queue;
-            ko.bindingHandlers.tinymce={
-                init: (element: any, valueAccessor: any, allBindingsAccessor: any, context: any): void =>
-                {
-                    var init_arguments=arguments;
-                    var options=allBindingsAccessor().tinymceOptions||{};
-                    var modelValue=valueAccessor();
-                    var value=ko.utils.unwrapObservable(valueAccessor());
-                    var el=$(element);
+            ///* From: https://github.com/SteveSanderson/knockout/wiki/Bindings---tinyMCE */
+            ///* Typscripted by DCC */
+            //this.instances_by_id={};		 // needed for referencing instances during updates.
+            //this.init_queue=$.Deferred() // jQuery deferred object used for creating TinyMCE instances synchronously
+            //this.init_queue_next=this.init_queue;
+            //ko.bindingHandlers.tinymce={
+            //    init: (element: any, valueAccessor: any, allBindingsAccessor: any, context: any): void =>
+            //    {
+            //        var init_arguments=arguments;
+            //        var options=allBindingsAccessor().tinymceOptions||{};
+            //        var modelValue=valueAccessor();
+            //        var value=ko.utils.unwrapObservable(valueAccessor());
+            //        var el=$(element);
 
-                    options.setup = (ed: any): void =>
-                    {
-                        ed.onChange.add((editor: any, l: any): void =>
-                        { //handle edits made in the editor. Updates after an undo point is reached.
-                            if(ko.isWriteableObservable(modelValue))
-                            {
-                                modelValue(l.content);
-                            }
-                        });
+            //        options.setup = (ed: any): void =>
+            //        {
+            //            ed.onChange.add((editor: any, l: any): void =>
+            //            { //handle edits made in the editor. Updates after an undo point is reached.
+            //                if(ko.isWriteableObservable(modelValue))
+            //                {
+            //                    modelValue(l.content);
+            //                }
+            //            });
 
-                        //This is required if you want the HTML Edit Source button to work correctly
-                        ed.onBeforeSetContent.add((editor: any, l: any): void =>
-                        {
-                            if(ko.isWriteableObservable(modelValue))
-                            {
-                                modelValue(l.content);
-                            }
-                        });
+            //            //This is required if you want the HTML Edit Source button to work correctly
+            //            ed.onBeforeSetContent.add((editor: any, l: any): void =>
+            //            {
+            //                if(ko.isWriteableObservable(modelValue))
+            //                {
+            //                    modelValue(l.content);
+            //                }
+            //            });
 
-                        ed.onPaste.add((ed: any, evt: any): void =>
-                        { // The paste event for the mouse paste fix.
-                            var doc=ed.getDoc();
+            //            ed.onPaste.add((ed: any, evt: any): void =>
+            //            { // The paste event for the mouse paste fix.
+            //                var doc=ed.getDoc();
 
-                            if(ko.isWriteableObservable(modelValue))
-                            {
-                                setTimeout((): void => { modelValue(ed.getContent({ format: 'raw' })); },10);
-                            }
-                        });
+            //                if(ko.isWriteableObservable(modelValue))
+            //                {
+            //                    setTimeout((): void => { modelValue(ed.getContent({ format: 'raw' })); },10);
+            //                }
+            //            });
 
-                        ed.onInit.add((ed: any, evt: any): void =>
-                        { // Make sure observable is updated when leaving editor.
-                            var doc=ed.getDoc();
-                            tinyMCE.dom.Event.add(doc,'blur',(e: any): void =>
-                            {
-                                if(ko.isWriteableObservable(modelValue))
-                                {
-                                    modelValue(ed.getContent({ format: 'raw' }));
-                                }
-                            });
-                        });
+            //            ed.onInit.add((ed: any, evt: any): void =>
+            //            { // Make sure observable is updated when leaving editor.
+            //                var doc=ed.getDoc();
+            //                tinyMCE.dom.Event.add(doc,'blur',(e: any): void =>
+            //                {
+            //                    if(ko.isWriteableObservable(modelValue))
+            //                    {
+            //                        modelValue(ed.getContent({ format: 'raw' }));
+            //                    }
+            //                });
+            //            });
 
-                    };
+            //        };
 
-                    //handle destroying an editor (based on what jQuery plugin does)
-                    ko.utils.domNodeDisposal.addDisposeCallback(element,(): void =>
-                    {
-                        $(element).parent().find("textarea.mceEditor,span.mceEditor,div.mceEditor").each((i: any,node: any): void =>
-                        {
-                            var tid=node.id.replace(/_parent$/,'');
-                            var ed=tinyMCE.get(tid);
-                            if(ed)
-                            {
-                                ed.remove();
-                                // remove referenced instance if possible.
-                                if(this.instances_by_id[tid])
-                                {
-                                    delete this.instances_by_id[tid];
-                                }
-                            }
-                        });
-                    });
+            //        //handle destroying an editor (based on what jQuery plugin does)
+            //        ko.utils.domNodeDisposal.addDisposeCallback(element,(): void =>
+            //        {
+            //            $(element).parent().find("textarea.mceEditor,span.mceEditor,div.mceEditor").each((i: any,node: any): void =>
+            //            {
+            //                var tid=node.id.replace(/_parent$/,'');
+            //                var ed=tinyMCE.get(tid);
+            //                if(ed)
+            //                {
+            //                    ed.remove();
+            //                    // remove referenced instance if possible.
+            //                    if(this.instances_by_id[tid])
+            //                    {
+            //                        delete this.instances_by_id[tid];
+            //                    }
+            //                }
+            //            });
+            //        });
 
-                    // TinyMCE attaches to the element by DOM id, so we need to make one for the element if it doesn't have one already.
-                    if(!element.id)
-                    {
-                        element.id=tinyMCE.dom.uniqueId();
-                    }
+            //        // TinyMCE attaches to the element by DOM id, so we need to make one for the element if it doesn't have one already.
+            //        if(!element.id)
+            //        {
+            //            element.id=tinyMCE.dom.uniqueId();
+            //        }
 
-                    // create each tinyMCE instance synchronously. This addresses an issue when working with foreach bindings
-                    this.init_queue_next = this.init_queue_next.pipe((): JQueryDeferred =>
-                    {
-                        var defer=$.Deferred();
-                        var init_options=$.extend({},options,{
-                            mode: 'none',
-                            init_instance_callback: (instance: any): void =>
-                            {
-                                this.instances_by_id[element.id]=instance;
-                                ko.bindingHandlers.tinymce.update.apply(undefined,init_arguments);
-                                defer.resolve(element.id);
-                                if(options.hasOwnProperty("init_instance_callback"))
-                                {
-                                    options.init_instance_callback(instance);
-                                }
-                            }
-                        });
-                        setTimeout((): void =>
-                        {
-                            tinyMCE.init(init_options);
-                            setTimeout( (): void =>
-                            {
-                                tinyMCE.execCommand("mceAddControl",true,element.id);
-                            },0);
-                        },0);
-                        return defer.promise();
-                    });
-                    el.val(value);
-                },
+            //        // create each tinyMCE instance synchronously. This addresses an issue when working with foreach bindings
+            //        this.init_queue_next = this.init_queue_next.pipe((): JQueryDeferred =>
+            //        {
+            //            var defer=$.Deferred();
+            //            var init_options=$.extend({},options,{
+            //                mode: 'none',
+            //                init_instance_callback: (instance: any): void =>
+            //                {
+            //                    this.instances_by_id[element.id]=instance;
+            //                    ko.bindingHandlers.tinymce.update.apply(undefined,init_arguments);
+            //                    defer.resolve(element.id);
+            //                    if(options.hasOwnProperty("init_instance_callback"))
+            //                    {
+            //                        options.init_instance_callback(instance);
+            //                    }
+            //                }
+            //            });
+            //            setTimeout((): void =>
+            //            {
+            //                tinyMCE.init(init_options);
+            //                setTimeout( (): void =>
+            //                {
+            //                    tinyMCE.execCommand("mceAddControl",true,element.id);
+            //                },0);
+            //            },0);
+            //            return defer.promise();
+            //        });
+            //        el.val(value);
+            //    },
 
-                update: (element: any, valueAccessor: any, allBindingsAccessor: any, context: any): void =>
-                {
-                    var el=$(element);
-                    var value=ko.utils.unwrapObservable(valueAccessor());
-                    var id=el.attr('id');
+            //    update: (element: any, valueAccessor: any, allBindingsAccessor: any, context: any): void =>
+            //    {
+            //        var el=$(element);
+            //        var value=ko.utils.unwrapObservable(valueAccessor());
+            //        var id=el.attr('id');
 
-                    //handle programmatic updates to the observable
-                    // also makes sure it doesn't update it if it's the same.
-                    // otherwise, it will reload the instance, causing the cursor to jump.
-                    if(id!==undefined&&id!==''&&this.instances_by_id.hasOwnProperty(id))
-                    {
-                        var content=this.instances_by_id[id].getContent({ format: 'raw' });
-                        if(content!==value)
-                        {
-                            el.val(value);
-                        }
-                    }
-                }
-            };
+            //        //handle programmatic updates to the observable
+            //        // also makes sure it doesn't update it if it's the same.
+            //        // otherwise, it will reload the instance, causing the cursor to jump.
+            //        if(id!==undefined&&id!==''&&this.instances_by_id.hasOwnProperty(id))
+            //        {
+            //            var content=this.instances_by_id[id].getContent({ format: 'raw' });
+            //            if(content!==value)
+            //            {
+            //                el.val(value);
+            //            }
+            //        }
+            //    }
+            //};
 
             $("#"+uploadFileId).kendoUpload({
                 multiple: false,
@@ -472,6 +472,13 @@ module ViewModels.Activities
                               {
                                   this.activityTypes()[i].checked=ko.computed(this.defHasActivityTypeCallback(i));
                               }
+
+                              this.values.content.subscribe((newValue: string): void => {
+                                  alert('This alert was triggered by a subscription to ' +
+                                      'the "values.content" observable. Its new value is:\n\n' +
+                                      newValue + '\n\nAdditionally, the textarea value is:\n\n' +
+                                      $('#mce_0').val());
+                              });
 
                               deferred.resolve();
                           })

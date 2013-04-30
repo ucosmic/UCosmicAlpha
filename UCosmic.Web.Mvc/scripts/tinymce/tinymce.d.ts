@@ -4,6 +4,7 @@
     dom: any;
     get: any;
     execCommand: any;
+    getInstanceById(instanceId: string);
 }
 
 

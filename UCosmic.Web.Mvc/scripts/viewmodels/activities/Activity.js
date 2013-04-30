@@ -29,130 +29,6 @@ var ViewModels;
                     },
                     placeholder: "[Select Country/Location, Body of Water or Global]"
                 });
-                tinyMCE.init({
-                    content_css: "scripts/tinymce/css/content.css",
-                    convert_urls: false,
-                    theme: 'advanced',
-                    mode: 'exact',
-                    elements: 'tinymce',
-                    height: '300',
-                    width: '100%',
-                    verify_html: true,
-                    plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
-                    theme_advanced_buttons1: 'undo,redo,restoredraft,|,formatselect,fontsizeselect ,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
-                    theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
-                    theme_advanced_buttons3: '',
-                    theme_advanced_font_sizes: "10px,12px,14px,16px,24px",
-                    theme_advanced_toolbar_location: 'top',
-                    theme_advanced_toolbar_align: 'left',
-                    theme_advanced_statusbar_location: 'bottom',
-                    theme_advanced_resizing: true,
-                    theme_advanced_resizing_max_height: '580',
-                    theme_advanced_resize_horizontal: false,
-                    theme_advanced_blockformats: 'h2,h3,p,blockquote',
-                    save_enablewhendirty: true,
-                    template_external_list_url: 'lists/template_list.js',
-                    external_link_list_url: 'lists/link_list.js',
-                    external_image_list_url: 'lists/image_list.js',
-                    media_external_list_url: 'lists/media_list.js'
-                });
-                this.instances_by_id = {
-                };
-                this.init_queue = $.Deferred();
-                this.init_queue_next = this.init_queue;
-                ko.bindingHandlers.tinymce = {
-                    init: function (element, valueAccessor, allBindingsAccessor, context) {
-                        var init_arguments = arguments;
-                        var options = allBindingsAccessor().tinymceOptions || {
-                        };
-                        var modelValue = valueAccessor();
-                        var value = ko.utils.unwrapObservable(valueAccessor());
-                        var el = $(element);
-                        options.setup = function (ed) {
-                            ed.onChange.add(function (editor, l) {
-                                if(ko.isWriteableObservable(modelValue)) {
-                                    modelValue(l.content);
-                                }
-                            });
-                            ed.onBeforeSetContent.add(function (editor, l) {
-                                if(ko.isWriteableObservable(modelValue)) {
-                                    modelValue(l.content);
-                                }
-                            });
-                            ed.onPaste.add(function (ed, evt) {
-                                var doc = ed.getDoc();
-                                if(ko.isWriteableObservable(modelValue)) {
-                                    setTimeout(function () {
-                                        modelValue(ed.getContent({
-                                            format: 'raw'
-                                        }));
-                                    }, 10);
-                                }
-                            });
-                            ed.onInit.add(function (ed, evt) {
-                                var doc = ed.getDoc();
-                                tinyMCE.dom.Event.add(doc, 'blur', function (e) {
-                                    if(ko.isWriteableObservable(modelValue)) {
-                                        modelValue(ed.getContent({
-                                            format: 'raw'
-                                        }));
-                                    }
-                                });
-                            });
-                        };
-                        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                            $(element).parent().find("textarea.mceEditor,span.mceEditor,div.mceEditor").each(function (i, node) {
-                                var tid = node.id.replace(/_parent$/, '');
-                                var ed = tinyMCE.get(tid);
-                                if(ed) {
-                                    ed.remove();
-                                    if(_this.instances_by_id[tid]) {
-                                        delete _this.instances_by_id[tid];
-                                    }
-                                }
-                            });
-                        });
-                        if(!element.id) {
-                            element.id = tinyMCE.dom.uniqueId();
-                        }
-                        _this.init_queue_next = _this.init_queue_next.pipe(function () {
-                            var defer = $.Deferred();
-                            var init_options = $.extend({
-                            }, options, {
-                                mode: 'none',
-                                init_instance_callback: function (instance) {
-                                    _this.instances_by_id[element.id] = instance;
-                                    ko.bindingHandlers.tinymce.update.apply(undefined, init_arguments);
-                                    defer.resolve(element.id);
-                                    if(options.hasOwnProperty("init_instance_callback")) {
-                                        options.init_instance_callback(instance);
-                                    }
-                                }
-                            });
-                            setTimeout(function () {
-                                tinyMCE.init(init_options);
-                                setTimeout(function () {
-                                    tinyMCE.execCommand("mceAddControl", true, element.id);
-                                }, 0);
-                            }, 0);
-                            return defer.promise();
-                        });
-                        el.val(value);
-                    },
-                    update: function (element, valueAccessor, allBindingsAccessor, context) {
-                        var el = $(element);
-                        var value = ko.utils.unwrapObservable(valueAccessor());
-                        var id = el.attr('id');
-                        if(id !== undefined && id !== '' && _this.instances_by_id.hasOwnProperty(id)) {
-                            var content = _this.instances_by_id[id].getContent({
-                                format: 'raw'
-                            });
-                            if(content !== value) {
-                                el.val(value);
-                            }
-                        }
-                    }
-                };
                 $("#" + uploadFileId).kendoUpload({
                     multiple: false,
                     showFileList: false,
@@ -283,6 +159,9 @@ var ViewModels;
                     for(var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
                     }
+                    _this.values.content.subscribe(function (newValue) {
+                        alert('This alert was triggered by a subscription to ' + 'the "values.content" observable. Its new value is:\n\n' + newValue + '\n\nAdditionally, the textarea value is:\n\n' + $('#mce_0').val());
+                    });
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);

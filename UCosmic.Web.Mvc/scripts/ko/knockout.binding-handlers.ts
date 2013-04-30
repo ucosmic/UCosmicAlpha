@@ -1,5 +1,7 @@
 /// <reference path="../jquery/jquery-1.8.d.ts" />
 /// <reference path="knockout-2.2.d.ts" />
+/// <reference path="../tinymce/tinymce.d.ts" />
+/// <reference path="../oss/jquery.tinymce.d.ts" />
 
 interface KnockoutBindingHandlers {
     element: KnockoutBindingHandler;
@@ -8,6 +10,7 @@ interface KnockoutBindingHandlers {
     multilineText: KnockoutBindingHandler;
     slideDownVisible: KnockoutBindingHandler;
     fadeVisible: KnockoutBindingHandler;
+    tinymce: KnockoutBindingHandler;
 }
 
 ko.bindingHandlers.element = {
@@ -77,5 +80,48 @@ ko.bindingHandlers.fadeVisible = {
             $(element).fadeIn();
         else if ((!value) && isCurrentlyVisible)
             $(element).fadeOut();
+    }
+};
+
+ko.bindingHandlers.tinymce = {
+    init: function (element, valueAccessor, allBindingsAccessor, context) {
+        var options = allBindingsAccessor().tinymceOptions || {};
+        var modelValue = valueAccessor();
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var el = $(element)
+
+        //handle edits made in the editor. Updates after an undo point is reached.
+        options.setup = function (ed) {
+            ed.onChange.add(function (ed, l) {
+                if (ko.isWriteableObservable(modelValue)) {
+                    modelValue(l.content);
+                }
+            });
+        };
+
+        //handle destroying an editor
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+            setTimeout(function () { $(element).tinymce().remove() }, 0)
+        });
+
+        //$(element).tinymce(options);
+        setTimeout(function () { $(element).tinymce(options); }, 0);
+        el.html(value);
+
+    },
+    update: function (element, valueAccessor, allBindingsAccessor, context) {
+        var el = $(element)
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var id = el.attr('id')
+
+        //handle programmatic updates to the observable
+        // also makes sure it doesn't update it if it's the same. 
+        // otherwise, it will reload the instance, causing the cursor to jump.
+        if (id !== undefined) {
+            var content = tinyMCE.getInstanceById(id).getContent({ format: 'raw' })
+            if (content !== value) {
+                el.html(value);
+            }
+        }
     }
 };
