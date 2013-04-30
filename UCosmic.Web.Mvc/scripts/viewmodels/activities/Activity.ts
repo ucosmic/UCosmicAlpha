@@ -474,10 +474,12 @@ module ViewModels.Activities
                               }
 
                               this.values.content.subscribe((newValue: string): void => {
-                                  alert('This alert was triggered by a subscription to ' +
-                                      'the "values.content" observable. Its new value is:\n\n' +
-                                      newValue + '\n\nAdditionally, the textarea value is:\n\n' +
-                                      $('#mce_0').val());
+                                  setTimeout((): void => {
+                                      alert('This alert was triggered by a subscription to ' +
+                                          'the "values.content" observable. Its new value is:\n\n' +
+                                          newValue + '\n\nAdditionally, the textarea value is:\n\n' +
+                                          $('#mce_0').val());
+                                  }, 100);
                               });
 
                               deferred.resolve();
