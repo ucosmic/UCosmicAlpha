@@ -90,7 +90,7 @@ ko.bindingHandlers.fadeVisible = {
                 });
                 var valueUpdateHandler = function (eventName) {
                     if(ko.isWriteableObservable(modelValue)) {
-                        if(ko.utils.stringStartsWith(eventName, 'after')) {
+                        if(eventName.indexOf('after') == 0) {
                             setTimeout(function () {
                                 modelValue(ed.getContent({
                                     format: 'raw'

@@ -10,6 +10,16 @@
 
 @section scripts
 {
+    @* include tinymce unbundled so it can find its plugins and other scripts internally when bundles are optimized *@
+    @if (BundleTable.EnableOptimizations)
+    {
+        <script type="text/javascript" src="~/scripts/tinymce/tiny_mce.js"></script>
+    }
+    else
+    {
+        <script type="text/javascript" src="~/scripts/tinymce/tiny_mce_src.js"></script>
+    }
+
     @Scripts.Render("~/bundles/activity")
 
     <script type="text/javascript">

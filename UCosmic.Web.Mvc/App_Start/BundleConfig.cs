@@ -109,9 +109,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/activities/Activities.js"));
 
             // activity edit
-            bundles.Add(new ScriptBundle("~/bundles/activity").Include(
-                "~/scripts/viewmodels/activities/Activity.js",
-                "~/scripts/tinymce/tiny_mce.js"));
+            bundles.Add(new ScriptBundle("~/bundles/activity").Include( // do not bundle tinyMCE, causes errors when optimized.
+                "~/scripts/viewmodels/activities/Activity.js"));
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(
