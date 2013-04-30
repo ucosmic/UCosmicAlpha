@@ -69,10 +69,56 @@ ko.bindingHandlers.fadeVisible = {
             var modelValue = valueAccessor();
             var value = ko.utils.unwrapObservable(valueAccessor());
             var el = $(element);
+            var eventsToCatch = [
+                "change"
+            ];
+            var requestedEventsToCatch = allBindingsAccessor()["valueUpdate"];
+            if(requestedEventsToCatch) {
+                if(typeof requestedEventsToCatch == "string") {
+                    requestedEventsToCatch = [
+                        requestedEventsToCatch
+                    ];
+                }
+                ko.utils.arrayPushAll(eventsToCatch, requestedEventsToCatch);
+                eventsToCatch = ko.utils.arrayGetDistinctValues(eventsToCatch);
+            }
             options.setup = function (ed) {
                 ed.onChange.add(function (ed, l) {
                     if(ko.isWriteableObservable(modelValue)) {
                         modelValue(l.content);
+                    }
+                });
+                var valueUpdateHandler = function (eventName) {
+                    if(ko.isWriteableObservable(modelValue)) {
+                        if(ko.utils.stringStartsWith(eventName, 'after')) {
+                            setTimeout(function () {
+                                modelValue(ed.getContent({
+                                    format: 'raw'
+                                }));
+                            }, 10);
+                        } else {
+                            modelValue(ed.getContent({
+                                format: 'raw'
+                            }));
+                        }
+                    }
+                };
+                $.each(eventsToCatch, function (index) {
+                    var eventName = eventsToCatch[index];
+                    if(eventName.indexOf('keydown') >= 0) {
+                        ed.onKeyDown.add(function (ed, e) {
+                            valueUpdateHandler(eventName);
+                        });
+                    }
+                    if(eventName.indexOf('keypress') >= 0) {
+                        ed.onKeyPress.add(function (ed, e) {
+                            valueUpdateHandler(eventName);
+                        });
+                    }
+                    if(eventName.indexOf('keyup') >= 0) {
+                        ed.onKeyUp.add(function (ed, e) {
+                            valueUpdateHandler(eventName);
+                        });
                     }
                 });
                 ed.onBeforeSetContent.add(function (editor, l) {
