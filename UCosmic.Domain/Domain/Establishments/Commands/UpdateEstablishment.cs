@@ -23,6 +23,7 @@ namespace UCosmic.Domain.Establishments
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
 
+        public int? ParentId { get; set; }
         public int TypeId { get; set; }
         public string CeebCode
         {
@@ -57,6 +58,12 @@ namespace UCosmic.Domain.Establishments
                 .Must(x => x.IsInRole(RoleName.EstablishmentAdministrator))
                     .WithMessage("User '{0}' is not authorized to execute this command.")
             ;
+
+            // parent id must exist when passed
+            RuleFor(x => x.ParentId)
+                .MustFindEstablishmentById(entities)
+                .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId);
 
             // type id must exist
             RuleFor(x => x.TypeId)
@@ -108,13 +115,18 @@ namespace UCosmic.Domain.Establishments
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                 {
                     x => x.Type.Category,
+                    x => x.Parent,
                 })
                 .Single(x => x.RevisionId == command.Id);
 
             // only mutate when state is modified
+            var parentChanged = (command.ParentId.HasValue && entity.Parent == null) ||
+                (!command.ParentId.HasValue && entity.Parent != null) ||
+                (command.ParentId.HasValue && entity.Parent != null && command.ParentId != entity.Parent.RevisionId);
             if (command.TypeId == entity.Type.RevisionId &&
                 command.CeebCode == entity.CollegeBoardDesignatedIndicator &&
-                command.UCosmicCode == entity.UCosmicCode
+                command.UCosmicCode == entity.UCosmicCode &&
+                !parentChanged
             )
                 return;
 
@@ -126,6 +138,7 @@ namespace UCosmic.Domain.Establishments
                 Value = JsonConvert.SerializeObject(new
                 {
                     command.Id,
+                    command.ParentId,
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
@@ -142,6 +155,10 @@ namespace UCosmic.Domain.Establishments
             }
             entity.CollegeBoardDesignatedIndicator = command.CeebCode;
             entity.UCosmicCode = command.UCosmicCode;
+            if (parentChanged)
+                entity.Parent = command.ParentId.HasValue
+                    ? _entities.Get<Establishment>().Single(x => x.RevisionId == command.ParentId)
+                    : null;
 
             audit.NewState = entity.ToJsonAudit();
             _entities.Create(audit);

@@ -20,12 +20,13 @@ namespace UCosmic.Domain.Establishments
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is int))
+            if (!(context.PropertyValue is int) && !(context.PropertyValue is int?))
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on integer properties", GetType().Name));
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var value = (int)context.PropertyValue;
+            var value = (int?)context.PropertyValue;
+            if (value == null) return false;
 
             var entity = _entities.Query<Establishment>()
                 .SingleOrDefault(x => x.RevisionId == value);
@@ -38,6 +39,12 @@ namespace UCosmic.Domain.Establishments
     {
         public static IRuleBuilderOptions<T, int> MustFindEstablishmentById<T>
             (this IRuleBuilder<T, int> ruleBuilder, IQueryEntities entities)
+        {
+            return ruleBuilder.SetValidator(new MustFindEstablishmentById(entities));
+        }
+
+        public static IRuleBuilderOptions<T, int?> MustFindEstablishmentById<T>
+            (this IRuleBuilder<T, int?> ruleBuilder, IQueryEntities entities)
         {
             return ruleBuilder.SetValidator(new MustFindEstablishmentById(entities));
         }

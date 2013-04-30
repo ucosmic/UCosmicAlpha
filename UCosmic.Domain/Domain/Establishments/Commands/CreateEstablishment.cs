@@ -19,6 +19,7 @@ namespace UCosmic.Domain.Establishments
         }
 
         public IPrincipal Principal { get; private set; }
+        public int? ParentId { get; set; }
         public int TypeId { get; set; }
         public CreateEstablishmentName OfficialName { get; set; }
         public CreateEstablishmentUrl OfficialUrl { get; set; }
@@ -53,6 +54,13 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("Establishment must have an official name.")
                 .Must(x => officialNameValidator.Validate(x).IsValid)
                     .WithMessage("Establishment official name failed one or more validation rules.")
+            ;
+
+            // parent id must exist when passed
+            RuleFor(x => x.ParentId)
+                .MustFindEstablishmentById(entities)
+                .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
+                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
             ;
 
             // typeid is required
@@ -124,9 +132,14 @@ namespace UCosmic.Domain.Establishments
             var establishmentType = _entities.Get<EstablishmentType>()
                 .Single(x => x.RevisionId == command.TypeId);
 
+            var establishmentParent = command.ParentId.HasValue
+                ? _entities.Get<Establishment>().Single(x => x.RevisionId == command.ParentId)
+                : null;
+
             // create initial establishment
             var establishment = new Establishment
             {
+                Parent = establishmentParent,
                 Type = establishmentType,
                 OfficialName = command.OfficialName.Text,
                 WebsiteUrl = hasOfficialUrl ? command.OfficialUrl.Value : null,
@@ -142,6 +155,10 @@ namespace UCosmic.Domain.Establishments
                 Name = command.GetType().FullName,
                 Value = JsonConvert.SerializeObject(new
                 {
+                    command.ParentId,
+                    command.TypeId,
+                    command.CeebCode,
+                    command.UCosmicCode,
                     OfficialName = command.OfficialName.Text,
                     OfficialNameLanguageCode = command.OfficialName.LanguageCode,
                     OfficialUrl = hasOfficialUrl ? command.OfficialUrl.Value : null,

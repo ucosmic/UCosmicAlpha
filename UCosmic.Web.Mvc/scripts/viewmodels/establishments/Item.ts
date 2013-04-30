@@ -47,15 +47,17 @@ module ViewModels.Establishments {
             }
         }
         private _isValidatable(vm: Item): bool {
+            var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
-                return !this._isAwaitingResponse && vm && vm.ceebCode() && vm.originalValues
-                    && vm.originalValues.ceebCode !== vm.ceebCode(); // edit
+                return !this._isAwaitingResponse && vm && vm.ceebCode() && originalValues
+                    && originalValues.ceebCode !== vm.ceebCode(); // edit
             return vm && vm.ceebCode() && !this._isAwaitingResponse; // create
         }
         private _isOk(vm: Item): bool {
+            var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
-                return vm && vm.ceebCode() && vm.originalValues
-                    && vm.originalValues.ceebCode == vm.ceebCode();
+                return vm && vm.ceebCode() && originalValues
+                    && originalValues.ceebCode == vm.ceebCode();
             return false;
         }
         constructor() {
@@ -91,15 +93,17 @@ module ViewModels.Establishments {
             }
         }
         private _isValidatable(vm: Item): bool {
+            var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
-                return !this._isAwaitingResponse && vm && vm.uCosmicCode() && vm.originalValues
-                    && vm.originalValues.uCosmicCode !== vm.uCosmicCode(); // edit
+                return !this._isAwaitingResponse && vm && vm.uCosmicCode() && originalValues
+                    && originalValues.uCosmicCode !== vm.uCosmicCode(); // edit
             return vm && vm.uCosmicCode() && !this._isAwaitingResponse; // create
         }
         private _isOk(vm: Item): bool {
+            var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
-                return vm && vm.uCosmicCode() && vm.originalValues
-                    && vm.originalValues.uCosmicCode == vm.uCosmicCode();
+                return vm && vm.uCosmicCode() && originalValues
+                    && originalValues.uCosmicCode == vm.uCosmicCode();
             return false;
         }
         constructor() {
@@ -113,7 +117,7 @@ module ViewModels.Establishments {
 
         // fields
         id: number = 0;
-        originalValues: any;
+        originalValues: KnockoutObservableAny = ko.observable();
         private _isInitialized: KnockoutObservableBool = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
@@ -425,6 +429,7 @@ module ViewModels.Establishments {
 
         serializeData(): any {
             var data: any = {};
+            data.parentId = this.parentId();
             data.typeId = this.typeId();
             data.ceebCode = this.ceebCode();
             data.uCosmicCode = this.uCosmicCode();
@@ -451,7 +456,7 @@ module ViewModels.Establishments {
 
         // populate scalar value observables from api values
         private _pullScalars(response: IServerApiScalarModel): void {
-            this.originalValues = response;
+            this.originalValues(response);
             if (response) {
                 ko.mapping.fromJS(response, {
                     ignore: ['id']
@@ -484,6 +489,8 @@ module ViewModels.Establishments {
             else {
                 this.typeIdSaveSpinner.start();
                 var data = this.serializeData();
+                var originalValues = this.originalValues();
+                data.parentId = originalValues.parentId;
                 var url = App.Routes.WebApi.Establishments.put(this.id);
                 $.ajax({
                     url: url,
@@ -510,13 +517,16 @@ module ViewModels.Establishments {
         }
 
         sideSwiper = new App.SideSwiper({
-            frameWidth: 980, speed: 'fast', root: '#establishment_page'});
+            frameWidth: 980, speed: 'fast', root: '#establishment_page'
+        });
         parentSearch = new Search(false);
         sammy: Sammy.Application = Sammy();
         private _findingParent: bool = false;
         parentEstablishment: KnockoutObservableAny = ko.observable();
         parentId: KnockoutObservableNumber = ko.observable();
         private _parentScrollTop: number;
+        parentIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        parentIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
 
         private _setupSammy(): void {
             var self = this;
@@ -539,7 +549,7 @@ module ViewModels.Establishments {
             this.parentSearch.sammy.run();
 
             this.sammy.get('/#/select-parent/page/:pageNumber/', function () {
-                if (!self._findingParent){
+                if (!self._findingParent) {
                     self._findingParent = true;
                     self._parentScrollTop = App.WindowScroller.getTop();
                     self.sideSwiper.next();
@@ -562,8 +572,18 @@ module ViewModels.Establishments {
         }
 
         hasParent: KnockoutComputed;
+        isParentDirty: KnockoutComputed;
         private _setupParentComputeds(): void {
             var parentId = this.parentId();
+
+            this.isParentDirty = ko.computed((): bool => {
+                var parentId = this.parentId();
+                var originalValues = this.originalValues();
+                if (!this.id) return false;
+                if (originalValues)
+                    return parentId != originalValues.parentId;
+                return false;
+            });
 
             this.hasParent = ko.computed((): bool => {
                 return this.parentId() !== undefined && this.parentId() > 0;
@@ -585,6 +605,57 @@ module ViewModels.Establishments {
                 }
             });
 
+        }
+
+        clearParent(): void {
+            this.parentId(undefined);
+        }
+
+        clickToCancelParentIdEdit(): void {
+            this.parentId(this.originalValues().parentId);
+        }
+
+        // save typeId & institution codes
+        clickToSaveParentId(): void {
+            if (!this.id) return; // guard against a put before establishment is created
+
+            //// wait for async validators to finish
+            //if (this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
+            //    this.typeIdValidatingSpinner.start();
+            //    window.setTimeout((): void => {
+            //        this.clickToSaveTypeId();
+            //    }, 50);
+            //    return;
+            //}
+
+            this.parentIdValidatingSpinner.stop();
+            if (!this.isValid()) {
+                this.errors.showAllMessages();
+            }
+            else {
+                this.parentIdSaveSpinner.start();
+                var data = this.serializeData();
+                var originalValues = this.originalValues();
+                data.typeId = originalValues.typeId;
+                data.ceebCode = originalValues.ceebCode;
+                data.uCosmicCode = originalValues.uCosmicCode;
+                var url = App.Routes.WebApi.Establishments.put(this.id);
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: data
+                })
+                .always((): void => {
+                    this.parentIdSaveSpinner.stop();
+                })
+                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                    App.flasher.flash(response);
+                    this.parentIdSaveSpinner.stop();
+                    var originalValues = this.originalValues();
+                    originalValues.parentId = data.parentId;
+                    this.originalValues(originalValues);
+                });
+            }
         }
     }
 }

@@ -31,14 +31,16 @@ var ViewModels;
                 }
             };
             CeebCodeValidator.prototype._isValidatable = function (vm) {
+                var originalValues = vm.originalValues();
                 if(vm.id && vm.id !== 0) {
-                    return !this._isAwaitingResponse && vm && vm.ceebCode() && vm.originalValues && vm.originalValues.ceebCode !== vm.ceebCode();
+                    return !this._isAwaitingResponse && vm && vm.ceebCode() && originalValues && originalValues.ceebCode !== vm.ceebCode();
                 }
                 return vm && vm.ceebCode() && !this._isAwaitingResponse;
             };
             CeebCodeValidator.prototype._isOk = function (vm) {
+                var originalValues = vm.originalValues();
                 if(vm.id && vm.id !== 0) {
-                    return vm && vm.ceebCode() && vm.originalValues && vm.originalValues.ceebCode == vm.ceebCode();
+                    return vm && vm.ceebCode() && originalValues && originalValues.ceebCode == vm.ceebCode();
                 }
                 return false;
             };
@@ -74,14 +76,16 @@ var ViewModels;
                 }
             };
             UCosmicCodeValidator.prototype._isValidatable = function (vm) {
+                var originalValues = vm.originalValues();
                 if(vm.id && vm.id !== 0) {
-                    return !this._isAwaitingResponse && vm && vm.uCosmicCode() && vm.originalValues && vm.originalValues.uCosmicCode !== vm.uCosmicCode();
+                    return !this._isAwaitingResponse && vm && vm.uCosmicCode() && originalValues && originalValues.uCosmicCode !== vm.uCosmicCode();
                 }
                 return vm && vm.uCosmicCode() && !this._isAwaitingResponse;
             };
             UCosmicCodeValidator.prototype._isOk = function (vm) {
+                var originalValues = vm.originalValues();
                 if(vm.id && vm.id !== 0) {
-                    return vm && vm.uCosmicCode() && vm.originalValues && vm.originalValues.uCosmicCode == vm.uCosmicCode();
+                    return vm && vm.uCosmicCode() && originalValues && originalValues.uCosmicCode == vm.uCosmicCode();
                 }
                 return false;
             };
@@ -92,6 +96,7 @@ var ViewModels;
             function Item(id) {
                 var _this = this;
                 this.id = 0;
+                this.originalValues = ko.observable();
                 this._isInitialized = ko.observable(false);
                 this.$genericAlertDialog = undefined;
                 this.createSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0));
@@ -123,6 +128,8 @@ var ViewModels;
                 this._findingParent = false;
                 this.parentEstablishment = ko.observable();
                 this.parentId = ko.observable();
+                this.parentIdSaveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.parentIdValidatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this.id = id || 0;
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
@@ -354,6 +361,7 @@ var ViewModels;
             Item.prototype.serializeData = function () {
                 var data = {
                 };
+                data.parentId = this.parentId();
                 data.typeId = this.typeId();
                 data.ceebCode = this.ceebCode();
                 data.uCosmicCode = this.uCosmicCode();
@@ -373,7 +381,7 @@ var ViewModels;
                 return deferred;
             };
             Item.prototype._pullScalars = function (response) {
-                this.originalValues = response;
+                this.originalValues(response);
                 if(response) {
                     ko.mapping.fromJS(response, {
                         ignore: [
@@ -403,6 +411,8 @@ var ViewModels;
                 } else {
                     this.typeIdSaveSpinner.start();
                     var data = this.serializeData();
+                    var originalValues = this.originalValues();
+                    data.parentId = originalValues.parentId;
                     var url = App.Routes.WebApi.Establishments.put(this.id);
                     $.ajax({
                         url: url,
@@ -465,6 +475,17 @@ var ViewModels;
             Item.prototype._setupParentComputeds = function () {
                 var _this = this;
                 var parentId = this.parentId();
+                this.isParentDirty = ko.computed(function () {
+                    var parentId = _this.parentId();
+                    var originalValues = _this.originalValues();
+                    if(!_this.id) {
+                        return false;
+                    }
+                    if(originalValues) {
+                        return parentId != originalValues.parentId;
+                    }
+                    return false;
+                });
                 this.hasParent = ko.computed(function () {
                     return _this.parentId() !== undefined && _this.parentId() > 0;
                 });
@@ -483,6 +504,43 @@ var ViewModels;
                         });
                     }
                 });
+            };
+            Item.prototype.clearParent = function () {
+                this.parentId(undefined);
+            };
+            Item.prototype.clickToCancelParentIdEdit = function () {
+                this.parentId(this.originalValues().parentId);
+            };
+            Item.prototype.clickToSaveParentId = function () {
+                var _this = this;
+                if(!this.id) {
+                    return;
+                }
+                this.parentIdValidatingSpinner.stop();
+                if(!this.isValid()) {
+                    this.errors.showAllMessages();
+                } else {
+                    this.parentIdSaveSpinner.start();
+                    var data = this.serializeData();
+                    var originalValues = this.originalValues();
+                    data.typeId = originalValues.typeId;
+                    data.ceebCode = originalValues.ceebCode;
+                    data.uCosmicCode = originalValues.uCosmicCode;
+                    var url = App.Routes.WebApi.Establishments.put(this.id);
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        data: data
+                    }).always(function () {
+                        _this.parentIdSaveSpinner.stop();
+                    }).done(function (response, statusText, xhr) {
+                        App.flasher.flash(response);
+                        _this.parentIdSaveSpinner.stop();
+                        var originalValues = _this.originalValues();
+                        originalValues.parentId = data.parentId;
+                        _this.originalValues(originalValues);
+                    });
+                }
             };
             return Item;
         })();
