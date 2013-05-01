@@ -137,6 +137,10 @@ module App.Routes {
                 return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
             }
 
+            export function validateParentId(establishmentId: number): string {
+                return makeUrl('establishments/' + establishmentId + '/validate-parent-id');
+            }
+
             export class Names {
 
                 static get (establishmentId: number, establishmentNameId?: number): string {

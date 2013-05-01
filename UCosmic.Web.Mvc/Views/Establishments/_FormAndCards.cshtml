@@ -35,7 +35,7 @@
                             </div>
                             <div class="field-input">
                                 <div class="text-box when-hovered" data-bind="text: ceebCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
-                                <input type="text" data-bind="value: ceebCode, valueUpdate: 'afterkeydown', visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+                                <input type="text" data-bind="value: ceebCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
                             </div>
                         </div>
                         <div class="field-row">
@@ -44,12 +44,12 @@
                             </div>
                             <div class="field-input">
                                 <div class="text-box when-hovered" data-bind="text: uCosmicCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
-                                <input type="text" data-bind="value: uCosmicCode, valueUpdate: 'afterkeydown', visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+                                <input type="text" data-bind="value: uCosmicCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
                             </div>
                         </div>
                         <div class="field-row" data-bind="visible: id && isEditingTypeId" style="display: none;">
                             <div class="field-unlabeled-input">
-                                <input type="button" value="Save" data-bind="click: clickToSaveTypeId, attr: { disabled: typeIdSaveSpinner.isVisible() || typeIdValidatingSpinner.isVisible() }" />
+                                <input type="button" value="Save" data-bind="click: clickToSaveTypeId, disable: isTypeIdSaveDisabled" />
                                 &nbsp;&nbsp;&nbsp;
                                 <a href="#/" data-bind="click: clickToCancelTypeIdEdit">Cancel</a>
                                 &nbsp;&nbsp;&nbsp;
@@ -84,8 +84,11 @@
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <input type="hidden" data-bind="value: parentId"/>
+                    </div>
                     <div data-bind="visible: isParentDirty" style="margin-top: 1em; display: none;">
-                        <input type="button" value="Save" data-bind="click: clickToSaveParentId, attr: { disabled: parentIdSaveSpinner.isVisible() || parentIdValidatingSpinner.isVisible() }" />
+                        <input type="button" value="Save" data-bind="click: clickToSaveParentId, disable: isParentIdSaveDisabled" />
                         &nbsp;&nbsp;&nbsp;
                         <a href="#/" data-bind="click: clickToCancelParentIdEdit">Cancel</a>
                         &nbsp;&nbsp;&nbsp;
@@ -97,7 +100,7 @@
                 </section>
                 <section class="fieldset">
                     <div>
-                        <input type="submit" value="Save" data-bind="visible: !id, attr: { disabled: createSpinner.isVisible }" />
+                        <input type="submit" value="Save" data-bind="visible: !id, disable: { disabled: createSpinner.isVisible }" />
                         &nbsp;&nbsp;&nbsp;
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: validatingSpinner.isVisible" />
                         <strong data-bind="visible: validatingSpinner.isVisible">Validating...</strong>

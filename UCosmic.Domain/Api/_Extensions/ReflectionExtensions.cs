@@ -24,8 +24,19 @@ namespace UCosmic
         public static string PropertyName<T>(this T owner, Expression<Func<T, object>> expression) where T : class
         {
             if (owner == null) throw new ArgumentNullException("owner");
-            var memberExpression = (MemberExpression)expression.Body;
-            return memberExpression.Member.Name;
+
+            var memberExpression = expression.Body as MemberExpression;
+            var unaryExpression = expression.Body as UnaryExpression;
+
+            if (memberExpression == null && unaryExpression != null)
+                memberExpression = unaryExpression.Operand as MemberExpression;
+
+            if (memberExpression != null)
+                return memberExpression.Member.Name;
+
+            throw new NotSupportedException(string.Format(
+                "Unable to determine the property name for the lambda '{0}' on '{1}'.",
+                    expression, owner.GetType().Name));
         }
 
         public static T PropertyValue<T>(this object owner, string propertyName)

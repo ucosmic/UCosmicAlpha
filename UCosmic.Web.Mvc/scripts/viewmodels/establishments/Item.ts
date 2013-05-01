@@ -56,7 +56,7 @@ module ViewModels.Establishments {
         private _isOk(vm: Item): bool {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
-                return vm && vm.ceebCode() && originalValues
+                return vm && vm.ceebCode() !== undefined && originalValues
                     && originalValues.ceebCode == vm.ceebCode();
             return false;
         }
@@ -102,7 +102,7 @@ module ViewModels.Establishments {
         private _isOk(vm: Item): bool {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
-                return vm && vm.uCosmicCode() && originalValues
+                return vm && vm.uCosmicCode() !== undefined && originalValues
                     && originalValues.uCosmicCode == vm.uCosmicCode();
             return false;
         }
@@ -112,6 +112,52 @@ module ViewModels.Establishments {
         }
     }
     new UCosmicCodeValidator();
+
+    class ParentIdValidator implements KnockoutValidationAsyncRuleDefinition {
+        async: bool = true;
+        message: string = 'error';
+        private _isAwaitingResponse: bool = false;
+        private _ruleName: string = 'validEstablishmentParentId';
+        validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
+            if (this._isValidatable(vm)) {
+                var route = App.Routes.WebApi.Establishments
+                    .validateParentId(vm.id);
+                this._isAwaitingResponse = true;
+                $.post(route, vm.serializeData())
+                .always((): void => {
+                    this._isAwaitingResponse = false;
+                })
+                .done((): void => {
+                    callback(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    callback({ isValid: false, message: xhr.responseText });
+                });
+            }
+            else if (!this._isAwaitingResponse || this._isOk(vm)) {
+                callback(true);
+            }
+        }
+        private _isValidatable(vm: Item): bool {
+            var originalValues = vm.originalValues();
+            if (vm.id && vm.id !== 0)
+                return !this._isAwaitingResponse && vm && vm.parentId() && originalValues
+                    && originalValues.parentId !== vm.parentId(); // edit
+            return false; // create
+        }
+        private _isOk(vm: Item): bool {
+            var originalValues = vm.originalValues();
+            if (vm.id && vm.id !== 0)
+                return vm && vm.parentId() && originalValues
+                    && originalValues.parentId == vm.parentId();
+            return true;
+        }
+        constructor() {
+            ko.validation.rules[this._ruleName] = this;
+            ko.validation.addExtender(this._ruleName);
+        }
+    }
+    new ParentIdValidator();
 
     export class Item implements KnockoutValidationGroup {
 
@@ -126,6 +172,7 @@ module ViewModels.Establishments {
         categories: KnockoutObservableArray = ko.observableArray();
         typeIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
         typeIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        isTypeIdSaveDisabled: KnockoutComputed;
         typeId: KnockoutObservableNumber = ko.observable();
         typeText: KnockoutObservableString = ko.observable('[Loading...]');
         ceebCode: KnockoutObservableString = ko.observable();
@@ -149,16 +196,18 @@ module ViewModels.Establishments {
             this.typeEmptyText = ko.computed((): string => {
                 return this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
             });
-            this.typeText = ko.computed((): string => {
+            this.typeId.subscribe((newValue: number): void => {
                 var categories = this.categories();
                 for (var i = 0; i < categories.length; i++) {
                     var types: any[] = categories[i].types();
                     for (var ii = 0; ii < types.length; ii++) {
-                        if (types[ii].id() == this.typeId())
-                            return types[ii].text();
+                        if (types[ii].id() == this.typeId()) {
+                            this.typeText(types[ii].text());
+                            return;
+                        }
                     }
                 }
-                return '[Unknown]';
+                this.typeText('[Unknown]');
             });
             this.typeId.extend({
                 required: {
@@ -181,6 +230,21 @@ module ViewModels.Establishments {
             this.uCosmicCode.subscribe((newValue: string): void => {
                 if (this.uCosmicCode()) // disallow space characters
                     this.uCosmicCode($.trim(this.uCosmicCode()));
+            });
+
+            this.isTypeIdSaveDisabled = ko.computed((): bool => {
+                return this.typeId.isValidating()
+                    || this.uCosmicCode.isValidating()
+                    || this.ceebCode.isValidating()
+                    || this.typeIdSaveSpinner.isVisible()
+                    || this.typeIdValidatingSpinner.isVisible()
+                    || this.typeId.error
+                    || this.ceebCode.error
+                    || this.uCosmicCode.error;
+            });
+
+            this.parentId.extend({
+                validEstablishmentParentId: this
             });
 
             // load the scalars
@@ -573,6 +637,7 @@ module ViewModels.Establishments {
 
         hasParent: KnockoutComputed;
         isParentDirty: KnockoutComputed;
+        isParentIdSaveDisabled: KnockoutComputed;
         private _setupParentComputeds(): void {
             var parentId = this.parentId();
 
@@ -587,6 +652,13 @@ module ViewModels.Establishments {
 
             this.hasParent = ko.computed((): bool => {
                 return this.parentId() !== undefined && this.parentId() > 0;
+            });
+
+            this.isParentIdSaveDisabled = ko.computed((): bool => {
+                return this.parentId.isValidating()
+                    || this.parentIdSaveSpinner.isVisible()
+                    || this.parentIdValidatingSpinner.isVisible()
+                    || this.parentId.error;
             });
 
             this.parentId.subscribe((newValue: number): void => {
@@ -619,14 +691,14 @@ module ViewModels.Establishments {
         clickToSaveParentId(): void {
             if (!this.id) return; // guard against a put before establishment is created
 
-            //// wait for async validators to finish
-            //if (this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
-            //    this.typeIdValidatingSpinner.start();
-            //    window.setTimeout((): void => {
-            //        this.clickToSaveTypeId();
-            //    }, 50);
-            //    return;
-            //}
+            // wait for async validator to finish
+            if (this.parentId.isValidating()) {
+                this.parentIdValidatingSpinner.start();
+                window.setTimeout((): void => {
+                    this.clickToSaveParentId();
+                }, 50);
+                return;
+            }
 
             this.parentIdValidatingSpinner.stop();
             if (!this.isValid()) {

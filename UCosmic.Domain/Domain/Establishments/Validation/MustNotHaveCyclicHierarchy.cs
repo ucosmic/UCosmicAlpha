@@ -53,7 +53,7 @@ namespace UCosmic.Domain.Establishments
 
             if (entity.Offspring.Select(x => x.OffspringId).Contains(parentId.Value))
             {
-                context.MessageFormatter.AppendArgument("FailJustification", "'{ParentName}' is a child of '{EstablishmentName}'");
+                context.MessageFormatter.AppendArgument("FailJustification", "'{ParentName}' is already a child of '{EstablishmentName}'");
                 context.MessageFormatter.AppendArgument("EstablishmentName", entity.TranslatedName);
                 var proposedParent = entity.Offspring.Select(x => x.Offspring).Single(x => x.RevisionId == parentId);
                 context.MessageFormatter.AppendArgument("ParentName", proposedParent.TranslatedName);

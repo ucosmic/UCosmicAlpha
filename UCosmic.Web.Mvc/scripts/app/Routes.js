@@ -146,6 +146,10 @@ var App;
                     return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
                 }
                 Establishments.validateUCosmicCode = validateUCosmicCode;
+                function validateParentId(establishmentId) {
+                    return makeUrl('establishments/' + establishmentId + '/validate-parent-id');
+                }
+                Establishments.validateParentId = validateParentId;
                 var Names = (function () {
                     function Names() { }
                     Names.get = function get(establishmentId, establishmentNameId) {

@@ -191,5 +191,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+        [POST("{establishmentId}/validate-parent-id")]
+        public HttpResponseMessage ValidateParentId(int establishmentId, EstablishmentApiScalarModel model)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            model.Id = establishmentId;
+
+            var command = new UpdateEstablishment(model.Id, User);
+            Mapper.Map(model, command);
+            var validationResult = _updateValidator.Validate(command);
+            var propertyName = command.PropertyName(y => y.ParentId);
+
+            Func<ValidationFailure, bool> forText = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forText))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forText).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

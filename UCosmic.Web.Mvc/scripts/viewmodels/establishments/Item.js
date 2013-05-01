@@ -40,7 +40,7 @@ var ViewModels;
             CeebCodeValidator.prototype._isOk = function (vm) {
                 var originalValues = vm.originalValues();
                 if(vm.id && vm.id !== 0) {
-                    return vm && vm.ceebCode() && originalValues && originalValues.ceebCode == vm.ceebCode();
+                    return vm && vm.ceebCode() !== undefined && originalValues && originalValues.ceebCode == vm.ceebCode();
                 }
                 return false;
             };
@@ -85,13 +85,58 @@ var ViewModels;
             UCosmicCodeValidator.prototype._isOk = function (vm) {
                 var originalValues = vm.originalValues();
                 if(vm.id && vm.id !== 0) {
-                    return vm && vm.uCosmicCode() && originalValues && originalValues.uCosmicCode == vm.uCosmicCode();
+                    return vm && vm.uCosmicCode() !== undefined && originalValues && originalValues.uCosmicCode == vm.uCosmicCode();
                 }
                 return false;
             };
             return UCosmicCodeValidator;
         })();        
         new UCosmicCodeValidator();
+        var ParentIdValidator = (function () {
+            function ParentIdValidator() {
+                this.async = true;
+                this.message = 'error';
+                this._isAwaitingResponse = false;
+                this._ruleName = 'validEstablishmentParentId';
+                ko.validation.rules[this._ruleName] = this;
+                ko.validation.addExtender(this._ruleName);
+            }
+            ParentIdValidator.prototype.validator = function (val, vm, callback) {
+                var _this = this;
+                if(this._isValidatable(vm)) {
+                    var route = App.Routes.WebApi.Establishments.validateParentId(vm.id);
+                    this._isAwaitingResponse = true;
+                    $.post(route, vm.serializeData()).always(function () {
+                        _this._isAwaitingResponse = false;
+                    }).done(function () {
+                        callback(true);
+                    }).fail(function (xhr) {
+                        callback({
+                            isValid: false,
+                            message: xhr.responseText
+                        });
+                    });
+                } else if(!this._isAwaitingResponse || this._isOk(vm)) {
+                    callback(true);
+                }
+            };
+            ParentIdValidator.prototype._isValidatable = function (vm) {
+                var originalValues = vm.originalValues();
+                if(vm.id && vm.id !== 0) {
+                    return !this._isAwaitingResponse && vm && vm.parentId() && originalValues && originalValues.parentId !== vm.parentId();
+                }
+                return false;
+            };
+            ParentIdValidator.prototype._isOk = function (vm) {
+                var originalValues = vm.originalValues();
+                if(vm.id && vm.id !== 0) {
+                    return vm && vm.parentId() && originalValues && originalValues.parentId == vm.parentId();
+                }
+                return true;
+            };
+            return ParentIdValidator;
+        })();        
+        new ParentIdValidator();
         var Item = (function () {
             function Item(id) {
                 var _this = this;
@@ -137,17 +182,18 @@ var ViewModels;
                 this.typeEmptyText = ko.computed(function () {
                     return _this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
                 });
-                this.typeText = ko.computed(function () {
+                this.typeId.subscribe(function (newValue) {
                     var categories = _this.categories();
                     for(var i = 0; i < categories.length; i++) {
                         var types = categories[i].types();
                         for(var ii = 0; ii < types.length; ii++) {
                             if(types[ii].id() == _this.typeId()) {
-                                return types[ii].text();
+                                _this.typeText(types[ii].text());
+                                return;
                             }
                         }
                     }
-                    return '[Unknown]';
+                    _this.typeText('[Unknown]');
                 });
                 this.typeId.extend({
                     required: {
@@ -169,6 +215,12 @@ var ViewModels;
                     if(_this.uCosmicCode()) {
                         _this.uCosmicCode($.trim(_this.uCosmicCode()));
                     }
+                });
+                this.isTypeIdSaveDisabled = ko.computed(function () {
+                    return _this.typeId.isValidating() || _this.uCosmicCode.isValidating() || _this.ceebCode.isValidating() || _this.typeIdSaveSpinner.isVisible() || _this.typeIdValidatingSpinner.isVisible() || _this.typeId.error || _this.ceebCode.error || _this.uCosmicCode.error;
+                });
+                this.parentId.extend({
+                    validEstablishmentParentId: this
                 });
                 var categoriesPact = $.Deferred();
                 $.get(App.Routes.WebApi.Establishments.Categories.get()).done(function (data, textStatus, jqXHR) {
@@ -489,6 +541,9 @@ var ViewModels;
                 this.hasParent = ko.computed(function () {
                     return _this.parentId() !== undefined && _this.parentId() > 0;
                 });
+                this.isParentIdSaveDisabled = ko.computed(function () {
+                    return _this.parentId.isValidating() || _this.parentIdSaveSpinner.isVisible() || _this.parentIdValidatingSpinner.isVisible() || _this.parentId.error;
+                });
                 this.parentId.subscribe(function (newValue) {
                     if(!newValue) {
                         _this.parentEstablishment(undefined);
@@ -514,6 +569,13 @@ var ViewModels;
             Item.prototype.clickToSaveParentId = function () {
                 var _this = this;
                 if(!this.id) {
+                    return;
+                }
+                if(this.parentId.isValidating()) {
+                    this.parentIdValidatingSpinner.start();
+                    window.setTimeout(function () {
+                        _this.clickToSaveParentId();
+                    }, 50);
                     return;
                 }
                 this.parentIdValidatingSpinner.stop();

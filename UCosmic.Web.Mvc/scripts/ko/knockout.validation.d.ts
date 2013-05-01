@@ -138,3 +138,6 @@ interface KnockoutSubscribableFunctions {
     rules: KnockoutObservableArray;
 }
 
+interface KnockoutObservableFunctions {
+    error: string;
+}
