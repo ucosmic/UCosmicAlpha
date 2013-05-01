@@ -11,17 +11,28 @@ var ViewModels;
                 this.uploadingDocument = ko.observable(false);
                 this.isOnGoing = ko.observable(false);
                 this.inititializationErrors = "";
+                this.AUTOSAVE_KEYCOUNT = 10;
+                this.keyCounter = 0;
+                this.dirtyFlag = ko.observable(false);
+                this.saving = false;
                 this._initialize(activityId);
             }
             Activity.prototype._initialize = function (activityId) {
+                var _this = this;
                 this.id = ko.observable(activityId);
+                this.dirty = ko.computed(function () {
+                    if(_this.dirtyFlag()) {
+                        _this.autoSave(_this, null);
+                    }
+                });
             };
             Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
                 var _this = this;
                 $("#" + fromDatePickerId).kendoDatePicker();
                 $("#" + toDatePickerId).kendoDatePicker();
                 $("#" + countrySelectorId).kendoMultiSelect({
-                    dataTextField: "officialName",
+                    dataTextField: "officialName()",
+                    dataValueField: "id()",
                     dataSource: this.locations(),
                     change: function (event) {
                         _this.updateLocations(event.sender.value());
@@ -165,10 +176,32 @@ var ViewModels;
                     for(var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
                     }
+                    _this.values.title.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
                     _this.values.content.subscribe(function (newValue) {
-                        setTimeout(function () {
-                            alert('This alert was triggered by a subscription to ' + 'the "values.content" observable. Its new value is:\n\n' + newValue + '\n\nAdditionally, the textarea value is:\n\n' + $('#mce_0').val());
-                        }, 100);
+                        _this.keyCountAutoSave(newValue);
+                    });
+                    _this.values.startsOn.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
+                    _this.values.endsOn.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
+                    _this.values.wasExternallyFunded.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
+                    _this.values.wasInternallyFunded.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
+                    _this.values.locations.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
+                    _this.values.types.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
+                    _this.values.tags.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
                     });
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
@@ -176,41 +209,65 @@ var ViewModels;
                 });
                 return deferred;
             };
-            Activity.prototype.autoSave = function (item, event) {
+            Activity.prototype.keyCountAutoSave = function (newValue) {
+                this.keyCounter += 1;
+                if(this.keyCounter > this.AUTOSAVE_KEYCOUNT) {
+                    this.dirtyFlag(true);
+                    this.keyCounter = 0;
+                }
+            };
+            Activity.prototype.autoSave = function (viewModel, event) {
+                var _this = this;
+                if(this.saving) {
+                    return;
+                }
+                if(!this.dirtyFlag()) {
+                    return;
+                }
                 var model = ko.mapping.toJS(this);
-                model.values.startsOn = moment(model.values.startsOn).format();
-                model.values.endsOn = moment(model.values.endsOn).format();
+                model.values.startsOn = model.values.startsOn != null ? moment(model.values.startsOn).format() : null;
+                model.values.endsOn = model.values.endsOn != null ? moment(model.values.endsOn).format() : null;
+                this.saving = true;
                 $.ajax({
-                    async: false,
                     type: 'PUT',
-                    url: App.Routes.WebApi.Activities.put(item.id()),
+                    url: App.Routes.WebApi.Activities.put(viewModel.id()),
                     data: model,
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
+                        _this.saving = false;
+                        _this.dirtyFlag(false);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
+                        _this.saving = false;
+                        _this.dirtyFlag(false);
                         alert(textStatus + "; " + errorThrown);
                     }
                 });
-                ;
-                location.href = App.Routes.Mvc.My.Profile.get();
             };
-            Activity.prototype.save = function (item, event, mode) {
-                this.autoSave(item, event);
+            Activity.prototype.save = function (viewModel, event, mode) {
+                var _this = this;
+                this.autoSave(viewModel, event);
+                while(this.saving) {
+                    alert("Please wait while activity is saved.");
+                }
+                this.saving = true;
                 $.ajax({
                     async: false,
                     type: 'PUT',
-                    url: App.Routes.WebApi.Activities.putEdit(item.id()),
+                    url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
                     data: ko.toJSON(mode),
                     dataType: 'json',
                     contentType: 'application/json',
                     success: function (data, textStatus, jqXhr) {
+                        _this.saving = false;
+                        _this.dirtyFlag(false);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
+                        _this.saving = false;
+                        _this.dirtyFlag(false);
                         alert(textStatus + "; " + errorThrown);
                     }
                 });
-                ;
                 location.href = App.Routes.Mvc.My.Profile.get();
             };
             Activity.prototype.cancel = function (item, event, mode) {

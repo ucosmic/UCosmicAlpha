@@ -119,23 +119,24 @@ var ViewModels;
                                     }
                                 }
                             });
+                        } else {
+                            var element = event.target;
+                            var url = null;
+                            while((element != null) && (element.nodeName != 'TR')) {
+                                element = element.parentElement;
+                            }
+                            if(element != null) {
+                                url = element.attributes["href"].value;
+                            }
+                            if(url != null) {
+                                location.href = url;
+                            }
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert(textStatus + "|" + errorThrown);
                     }
                 });
-                var element = event.target;
-                var url = null;
-                while((element != null) && (element.nodeName != 'TR')) {
-                    element = element.parentElement;
-                }
-                if(element != null) {
-                    url = element.attributes["href"].value;
-                }
-                if(url != null) {
-                    location.href = url;
-                }
             };
             ActivityList.prototype.newActivity = function (data, event) {
                 $.ajax({

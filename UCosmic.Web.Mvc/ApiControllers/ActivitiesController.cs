@@ -506,8 +506,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}/documents/{documentId}/title")]
         public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
         {
-            ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
-
             var command = new RenameActivityDocument(User, documentId, newTitle);
 
             try

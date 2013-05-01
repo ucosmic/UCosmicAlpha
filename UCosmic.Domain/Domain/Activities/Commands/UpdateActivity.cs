@@ -55,14 +55,17 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
+        private readonly IHandleCommands<CreateDeepActivityValues> _createActivityValuesDeep;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities,
                                              IUnitOfWork unitOfWork,
-                                             IHandleCommands<UpdateActivityValues> updateActivityValues)
+                                             IHandleCommands<UpdateActivityValues> updateActivityValues,
+                                             IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
+            _createActivityValuesDeep = createActivityValuesDeep;
         }
 
         public void Handle(UpdateActivity command)
@@ -72,15 +75,30 @@ namespace UCosmic.Domain.Activities
             /* Retrieve the activity to update. */
             var target = _entities.Get<Activity>().Single(a => a.RevisionId == command.Id);
 
-            /* Retrieve the target activty values of the same mode. */
-            var targetActivityValues = _entities.Get<ActivityValues>()
-                                                .Single(v => (v.ActivityId == target.RevisionId) &&
-                                                             (v.ModeText == command.ModeText));
+            /* Retrieve the target activity values of the same mode. */
+            ActivityValues targetActivityValues = null;
 
+            /* Attempt to get the ActivityValues of the command'ed type. */
+            try
+            {
+                targetActivityValues = _entities.Get<ActivityValues>()
+                                            .Single(v => (v.ActivityId == target.RevisionId) &&
+                                                            (v.ModeText == command.ModeText));
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains("Sequence contains no elements")) throw ex;
+
+                var mode = command.ModeText.AsEnum<ActivityMode>();
+
+                var createActivityValuesDeepCommand = new CreateDeepActivityValues(target.RevisionId, mode);
+                _createActivityValuesDeep.Handle(createActivityValuesDeepCommand);
+
+                targetActivityValues = createActivityValuesDeepCommand.CreatedActivityValues;
+            }
 
             /* If target fields equal new field values, we do not proceed. */
-            if ((target.ModeText == command.ModeText) &&
-                (targetActivityValues.Equals(command.Values)))
+            if ( targetActivityValues.Equals(command.Values) )
             {
                 return;
             }

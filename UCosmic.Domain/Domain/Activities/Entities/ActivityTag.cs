@@ -4,11 +4,10 @@
     {
         protected bool Equals(ActivityTag other)
         {
-            return Number == other.Number &&
-                string.Equals(Text, other.Text) &&
-                string.Equals(DomainTypeText, other.DomainTypeText) &&
-                DomainKey == other.DomainKey &&
-                string.Equals(ModeText, other.ModeText);
+            return  string.Equals(Text, other.Text) &&
+                    string.Equals(DomainTypeText, other.DomainTypeText) &&
+                    DomainKey == other.DomainKey &&
+                    string.Equals(ModeText, other.ModeText);
         }
 
         public override bool Equals(object obj)
@@ -26,7 +25,7 @@
                 int hashCode = Number;
                 hashCode = (hashCode*397) ^ (Text != null ? Text.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (DomainTypeText != null ? DomainTypeText.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ DomainKey.GetHashCode();
+                hashCode = (hashCode*397) ^ (DomainKey != null ? DomainKey.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
                 return hashCode;
             }

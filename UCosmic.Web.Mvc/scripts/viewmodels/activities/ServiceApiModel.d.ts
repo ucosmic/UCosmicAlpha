@@ -72,7 +72,7 @@ module Service.ApiModels {
         startsOn: KnockoutObservableDate;
         endsOn: KnockoutObservableDate;
         wasExternallyFunded: KnockoutObservableBool;
-        wasinternallyFunded: KnockoutObservableBool;
+        wasInternallyFunded: KnockoutObservableBool;
         locations: KnockoutObservableArray;
         types: KnockoutObservableArray;         // IObservableValuesActivityType
         modeText: KnockoutObservableString;
