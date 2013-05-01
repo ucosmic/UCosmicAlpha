@@ -11,7 +11,7 @@
     </header>
     <ul class="data-items" data-bind="foreach: names">
         <li data-bind="css: { selected: editMode }">
-            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingName() }">
+            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingName() }" style="display: none;">
                 <div class="group">
                     <div class="on-left" style="max-width: 645px;">
                         <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>

@@ -162,7 +162,7 @@ module ViewModels.Establishments {
         // lensing
         lenses: KnockoutObservableArray = ko.observableArray([
             { text: 'Table', value: 'table' },
-            { text: 'List', value: 'list' },
+            { text: 'List', value: 'list' }//,
             //{ text: 'Grid', value: 'grid' },
             //{ text: 'Map', value: 'map' },
             //{ text: 'Tree', value: 'tree' }

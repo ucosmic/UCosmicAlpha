@@ -7,9 +7,9 @@
                 @Html.Partial(MVC.Establishments.Views._FormParentSection)
                 @Html.Partial(MVC.Establishments.Views._FormLocationSection)
                 @Html.Partial(MVC.Establishments.Views._FormCodesAndCategorySection)
-                <section class="fieldset">
+                <section class="fieldset" data-bind="visible: !id" style="display: none;">
                     <div>
-                        <input type="submit" value="Save" data-bind="visible: !id, disable: { disabled: createSpinner.isVisible }" />
+                        <input type="submit" value="Save" data-bind="disable: { disabled: createSpinner.isVisible }" />
                         &nbsp;&nbsp;&nbsp;
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: validatingSpinner.isVisible" />
                         <strong data-bind="visible: validatingSpinner.isVisible">Validating...</strong>
@@ -18,7 +18,7 @@
                         <strong data-bind="visible: createSpinner.isVisible">Saving...</strong>
                     </div>
                 </section>
-                <section class="fieldset" data-bind="visible: isValidationSummaryVisible() && errors().length">
+                <section class="fieldset" data-bind="visible: isValidationSummaryVisible() && errors().length" style="display: none;">
                     <div class="validation-summary">
                         <h3>Please correct the following and try again:</h3>
                         <div data-bind="foreach: names">

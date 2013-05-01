@@ -8,6 +8,7 @@ var ViewModels;
                 this.mapZoom = ko.observable(1);
                 this.mapTools = ko.observable();
                 this.$mapCanvas = ko.observable();
+                this.isMapVisible = ko.observable();
                 this.isLoaded = ko.observable();
                 this.continents = ko.observableArray();
                 this.continentId = ko.observable();
@@ -243,6 +244,7 @@ var ViewModels;
                     scrollwheel: false
                 };
                 this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
+                this.isMapVisible(true);
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
                     _this.mapTools().hideMarkerTools();

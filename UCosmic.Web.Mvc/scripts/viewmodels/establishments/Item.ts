@@ -679,8 +679,9 @@ module ViewModels.Establishments {
 
         }
 
-        clearParent(): void {
+        clearParent(vm: any, e: JQueryEventObject): void {
             this.parentId(undefined);
+            e.stopPropagation();
         }
 
         clickToCancelParentIdEdit(): void {

@@ -27,8 +27,7 @@ var ViewModels;
                     {
                         text: 'List',
                         value: 'list'
-                    }, 
-                    
+                    }
                 ]);
                 this.lens = ko.observable();
                 this.$itemsPage = undefined;

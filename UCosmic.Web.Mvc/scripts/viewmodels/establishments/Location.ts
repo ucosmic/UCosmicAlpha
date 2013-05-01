@@ -18,6 +18,7 @@ module ViewModels.Establishments {
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
+        isMapVisible: KnockoutObservableBool = ko.observable();
         isLoaded: KnockoutObservableBool = ko.observable();
         continents: KnockoutObservablePlaceModelArray = ko.observableArray();
         continentId: KnockoutObservableNumber = ko.observable();
@@ -306,6 +307,7 @@ module ViewModels.Establishments {
                 scrollwheel: false // prevent mouse wheel zooming
             };
             this.map = new gm.Map(this.$mapCanvas()[0], mapOptions); // create map on element
+            this.isMapVisible(true);
 
             gm.event.addListenerOnce(this.map, 'idle', (): void => {
                 this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));

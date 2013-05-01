@@ -11,7 +11,7 @@
     </header>
     <ul class="data-items" data-bind="foreach: urls">
         <li data-bind="css: { selected: editMode }">
-            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingUrl() }">
+            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingUrl() }" style="display: none;">
                 <div class="group">
                     <div class="on-left" style="max-width: 645px;">
                         <span data-bind="text: value, css: { 'bold': isOfficialUrl() }" class="inline-block"></span>
@@ -75,7 +75,7 @@
             </div>
         </li>
     </ul>
-    <div data-bind="visible: !urls().length">
+    <div data-bind="visible: !urls().length" style="display: none;">
         [No URLs]
     </div>
 </section>

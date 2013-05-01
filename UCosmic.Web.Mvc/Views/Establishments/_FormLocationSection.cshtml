@@ -133,7 +133,7 @@
         Lng:
         <input type="text" data-bind="value: toolsMarkerLng" />
     </div>
-    <div id="map_canvas" class="map-canvas-w100-h500" data-bind="jqObservableElement: '$mapCanvas'"></div>
+    <div id="map_canvas" class="map-canvas-w100-h500" data-bind="jqObservableElement: '$mapCanvas', visible: isMapVisible" style="display: none;"></div>
     @Html.Partial(MVC.Shared.Views._GoogleMapsToolsOverlay)
     <div data-bind="jqElement: '$dataLoadingDialog'" title="Loading Geographic Information" style="display: none;">
         <div>

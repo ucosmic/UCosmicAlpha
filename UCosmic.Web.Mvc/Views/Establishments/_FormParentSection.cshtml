@@ -2,27 +2,30 @@
     <header>
         <h2>
             <span>Parent Establishment</span>
-            <a href="#/select-parent/page/1/" title="Edit parent establishment">
-                <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit parent establishment" />
-            </a>
-            <a href="#/" title="Remove parent establishment" data-bind="visible: hasParent, click: clearParent">
-                <img src="~/images/icons/minus/minus-24-red.png" alt="Remove parent establishment" />
-            </a>
         </h2>
     </header>
-    <div>
-        <div data-bind="visible: !hasParent()">
-            [None -- This is a top-level establishment]
-        </div>
-        <div data-bind="if: hasParent">
-            <div data-bind="with: parentEstablishment">
-                <span data-bind="text: translatedName" style="font-weight: bold;"></span>
-                <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
+    <div data-bind="visible: $data" style="display: none;">
+        <div>
+            <div class="text-box when-hovered" data-bind="click: function () { window.location.hash = '#/select-parent/page/1/'; }">
+                <div class="group">
+                    <div class="on-left" style="max-width: 645px;">
+                        <span class="inline-block" data-bind="with: parentEstablishment, visible: hasParent">
+                            <span data-bind="text: translatedName" class="bold"></span>
+                            <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="    text: officialName"></span>)
+                            </span>
+                        </span>
+                        <span data-bind="visible: !hasParent()">[None -- This is a top-level establishment]</span>
+                    </div>
+                    <div class="on-right" data-bind="visible: hasParent">
+                        <a href="#" data-bind="click: clearParent" title="Remove parent establishment">
+                            <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div>
-        <input type="hidden" data-bind="value: parentId"/>
+        <input type="hidden" data-bind="value: parentId" />
     </div>
     <div data-bind="visible: isParentDirty" style="margin-top: 1em; display: none;">
         <input type="button" value="Save" data-bind="click: clickToSaveParentId, disable: isParentIdSaveDisabled" />

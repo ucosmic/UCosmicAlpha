@@ -89,7 +89,11 @@
                         // Update the width in case the original textarea width has changed
                         mirror.style.width = $ta.css('width');
                         if ($ta.css('box-sizing') === borderBox || $ta.css('-moz-box-sizing') === borderBox || $ta.css('-webkit-box-sizing') === borderBox) {
-                            if ($ta.css('width').indexOf('px') > 0) mirror.style.width = $ta.width() + 'px';
+                            if ($ta.css('width').indexOf('px') > 0) {
+                                var newMirrorStyleWidth = $ta.width();
+                                if (newMirrorStyleWidth < 0) newMirrorStyleWidth = 0;
+                                mirror.style.width = newMirrorStyleWidth + 'px';
+                            }
                         }
 
                         // Needed for IE to reliably return the correct scrollHeight

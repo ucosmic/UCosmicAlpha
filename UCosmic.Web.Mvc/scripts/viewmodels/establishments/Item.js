@@ -560,8 +560,9 @@ var ViewModels;
                     }
                 });
             };
-            Item.prototype.clearParent = function () {
+            Item.prototype.clearParent = function (vm, e) {
                 this.parentId(undefined);
+                e.stopPropagation();
             };
             Item.prototype.clickToCancelParentIdEdit = function () {
                 this.parentId(this.originalValues().parentId);
