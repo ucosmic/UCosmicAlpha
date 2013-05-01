@@ -633,6 +633,8 @@ module ViewModels.Establishments {
                     self._findingParent = false;
                 }
             });
+
+            this.sammy.setLocation('#/');
         }
 
         hasParent: KnockoutComputed;

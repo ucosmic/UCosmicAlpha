@@ -523,6 +523,7 @@ var ViewModels;
                         self._findingParent = false;
                     }
                 });
+                this.sammy.setLocation('#/');
             };
             Item.prototype._setupParentComputeds = function () {
                 var _this = this;
