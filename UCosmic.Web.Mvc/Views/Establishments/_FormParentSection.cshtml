@@ -1,0 +1,37 @@
+﻿<section class="fieldset">
+    <header>
+        <h2>
+            <span>Parent Establishment</span>
+            <a href="#/select-parent/page/1/" title="Edit parent establishment">
+                <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit parent establishment" />
+            </a>
+            <a href="#/" title="Remove parent establishment" data-bind="visible: hasParent, click: clearParent">
+                <img src="~/images/icons/minus/minus-24-red.png" alt="Remove parent establishment" />
+            </a>
+        </h2>
+    </header>
+    <div>
+        <div data-bind="visible: !hasParent()">
+            [None -- This is a top-level establishment]
+        </div>
+        <div data-bind="if: hasParent">
+            <div data-bind="with: parentEstablishment">
+                <span data-bind="text: translatedName" style="font-weight: bold;"></span>
+                <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
+            </div>
+        </div>
+    </div>
+    <div>
+        <input type="hidden" data-bind="value: parentId"/>
+    </div>
+    <div data-bind="visible: isParentDirty" style="margin-top: 1em; display: none;">
+        <input type="button" value="Save" data-bind="click: clickToSaveParentId, disable: isParentIdSaveDisabled" />
+        &nbsp;&nbsp;&nbsp;
+        <a href="#/" data-bind="click: clickToCancelParentIdEdit">Cancel</a>
+        &nbsp;&nbsp;&nbsp;
+        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: parentIdSaveSpinner.isVisible" />
+        <strong data-bind="visible: parentIdSaveSpinner.isVisible">Saving...</strong>
+        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: parentIdValidatingSpinner.isVisible" />
+        <strong data-bind="visible: parentIdValidatingSpinner.isVisible">Validating...</strong>
+    </div>
+</section>

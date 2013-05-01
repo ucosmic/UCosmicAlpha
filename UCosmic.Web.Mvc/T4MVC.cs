@@ -2719,15 +2719,10 @@ namespace Links
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class NewFolder1 {
                 private const string URLPATH = "~/scripts/viewmodels/NewFolder1";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            }
-        
             public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class places {
                 private const string URLPATH = "~/scripts/viewmodels/places";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

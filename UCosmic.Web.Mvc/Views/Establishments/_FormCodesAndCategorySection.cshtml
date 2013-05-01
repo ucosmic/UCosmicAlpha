@@ -1,0 +1,56 @@
+﻿<section class="fieldset">
+    <header>
+        <h2>
+            <span>Classification &amp; Identifier Codes</span>
+            <a href="#/" title="Edit classification & identifier codes" data-bind="visible: !isEditingTypeId(), click: clickToEditTypeId" style="display: none;">
+                <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit classification & identifier codes" />
+            </a>
+        </h2>
+    </header>
+    <div class="field-table w690-l190-v500">
+        <div class="field-row">
+            <div class="field-label">
+                <label>Classification</label>
+            </div>
+            <div class="field-input">
+                <div class="text-box when-hovered" data-bind="text: typeText, click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                <select data-bind="foreach: categories, value: typeId, visible: isEditingTypeId" style="display: none;">
+                    <option data-bind="visible: $index() == 0 && !$parent.id, text: $parent.typeEmptyText" style="display: none;" value="">[Loading...]</option>
+                    <optgroup label="" data-bind="attr: { label: text }, foreach: types">
+                        <option data-bind="attr: { value: id }, text: text"></option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-label">
+                <label>CEEB Code</label>
+            </div>
+            <div class="field-input">
+                <div class="text-box when-hovered" data-bind="text: ceebCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                <input type="text" data-bind="value: ceebCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-label">
+                <label>UCosmic Code</label>
+            </div>
+            <div class="field-input">
+                <div class="text-box when-hovered" data-bind="text: uCosmicCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                <input type="text" data-bind="value: uCosmicCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+            </div>
+        </div>
+        <div class="field-row" data-bind="visible: id && isEditingTypeId" style="display: none;">
+            <div class="field-unlabeled-input">
+                <input type="button" value="Save" data-bind="click: clickToSaveTypeId, disable: isTypeIdSaveDisabled" />
+                &nbsp;&nbsp;&nbsp;
+                <a href="#/" data-bind="click: clickToCancelTypeIdEdit">Cancel</a>
+                &nbsp;&nbsp;&nbsp;
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: typeIdSaveSpinner.isVisible" />
+                <strong data-bind="visible: typeIdSaveSpinner.isVisible">Saving...</strong>
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: typeIdValidatingSpinner.isVisible" />
+                <strong data-bind="visible: typeIdValidatingSpinner.isVisible">Validating...</strong>
+            </div>
+        </div>
+    </div>
+</section>

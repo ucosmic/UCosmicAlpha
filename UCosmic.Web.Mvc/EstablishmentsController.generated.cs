@@ -112,8 +112,10 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _FormAndCards = "_FormAndCards";
+                public readonly string _FormCodesAndCategorySection = "_FormCodesAndCategorySection";
                 public readonly string _FormLocationSection = "_FormLocationSection";
                 public readonly string _FormNamesSection = "_FormNamesSection";
+                public readonly string _FormParentSection = "_FormParentSection";
                 public readonly string _FormSideBar = "_FormSideBar";
                 public readonly string _FormUrlsSection = "_FormUrlsSection";
                 public readonly string _SearchAndResults = "_SearchAndResults";
@@ -122,8 +124,10 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Index = "Index";
             }
             public readonly string _FormAndCards = "~/Views/Establishments/_FormAndCards.cshtml";
+            public readonly string _FormCodesAndCategorySection = "~/Views/Establishments/_FormCodesAndCategorySection.cshtml";
             public readonly string _FormLocationSection = "~/Views/Establishments/_FormLocationSection.cshtml";
             public readonly string _FormNamesSection = "~/Views/Establishments/_FormNamesSection.cshtml";
+            public readonly string _FormParentSection = "~/Views/Establishments/_FormParentSection.cshtml";
             public readonly string _FormSideBar = "~/Views/Establishments/_FormSideBar.cshtml";
             public readonly string _FormUrlsSection = "~/Views/Establishments/_FormUrlsSection.cshtml";
             public readonly string _SearchAndResults = "~/Views/Establishments/_SearchAndResults.cshtml";

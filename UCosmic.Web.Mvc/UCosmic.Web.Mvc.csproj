@@ -2455,6 +2455,8 @@
     <Content Include="Views\Errors\BadRequest.cshtml" />
     <Content Include="Views\Identity\SignOverFail.cshtml" />
     <Content Include="Views\Users\New.cshtml" />
+    <Content Include="Views\Establishments\_FormParentSection.cshtml" />
+    <Content Include="Views\Establishments\_FormCodesAndCategorySection.cshtml" />
     <Content Include="Views\MyProfile\_GeographicExpertises.cshtml" />
     <Content Include="Views\MyProfile\_LanguageExpertises.cshtml" />
     <Content Include="Views\MyProfile\_FormalEducations.cshtml" />
