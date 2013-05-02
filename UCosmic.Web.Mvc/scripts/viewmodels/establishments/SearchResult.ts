@@ -10,24 +10,55 @@ module ViewModels.Establishments {
 
         private _owner: Search;
 
-        // computed observables
-        nullDisplayCountryName: KnockoutComputed;
-        fitOfficialUrl: KnockoutComputed;
-        officialNameMatchesTranslation: KnockoutComputed;
-        officialNameDoesNotMatchTranslation: KnockoutComputed;
-
         constructor (values: IServerApiFlatModel, owner: Search) {
-
             this._owner = owner;
+            this._pullData(values);
+            this._setupComputeds();
+        }
 
+        //#region Observable data
+
+        id: KnockoutObservableNumber;
+        officialName: KnockoutObservableString;
+        translatedName: KnockoutObservableString;
+        officialUrl: KnockoutObservableString;
+        countryName: KnockoutObservableString;
+        countryCode: KnockoutObservableString;
+        uCosmicCode: KnockoutObservableString;
+        ceebCode: KnockoutObservableString;
+
+        private _pullData(values: IServerApiFlatModel) {
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);
+        }
 
+        //#endregion
+        //#region Computeds
+
+        private _setupComputeds() {
+            this._setupNullDisplayCountryName();
+            this._setupFittedOfficialUrl();
+            this._setupOfficialUrlTooltip();
+            this._setupOfficialNameTranslationMatches();
+        }
+
+        //#region Country computeds
+
+        nullDisplayCountryName: KnockoutComputed;
+
+        private _setupNullDisplayCountryName() {
             // show alternate text when country is undefined
             this.nullDisplayCountryName = ko.computed((): string => {
                 return this.countryName() || '[Undefined]';
             });
+        }
 
+        //#endregion
+        //#region Url computeds
+
+        fitOfficialUrl: KnockoutComputed;
+
+        private _setupFittedOfficialUrl() {
             // compact URL so that it fits within page width
             this.fitOfficialUrl = ko.computed((): string => {
                 var value = this.officialUrl();
@@ -46,7 +77,28 @@ module ViewModels.Establishments {
                 }
                 return computedValue;
             });
+        }
 
+        officialUrlTooltip: KnockoutComputed;
+
+        private _setupOfficialUrlTooltip() {
+            // inform user what clicking the link does
+            this.officialUrlTooltip = ko.computed((): string => {
+                var value = this.fitOfficialUrl();
+                if (!value) return value;
+
+                var computedValue = 'Visit ' + value + ' (opens a new window)';
+                return computedValue;
+            });
+        }
+
+        //#endregion
+        //#region Name computeds
+
+        officialNameMatchesTranslation: KnockoutComputed;
+        officialNameDoesNotMatchTranslation: KnockoutComputed;
+
+        private _setupOfficialNameTranslationMatches() {
             // are the official name and translated name the same?
             this.officialNameMatchesTranslation = ko.computed((): bool => {
                 return this.officialName() === this.translatedName();
@@ -56,15 +108,10 @@ module ViewModels.Establishments {
             });
         }
 
-        // api model properties are mapped to observables
-        id: KnockoutObservableNumber;
-        officialName: KnockoutObservableString;
-        translatedName: KnockoutObservableString;
-        officialUrl: KnockoutObservableString;
-        countryName: KnockoutObservableString;
-        countryCode: KnockoutObservableString;
-        uCosmicCode: KnockoutObservableString;
-        ceebCode: KnockoutObservableString;
+        //#endregion
+
+        //#endregion
+        //#region Click handlers
 
         // navigate to detail page
         clickAction(viewModel: SearchResult, e: JQueryEventObject): void {
@@ -76,5 +123,7 @@ module ViewModels.Establishments {
             e.stopPropagation();
             return true;
         }
+
+        //#endregion
     }
 }

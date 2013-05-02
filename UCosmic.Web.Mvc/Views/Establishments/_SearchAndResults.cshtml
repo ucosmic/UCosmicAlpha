@@ -50,7 +50,7 @@
                                     </div>
                                     <div data-bind="visible: officialUrl">
                                         <a href="#" target="_blank"
-                                            data-bind="text: fitOfficialUrl, attr: { href: 'http://' + officialUrl() }, click: openOfficialUrl"></a>
+                                            data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
                                     </div>
                                 </td>
                                 <td>
