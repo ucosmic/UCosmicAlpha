@@ -285,7 +285,7 @@ module ViewModels.Activities {
                 multiple: false,
                 showFileList: false,
                 async: {
-                    saveUrl: App.Routes.WebApi.Activities.Documents.post( this.id() ),
+                    saveUrl: App.Routes.WebApi.Activities.Documents.post( this.id(), this.modeText() ),
                     autoUpload: true
                 },
                 select: ( e: any ): void => {
@@ -493,9 +493,7 @@ module ViewModels.Activities {
                               this.values.endsOn.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.wasExternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.wasInternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.locations.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.types.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.tags.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
 
                               deferred.resolve();
                           } )
@@ -532,8 +530,29 @@ module ViewModels.Activities {
             }
 
             var model = ko.mapping.toJS( this );
-            model.values.startsOn = model.values.startsOn != null ? moment( model.values.startsOn ).format() : null;
-            model.values.endsOn = model.values.endsOn != null ? moment( model.values.endsOn ).format() : null;
+
+            /* Date processing */
+            {
+                /* When supplying only year to moment, there is a rounding error */
+                if ( ( model.values.startsOn != null ) && ( model.values.startsOn.length > 0 ) ) {
+                    model.values.startsOn = model.values.startsOn.trim();
+                    if ( model.values.startsOn.indexOf( '/' ) == -1 ) {
+                        model.values.startsOn = "01/01/" + model.values.startsOn;
+                    }
+                }
+
+                if ( ( model.values.endsOn != null ) && ( model.values.endsOn.length > 0 ) ) {
+                    model.values.endsOn = model.values.endsOn.trim();
+                    if ( model.values.endsOn.indexOf( '/' ) == -1 ) {
+                        model.values.endsOn = "01/01/" + model.values.endsOn;
+                    }
+                }
+
+                model.values.startsOn = ( model.values.startsOn != null ) && ( model.values.startsOn.length > 0 ) ?
+                    moment( model.values.startsOn ).format() : null;
+                model.values.endsOn = ( model.values.endsOn != null ) && ( model.values.endsOn.length > 0 ) ?
+                    moment( model.values.endsOn ).format() : null;
+            }
 
             this.saving = true;
             $.ajax( {
@@ -748,6 +767,7 @@ module ViewModels.Activities {
                 var location = ko.mapping.fromJS( { id: 0, placeId: locations[i], version: "" } );
                 this.values.locations.push( location );
             }
+            this.dirtyFlag(true);
         }
 
         // --------------------------------------------------------------------------------
@@ -755,7 +775,6 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         addTag( item: any, event: Event ): void {
-            debugger;
             var newText: string = null;
             var domainTypeText: string = "Custom";
             var domainKey: number = null;
@@ -788,6 +807,7 @@ module ViewModels.Activities {
             }
 
             this.newTag( null );
+            this.dirtyFlag(true);
         }
 
         // --------------------------------------------------------------------------------
@@ -796,6 +816,7 @@ module ViewModels.Activities {
         // --------------------------------------------------------------------------------
         removeTag( item: any, event: Event ): void {
             this.values.tags.remove( item );
+            this.dirtyFlag(true);
         }
 
         // --------------------------------------------------------------------------------

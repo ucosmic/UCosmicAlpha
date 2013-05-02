@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityLocation
     {
+        public IPrincipal Principal { get; protected set; }
         public int ActivityValuesId { get; set; }
         public int PlaceId { get; set; }
         public bool NoCommit { get; set; }
         public ActivityLocation CreatedActivityLocation { get; set; }
+
+        public CreateActivityLocation(IPrincipal principal)
+        {
+            Principal = principal;
+        }
     }
 
     public class HandleCreateActivityLocationCommand : IHandleCommands<CreateActivityLocation>
@@ -67,6 +75,9 @@ namespace UCosmic.Domain.Activities
             {
                 ActivityValuesId = activityValues.RevisionId,
                 PlaceId = place.RevisionId,
+
+                CreatedByPrincipal = command.Principal.Identity.Name,
+                CreatedOnUtc = DateTime.UtcNow
             };
 
             _entities.Create(activityLocation);

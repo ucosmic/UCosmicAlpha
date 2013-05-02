@@ -69,8 +69,8 @@ module Service.ApiModels {
         id: KnockoutObservableNumber;
         title: KnockoutObservableString;
         content: KnockoutObservableString;
-        startsOn: KnockoutObservableDate;
-        endsOn: KnockoutObservableDate;
+        startsOn?: KnockoutObservableDate;
+        endsOn?: KnockoutObservableDate;
         wasExternallyFunded: KnockoutObservableBool;
         wasInternallyFunded: KnockoutObservableBool;
         locations: KnockoutObservableArray;

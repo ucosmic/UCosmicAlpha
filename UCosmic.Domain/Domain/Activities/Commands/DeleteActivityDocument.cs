@@ -34,10 +34,6 @@ namespace UCosmic.Domain.Activities
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
                     .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityDocument id", x => x.Id)
-
-                // id must exist in the database
-                .MustFindActivityDocumentById(entities)
-                    .WithMessage(MustFindActivityDocumentById.FailMessageFormat, x => x.Id)
             ;
         }
     }
@@ -68,19 +64,20 @@ namespace UCosmic.Domain.Activities
             ;
             if (activityDocument == null) return; // delete idempotently
 
-            if (activityDocument.ImageId.HasValue && (activityDocument.ImageId.Value != 0))
-            {
-                var image = _entities.Get<Image>()
-                                     .SingleOrDefault(x => x.Id == activityDocument.ImageId.Value);
-                _entities.Purge(image);
-            }
+            /* TBD - Delete these when Activity is deleted. */
+            //if (activityDocument.ImageId.HasValue && (activityDocument.ImageId.Value != 0))
+            //{
+            //    var image = _entities.Get<Image>()
+            //                         .SingleOrDefault(x => x.Id == activityDocument.ImageId.Value);
+            //    _entities.Purge(image);
+            //}
 
-            if (activityDocument.FileId.HasValue && (activityDocument.FileId.Value != 0))
-            {
-                var loadableFile = _entities.Get<LoadableFile>()
-                                     .SingleOrDefault(x => x.Id == activityDocument.FileId.Value);
-                _entities.Purge(loadableFile);                
-            }
+            //if (activityDocument.FileId.HasValue && (activityDocument.FileId.Value != 0))
+            //{
+            //    var loadableFile = _entities.Get<LoadableFile>()
+            //                         .SingleOrDefault(x => x.Id == activityDocument.FileId.Value);
+            //    _entities.Purge(loadableFile);                
+            //}
 
             // TBD
             // log audit

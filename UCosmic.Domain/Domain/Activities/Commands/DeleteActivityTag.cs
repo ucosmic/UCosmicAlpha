@@ -33,10 +33,6 @@ namespace UCosmic.Domain.Activities
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
                     .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityTag id", x => x.Id)
-
-                // id must exist in the database
-                .MustFindActivityTagById(entities)
-                    .WithMessage(MustFindActivityTagById.FailMessageFormat, x => x.Id)
             ;
         }
     }

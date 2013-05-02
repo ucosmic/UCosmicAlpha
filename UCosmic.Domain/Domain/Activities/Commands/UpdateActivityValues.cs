@@ -139,6 +139,7 @@ namespace UCosmic.Domain.Activities
             target.Mode = command.Mode;
             target.WasExternallyFunded = command.WasExternallyFunded;
             target.WasInternallyFunded = command.WasInternallyFunded;
+            target.UpdatedByPrincipal = command.Principal.Identity.Name;
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
 
             /* ----- Activity Locations ----- */
@@ -149,7 +150,7 @@ namespace UCosmic.Domain.Activities
                 var targetLocation = target.Locations.SingleOrDefault(x => x.PlaceId == location.PlaceId);
                 if (targetLocation == null)
                 {
-                    var createActivityLocation = new CreateActivityLocation
+                    var createActivityLocation = new CreateActivityLocation(command.Principal)
                     {
                         ActivityValuesId = target.RevisionId,
                         PlaceId = location.PlaceId,
@@ -184,7 +185,7 @@ namespace UCosmic.Domain.Activities
                 var targetType = target.Types.SingleOrDefault(x => x.TypeId == type.TypeId);
                 if (targetType == null)
                 {
-                    var createActivityType = new CreateActivityType(target.RevisionId, type.TypeId)
+                    var createActivityType = new CreateActivityType(command.Principal,target.RevisionId, type.TypeId)
                     {
                         NoCommit = true
                     };
@@ -214,14 +215,14 @@ namespace UCosmic.Domain.Activities
                 var targetTag = target.Tags.SingleOrDefault(x => x.Text == tag.Text);
                 if (targetTag == null)
                 {
-                    var createActivityTag = new CreateActivityTag
+                    var createActivityTag = new CreateActivityTag(command.Principal)
                     {
                         ActivityValuesId = target.RevisionId,
                         Number = tag.Number,
                         Text = tag.Text,
                         DomainType = tag.DomainType,
                         DomainKey = tag.DomainKey,
-                        Mode = tag.Mode,
+                        Mode = command.Mode,
                         NoCommit = true
                     };
                     _createActivityTag.Handle(createActivityTag);
@@ -258,12 +259,12 @@ namespace UCosmic.Domain.Activities
 
                 if (targetDocument == null)
                 {
-                    var createActivityDocument = new CreateActivityDocument
+                    var createActivityDocument = new CreateActivityDocument(command.Principal)
                     {
                         ActivityValuesId = target.RevisionId,
                         FileId = document.FileId,
                         ImageId = document.ImageId,
-                        Mode = document.Mode,
+                        Mode = command.Mode,
                         Title = document.Title,
                         Visible = document.Visible,
                         NoCommit = true
@@ -278,7 +279,7 @@ namespace UCosmic.Domain.Activities
                     {
                         FileId = document.FileId,
                         ImageId = document.ImageId,
-                        Mode = document.Mode,
+                        Mode = command.Mode,
                         Title = document.Title,
                         Visible = document.Visible,
                         NoCommit = true

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityValues
     {
+        public IPrincipal  Principal { get; protected set;  }
         public int ActivityId { get; protected set; }
         public ActivityMode Mode { get; protected set; }
         public string Title { get; set; }
@@ -16,8 +19,9 @@ namespace UCosmic.Domain.Activities
         public bool NoCommit { get; set; }
         public ActivityValues CreatedActivityValues { get; protected internal set; }
 
-        public CreateActivityValues(int activityId, ActivityMode mode)
+        public CreateActivityValues(IPrincipal principal, int activityId, ActivityMode mode)
         {
+            Principal = principal;
             ActivityId = activityId;
             Mode = mode;
         }
@@ -66,7 +70,10 @@ namespace UCosmic.Domain.Activities
                 EndsOn = command.EndsOn,
                 Mode = command.Mode,
                 WasExternallyFunded = command.WasExternallyFunded,
-                WasInternallyFunded = command.WasInternallyFunded
+                WasInternallyFunded = command.WasInternallyFunded,
+
+                CreatedByPrincipal = command.Principal.Identity.Name,
+                CreatedOnUtc = DateTime.UtcNow
             };
 
             _entities.Create(activityValues);

@@ -329,8 +329,10 @@ module App.Routes {
                     return url;
                 }
 
-                export function post(activityId: number): string {
-                    return makeUrl('activities/' + activityId + '/documents');
+                export function post(activityId: number, activityMode: string): string {
+                    var url = makeUrl('activities/' + activityId + '/documents/');
+                    url += '?activityMode=' + activityMode;
+                    return url;
                 }
 
                 export function put(activityId: number, documentId: number): string {

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Files;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityDocument
     {
+        public IPrincipal Principal { get; protected set; }
         public Guid? EntityId { get; set; }
         public int ActivityValuesId { get; set; }
         public int? FileId { get; set; }
@@ -18,8 +21,9 @@ namespace UCosmic.Domain.Activities
 
         public ActivityDocument CreatedActivityDocument { get; protected internal set; }
 
-        public CreateActivityDocument()
+        public CreateActivityDocument(IPrincipal principal)
         {
+            Principal = principal;
             Visible = true;
         }
 
@@ -85,7 +89,10 @@ namespace UCosmic.Domain.Activities
                 Mode = command.Mode,
                 ImageId = command.ImageId,
                 Title = command.Title,
-                Visible = command.Visible
+                Visible = command.Visible,
+
+                CreatedByPrincipal = command.Principal.Identity.Name,
+                CreatedOnUtc = DateTime.UtcNow
             };
 
             if (command.EntityId != null)

@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
 
 
 namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivity
     {
+        public IPrincipal Principal { get; protected set; }
         public int Id { get; protected set; }
         public ActivityMode Mode { get; protected set; }
         public int? EditSourceId { get; protected set; }
         public bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
 
-        public CopyDeepActivity(int id, ActivityMode mode, int? editSourceId = null)
+        public CopyDeepActivity(IPrincipal principal, int id, ActivityMode mode, int? editSourceId = null)
         {
+            Principal = principal;
             Id = id;
             Mode = mode;
             EditSourceId = editSourceId;
@@ -61,9 +65,14 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             var sourceActivity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.Id);
+            if (sourceActivity == null)
+            {
+                var message = string.Format("Activity Id {0} not found.", command.Id);
+                throw new Exception(message);
+            }
 
             /* ----- Copy Activity ----- */
-            var copyActivityCommand = new CopyActivity
+            var copyActivityCommand = new CopyActivity(command.Principal)
             {
                 Id = sourceActivity.RevisionId,
                 Mode = command.Mode,
@@ -85,7 +94,7 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var copyDeepActivityValuesCommand = new CopyDeepActivityValues
+            var copyDeepActivityValuesCommand = new CopyDeepActivityValues(command.Principal)
             {
                 ActivityId = activityCopy.RevisionId,
                 Id = activityValues.RevisionId,

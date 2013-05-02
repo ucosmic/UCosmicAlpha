@@ -55,17 +55,20 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
-        private readonly IHandleCommands<CreateDeepActivityValues> _createActivityValuesDeep;
+        private readonly IHandleCommands<CreateDeepActivityValues> _createDeepActivityValues;
+        private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities,
                                              IUnitOfWork unitOfWork,
                                              IHandleCommands<UpdateActivityValues> updateActivityValues,
-                                             IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep)
+                                             IHandleCommands<CreateDeepActivityValues> createDeepActivityValues,
+                                             IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
-            _createActivityValuesDeep = createActivityValuesDeep;
+            _createDeepActivityValues = createDeepActivityValues;
+            _copyDeepActivityValues = copyDeepActivityValues;
         }
 
         public void Handle(UpdateActivity command)
@@ -75,26 +78,21 @@ namespace UCosmic.Domain.Activities
             /* Retrieve the activity to update. */
             var target = _entities.Get<Activity>().Single(a => a.RevisionId == command.Id);
 
-            /* Retrieve the target activity values of the same mode. */
-            ActivityValues targetActivityValues = null;
-
             /* Attempt to get the ActivityValues of the command'ed type. */
-            try
+            ActivityValues targetActivityValues = _entities.Get<ActivityValues>()
+                                        .SingleOrDefault(v => (v.ActivityId == target.RevisionId) &&
+                                                        (v.ModeText == command.ModeText));
+
+            if (targetActivityValues == null)
             {
-                targetActivityValues = _entities.Get<ActivityValues>()
-                                            .Single(v => (v.ActivityId == target.RevisionId) &&
-                                                            (v.ModeText == command.ModeText));
-            }
-            catch (Exception ex)
-            {
-                if (!ex.Message.Contains("Sequence contains no elements")) throw ex;
-
-                var mode = command.ModeText.AsEnum<ActivityMode>();
-
-                var createActivityValuesDeepCommand = new CreateDeepActivityValues(target.RevisionId, mode);
-                _createActivityValuesDeep.Handle(createActivityValuesDeepCommand);
-
-                targetActivityValues = createActivityValuesDeepCommand.CreatedActivityValues;
+                var copyDeepActivityValues = new CopyDeepActivityValues(command.Principal)
+                {
+                    Id = command.Values.RevisionId,
+                    ActivityId = target.RevisionId,
+                    Mode = command.ModeText.AsEnum<ActivityMode>()
+                };
+                _copyDeepActivityValues.Handle(copyDeepActivityValues);
+                targetActivityValues = copyDeepActivityValues.CreatedActivityValues;
             }
 
             /* If target fields equal new field values, we do not proceed. */
@@ -118,7 +116,7 @@ namespace UCosmic.Domain.Activities
                 Content = command.Values.Content,
                 StartsOn = command.Values.StartsOn,
                 EndsOn = command.Values.EndsOn,
-                Mode = command.Values.Mode,
+                Mode = command.ModeText.AsEnum<ActivityMode>(),
                 WasExternallyFunded = command.Values.WasExternallyFunded,
                 WasInternallyFunded = command.Values.WasInternallyFunded,
                 Locations = command.Values.Locations ?? new Collection<ActivityLocation>(),

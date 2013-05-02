@@ -6,6 +6,7 @@
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../oss/moment.d.ts" />s
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Activities
@@ -96,17 +97,25 @@ module ViewModels.Activities
                     this.activityLocationsList = locations;
 
                     {
-                        var augmentedDocumentModel = function (data)
-                        {
-                            ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id);
+                        var augmentedDocumentModel = function ( data ) {
+                            ko.mapping.fromJS( data, {}, this );
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get( this.id(), data.id );
                         };
 
                         var mapping = {
                             'documents': {
-                                create: function (options)
-                                {
-                                    return new augmentedDocumentModel(options.data);
+                                create: function ( options ) {
+                                    return new augmentedDocumentModel( options.data );
+                                },
+                            },
+                            'startsOn': {
+                                create: ( options: any ): KnockoutObservableDate => {
+                                    return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
+                                }
+                            },
+                            'endsOn': {
+                                create: ( options: any ): KnockoutObservableDate => {
+                                    return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                 }
                             }
                         };
@@ -287,24 +296,28 @@ module ViewModels.Activities
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityDatesFormatted(startsOnStr: string, endsOnStr: string): string
+        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date): string
         {
             var formattedDateRange: string = "";
-            var startsOn = (startsOnStr != null) ? new Date(startsOnStr) : null;
-            var endsOn = (endsOnStr != null) ? new Date(endsOnStr) : null;
+            //var startsOn = (startsOnStr != null) ? new Date(startsOnStr) : null;
+            //var endsOn = (endsOnStr != null) ? new Date(endsOnStr) : null;
 
-            if (startsOn == null)
+            if (startsOnStr == null)
             {
-                if (endsOn != null)
+                if (endsOnStr != null)
                 {
-                    formattedDateRange = endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
+                    //formattedDateRange = endsOn.getMonth()+1 + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
+                    formattedDateRange = moment(endsOnStr).format("MM/DD/YYYY");
                 }
-            } else
+            }
+            else
             {
-                formattedDateRange = startsOn.getMonth() + "/" + startsOn.getDate() + "/" + startsOn.getFullYear();
-                if (endsOn != null)
+                //formattedDateRange = startsOn.getMonth()+1 + "/" + startsOn.getDate() + "/" + startsOn.getFullYear();
+                formattedDateRange = moment(startsOnStr).format("MM/DD/YYYY");
+                if (endsOnStr != null)
                 {
-                    formattedDateRange += " - " + endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
+                    //formattedDateRange += " - " + endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
+                    formattedDateRange += " - " + moment(endsOnStr).format("MM/DD/YYYY");
                 }
             }
 

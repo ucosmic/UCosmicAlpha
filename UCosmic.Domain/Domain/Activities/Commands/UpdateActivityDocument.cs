@@ -31,14 +31,17 @@ namespace UCosmic.Domain.Activities
     public class HandleUpdateActivityDocumentCommand : IHandleCommands<UpdateActivityDocument>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
         private readonly IHandleCommands<DeleteActivityLocation> _deleteActivityLocation;
 
         public HandleUpdateActivityDocumentCommand(ICommandEntities entities,
-                                                 IHandleCommands<CreateActivityLocation> createActivityLocation,
-                                                 IHandleCommands<DeleteActivityLocation> deleteActivityLocation)
+                                                   IUnitOfWork unitOfWork,
+                                                   IHandleCommands<CreateActivityLocation> createActivityLocation,
+                                                   IHandleCommands<DeleteActivityLocation> deleteActivityLocation)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
             _createActivityLocation = createActivityLocation;
             _deleteActivityLocation = deleteActivityLocation;
         }
@@ -80,9 +83,11 @@ namespace UCosmic.Domain.Activities
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
 
+            _entities.Update(target);
+
             if (!command.NoCommit)
             {
-                _entities.Update(target);
+                _unitOfWork.SaveChanges();
             }
         }
     }

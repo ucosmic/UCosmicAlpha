@@ -84,6 +84,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
+            foreach (var activity in activities)
+            {
+                activity.TimeToLocal();
+            }
+
             var model = Mapper.Map<PageOfActivityApiModel>(activities);
             return model;
         }
@@ -102,6 +107,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
+            activity.TimeToLocal();
             var model = Mapper.Map<ActivityApiModel>(activity);
             return model;
         }
@@ -130,7 +136,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                 /* There's no "in progress edit" record, so we make a copy of the
                      * activity and set it to edit mode. */
-                    var copyDeepActivityCommand = new CopyDeepActivity(activity.RevisionId,
+                    var copyDeepActivityCommand = new CopyDeepActivity(User,
+                                                                       activity.RevisionId,
                                                                        activity.Mode,
                                                                        activity.RevisionId);
 
@@ -150,6 +157,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             }
 
+            editActivity.TimeToLocal();
             var model = Mapper.Map<ActivityApiModel>(editActivity);
             return model;
         }
@@ -190,8 +198,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Post()
         {
             var createDeepActivityCommand =
-                new CreateDeepActivity(_queryProcessor.Execute(new UserByName(User.Identity.Name)),
-                                       ActivityMode.Draft.AsSentenceFragment());
+                new CreateDeepActivity(User, ActivityMode.Draft.AsSentenceFragment());
             _createDeepActivity.Handle(createDeepActivityCommand);
 
             var model = createDeepActivityCommand.CreatedActivity.RevisionId;
@@ -209,6 +216,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if ((activityId == 0) || (model == null)) return Request.CreateResponse(HttpStatusCode.InternalServerError);
 
             var activity = Mapper.Map<Activity>(model);
+
+            activity.OrderTime();
+            activity.TimeToUtc();
+
             try
             {
                 var updateActivityCommand = new UpdateActivity(User,
@@ -343,15 +354,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [POST("{activityId}/documents")]
-        public Task<HttpResponseMessage> PostDocuments(int activityId)
+        public Task<HttpResponseMessage> PostDocuments(int activityId, string activityMode)
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
-            if (activity == null)
+            //Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
+            //if (activity == null)
+            //{
+            //    //string message = string.Format("Activity Id {0} not found", activityId);
+            //    //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
+            //    throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            //}
+
+            ActivityValues activityValues =
+                _queryProcessor.Execute(new ActivityValuesByActivityIdAndMode(activityId, activityMode));
+
+            if (activityValues == null)
             {
                 //string message = string.Format("Activity Id {0} not found", activityId);
                 //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
@@ -416,11 +437,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                                 _createImage.Handle(createImageCommand);
 
-                                activityDocumentCommand = new CreateActivityDocument
+                                activityDocumentCommand = new CreateActivityDocument(User)
                                 {
-                                    ActivityValuesId = activityId,
+                                    ActivityValuesId = activityValues.RevisionId,
                                     ImageId = createImageCommand.CreatedImage.Id,
-                                    Mode = activity.Mode,
+                                    Mode = activityMode.AsEnum<ActivityMode>(),
                                     Title = name
                                 };
                             }
@@ -437,11 +458,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                                 _createLoadableFile.Handle(createLoadableFileCommand);
 
-                                activityDocumentCommand = new CreateActivityDocument
+                                activityDocumentCommand = new CreateActivityDocument(User)
                                 {
-                                    ActivityValuesId = activityId,
+                                    ActivityValuesId = activityValues.RevisionId,
                                     FileId = createLoadableFileCommand.CreatedLoadableFile.Id,
-                                    Mode = activity.Mode,
+                                    Mode = activityMode.AsEnum<ActivityMode>(),
                                     Title = name
                                 };
                             }

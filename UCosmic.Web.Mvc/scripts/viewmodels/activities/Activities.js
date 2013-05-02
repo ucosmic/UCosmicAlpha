@@ -54,6 +54,16 @@ var ViewModels;
                                 create: function (options) {
                                     return new augmentedDocumentModel(options.data);
                                 }
+                            },
+                            'startsOn': {
+                                create: function (options) {
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                                }
+                            },
+                            'endsOn': {
+                                create: function (options) {
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                                }
                             }
                         };
                         ko.mapping.fromJS(data, mapping, _this);
@@ -178,16 +188,14 @@ var ViewModels;
             };
             ActivityList.prototype.activityDatesFormatted = function (startsOnStr, endsOnStr) {
                 var formattedDateRange = "";
-                var startsOn = (startsOnStr != null) ? new Date(startsOnStr) : null;
-                var endsOn = (endsOnStr != null) ? new Date(endsOnStr) : null;
-                if(startsOn == null) {
-                    if(endsOn != null) {
-                        formattedDateRange = endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
+                if(startsOnStr == null) {
+                    if(endsOnStr != null) {
+                        formattedDateRange = moment(endsOnStr).format("MM/DD/YYYY");
                     }
                 } else {
-                    formattedDateRange = startsOn.getMonth() + "/" + startsOn.getDate() + "/" + startsOn.getFullYear();
-                    if(endsOn != null) {
-                        formattedDateRange += " - " + endsOn.getMonth() + "/" + endsOn.getDate() + "/" + endsOn.getFullYear();
+                    formattedDateRange = moment(startsOnStr).format("MM/DD/YYYY");
+                    if(endsOnStr != null) {
+                        formattedDateRange += " - " + moment(endsOnStr).format("MM/DD/YYYY");
                     }
                 }
                 if(formattedDateRange.length > 0) {

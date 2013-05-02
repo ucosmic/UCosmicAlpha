@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityTag
     {
+        public IPrincipal Principal { get; protected set; }
         public int ActivityValuesId { get; set; }
         public int Number { get; set; }
         public string Text { get; set; }
@@ -15,11 +18,11 @@ namespace UCosmic.Domain.Activities
         public ActivityMode Mode { get; set; }
         public bool NoCommit { get; set; }
 
-        public CreateActivityTag()
+        public CreateActivityTag(IPrincipal principal)
         {
+            Principal = principal;
             DomainType = ActivityTagDomainType.Custom;
         }
-
 
         public ActivityTag CreatedActivityTag { get; protected internal set; }
     }
@@ -59,24 +62,31 @@ namespace UCosmic.Domain.Activities
 
             var activityValues = _entities.Get<ActivityValues>()
                 .SingleOrDefault(x => x.RevisionId == command.ActivityValuesId);
+            if (activityValues == null)
+            {
+                var message = String.Format("ActivityValues Id {0} not found.", command.ActivityValuesId);
+                throw new Exception(message);
+            }
 
             var person = _entities.Get<Person>()
                 .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);
 
-            var otherActivities = _entities.Get<Activity>()
-                                           .WithPersonId(person.RevisionId)
-                                           .WithMode(command.Mode.AsSentenceFragment());
+            //var otherActivities = _entities.Get<Activity>()
+            //                               .WithPersonId(person.RevisionId)
+            //                               .WithMode(command.Mode.AsSentenceFragment());
 
             var activityTag = new ActivityTag
             {
                 ActivityValuesId = activityValues.RevisionId,
-                Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
+                //Number = (otherActivities != null) ? otherActivities.NextNumber() : 0,
                 Text = command.Text,
                 DomainType = command.DomainType,
                 DomainKey = command.DomainKey,
-                Mode = command.Mode
-            };
+                Mode = command.Mode,
 
+                CreatedByPrincipal = command.Principal.Identity.Name,
+                CreatedOnUtc = DateTime.UtcNow
+            };
 
             _entities.Create(activityTag);
 

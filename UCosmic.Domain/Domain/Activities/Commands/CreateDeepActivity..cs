@@ -1,22 +1,23 @@
 ﻿using System;
+using System.Security.Principal;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateDeepActivity
     {
-        public User User { get; protected set; }
+        public IPrincipal Principal { get; protected set; }
         public string ModeText { get; protected set; }
         public Guid? EntityId { get; set; }
         public int? EditSourceId { get; set; }
         public Activity CreatedActivity { get; internal set; }
         public bool NoCommit { get; set; }
 
-        public CreateDeepActivity(User user, string modeText)
+        public CreateDeepActivity(IPrincipal principal, string modeText)
         {
-            if (user == null) throw new ArgumentNullException("user");
+            if (principal == null) throw new ArgumentNullException("principal");
             if (modeText == null) throw new ArgumentNullException("modeText");
-            User = user;
+            Principal = principal;
             ModeText = modeText;
         }
     }
@@ -43,12 +44,15 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var createMyNewActivityCommand = new CreateMyNewActivity(command.User, command.ModeText);
+            var createMyNewActivityCommand = new CreateMyNewActivity(command.Principal,
+                                                                     command.ModeText);
             _createMyNewActivity.Handle(createMyNewActivityCommand);
 
             var activity = createMyNewActivityCommand.CreatedActivity;
 
-            var createActivityValuesDeepCommand = new CreateDeepActivityValues(activity.RevisionId, activity.Mode);
+            var createActivityValuesDeepCommand = new CreateDeepActivityValues(command.Principal,
+                                                                               activity.RevisionId,
+                                                                               activity.Mode);
             _createActivityValuesDeep.Handle(createActivityValuesDeepCommand);
 
 

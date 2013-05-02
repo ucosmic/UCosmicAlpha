@@ -27,19 +27,17 @@
 </script>
 
 <script type="text/html" id="activities-template">
-    <tr class="hover-hilite"
+    <tr class="hover-hilite"  
         data-bind="click: function (item, event) { $parent.editActivity(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.activityEdit(id()) }">
         <!-- Description -->
-        <td class="ellipsis">
-            <div style="height: 30px">
+        <td>
+            <div class="ellipsis" style="height: 30px">
                 <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: values.title()"></span>
-                <!-- <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: formattedTypes"></span>  -->
                 <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
             </div>
-            <div class="ellipsis">
-                <span data-bind="text: $parent.activityTypesFormatted(values.types())"></span>
+            <div data-bind="text: $parent.activityTypesFormatted( values.types() )">
             </div>
-            <div class="ellipsis" style="margin-bottom: 4px">
+            <div style="margin-bottom: 4px">
                 <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn())"></span>
                 <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
             </div>

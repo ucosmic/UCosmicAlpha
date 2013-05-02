@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using FluentValidation.Validators;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
@@ -33,14 +34,20 @@ namespace UCosmic.Domain.Activities
             var principle = (IPrincipal)context.PropertyValue;
             var activityDocumentId = _activityDocumentId != null ? _activityDocumentId((T)context.Instance) : (int?)null;
 
+            Person person = null;
             var activity = _entities.Query<Activity>()
-                                    .Where(x => x.Values.Any(
+                                    .SingleOrDefault(x => x.Values.Any(
                                         y => y.Documents.Any(
-                                            z => z.RevisionId == activityDocumentId)))
-                                    .SingleOrDefault(w => w.Person.User.Name.Equals(principle.Identity.Name,
-                                                     StringComparison.OrdinalIgnoreCase));
+                                            z => z.RevisionId == activityDocumentId)));
 
-            return activity != null;
+            if (activity != null)
+            {
+                person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == activity.PersonId);
+            }
+
+            return (person != null)
+                       ? person.User.Name.Equals(principle.Identity.Name, StringComparison.OrdinalIgnoreCase)
+                       : false;
         }
     }
 

@@ -43,7 +43,7 @@ var ViewModels;
                     multiple: false,
                     showFileList: false,
                     async: {
-                        saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id()),
+                        saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id(), this.modeText()),
                         autoUpload: true
                     },
                     select: function (e) {
@@ -194,13 +194,7 @@ var ViewModels;
                     _this.values.wasInternallyFunded.subscribe(function (newValue) {
                         _this.dirtyFlag(true);
                     });
-                    _this.values.locations.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
                     _this.values.types.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.tags.subscribe(function (newValue) {
                         _this.dirtyFlag(true);
                     });
                     deferred.resolve();
@@ -225,8 +219,22 @@ var ViewModels;
                     return;
                 }
                 var model = ko.mapping.toJS(this);
-                model.values.startsOn = model.values.startsOn != null ? moment(model.values.startsOn).format() : null;
-                model.values.endsOn = model.values.endsOn != null ? moment(model.values.endsOn).format() : null;
+ {
+                    if((model.values.startsOn != null) && (model.values.startsOn.length > 0)) {
+                        model.values.startsOn = model.values.startsOn.trim();
+                        if(model.values.startsOn.indexOf('/') == -1) {
+                            model.values.startsOn = "01/01/" + model.values.startsOn;
+                        }
+                    }
+                    if((model.values.endsOn != null) && (model.values.endsOn.length > 0)) {
+                        model.values.endsOn = model.values.endsOn.trim();
+                        if(model.values.endsOn.indexOf('/') == -1) {
+                            model.values.endsOn = "01/01/" + model.values.endsOn;
+                        }
+                    }
+                    model.values.startsOn = (model.values.startsOn != null) && (model.values.startsOn.length > 0) ? moment(model.values.startsOn).format() : null;
+                    model.values.endsOn = (model.values.endsOn != null) && (model.values.endsOn.length > 0) ? moment(model.values.endsOn).format() : null;
+                }
                 this.saving = true;
                 $.ajax({
                     type: 'PUT',
@@ -367,10 +375,9 @@ var ViewModels;
                     });
                     this.values.locations.push(location);
                 }
+                this.dirtyFlag(true);
             };
             Activity.prototype.addTag = function (item, event) {
-                debugger;
-
                 var newText = null;
                 var domainTypeText = "Custom";
                 var domainKey = null;
@@ -399,9 +406,11 @@ var ViewModels;
                     this.values.tags.push(observableTag);
                 }
                 this.newTag(null);
+                this.dirtyFlag(true);
             };
             Activity.prototype.removeTag = function (item, event) {
                 this.values.tags.remove(item);
+                this.dirtyFlag(true);
             };
             Activity.prototype.haveTag = function (text) {
                 return this.tagIndex(text) != -1;

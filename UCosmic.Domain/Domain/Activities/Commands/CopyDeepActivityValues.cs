@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivityValues
     {
+        public IPrincipal Principal { get; protected set; }
         public int Id { get; set; }
         public int ActivityId { get; set; } 
         public ActivityMode Mode { get; set; }
         public bool NoCommit { get; set; }
         public ActivityValues CreatedActivityValues { get; set; }
+
+        public CopyDeepActivityValues(IPrincipal principal)
+        {
+            Principal = principal;
+        }
     }
 
     public class HandleCopyDeepActivityValuesCommand : IHandleCommands<CopyDeepActivityValues>
@@ -50,7 +58,7 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var createActivityValuesCommand = new CreateActivityValues(command.ActivityId,command.Mode)
+            var createActivityValuesCommand = new CreateActivityValues(command.Principal, command.ActivityId, command.Mode)
             {
                 Title = sourceActivityValues.Title,
                 Content = sourceActivityValues.Content,
@@ -66,7 +74,7 @@ namespace UCosmic.Domain.Activities
 
             foreach (var location in sourceActivityValues.Locations)
             {
-                _createActivityLocation.Handle(new CreateActivityLocation
+                _createActivityLocation.Handle(new CreateActivityLocation(command.Principal)
                 {
                     ActivityValuesId = activityValuesCopy.RevisionId,
                     PlaceId = location.PlaceId,
@@ -75,29 +83,31 @@ namespace UCosmic.Domain.Activities
 
             foreach (var type in sourceActivityValues.Types)
             {
-                _createActivityType.Handle(new CreateActivityType(activityValuesCopy.RevisionId, type.TypeId));
+                _createActivityType.Handle(new CreateActivityType(command.Principal,
+                                                                  activityValuesCopy.RevisionId,
+                                                                  type.TypeId));
             }
 
             foreach (var tag in sourceActivityValues.Tags)
             {
-                _createActivityTag.Handle(new CreateActivityTag
+                _createActivityTag.Handle(new CreateActivityTag(command.Principal)
                 {
                     ActivityValuesId = activityValuesCopy.RevisionId,
                     Text = tag.Text,
                     DomainType = tag.DomainType,
                     DomainKey = tag.DomainKey,
-                    Mode = tag.Mode
+                    Mode = command.Mode
                 });                
             }
 
             foreach (var document in sourceActivityValues.Documents)
             {
-                _createActivityDocument.Handle(new CreateActivityDocument
+                _createActivityDocument.Handle(new CreateActivityDocument(command.Principal)
                 {
                     ActivityValuesId = activityValuesCopy.RevisionId,
                     FileId = document.FileId,
                     ImageId = document.ImageId,
-                    Mode = document.Mode,
+                    Mode = command.Mode,
                     Title = document.Title,
                     Visible = document.Visible
                 });

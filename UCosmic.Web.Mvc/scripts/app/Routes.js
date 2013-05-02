@@ -365,8 +365,10 @@ var App;
                         return url;
                     }
                     Documents.get = get;
-                    function post(activityId) {
-                        return makeUrl('activities/' + activityId + '/documents');
+                    function post(activityId, activityMode) {
+                        var url = makeUrl('activities/' + activityId + '/documents/');
+                        url += '?activityMode=' + activityMode;
+                        return url;
                     }
                     Documents.post = post;
                     function put(activityId, documentId) {

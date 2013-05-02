@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 
 
 namespace UCosmic.Domain.Activities
 {
     public class CopyActivity
     {
+        public IPrincipal Principal { get; protected set; }
         public int Id { get; set; }
         public ActivityMode Mode { get; set; }
         public int? EditSourceId { get; set; }
         public bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
+
+        public CopyActivity(IPrincipal principal)
+        {
+            Principal = principal;
+        }
     }
 
     public class HandleCopyActivityCommand : IHandleCommands<CopyActivity>
@@ -19,7 +26,7 @@ namespace UCosmic.Domain.Activities
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
 
-        public HandleCopyActivityCommand(ICommandEntities entities,
+        public HandleCopyActivityCommand( ICommandEntities entities,
                                           IUnitOfWork unitOfWork,
                                           IHandleCommands<CreateMyNewActivity> createActivity)
         {
@@ -39,8 +46,8 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var createActivityCommand = new CreateMyNewActivity(sourceActivity.Person.User,
-                                                                command.Mode.AsSentenceFragment())
+            var createActivityCommand = new CreateMyNewActivity( command.Principal,  
+                                                                 command.Mode.AsSentenceFragment())
             {
                 EditSourceId = command.EditSourceId
             };

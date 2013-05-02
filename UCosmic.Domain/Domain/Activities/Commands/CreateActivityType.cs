@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Employees;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityType
     {
+        public IPrincipal Principal { get; protected set; }
         public int ActivityValuesId { get; protected set; }
         public int EmployeeActivityTypeId { get; protected set; }
         public bool NoCommit { get; set; }
         public ActivityType CreatedActivityType { get; protected internal set; }
 
-        public CreateActivityType(int activityValuesId, int employeeActivityTypeId)
+        public CreateActivityType(IPrincipal principal, int activityValuesId, int employeeActivityTypeId)
         {
+            Principal = principal;
             ActivityValuesId = activityValuesId;
             EmployeeActivityTypeId = employeeActivityTypeId;
         }
@@ -72,6 +76,9 @@ namespace UCosmic.Domain.Activities
             {
                 ActivityValuesId = activityValues.RevisionId,
                 TypeId = employeeActivityType.Id,
+
+                CreatedByPrincipal = command.Principal.Identity.Name,
+                CreatedOnUtc = DateTime.UtcNow
             };
 
 
