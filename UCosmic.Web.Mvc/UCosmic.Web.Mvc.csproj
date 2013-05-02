@@ -458,6 +458,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app_offline.html" />
     <Content Include="content\kendo\2012.3.1114\Black\editor.png" />
     <Content Include="content\kendo\2012.3.1114\Black\imagebrowser.png" />
     <Content Include="content\kendo\2012.3.1114\Black\loading-image.gif" />
