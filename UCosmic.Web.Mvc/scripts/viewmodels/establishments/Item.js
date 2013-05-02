@@ -501,7 +501,14 @@ var ViewModels;
                 this.parentSearch.clickAction = function (viewModel, e) {
                     _this.parentEstablishment(viewModel);
                     _this.parentId(viewModel.id());
-                    _this.sammy.setLocation('/establishments/' + _this.id + '/');
+                    _this.sammy.setLocation('/establishments/' + _this.id + '/#/');
+                    return false;
+                };
+                this.parentSearch.detailHref = function () {
+                    return '#/';
+                };
+                this.parentSearch.detailTooltip = function () {
+                    return 'Choose this establishment as the parent';
                 };
                 this.parentSearch.sammy.run();
                 this.sammy.get('/#/select-parent/page/:pageNumber/', function () {
@@ -515,7 +522,7 @@ var ViewModels;
                         self.parentSearch.getPage(this.params['pageNumber']);
                     }
                 });
-                this.sammy.get('/establishments/:establishmentId/', function () {
+                this.sammy.get('/establishments/:establishmentId/#/', function () {
                     if(self._findingParent) {
                         self.sideSwiper.prev(1, function () {
                             App.WindowScroller.setTop(self._parentScrollTop);

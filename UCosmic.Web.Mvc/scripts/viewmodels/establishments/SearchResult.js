@@ -12,18 +12,18 @@ var ViewModels;
                 }, this);
             };
             SearchResult.prototype._setupComputeds = function () {
-                this._setupNullDisplayCountryName();
-                this._setupFittedOfficialUrl();
-                this._setupOfficialUrlTooltip();
-                this._setupOfficialNameTranslationMatches();
+                this._setupCountryComputeds();
+                this._setupUrlComputeds();
+                this._setupNameComputeds();
+                this._setupLinkComputeds();
             };
-            SearchResult.prototype._setupNullDisplayCountryName = function () {
+            SearchResult.prototype._setupCountryComputeds = function () {
                 var _this = this;
                 this.nullDisplayCountryName = ko.computed(function () {
                     return _this.countryName() || '[Undefined]';
                 });
             };
-            SearchResult.prototype._setupFittedOfficialUrl = function () {
+            SearchResult.prototype._setupUrlComputeds = function () {
                 var _this = this;
                 this.fitOfficialUrl = ko.computed(function () {
                     var value = _this.officialUrl();
@@ -44,9 +44,6 @@ var ViewModels;
                     }
                     return computedValue;
                 });
-            };
-            SearchResult.prototype._setupOfficialUrlTooltip = function () {
-                var _this = this;
                 this.officialUrlTooltip = ko.computed(function () {
                     var value = _this.fitOfficialUrl();
                     if(!value) {
@@ -56,7 +53,7 @@ var ViewModels;
                     return computedValue;
                 });
             };
-            SearchResult.prototype._setupOfficialNameTranslationMatches = function () {
+            SearchResult.prototype._setupNameComputeds = function () {
                 var _this = this;
                 this.officialNameMatchesTranslation = ko.computed(function () {
                     return _this.officialName() === _this.translatedName();
@@ -65,8 +62,17 @@ var ViewModels;
                     return !_this.officialNameMatchesTranslation();
                 });
             };
+            SearchResult.prototype._setupLinkComputeds = function () {
+                var _this = this;
+                this.detailHref = ko.computed(function () {
+                    return _this._owner.detailHref(_this.id());
+                });
+                this.detailTooltip = ko.computed(function () {
+                    return _this._owner.detailTooltip();
+                });
+            };
             SearchResult.prototype.clickAction = function (viewModel, e) {
-                this._owner.clickAction(viewModel, e);
+                return this._owner.clickAction(viewModel, e);
             };
             SearchResult.prototype.openOfficialUrl = function (viewModel, e) {
                 e.stopPropagation();

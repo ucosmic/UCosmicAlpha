@@ -241,15 +241,25 @@ module ViewModels.Establishments {
         }
 
         // click item
-        clickAction(viewModel: SearchResult, e: JQueryEventObject): void {
-            var href, $target = $(e.target);
-            while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-                $target = $target.parent();
-            }
-            if ($target.length) {
-                href = $target.attr('href') || $target.attr('data-href');
-                location.href = href.replace('/0/', '/' + viewModel.id() + '/');
-            }
+        // TODO: is this still needed?
+        clickAction(viewModel: SearchResult, e: JQueryEventObject): bool {
+            //var href, $target = $(e.target);
+            //while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
+            //    $target = $target.parent();
+            //}
+            //if ($target.length) {
+            //    href = $target.attr('href') || $target.attr('data-href');
+            //    location.href = href.replace('/0/', '/' + viewModel.id() + '/');
+            //}
+            return true;
+        }
+
+        detailHref(id: number): string {
+            return App.Routes.Mvc.Establishments.show(id);
+        }
+
+        detailTooltip(): string {
+            return 'View & edit this establishment\'s details';
         }
     }
 }

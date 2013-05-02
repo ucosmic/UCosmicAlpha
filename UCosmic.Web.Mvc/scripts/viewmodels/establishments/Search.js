@@ -200,14 +200,13 @@ var ViewModels;
                 return true;
             };
             Search.prototype.clickAction = function (viewModel, e) {
-                var href, $target = $(e.target);
-                while($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-                    $target = $target.parent();
-                }
-                if($target.length) {
-                    href = $target.attr('href') || $target.attr('data-href');
-                    location.href = href.replace('/0/', '/' + viewModel.id() + '/');
-                }
+                return true;
+            };
+            Search.prototype.detailHref = function (id) {
+                return App.Routes.Mvc.Establishments.show(id);
+            };
+            Search.prototype.detailTooltip = function () {
+                return 'View & edit this establishment\'s details';
             };
             return Search;
         })(ViewModels.PagedSearch);

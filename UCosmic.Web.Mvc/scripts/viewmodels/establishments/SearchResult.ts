@@ -27,7 +27,7 @@ module ViewModels.Establishments {
         uCosmicCode: KnockoutObservableString;
         ceebCode: KnockoutObservableString;
 
-        private _pullData(values: IServerApiFlatModel) {
+        private _pullData(values: IServerApiFlatModel): void {
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);
         }
@@ -35,18 +35,18 @@ module ViewModels.Establishments {
         //#endregion
         //#region Computeds
 
-        private _setupComputeds() {
-            this._setupNullDisplayCountryName();
-            this._setupFittedOfficialUrl();
-            this._setupOfficialUrlTooltip();
-            this._setupOfficialNameTranslationMatches();
+        private _setupComputeds(): void {
+            this._setupCountryComputeds();
+            this._setupUrlComputeds();
+            this._setupNameComputeds();
+            this._setupLinkComputeds();
         }
 
         //#region Country computeds
 
         nullDisplayCountryName: KnockoutComputed;
 
-        private _setupNullDisplayCountryName() {
+        private _setupCountryComputeds(): void {
             // show alternate text when country is undefined
             this.nullDisplayCountryName = ko.computed((): string => {
                 return this.countryName() || '[Undefined]';
@@ -57,8 +57,10 @@ module ViewModels.Establishments {
         //#region Url computeds
 
         fitOfficialUrl: KnockoutComputed;
+        officialUrlTooltip: KnockoutComputed;
 
-        private _setupFittedOfficialUrl() {
+        private _setupUrlComputeds(): void {
+
             // compact URL so that it fits within page width
             this.fitOfficialUrl = ko.computed((): string => {
                 var value = this.officialUrl();
@@ -77,11 +79,7 @@ module ViewModels.Establishments {
                 }
                 return computedValue;
             });
-        }
 
-        officialUrlTooltip: KnockoutComputed;
-
-        private _setupOfficialUrlTooltip() {
             // inform user what clicking the link does
             this.officialUrlTooltip = ko.computed((): string => {
                 var value = this.fitOfficialUrl();
@@ -92,13 +90,14 @@ module ViewModels.Establishments {
             });
         }
 
+
         //#endregion
         //#region Name computeds
 
         officialNameMatchesTranslation: KnockoutComputed;
         officialNameDoesNotMatchTranslation: KnockoutComputed;
 
-        private _setupOfficialNameTranslationMatches() {
+        private _setupNameComputeds(): void {
             // are the official name and translated name the same?
             this.officialNameMatchesTranslation = ko.computed((): bool => {
                 return this.officialName() === this.translatedName();
@@ -109,13 +108,32 @@ module ViewModels.Establishments {
         }
 
         //#endregion
+        //#region Link computeds
+
+        detailHref: KnockoutComputed;
+        detailTooltip: KnockoutComputed;
+
+        private _setupLinkComputeds(): void {
+            
+            // href to navigate from search to detail / edit page
+            this.detailHref = ko.computed((): string => {
+                return this._owner.detailHref(this.id());
+            });
+
+            // tooltip for link to detail / edit page
+            this.detailTooltip = ko.computed((): string => {
+                return this._owner.detailTooltip();
+            });
+        }
+
+        //#endregion
 
         //#endregion
         //#region Click handlers
 
         // navigate to detail page
-        clickAction(viewModel: SearchResult, e: JQueryEventObject): void {
-            this._owner.clickAction(viewModel, e);
+        clickAction(viewModel: SearchResult, e: JQueryEventObject): bool {
+            return this._owner.clickAction(viewModel, e);
         }
 
         // open official URL page

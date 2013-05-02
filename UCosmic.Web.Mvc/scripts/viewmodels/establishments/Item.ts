@@ -604,10 +604,19 @@ module ViewModels.Establishments {
                     this.parentSearch.sammy.setLocation(location);
             }
 
-            this.parentSearch.clickAction = (viewModel: SearchResult, e: JQueryEventObject): void => {
+            this.parentSearch.clickAction = (viewModel: SearchResult, e: JQueryEventObject): bool => {
                 this.parentEstablishment(viewModel);
                 this.parentId(viewModel.id());
-                this.sammy.setLocation('/establishments/' + this.id + '/');
+                this.sammy.setLocation('/establishments/' + this.id + '/#/');
+                return false;
+            }
+
+            this.parentSearch.detailHref = (): string => {
+                return '#/';
+            }
+
+            this.parentSearch.detailTooltip = (): string => {
+                return 'Choose this establishment as the parent';
             }
 
             this.parentSearch.sammy.run();
@@ -625,7 +634,7 @@ module ViewModels.Establishments {
                 }
             });
 
-            this.sammy.get('/establishments/:establishmentId/', function () {
+            this.sammy.get('/establishments/:establishmentId/#/', function () {
                 if (self._findingParent) {
                     self.sideSwiper.prev(1, (): void => {
                         App.WindowScroller.setTop(self._parentScrollTop);

@@ -9,7 +9,7 @@
                 @Html.Partial(MVC.Establishments.Views._FormCodesAndCategorySection)
                 <section class="fieldset" data-bind="visible: !id" style="display: none;">
                     <div>
-                        <input type="submit" value="Save" data-bind="disable: { disabled: createSpinner.isVisible }" />
+                        <input type="submit" value="Save" data-bind="disable: createSpinner.isVisible" />
                         &nbsp;&nbsp;&nbsp;
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: validatingSpinner.isVisible" />
                         <strong data-bind="visible: validatingSpinner.isVisible">Validating...</strong>

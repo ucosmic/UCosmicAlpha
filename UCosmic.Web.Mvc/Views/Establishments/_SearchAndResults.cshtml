@@ -40,13 +40,17 @@
                             </tr>
                         </thead>
                         <tbody data-bind="foreach: items">
-                            <tr class="hover-hilite" data-bind="click: clickAction" data-href="@Url.Action(MVC.Establishments.Show(0))">
+                            <tr data-bind="click: clickAction">
                                 <td>
                                     <div>
-                                        <strong data-bind="text: translatedName"></strong>
-                                    </div>
-                                    <div data-bind="visible: officialNameDoesNotMatchTranslation">
-                                        (<span data-bind="text: officialName"></span>)
+                                        <a href="#/" style="color: inherit;"
+                                           data-bind="attr: { href: detailHref, title: detailTooltip }">
+                                            <strong data-bind="text: translatedName"></strong>
+                                            <span data-bind="visible: officialNameDoesNotMatchTranslation">
+                                                @*<br/>*@
+                                                (<span data-bind="text: officialName"></span>)
+                                            </span>
+                                        </a>
                                     </div>
                                     <div data-bind="visible: officialUrl">
                                         <a href="#" target="_blank"
@@ -68,14 +72,18 @@
                                     <div data-bind="text: nullDisplayCountryName"></div>
                                     <div data-bind="visible: officialUrl">
                                         <a href="#" target="_blank"
-                                            data-bind="text: fitOfficialUrl, attr: { href: 'http://' + officialUrl() }, click: openOfficialUrl"></a>
+                                            data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
                                     </div>
                                 </div>
                                 <div>
-                                    <strong data-bind="text: translatedName"></strong>
-                                </div>
-                                <div data-bind="visible: officialNameDoesNotMatchTranslation">
-                                    (<span data-bind="text: officialName"></span>)
+                                    <a href="#/" style="color: inherit;"
+                                        data-bind="attr: { href: detailHref, title: detailTooltip }">
+                                        <strong data-bind="text: translatedName"></strong>
+                                        <span data-bind="visible: officialNameDoesNotMatchTranslation">
+                                            @*<br/>*@
+                                            (<span data-bind="text: officialName"></span>)
+                                        </span>
+                                    </a>
                                 </div>
                                 <div style="clear: right;"></div>
                             </div>
