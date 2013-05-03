@@ -197,6 +197,9 @@ var ViewModels;
                     _this.values.types.subscribe(function (newValue) {
                         _this.dirtyFlag(true);
                     });
+                    _this.isOnGoing.subscribe(function (newValue) {
+                        _this.dirtyFlag(true);
+                    });
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
@@ -210,6 +213,35 @@ var ViewModels;
                     this.keyCounter = 0;
                 }
             };
+            Activity.prototype.convertDate = function (date) {
+                var formatted = null;
+                var YYYYPattern = new RegExp("^\\d{4}$");
+                var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
+                var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+                if(typeof (date) === "object") {
+                    formatted = moment(date).format();
+                } else {
+                    var dateStr = date;
+                    if((dateStr != null) && (dateStr.length > 0)) {
+                        dateStr = dateStr.trim();
+                        if(YYYYPattern.test(dateStr)) {
+                            dateStr = "01/01/" + dateStr;
+                            formatted = moment(dateStr, [
+                                "MM/DD/YYYY"
+                            ]).format();
+                        } else if(MMYYYYPattern.test(dateStr)) {
+                            formatted = moment(dateStr, [
+                                "MM/YYYY"
+                            ]).format();
+                        } else if(MMDDYYYYPattern.test(dateStr)) {
+                            formatted = moment(dateStr, [
+                                "MM/DD/YYYY"
+                            ]).format();
+                        }
+                    }
+                }
+                return formatted;
+            };
             Activity.prototype.autoSave = function (viewModel, event) {
                 var _this = this;
                 if(this.saving) {
@@ -219,21 +251,15 @@ var ViewModels;
                     return;
                 }
                 var model = ko.mapping.toJS(this);
- {
-                    if((model.values.startsOn != null) && (model.values.startsOn.length > 0)) {
-                        model.values.startsOn = model.values.startsOn.trim();
-                        if(model.values.startsOn.indexOf('/') == -1) {
-                            model.values.startsOn = "01/01/" + model.values.startsOn;
-                        }
+                if(model.values.startsOn != null) {
+                    model.values.startsOn = this.convertDate(model.values.startsOn);
+                }
+                if(this.isOnGoing()) {
+                    model.values.endsOn = null;
+                } else {
+                    if(model.values.endsOn != null) {
+                        model.values.endsOn = this.convertDate(model.values.endsOn);
                     }
-                    if((model.values.endsOn != null) && (model.values.endsOn.length > 0)) {
-                        model.values.endsOn = model.values.endsOn.trim();
-                        if(model.values.endsOn.indexOf('/') == -1) {
-                            model.values.endsOn = "01/01/" + model.values.endsOn;
-                        }
-                    }
-                    model.values.startsOn = (model.values.startsOn != null) && (model.values.startsOn.length > 0) ? moment(model.values.startsOn).format() : null;
-                    model.values.endsOn = (model.values.endsOn != null) && (model.values.endsOn.length > 0) ? moment(model.values.endsOn).format() : null;
                 }
                 this.saving = true;
                 $.ajax({

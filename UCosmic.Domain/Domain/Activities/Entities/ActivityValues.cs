@@ -93,8 +93,37 @@ namespace UCosmic.Domain.Activities
 
         public string Title { get; protected internal set; }
         public string Content { get; protected internal set; }
-        public DateTime? StartsOn { get; protected internal set; }
-        public DateTime? EndsOn { get; protected internal set; }
+
+        private DateTime? _startsOn;
+        public DateTime? StartsOn
+        {
+            get
+            {
+                return _startsOn.HasValue ? _startsOn.Value.ToLocalTime() : (DateTime?)null;
+            }
+
+            protected internal set
+            {
+                _startsOn = value.HasValue ? value.Value.ToUniversalTime() : (DateTime?)null;
+                OrderTime();
+            }
+        }
+
+        private DateTime? _endsOn;
+        public DateTime? EndsOn
+        {
+            get
+            {
+                return _endsOn.HasValue ? _endsOn.Value.ToLocalTime() : (DateTime?)null;
+            }
+
+            protected internal set
+            {
+                _endsOn = value.HasValue ? value.Value.ToUniversalTime() : (DateTime?)null;
+                OrderTime();
+            }
+        }
+
         public virtual ICollection<ActivityLocation> Locations { get; protected internal set; }
         public virtual ICollection<ActivityType> Types { get; protected internal set; }
         public virtual ICollection<ActivityTag> Tags { get; protected internal set; }
@@ -104,5 +133,18 @@ namespace UCosmic.Domain.Activities
         public ActivityMode Mode { get { return _mode; } set { _mode = value; } }
         public bool? WasExternallyFunded { get; protected internal set; }
         public bool? WasInternallyFunded { get; protected internal set; }
+
+        private void OrderTime()
+        {
+            if (_startsOn.HasValue && _endsOn.HasValue)
+            {
+                if (_startsOn.Value.CompareTo(_endsOn.Value) > 0)
+                {
+                    DateTime temp = _endsOn.Value;
+                    _endsOn = _startsOn.Value;
+                    _startsOn = temp;
+                }
+            }
+        }
     }
 }

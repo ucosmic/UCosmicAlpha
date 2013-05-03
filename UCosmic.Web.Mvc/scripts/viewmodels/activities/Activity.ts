@@ -494,6 +494,7 @@ module ViewModels.Activities {
                               this.values.wasExternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.wasInternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.types.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
+                              this.isOnGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
 
                               deferred.resolve();
                           } )
@@ -520,6 +521,40 @@ module ViewModels.Activities {
         /*
         */
         // --------------------------------------------------------------------------------
+        convertDate( date: any ): string {
+            var formatted = null;
+            var YYYYPattern = new RegExp( "^\\d{4}$" );
+            var MMYYYYPattern = new RegExp( "^\\d{1,}/\\d{4}$" );
+            var MMDDYYYYPattern = new RegExp( "^\\d{1,}/\\d{1,}/\\d{4}$" );
+
+            if ( typeof( date ) === "object" ) {
+                formatted = moment(date).format();
+            }
+            else {
+                var dateStr = date;
+                if ( ( dateStr != null ) && ( dateStr.length > 0 ) ) {
+                    dateStr = dateStr.trim();
+
+                    if ( YYYYPattern.test( dateStr ) ) {
+                        dateStr = "01/01/" + dateStr; // fixes Moment rounding error
+                        formatted = moment( dateStr, ["MM/DD/YYYY"] ).format();
+                    }
+                    else if ( MMYYYYPattern.test( dateStr ) ) {
+                        formatted = moment( dateStr, ["MM/YYYY"] ).format();
+                    }
+                    else if ( MMDDYYYYPattern.test( dateStr ) ) {
+                        formatted = moment( dateStr, ["MM/DD/YYYY"] ).format();
+                    } 
+                }
+            }
+
+            return formatted;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
         autoSave( viewModel: any, event: any ): void {
             if ( this.saving ) {
                 return; // TBD handle this better
@@ -531,27 +566,17 @@ module ViewModels.Activities {
 
             var model = ko.mapping.toJS( this );
 
-            /* Date processing */
-            {
-                /* When supplying only year to moment, there is a rounding error */
-                if ( ( model.values.startsOn != null ) && ( model.values.startsOn.length > 0 ) ) {
-                    model.values.startsOn = model.values.startsOn.trim();
-                    if ( model.values.startsOn.indexOf( '/' ) == -1 ) {
-                        model.values.startsOn = "01/01/" + model.values.startsOn;
-                    }
-                }
+            if (model.values.startsOn != null) {
+                model.values.startsOn = this.convertDate(model.values.startsOn);
+            }
 
-                if ( ( model.values.endsOn != null ) && ( model.values.endsOn.length > 0 ) ) {
-                    model.values.endsOn = model.values.endsOn.trim();
-                    if ( model.values.endsOn.indexOf( '/' ) == -1 ) {
-                        model.values.endsOn = "01/01/" + model.values.endsOn;
-                    }
+            if ( this.isOnGoing() ) {
+                model.values.endsOn = null;
+            }
+            else {
+                if ( model.values.endsOn != null ) {
+                    model.values.endsOn = this.convertDate( model.values.endsOn );
                 }
-
-                model.values.startsOn = ( model.values.startsOn != null ) && ( model.values.startsOn.length > 0 ) ?
-                    moment( model.values.startsOn ).format() : null;
-                model.values.endsOn = ( model.values.endsOn != null ) && ( model.values.endsOn.length > 0 ) ?
-                    moment( model.values.endsOn ).format() : null;
             }
 
             this.saving = true;

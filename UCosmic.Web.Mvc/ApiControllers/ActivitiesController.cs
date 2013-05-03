@@ -14,7 +14,6 @@ using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
-using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 using Image = UCosmic.Domain.Files.Image;
 
@@ -84,11 +83,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            foreach (var activity in activities)
-            {
-                activity.TimeToLocal();
-            }
-
             var model = Mapper.Map<PageOfActivityApiModel>(activities);
             return model;
         }
@@ -107,7 +101,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            activity.TimeToLocal();
             var model = Mapper.Map<ActivityApiModel>(activity);
             return model;
         }
@@ -157,7 +150,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             }
 
-            editActivity.TimeToLocal();
             var model = Mapper.Map<ActivityApiModel>(editActivity);
             return model;
         }
@@ -197,8 +189,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post()
         {
-            var createDeepActivityCommand =
-                new CreateDeepActivity(User, ActivityMode.Draft.AsSentenceFragment());
+            var createDeepActivityCommand = new CreateDeepActivity(User, ActivityMode.Draft.AsSentenceFragment());
             _createDeepActivity.Handle(createDeepActivityCommand);
 
             var model = createDeepActivityCommand.CreatedActivity.RevisionId;
@@ -213,12 +204,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
-            if ((activityId == 0) || (model == null)) return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            if ((activityId == 0) || (model == null))
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
 
             var activity = Mapper.Map<Activity>(model);
-
-            activity.OrderTime();
-            activity.TimeToUtc();
 
             try
             {
