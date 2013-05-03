@@ -319,9 +319,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public ICollection<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
         {
             ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
-            if ((documents == null) || (documents.Length == 0))
+            if (documents == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
             
             var model = Mapper.Map<ICollection<ActivityDocumentApiModel>>(documents);
