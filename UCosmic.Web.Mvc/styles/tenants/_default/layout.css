@@ -333,6 +333,8 @@ body #main {
         overflow: hidden; }
         body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] {
           width: 10000px; }
+          body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=off] {
+            visibility: hidden; }
           body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] > [data-side-swiper=off], body #main > .content.fixed [data-side-swiper=root] > [data-side-swiper=deck] [data-side-swiper=on] {
             position: relative;
             float: left;

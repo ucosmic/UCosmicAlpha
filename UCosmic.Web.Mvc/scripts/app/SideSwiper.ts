@@ -51,6 +51,10 @@ module App {
                 $nextFrame.css({ left: 0 });
             });
 
+            // the left frame is now on
+            $nextFrame.attr('data-side-swiper', 'on')
+                .data('side-swiper', 'on');
+
             // reduce the left margin of the left frame to slide the right frame into view
             $currentFrame.animate({ left: negativeFrameWidth }, this.settings.speed, () => {
 
@@ -63,10 +67,6 @@ module App {
                     // remove the css class since this is no longer the current frame
                     .attr('data-side-swiper', 'off')
                     .data('side-swiper', 'off');
-
-                // the left frame is now current
-                $nextFrame.attr('data-side-swiper', 'on')
-                    .data('side-swiper', 'on');
 
                 // invoke callback if one was passed
                 if (callback) callback();
@@ -92,6 +92,9 @@ module App {
             // reset the left frame to a negative left margin
             $prevFrame.css({ left: negativeFrameWidth })
 
+            // the right frame is now on
+            .attr('data-side-swiper', 'on').data('side-swiper', 'on')
+
             // show the left frame, since its parent's overflow will obscure it
             .show()
 
@@ -104,10 +107,6 @@ module App {
                     // remove the css class since this is no longer the current frame
                     .attr('data-side-swiper', 'off')
                     .data('side-swiper', 'off');
-
-                // the right frame is now current
-                $prevFrame.attr('data-side-swiper', 'on')
-                    .data('side-swiper', 'on');
 
                 // invoke callback if one was passed
                 if (callback) callback();

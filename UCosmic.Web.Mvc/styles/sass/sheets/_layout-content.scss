@@ -35,6 +35,9 @@ body {
                     overflow: hidden;
                     > [data-side-swiper=deck] {
                         width: 10000px;
+                        > [data-side-swiper=off] {
+                            visibility: hidden;
+                        }
                         > [data-side-swiper=off], [data-side-swiper=on] {
                             position: relative;
                             float: left;

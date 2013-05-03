@@ -33,13 +33,13 @@ var App;
                     left: 0
                 });
             });
+            $nextFrame.attr('data-side-swiper', 'on').data('side-swiper', 'on');
             $currentFrame.animate({
                 left: negativeFrameWidth
             }, this.settings.speed, function () {
                 $currentFrame.hide().css({
                     left: 0
                 }).attr('data-side-swiper', 'off').data('side-swiper', 'off');
-                $nextFrame.attr('data-side-swiper', 'on').data('side-swiper', 'on');
                 if(callback) {
                     callback();
                 }
@@ -65,11 +65,10 @@ var App;
             });
             $prevFrame.css({
                 left: negativeFrameWidth
-            }).show().animate({
+            }).attr('data-side-swiper', 'on').data('side-swiper', 'on').show().animate({
                 left: 0
             }, this.settings.speed, function () {
                 $currentFrame.hide().attr('data-side-swiper', 'off').data('side-swiper', 'off');
-                $prevFrame.attr('data-side-swiper', 'on').data('side-swiper', 'on');
                 if(callback) {
                     callback();
                 }
