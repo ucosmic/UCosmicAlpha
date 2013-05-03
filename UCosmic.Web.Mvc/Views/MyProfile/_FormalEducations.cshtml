@@ -1,0 +1,39 @@
+﻿<section id="formal-educations">
+    <header>
+        <h2>
+            <span>Formal Education</span>
+            <a href="#" title="Add a new education" data-bind="click: function (data, event) { newEducation(data, event); }">
+                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new education" />
+            </a>
+        </h2>
+    </header>
+    <table class="data">
+        <!--<tbody data-bind="template: { name: 'formal-educations-template', foreach: items }">
+        </tbody>-->
+    </table>
+</section>
+
+<!-- DIALOGS -->
+<div id="confirmEducationDeleteDialog" title="Please confirm your intent" style="display: none">
+    <div style="text-align: center; font-weight: bold">Are you sure you want to delete this education?</div>
+</div>
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="formal-educations-template">
+    <tr class="hover-hilite"  
+        data-bind="click: function (item, event) { $parent.editEducation(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.formalEducationEdit(id()) }">
+        <!-- Description -->
+        <td>
+            <div style="height: 30px">
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: officialName()"></span>
+            </div>
+        </td>
+        <!-- Remove Button -->
+        <td style="text-align: center; vertical-align: middle">
+            <a href="#" title="Remove education" data-bind="click: function (data, event) { $parent.deleteEducation(data, event, $parent); }, clickBubble: false">
+                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove education" />
+            </a>
+        </td>
+    </tr>
+</script>
+

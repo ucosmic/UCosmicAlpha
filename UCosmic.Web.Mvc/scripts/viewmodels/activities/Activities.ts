@@ -6,7 +6,7 @@
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../oss/moment.d.ts" />s
+/// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Activities

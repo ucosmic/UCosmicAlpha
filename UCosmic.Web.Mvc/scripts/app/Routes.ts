@@ -363,7 +363,149 @@ module App.Routes {
                     return makeUrl('activity-locations');
                 }
             }
-        }
+        } // Activities
+
+        export module GeographicExpertises {
+            export function get (expertiseId?: number): string {
+                var url = makeUrl('geoexpertises');
+                if (expertiseId) {
+                    url += '/' + expertiseId;
+                }
+                return url;
+            }
+
+            export function post(): string {
+                return makeUrl('geoexpertises');
+            }
+
+            export function getEdit (expertiseId: number): string {
+                return makeUrl('geoexpertises/' + expertiseId + "/edit");
+            }
+
+            export function getEditState (expertiseId: number): string {
+                return makeUrl('geoexpertises/' + expertiseId + "/edit-state");
+            }
+
+            export function put(expertiseId: number): string {
+                return makeUrl('geoexpertises/' + expertiseId);
+            }
+
+            export function putEdit(expertiseId: number): string {
+                return makeUrl('geoexpertises/' + expertiseId + "/edit");
+            }
+
+            export function del(expertiseId: number): string {
+                return makeUrl('geoexpertises/' + expertiseId);
+            }
+
+            export module Locations {
+                export function get (): string {
+                    return makeUrl('geoexpertises-locations');
+                }
+            }
+        } // GeographicExpertises
+
+        export module LanguageExpertises {
+            export function get (expertiseId?: number): string {
+                var url = makeUrl('langexpertises');
+                if (expertiseId) {
+                    url += '/' + expertiseId;
+                }
+                return url;
+            }
+
+            export function post(): string {
+                return makeUrl('langexpertises');
+            }
+
+            export function getEdit (expertiseId: number): string {
+                return makeUrl('langexpertises/' + expertiseId + "/edit");
+            }
+
+            export function getEditState (expertiseId: number): string {
+                return makeUrl('langexpertises/' + expertiseId + "/edit-state");
+            }
+
+            export function put(expertiseId: number): string {
+                return makeUrl('langexpertises/' + expertiseId);
+            }
+
+            export function putEdit(expertiseId: number): string {
+                return makeUrl('langexpertises/' + expertiseId + "/edit");
+            }
+
+            export function del(expertiseId: number): string {
+                return makeUrl('langexpertises/' + expertiseId);
+            }
+        } // LanguageExpertises
+
+        export module FormalEducations {
+            export function get (educationId?: number): string {
+                var url = makeUrl('educations');
+                if (educationId) {
+                    url += '/' + educationId;
+                }
+                return url;
+            }
+
+            export function post(): string {
+                return makeUrl('educations');
+            }
+
+            export function getEdit (educationId: number): string {
+                return makeUrl('educations/' + educationId + "/edit");
+            }
+
+            export function getEditState (educationId: number): string {
+                return makeUrl('educations/' + educationId + "/edit-state");
+            }
+
+            export function put(educationId: number): string {
+                return makeUrl('educations/' + educationId);
+            }
+
+            export function putEdit(educationId: number): string {
+                return makeUrl('educations/' + educationId + "/edit");
+            }
+
+            export function del(educationId: number): string {
+                return makeUrl('educations/' + educationId);
+            }
+        } // FormalEducations
+
+        export module Affiliations {
+            export function get (affiliationId?: number): string {
+                var url = makeUrl('affiliations');
+                if (affiliationId) {
+                    url += '/' + affiliationId;
+                }
+                return url;
+            }
+
+            export function post(): string {
+                return makeUrl('affiliations');
+            }
+
+            export function getEdit (affiliationId: number): string {
+                return makeUrl('affiliations/' + affiliationId + "/edit");
+            }
+
+            export function getEditState (affiliationId: number): string {
+                return makeUrl('affiliations/' + affiliationId + "/edit-state");
+            }
+
+            export function put(affiliationId: number): string {
+                return makeUrl('affiliations/' + affiliationId);
+            }
+
+            export function putEdit(affiliationId: number): string {
+                return makeUrl('affiliations/' + affiliationId + "/edit");
+            }
+
+            export function del(affiliationId: number): string {
+                return makeUrl('affiliations/' + affiliationId);
+            }
+        } // Affiliations
     }
 
     export module Mvc {
@@ -397,16 +539,29 @@ module App.Routes {
 
         export module My
         {
-            export module Profile
-            {
-                export function get ()
-                {
-                    return makeUrl('my/profile');
+            export module Profile {
+                export function get () {
+                    return makeUrl( 'my/profile' );
                 }
-                export function activityEdit(activityId: string)
-                {
-                    var url = makeUrl('my/activity/');
+                export function activityEdit( activityId: string ) {
+                    var url = makeUrl( 'my/activity/' );
                     return url + activityId;
+                }
+                export function geographicExpertiseEdit( expertiseId: string ) {
+                    var url = makeUrl( 'my/geoexpertise/' );
+                    return url + expertiseId;
+                }
+                export function languageExpertiseEdit( expertiseId: string ) {
+                    var url = makeUrl( 'my/langexpertise/' );
+                    return url + expertiseId;
+                }
+                export function formalEducationEdit( expertiseId: string ) {
+                    var url = makeUrl( 'my/education/' );
+                    return url + expertiseId;
+                }
+                export function affiliationEdit( expertiseId: string ) {
+                    var url = makeUrl( 'my/affiliation/' );
+                    return url + expertiseId;
                 }
             }
         }

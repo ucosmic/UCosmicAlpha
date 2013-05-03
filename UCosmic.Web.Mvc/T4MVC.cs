@@ -1329,6 +1329,9 @@ namespace Links
             public static readonly string jquery_placeholder_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.placeholder.min.js") ? Url("jquery.placeholder.min.js") : Url("jquery.placeholder.js");
                           
             public static readonly string jquery_placeholder_min_js = Url("jquery.placeholder.min.js");
+            public static readonly string jquery_tinymce_d_ts = Url("jquery.tinymce.d.ts");
+            public static readonly string jquery_tinymce_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.tinymce.min.js") ? Url("jquery.tinymce.min.js") : Url("jquery.tinymce.js");
+                          
             public static readonly string jquery_unobtrusive_ajax_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.unobtrusive-ajax.min.js") ? Url("jquery.unobtrusive-ajax.min.js") : Url("jquery.unobtrusive-ajax.js");
                           
             public static readonly string jquery_unobtrusive_ajax_min_js = Url("jquery.unobtrusive-ajax.min.js");
@@ -1554,15 +1557,6 @@ namespace Links
                                   
                     public static readonly string editor_plugin_src_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/editor_plugin_src.min.js") ? Url("editor_plugin_src.min.js") : Url("editor_plugin_src.js");
                                   
-                    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-                    public static class langs {
-                        private const string URLPATH = "~/scripts/tinymce/plugins/autosave/langs";
-                        public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                        public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                        public static readonly string en_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/en.min.js") ? Url("en.min.js") : Url("en.js");
-                                      
-                    }
-                
                 }
             
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2106,6 +2100,7 @@ namespace Links
                     }
                 
                     public static readonly string props_htm = Url("props.htm");
+                    public static readonly string readme_txt = Url("readme.txt");
                 }
             
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2209,6 +2204,26 @@ namespace Links
                     }
                 
                     public static readonly string template_htm = Url("template.htm");
+                }
+            
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class visualblocks {
+                    private const string URLPATH = "~/scripts/tinymce/plugins/visualblocks";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                    public static class css {
+                        private const string URLPATH = "~/scripts/tinymce/plugins/visualblocks/css";
+                        public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                        public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                        public static readonly string visualblocks_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/visualblocks.min.css") ? Url("visualblocks.min.css") : Url("visualblocks.css");
+                             
+                    }
+                
+                    public static readonly string editor_plugin_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/editor_plugin.min.js") ? Url("editor_plugin.min.js") : Url("editor_plugin.js");
+                                  
+                    public static readonly string editor_plugin_src_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/editor_plugin_src.min.js") ? Url("editor_plugin_src.min.js") : Url("editor_plugin_src.js");
+                                  
                 }
             
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2565,8 +2580,19 @@ namespace Links
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
+                public static readonly string Activity_min_js_map = Url("Activity.min.js.map");
                 public static readonly string Activity_min_js = Url("Activity.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class affiliations {
+                private const string URLPATH = "~/scripts/viewmodels/affiliations";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string Affiliations_ts = Url("Affiliations.ts");
+                public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
+                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2623,6 +2649,43 @@ namespace Links
                           
             public static readonly string Flasher_min_js = Url("Flasher.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class formalEducations {
+                private const string URLPATH = "~/scripts/viewmodels/formalEducations";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string FormalEducation_ts = Url("FormalEducation.ts");
+                public static readonly string FormalEducation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormalEducation.min.js") ? Url("FormalEducation.min.js") : Url("FormalEducation.js");
+                              
+                public static readonly string FormalEducations_ts = Url("FormalEducations.ts");
+                public static readonly string FormalEducations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormalEducations.min.js") ? Url("FormalEducations.min.js") : Url("FormalEducations.js");
+                              
+                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
+                public static readonly string SeviceApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SeviceApiModel.d.min.js") ? Url("SeviceApiModel.d.min.js") : Url("SeviceApiModel.d.js");
+                              
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class geographicExpertises {
+                private const string URLPATH = "~/scripts/viewmodels/geographicExpertises";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string GeographicExpertises_ts = Url("GeographicExpertises.ts");
+                public static readonly string GeographicExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertises.min.js") ? Url("GeographicExpertises.min.js") : Url("GeographicExpertises.js");
+                              
+                public static readonly string GeographicExpertises_min_js = Url("GeographicExpertises.min.js");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class languageExpertises {
+                private const string URLPATH = "~/scripts/viewmodels/languageExpertises";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string LanguageExpertises_ts = Url("LanguageExpertises.ts");
+                public static readonly string LanguageExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LanguageExpertises.min.js") ? Url("LanguageExpertises.min.js") : Url("LanguageExpertises.js");
+                              
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class languages {
                 private const string URLPATH = "~/scripts/viewmodels/languages";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2653,17 +2716,17 @@ namespace Links
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }
         
-            public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
-            public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
-                          
-            public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class people {
-                private const string URLPATH = "~/scripts/viewmodels/people";
+            public static class NewFolder1 {
+                private const string URLPATH = "~/scripts/viewmodels/NewFolder1";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             }
         
+            public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
+            public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
+                          
+            public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class places {
                 private const string URLPATH = "~/scripts/viewmodels/places";
@@ -3526,6 +3589,8 @@ namespace Links
         
         }
     
+        public static readonly string tinymce_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/tinymce.min.css") ? Url("tinymce.min.css") : Url("tinymce.css");
+             
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

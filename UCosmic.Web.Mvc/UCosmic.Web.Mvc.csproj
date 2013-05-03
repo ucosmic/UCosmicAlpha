@@ -2060,6 +2060,10 @@
     <Content Include="scripts\viewmodels\activities\Activity.min.js">
       <DependentUpon>Activity.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\affiliations\Affiliations.ts" />
+    <Content Include="scripts\viewmodels\affiliations\Affiliations.js">
+      <DependentUpon>Affiliations.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -2067,6 +2071,32 @@
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\formalEducations\FormalEducations.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\formalEducations\FormalEducation.ts" />
+    <Content Include="scripts\viewmodels\formalEducations\FormalEducation.js">
+      <DependentUpon>FormalEducation.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\formalEducations\FormalEducations.js">
+      <DependentUpon>FormalEducations.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\formalEducations\ServiceApiModl.d.ts" />
+    <Content Include="scripts\viewmodels\formalEducations\FormalEducations.min.js">
+      <DependentUpon>FormalEducations.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\formalEducations\ServiceApiModl.d.js">
+      <DependentUpon>ServiceApiModl.d.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.js">
+      <DependentUpon>GeographicExpertises.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.min.js">
+      <DependentUpon>GeographicExpertises.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertises.ts" />
+    <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertises.js">
+      <DependentUpon>LanguageExpertises.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\representatives\RepModuleSettings.js">
       <DependentUpon>RepModuleSettings.ts</DependentUpon>
     </Content>
@@ -2428,6 +2458,9 @@
     <Content Include="Views\Errors\BadRequest.cshtml" />
     <Content Include="Views\Identity\SignOverFail.cshtml" />
     <Content Include="Views\Users\New.cshtml" />
+    <Content Include="Views\MyProfile\_GeographicExpertises.cshtml" />
+    <Content Include="Views\MyProfile\_LanguageExpertises.cshtml" />
+    <Content Include="Views\MyProfile\_FormalEducations.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2586,6 +2619,7 @@
     <Folder Include="App_Data\mail\" />
     <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
+    <Folder Include="scripts\viewmodels\NewFolder1\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>
   <ItemGroup>

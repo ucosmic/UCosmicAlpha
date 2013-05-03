@@ -405,6 +405,153 @@ var App;
                 var Locations = Activities.Locations;
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
+            (function (GeographicExpertises) {
+                function get(expertiseId) {
+                    var url = makeUrl('geoexpertises');
+                    if(expertiseId) {
+                        url += '/' + expertiseId;
+                    }
+                    return url;
+                }
+                GeographicExpertises.get = get;
+                function post() {
+                    return makeUrl('geoexpertises');
+                }
+                GeographicExpertises.post = post;
+                function getEdit(expertiseId) {
+                    return makeUrl('geoexpertises/' + expertiseId + "/edit");
+                }
+                GeographicExpertises.getEdit = getEdit;
+                function getEditState(expertiseId) {
+                    return makeUrl('geoexpertises/' + expertiseId + "/edit-state");
+                }
+                GeographicExpertises.getEditState = getEditState;
+                function put(expertiseId) {
+                    return makeUrl('geoexpertises/' + expertiseId);
+                }
+                GeographicExpertises.put = put;
+                function putEdit(expertiseId) {
+                    return makeUrl('geoexpertises/' + expertiseId + "/edit");
+                }
+                GeographicExpertises.putEdit = putEdit;
+                function del(expertiseId) {
+                    return makeUrl('geoexpertises/' + expertiseId);
+                }
+                GeographicExpertises.del = del;
+                (function (Locations) {
+                    function get() {
+                        return makeUrl('geoexpertises-locations');
+                    }
+                    Locations.get = get;
+                })(GeographicExpertises.Locations || (GeographicExpertises.Locations = {}));
+                var Locations = GeographicExpertises.Locations;
+            })(WebApi.GeographicExpertises || (WebApi.GeographicExpertises = {}));
+            var GeographicExpertises = WebApi.GeographicExpertises;
+            (function (LanguageExpertises) {
+                function get(expertiseId) {
+                    var url = makeUrl('langexpertises');
+                    if(expertiseId) {
+                        url += '/' + expertiseId;
+                    }
+                    return url;
+                }
+                LanguageExpertises.get = get;
+                function post() {
+                    return makeUrl('langexpertises');
+                }
+                LanguageExpertises.post = post;
+                function getEdit(expertiseId) {
+                    return makeUrl('langexpertises/' + expertiseId + "/edit");
+                }
+                LanguageExpertises.getEdit = getEdit;
+                function getEditState(expertiseId) {
+                    return makeUrl('langexpertises/' + expertiseId + "/edit-state");
+                }
+                LanguageExpertises.getEditState = getEditState;
+                function put(expertiseId) {
+                    return makeUrl('langexpertises/' + expertiseId);
+                }
+                LanguageExpertises.put = put;
+                function putEdit(expertiseId) {
+                    return makeUrl('langexpertises/' + expertiseId + "/edit");
+                }
+                LanguageExpertises.putEdit = putEdit;
+                function del(expertiseId) {
+                    return makeUrl('langexpertises/' + expertiseId);
+                }
+                LanguageExpertises.del = del;
+            })(WebApi.LanguageExpertises || (WebApi.LanguageExpertises = {}));
+            var LanguageExpertises = WebApi.LanguageExpertises;
+            (function (FormalEducations) {
+                function get(educationId) {
+                    var url = makeUrl('educations');
+                    if(educationId) {
+                        url += '/' + educationId;
+                    }
+                    return url;
+                }
+                FormalEducations.get = get;
+                function post() {
+                    return makeUrl('educations');
+                }
+                FormalEducations.post = post;
+                function getEdit(educationId) {
+                    return makeUrl('educations/' + educationId + "/edit");
+                }
+                FormalEducations.getEdit = getEdit;
+                function getEditState(educationId) {
+                    return makeUrl('educations/' + educationId + "/edit-state");
+                }
+                FormalEducations.getEditState = getEditState;
+                function put(educationId) {
+                    return makeUrl('educations/' + educationId);
+                }
+                FormalEducations.put = put;
+                function putEdit(educationId) {
+                    return makeUrl('educations/' + educationId + "/edit");
+                }
+                FormalEducations.putEdit = putEdit;
+                function del(educationId) {
+                    return makeUrl('educations/' + educationId);
+                }
+                FormalEducations.del = del;
+            })(WebApi.FormalEducations || (WebApi.FormalEducations = {}));
+            var FormalEducations = WebApi.FormalEducations;
+            (function (Affiliations) {
+                function get(affiliationId) {
+                    var url = makeUrl('affiliations');
+                    if(affiliationId) {
+                        url += '/' + affiliationId;
+                    }
+                    return url;
+                }
+                Affiliations.get = get;
+                function post() {
+                    return makeUrl('affiliations');
+                }
+                Affiliations.post = post;
+                function getEdit(affiliationId) {
+                    return makeUrl('affiliations/' + affiliationId + "/edit");
+                }
+                Affiliations.getEdit = getEdit;
+                function getEditState(affiliationId) {
+                    return makeUrl('affiliations/' + affiliationId + "/edit-state");
+                }
+                Affiliations.getEditState = getEditState;
+                function put(affiliationId) {
+                    return makeUrl('affiliations/' + affiliationId);
+                }
+                Affiliations.put = put;
+                function putEdit(affiliationId) {
+                    return makeUrl('affiliations/' + affiliationId + "/edit");
+                }
+                Affiliations.putEdit = putEdit;
+                function del(affiliationId) {
+                    return makeUrl('affiliations/' + affiliationId);
+                }
+                Affiliations.del = del;
+            })(WebApi.Affiliations || (WebApi.Affiliations = {}));
+            var Affiliations = WebApi.Affiliations;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
         (function (Mvc) {
@@ -455,6 +602,26 @@ var App;
                         return url + activityId;
                     }
                     Profile.activityEdit = activityEdit;
+                    function geographicExpertiseEdit(expertiseId) {
+                        var url = makeUrl('my/geoexpertise/');
+                        return url + expertiseId;
+                    }
+                    Profile.geographicExpertiseEdit = geographicExpertiseEdit;
+                    function languageExpertiseEdit(expertiseId) {
+                        var url = makeUrl('my/langexpertise/');
+                        return url + expertiseId;
+                    }
+                    Profile.languageExpertiseEdit = languageExpertiseEdit;
+                    function formalEducationEdit(expertiseId) {
+                        var url = makeUrl('my/education/');
+                        return url + expertiseId;
+                    }
+                    Profile.formalEducationEdit = formalEducationEdit;
+                    function affiliationEdit(expertiseId) {
+                        var url = makeUrl('my/affiliation/');
+                        return url + expertiseId;
+                    }
+                    Profile.affiliationEdit = affiliationEdit;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
             })(Mvc.My || (Mvc.My = {}));

@@ -96,6 +96,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Activities = "_Activities";
                 public readonly string _Affiliations = "_Affiliations";
                 public readonly string _EmailAddresses = "_EmailAddresses";
+                public readonly string _FormalEducations = "_FormalEducations";
+                public readonly string _GeographicExpertises = "_GeographicExpertises";
+                public readonly string _LanguageExpertises = "_LanguageExpertises";
                 public readonly string _PersonalInfo = "_PersonalInfo";
                 public readonly string ActivityEdit = "ActivityEdit";
                 public readonly string Index = "Index";
@@ -103,6 +106,9 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
             public readonly string _Affiliations = "~/Views/MyProfile/_Affiliations.cshtml";
             public readonly string _EmailAddresses = "~/Views/MyProfile/_EmailAddresses.cshtml";
+            public readonly string _FormalEducations = "~/Views/MyProfile/_FormalEducations.cshtml";
+            public readonly string _GeographicExpertises = "~/Views/MyProfile/_GeographicExpertises.cshtml";
+            public readonly string _LanguageExpertises = "~/Views/MyProfile/_LanguageExpertises.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
             public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";

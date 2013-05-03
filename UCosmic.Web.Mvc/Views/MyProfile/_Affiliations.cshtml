@@ -1,42 +1,39 @@
-﻿<div id="my_affiliations">
-    
+﻿<section id="affliations">
     <header>
-        <h2><span>
-                Affiliations
-                <a href="#" title="Add a new affiliation" data-bind="click: addAffiliation">
-                    <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new affiliation" />
-                </a>
-            </span>
+        <h2>
+            <span>Affiliations</span>
+            <a href="#" title="Add a new affiliation" data-bind="click: function ( data, event ) { newAffiliation( data, event ); }">
+                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new education" />
+            </a>
         </h2>
     </header>
+    <table class="data">
+        <!--<tbody data-bind="template: { name: 'affiliations-template', foreach: items }">
+        </tbody>-->
+    </table>
+</section>
 
-    <div>
-        <ol class="data" data-bind="foreach: affiliations" >
-            <li class="hover-hilite" data-bind="click: editAffiliation">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <table>
-                                    <tbody>
-                                        <tr><td>Campus</td></tr>
-                                        <tr><td>College</td></tr>
-                                        <tr><td>Department</td></tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                            <td>Job Description</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </li>
-        </ol> 
-    </div>
-
-    <form data-xbind="submit: saveAffiliation">
-        <div>
-            <input type="submit" value="Save" />
-        </div>
-    </form>
-
+<!-- DIALOGS -->
+<div id="confirmAffiliationsDeleteDialog" title="Please confirm your intent" style="display: none">
+    <div style="text-align: center; font-weight: bold">Are you sure you want to delete this affiliation?</div>
 </div>
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="affiliation-template">
+    <tr class="hover-hilite"  
+        data-bind="click: function ( item, event ) { $parent.editAffiliation( item, event, id() ); }, attr: { href: App.Routes.Mvc.My.Profile.affiliationEdit( id() ) }">
+        <!-- Description -->
+        <td>
+            <div style="height: 30px">
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: officialName()"></span>
+            </div>
+        </td>
+        <!-- Remove Button -->
+        <td style="text-align: center; vertical-align: middle">
+            <a href="#" title="Remove affiliation" data-bind="click: function ( data, event ) { $parent.deleteAffiliation( data, event, $parent ); }, clickBubble: false">
+                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove affiliation" />
+            </a>
+        </td>
+    </tr>
+</script>
+
