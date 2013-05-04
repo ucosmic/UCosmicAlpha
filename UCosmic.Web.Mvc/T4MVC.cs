@@ -2580,7 +2580,6 @@ namespace Links
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
-                public static readonly string Activity_min_js_map = Url("Activity.min.js.map");
                 public static readonly string Activity_min_js = Url("Activity.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
@@ -2593,6 +2592,7 @@ namespace Links
                 public static readonly string Affiliations_ts = Url("Affiliations.ts");
                 public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
                               
+                public static readonly string Affiliations_min_js = Url("Affiliations.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2656,11 +2656,13 @@ namespace Links
                 public static readonly string FormalEducation_ts = Url("FormalEducation.ts");
                 public static readonly string FormalEducation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormalEducation.min.js") ? Url("FormalEducation.min.js") : Url("FormalEducation.js");
                               
+                public static readonly string FormalEducation_min_js = Url("FormalEducation.min.js");
                 public static readonly string FormalEducations_ts = Url("FormalEducations.ts");
                 public static readonly string FormalEducations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormalEducations.min.js") ? Url("FormalEducations.min.js") : Url("FormalEducations.js");
                               
-                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
-                public static readonly string SeviceApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SeviceApiModel.d.min.js") ? Url("SeviceApiModel.d.min.js") : Url("SeviceApiModel.d.js");
+                public static readonly string FormalEducations_min_js = Url("FormalEducations.min.js");
+                public static readonly string ServiceApiModl_d_ts = Url("ServiceApiModl.d.ts");
+                public static readonly string ServiceApiModl_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModl.d.min.js") ? Url("ServiceApiModl.d.min.js") : Url("ServiceApiModl.d.js");
                               
             }
         
@@ -2683,6 +2685,7 @@ namespace Links
                 public static readonly string LanguageExpertises_ts = Url("LanguageExpertises.ts");
                 public static readonly string LanguageExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LanguageExpertises.min.js") ? Url("LanguageExpertises.min.js") : Url("LanguageExpertises.js");
                               
+                public static readonly string LanguageExpertises_min_js = Url("LanguageExpertises.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2716,13 +2719,11 @@ namespace Links
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }
         
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class NewFolder1 {
-                private const string URLPATH = "~/scripts/viewmodels/NewFolder1";
             public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class places {
                 private const string URLPATH = "~/scripts/viewmodels/places";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

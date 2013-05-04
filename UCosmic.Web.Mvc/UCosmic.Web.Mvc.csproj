@@ -859,20 +859,6 @@
     </Content>
     <None Include="scripts\google\google.maps.d.ts" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
-    <TypeScriptCompile Include="scripts\datacontext\peoplewebservice.ts" />
-    <Content Include="scripts\datacontext\people.min.js">
-      <DependentUpon>people.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\datacontext\peoplewebservice.js">
-      <DependentUpon>peoplewebservice.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\datacontext\people.ts" />
-    <Content Include="scripts\datacontext\people.js">
-      <DependentUpon>people.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\datacontext\peoplewebservice.min.js">
-      <DependentUpon>peoplewebservice.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
@@ -2062,6 +2048,9 @@
     <Content Include="scripts\viewmodels\affiliations\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\affiliations\Affiliations.min.js">
+      <DependentUpon>Affiliations.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -2073,6 +2062,9 @@
     <TypeScriptCompile Include="scripts\viewmodels\formalEducations\FormalEducations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\formalEducations\FormalEducation.ts" />
     <Content Include="scripts\viewmodels\formalEducations\FormalEducation.js">
+      <DependentUpon>FormalEducation.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\formalEducations\FormalEducation.min.js">
       <DependentUpon>FormalEducation.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\formalEducations\FormalEducations.js">
@@ -2093,6 +2085,9 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertises.ts" />
     <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertises.js">
+      <DependentUpon>LanguageExpertises.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertises.min.js">
       <DependentUpon>LanguageExpertises.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\representatives\RepModuleSettings.js">
@@ -2619,7 +2614,6 @@
     <Folder Include="App_Data\mail\" />
     <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
-    <Folder Include="scripts\viewmodels\NewFolder1\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>
   <ItemGroup>
