@@ -84,7 +84,7 @@ module ViewModels.GeographicExpertises
             expertiseSearchInput.personId = this.personId;
             expertiseSearchInput.orderBy = "";
             expertiseSearchInput.pageNumber = 1;
-            expertiseSearchInput.pageSize = 10;
+            expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
             $.get(App.Routes.WebApi.GeographicExpertises.get(), expertiseSearchInput)
                 .done((data: IGeographicExpertise[], textStatus: string, jqXHR: JQueryXHR): void => {

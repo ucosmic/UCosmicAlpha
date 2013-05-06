@@ -107,10 +107,32 @@ namespace UCosmic.Web.Mvc
             // activities
             bundles.Add(new ScriptBundle("~/bundles/activities").Include(
                 "~/scripts/viewmodels/activities/Activities.js"));
-
-            // activity edit
             bundles.Add(new ScriptBundle("~/bundles/activity").Include( // do not bundle tinyMCE, causes errors when optimized.
                 "~/scripts/viewmodels/activities/Activity.js"));
+
+            // geographic expertise
+            bundles.Add(new ScriptBundle("~/bundles/geographicExpertises").Include(
+                "~/scripts/viewmodels/geographicExpertises/GeographicExpertises.js"));
+            bundles.Add(new ScriptBundle("~/bundles/geographicExpertise").Include(
+                "~/scripts/viewmodels/geographicExpertises/GeographicExpertise.js"));
+
+            // language expertise
+            bundles.Add(new ScriptBundle("~/bundles/languageExpertises").Include(
+                "~/scripts/viewmodels/languageExpertises/LanguageExpertises.js"));
+            bundles.Add(new ScriptBundle("~/bundles/languageExpertise").Include(
+                "~/scripts/viewmodels/languageExpertises/LanguageExpertise.js"));
+
+            // formal education
+            bundles.Add(new ScriptBundle("~/bundles/formalEducations").Include(
+                "~/scripts/viewmodels/formalEducations/FormalEducations.js"));
+            bundles.Add(new ScriptBundle("~/bundles/formalEducation").Include(
+                "~/scripts/viewmodels/formalEducations/FormalEducation.js"));
+
+            // affiliations
+            bundles.Add(new ScriptBundle("~/bundles/affiliations").Include(
+                "~/scripts/viewmodels/affiliations/Affiliations.js"));
+            bundles.Add(new ScriptBundle("~/bundles/affiliation").Include(
+                "~/scripts/viewmodels/affiliations/Affiliation.js"));
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(

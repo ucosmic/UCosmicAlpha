@@ -6,7 +6,7 @@
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../formalEducations/ServiceApiModel.d.ts"
+/// <reference path="../formalEducations/ServiceApiModel.d.ts" />
 
 module ViewModels.FormalEducations
 {
@@ -14,170 +14,170 @@ module ViewModels.FormalEducations
     /* 
     */
     // ================================================================================
-    //export class FormalEducationList implements KnockoutValidationGroup
-    //{
-    //    personId: number;
-    //    orderBy: string;
-    //    pageSize: number;
-    //    pageNumber: number;
-    //    items: KnockoutObservableArray;
+    export class FormalEducationList implements KnockoutValidationGroup
+    {
+        personId: number;
+        orderBy: string;
+        pageSize: number;
+        pageNumber: number;
+        items: KnockoutObservableArray;
 
-    //    // --------------------------------------------------------------------------------
-    //    /* 
-    //    */
-    //    // --------------------------------------------------------------------------------                        
-    //    constructor(personId: number)
-    //    {
-    //        this.personId = personId;
-    //    }
+        // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------                        
+        constructor(personId: number)
+        {
+            this.personId = personId;
+        }
 
-    //    // --------------------------------------------------------------------------------
-    //    /* 
-    //    */
-    //    // --------------------------------------------------------------------------------
-    //    load(): JQueryPromise
-    //    {
-    //        var deferred: JQueryDeferred = $.Deferred();
+        // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------
+        load(): JQueryPromise
+        {
+            var deferred: JQueryDeferred = $.Deferred();
 
-    //        var dataPact = $.Deferred();
-    //        var expertiseSearchInput: Service.ApiModels.EducationSearchInput = new Service.ApiModels.EducationSearchInput();
+            var dataPact = $.Deferred();
+            var expertiseSearchInput: Service.ApiModels.FormalEducation.EducationSearchInput = new Service.ApiModels.FormalEducation.EducationSearchInput();
 
-    //        expertiseSearchInput.personId = this.personId;
-    //        expertiseSearchInput.orderBy = "";
-    //        expertiseSearchInput.pageNumber = 1;
-    //        expertiseSearchInput.pageSize = 10;
+            expertiseSearchInput.personId = this.personId;
+            expertiseSearchInput.orderBy = "";
+            expertiseSearchInput.pageNumber = 1;
+            expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
-    //        $.get(App.Routes.WebApi.FormalEducations.get(), expertiseSearchInput)
-    //            .done((data: Service.ApiModels.IFormalEducation[], textStatus: string, jqXHR: JQueryXHR): void => {
-    //                { dataPact.resolve(data); }
-    //            })
-    //            .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-    //                { dataPact.reject(jqXhr, textStatus, errorThrown); }
-    //            });
+            $.get(App.Routes.WebApi.FormalEducations.get(), expertiseSearchInput)
+                .done((data: Service.ApiModels.FormalEducation.IFormalEducation[], textStatus: string, jqXHR: JQueryXHR): void => {
+                    { dataPact.resolve(data); }
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
+                });
 
-    //        $.when(dataPact)
-    //            .done((data: Service.ApiModels.IFormalEducationPage) => {
-    //                deferred.resolve();
-    //            })
-    //            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-    //                deferred.reject(xhr, textStatus, errorThrown);
-    //            });
+            $.when(dataPact)
+                .done((data: Service.ApiModels.FormalEducation.IFormalEducationPage) => {
+                    deferred.resolve();
+                })
+                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    deferred.reject(xhr, textStatus, errorThrown);
+                });
 
-    //        return deferred;
-    //    }
+            return deferred;
+        }
 
-    //    // --------------------------------------------------------------------------------
-    //    /* 
-    //    */
-    //    // --------------------------------------------------------------------------------
-    //    deleteEducationById(expertiseId: number): void {
-    //        $.ajax({
-    //            async: false,
-    //            type: "DELETE",
-    //            url: App.Routes.WebApi.FormalEducations.del(expertiseId),
-    //            success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-    //            { },
-    //            error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-    //            {
-    //                alert(textStatus);
-    //            }
-    //        });
-    //    }
+        // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------
+        deleteEducationById(expertiseId: number): void {
+            $.ajax({
+                async: false,
+                type: "DELETE",
+                url: App.Routes.WebApi.FormalEducations.del(expertiseId),
+                success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
+                { },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                {
+                    alert(textStatus);
+                }
+            });
+        }
 
-    //    // --------------------------------------------------------------------------------
-    //    /*  
-    //    */
-    //    // --------------------------------------------------------------------------------
-    //    deleteEducation(data: any, event: any, viewModel: any): void {
-    //        $("#confirmFormalEducationDeleteDialog").dialog({
-    //            dialogClass: 'jquery-ui',
-    //            width: 'auto',
-    //            resizable: false,
-    //            modal: true,
-    //            buttons: [
-    //                        {
-    //                            text: "Yes, confirm delete", click: function (): void {
-    //                                viewModel.deleteEducationById(data.id());
-    //                                $(this).dialog("close");
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        deleteEducation(data: any, event: any, viewModel: any): void {
+            $("#confirmFormalEducationDeleteDialog").dialog({
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                            {
+                                text: "Yes, confirm delete", click: function (): void {
+                                    viewModel.deleteEducationById(data.id());
+                                    $(this).dialog("close");
 
-    //                                /* TBD - Don't reload page. */
-    //                                location.href = App.Routes.Mvc.My.Profile.get();
-    //                            }
-    //                        },
-    //                        {
-    //                            text: "No, cancel delete", click: function (): void {
-    //                                $(this).dialog("close");
-    //                            }
-    //                        },
-    //            ]
-    //        });
-    //    }
+                                    /* TBD - Don't reload page. */
+                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                }
+                            },
+                            {
+                                text: "No, cancel delete", click: function (): void {
+                                    $(this).dialog("close");
+                                }
+                            },
+                ]
+            });
+        }
 
-    //    // --------------------------------------------------------------------------------
-    //    /*  
-    //    */
-    //    // --------------------------------------------------------------------------------
-    //    editEducation(data: any, event: any, expertiseId: number): void {
-    //        $.ajax({
-    //            type: "GET",
-    //            url: App.Routes.WebApi.FormalEducations.getEditState(expertiseId),
-    //            success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
-    //            {
-    //                if ( editState.isInEdit ) {
-    //                    $( "#formalEducationBeingEditedDialog" ).dialog( {
-    //                        dialogClass: 'jquery-ui',
-    //                        width: 'auto',
-    //                        resizable: false,
-    //                        modal: true,
-    //                        buttons: {
-    //                            Ok: function () {
-    //                                $( this ).dialog( "close" );
-    //                                return;
-    //                            }
-    //                        }
-    //                    } );
-    //                }
-    //                else {
-    //                    var element = event.target;
-    //                    var url = null;
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        editEducation(data: any, event: any, expertiseId: number): void {
+            $.ajax({
+                type: "GET",
+                url: App.Routes.WebApi.FormalEducations.getEditState(expertiseId),
+                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
+                {
+                    if ( editState.isInEdit ) {
+                        $( "#formalEducationBeingEditedDialog" ).dialog( {
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                Ok: function () {
+                                    $( this ).dialog( "close" );
+                                    return;
+                                }
+                            }
+                        } );
+                    }
+                    else {
+                        var element = event.target;
+                        var url = null;
 
-    //                    while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-    //                        element = element.parentElement;
-    //                    }
+                        while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
+                            element = element.parentElement;
+                        }
 
-    //                    if ( element != null ) {
-    //                        url = element.attributes["href"].value;
-    //                    }
+                        if ( element != null ) {
+                            url = element.attributes["href"].value;
+                        }
 
-    //                    if ( url != null ) {
-    //                        location.href = url;
-    //                    }
-    //                }
-    //            },
-    //            error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-    //            {
-    //                alert(textStatus + "|" + errorThrown);
-    //            }
-    //        });
-    //    }
+                        if ( url != null ) {
+                            location.href = url;
+                        }
+                    }
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                {
+                    alert(textStatus + "|" + errorThrown);
+                }
+            });
+        }
 
-    //    // --------------------------------------------------------------------------------
-    //    /*  
-    //    */
-    //    // --------------------------------------------------------------------------------
-    //    newEducation(data: any, event: any): void {
-    //        $.ajax({
-    //            type: "POST",
-    //            url: App.Routes.WebApi.FormalEducations.post(),
-    //            success: (newEducationId: string, textStatus: string, jqXHR: JQueryXHR): void =>
-    //            {
-    //                location.href = App.Routes.Mvc.My.Profile.formalEducationEdit(newEducationId);
-    //            },
-    //            error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-    //            {
-    //                alert(textStatus + "|" + errorThrown);
-    //            }
-    //        });
-    //    }
-    //}
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        newEducation(data: any, event: any): void {
+            $.ajax({
+                type: "POST",
+                url: App.Routes.WebApi.FormalEducations.post(),
+                success: (newEducationId: string, textStatus: string, jqXHR: JQueryXHR): void =>
+                {
+                    location.href = App.Routes.Mvc.My.Profile.formalEducationEdit(newEducationId);
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                {
+                    alert(textStatus + "|" + errorThrown);
+                }
+            });
+        }
+    }
 }

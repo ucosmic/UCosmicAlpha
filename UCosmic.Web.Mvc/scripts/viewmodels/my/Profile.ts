@@ -10,6 +10,11 @@
 /// <reference path="../Spinner.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="../employees/ServerApiModel.d.ts" />
+/// <reference path="../activities/Activities.ts" />
+/// <reference path="../geographicExpertises/GeographicExpertises.ts" />
+/// <reference path="../languageExpertises/LanguageExpertises.ts" />
+/// <reference path="../formalEducations/FormalEducations.ts" />
+/// <reference path="../affiliations/Affiliations.ts" />
 
 module ViewModels.My {
 
@@ -17,6 +22,11 @@ module ViewModels.My {
 
         private _isInitialized: bool = false;
         private _originalValues: IServerProfileApiModel;
+        private _activitiesViewModel: ViewModels.Activities.ActivityList = null;
+        private _geographicExpertisesViewModel: ViewModels.GeographicExpertises.GeographicExpertiseList = null;
+        private _languageExpertisesViewModel: ViewModels.LanguageExpertises.LanguageExpertiseList = null;
+        private _formalEducationsViewModel: ViewModels.FormalEducations.FormalEducationList = null;
+        private _affiliationsViewModel: ViewModels.Affiliations.AffiliationList = null;
 
         hasPhoto: KnockoutObservableBool = ko.observable();
         isPhotoExtensionInvalid: KnockoutObservableBool = ko.observable(false);
@@ -120,6 +130,71 @@ module ViewModels.My {
                 (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     //alert('a GET API call failed :(');
                 });
+        }
+
+        startTab(tabName: string): void {
+            debugger;
+            var viewModel: any;
+            if ( tabName === "Activities" ) {
+                if ( this._activitiesViewModel == null ) {
+                    this._activitiesViewModel = new ViewModels.Activities.ActivityList( this.personId );
+                    this._activitiesViewModel.load()
+                        .done( (): void => {
+                            ko.applyBindings( this._activitiesViewModel, $( "#activities" )[0] );
+                        } )
+                        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                            alert( textStatus + "|" + errorThrown );
+                        } );
+                }
+            } else if ( tabName === "Geographic Expertise" ) {
+                if ( this._geographicExpertisesViewModel == null ) {
+                    this._geographicExpertisesViewModel = new ViewModels.GeographicExpertises.GeographicExpertiseList( this.personId );
+                    this._geographicExpertisesViewModel.load()
+                        .done( (): void => {
+                            ko.applyBindings( this._geographicExpertisesViewModel, $( "#geographic-expertises" )[0] );
+                        } )
+                        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                            alert( textStatus + "|" + errorThrown );
+                        } );
+                }
+            } else if ( tabName === "Language Expertise" ) {
+                if ( this._languageExpertisesViewModel == null ) {
+                    this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
+                    this._languageExpertisesViewModel.load()
+                        .done( (): void => {
+                            ko.applyBindings( this._languageExpertisesViewModel, $( "#language-expertises" )[0] );
+                        } )
+                        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                            alert( textStatus + "|" + errorThrown );
+                        } );
+                }
+            } else if ( tabName === "Formal Education" ) {
+                if ( this._formalEducationsViewModel == null ) {
+                    this._formalEducationsViewModel = new ViewModels.FormalEducations.FormalEducationList( this.personId );
+                    this._formalEducationsViewModel.load()
+                        .done( (): void => {
+                            ko.applyBindings( this._formalEducationsViewModel, $( "#formal-educations" )[0] );
+                        } )
+                        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                            alert( textStatus + "|" + errorThrown );
+                        } );
+                }
+            } else if ( tabName === "Affiliations" ) {
+                if ( this._affiliationsViewModel == null ) {
+                    this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
+                    this._affiliationsViewModel.load()
+                        .done( (): void => {
+                            ko.applyBindings( this._affiliationsViewModel, $( "#affiliations" )[0] );
+                        } )
+                        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                            alert( textStatus + "|" + errorThrown );
+                        } );
+                }
+            }
+        }
+
+        tabClickHandler(event: any): void {
+           this.startTab( event.item.innerText );
         }
 
         startEditing(): void { // show the editor

@@ -24,7 +24,7 @@ var ViewModels;
                 expertiseSearchInput.personId = this.personId;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
-                expertiseSearchInput.pageSize = 10;
+                expertiseSearchInput.pageSize = 2147483647;
                 $.get(App.Routes.WebApi.GeographicExpertises.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
  {
                         dataPact.resolve(data);

@@ -2045,11 +2045,19 @@
       <DependentUpon>Activity.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\affiliations\Affiliations.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\affiliations\Affiliation.ts" />
+    <Content Include="scripts\viewmodels\affiliations\Affiliation.js">
+      <DependentUpon>Affiliation.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\affiliations\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\affiliations\Affiliations.min.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\affiliations\ServiceApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\affiliations\ServiceApiModel.d.js">
+      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
@@ -2070,12 +2078,16 @@
     <Content Include="scripts\viewmodels\formalEducations\FormalEducations.js">
       <DependentUpon>FormalEducations.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\formalEducations\ServiceApiModl.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\formalEducations\ServiceApiModel.d.ts" />
     <Content Include="scripts\viewmodels\formalEducations\FormalEducations.min.js">
       <DependentUpon>FormalEducations.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\formalEducations\ServiceApiModl.d.js">
-      <DependentUpon>ServiceApiModl.d.ts</DependentUpon>
+      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.ts" />
+    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.js">
+      <DependentUpon>GeographicExpertise.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.js">
       <DependentUpon>GeographicExpertises.ts</DependentUpon>
@@ -2084,11 +2096,29 @@
       <DependentUpon>GeographicExpertises.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertises.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\ServiceApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\geographicExpertises\ServiceApiModel.d.js">
+      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertise.js">
+      <DependentUpon>LanguageExpertise.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertise.min.js">
+      <DependentUpon>LanguageExpertise.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertises.js">
       <DependentUpon>LanguageExpertises.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertises.min.js">
       <DependentUpon>LanguageExpertises.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertise.ts" />
+    <Content Include="scripts\viewmodels\languageExpertises\LauageExpertise.js">
+      <DependentUpon>LanguageExpertise.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.js">
+      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\representatives\RepModuleSettings.js">
       <DependentUpon>RepModuleSettings.ts</DependentUpon>
@@ -2456,6 +2486,7 @@
     <Content Include="Views\MyProfile\_GeographicExpertises.cshtml" />
     <Content Include="Views\MyProfile\_LanguageExpertises.cshtml" />
     <Content Include="Views\MyProfile\_FormalEducations.cshtml" />
+    <Content Include="Views\MyProfile\FormalEducationEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

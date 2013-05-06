@@ -30,7 +30,7 @@ var ViewModels;
                 activitiesSearchInput.personId = this.personId;
                 activitiesSearchInput.orderBy = "";
                 activitiesSearchInput.pageNumber = 1;
-                activitiesSearchInput.pageSize = 10;
+                activitiesSearchInput.pageSize = 2147483647;
                 $.get(App.Routes.WebApi.Activities.get(), activitiesSearchInput).done(function (data, textStatus, jqXHR) {
  {
                         dataPact.resolve(data);
