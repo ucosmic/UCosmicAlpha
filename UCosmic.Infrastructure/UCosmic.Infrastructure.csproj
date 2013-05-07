@@ -160,6 +160,7 @@
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="Cryptography\AesExtensions.cs" />
+    <Compile Include="EntityFramework\Fluent\Degrees.cs" />
     <Compile Include="EntityFramework\DropCreateDbOnEveryBuild.cs" />
     <Compile Include="EntityFramework\DropCreateDbOnModelChange.cs" />
     <Compile Include="EntityFramework\Fluent\Activities.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
     <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />
+    <Compile Include="SeedData\DegreeSeeder.cs" />
     <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
     <Compile Include="SeedData\ImageEntitySeeder.cs" />

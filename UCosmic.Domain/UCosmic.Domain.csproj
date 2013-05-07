@@ -164,6 +164,8 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
+    <Compile Include="Domain\Degrees\Commands\CreateDegree.cs" />
+    <Compile Include="Domain\Degrees\Entities\Degree.cs" />
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">

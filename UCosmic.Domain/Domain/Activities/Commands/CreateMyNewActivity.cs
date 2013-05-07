@@ -70,11 +70,10 @@ namespace UCosmic.Domain.Activities
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            if (command.EntityId != null)
+            if (command.EntityId.HasValue)
             {
                 activity.EntityId = command.EntityId.Value;
             }
-
 
             _entities.Create(activity);
 

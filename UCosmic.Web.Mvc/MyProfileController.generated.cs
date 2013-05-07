@@ -101,6 +101,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _LanguageExpertises = "_LanguageExpertises";
                 public readonly string _PersonalInfo = "_PersonalInfo";
                 public readonly string ActivityEdit = "ActivityEdit";
+                public readonly string FormalEducationEdit = "FormalEducationEdit";
                 public readonly string Index = "Index";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
@@ -111,6 +112,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _LanguageExpertises = "~/Views/MyProfile/_LanguageExpertises.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
             public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
+            public readonly string FormalEducationEdit = "~/Views/MyProfile/FormalEducationEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
         }
     }

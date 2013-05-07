@@ -23,6 +23,7 @@
         private readonly ActivityEntitySeeder _activityEntitySeeder;
         private readonly LoadableFileEntitySeeder _loadableFileEntitySeeder;
         private readonly ImageEntitySeeder _imageEntitySeeder;
+        private readonly DegreeEntitySeeder _degreeEntitySeeder;
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
@@ -45,6 +46,7 @@
             , ActivityEntitySeeder activityEntitySeeder
             , LoadableFileEntitySeeder loadableFileEntitySeeder
             , ImageEntitySeeder imageEntitySeeder
+            , DegreeEntitySeeder degreeEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -68,6 +70,7 @@
             _activityEntitySeeder = activityEntitySeeder;
             _loadableFileEntitySeeder = loadableFileEntitySeeder;
             _imageEntitySeeder = imageEntitySeeder;
+            _degreeEntitySeeder = degreeEntitySeeder;
         }
 
         public void Seed()
@@ -95,6 +98,7 @@
             _affiliationEntitySeeder.Seed();
             _employeeEntitySeeder.Seed();
             _activityEntitySeeder.Seed();
+            _degreeEntitySeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }
