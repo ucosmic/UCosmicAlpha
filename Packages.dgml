@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="UCosmic.Web.Mvc" Label="UCosmic.Web.Mvc" Category="Project" />
+    <Node Id="AspNetWebApi.Core 4.0.20710.0" Label="AspNetWebApi.Core 4.0.20710.0" Category="Package" />
+    <Node Id="AttributeRouting 3.3" Label="AttributeRouting 3.3" Category="Package" />
+    <Node Id="AttributeRouting.Core 3.3" Label="AttributeRouting.Core 3.3" Category="Package" />
+    <Node Id="AttributeRouting.Core.Http 3.3" Label="AttributeRouting.Core.Http 3.3" Category="Package" />
+    <Node Id="AttributeRouting.Core.Web 3.3" Label="AttributeRouting.Core.Web 3.3" Category="Package" />
+    <Node Id="AttributeRouting.WebApi 3.3" Label="AttributeRouting.WebApi 3.3" Category="Package" />
+    <Node Id="AutoAutoMapper 0.2.0.0" Label="AutoAutoMapper 0.2.0.0" Category="Package" />
+    <Node Id="AutoMapper 2.2.0" Label="AutoMapper 2.2.0" Category="Package" />
+    <Node Id="BeginCollectionItem 1.2.1.0" Label="BeginCollectionItem 1.2.1.0" Category="Package" />
+    <Node Id="elmah.corelibrary 1.2.2" Label="elmah.corelibrary 1.2.2" Category="Package" />
+    <Node Id="Elmah.MVC 2.0.2" Label="Elmah.MVC 2.0.2" Category="Package" />
+    <Node Id="EntityFramework 5.0.0" Label="EntityFramework 5.0.0" Category="Package" />
+    <Node Id="FluentValidation 3.4.6.0" Label="FluentValidation 3.4.6.0" Category="Package" />
+    <Node Id="ImageResizer 3.3.3" Label="ImageResizer 3.3.3" Category="Package" />
+    <Node Id="ImageResizer.Mvc 3.3.3" Label="ImageResizer.Mvc 3.3.3" Category="Package" />
+    <Node Id="ImageResizer.MvcWebConfig 3.3.3" Label="ImageResizer.MvcWebConfig 3.3.3" Category="Package" />
+    <Node Id="ImageResizer.WebConfig 3.3.3" Label="ImageResizer.WebConfig 3.3.3" Category="Package" />
+    <Node Id="jQuery 1.8.2" Label="jQuery 1.8.2" Category="Package" />
+    <Node Id="jQuery.UI.Combined 1.9.2" Label="jQuery.UI.Combined 1.9.2" Category="Package" />
+    <Node Id="jQuery.Validation 1.10.0" Label="jQuery.Validation 1.10.0" Category="Package" />
+    <Node Id="KendoUIWeb 2012.3.1114" Label="KendoUIWeb 2012.3.1114" Category="Package" />
+    <Node Id="Knockout.Mapping 2.3.4" Label="Knockout.Mapping 2.3.4" Category="Package" />
+    <Node Id="Knockout.Validation 1.0.1" Label="Knockout.Validation 1.0.1" Category="Package" />
+    <Node Id="knockoutjs 2.2.0" Label="knockoutjs 2.2.0" Category="Package" />
+    <Node Id="LowercaseRoutesMVC4 0.4.1" Label="LowercaseRoutesMVC4 0.4.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.Mvc 4.0.20710.0" Label="Microsoft.AspNet.Mvc 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.Providers 1.2" Label="Microsoft.AspNet.Providers 1.2" Category="Package" />
+    <Node Id="Microsoft.AspNet.Providers.Core 1.2" Label="Microsoft.AspNet.Providers.Core 1.2" Category="Package" />
+    <Node Id="Microsoft.AspNet.Razor 2.0.20715.0" Label="Microsoft.AspNet.Razor 2.0.20715.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.Web.Optimization 1.0.0" Label="Microsoft.AspNet.Web.Optimization 1.0.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi 4.0.20710.0" Label="Microsoft.AspNet.WebApi 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Label="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Label="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Label="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebPages 2.0.20710.0" Label="Microsoft.AspNet.WebPages 2.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.Data.Edm 5.1.0" Label="Microsoft.Data.Edm 5.1.0" Category="Package" />
+    <Node Id="Microsoft.Data.OData 5.1.0" Label="Microsoft.Data.OData 5.1.0" Category="Package" />
+    <Node Id="Microsoft.jQuery.Unobtrusive.Ajax 2.0.20710.0" Label="Microsoft.jQuery.Unobtrusive.Ajax 2.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.jQuery.Unobtrusive.Validation 2.0.20710.0" Label="Microsoft.jQuery.Unobtrusive.Validation 2.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.Net.Http 2.0.20710.0" Label="Microsoft.Net.Http 2.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.Web.Infrastructure 1.0.0.0" Label="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package" />
+    <Node Id="Microsoft.WindowsAzure.ConfigurationManager 1.8.0.0" Label="Microsoft.WindowsAzure.ConfigurationManager 1.8.0.0" Category="Package" />
+    <Node Id="Modernizr 2.6.2" Label="Modernizr 2.6.2" Category="Package" />
+    <Node Id="Moment.js 2.0.0" Label="Moment.js 2.0.0" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NGeo 1.9.0.0" Label="NGeo 1.9.0.0" Category="Package" />
+    <Node Id="Pkcs12ProtectedConfigurationProvider 1.0.1" Label="Pkcs12ProtectedConfigurationProvider 1.0.1" Category="Package" />
+    <Node Id="Pluralizer 0.3.0.1" Label="Pluralizer 0.3.0.1" Category="Package" />
+    <Node Id="Pluralizer.Mvc 0.3.0.1" Label="Pluralizer.Mvc 0.3.0.1" Category="Package" />
+    <Node Id="Sammy.js 0.7.1" Label="Sammy.js 0.7.1" Category="Package" />
+    <Node Id="SimpleInjector 1.6.0.12319" Label="SimpleInjector 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.Extensions 1.6.0.12319" Label="SimpleInjector.Extensions 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Label="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.Integration.Web 1.6.0.12319" Label="SimpleInjector.Integration.Web 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.MVC3 1.6.0.12319" Label="SimpleInjector.MVC3 1.6.0.12319" Category="Package" />
+    <Node Id="System.Spatial 5.1.0" Label="System.Spatial 5.1.0" Category="Package" />
+    <Node Id="T4MVC 3.0.3" Label="T4MVC 3.0.3" Category="Package" />
+    <Node Id="T4MVCExtensions 3.0.3" Label="T4MVCExtensions 3.0.3" Category="Package" />
+    <Node Id="TaskHelpers.Sources 0.2" Label="TaskHelpers.Sources 0.2" Category="Package" />
+    <Node Id="TinyMCE 3.5.8" Label="TinyMCE 3.5.8" Category="Package" />
+    <Node Id="TinyMCE.MVC 3.4.7" Label="TinyMCE.MVC 3.4.7" Category="Package" />
+    <Node Id="WebActivator 1.5.2" Label="WebActivator 1.5.2" Category="Package" />
+    <Node Id="WebApiContrib 0.9.1" Label="WebApiContrib 0.9.1" Category="Package" />
+    <Node Id="WebGrease 1.3.0" Label="WebGrease 1.3.0" Category="Package" />
+    <Node Id="WindowsAzure.Caching 1.7.0.0" Label="WindowsAzure.Caching 1.7.0.0" Category="Package" />
+    <Node Id="WindowsAzure.Storage 2.0.1.0" Label="WindowsAzure.Storage 2.0.1.0" Category="Package" />
+    <Node Id="UCosmic.Infrastructure" Label="UCosmic.Infrastructure" Category="Project" />
+    <Node Id="AspNetWebApi.Core 4.0.20710.0" Label="AspNetWebApi.Core 4.0.20710.0" Category="Package" />
+    <Node Id="elmah.corelibrary 1.2.2" Label="elmah.corelibrary 1.2.2" Category="Package" />
+    <Node Id="EntityFramework 5.0.0" Label="EntityFramework 5.0.0" Category="Package" />
+    <Node Id="FluentValidation 3.4.6.0" Label="FluentValidation 3.4.6.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Label="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Label="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Label="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.Data.Edm 5.0.2" Label="Microsoft.Data.Edm 5.0.2" Category="Package" />
+    <Node Id="Microsoft.Data.OData 5.0.2" Label="Microsoft.Data.OData 5.0.2" Category="Package" />
+    <Node Id="Microsoft.Net.Http 2.0.20710.0" Label="Microsoft.Net.Http 2.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.Web.Infrastructure 1.0.0.0" Label="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package" />
+    <Node Id="Microsoft.WindowsAzure.ConfigurationManager 1.7.0.3" Label="Microsoft.WindowsAzure.ConfigurationManager 1.7.0.3" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NGeo 1.9.0.0" Label="NGeo 1.9.0.0" Category="Package" />
+    <Node Id="SimpleInjector 1.6.0.12319" Label="SimpleInjector 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.Extensions 1.6.0.12319" Label="SimpleInjector.Extensions 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Label="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Category="Package" />
+    <Node Id="SimpleInjector.Integration.Web 1.6.0.12319" Label="SimpleInjector.Integration.Web 1.6.0.12319" Category="Package" />
+    <Node Id="System.Spatial 5.0.2" Label="System.Spatial 5.0.2" Category="Package" />
+    <Node Id="WindowsAzure.Caching 1.7.0.0" Label="WindowsAzure.Caching 1.7.0.0" Category="Package" />
+    <Node Id="WindowsAzure.Storage 2.0.1.0" Label="WindowsAzure.Storage 2.0.1.0" Category="Package" />
+    <Node Id="UCosmic.Domain" Label="UCosmic.Domain" Category="Project" />
+    <Node Id="AutoMapper 2.2.0" Label="AutoMapper 2.2.0" Category="Package" />
+    <Node Id="EntityFramework 5.0.0" Label="EntityFramework 5.0.0" Category="Package" />
+    <Node Id="FluentValidation 3.4.6.0" Label="FluentValidation 3.4.6.0" Category="Package" />
+    <Node Id="LinqKit 1.0" Label="LinqKit 1.0" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NGeo 1.9.0.0" Label="NGeo 1.9.0.0" Category="Package" />
+    <Node Id="Pluralizer 0.3.0.1" Label="Pluralizer 0.3.0.1" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="AspNetWebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="AspNetWebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="AttributeRouting 3.3" Target="AttributeRouting.Core 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting 3.3" Target="AttributeRouting.Core.Web 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting 3.3" Target="WebActivator 1.5.2" Category="Package Dependency" />
+    <Link Source="AttributeRouting.Core.Http 3.3" Target="AttributeRouting.Core 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting.Core.Web 3.3" Target="AttributeRouting.Core 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting.WebApi 3.3" Target="AttributeRouting.Core 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting.WebApi 3.3" Target="AttributeRouting.Core.Web 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting.WebApi 3.3" Target="AttributeRouting.Core.Http 3.3" Category="Package Dependency" />
+    <Link Source="AttributeRouting.WebApi 3.3" Target="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="AttributeRouting.WebApi 3.3" Target="WebActivator 1.5.2" Category="Package Dependency" />
+    <Link Source="AutoAutoMapper 0.2.0.0" Target="AutoMapper 2.2.0" Category="Package Dependency" />
+    <Link Source="Elmah.MVC 2.0.2" Target="elmah.corelibrary 1.2.2" Category="Package Dependency" />
+    <Link Source="ImageResizer.Mvc 3.3.3" Target="ImageResizer 3.3.3" Category="Package Dependency" />
+    <Link Source="ImageResizer.MvcWebConfig 3.3.3" Target="ImageResizer 3.3.3" Category="Package Dependency" />
+    <Link Source="ImageResizer.MvcWebConfig 3.3.3" Target="ImageResizer.WebConfig 3.3.3" Category="Package Dependency" />
+    <Link Source="ImageResizer.MvcWebConfig 3.3.3" Target="ImageResizer.Mvc 3.3.3" Category="Package Dependency" />
+    <Link Source="ImageResizer.WebConfig 3.3.3" Target="ImageResizer 3.3.3" Category="Package Dependency" />
+    <Link Source="jQuery.UI.Combined 1.9.2" Target="jQuery 1.8.2" Category="Package Dependency" />
+    <Link Source="jQuery.Validation 1.10.0" Target="jQuery 1.8.2" Category="Package Dependency" />
+    <Link Source="KendoUIWeb 2012.3.1114" Target="jQuery 1.8.2" Category="Package Dependency" />
+    <Link Source="Knockout.Mapping 2.3.4" Target="knockoutjs 2.2.0" Category="Package Dependency" />
+    <Link Source="Knockout.Validation 1.0.1" Target="knockoutjs 2.2.0" Category="Package Dependency" />
+    <Link Source="LowercaseRoutesMVC4 0.4.1" Target="AspNetWebApi.Core 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Mvc 4.0.20710.0" Target="Microsoft.AspNet.WebPages 2.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Mvc 4.0.20710.0" Target="Microsoft.AspNet.Razor 2.0.20715.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Providers 1.2" Target="Microsoft.AspNet.Providers.Core 1.2" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Providers.Core 1.2" Target="EntityFramework 5.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Web.Optimization 1.0.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.Web.Optimization 1.0.0" Target="WebGrease 1.3.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi 4.0.20710.0" Target="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebPages 2.0.20710.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebPages 2.0.20710.0" Target="Microsoft.AspNet.Razor 2.0.20715.0" Category="Package Dependency" />
+    <Link Source="Microsoft.Data.OData 5.1.0" Target="System.Spatial 5.1.0" Category="Package Dependency" />
+    <Link Source="Microsoft.Data.OData 5.1.0" Target="Microsoft.Data.Edm 5.1.0" Category="Package Dependency" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Ajax 2.0.20710.0" Target="jQuery 1.8.2" Category="Package Dependency" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Validation 2.0.20710.0" Target="jQuery.Validation 1.10.0" Category="Package Dependency" />
+    <Link Source="NGeo 1.9.0.0" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Pluralizer.Mvc 0.3.0.1" Target="Pluralizer 0.3.0.1" Category="Package Dependency" />
+    <Link Source="Sammy.js 0.7.1" Target="jQuery 1.8.2" Category="Package Dependency" />
+    <Link Source="SimpleInjector.Extensions 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.Integration.Web 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.MVC3 1.6.0.12319" Target="WebActivator 1.5.2" Category="Package Dependency" />
+    <Link Source="SimpleInjector.MVC3 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.MVC3 1.6.0.12319" Target="SimpleInjector.Extensions 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.MVC3 1.6.0.12319" Target="SimpleInjector.Integration.Web 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="T4MVC 3.0.3" Target="T4MVCExtensions 3.0.3" Category="Package Dependency" />
+    <Link Source="TinyMCE.MVC 3.4.7" Target="TinyMCE 3.5.8" Category="Package Dependency" />
+    <Link Source="WebActivator 1.5.2" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="WebApiContrib 0.9.1" Target="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="WebApiContrib 0.9.1" Target="TaskHelpers.Sources 0.2" Category="Package Dependency" />
+    <Link Source="WindowsAzure.Storage 2.0.1.0" Target="Microsoft.WindowsAzure.ConfigurationManager 1.8.0.0" Category="Package Dependency" />
+    <Link Source="WindowsAzure.Storage 2.0.1.0" Target="Microsoft.Data.OData 5.1.0" Category="Package Dependency" />
+    <Link Source="UCosmic.Web.Mvc" Target="AttributeRouting 3.3" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="AttributeRouting.WebApi 3.3" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="AutoAutoMapper 0.2.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="BeginCollectionItem 1.2.1.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Elmah.MVC 2.0.2" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="FluentValidation 3.4.6.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="ImageResizer.MvcWebConfig 3.3.3" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="jQuery.UI.Combined 1.9.2" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="KendoUIWeb 2012.3.1114" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Knockout.Mapping 2.3.4" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Knockout.Validation 1.0.1" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="LowercaseRoutesMVC4 0.4.1" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Microsoft.AspNet.Mvc 4.0.20710.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Microsoft.AspNet.Providers 1.2" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Microsoft.AspNet.Web.Optimization 1.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Microsoft.AspNet.WebApi 4.0.20710.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Microsoft.jQuery.Unobtrusive.Ajax 2.0.20710.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Microsoft.jQuery.Unobtrusive.Validation 2.0.20710.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Modernizr 2.6.2" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Moment.js 2.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="NGeo 1.9.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Pkcs12ProtectedConfigurationProvider 1.0.1" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Pluralizer.Mvc 0.3.0.1" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="Sammy.js 0.7.1" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="SimpleInjector.MVC3 1.6.0.12319" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="T4MVC 3.0.3" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="TinyMCE.MVC 3.4.7" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="WebApiContrib 0.9.1" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="WindowsAzure.Caching 1.7.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Web.Mvc" Target="WindowsAzure.Storage 2.0.1.0" Category="Installed Package" />
+    <Link Source="AspNetWebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="AspNetWebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.Data.OData 5.0.2" Target="Microsoft.Data.Edm 5.0.2" Category="Package Dependency" />
+    <Link Source="Microsoft.Data.OData 5.0.2" Target="System.Spatial 5.0.2" Category="Package Dependency" />
+    <Link Source="NGeo 1.9.0.0" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="SimpleInjector.Extensions 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="SimpleInjector.Integration.Web 1.6.0.12319" Target="SimpleInjector 1.6.0.12319" Category="Package Dependency" />
+    <Link Source="WindowsAzure.Storage 2.0.1.0" Target="Microsoft.WindowsAzure.ConfigurationManager 1.7.0.3" Category="Package Dependency" />
+    <Link Source="WindowsAzure.Storage 2.0.1.0" Target="Microsoft.Data.OData 5.0.2" Category="Package Dependency" />
+    <Link Source="UCosmic.Infrastructure" Target="AspNetWebApi.Core 4.0.20710.0" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="elmah.corelibrary 1.2.2" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="EntityFramework 5.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="FluentValidation 3.4.6.0" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="NGeo 1.9.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="SimpleInjector.Extensions 1.6.0.12319" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="SimpleInjector.Extensions.LifetimeScoping 1.6.0.12319" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="SimpleInjector.Integration.Web 1.6.0.12319" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="WindowsAzure.Caching 1.7.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Infrastructure" Target="WindowsAzure.Storage 2.0.1.0" Category="Installed Package" />
+    <Link Source="NGeo 1.9.0.0" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="UCosmic.Domain" Target="AutoMapper 2.2.0" Category="Installed Package" />
+    <Link Source="UCosmic.Domain" Target="EntityFramework 5.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Domain" Target="FluentValidation 3.4.6.0" Category="Installed Package" />
+    <Link Source="UCosmic.Domain" Target="LinqKit 1.0" Category="Installed Package" />
+    <Link Source="UCosmic.Domain" Target="NGeo 1.9.0.0" Category="Installed Package" />
+    <Link Source="UCosmic.Domain" Target="Pluralizer 0.3.0.1" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>

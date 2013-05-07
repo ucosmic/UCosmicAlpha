@@ -1773,10 +1773,12 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
+    <Content Include="scripts\main.js" />
     <Content Include="scripts\oss\jquery.tinymce.d.ts" />
     <Content Include="scripts\oss\jquery.tinymce.js" />
     <Content Include="scripts\oss\moment.js" />
     <Content Include="scripts\oss\moment.min.js" />
+    <Content Include="scripts\require.js" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
     <Content Include="scripts\tinymce\license.txt" />
@@ -2214,6 +2216,13 @@
     <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\User.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\SearchResult.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\spinnerRequireTest.ts" />
+    <Content Include="scripts\viewmodels\spinnerRequireTest.js">
+      <DependentUpon>spinnerRequireTest.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\spinnerRequireTest.min.js">
+      <DependentUpon>spinnerRequireTest.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\users\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
