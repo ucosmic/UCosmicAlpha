@@ -1290,6 +1290,8 @@ namespace Links
         }
     
         public static readonly string lib_ext_d_ts = Url("lib-ext.d.ts");
+        public static readonly string main_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/main.min.js") ? Url("main.min.js") : Url("main.js");
+                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class modernizr {
             private const string URLPATH = "~/scripts/modernizr";
@@ -1333,6 +1335,8 @@ namespace Links
             public static readonly string moment_min_js = Url("moment.min.js");
         }
     
+        public static readonly string require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/require.min.js") ? Url("require.min.js") : Url("require.js");
+                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class sammy {
             private const string URLPATH = "~/scripts/sammy";
@@ -2750,6 +2754,20 @@ namespace Links
                 public static readonly string RepModuleSettings_min_js = Url("RepModuleSettings.min.js");
             }
         
+            public static readonly string RequireTest_ts = Url("RequireTest.ts");
+            public static readonly string RequireTest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTest.min.js") ? Url("RequireTest.min.js") : Url("RequireTest.js");
+                          
+            public static readonly string RequireTest_min_js = Url("RequireTest.min.js");
+            public static readonly string spinnerRequireTest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/spinnerRequireTest.min.js") ? Url("spinnerRequireTest.min.js") : Url("spinnerRequireTest.js");
+                          
+            public static readonly string spinnerRequireTest_min_js = Url("spinnerRequireTest.min.js");
+            public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
+            public static readonly string modItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modItWorked.min.js") ? Url("modItWorked.min.js") : Url("modItWorked.js");
+                          
+            public static readonly string modItWorked_min_js = Url("modItWorked.min.js");
+            public static readonly string RequireTestModItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTestModItWorked.min.js") ? Url("RequireTestModItWorked.min.js") : Url("RequireTestModItWorked.js");
+                          
+            public static readonly string RequireTestModItWorked_min_js = Url("RequireTestModItWorked.min.js");
             public static readonly string Spinner_ts = Url("Spinner.ts");
             public static readonly string Spinner_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Spinner.min.js") ? Url("Spinner.min.js") : Url("Spinner.js");
                           

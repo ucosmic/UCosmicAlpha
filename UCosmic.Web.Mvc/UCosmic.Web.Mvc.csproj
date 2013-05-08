@@ -2216,12 +2216,24 @@
     <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\User.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\SearchResult.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\spinnerRequireTest.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\RequireTest.ts" />
+    <Content Include="scripts\viewmodels\RequireTest.js">
+      <DependentUpon>RequireTest.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\RequireTest.min.js">
+      <DependentUpon>RequireTest.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\RequireTestModItWorked.js">
+      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\RequireTestModItWorked.min.js">
+      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\spinnerRequireTest.js">
-      <DependentUpon>spinnerRequireTest.ts</DependentUpon>
+      <DependentUpon>RequireTest.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\spinnerRequireTest.min.js">
-      <DependentUpon>spinnerRequireTest.ts</DependentUpon>
+      <DependentUpon>RequireTest.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\users\Search.js">
       <DependentUpon>Search.ts</DependentUpon>

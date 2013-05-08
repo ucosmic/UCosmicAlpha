@@ -50,7 +50,6 @@ namespace UCosmic.Web.Mvc
                 // current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
 
                 //"~/scripts/jquery/jquery-{version}.js",
-                "~/scripts/viewmodels/spinnerRequireTest.js", 
 
                 "~/scripts/jquery/jquery-ui-{version}.js",
                 "~/scripts/ko/knockout-{version}.js",

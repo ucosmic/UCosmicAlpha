@@ -1,5 +1,5 @@
-define(["require", "exports", 'modItWorked'], function(require, exports, __Spinner__) {
-    var Spinner = __Spinner__;
+define(["require", "exports", 'modItWorked'], function(require, exports, __mySpinnerTim__) {
+    var mySpinnerTim = __mySpinnerTim__;
 
-    Spinner.itWorked("yes");
+    mySpinnerTim.itWorkedTim("yes");
 })
