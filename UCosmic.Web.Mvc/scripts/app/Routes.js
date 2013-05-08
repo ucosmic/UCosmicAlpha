@@ -227,6 +227,109 @@ var App;
                 Establishments.Categories = Categories;                
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
+            (function (Shared) {
+                function get(SharedId) {
+                    var url = 'Shared';
+                    if(SharedId) {
+                        url += '/' + SharedId;
+                    }
+                    return makeUrl(url);
+                }
+                Shared.get = get;
+                function post() {
+                    return makeUrl('Shared');
+                }
+                Shared.post = post;
+                function put(SharedId) {
+                    return get(SharedId);
+                }
+                Shared.put = put;
+                function validateCeebCode(SharedId) {
+                    return makeUrl('Shared/' + SharedId + '/validate-ceeb-code');
+                }
+                Shared.validateCeebCode = validateCeebCode;
+                function validateUCosmicCode(SharedId) {
+                    return makeUrl('Shared/' + SharedId + '/validate-ucosmic-code');
+                }
+                Shared.validateUCosmicCode = validateUCosmicCode;
+                function validateParentId(SharedId) {
+                    return makeUrl('Shared/' + SharedId + '/validate-parent-id');
+                }
+                Shared.validateParentId = validateParentId;
+                var Names = (function () {
+                    function Names() { }
+                    Names.get = function get(SharedId, SharedNameId) {
+                        var url = 'Shared/' + SharedId + '/names';
+                        if(SharedNameId) {
+                            url += '/' + SharedNameId;
+                        }
+                        return makeUrl(url);
+                    };
+                    Names.post = function post(SharedId) {
+                        return Names.get(SharedId);
+                    };
+                    Names.put = function put(SharedId, SharedNameId) {
+                        return makeUrl('Shared/' + SharedId + '/names/' + SharedNameId);
+                    };
+                    Names.del = function del(SharedId, SharedNameId) {
+                        return Names.put(SharedId, SharedNameId);
+                    };
+                    Names.validateText = function validateText(SharedId, SharedNameId) {
+                        return makeUrl('Shared/' + SharedId + '/names/' + SharedNameId + '/validate-text');
+                    };
+                    return Names;
+                })();
+                Shared.Names = Names;                
+                var Urls = (function () {
+                    function Urls() { }
+                    Urls.get = function get(SharedId, SharedUrlId) {
+                        var url = 'Shared/' + SharedId + '/urls';
+                        if(SharedUrlId) {
+                            url += '/' + SharedUrlId;
+                        }
+                        return makeUrl(url);
+                    };
+                    Urls.post = function post(SharedId) {
+                        return Urls.get(SharedId);
+                    };
+                    Urls.put = function put(SharedId, SharedUrlId) {
+                        return makeUrl('Shared/' + SharedId + '/urls/' + SharedUrlId);
+                    };
+                    Urls.del = function del(SharedId, SharedUrlId) {
+                        return Urls.put(SharedId, SharedUrlId);
+                    };
+                    Urls.validateValue = function validateValue(SharedId, SharedUrlId) {
+                        return makeUrl('Shared/' + SharedId + '/urls/' + SharedUrlId + '/validate-value');
+                    };
+                    return Urls;
+                })();
+                Shared.Urls = Urls;                
+                var Locations = (function () {
+                    function Locations() { }
+                    Locations.get = function get(SharedId) {
+                        var url = 'Shared/' + SharedId + '/location';
+                        return makeUrl(url);
+                    };
+                    Locations.put = function put(SharedId) {
+                        return Locations.get(SharedId);
+                    };
+                    return Locations;
+                })();
+                Shared.Locations = Locations;                
+                var Categories = (function () {
+                    function Categories() { }
+                    Categories.get = function get(id) {
+                        var url = 'Shared-categories';
+                        if(id) {
+                            url += '/' + id;
+                        }
+                        return makeUrl(url);
+                    };
+                    return Categories;
+                })();
+                Shared.Categories = Categories;                
+            })(WebApi.Shared || (WebApi.Shared = {}));
+            var Shared = WebApi.Shared;
             (function (My) {
                 (function (Profile) {
                     function get() {
@@ -536,6 +639,21 @@ var App;
                 Establishments.created = created;
             })(Mvc.Establishments || (Mvc.Establishments = {}));
             var Establishments = Mvc.Establishments;
+            (function (Shared) {
+                function show(SharedId) {
+                    return makeUrl('Shared/' + SharedId);
+                }
+                Shared.show = show;
+                function created(params) {
+                    var url = makeUrl('Shared/created');
+                    if(params) {
+                        url += '?' + $.param(params);
+                    }
+                    return url;
+                }
+                Shared.created = created;
+            })(Mvc.Shared || (Mvc.Shared = {}));
+            var Shared = Mvc.Shared;
             (function (Identity) {
                 (function (Users) {
                     function created(params) {

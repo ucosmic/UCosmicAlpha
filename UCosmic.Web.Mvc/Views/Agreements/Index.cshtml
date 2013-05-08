@@ -5,6 +5,16 @@
 
 @section scripts
 {
+    
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            requirejs(['../../scripts/viewmodels/shared/Search'],
+                function() {
+
+                });
+        });
+    </script>
 
     @Scripts.Render("~/bundles/establishments")
 

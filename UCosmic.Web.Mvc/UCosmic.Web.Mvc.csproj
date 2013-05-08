@@ -2213,6 +2213,12 @@
     <Content Include="scripts\viewmodels\places\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Item.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Location.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Name.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\SearchResult.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Url.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\User.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\SearchResult.ts" />
@@ -2228,6 +2234,58 @@
     </Content>
     <Content Include="scripts\viewmodels\RequireTestModItWorked.min.js">
       <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Item.js">
+      <DependentUpon>Item.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Item.min.js">
+      <DependentUpon>Item.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Location.js">
+      <DependentUpon>Location.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Location.min.js">
+      <DependentUpon>Location.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Location.min.js.map">
+      <DependentUpon>Location.js</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Name.js">
+      <DependentUpon>Name.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Name.min.js">
+      <DependentUpon>Name.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Name.min.js.map">
+      <DependentUpon>Name.js</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Search.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Search.min.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Search.min.js.map">
+      <DependentUpon>Search.js</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\SearchResult.js">
+      <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\SearchResult.min.js">
+      <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\SearchResult.min.js.map">
+      <DependentUpon>SearchResult.js</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\ServerApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\shared\Url.js">
+      <DependentUpon>Url.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Url.min.js">
+      <DependentUpon>Url.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Url.min.js.map">
+      <DependentUpon>Url.js</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\spinnerRequireTest.js">
       <DependentUpon>RequireTest.ts</DependentUpon>

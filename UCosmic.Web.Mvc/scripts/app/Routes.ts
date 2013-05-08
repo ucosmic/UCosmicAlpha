@@ -220,7 +220,109 @@ module App.Routes {
                 }
             }
         }
+        export module Shared {
 
+            export function get (SharedId?: number): string {
+                var url = 'Shared';
+                if (SharedId) url += '/' + SharedId;
+                return makeUrl(url);
+            }
+
+            export function post(): string {
+                return makeUrl('Shared');
+            }
+
+            export function put(SharedId: number): string {
+                return get(SharedId);
+            }
+
+            export function validateCeebCode(SharedId: number): string {
+                return makeUrl('Shared/' + SharedId + '/validate-ceeb-code');
+            }
+
+            export function validateUCosmicCode(SharedId: number): string {
+                return makeUrl('Shared/' + SharedId + '/validate-ucosmic-code');
+            }
+
+            export function validateParentId(SharedId: number): string {
+                return makeUrl('Shared/' + SharedId + '/validate-parent-id');
+            }
+
+            export class Names {
+
+                static get (SharedId: number, SharedNameId?: number): string {
+                    var url = 'Shared/' + SharedId + '/names';
+                    if (SharedNameId) url += '/' + SharedNameId;
+                    return makeUrl(url);
+                }
+
+                static post(SharedId: number): string {
+                    return Names.get(SharedId);
+                }
+
+                static put(SharedId: number, SharedNameId: number): string {
+                    return makeUrl('Shared/' + SharedId + '/names/'
+                        + SharedNameId);
+                }
+
+                static del(SharedId: number, SharedNameId: number): string {
+                    return Names.put(SharedId, SharedNameId);
+                }
+
+                static validateText(SharedId: number, SharedNameId: number): string {
+                    return makeUrl('Shared/' + SharedId + '/names/'
+                        + SharedNameId + '/validate-text');
+                }
+            }
+
+            export class Urls {
+
+                static get (SharedId: number, SharedUrlId?: number): string {
+                    var url = 'Shared/' + SharedId + '/urls';
+                    if (SharedUrlId) url += '/' + SharedUrlId;
+                    return makeUrl(url);
+                }
+
+                static post(SharedId: number): string {
+                    return Urls.get(SharedId);
+                }
+
+                static put(SharedId: number, SharedUrlId: number): string {
+                    return makeUrl('Shared/' + SharedId + '/urls/'
+                        + SharedUrlId);
+                }
+
+                static del(SharedId: number, SharedUrlId: number): string {
+                    return Urls.put(SharedId, SharedUrlId);
+                }
+
+                static validateValue(SharedId: number, SharedUrlId: number): string {
+                    return makeUrl('Shared/' + SharedId + '/urls/'
+                        + SharedUrlId + '/validate-value');
+                }
+            }
+
+            export class Locations {
+
+                static get (SharedId: number): string {
+                    var url = 'Shared/' + SharedId + '/location';
+                    return makeUrl(url);
+                }
+
+                static put(SharedId: number): string {
+                    return get(SharedId);
+                }
+            }
+
+            export class Categories {
+
+                static get (id?: number): string {
+                    var url = 'Shared-categories';
+                    if (id) url += '/' + id;
+                    return makeUrl(url);
+                }
+            }
+        }
         export module My {
             export module Profile {
                 export function get (): string {
@@ -479,9 +581,20 @@ module App.Routes {
         export module Establishments {
             export function show(establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);
-            }
+            } 
             export function created(params?: any) {
                 var url = makeUrl('establishments/created');
+                if (params) url += '?' + $.param(params);
+                return url;
+            }
+        }
+
+        export module Shared {
+            export function show(SharedId: number) {
+                return makeUrl('Shared/' + SharedId);
+            }
+            export function created(params?: any) {
+                var url = makeUrl('Shared/created');
                 if (params) url += '?' + $.param(params);
                 return url;
             }
