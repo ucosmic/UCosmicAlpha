@@ -110,11 +110,11 @@ module ViewModels.FormalEducations {
 
             $.ajax( {
                 type: "GET",
-                url: App.Routes.WebApi.FormalEducations.getEdit( this.id() ),
+                url: App.Routes.WebApi.Degrees.get( this.id() ),
                 success: function ( data: Service.ApiModels.FormalEducation.IFormalEducationPage, textStatus: string, jqXhr: JQueryXHR ): void
-                { dataPact.resolve( data ); },
+                    { dataPact.resolve( data ); },
                 error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
-                { dataPact.reject( jqXhr, textStatus, errorThrown ); },
+                    { dataPact.reject( jqXhr, textStatus, errorThrown ); },
             } );
 
             // only process after all requests have been resolved
@@ -167,7 +167,7 @@ module ViewModels.FormalEducations {
             this.saving = true;
             $.ajax( {
                 type: 'PUT',
-                url: App.Routes.WebApi.FormalEducations.put( viewModel.id() ),
+                url: App.Routes.WebApi.Degrees.put( viewModel.id() ),
                 data: model,
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
@@ -197,7 +197,7 @@ module ViewModels.FormalEducations {
             $.ajax( {
                 async: false,
                 type: 'PUT',
-                url: App.Routes.WebApi.FormalEducations.putEdit( viewModel.id() ),
+                url: App.Routes.WebApi.Degrees.put( viewModel.id() ),
                 data: ko.toJSON( mode ),
                 dataType: 'json',
                 contentType: 'application/json',
@@ -232,7 +232,7 @@ module ViewModels.FormalEducations {
                         $.ajax( {
                             async: false,
                             type: 'DELETE',
-                            url: App.Routes.WebApi.FormalEducations.del( item.id() ),
+                            url: App.Routes.WebApi.Degrees.del( item.id() ),
                             dataType: 'json',
                             contentType: 'application/json',
                             success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {

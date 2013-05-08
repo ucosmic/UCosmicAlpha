@@ -133,7 +133,6 @@ module ViewModels.My {
         }
 
         startTab(tabName: string): void {
-            debugger;
             var viewModel: any;
             if ( tabName === "Activities" ) {
                 if ( this._activitiesViewModel == null ) {

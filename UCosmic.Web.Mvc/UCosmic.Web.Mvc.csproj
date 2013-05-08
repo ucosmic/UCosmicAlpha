@@ -282,6 +282,7 @@
     </Compile>
     <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\ActivityElementsController.cs" />
+    <Compile Include="ApiControllers\DegreesController.cs" />
     <Compile Include="ApiControllers\GrantsController.cs" />
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
+    <Compile Include="Models\DegreeApiModel.cs" />
     <Compile Include="Models\Identity\ActivityModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
     <Compile Include="Models\Users\RoleApiModel.cs" />

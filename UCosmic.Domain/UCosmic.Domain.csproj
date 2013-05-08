@@ -165,7 +165,13 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Degrees\Commands\CreateDegree.cs" />
+    <Compile Include="Domain\Degrees\Commands\DeleteDegree.cs" />
+    <Compile Include="Domain\Degrees\Commands\UpdateDegree.cs" />
     <Compile Include="Domain\Degrees\Entities\Degree.cs" />
+    <Compile Include="Domain\Degrees\Queries\DegreeById.cs" />
+    <Compile Include="Domain\Degrees\Queries\DegreesByPersonId.cs" />
+    <Compile Include="Domain\Degrees\Validation\MustFindDegreeById.cs" />
+    <Compile Include="Domain\Degrees\Validation\MustOwnDegree.cs" />
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">

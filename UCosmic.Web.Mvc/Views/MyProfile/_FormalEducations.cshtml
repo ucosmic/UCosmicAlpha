@@ -25,12 +25,10 @@
         <!-- Description -->
         <td>
             <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: officialName()"></span>
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: title()"></span>
             </div>
             <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: yearAwarded()"></span>
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: institutionId()"></span>
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: institutionCountryId()"></span>
+                <span style="vertical-align: middle" data-bind="text: formattedInfo()"></span>
             </div>
         </td>
         <!-- Remove Button -->

@@ -44,13 +44,4 @@ module Service.ApiModels.FormalEducation {
         items: KnockoutObservableArray;
     }
 
-    export class EducationSearchInput
-    {
-        personId: number;
-        orderBy: string;
-        pageSize: number;
-        pageNumber: number;
-    }
-
-
 }

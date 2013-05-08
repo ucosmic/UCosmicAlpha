@@ -10,11 +10,19 @@
 
 module ViewModels.FormalEducations
 {
+    export class DegreeSearchInput
+    {
+        personId: number;
+        orderBy: string;
+        pageSize: number;
+        pageNumber: number;
+    }
+
     // ================================================================================
     /* 
     */
     // ================================================================================
-    export class FormalEducationList implements KnockoutValidationGroup
+    export class FormalEducationList
     {
         personId: number;
         orderBy: string;
@@ -38,29 +46,24 @@ module ViewModels.FormalEducations
         load(): JQueryPromise
         {
             var deferred: JQueryDeferred = $.Deferred();
-
-            var dataPact = $.Deferred();
-            var expertiseSearchInput: Service.ApiModels.FormalEducation.EducationSearchInput = new Service.ApiModels.FormalEducation.EducationSearchInput();
+            var expertiseSearchInput: DegreeSearchInput = new DegreeSearchInput();
 
             expertiseSearchInput.personId = this.personId;
             expertiseSearchInput.orderBy = "";
             expertiseSearchInput.pageNumber = 1;
             expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
-            $.get(App.Routes.WebApi.FormalEducations.get(), expertiseSearchInput)
-                .done((data: Service.ApiModels.FormalEducation.IFormalEducation[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    { dataPact.resolve(data); }
+            $.get(App.Routes.WebApi.Degrees.get(), expertiseSearchInput)
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    {
+                        ko.mapping.fromJS(data, {}, this);
+                        deferred.resolve();
+                    }
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
-                });
-
-            $.when(dataPact)
-                .done((data: Service.ApiModels.FormalEducation.IFormalEducationPage) => {
-                    deferred.resolve();
-                })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                    {
+                        deferred.reject(jqXhr, textStatus, errorThrown);
+                    }
                 });
 
             return deferred;
@@ -74,7 +77,7 @@ module ViewModels.FormalEducations
             $.ajax({
                 async: false,
                 type: "DELETE",
-                url: App.Routes.WebApi.FormalEducations.del(expertiseId),
+                url: App.Routes.WebApi.Degrees.del(expertiseId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 { },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
@@ -118,47 +121,20 @@ module ViewModels.FormalEducations
         */
         // --------------------------------------------------------------------------------
         editEducation(data: any, event: any, expertiseId: number): void {
-            $.ajax({
-                type: "GET",
-                url: App.Routes.WebApi.FormalEducations.getEditState(expertiseId),
-                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    if ( editState.isInEdit ) {
-                        $( "#formalEducationBeingEditedDialog" ).dialog( {
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                Ok: function () {
-                                    $( this ).dialog( "close" );
-                                    return;
-                                }
-                            }
-                        } );
-                    }
-                    else {
-                        var element = event.target;
-                        var url = null;
+            var element = event.target;
+            var url = null;
 
-                        while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                            element = element.parentElement;
-                        }
+            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
+                element = element.parentElement;
+            }
 
-                        if ( element != null ) {
-                            url = element.attributes["href"].value;
-                        }
+            if ( element != null ) {
+                url = element.attributes["href"].value;
+            }
 
-                        if ( url != null ) {
-                            location.href = url;
-                        }
-                    }
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            if ( url != null ) {
+                location.href = url;
+            }
         }
 
         // --------------------------------------------------------------------------------
@@ -168,7 +144,7 @@ module ViewModels.FormalEducations
         newEducation(data: any, event: any): void {
             $.ajax({
                 type: "POST",
-                url: App.Routes.WebApi.FormalEducations.post(),
+                url: App.Routes.WebApi.Degrees.post(),
                 success: (newEducationId: string, textStatus: string, jqXHR: JQueryXHR): void =>
                 {
                     location.href = App.Routes.Mvc.My.Profile.formalEducationEdit(newEducationId);

@@ -26,9 +26,8 @@ namespace UCosmic.Domain.Activities
             if (query == null) throw new ArgumentNullException("query");
 
             var result = _entities.Query<Activity>()
-                .EagerLoad(_entities, query.EagerLoad)
-                .ById(query.Id)
-            ;
+                                  .EagerLoad(_entities, query.EagerLoad)
+                                  .ById(query.Id);
 
             return result;
         }

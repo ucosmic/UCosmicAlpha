@@ -78,8 +78,6 @@ var ViewModels;
             };
             Profile.prototype.startTab = function (tabName) {
                 var _this = this;
-                debugger;
-
                 var viewModel;
                 if(tabName === "Activities") {
                     if(this._activitiesViewModel == null) {

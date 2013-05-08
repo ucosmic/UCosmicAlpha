@@ -486,41 +486,29 @@ var App;
                 LanguageExpertises.del = del;
             })(WebApi.LanguageExpertises || (WebApi.LanguageExpertises = {}));
             var LanguageExpertises = WebApi.LanguageExpertises;
-            (function (FormalEducations) {
-                function get(educationId) {
-                    var url = makeUrl('educations');
-                    if(educationId) {
-                        url += '/' + educationId;
+            (function (Degrees) {
+                function get(degreeId) {
+                    var url = makeUrl('degrees');
+                    if(degreeId) {
+                        url += '/' + degreeId;
                     }
                     return url;
                 }
-                FormalEducations.get = get;
+                Degrees.get = get;
                 function post() {
-                    return makeUrl('educations');
+                    return makeUrl('degrees');
                 }
-                FormalEducations.post = post;
-                function getEdit(educationId) {
-                    return makeUrl('educations/' + educationId + "/edit");
+                Degrees.post = post;
+                function put(degreeId) {
+                    return makeUrl('degrees/' + degreeId);
                 }
-                FormalEducations.getEdit = getEdit;
-                function getEditState(educationId) {
-                    return makeUrl('educations/' + educationId + "/edit-state");
+                Degrees.put = put;
+                function del(degreeId) {
+                    return makeUrl('degrees/' + degreeId);
                 }
-                FormalEducations.getEditState = getEditState;
-                function put(educationId) {
-                    return makeUrl('educations/' + educationId);
-                }
-                FormalEducations.put = put;
-                function putEdit(educationId) {
-                    return makeUrl('educations/' + educationId + "/edit");
-                }
-                FormalEducations.putEdit = putEdit;
-                function del(educationId) {
-                    return makeUrl('educations/' + educationId);
-                }
-                FormalEducations.del = del;
-            })(WebApi.FormalEducations || (WebApi.FormalEducations = {}));
-            var FormalEducations = WebApi.FormalEducations;
+                Degrees.del = del;
+            })(WebApi.Degrees || (WebApi.Degrees = {}));
+            var Degrees = WebApi.Degrees;
             (function (Affiliations) {
                 function get(affiliationId) {
                     var url = makeUrl('affiliations');

@@ -32,7 +32,7 @@ module ViewModels.Affiliations
     /* 
     */
     // ================================================================================
-    export class AffiliationList implements KnockoutValidationGroup
+    export class AffiliationList
     {
         personId: number;
         orderBy: string;

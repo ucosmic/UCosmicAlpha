@@ -27,7 +27,7 @@ var ViewModels;
                 var dataPact = $.Deferred();
                 $.ajax({
                     type: "GET",
-                    url: App.Routes.WebApi.FormalEducations.getEdit(this.id()),
+                    url: App.Routes.WebApi.Degrees.get(this.id()),
                     success: function (data, textStatus, jqXhr) {
                         dataPact.resolve(data);
                     },
@@ -56,7 +56,7 @@ var ViewModels;
                 this.saving = true;
                 $.ajax({
                     type: 'PUT',
-                    url: App.Routes.WebApi.FormalEducations.put(viewModel.id()),
+                    url: App.Routes.WebApi.Degrees.put(viewModel.id()),
                     data: model,
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
@@ -80,7 +80,7 @@ var ViewModels;
                 $.ajax({
                     async: false,
                     type: 'PUT',
-                    url: App.Routes.WebApi.FormalEducations.putEdit(viewModel.id()),
+                    url: App.Routes.WebApi.Degrees.put(viewModel.id()),
                     data: ko.toJSON(mode),
                     dataType: 'json',
                     contentType: 'application/json',
@@ -109,7 +109,7 @@ var ViewModels;
                             $.ajax({
                                 async: false,
                                 type: 'DELETE',
-                                url: App.Routes.WebApi.FormalEducations.del(item.id()),
+                                url: App.Routes.WebApi.Degrees.del(item.id()),
                                 dataType: 'json',
                                 contentType: 'application/json',
                                 success: function (data, textStatus, jqXhr) {
