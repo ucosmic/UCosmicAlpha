@@ -55,6 +55,8 @@ namespace UCosmic.EntityFramework
             Property(p => p.Content).HasColumnType("ntext");
             Property(p => p.StartsOn).IsOptional();
             Property(p => p.EndsOn).IsOptional();
+            Property(p => p.OnGoing).IsOptional();
+            Property(p => p.DateFormat).IsOptional().HasMaxLength(32);
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
             Property(p => p.WasExternallyFunded).IsOptional();
             Property(p => p.WasInternallyFunded).IsOptional();

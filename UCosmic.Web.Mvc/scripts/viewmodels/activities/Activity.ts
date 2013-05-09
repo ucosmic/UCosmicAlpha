@@ -41,9 +41,6 @@ module ViewModels.Activities {
         /* True if uploading document. */
         uploadingDocument: KnockoutObservableBool = ko.observable( false );
 
-        /* True if activity is on-going (no end date specified) */
-        isOnGoing: KnockoutObservableBool = ko.observable( false );
-
         /* Old document name - used during document rename. */
         previousDocumentTitle: string;
 
@@ -68,17 +65,16 @@ module ViewModels.Activities {
 
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
+        version: KnockoutObservableString;                      // byte[] converted to base64
         personId: KnockoutObservableNumber;
         number: KnockoutObservableNumber;
-        entityId: KnockoutObservableString;     // guid converted to string
+        entityId: KnockoutObservableString;                     // guid converted to string
         modeText: KnockoutObservableString;
-        //values: KnockoutObservableAny;          // only values for modeText
-        values: Service.ApiModels.IObservableActivityValues;          // only values for modeText
+        values: Service.ApiModels.IObservableActivityValues;    // only values for modeText
 
         // --------------------------------------------------------------------------------
         /*
-            */
+        */
         // --------------------------------------------------------------------------------
         _initialize( activityId: number ): void {
             this.id = ko.observable( activityId );
@@ -100,10 +96,17 @@ module ViewModels.Activities {
             uploadFileId: string,
             newTagId: string ): void {
 
-            $( "#" + fromDatePickerId ).kendoDatePicker();
-            $( "#" + toDatePickerId ).kendoDatePicker();
+            $( "#" + fromDatePickerId ).kendoDatePicker( {
+                open: function(e) { this.options.format = "MM/dd/yyyy"; }
+            } );
+
+            $( "#" + toDatePickerId ).kendoDatePicker( {
+                open: function(e) { this.options.format = "MM/dd/yyyy"; }
+            } );
 
             $( "#" + countrySelectorId ).kendoMultiSelect( {
+                filter: 'contains',
+                ignoreCase: true,
                 dataTextField: "officialName()",
                 dataValueField: "id()",
                 dataSource: this.locations(),
@@ -341,21 +344,29 @@ module ViewModels.Activities {
             */
         // --------------------------------------------------------------------------------
         setupValidation(): void {
-
             ko.validation.rules['atLeast'] = {
                 validator: ( val: any, otherVal: any ): bool => {
                     return val.length >= otherVal;
                 },
-                message: 'At least {0} must be selected'
-            }
+                message: 'At least {0} must be selected.'
+            };
+
+            ko.validation.rules['nullSafeDate'] = {
+                validator: ( val: any, otherVal: any ): bool => {
+                    return (val != null) ? moment(val).isValid() : true;
+                },
+                message: 'Date must be valid.'
+            };
 
             ko.validation.registerExtenders();
 
-            this.values.title.extend( { required: true, minLength: 1, maxLength: 64 } );
+            ko.validation.group( this.values );
+
+            this.values.title.extend( { required: true, minLength: 1, maxLength: 200 } );
             this.values.locations.extend( { atLeast: 1 } );
             this.values.types.extend( { atLeast: 1 } );
-
-            ko.validation.group( this.values );
+            this.values.startsOn.extend( { nullSafeDate: 0 } );
+            this.values.endsOn.extend( { nullSafeDate: 0 } );
         }
 
         // --------------------------------------------------------------------------------
@@ -427,54 +438,21 @@ module ViewModels.Activities {
                                           create: ( options: any ): KnockoutObservableAny => {
                                               return new augmentedDocumentModel( options.data );
                                           }
-                                      },
-                                      'startsOn': {
+                                      }
+                                      ,'startsOn': {
                                           create: ( options: any ): KnockoutObservableDate => {
                                               return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                           }
-                                      },
-                                      'endsOn': {
+                                      }
+                                      ,'endsOn': {
                                           create: ( options: any ): KnockoutObservableDate => {
                                               return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                           }
                                       }
                                   };
 
-                                  //var mapping = {
-                                  //     'values': {
-                                  //         create: (options: any): KnockoutObservableAny => {
-                                  //             var augmentedDocumentModel = function (data) {
-                                  //                 ko.mapping.fromJS(data, {}, this);
-                                  //                 this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(),data.id));
-                                  //             };
-
-                                  //             var mapping = {
-                                  //                 'documents': {
-                                  //                     create: (options: any): KnockoutObservableAny => {
-                                  //                         return new augmentedDocumentModel(options.data);
-                                  //                     }
-                                  //                 },
-                                  //                 'startsOn': {
-                                  //                     create: (options: any): KnockoutObservableDate => {
-                                  //                         return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                  //                     }
-                                  //                 },
-                                  //                 'endsOn': {
-                                  //                     create: (options: any): KnockoutObservableDate => {
-                                  //                         return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                  //                     }
-                                  //                 }
-                                  //             }
-
-                                  //             var values = ko.mapping.fromJS(options.data, mapping);
-                                  //             return ko.observable(values);
-                                  //         }
-                                  //     }
-                                  // };
-
-                                  ko.mapping.fromJS( data, mapping, this );
+                                    ko.mapping.fromJS( data, mapping, this );
                               }
-
 
                               /* Initialize the list of selected locations with current locations in values. */
                               for ( var i = 0; i < this.values.locations().length; i += 1 ) {
@@ -491,10 +469,10 @@ module ViewModels.Activities {
                               this.values.content.subscribe( ( newValue: any ): void => { this.keyCountAutoSave(newValue); } );
                               this.values.startsOn.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.endsOn.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
+                              this.values.onGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.wasExternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.wasInternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
                               this.values.types.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.isOnGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
 
                               deferred.resolve();
                           } )
@@ -515,6 +493,33 @@ module ViewModels.Activities {
                 this.dirtyFlag(true);
                 this.keyCounter = 0;
             }
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        getDateFormat( dateStr: string ): string {
+            var formatted:string = null;
+            var YYYYPattern = new RegExp( "^\\d{4}$" );
+            var MMYYYYPattern = new RegExp( "^\\d{1,}/\\d{4}$" );
+            var MMDDYYYYPattern = new RegExp( "^\\d{1,}/\\d{1,}/\\d{4}$" );
+
+            if ( ( dateStr != null ) && ( dateStr.length > 0 ) ) {
+                dateStr = dateStr.trim();
+
+                if ( YYYYPattern.test( dateStr ) ) {
+                    formatted = "yyyy";
+                }
+                else if ( MMYYYYPattern.test( dateStr ) ) {
+                    formatted = "MM/yyyy";
+                }
+                else {
+                    formatted = "MM/dd/yyyy";
+                } 
+            }
+
+            return formatted;
         }
 
         // --------------------------------------------------------------------------------
@@ -567,10 +572,11 @@ module ViewModels.Activities {
             var model = ko.mapping.toJS( this );
 
             if (model.values.startsOn != null) {
+                model.values.dateFormat = this.getDateFormat(model.values.startsOn);
                 model.values.startsOn = this.convertDate(model.values.startsOn);
             }
 
-            if ( this.isOnGoing() ) {
+            if ( (this.values.onGoing != null) && (this.values.onGoing()) ) {
                 model.values.endsOn = null;
             }
             else {
@@ -603,6 +609,11 @@ module ViewModels.Activities {
         // --------------------------------------------------------------------------------
         save( viewModel: any, event: any, mode: string ): void {
             this.autoSave( viewModel, event );
+
+            if (!this.values.isValid()) {
+                this.values.errors.showAllMessages();
+                return;
+            }
 
             while ( this.saving ) {
                 alert( "Please wait while activity is saved." ); // TBD: dialog
@@ -761,7 +772,7 @@ module ViewModels.Activities {
     
                     Due to the use of computed observable array (activityTypes) we need to
                     create a closure in order to capture state of array index/element.
-            */
+        */
         // --------------------------------------------------------------------------------
         defHasActivityTypeCallback( activityTypeIndex: number ): KnockoutComputedDefine {
             var def: KnockoutComputedDefine = {

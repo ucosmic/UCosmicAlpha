@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
@@ -34,6 +32,25 @@ namespace UCosmic.Domain.Activities
                 hashCode = (hashCode*397) ^ (Values != null ? Values.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public bool IsEmpty()
+        {
+            bool empty = true;
+
+            if (Values != null)
+            {
+                foreach (var value in Values)
+                {
+                    empty &= value.IsEmpty();
+                }
+            }
+            else
+            {
+                empty = true;
+            }
+
+            return empty;
         }
 
         public Activity()

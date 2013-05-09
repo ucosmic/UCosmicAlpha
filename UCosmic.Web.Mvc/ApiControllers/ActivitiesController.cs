@@ -293,8 +293,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             try
             {
-                var deleteActivityCommand = new DeleteActivity(User, activityId);
-                _deleteActivity.Handle(deleteActivityCommand);
+                var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
+                if (editActivity == null)
+                {
+                    var message = string.Format("Activity Id {0} not found.", activityId);
+                    throw new Exception(message);
+                }
+
+                if (editActivity.EditSourceId.HasValue)
+                {
+                    var activity = _queryProcessor.Execute(new ActivityById(editActivity.EditSourceId.Value));
+                    if (activity != null)
+                    {
+                        if (activity.IsEmpty())
+                        {
+                            var deleteActivityCommand = new DeleteActivity(User, activityId);
+                            _deleteActivity.Handle(deleteActivityCommand);
+                        }
+                    }
+                }
+
+                var deleteEditActivityCommand = new DeleteActivity(User, activityId);
+                _deleteActivity.Handle(deleteEditActivityCommand);
             }
             catch (Exception ex)
             {

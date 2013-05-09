@@ -63,6 +63,8 @@ namespace UCosmic.Web.Mvc.Models
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
+        public bool? OnGoing { get; set; }
+        public string DateFormat { get; set; }
         public ICollection<ActivityLocationApiModel> Locations { get; set; }    // only Locations with same mode as Activity
         public ICollection<ActivityTypeApiModel> Types { get; set; }            // only Types with same mode as Activity
         public ICollection<ActivityTagApiModel> Tags { get; set; }              // only Tags with same mode as Activity

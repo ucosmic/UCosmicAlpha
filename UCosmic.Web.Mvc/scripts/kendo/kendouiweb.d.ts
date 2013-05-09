@@ -5,7 +5,7 @@ interface JQuery {
     kendoComboBox(arg1?: any): JQuery;
     kendoUpload(arg1?: any): JQuery;
     kendoMenu(arg1?: any): JQuery;
-    kendoDatePicker(): JQuery;
+    kendoDatePicker(arg1?: any): JQuery;
     kendoMultiSelect(arg1?: any): JQuery;
     kendoAutoComplete(arg1?: any): JQuery;
 }

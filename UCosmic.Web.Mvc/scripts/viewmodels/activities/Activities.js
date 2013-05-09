@@ -186,16 +186,19 @@ var ViewModels;
                 }
                 return locationName;
             };
-            ActivityList.prototype.activityDatesFormatted = function (startsOnStr, endsOnStr) {
+            ActivityList.prototype.activityDatesFormatted = function (startsOnStr, endsOnStr, onGoing, dateFormat) {
                 var formattedDateRange = "";
+                dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : "MM/DD/YYYY";
                 if(startsOnStr == null) {
                     if(endsOnStr != null) {
-                        formattedDateRange = moment(endsOnStr).format("MM/DD/YYYY");
+                        formattedDateRange = moment(endsOnStr).format(dateFormat);
                     }
                 } else {
-                    formattedDateRange = moment(startsOnStr).format("MM/DD/YYYY");
-                    if(endsOnStr != null) {
-                        formattedDateRange += " - " + moment(endsOnStr).format("MM/DD/YYYY");
+                    formattedDateRange = moment(startsOnStr).format(dateFormat);
+                    if(onGoing) {
+                        formattedDateRange += " -";
+                    } else if(endsOnStr != null) {
+                        formattedDateRange += " - " + moment(endsOnStr).format(dateFormat);
                     }
                 }
                 if(formattedDateRange.length > 0) {

@@ -71,6 +71,8 @@ module Service.ApiModels {
         content: KnockoutObservableString;
         startsOn?: KnockoutObservableDate;
         endsOn?: KnockoutObservableDate;
+        onGoing?: KnockoutObservableBool;
+        dateFormat: KnockoutObservableString;
         wasExternallyFunded: KnockoutObservableBool;
         wasInternallyFunded: KnockoutObservableBool;
         locations: KnockoutObservableArray;
@@ -78,6 +80,11 @@ module Service.ApiModels {
         modeText: KnockoutObservableString;
         tags: KnockoutObservableArray;
         documents: KnockoutObservableArray;
+
+        /* Knockout-Validation */
+        errors: KnockoutValidationErrors;
+        isValid: () => bool;
+        isAnyMessageShown: () => bool;
     }
 
     export interface IObservableActivity {
@@ -87,7 +94,6 @@ module Service.ApiModels {
         number: KnockoutObservableNumber;
         entityId: KnockoutObservableString;     // guid converted to string
         modeText: KnockoutObservableString;
-        //values: KnockoutObservableAny;      // only values for modeText
         values: IObservableActivityValues;
     }
 

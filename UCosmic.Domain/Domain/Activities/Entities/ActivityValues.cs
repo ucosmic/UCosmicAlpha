@@ -22,6 +22,8 @@ namespace UCosmic.Domain.Activities
             equal &= string.Equals(Content, other.Content);
             equal &= StartsOn.Equals(other.StartsOn);
             equal &= EndsOn.Equals(other.EndsOn);
+            equal &= EqualsNullableBool(OnGoing, other.OnGoing);
+            equal &= string.Equals(DateFormat, other.DateFormat);
             equal &= Locations.OrderBy(a => a.PlaceId).SequenceEqual(other.Locations.OrderBy(b => b.PlaceId));
             equal &= Types.OrderBy(a => a.TypeId).SequenceEqual(other.Types.OrderBy(b => b.TypeId));
             equal &= Tags.OrderBy(a => a.Text).SequenceEqual(other.Tags.OrderBy(b => b.Text));
@@ -41,6 +43,23 @@ namespace UCosmic.Domain.Activities
             return Equals((ActivityValues)obj);
         }
 
+        public bool IsEmpty()
+        {
+            bool empty = true;
+            empty &= String.IsNullOrEmpty(Title);
+            empty &= String.IsNullOrEmpty(Content);
+            empty &= !StartsOn.HasValue;
+            empty &= !EndsOn.HasValue;
+            empty &= !OnGoing.HasValue;
+            empty &= Locations != null ? Locations.Count > 0 : true;
+            empty &= Types != null ? Types.Count > 0 : true;
+            empty &= Tags != null ? Tags.Count > 0 : true;
+            empty &= Documents != null ? Documents.Count > 0 : true;
+            empty &= !WasExternallyFunded.HasValue;
+            empty &= !WasInternallyFunded.HasValue;
+            return empty;
+        }
+
         public override int GetHashCode()
         {
             unchecked
@@ -49,6 +68,8 @@ namespace UCosmic.Domain.Activities
                 hashCode = (hashCode * 397) ^ (Content != null ? Content.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ StartsOn.GetHashCode();
                 hashCode = (hashCode * 397) ^ EndsOn.GetHashCode();
+                hashCode = (hashCode * 397) ^ OnGoing.GetHashCode();
+                hashCode = (hashCode * 397) ^ (DateFormat != null ? DateFormat.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Locations != null ? Locations.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Types != null ? Types.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Tags != null ? Tags.GetHashCode() : 0);
@@ -68,6 +89,7 @@ namespace UCosmic.Domain.Activities
             Types = new Collection<ActivityType>();
             Tags = new Collection<ActivityTag>();
             Documents = new Collection<ActivityDocument>();
+            DateFormat = "MM/dd/yyyy"; // "Custom Date and Time Format Strings" http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -79,6 +101,7 @@ namespace UCosmic.Domain.Activities
             Content = v.Content;
             StartsOn = v.StartsOn;
             EndsOn = v.EndsOn;
+            OnGoing = v.OnGoing;
             Locations = v.Locations;
             Types = v.Types;
             Tags = v.Tags;
@@ -124,6 +147,8 @@ namespace UCosmic.Domain.Activities
             }
         }
 
+        public bool? OnGoing { get; protected internal set; }
+        public string DateFormat { get; protected internal set; }
         public virtual ICollection<ActivityLocation> Locations { get; protected internal set; }
         public virtual ICollection<ActivityType> Types { get; protected internal set; }
         public virtual ICollection<ActivityTag> Tags { get; protected internal set; }

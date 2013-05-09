@@ -64,6 +64,8 @@ namespace UCosmic.Domain.Activities
                 Content = sourceActivityValues.Content,
                 StartsOn = sourceActivityValues.StartsOn,
                 EndsOn = sourceActivityValues.EndsOn,
+                OnGoing = sourceActivityValues.OnGoing,
+                DateFormat = sourceActivityValues.DateFormat,
                 WasExternallyFunded = sourceActivityValues.WasExternallyFunded,
                 WasInternallyFunded = sourceActivityValues.WasInternallyFunded
             };

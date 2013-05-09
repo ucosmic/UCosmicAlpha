@@ -116,6 +116,8 @@ namespace UCosmic.Domain.Activities
                 Content = command.Values.Content,
                 StartsOn = command.Values.StartsOn,
                 EndsOn = command.Values.EndsOn,
+                OnGoing = command.Values.OnGoing,
+                DateFormat = command.Values.DateFormat,
                 Mode = command.ModeText.AsEnum<ActivityMode>(),
                 WasExternallyFunded = command.Values.WasExternallyFunded,
                 WasInternallyFunded = command.Values.WasInternallyFunded,

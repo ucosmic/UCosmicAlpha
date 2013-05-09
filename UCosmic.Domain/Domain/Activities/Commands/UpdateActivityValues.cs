@@ -15,6 +15,8 @@ namespace UCosmic.Domain.Activities
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
+        public bool? OnGoing { get; set; }
+        public string DateFormat { get; set; }
         public ActivityMode Mode { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
@@ -32,6 +34,7 @@ namespace UCosmic.Domain.Activities
             Principal = principal;
             Id = id;
             UpdatedOn = updatedOn.ToUniversalTime();
+            DateFormat = "MM/dd/yyyy";
         }
     }
 
@@ -116,6 +119,8 @@ namespace UCosmic.Domain.Activities
                 Content = command.Content,
                 StartsOn = command.StartsOn,
                 EndsOn = command.EndsOn,
+                OnGoing = command.OnGoing,
+                DateFormat = command.DateFormat,
                 Mode = command.Mode,
                 WasExternallyFunded = command.WasExternallyFunded,
                 WasInternallyFunded = command.WasInternallyFunded,
@@ -136,6 +141,8 @@ namespace UCosmic.Domain.Activities
             target.Content = command.Content;
             target.StartsOn = command.StartsOn;
             target.EndsOn = command.EndsOn;
+            target.OnGoing = command.OnGoing;
+            target.DateFormat = command.DateFormat;
             target.Mode = command.Mode;
             target.WasExternallyFunded = command.WasExternallyFunded;
             target.WasInternallyFunded = command.WasInternallyFunded;

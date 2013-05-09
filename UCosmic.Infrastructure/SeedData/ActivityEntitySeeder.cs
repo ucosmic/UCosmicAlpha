@@ -97,7 +97,7 @@ namespace UCosmic.SeedData
                             "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
                         Content =
                             "Permian/Triassic (P/Tr) Boundary Global Events—The P/Tr boundary represents the largest mass extinction in Earth history, yet its causes remain uncertain. I am investigating critical questions related to the extent and intensity of Permo-Triassic deep-ocean anoxia, patterns of upwelling of toxic sulfidic waters onto shallow-marine shelves and platforms, and the relationship of such events to global C-isotopic excursions and the delayed recovery of marine biotas during the Early Triassic. I am working on the P/Tr boundary globally.",
-                        StartsOn = new DateTime(2003, 3, 1)
+                        StartsOn = new DateTime(2003, 3, 1),
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
