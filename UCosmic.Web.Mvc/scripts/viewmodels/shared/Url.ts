@@ -6,12 +6,12 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../Spinner.ts" />
-/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="Item.ts" />
 
-module ViewModels.Shared {
-
-    export class ServerUrlApiModel implements IServerUrlApiModel {
+import Item = module('Item')
+import SearchApiModel = module('ServerApiModel')
+import Spinner = module('Spinner')
+export class ServerUrlApiModel implements SearchApiModel.IServerUrlApiModel {
         
         id: number = 0;
         ownerId: number = 0;
@@ -79,18 +79,18 @@ module ViewModels.Shared {
         valueHref: KnockoutComputed;
 
         // spinners
-        saveSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        purgeSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        valueValidationSpinner = new Spinner(new SpinnerOptions(0, false));
+        saveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
+        purgeSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
+        valueValidationSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
 
         // private fields
         private saveEditorClicked: bool = false;
         private originalValues: ServerUrlApiModel;
-        private owner: Item;
+        private owner: Item.Item;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerUrlApiModel, owner: Item) {
+        constructor(js: ServerUrlApiModel, owner: Item.Item) {
             this.owner = owner;
 
             // when adding new URL, js is not defined
@@ -312,7 +312,7 @@ module ViewModels.Shared {
             });
         }
 
-        serializeData(): IServerUrlApiModel {
+        serializeData(): SearchApiModel.IServerUrlApiModel {
             return {
                 id: this.id(),
                 ownerId: this.ownerId(),
@@ -322,4 +322,3 @@ module ViewModels.Shared {
             };
         }
     }
-}

@@ -1778,6 +1778,10 @@
     <Content Include="scripts\oss\jquery.tinymce.js" />
     <Content Include="scripts\oss\moment.js" />
     <Content Include="scripts\oss\moment.min.js" />
+    <TypeScriptCompile Include="scripts\require.d.ts" />
+    <Content Include="scripts\require.d.js">
+      <DependentUpon>require.d.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\require.js" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
@@ -2241,6 +2245,13 @@
     <Content Include="scripts\viewmodels\shared\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\shared\languages\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\shared\languages\ServerApiModel.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\languages\ServerApiModel.min.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\shared\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -2258,6 +2269,13 @@
     </Content>
     <Content Include="scripts\viewmodels\shared\Name.min.js.map">
       <DependentUpon>Name.js</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\shared\places\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\shared\places\ServerApiModel.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\places\ServerApiModel.min.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\shared\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
@@ -2277,7 +2295,20 @@
     <Content Include="scripts\viewmodels\shared\SearchResult.min.js.map">
       <DependentUpon>SearchResult.js</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\shared\ServerApiModel.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\shared\ServerApiModel.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\ServerApiModel.min.js">
+      <DependentUpon>ServerApiModel.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Spinner.ts" />
+    <Content Include="scripts\viewmodels\shared\Spinner.js">
+      <DependentUpon>Spinner.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Spinner.min.js">
+      <DependentUpon>Spinner.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\shared\Url.js">
       <DependentUpon>Url.ts</DependentUpon>
     </Content>

@@ -5,13 +5,15 @@
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
-/// <reference path="../Spinner.ts" />
-/// <reference path="Item.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+
  
-module ViewModels.Shared {
-      
-    export class ServerNameApiModel implements IServerNameApiModel {
+ 
+
+import SearchApiModel = module('ServerApiModel')
+import Item = module('Item')
+
+import Spinner = module('Spinner')
+export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
         
         id: number = 0;
         ownerId: number = 0;
@@ -73,7 +75,7 @@ module ViewModels.Shared {
         editMode: KnockoutObservableBool = ko.observable();
         $textElement: JQuery = undefined; // bind to this so we can focus it on actions
         $languagesElement: JQuery = undefined; // bind to this so we can restore on back button
-        selectedLanguageCode: KnockoutObservableString; // shadow to restore after list items are bound
+        selectedLanguageCode: KnockoutObservableString; // shadow to restore after list Item.Items are bound
         $confirmPurgeDialog: JQuery = undefined;
         isValid: () => bool;
         errors: KnockoutValidationErrors;
@@ -82,19 +84,21 @@ module ViewModels.Shared {
         isOfficialNameEnabled: KnockoutComputed;
         isTextValidatableAsync: KnockoutComputed;
 
+        
         // spinners
-        saveSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        purgeSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        textValidationSpinner = new Spinner(new SpinnerOptions(0, false));
+        saveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
+        purgeSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
+        textValidationSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
 
+        
         // private fields
         private saveEditorClicked: bool = false;
         private originalValues: ServerNameApiModel;
-        private owner: Item;
+        private owner: Item.Item;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerNameApiModel, owner: Item) {
+        constructor(js: ServerNameApiModel, owner: Item.Item) {
             this.owner = owner;
 
             // when adding new name, js is not defined
@@ -146,7 +150,7 @@ module ViewModels.Shared {
 
             this.mutationSuccess = (response: string): void => {
                 this.owner.requestNames((): void => {
-                    this.owner.editingName(0); // tell parent no item is being edited anymore
+                    this.owner.editingName(0); // tell parent no Item.Item is being edited anymore
                     this.editMode(false); // hide the form, show the view
                     this.saveSpinner.stop(); // stop save spinner
                     this.purgeSpinner.stop(); // stop purge spinner
@@ -197,7 +201,7 @@ module ViewModels.Shared {
         showEditor(): void { // click to hide viewer and show editor
             var editingName = this.owner.editingName(); // disallow if another name is being edited
             if (!editingName) {
-                this.owner.editingName(this.id() || -1); // tell parent which item is being edited
+                this.owner.editingName(this.id() || -1); // tell parent which Item.Item is being edited
                 this.editMode(true); // show the form / hide the viewer
                 this.$textElement.trigger('autosize');
                 this.$textElement.focus(); // focus the text box
@@ -235,13 +239,13 @@ module ViewModels.Shared {
         }
 
         cancelEditor(): void {
-            this.owner.editingName(0); // tell parent no item is being edited anymore
+            this.owner.editingName(0); // tell parent no Item.Item is being edited anymore
             if (this.id()) {
                 ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
                 this.editMode(false); // hide the form, show the view
             }
             else {
-                this.owner.names.shift(); // remove the new empty item
+                this.owner.names.shift(); // remove the new empty Item.Item
             }
         }
 
@@ -299,7 +303,7 @@ module ViewModels.Shared {
             });
         }
 
-        serializeData(): IServerNameInputModel {
+        serializeData(): SearchApiModel.IServerNameInputModel {
             return {
                 id: this.id(),
                 ownerId: this.ownerId(),
@@ -310,5 +314,3 @@ module ViewModels.Shared {
             };
         }
     }
-}
-

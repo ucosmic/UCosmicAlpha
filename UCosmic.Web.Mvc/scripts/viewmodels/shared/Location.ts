@@ -1,11 +1,13 @@
 /// <reference path="../../google/ToolsOverlay.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
-/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="../Flasher.ts" />
 
-module ViewModels.Shared {
+
+import SearchApiModel = module('ServerApiModel')
+import Places = module('places/ServerApiModel');
+import Spinner = module('Spinner')
 
     import gm = google.maps
 
@@ -52,8 +54,8 @@ module ViewModels.Shared {
         showAdmin3Input: KnockoutComputed;
         places: KnockoutObservablePlaceModelArray = ko.observableArray();
         subAdmins: KnockoutObservablePlaceModelArray = ko.observableArray();
-        loadSpinner: Spinner = new Spinner(new SpinnerOptions(400));
-        saveSpinner: Spinner = new Spinner(new SpinnerOptions(400));
+        loadSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+        saveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
         $dataLoadingDialog: JQuery;
         isEditable: () => bool;
         isEditIconVisible: () => bool;
@@ -210,7 +212,7 @@ module ViewModels.Shared {
                 // it will be reset to undefined.
                 if (newValue && this.admin1s().length == 0)
                     this._admin1Id = newValue; // stash the value to set it after menu loads
-
+                
                 if (newValue && this.admin1s().length > 0) {
                     var admin1: Places.IServerApiModel = Places.Utils
                         .getPlaceById(this.admin1s(), newValue);
@@ -357,7 +359,7 @@ module ViewModels.Shared {
             if (this.ownerId) { // set up based on current owner id
                 this.isLoaded(false);
                 $.get(App.Routes.WebApi.Shared.Locations.get(this.ownerId))
-                .done((response: IServerLocationApiModel): void => {
+                .done((response: SearchApiModel.IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         this.loadMapZoom(response);
                         this.loadMapMarker(response);
@@ -374,7 +376,7 @@ module ViewModels.Shared {
             }
         }
 
-        private loadMapZoom(response: IServerLocationApiModel): void {
+        private loadMapZoom(response: SearchApiModel.IServerLocationApiModel): void {
             // zoom map to reveal location
             if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                 this.map.setZoom(response.googleMapZoomLevel);
@@ -388,7 +390,7 @@ module ViewModels.Shared {
                 this.allowCountryFitBounds = false;
         }
 
-        private loadMapMarker(response: IServerLocationApiModel): void {
+        private loadMapMarker(response: SearchApiModel.IServerLocationApiModel): void {
             // place marker and set map center
             if (response.center.hasValue) {
                 var latLng = Places.Utils.convertToLatLng(response.center);
@@ -516,7 +518,7 @@ module ViewModels.Shared {
             });
         }
 
-        serializeData(): IServerLocationPutModel {
+        serializeData(): SearchApiModel.IServerLocationPutModel {
             var center: Places.IServerPointModel,
                 centerLat: number = this.toolsMarkerLat(),
                 centerLng: number = this.toolsMarkerLng(),
@@ -565,7 +567,7 @@ module ViewModels.Shared {
             else if (this.continentId())
                 placeId = this.continentId();
 
-            var js: IServerLocationPutModel = {
+            var js: SearchApiModel.IServerLocationPutModel = {
                 center: center,
                 box: box,
                 googleMapZoomLevel: zoom,
@@ -583,7 +585,7 @@ module ViewModels.Shared {
             // restore initial values
             this.isLoaded(false);
             $.get(App.Routes.WebApi.Shared.Locations.get(this.ownerId))
-                .done((response: IServerLocationApiModel): void => {
+                .done((response: SearchApiModel.IServerLocationApiModel): void => {
                     // reset zoom
                     this.map.setZoom(1);
                     this.loadMapZoom(response);
@@ -602,4 +604,3 @@ module ViewModels.Shared {
         }
     }
 
-}

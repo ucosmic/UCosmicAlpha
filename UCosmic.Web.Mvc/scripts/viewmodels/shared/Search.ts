@@ -7,17 +7,16 @@
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../PagedSearch.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../places/ServerApiModel.ts" /> 
 /// <reference path="SearchResult.ts" />
- 
-//interface Lens {
-//    text: string;
-//    value: string;  
-//}
-
-module ViewModels.Shared {
-
+  
+interface LensShared {
+    text: string;
+    value: string;  
+}
+import SearchResult = module('SearchResult')
+import Places = module('places/ServerApiModel');
+import SearchApiModel = module('ServerApiModel')
     export class Search extends ViewModels.PagedSearch {
 
         constructor (public initDefaultPageRoute?: bool = true) {
@@ -67,7 +66,7 @@ module ViewModels.Shared {
 
         // lensing
         private _setupLensing(): void {
-            this.changeLens = (lens: Lens): void => {
+            this.changeLens = (lens: LensShared): void => {
                 this.lens(lens.value);
             };
         }
@@ -168,7 +167,7 @@ module ViewModels.Shared {
             //{ text: 'Tree', value: 'tree' }
         ]);
         lens: KnockoutObservableString = ko.observable();
-        changeLens: (lens: Lens) => void;
+        changeLens: (lens: LensShared) => void;
 
         // items page
         $itemsPage: JQuery = undefined;
@@ -194,15 +193,14 @@ module ViewModels.Shared {
                     return ko.utils.unwrapObservable(data.id);
                 },
                 create: function (options) {
-                    return new ViewModels.Shared
-                        .SearchResult(options.data, options.parent);
+                    return new SearchResult.SearchResult(options.data, options.parent);
                 }
             },
             ignore: ['pageSize', 'pageNumber']
         };
         swipeCallback(): void {
         }
-        receiveResults(js: IServerApiFlatModel[]): void {
+        receiveResults(js: SearchApiModel.IServerApiFlatModel[]): void {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -230,7 +228,7 @@ module ViewModels.Shared {
                 keyword: this.throttledKeyword(),
                 orderBy: this.orderBy()
             })
-            .done((response: IServerApiFlatModel[]): void => {
+            .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
             });
         }
@@ -262,4 +260,6 @@ module ViewModels.Shared {
             return 'View & edit this establishment\'s details';
         }
     }
-}
+
+
+

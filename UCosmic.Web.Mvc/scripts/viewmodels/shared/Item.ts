@@ -10,16 +10,18 @@
 /// <reference path="../Spinner.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="../languages/ServerApiModel.ts" />
-/// <reference path="ServerApiModel.d.ts" />
-/// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
 /// <reference path="Location.ts" />
-/// <reference path="Search.ts" />
-/// <reference path="SearchResult.ts" /> 
 
-module ViewModels.Shared {
-    
-    import gm = google.maps
+
+import SearchApiModel = module('ServerApiModel')
+import gm = google.maps
+import SearchResult = module('SearchResult')
+import Name = module('Name')
+import Location = module('Location')
+import Url = module('Url')
+import Spinner = module('Spinner')
+import Languages = module('languages/ServerApiModel')
 
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
         async: bool = true;
@@ -166,12 +168,12 @@ module ViewModels.Shared {
         originalValues: KnockoutObservableAny = ko.observable();
         private _isInitialized: KnockoutObservableBool = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
-        location: Location;
-        createSpinner: Spinner = new Spinner(new SpinnerOptions(0));
-        validatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        location: Location.Location;
+        createSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0));
+        validatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         categories: KnockoutObservableArray = ko.observableArray();
-        typeIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
-        typeIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
+        typeIdValidatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         isTypeIdSaveDisabled: KnockoutComputed;
         typeId: KnockoutObservableNumber = ko.observable();
         typeText: KnockoutObservableString = ko.observable('[Loading...]');
@@ -191,7 +193,7 @@ module ViewModels.Shared {
 
             this._initNamesComputeds();
             this._initUrlsComputeds();
-            this.location = new Location(this.id);
+            this.location = new Location.Location(this.id);
 
             this.typeEmptyText = ko.computed((): string => {
                 return this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
@@ -262,7 +264,7 @@ module ViewModels.Shared {
             $.when(categoriesPact, viewModelPact).then(
 
                 // all requests succeeded
-                (categories: any[], viewModel: IServerApiScalarModel): void => {
+                (categories: any[], viewModel: SearchApiModel.IServerApiScalarModel): void => {
 
                     ko.mapping.fromJS(categories, {}, this.categories);
 
@@ -293,34 +295,34 @@ module ViewModels.Shared {
 
         // observables, computeds, & variables
         languages: KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
-        names: KnockoutObservableArray = ko.observableArray();
+        Names: KnockoutObservableArray = ko.observableArray();
         editingName: KnockoutObservableNumber = ko.observable(0);
         canAddName: KnockoutComputed;
-        private _namesMapping: any;
-        namesSpinner: Spinner = new Spinner(new SpinnerOptions(0, true));
+        private _NamesMapping: any;
+        NamesSpinner: Spinner.Spinner= new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
 
         // methods
-        requestNames(callback?: (response?: IServerNameApiModel[]) => void ): void {
-            this.namesSpinner.start();
+        requestNames(callback?: (response?: SearchApiModel.IServerNameApiModel[]) => void ): void {
+            this.NamesSpinner.start();
             $.get(App.Routes.WebApi.Shared.Names.get(this.id))
-                .done((response: IServerNameApiModel[]): void => {
+                .done((response: SearchApiModel.IServerNameApiModel[]): void => {
                     this.receiveNames(response);
                     if (callback) callback(response);
                 });
         }
 
-        receiveNames(js: IServerNameApiModel[]): void {
-            ko.mapping.fromJS(js || [], this._namesMapping, this.names);
-            this.namesSpinner.stop();
+        receiveNames(js: SearchApiModel.IServerNameApiModel[]): void {
+            ko.mapping.fromJS(js || [], this._NamesMapping, this.Names);
+            this.NamesSpinner.stop();
             App.Obtruder.obtrude(document);
         }
 
         addName(): void {
             var apiModel = new ServerNameApiModel(this.id);
-            if (this.names().length === 0)
-                apiModel.isOfficialName = true;
-            var newName = new Name(apiModel, this);
-            this.names.unshift(newName);
+            if (this.Names().length === 0)
+                apiModel.isofficialName = true;
+            var newName = new Name.Name(apiModel, this);
+            this.Names.unshift(newName);
             newName.showEditor();
             App.Obtruder.obtrude(document);
         }
@@ -338,24 +340,24 @@ module ViewModels.Shared {
                     });
             }).extend({ throttle: 1 });
 
-            // set up names mapping
-            this._namesMapping = {
-                create: (options: any): Name => {
-                    return new Name(options.data, this);
+            // set up Names mapping
+            this._NamesMapping = {
+                create: (options: any): Name.Name => {
+                    return new Name.Name(options.data, this);
                 }
             };
 
             this.canAddName = ko.computed((): bool => {
-                return !this.namesSpinner.isVisible() && this.editingName() === 0 && this.id !== 0;
+                return !this.NamesSpinner.isVisible() && this.editingName() === 0 && this.id !== 0;
             });
 
-            // request names
+            // request Names
             ko.computed((): void => {
-                if (this.id) // only get names if this is an existing establishment
+                if (this.id) // only get Names if this is an existing establishment
                     this.requestNames();
 
-                else setTimeout(() => { // otherwise, stop spinning and load a single name form
-                    this.namesSpinner.stop();
+                else setTimeout(() => { // otherwise, stop spinning and load a single Name.Name form
+                    this.NamesSpinner.stop();
                     this.addName();
                 }, 0);
             }).extend({ throttle: 1 });
@@ -369,19 +371,19 @@ module ViewModels.Shared {
         editingUrl: KnockoutObservableNumber = ko.observable(0);
         canAddUrl: KnockoutComputed;
         private _urlsMapping: any;
-        urlsSpinner: Spinner = new Spinner(new SpinnerOptions(0, true));
+        urlsSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
 
         // methods
-        requestUrls(callback?: (response?: IServerUrlApiModel[]) => void ): void {
+        requestUrls(callback?: (response?: SearchApiModel.IServerUrlApiModel[]) => void ): void {
             this.urlsSpinner.start();
             $.get(App.Routes.WebApi.Shared.Urls.get(this.id))
-                .done((response: IServerUrlApiModel[]): void => {
+                .done((response: SearchApiModel.IServerUrlApiModel[]): void => {
                     this.receiveUrls(response);
                     if (callback) callback(response);
                 });
         }
 
-        receiveUrls(js: IServerUrlApiModel[]): void {
+        receiveUrls(js: SearchApiModel.IServerUrlApiModel[]): void {
             ko.mapping.fromJS(js || [], this._urlsMapping, this.urls);
             this.urlsSpinner.stop();
             App.Obtruder.obtrude(document);
@@ -391,7 +393,7 @@ module ViewModels.Shared {
             var apiModel = new ServerUrlApiModel(this.id);
             if (this.urls().length === 0)
                 apiModel.isOfficialUrl = true;
-            var newUrl = new Url(apiModel, this);
+            var newUrl = new Url.Url(apiModel, this);
             this.urls.unshift(newUrl);
             newUrl.showEditor();
             App.Obtruder.obtrude(document);
@@ -400,8 +402,8 @@ module ViewModels.Shared {
         _initUrlsComputeds(): void {
             // set up URLs mapping
             this._urlsMapping = {
-                create: (options: any): Url => {
-                    return new Url(options.data, this);
+                create: (options: any): Url.Url => {
+                    return new Url.Url(options.data, this);
                 }
             };
 
@@ -428,10 +430,10 @@ module ViewModels.Shared {
                 var me = this;
                 this.validatingSpinner.start();
 
-                // reference the single name and url
-                var officialName: Name = this.names()[0];
-                var officialUrl: Url = this.urls()[0];
-                var location = this.location;
+                // reference the single Name.Name and url
+                var officialName: Name.Name = this.Names()[0];
+                var officialUrl: Url.Url = this.urls()[0];
+                var location = this.Location;
 
                 // wait for async validation to stop
                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
@@ -460,7 +462,7 @@ module ViewModels.Shared {
                     var data = this.serializeData();
                     data.officialName = officialName.serializeData();
                     data.officialUrl = officialUrl.serializeData();
-                    data.location = location.serializeData();
+                    data.location = Location.Location.serializeData();
                     this.createSpinner.start();
                     $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
@@ -505,7 +507,7 @@ module ViewModels.Shared {
             var deferred = $.Deferred();
             if (this.id) {
                 $.get(App.Routes.WebApi.Shared.get(this.id))
-                    .done((response: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
+                    .done((response: SearchApiModel.IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
                         deferred.resolve(response);
                     })
                     .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -519,7 +521,7 @@ module ViewModels.Shared {
         }
 
         // populate scalar value observables from api values
-        private _pullScalars(response: IServerApiScalarModel): void {
+        private _pullScalars(response: SearchApiModel.IServerApiScalarModel): void {
             this.originalValues(response);
             if (response) {
                 ko.mapping.fromJS(response, {
@@ -575,7 +577,7 @@ module ViewModels.Shared {
         // restore original values when cancelling edit of typeId & institution codes
         clickToCancelTypeIdEdit(): void {
             this.isEditingTypeId(false);
-            this._loadScalars().done((response: IServerApiScalarModel): void => {
+            this._loadScalars().done((response: SearchApiModel.IServerApiScalarModel): void => {
                 this._pullScalars(response);
             });
         }
@@ -589,8 +591,8 @@ module ViewModels.Shared {
         parentEstablishment: KnockoutObservableAny = ko.observable();
         parentId: KnockoutObservableNumber = ko.observable();
         private _parentScrollTop: number;
-        parentIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
-        parentIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        parentIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
+        parentIdValidatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
 
         private _setupSammy(): void {
             var self = this;
@@ -742,4 +744,3 @@ module ViewModels.Shared {
             }
         }
     }
-}

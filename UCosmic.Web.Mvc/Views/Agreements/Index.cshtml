@@ -6,17 +6,9 @@
 @section scripts
 {
     
-    <script type="text/javascript">
+    
 
-        $(document).ready(function() {
-            requirejs(['../../scripts/viewmodels/shared/Search'],
-                function() {
-
-                });
-        });
-    </script>
-
-    @Scripts.Render("~/bundles/establishments")
+    @Scripts.Render("~/bundles/agreements")
 
     <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.agreements.InstitutionalAgreementEditModel_js)"></script>
 

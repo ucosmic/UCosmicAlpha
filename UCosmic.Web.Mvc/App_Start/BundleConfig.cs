@@ -204,6 +204,11 @@ namespace UCosmic.Web.Mvc
                 //"~/content/kendo/2012.3.1114/kendo.uniform.css",
                 "~/content/kendo/2013.1.226/kendo.common.css",
                 "~/content/kendo/2013.1.226/kendo.uniform.css"));
+
+            // activities
+            bundles.Add(new ScriptBundle("~/bundles/agreements").Include(
+                "~/scripts/viewmodels/activities/Activities.js"));
+
         }
     }
 }

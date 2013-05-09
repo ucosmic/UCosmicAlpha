@@ -2,15 +2,15 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="Search.ts" />
-/// <reference path="ServerApiModel.d.ts" />
-
-module ViewModels.Shared {
-
+ 
+import Search = module('Search')
+import SearchApiModel = module('ServerApiModel')
+ 
     export class SearchResult { 
 
-        private _owner: Search; 
+        private _owner: Search.Search; 
 
-        constructor (values: IServerApiFlatModel, owner: Search) {
+        constructor (values: SearchApiModel.IServerApiFlatModel, owner: Search.Search) {
             this._owner = owner;
             this._pullData(values);
             this._setupComputeds();
@@ -27,7 +27,7 @@ module ViewModels.Shared {
         uCosmicCode: KnockoutObservableString;
         ceebCode: KnockoutObservableString;
 
-        private _pullData(values: IServerApiFlatModel): void {
+        private _pullData(values: SearchApiModel.IServerApiFlatModel): void {
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);
         }
@@ -144,4 +144,3 @@ module ViewModels.Shared {
 
         //#endregion
     }
-}
