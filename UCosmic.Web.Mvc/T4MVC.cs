@@ -259,21 +259,6 @@ namespace Links
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class datacontext {
-            private const string URLPATH = "~/scripts/datacontext";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string people_ts = Url("people.ts");
-            public static readonly string people_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/people.min.js") ? Url("people.min.js") : Url("people.js");
-                          
-            public static readonly string people_min_js = Url("people.min.js");
-            public static readonly string peoplewebservice_ts = Url("peoplewebservice.ts");
-            public static readonly string peoplewebservice_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/peoplewebservice.min.js") ? Url("peoplewebservice.min.js") : Url("peoplewebservice.js");
-                          
-            public static readonly string peoplewebservice_min_js = Url("peoplewebservice.min.js");
-        }
-    
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class google {
             private const string URLPATH = "~/scripts/google";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
