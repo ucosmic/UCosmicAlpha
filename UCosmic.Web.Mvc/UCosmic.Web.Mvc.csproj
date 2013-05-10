@@ -2079,6 +2079,10 @@
     <Content Include="scripts\viewmodels\affiliations\ServiceApiModel.d.js">
       <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\agreements\modItWorked.min.js">
+      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
+    </Content>
+    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degree.ts" />
     <Content Include="scripts\viewmodels\degrees\Degree.js">
       <DependentUpon>Degree.ts</DependentUpon>
@@ -2092,6 +2096,13 @@
     </Content>
     <Content Include="scripts\viewmodels\degrees\Degrees.min.js">
       <DependentUpon>Degrees.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireTestModItWorked.ts" />
+    <Content Include="scripts\viewmodels\agreements\RequireTestModItWorked.js">
+      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\RequireTestModItWorked.min.js">
+      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
@@ -2252,6 +2263,13 @@
     <Content Include="scripts\viewmodels\shared\languages\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\shared\Lens.ts" />
+    <Content Include="scripts\viewmodels\shared\Lens.js">
+      <DependentUpon>Lens.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\Lens.min.js">
+      <DependentUpon>Lens.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\shared\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -2271,6 +2289,13 @@
       <DependentUpon>Name.js</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\shared\places\ServerApiModel.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\shared\PagedSearch.ts" />
+    <Content Include="scripts\viewmodels\shared\PagedSearch.js">
+      <DependentUpon>PagedSearch.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\shared\PagedSearch.min.js">
+      <DependentUpon>PagedSearch.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\shared\places\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>

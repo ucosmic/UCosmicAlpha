@@ -14,14 +14,14 @@
 /// <reference path="Location.ts" />
 
 
-import SearchApiModel = module('ServerApiModel')
+import SearchApiModel = module('./ServerApiModel')
 import gm = google.maps
-import SearchResult = module('SearchResult')
-import Search = module('Search')
-import Name = module('Name')
-import Location = module('Location')
-import Url = module('Url')
-import Spinner = module('Spinner')
+import SearchResult = module('./SearchResult')
+import Search = module('./Search')
+import Name = module('./Name')
+import Location = module('./Location')
+import Url = module('./Url')
+import Spinner = module('./Spinner')
 import Languages = module('languages/ServerApiModel')
 
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {

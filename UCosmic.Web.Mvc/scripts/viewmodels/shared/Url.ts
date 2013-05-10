@@ -8,9 +8,9 @@
 /// <reference path="../Spinner.ts" />
 /// <reference path="Item.ts" />
 
-import Item = module('Item')
-import SearchApiModel = module('ServerApiModel')
-import Spinner = module('Spinner')
+import Item = module('./Item')
+import SearchApiModel = module('./ServerApiModel')
+import Spinner = module('./Spinner')
 export class ServerUrlApiModel implements SearchApiModel.IServerUrlApiModel {
         
         id: number = 0;

@@ -11,7 +11,7 @@
 //    notifySubscribers(valueToWrite: Name[], topic?: string);
 //}
 
-import Places = module('places/ServerApiModel'); 
+import Places = module('./places/ServerApiModel'); 
 
 export interface IServerApiFlatModel {
     id: number;

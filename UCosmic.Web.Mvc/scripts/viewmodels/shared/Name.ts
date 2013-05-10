@@ -7,12 +7,12 @@
 /// <reference path="../Flasher.ts" />
 
   
- 
 
-import SearchApiModel = module('ServerApiModel')
-import Item = module('Item')
 
-import Spinner = module('Spinner')
+import SearchApiModel = module('./ServerApiModel')
+import Item = module('./Item')
+
+import Spinner = module('./Spinner')
 export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
         
         id: number = 0;

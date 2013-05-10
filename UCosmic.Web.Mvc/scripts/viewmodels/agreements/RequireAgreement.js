@@ -1,5 +1,6 @@
-define(["require", "exports", 'RequireTestModItWorked'], function(require, exports, __mySpinnerTim__) {
-    var mySpinnerTim = __mySpinnerTim__;
-
-    mySpinnerTim.itWorkedTim("yes");
-})
+require([
+    "viewmodels/agreements/RequireTestModItWorked", 
+    "viewmodels/shared/search"
+], function (Req) {
+    Req.itWorkedTim("yes");
+});

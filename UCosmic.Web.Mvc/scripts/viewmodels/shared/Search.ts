@@ -6,18 +6,14 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../PagedSearch.ts" />
-/// <reference path="../places/ServerApiModel.ts" /> 
-/// <reference path="SearchResult.ts" />
-export interface Lens {
-    text: string;
-    value: string;
-}
 
-import SearchResult = module('SearchResult')
-import Places = module('places/ServerApiModel');
-import SearchApiModel = module('ServerApiModel')
-    export class Search extends ViewModels.PagedSearch {
+
+import PagedSearch = module('./PagedSearch')
+import SearchResult = module('./SearchResult');
+import Lens = module('./Lens');
+import Places = module('./places/ServerApiModel');
+import SearchApiModel = module('./ServerApiModel');
+export class Search extends PagedSearch.PagedSearch {
         
 
         constructor (public initDefaultPageRoute?: bool = true) {
@@ -67,7 +63,7 @@ import SearchApiModel = module('ServerApiModel')
 
         // lensing
         private _setupLensing(): void {
-            this.changeLens = (lens: Lens): void => {
+            this.changeLens = (lens: Lens.Lens): void => {
                 this.lens(lens.value);
             };
         }
@@ -168,7 +164,7 @@ import SearchApiModel = module('ServerApiModel')
             //{ text: 'Tree', value: 'tree' }
         ]);
         lens: KnockoutObservableString = ko.observable();
-        changeLens: (lens: Lens) => void;
+        changeLens: (lens: Lens.Lens) => void;
 
         // items page
         $itemsPage: JQuery = undefined;

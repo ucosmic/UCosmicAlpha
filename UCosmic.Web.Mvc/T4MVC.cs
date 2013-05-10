@@ -2607,6 +2607,13 @@ namespace Links
                 public static readonly string RequireAgreement_min_js = Url("RequireAgreement.min.js");
                 public static readonly string requireAgreements_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireAgreements.min.js") ? Url("requireAgreements.min.js") : Url("requireAgreements.js");
                               
+                public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
+                public static readonly string modItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modItWorked.min.js") ? Url("modItWorked.min.js") : Url("modItWorked.js");
+                              
+                public static readonly string modItWorked_min_js = Url("modItWorked.min.js");
+                public static readonly string RequireTestModItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTestModItWorked.min.js") ? Url("RequireTestModItWorked.min.js") : Url("RequireTestModItWorked.js");
+                              
+                public static readonly string RequireTestModItWorked_min_js = Url("RequireTestModItWorked.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2797,6 +2804,10 @@ namespace Links
                     public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
                 }
             
+                public static readonly string Lens_ts = Url("Lens.ts");
+                public static readonly string Lens_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Lens.min.js") ? Url("Lens.min.js") : Url("Lens.js");
+                              
+                public static readonly string Lens_min_js = Url("Lens.min.js");
                 public static readonly string Location_ts = Url("Location.ts");
                 public static readonly string Location_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Location.min.js") ? Url("Location.min.js") : Url("Location.js");
                               
@@ -2807,6 +2818,10 @@ namespace Links
                               
                 public static readonly string Name_min_js_map = Url("Name.min.js.map");
                 public static readonly string Name_min_js = Url("Name.min.js");
+                public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
+                public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
+                              
+                public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class places {
                     private const string URLPATH = "~/scripts/viewmodels/shared/places";

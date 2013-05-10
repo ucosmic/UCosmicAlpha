@@ -5,9 +5,9 @@
 /// <reference path="../Flasher.ts" />
 
 
-import SearchApiModel = module('ServerApiModel')
-import Places = module('places/ServerApiModel');
-import Spinner = module('Spinner')
+import SearchApiModel = module('./ServerApiModel')
+import Places = module('./places/ServerApiModel');
+import Spinner = module('./Spinner')
 
     import gm = google.maps
 

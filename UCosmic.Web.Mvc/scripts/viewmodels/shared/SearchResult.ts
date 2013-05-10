@@ -3,8 +3,8 @@
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="Search.ts" />
  
-import Search = module('Search')
-import SearchApiModel = module('ServerApiModel')
+import Search = module('./Search')
+import SearchApiModel = module('./ServerApiModel')
  
     export class SearchResult { 
 

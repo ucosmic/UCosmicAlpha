@@ -10,15 +10,15 @@
 
     @Scripts.Render("~/bundles/agreements")
 
-    <script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.agreements.InstitutionalAgreementEditModel_js)"></script>
+    @*<script type="text/javascript" src="@Url.Content(Links.scripts.viewmodels.agreements.InstitutionalAgreementEditModel_js)"></script>*@
 
-    <script type="text/javascript">
+   @* <script type="text/javascript">
 
         var institutionalAgreementEditModel = new InstitutionalAgreementEditModel();
         ko.applyBindings(institutionalAgreementEditModel, $('#main')[0]);
         institutionalAgreementEditModel.sammy().run();
 
-    </script>
+    </script>*@
 
 }
 
