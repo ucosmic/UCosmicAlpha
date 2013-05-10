@@ -47,6 +47,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult DegreeEdit()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public MyProfileController Actions { get { return MVC.MyProfile; } }
@@ -65,6 +71,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string ActivityEdit = "ActivityEdit";
+            public readonly string DegreeEdit = "DegreeEdit";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -72,6 +79,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string ActivityEdit = "ActivityEdit";
+            public const string DegreeEdit = "DegreeEdit";
         }
 
 
@@ -82,6 +90,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_ActivityEdit
         {
             public readonly string activityId = "activityId";
+        }
+        static readonly ActionParamsClass_DegreeEdit s_params_DegreeEdit = new ActionParamsClass_DegreeEdit();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_DegreeEdit DegreeEditParams { get { return s_params_DegreeEdit; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_DegreeEdit
+        {
+            public readonly string degreeId = "degreeId";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -95,24 +111,24 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _Activities = "_Activities";
                 public readonly string _Affiliations = "_Affiliations";
+                public readonly string _Degrees = "_Degrees";
                 public readonly string _EmailAddresses = "_EmailAddresses";
-                public readonly string _FormalEducations = "_FormalEducations";
                 public readonly string _GeographicExpertises = "_GeographicExpertises";
                 public readonly string _LanguageExpertises = "_LanguageExpertises";
                 public readonly string _PersonalInfo = "_PersonalInfo";
                 public readonly string ActivityEdit = "ActivityEdit";
-                public readonly string FormalEducationEdit = "FormalEducationEdit";
+                public readonly string DegreeEdit = "DegreeEdit";
                 public readonly string Index = "Index";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
             public readonly string _Affiliations = "~/Views/MyProfile/_Affiliations.cshtml";
+            public readonly string _Degrees = "~/Views/MyProfile/_Degrees.cshtml";
             public readonly string _EmailAddresses = "~/Views/MyProfile/_EmailAddresses.cshtml";
-            public readonly string _FormalEducations = "~/Views/MyProfile/_FormalEducations.cshtml";
             public readonly string _GeographicExpertises = "~/Views/MyProfile/_GeographicExpertises.cshtml";
             public readonly string _LanguageExpertises = "~/Views/MyProfile/_LanguageExpertises.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
             public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
-            public readonly string FormalEducationEdit = "~/Views/MyProfile/FormalEducationEdit.cshtml";
+            public readonly string DegreeEdit = "~/Views/MyProfile/DegreeEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
         }
     }
@@ -132,6 +148,13 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "activityId", activityId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult DegreeEdit(int degreeId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "degreeId", degreeId);
             return callInfo;
         }
 

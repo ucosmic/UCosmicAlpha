@@ -8,14 +8,14 @@
 /// <reference path="../../tinymce/tinymce.d.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../formalEducations/ServiceApiModel.d.ts" />
+/// <reference path="../degrees/ServiceApiModel.d.ts" />
 
-module ViewModels.FormalEducations {
+module ViewModels.Degrees {
     // ================================================================================
     /* 
     */
     // ================================================================================
-    export class FormalEducation implements Service.ApiModels.FormalEducation.IObservableFormalEducation {
+    export class Degree implements Service.ApiModels.Degree.IObservableDegree {
 
         /* Initialization errors. */
         inititializationErrors: string = "";
@@ -27,7 +27,7 @@ module ViewModels.FormalEducations {
         /* In the process of saving */
         saving: bool = false;
 
-        /* IObservableFormalEducation implemented */
+        /* IObservableDegree implemented */
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
         entityId: KnockoutObservableString;     // guid converted to string
@@ -111,7 +111,7 @@ module ViewModels.FormalEducations {
             $.ajax( {
                 type: "GET",
                 url: App.Routes.WebApi.Degrees.get( this.id() ),
-                success: function ( data: Service.ApiModels.FormalEducation.IFormalEducationPage, textStatus: string, jqXhr: JQueryXHR ): void
+                success: function ( data: Service.ApiModels.Degree.IDegreePage, textStatus: string, jqXhr: JQueryXHR ): void
                     { dataPact.resolve( data ); },
                 error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
                     { dataPact.reject( jqXhr, textStatus, errorThrown ); },
@@ -119,7 +119,7 @@ module ViewModels.FormalEducations {
 
             // only process after all requests have been resolved
             $.when( dataPact )
-                          .done( ( data: Service.ApiModels.FormalEducation.IObservableFormalEducation ): void => {
+                          .done( ( data: Service.ApiModels.Degree.IObservableDegree ): void => {
 
                               ko.mapping.fromJS( data, {}, this );
 

@@ -28,5 +28,13 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = new ActivityModel { ActivityId = activityId };
             return View(model);
         }
+
+        [Authorize]
+        [GET("my/degree/{degreeId}")]
+        public virtual ActionResult DegreeEdit(int degreeId)
+        {
+            var model = new DegreeModel { DegreeId = degreeId };
+            return View(model);
+        }
     }
 }

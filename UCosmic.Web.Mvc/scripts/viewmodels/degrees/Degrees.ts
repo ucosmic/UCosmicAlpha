@@ -6,9 +6,9 @@
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../formalEducations/ServiceApiModel.d.ts" />
+/// <reference path="../degrees/ServiceApiModel.d.ts" />
 
-module ViewModels.FormalEducations
+module ViewModels.Degrees
 {
     export class DegreeSearchInput
     {
@@ -22,7 +22,7 @@ module ViewModels.FormalEducations
     /* 
     */
     // ================================================================================
-    export class FormalEducationList
+    export class DegreeList
     {
         personId: number;
         orderBy: string;
@@ -92,7 +92,7 @@ module ViewModels.FormalEducations
         */
         // --------------------------------------------------------------------------------
         deleteEducation(data: any, event: any, viewModel: any): void {
-            $("#confirmFormalEducationDeleteDialog").dialog({
+            $("#confirmDegreeDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
                 resizable: false,
@@ -147,7 +147,7 @@ module ViewModels.FormalEducations
                 url: App.Routes.WebApi.Degrees.post(),
                 success: (newEducationId: string, textStatus: string, jqXHR: JQueryXHR): void =>
                 {
-                    location.href = App.Routes.Mvc.My.Profile.formalEducationEdit(newEducationId);
+                    location.href = App.Routes.Mvc.My.Profile.degreeEdit(newEducationId);
                 },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
                 {

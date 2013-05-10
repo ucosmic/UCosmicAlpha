@@ -7,7 +7,7 @@ var ViewModels;
                 this._activitiesViewModel = null;
                 this._geographicExpertisesViewModel = null;
                 this._languageExpertisesViewModel = null;
-                this._formalEducationsViewModel = null;
+                this._degreesViewModel = null;
                 this._affiliationsViewModel = null;
                 this.hasPhoto = ko.observable();
                 this.isPhotoExtensionInvalid = ko.observable(false);
@@ -107,10 +107,10 @@ var ViewModels;
                         });
                     }
                 } else if(tabName === "Formal Education") {
-                    if(this._formalEducationsViewModel == null) {
-                        this._formalEducationsViewModel = new ViewModels.FormalEducations.FormalEducationList(this.personId);
-                        this._formalEducationsViewModel.load().done(function () {
-                            ko.applyBindings(_this._formalEducationsViewModel, $("#formal-educations")[0]);
+                    if(this._degreesViewModel == null) {
+                        this._degreesViewModel = new ViewModels.Degrees.DegreeList(this.personId);
+                        this._degreesViewModel.load().done(function () {
+                            ko.applyBindings(_this._degreesViewModel, $("#degrees")[0]);
                         }).fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });

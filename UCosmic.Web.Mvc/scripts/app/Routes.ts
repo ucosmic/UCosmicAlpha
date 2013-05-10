@@ -547,13 +547,13 @@ module App.Routes {
                     var url = makeUrl( 'my/langexpertise/' );
                     return url + expertiseId;
                 }
-                export function formalEducationEdit( expertiseId: string ) {
-                    var url = makeUrl( 'my/education/' );
-                    return url + expertiseId;
+                export function degreeEdit( degreeId: string ) {
+                    var url = makeUrl( 'my/degree/' );
+                    return url + degreeId;
                 }
-                export function affiliationEdit( expertiseId: string ) {
+                export function affiliationEdit( affiliationId: string ) {
                     var url = makeUrl( 'my/affiliation/' );
-                    return url + expertiseId;
+                    return url + affiliationId;
                 }
             }
         }

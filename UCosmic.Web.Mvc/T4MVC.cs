@@ -2565,6 +2565,7 @@ namespace Links
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
+                public static readonly string Activity_min_js_map = Url("Activity.min.js.map");
                 public static readonly string Activity_min_js = Url("Activity.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
@@ -2592,6 +2593,22 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string InstitutionalAgreementEditModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InstitutionalAgreementEditModel.min.js") ? Url("InstitutionalAgreementEditModel.min.js") : Url("InstitutionalAgreementEditModel.js");
+                              
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class degrees {
+                private const string URLPATH = "~/scripts/viewmodels/degrees";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string Degree_ts = Url("Degree.ts");
+                public static readonly string Degree_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degree.min.js") ? Url("Degree.min.js") : Url("Degree.js");
+                              
+                public static readonly string Degrees_ts = Url("Degrees.ts");
+                public static readonly string Degrees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degrees.min.js") ? Url("Degrees.min.js") : Url("Degrees.js");
+                              
+                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
+                public static readonly string ServiceApiModl_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModl.d.min.js") ? Url("ServiceApiModl.d.min.js") : Url("ServiceApiModl.d.js");
                               
             }
         
@@ -2639,24 +2656,6 @@ namespace Links
             public static readonly string Flasher_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Flasher.min.js") ? Url("Flasher.min.js") : Url("Flasher.js");
                           
             public static readonly string Flasher_min_js = Url("Flasher.min.js");
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class formalEducations {
-                private const string URLPATH = "~/scripts/viewmodels/formalEducations";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string FormalEducation_ts = Url("FormalEducation.ts");
-                public static readonly string FormalEducation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormalEducation.min.js") ? Url("FormalEducation.min.js") : Url("FormalEducation.js");
-                              
-                public static readonly string FormalEducation_min_js = Url("FormalEducation.min.js");
-                public static readonly string FormalEducations_ts = Url("FormalEducations.ts");
-                public static readonly string FormalEducations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormalEducations.min.js") ? Url("FormalEducations.min.js") : Url("FormalEducations.js");
-                              
-                public static readonly string FormalEducations_min_js = Url("FormalEducations.min.js");
-                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
-                public static readonly string ServiceApiModl_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModl.d.min.js") ? Url("ServiceApiModl.d.min.js") : Url("ServiceApiModl.d.js");
-                              
-            }
-        
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class geographicExpertises {
                 private const string URLPATH = "~/scripts/viewmodels/geographicExpertises";

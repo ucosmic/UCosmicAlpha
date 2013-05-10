@@ -25,7 +25,7 @@ namespace UCosmic.Domain.Degrees
 
             IQueryable<Degree> results = _entities.Query<Degree>()
                                                   .Where(a => a.PersonId == query.PersonId)
-                                                  .OrderBy(a => a.YearAwarded);
+                                                  .OrderBy(a => a.RevisionId);
 
             var pagedResults = new PagedQueryResult<Degree>(results, query.PageSize, query.PageNumber);
 

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using UCosmic.Domain.Establishments;
+﻿using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Degrees
 {

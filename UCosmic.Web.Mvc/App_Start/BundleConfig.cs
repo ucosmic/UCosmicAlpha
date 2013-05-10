@@ -122,11 +122,11 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/languageExpertise").Include(
                 "~/scripts/viewmodels/languageExpertises/LanguageExpertise.js"));
 
-            // formal education
-            bundles.Add(new ScriptBundle("~/bundles/formalEducations").Include(
-                "~/scripts/viewmodels/formalEducations/FormalEducations.js"));
-            bundles.Add(new ScriptBundle("~/bundles/formalEducation").Include(
-                "~/scripts/viewmodels/formalEducations/FormalEducation.js"));
+            // degrees
+            bundles.Add(new ScriptBundle("~/bundles/degrees").Include(
+                "~/scripts/viewmodels/degrees/Degrees.js"));
+            bundles.Add(new ScriptBundle("~/bundles/degree").Include(
+                "~/scripts/viewmodels/degrees/Degree.js"));
 
             // affiliations
             bundles.Add(new ScriptBundle("~/bundles/affiliations").Include(

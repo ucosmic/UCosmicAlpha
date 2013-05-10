@@ -1,7 +1,7 @@
 ﻿ @model UCosmic.Web.Mvc.Models.DegreeModel
 
 @{
-    ViewBag.Title = "My Degrees Outside the US";
+    ViewBag.Title = "My Degree Outside the US";
 }
 
 @section styles
@@ -15,14 +15,14 @@
     <script type="text/javascript">
         $(function() {
             var degreeId = @Model.DegreeId;
-            var degreeViewModel = new ViewModels.Activities.Degree(degreeId);
+            var degreeViewModel = new ViewModels.Degrees.Degree(degreeId);
             degreeViewModel.load()
                 .done(function() {
                     //degreeViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");
 
                     //degreeViewModel.setupValidation();
 
-                    //ko.applyBindings(degreeViewModel, $("#degree-edit")[0]);
+                    ko.applyBindings(degreeViewModel, $("#degree-edit")[0]);
 
                     ///* KendoUI Bug? - Can't seem to preload values unless I do this. */
                     //var countrySelector = $("#countrySelector").data("kendoMultiSelect");
@@ -61,43 +61,38 @@
                 <div class="group">
                     <div id="degree-edit" class="on-left from-top" style="width: 100%;">
 				        
-                        <!-- BUTTONS -->
-                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
-
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
 
                         <div style="margin-bottom: 38px">
                             <!-- TITLE -->
-                            <div>
-                                <span class="required-field-name">Title</span>
+                            <div style="margin-bottom: 4px">
                                 <span>
-                                    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="value: title"></textarea>
+                                    <label for="title" style="width: 120px; display:inline-block; text-align: right">Title</label>
+                                    <input type="text" id="title" style="width: 400px" data-bind="value: title" />
                                 </span>
                             </div>
 
                             <!-- YEAR AWARDED -->
-                            <div>
-                                <span class="required-field-name">Year Awarded</span>
+                            <div style="margin-bottom: 4px">
                                 <span>
-                                    <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Year]" data-bind="value: yearAwarded"></textarea>
+                                    <label for="yearAwarded" style="width: 120px; display:inline-block; text-align: right">Year Awarded</label>
+                                    <input type="text" id="yearAwarded" style="width: 60px" data-bind="value: yearAwarded" />
                                 </span>
                             </div>
 
                             <!-- INSTITUTION -->
-                            <div>
-                                <span class="required-field-name">Institution</span>
+                            <div style="margin-bottom: 4px">
                                 <span>
-                                    <input id="institution" style="width: 400px; white-space: nowrap; overflow: hidden" data-bind="value: institutionName"/>
+                                    <label for="institution" style="width: 120px; display:inline-block; text-align: right">Institution</label>
+                                    <input type="text" id="institution" style="width: 800px" data-bind="value: institutionId" />
                                 </span>
                             </div>
 
                             <!-- INSTITUTION COUNTRY -->
-                            <div>
-                                <span class="required-field-name">County of Institution</span>
-                                <span>
-                                    <select id="institution-country" style="width: 750px; overflow-y:auto" data-bind="selectedOptions: institutionCountry"></select>
+                            <div style="margin-bottom: 4px">
+                                <span style="padding-left: 122px"><span>located in</span>
                                 </span>
                             </div>
                         </div>
@@ -123,15 +118,13 @@
 
                   
 <!-- JQUERY DIALOGS -->
-<div id="cancelConfirmDialog" style="visibility: hidden" title="Confirm Cancel">
+<div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
     <div>By cancelling, you will lose all changes.</div>
-    <br/>
     <div style="font-weight: bold">Are you sure you want to Cancel editing this degree?</div>
 </div>
 
-<div id="degreeBeingEditedDialog" style="visibility: hidden" title="Error Renaming Document">
+<div id="degreeBeingEditedDialog" class="dialog" title="Error Renaming Document">
     <div>The degree cannot be edited at this time because it is in use by:</div>
-    <br/>
     <div id="editingUserName" style="text-align: center"></div>
     <a id="editingUserEmail" style="text-align: center"></a>
 </div>

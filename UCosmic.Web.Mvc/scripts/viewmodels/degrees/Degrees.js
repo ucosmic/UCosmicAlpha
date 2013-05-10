@@ -1,16 +1,16 @@
 var ViewModels;
 (function (ViewModels) {
-    (function (FormalEducations) {
+    (function (Degrees) {
         var DegreeSearchInput = (function () {
             function DegreeSearchInput() { }
             return DegreeSearchInput;
         })();
-        FormalEducations.DegreeSearchInput = DegreeSearchInput;        
-        var FormalEducationList = (function () {
-            function FormalEducationList(personId) {
+        Degrees.DegreeSearchInput = DegreeSearchInput;        
+        var DegreeList = (function () {
+            function DegreeList(personId) {
                 this.personId = personId;
             }
-            FormalEducationList.prototype.load = function () {
+            DegreeList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
                 var expertiseSearchInput = new DegreeSearchInput();
@@ -31,7 +31,7 @@ var ViewModels;
                 });
                 return deferred;
             };
-            FormalEducationList.prototype.deleteEducationById = function (expertiseId) {
+            DegreeList.prototype.deleteEducationById = function (expertiseId) {
                 $.ajax({
                     async: false,
                     type: "DELETE",
@@ -43,8 +43,8 @@ var ViewModels;
                     }
                 });
             };
-            FormalEducationList.prototype.deleteEducation = function (data, event, viewModel) {
-                $("#confirmFormalEducationDeleteDialog").dialog({
+            DegreeList.prototype.deleteEducation = function (data, event, viewModel) {
+                $("#confirmDegreeDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
                     width: 'auto',
                     resizable: false,
@@ -68,7 +68,7 @@ var ViewModels;
                     ]
                 });
             };
-            FormalEducationList.prototype.editEducation = function (data, event, expertiseId) {
+            DegreeList.prototype.editEducation = function (data, event, expertiseId) {
                 var element = event.target;
                 var url = null;
                 while((element != null) && (element.nodeName != 'TR')) {
@@ -81,21 +81,21 @@ var ViewModels;
                     location.href = url;
                 }
             };
-            FormalEducationList.prototype.newEducation = function (data, event) {
+            DegreeList.prototype.newEducation = function (data, event) {
                 $.ajax({
                     type: "POST",
                     url: App.Routes.WebApi.Degrees.post(),
                     success: function (newEducationId, textStatus, jqXHR) {
-                        location.href = App.Routes.Mvc.My.Profile.formalEducationEdit(newEducationId);
+                        location.href = App.Routes.Mvc.My.Profile.degreeEdit(newEducationId);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert(textStatus + "|" + errorThrown);
                     }
                 });
             };
-            return FormalEducationList;
+            return DegreeList;
         })();
-        FormalEducations.FormalEducationList = FormalEducationList;        
-    })(ViewModels.FormalEducations || (ViewModels.FormalEducations = {}));
-    var FormalEducations = ViewModels.FormalEducations;
+        Degrees.DegreeList = DegreeList;        
+    })(ViewModels.Degrees || (ViewModels.Degrees = {}));
+    var Degrees = ViewModels.Degrees;
 })(ViewModels || (ViewModels = {}));

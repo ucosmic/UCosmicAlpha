@@ -1,8 +1,8 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 
-module Service.ApiModels.FormalEducation {
+module Service.ApiModels.Degree {
 
-    export interface IFormalEducation {
+    export interface IDegree {
         id: number;
         version: string;    // byte[] converted to base64
         entityId: string;   // guid converted to string
@@ -14,7 +14,7 @@ module Service.ApiModels.FormalEducation {
         institutionCountryOfficialName: string;
     }
 
-    export interface IObservableFormalEducation {
+    export interface IObservableDegree {
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
         entityId: KnockoutObservableString;     // guid converted to string
@@ -26,17 +26,17 @@ module Service.ApiModels.FormalEducation {
         institutionCountryOfficialName: KnockoutObservableString;
     }
 
-    export interface IFormalEducationCountries {
+    export interface IDegreeCountries {
         id: number;
         officialName: string;
     }
 
-    export interface IFormalEducationInstitutions {
+    export interface IDegreeInstitutions {
         id: number;
         officialName: string;
     }
 
-    export interface IFormalEducationPage {
+    export interface IDegreePage {
         personId: KnockoutObservableNumber;
         orderBy: KnockoutObservableString;
         pageSize: KnockoutObservableNumber;

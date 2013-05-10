@@ -604,14 +604,14 @@ var App;
                         return url + expertiseId;
                     }
                     Profile.languageExpertiseEdit = languageExpertiseEdit;
-                    function formalEducationEdit(expertiseId) {
-                        var url = makeUrl('my/education/');
-                        return url + expertiseId;
+                    function degreeEdit(degreeId) {
+                        var url = makeUrl('my/degree/');
+                        return url + degreeId;
                     }
-                    Profile.formalEducationEdit = formalEducationEdit;
-                    function affiliationEdit(expertiseId) {
+                    Profile.degreeEdit = degreeEdit;
+                    function affiliationEdit(affiliationId) {
                         var url = makeUrl('my/affiliation/');
-                        return url + expertiseId;
+                        return url + affiliationId;
                     }
                     Profile.affiliationEdit = affiliationEdit;
                 })(My.Profile || (My.Profile = {}));

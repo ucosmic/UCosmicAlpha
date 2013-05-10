@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Providers.Entities;
 using AutoMapper;
-using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
 {

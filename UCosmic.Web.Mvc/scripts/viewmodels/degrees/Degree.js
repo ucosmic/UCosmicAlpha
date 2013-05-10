@@ -1,14 +1,14 @@
 var ViewModels;
 (function (ViewModels) {
-    (function (FormalEducations) {
-        var FormalEducation = (function () {
-            function FormalEducation(educationId) {
+    (function (Degrees) {
+        var Degree = (function () {
+            function Degree(educationId) {
                 this.inititializationErrors = "";
                 this.dirtyFlag = ko.observable(false);
                 this.saving = false;
                 this._initialize(educationId);
             }
-            FormalEducation.prototype._initialize = function (educationId) {
+            Degree.prototype._initialize = function (educationId) {
                 var _this = this;
                 this.id = ko.observable(educationId);
                 this.dirty = ko.computed(function () {
@@ -17,11 +17,11 @@ var ViewModels;
                     }
                 });
             };
-            FormalEducation.prototype.setupWidgets = function (countrySelectorId) {
+            Degree.prototype.setupWidgets = function (countrySelectorId) {
             };
-            FormalEducation.prototype.setupValidation = function () {
+            Degree.prototype.setupValidation = function () {
             };
-            FormalEducation.prototype.load = function () {
+            Degree.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
                 var dataPact = $.Deferred();
@@ -44,7 +44,7 @@ var ViewModels;
                 });
                 return deferred;
             };
-            FormalEducation.prototype.autoSave = function (viewModel, event) {
+            Degree.prototype.autoSave = function (viewModel, event) {
                 var _this = this;
                 if(this.saving) {
                     return;
@@ -70,7 +70,7 @@ var ViewModels;
                     }
                 });
             };
-            FormalEducation.prototype.save = function (viewModel, event, mode) {
+            Degree.prototype.save = function (viewModel, event, mode) {
                 var _this = this;
                 this.autoSave(viewModel, event);
                 while(this.saving) {
@@ -96,7 +96,7 @@ var ViewModels;
                 });
                 location.href = App.Routes.Mvc.My.Profile.get();
             };
-            FormalEducation.prototype.cancel = function (item, event, mode) {
+            Degree.prototype.cancel = function (item, event, mode) {
                 $("#cancelConfirmDialog").dialog({
                     modal: true,
                     resizable: false,
@@ -124,9 +124,9 @@ var ViewModels;
                     }
                 });
             };
-            return FormalEducation;
+            return Degree;
         })();
-        FormalEducations.FormalEducation = FormalEducation;        
-    })(ViewModels.FormalEducations || (ViewModels.FormalEducations = {}));
-    var FormalEducations = ViewModels.FormalEducations;
+        Degrees.Degree = Degree;        
+    })(ViewModels.Degrees || (ViewModels.Degrees = {}));
+    var Degrees = ViewModels.Degrees;
 })(ViewModels || (ViewModels = {}));
