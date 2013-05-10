@@ -135,7 +135,7 @@ module ViewModels.Establishments {
         clickAction(viewModel: SearchResult, e: JQueryEventObject): bool {
             return this._owner.clickAction(viewModel, e);
         }
-
+         
         // open official URL page
         openOfficialUrl(viewModel: SearchResult, e: JQueryEventObject): bool {
             e.stopPropagation();

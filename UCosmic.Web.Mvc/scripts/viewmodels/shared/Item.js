@@ -1,7 +1,9 @@
-define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinner', 'languages/ServerApiModel'], function(require, exports, __SearchResult__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
+define(["require", "exports", 'SearchResult', 'Search', 'Name', 'Location', 'Url', 'Spinner', 'languages/ServerApiModel'], function(require, exports, __SearchResult__, __Search__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
     
     var gm = google.maps;
     var SearchResult = __SearchResult__;
+
+    var Search = __Search__;
 
     var Name = __Name__;
 
@@ -179,7 +181,7 @@ define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinne
                 speed: 'fast',
                 root: '#establishment_page'
             });
-            this.parentSearch = new Search(false);
+            this.parentSearch = new Search.Search(false);
             this.sammy = Sammy();
             this._findingParent = false;
             this.parentEstablishment = ko.observable();
@@ -273,9 +275,9 @@ define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinne
             App.Obtruder.obtrude(document);
         };
         Item.prototype.addName = function () {
-            var apiModel = new ServerNameApiModel(this.id);
+            var apiModel = new Name.ServerNameApiModel(this.id);
             if(this.Names().length === 0) {
-                apiModel.isofficialName = true;
+                apiModel.isOfficialName = true;
             }
             var newName = new Name.Name(apiModel, this);
             this.Names.unshift(newName);
@@ -330,7 +332,7 @@ define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinne
             App.Obtruder.obtrude(document);
         };
         Item.prototype.addUrl = function () {
-            var apiModel = new ServerUrlApiModel(this.id);
+            var apiModel = new Url.ServerUrlApiModel(this.id);
             if(this.urls().length === 0) {
                 apiModel.isOfficialUrl = true;
             }
@@ -369,7 +371,7 @@ define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinne
                 this.validatingSpinner.start();
                 var officialName = this.Names()[0];
                 var officialUrl = this.urls()[0];
-                var location = this.Location;
+                var location = this.location;
                 if(officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                     setTimeout(function () {
                         var waitResult = _this.submitToCreate(formElement);
@@ -393,7 +395,7 @@ define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinne
                     var data = this.serializeData();
                     data.officialName = officialName.serializeData();
                     data.officialUrl = officialUrl.serializeData();
-                    data.location = Location.Location.serializeData();
+                    data.location = location.serializeData();
                     this.createSpinner.start();
                     $.post(url, data).done(function (response, statusText, xhr) {
                         window.location.href = App.Routes.Mvc.Shared.created({
@@ -573,7 +575,7 @@ define(["require", "exports", 'SearchResult', 'Name', 'Location', 'Url', 'Spinne
                     }).done(function (response) {
                         if(response && response.items && response.items.length) {
                             var parent = response.items[0];
-                            _this.parentEstablishment(new SearchResult(parent, _this.parentSearch));
+                            _this.parentEstablishment(new SearchResult.SearchResult(parent, _this.parentSearch));
                         }
                     });
                 }

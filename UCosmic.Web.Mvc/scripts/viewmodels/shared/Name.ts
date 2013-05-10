@@ -6,7 +6,7 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
 
- 
+  
  
 
 import SearchApiModel = module('ServerApiModel')
@@ -245,7 +245,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
                 this.editMode(false); // hide the form, show the view
             }
             else {
-                this.owner.names.shift(); // remove the new empty Item.Item
+                this.owner.Names.shift(); // remove the new empty Item.Item
             }
         }
 

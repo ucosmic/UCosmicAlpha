@@ -9,15 +9,16 @@
 /// <reference path="../PagedSearch.ts" />
 /// <reference path="../places/ServerApiModel.ts" /> 
 /// <reference path="SearchResult.ts" />
-  
-interface LensShared {
+export interface Lens {
     text: string;
-    value: string;  
+    value: string;
 }
+
 import SearchResult = module('SearchResult')
 import Places = module('places/ServerApiModel');
 import SearchApiModel = module('ServerApiModel')
     export class Search extends ViewModels.PagedSearch {
+        
 
         constructor (public initDefaultPageRoute?: bool = true) {
             super();
@@ -66,7 +67,7 @@ import SearchApiModel = module('ServerApiModel')
 
         // lensing
         private _setupLensing(): void {
-            this.changeLens = (lens: LensShared): void => {
+            this.changeLens = (lens: Lens): void => {
                 this.lens(lens.value);
             };
         }
@@ -167,7 +168,7 @@ import SearchApiModel = module('ServerApiModel')
             //{ text: 'Tree', value: 'tree' }
         ]);
         lens: KnockoutObservableString = ko.observable();
-        changeLens: (lens: LensShared) => void;
+        changeLens: (lens: Lens) => void;
 
         // items page
         $itemsPage: JQuery = undefined;
@@ -237,10 +238,10 @@ import SearchApiModel = module('ServerApiModel')
         gotoAddNew(): bool {
             return true;
         }
-
+         
         // click item
         // TODO: is this still needed?
-        clickAction(viewModel: SearchResult, e: JQueryEventObject): bool {
+        clickAction(viewModel: SearchResult.SearchResult, e: JQueryEventObject): bool {
             //var href, $target = $(e.target);
             //while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
             //    $target = $target.parent();

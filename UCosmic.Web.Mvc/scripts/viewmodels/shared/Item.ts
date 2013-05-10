@@ -17,6 +17,7 @@
 import SearchApiModel = module('ServerApiModel')
 import gm = google.maps
 import SearchResult = module('SearchResult')
+import Search = module('Search')
 import Name = module('Name')
 import Location = module('Location')
 import Url = module('Url')
@@ -318,9 +319,9 @@ import Languages = module('languages/ServerApiModel')
         }
 
         addName(): void {
-            var apiModel = new ServerNameApiModel(this.id);
+            var apiModel = new Name.ServerNameApiModel(this.id);
             if (this.Names().length === 0)
-                apiModel.isofficialName = true;
+                apiModel.isOfficialName = true;
             var newName = new Name.Name(apiModel, this);
             this.Names.unshift(newName);
             newName.showEditor();
@@ -388,9 +389,9 @@ import Languages = module('languages/ServerApiModel')
             this.urlsSpinner.stop();
             App.Obtruder.obtrude(document);
         }
-
+         
         addUrl(): void {
-            var apiModel = new ServerUrlApiModel(this.id);
+            var apiModel = new Url.ServerUrlApiModel(this.id);
             if (this.urls().length === 0)
                 apiModel.isOfficialUrl = true;
             var newUrl = new Url.Url(apiModel, this);
@@ -433,7 +434,7 @@ import Languages = module('languages/ServerApiModel')
                 // reference the single Name.Name and url
                 var officialName: Name.Name = this.Names()[0];
                 var officialUrl: Url.Url = this.urls()[0];
-                var location = this.Location;
+                var location = this.location;
 
                 // wait for async validation to stop
                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
@@ -462,7 +463,7 @@ import Languages = module('languages/ServerApiModel')
                     var data = this.serializeData();
                     data.officialName = officialName.serializeData();
                     data.officialUrl = officialUrl.serializeData();
-                    data.location = Location.Location.serializeData();
+                    data.location = location.serializeData();
                     this.createSpinner.start();
                     $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
@@ -572,7 +573,7 @@ import Languages = module('languages/ServerApiModel')
                     this.clickToCancelTypeIdEdit();
                 });
             }
-        }
+        } 
 
         // restore original values when cancelling edit of typeId & institution codes
         clickToCancelTypeIdEdit(): void {
@@ -585,7 +586,7 @@ import Languages = module('languages/ServerApiModel')
         sideSwiper = new App.SideSwiper({
             frameWidth: 980, speed: 'fast', root: '#establishment_page'
         });
-        parentSearch = new Search(false);
+        parentSearch = new Search.Search(false);
         sammy: Sammy.Application = Sammy();
         private _findingParent: bool = false;
         parentEstablishment: KnockoutObservableAny = ko.observable();
@@ -606,7 +607,7 @@ import Languages = module('languages/ServerApiModel')
                     this.parentSearch.sammy.setLocation(location);
             }
 
-            this.parentSearch.clickAction = (viewModel: SearchResult, e: JQueryEventObject): bool => {
+            this.parentSearch.clickAction = (viewModel: SearchResult.SearchResult, e: JQueryEventObject): bool => {
                 this.parentEstablishment(viewModel);
                 this.parentId(viewModel.id());
                 this.sammy.setLocation('/Shared/' + this.id + '/#/');
@@ -684,7 +685,7 @@ import Languages = module('languages/ServerApiModel')
                     .done((response: any): void => {
                         if (response && response.items && response.items.length) {
                             var parent = response.items[0];
-                            this.parentEstablishment(new SearchResult(parent, this.parentSearch));
+                            this.parentEstablishment(new SearchResult.SearchResult(parent, this.parentSearch));
                         }
                     });
                 }
