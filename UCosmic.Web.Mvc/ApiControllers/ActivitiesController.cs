@@ -307,13 +307,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     {
                         if (activity.IsEmpty())
                         {
-                            var deleteActivityCommand = new DeleteActivity(User, activityId);
+                            var deleteActivityCommand = new DeleteActivity(User, activity.RevisionId);
                             _deleteActivity.Handle(deleteActivityCommand);
                         }
                     }
                 }
 
-                var deleteEditActivityCommand = new DeleteActivity(User, activityId);
+                var deleteEditActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
                 _deleteActivity.Handle(deleteEditActivityCommand);
             }
             catch (Exception ex)
