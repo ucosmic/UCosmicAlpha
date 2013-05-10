@@ -243,3 +243,6 @@ body .example {
   font-size: smaller;
   color: #777; }
 
+.dialog {
+  display: none; }
+

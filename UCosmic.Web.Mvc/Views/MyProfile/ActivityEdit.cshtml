@@ -115,21 +115,26 @@
                                     <tr>
                                         <td class="field-name" style="vertical-align: top">On/From</td>
                                         <td>
-                                            <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
-                                            <span>
-                                                &emsp;
-                                                <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing"/>
-                                                <span>&nbsp;On-going&nbsp;</span>
-                                            </span>
-                                            <span data-bind="visible: !values.onGoing()">
-                                                <span>&nbsp;&nbsp;To&nbsp;</span>                                                
-                                                <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
-                                                <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->  
-                                            </span>
-                                            <span data-bind="validationMessage: values.startsOn" class="validationMessage"></span>
-                                            <span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>
+                                            <div data-bind='validationOptions: { insertMessages: false }'>
+                                                <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
+                                                <span>
+                                                    &emsp;
+                                                    <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing"/>
+                                                    <span>&nbsp;On-going&nbsp;</span>
+                                                </span>
+                                                <span data-bind="visible: !values.onGoing()">
+                                                    <span>&nbsp;&nbsp;To&nbsp;</span>                                                
+                                                    <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
+                                                    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->  
+                                                </span>
+                                            </div>
+                                            <!--<span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>-->
                                             <div class="example" style="margin-top: 8px">
                                                 <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
+                                                <div>
+                                                    <span data-bind="validationMessage: values.startsOn" class="validationMessage"></span>
+                                                    <span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -243,19 +248,16 @@
 
                   
 <!-- JQUERY DIALOGS -->
-<div id="documentRenameErrorDialog" style="visibility: hidden" title="Error Renaming Document">
+<div id="documentRenameErrorDialog" class="dialog" title="Error Renaming Document">
     <span id="message" style="float: left"></span>
 </div>
 
-<div id="cancelConfirmDialog" style="visibility: hidden" title="Confirm Cancel">
-    <span>By cancelling, you will lose all changes.</span>
-    <br/>
-    <div style="font-weight: bold">Are you sure you want to Cancel editing this Activity?</div>
+<div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
+    <span style="font-weight: bold">Are you sure you want to Cancel editing this Activity?</span>
 </div>
 
-<div id="activityBeingEditedDialog" style="visibility: hidden" title="Error Renaming Document">
-    <div>The activity cannot be edited at this time because it is in use by:</div>
-    <br/>
+<div id="activityBeingEditedDialog" class="dialog" title="Error Renaming Document">
+    <span style="font-weight: bold">The activity cannot be edited at this time because it is in use by:</span>
     <div id="editingUserName" style="text-align: center"></div>
     <a id="editingUserEmail" style="text-align: center"></a>
 </div>

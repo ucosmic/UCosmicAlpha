@@ -113,9 +113,26 @@ var ViewModels;
                 };
                 ko.validation.rules['nullSafeDate'] = {
                     validator: function (val, otherVal) {
-                        return (val != null) ? moment(val).isValid() : true;
+                        var valid = true;
+                        var format = null;
+                        var YYYYPattern = new RegExp("^\\d{4}$");
+                        var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
+                        var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+                        if((val != null) && (val.length > 0)) {
+                            val = val.trim();
+                            if(YYYYPattern.test(val)) {
+                                val = "01/01/" + val;
+                                format = "YYYY";
+                            } else if(MMYYYYPattern.test(val)) {
+                                format = "MM/YYYY";
+                            } else if(MMDDYYYYPattern.test(val)) {
+                                format = "MM/DD/YYYY";
+                            }
+                            valid = (format != null) ? moment(val, format).isValid() : false;
+                        }
+                        return valid;
                     },
-                    message: 'Date must be valid.'
+                    message: "Date must be valid."
                 };
                 ko.validation.registerExtenders();
                 ko.validation.group(this.values);
@@ -131,10 +148,14 @@ var ViewModels;
                     atLeast: 1
                 });
                 this.values.startsOn.extend({
-                    nullSafeDate: 0
+                    nullSafeDate: {
+                        message: "Start date must valid."
+                    }
                 });
                 this.values.endsOn.extend({
-                    nullSafeDate: 0
+                    nullSafeDate: {
+                        message: "End date must valid."
+                    }
                 });
             };
             Activity.prototype.load = function () {
@@ -235,21 +256,21 @@ var ViewModels;
                 }
             };
             Activity.prototype.getDateFormat = function (dateStr) {
-                var formatted = null;
+                var format = null;
                 var YYYYPattern = new RegExp("^\\d{4}$");
                 var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
                 var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
                 if((dateStr != null) && (dateStr.length > 0)) {
                     dateStr = dateStr.trim();
                     if(YYYYPattern.test(dateStr)) {
-                        formatted = "yyyy";
+                        format = "yyyy";
                     } else if(MMYYYYPattern.test(dateStr)) {
-                        formatted = "MM/yyyy";
+                        format = "MM/yyyy";
                     } else {
-                        formatted = "MM/dd/yyyy";
+                        format = "MM/dd/yyyy";
                     }
                 }
-                return formatted;
+                return format;
             };
             Activity.prototype.convertDate = function (date) {
                 var formatted = null;
@@ -290,7 +311,8 @@ var ViewModels;
                 }
                 var model = ko.mapping.toJS(this);
                 if(model.values.startsOn != null) {
-                    model.values.dateFormat = this.getDateFormat(model.values.startsOn);
+                    var dateStr = $("#fromDatePicker").get(0).value;
+                    model.values.dateFormat = this.getDateFormat(dateStr);
                     model.values.startsOn = this.convertDate(model.values.startsOn);
                 }
                 if((this.values.onGoing != null) && (this.values.onGoing())) {

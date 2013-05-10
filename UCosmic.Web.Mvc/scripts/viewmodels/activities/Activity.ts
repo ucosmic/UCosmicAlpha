@@ -97,6 +97,7 @@ module ViewModels.Activities {
             newTagId: string ): void {
 
             $( "#" + fromDatePickerId ).kendoDatePicker( {
+                /* If user clicks date picker button, reset format */
                 open: function(e) { this.options.format = "MM/dd/yyyy"; }
             } );
 
@@ -353,9 +354,32 @@ module ViewModels.Activities {
 
             ko.validation.rules['nullSafeDate'] = {
                 validator: ( val: any, otherVal: any ): bool => {
-                    return (val != null) ? moment(val).isValid() : true;
+                    var valid: bool = true;
+                    var format:string = null;
+                    var YYYYPattern = new RegExp( "^\\d{4}$" );
+                    var MMYYYYPattern = new RegExp( "^\\d{1,}/\\d{4}$" );
+                    var MMDDYYYYPattern = new RegExp( "^\\d{1,}/\\d{1,}/\\d{4}$" );
+
+                    if ( ( val != null ) && ( val.length > 0 ) ) {
+                        val = val.trim();
+
+                        if ( YYYYPattern.test( val ) ) {
+                            val = "01/01/" + val;
+                            format= "YYYY";
+                        }
+                        else if ( MMYYYYPattern.test( val ) ) {
+                            format = "MM/YYYY";
+                        }
+                        else if ( MMDDYYYYPattern.test( val ) ) {
+                            format= "MM/DD/YYYY";
+                        } 
+
+                        valid = (format != null) ? moment(val,format).isValid() : false;
+                    }
+
+                    return valid;
                 },
-                message: 'Date must be valid.'
+                message: "Date must be valid."
             };
 
             ko.validation.registerExtenders();
@@ -365,8 +389,8 @@ module ViewModels.Activities {
             this.values.title.extend( { required: true, minLength: 1, maxLength: 200 } );
             this.values.locations.extend( { atLeast: 1 } );
             this.values.types.extend( { atLeast: 1 } );
-            this.values.startsOn.extend( { nullSafeDate: 0 } );
-            this.values.endsOn.extend( { nullSafeDate: 0 } );
+            this.values.startsOn.extend( { nullSafeDate: { message: "Start date must valid." } } );
+            this.values.endsOn.extend( { nullSafeDate: { message: "End date must valid." } } );
         }
 
         // --------------------------------------------------------------------------------
@@ -500,7 +524,7 @@ module ViewModels.Activities {
         */
         // --------------------------------------------------------------------------------
         getDateFormat( dateStr: string ): string {
-            var formatted:string = null;
+            var format:string = null;
             var YYYYPattern = new RegExp( "^\\d{4}$" );
             var MMYYYYPattern = new RegExp( "^\\d{1,}/\\d{4}$" );
             var MMDDYYYYPattern = new RegExp( "^\\d{1,}/\\d{1,}/\\d{4}$" );
@@ -509,17 +533,17 @@ module ViewModels.Activities {
                 dateStr = dateStr.trim();
 
                 if ( YYYYPattern.test( dateStr ) ) {
-                    formatted = "yyyy";
+                    format = "yyyy";
                 }
                 else if ( MMYYYYPattern.test( dateStr ) ) {
-                    formatted = "MM/yyyy";
+                    format = "MM/yyyy";
                 }
                 else {
-                    formatted = "MM/dd/yyyy";
-                } 
+                    format = "MM/dd/yyyy";
+                }
             }
 
-            return formatted;
+            return format;
         }
 
         // --------------------------------------------------------------------------------
@@ -572,7 +596,8 @@ module ViewModels.Activities {
             var model = ko.mapping.toJS( this );
 
             if (model.values.startsOn != null) {
-                model.values.dateFormat = this.getDateFormat(model.values.startsOn);
+                var dateStr = $("#fromDatePicker").get(0).value;
+                model.values.dateFormat = this.getDateFormat(dateStr);
                 model.values.startsOn = this.convertDate(model.values.startsOn);
             }
 
