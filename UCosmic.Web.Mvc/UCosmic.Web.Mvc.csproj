@@ -2069,6 +2069,9 @@
       <DependentUpon>Degree.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degrees.ts" />
+    <Content Include="scripts\viewmodels\degrees\Degree.min.js">
+      <DependentUpon>Degree.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\degrees\Degrees.js">
       <DependentUpon>Degrees.ts</DependentUpon>
     </Content>
