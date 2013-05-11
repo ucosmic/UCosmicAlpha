@@ -7,18 +7,6 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class DegreeCountryNameApiModel
-    {
-        public int Id { get; set; }
-        public string OfficialName { get; set; }
-    }
-
-    public class DegreeInstitutionApiModel
-    {
-        public int Id { get; set; }
-        public string OfficialName { get; set; }
-    }
-
     public class DegreeApiModel
     {
         public int Id { get; set; }
@@ -28,8 +16,10 @@ namespace UCosmic.Web.Mvc.Models
         public DateTime? WhenLastUpdated { get; set; }
         public string WhoLastUpdated { get; set; }
         public string Title { get; set; }
-        public int YearAwarded { get; set; }
-        public int InstitutionId { get; set; }
+        public int? YearAwarded { get; set; }
+        public int? InstitutionId { get; set; }
+        public string InstitutionOfficialName { get; set; }
+        public string InstitutionCountryOfficialName { get; set; }
         public string FormattedInfo { get; set; }   // used in Degree List, for display only
     }
 
@@ -96,6 +86,66 @@ namespace UCosmic.Web.Mvc.Models
                 }
             }
 
+            public class InstitutionNameResolver : ValueResolver<Degree, String>
+            {
+                private readonly IQueryEntities _entities;
+
+                public InstitutionNameResolver(IQueryEntities entities)
+                {
+                    _entities = entities;
+                }
+
+                protected override String ResolveCore(Degree source)
+                {
+                    string info = null;
+
+                    if (source.InstitutionId.HasValue)
+                    {
+                        var institution = _entities.Query<Establishment>()
+                                                .SingleOrDefault(x => x.RevisionId == source.InstitutionId);
+
+                        if (institution != null)
+                        {
+                            info = institution.OfficialName;
+                        }
+                    }
+
+                    return info;
+                }
+            }
+
+            public class InstitutionCountryNameResolver : ValueResolver<Degree, String>
+            {
+                private readonly IQueryEntities _entities;
+
+                public InstitutionCountryNameResolver(IQueryEntities entities)
+                {
+                    _entities = entities;
+                }
+
+                protected override String ResolveCore(Degree source)
+                {
+                    string info = null;
+
+                    if (source.InstitutionId.HasValue)
+                    {
+                        var institution = _entities.Query<Establishment>()
+                                                .SingleOrDefault(x => x.RevisionId == source.InstitutionId);
+
+                        if (institution != null)
+                        {
+                            var country = institution.Location.Places.FirstOrDefault(x => x.IsCountry);
+                            if (country != null)
+                            {
+                                info = country.OfficialName;
+                            }
+                        }
+                    }
+
+                    return info;
+                }
+            }
+
             protected override void Configure()
             {
                 CreateMap<Degree, DegreeApiModel>()
@@ -107,6 +157,10 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
                     .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
                     .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
+                    .ForMember(d => d.InstitutionOfficialName, o => o.ResolveUsing<InstitutionNameResolver>()
+                        .ConstructedBy(() => new InstitutionNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
+                    .ForMember(d => d.InstitutionCountryOfficialName, o => o.ResolveUsing<InstitutionCountryNameResolver>()
+                        .ConstructedBy(() => new InstitutionCountryNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
                     .ForMember(d => d.FormattedInfo, o => o.ResolveUsing<FormattedInfoResolver>()
                         .ConstructedBy(() => new FormattedInfoResolver(DependencyResolver.Current.GetService<IQueryEntities>()))) // Yucky
                     ;

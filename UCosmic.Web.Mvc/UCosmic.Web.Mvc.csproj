@@ -2032,6 +2032,9 @@
     <Content Include="scripts\viewmodels\activities\Activity.min.js.map">
       <DependentUpon>Activity.js</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\degrees\Degree.min.js.map">
+      <DependentUpon>Degree.js</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />

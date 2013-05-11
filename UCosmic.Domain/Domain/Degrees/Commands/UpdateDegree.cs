@@ -8,13 +8,17 @@ namespace UCosmic.Domain.Degrees
 {
     public class UpdateDegree
     {
-        public IPrincipal Principal { get; protected set; }
-        public int Id { get; protected set; }
-        public string Title { get; protected set; }
+        public IPrincipal Principal { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
         public int? YearAwarded { get; set; }
         public int? InstitutionId { get; set; }
-        public DateTime UpdatedOn { get; protected set; }
+        public DateTime UpdatedOn { get; set; }
         public bool NoCommit { get; set; }
+
+        public UpdateDegree()
+        {
+        }
 
         public UpdateDegree(IPrincipal principal, int id, DateTime updatedOn)
         {
@@ -65,36 +69,18 @@ namespace UCosmic.Domain.Degrees
 
             /* Retrieve the degree to update. */
             var target = _entities.Get<Degree>().Single(a => a.RevisionId == command.Id);
-
+            if (target == null)
+            {
+                string message = String.Format("Degree Id {0} not found.", command.Id);
+                throw new Exception(message);
+            }
 
             /* Update fields */
-            //target.ModeText = command.ModeText;
-            //target.Number = command.Number;
+            target.Title = command.Title;
+            target.YearAwarded = command.YearAwarded;
+            target.InstitutionId = command.InstitutionId;
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
-
-            throw new NotImplementedException();
-
-            /* Update degree values (for this mode) */
-            //var updateDegreeValuesCommand = new UpdateDegreeValues(command.Principal,
-            //                                                           targetDegreeValues.RevisionId,
-            //                                                           command.UpdatedOn)
-            //{
-            //    Title = command.Values.Title,
-            //    Content = command.Values.Content,
-            //    StartsOn = command.Values.StartsOn,
-            //    EndsOn = command.Values.EndsOn,
-            //    Mode = command.ModeText.AsEnum<DegreeMode>(),
-            //    WasExternallyFunded = command.Values.WasExternallyFunded,
-            //    WasInternallyFunded = command.Values.WasInternallyFunded,
-            //    Locations = command.Values.Locations ?? new Collection<DegreeLocation>(),
-            //    Types = command.Values.Types ?? new Collection<DegreeType>(),
-            //    Tags = command.Values.Tags ?? new Collection<DegreeTag>(),
-            //    Documents = command.Values.Documents ?? new Collection<DegreeDocument>(),
-            //    NoCommit = true
-            //};
-
-            //_updateDegreeValues.Handle(updateDegreeValuesCommand);
 
             _entities.Update(target);
 

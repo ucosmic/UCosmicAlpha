@@ -2604,9 +2604,11 @@ namespace Links
                 public static readonly string Degree_ts = Url("Degree.ts");
                 public static readonly string Degree_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degree.min.js") ? Url("Degree.min.js") : Url("Degree.js");
                               
+                public static readonly string Degree_min_js = Url("Degree.min.js");
                 public static readonly string Degrees_ts = Url("Degrees.ts");
                 public static readonly string Degrees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degrees.min.js") ? Url("Degrees.min.js") : Url("Degrees.js");
                               
+                public static readonly string Degrees_min_js = Url("Degrees.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
                 public static readonly string ServiceApiModl_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModl.d.min.js") ? Url("ServiceApiModl.d.min.js") : Url("ServiceApiModl.d.js");
                               

@@ -18,26 +18,13 @@
             var degreeViewModel = new ViewModels.Degrees.Degree(degreeId);
             degreeViewModel.load()
                 .done(function() {
-                    //degreeViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");
-
-                    //degreeViewModel.setupValidation();
-
+                    degreeViewModel.setupWidgets("institution");
+                    degreeViewModel.setupValidation();
                     ko.applyBindings(degreeViewModel, $("#degree-edit")[0]);
 
                     ///* KendoUI Bug? - Can't seem to preload values unless I do this. */
                     //var countrySelector = $("#countrySelector").data("kendoMultiSelect");
                     //countrySelector.value(degreeViewModel.selectedLocations());
-
-                    //var datePicker = $("#fromDatePicker").data("kendoDatePicker");
-                    //datePicker.value(degreeViewModel.values.startsOn());
-
-                    //datePicker = $("#toDatePicker").data("kendoDatePicker");
-                    //datePicker.value(degreeViewModel.values.endsOn());
-
-                    ///* NOTE: Using TinyMCE autosave plugin will disable window.onbeforeunload. */
-                    //window.onbeforeunload = function() {
-                    //    degreeViewModel.autoSave(degreeViewModel, null);
-                    //};
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
@@ -67,33 +54,32 @@
 
                         <div style="margin-bottom: 38px">
                             <!-- TITLE -->
-                            <div style="margin-bottom: 4px">
+                            <div style="margin-bottom: 8px">
                                 <span>
                                     <label for="title" style="width: 120px; display:inline-block; text-align: right">Title</label>
-                                    <input type="text" id="title" style="width: 400px" data-bind="value: title" />
+                                    <input type="text" id="title" style="width: 400px; margin-right: 8px" data-bind="value: title" />
                                 </span>
                             </div>
 
                             <!-- YEAR AWARDED -->
-                            <div style="margin-bottom: 4px">
+                            <div style="margin-bottom: 8px">
                                 <span>
                                     <label for="yearAwarded" style="width: 120px; display:inline-block; text-align: right">Year Awarded</label>
-                                    <input type="text" id="yearAwarded" style="width: 60px" data-bind="value: yearAwarded" />
+                                    <input type="text" id="yearAwarded" style="width: 60px; margin-right: 8px" data-bind="value: yearAwarded" />
                                 </span>
                             </div>
 
                             <!-- INSTITUTION -->
-                            <div style="margin-bottom: 4px">
+                            <div style="margin-bottom: 14px">
                                 <span>
                                     <label for="institution" style="width: 120px; display:inline-block; text-align: right">Institution</label>
-                                    <input type="text" id="institution" style="width: 800px" data-bind="value: institutionId" />
+                                    <input type="text" id="institution" style="width: 800px; height: 32px" data-bind="value: institutionOfficialName" />
                                 </span>
                             </div>
 
                             <!-- INSTITUTION COUNTRY -->
-                            <div style="margin-bottom: 4px">
-                                <span style="padding-left: 122px"><span>located in</span>
-                                </span>
+                            <div style="margin-bottom: 8px">
+                                <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
                             </div>
                         </div>
                             
@@ -104,7 +90,7 @@
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size:smaller; color:slategray">
                                 <span>Last updated</span>
-                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).toDate() : ''"></label>
+                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).toDate('MM/DD/YY') : ''"></label>
                                 <span> by </span>
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
@@ -133,7 +119,7 @@
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">
     <span>
-        <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
+        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
         <input type="button" value="Guide Me" style="margin-left: 50px"/>
         <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
     </span>

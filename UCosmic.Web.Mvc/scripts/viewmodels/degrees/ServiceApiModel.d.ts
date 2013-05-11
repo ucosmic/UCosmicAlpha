@@ -18,12 +18,16 @@ module Service.ApiModels.Degree {
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
         entityId: KnockoutObservableString;     // guid converted to string
-        degree: KnockoutObservableString;
+        title: KnockoutObservableString;
         yearAwarded: KnockoutObservableNumber;
         institutionId: KnockoutObservableNumber;
         institutionOfficialName: KnockoutObservableString;
-        institutionCountryId: KnockoutObservableNumber;
         institutionCountryOfficialName: KnockoutObservableString;
+
+        /* Knockout-Validation */
+        errors: KnockoutValidationErrors;
+        isValid: () => bool;
+        isAnyMessageShown: () => bool;
     }
 
     export interface IDegreeCountries {

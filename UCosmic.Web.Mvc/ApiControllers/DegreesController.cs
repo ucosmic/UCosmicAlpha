@@ -97,11 +97,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
 
-            var degree = Mapper.Map<Degree>(model);
-
             try
             {
-                var updateDegreeCommand = new UpdateDegree(User, degree.RevisionId, DateTime.Now);
+                var updateDegreeCommand = Mapper.Map<UpdateDegree>(model);
+                updateDegreeCommand.UpdatedOn = DateTime.UtcNow;
+                updateDegreeCommand.Principal = User;
                 _updateDegree.Handle(updateDegreeCommand);
             }
             catch (Exception ex)
