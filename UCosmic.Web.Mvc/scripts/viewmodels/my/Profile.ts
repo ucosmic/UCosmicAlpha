@@ -134,7 +134,7 @@ module ViewModels.My {
 
         startTab(tabName: string): void {
             var viewModel: any;
-            if ( tabName === "Activities" ) {
+            if ( (tabName === "Activities") || (tabName === "activities") ) {
                 if ( this._activitiesViewModel == null ) {
                     this._activitiesViewModel = new ViewModels.Activities.ActivityList( this.personId );
                     this._activitiesViewModel.load()
@@ -145,7 +145,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( tabName === "Geographic Expertise" ) {
+            } else if ( (tabName === "Geographic Expertise") || (tabName === "geographic-expertise") ) {
                 if ( this._geographicExpertisesViewModel == null ) {
                     this._geographicExpertisesViewModel = new ViewModels.GeographicExpertises.GeographicExpertiseList( this.personId );
                     this._geographicExpertisesViewModel.load()
@@ -156,7 +156,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( tabName === "Language Expertise" ) {
+            } else if ( (tabName === "Language Expertise") || (tabName === "language-expertise") ) {
                 if ( this._languageExpertisesViewModel == null ) {
                     this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
                     this._languageExpertisesViewModel.load()
@@ -167,7 +167,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( tabName === "Formal Education" ) {
+            } else if ( (tabName === "Formal Education") || (tabName === "formal-education") ) {
                 if ( this._degreesViewModel == null ) {
                     this._degreesViewModel = new ViewModels.Degrees.DegreeList( this.personId );
                     this._degreesViewModel.load()
@@ -178,7 +178,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( tabName === "Affiliations" ) {
+            } else if ( (tabName === "Affiliations") || (tabName === "affiliations") ) {
                 if ( this._affiliationsViewModel == null ) {
                     this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
                     this._affiliationsViewModel.load()
@@ -193,7 +193,9 @@ module ViewModels.My {
         }
 
         tabClickHandler(event: any): void {
-           this.startTab( event.item.innerText );
+            var tabName = event.item.innerText; // IE
+            if (tabName == null) tabName = event.item.textContent; // FF
+           this.startTab( tabName );
         }
 
         startEditing(): void { // show the editor

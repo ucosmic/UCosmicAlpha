@@ -361,7 +361,7 @@ module ViewModels.Activities {
                     var MMDDYYYYPattern = new RegExp( "^\\d{1,}/\\d{1,}/\\d{4}$" );
 
                     if ( ( val != null ) && ( val.length > 0 ) ) {
-                        val = val.trim();
+                        val = $.trim(val);
 
                         if ( YYYYPattern.test( val ) ) {
                             val = "01/01/" + val;
@@ -530,7 +530,7 @@ module ViewModels.Activities {
             var MMDDYYYYPattern = new RegExp( "^\\d{1,}/\\d{1,}/\\d{4}$" );
 
             if ( ( dateStr != null ) && ( dateStr.length > 0 ) ) {
-                dateStr = dateStr.trim();
+                dateStr = $.trim(dateStr);
 
                 if ( YYYYPattern.test( dateStr ) ) {
                     format = "yyyy";
@@ -562,7 +562,7 @@ module ViewModels.Activities {
             else {
                 var dateStr = date;
                 if ( ( dateStr != null ) && ( dateStr.length > 0 ) ) {
-                    dateStr = dateStr.trim();
+                    dateStr = $.trim(dateStr);
 
                     if ( YYYYPattern.test( dateStr ) ) {
                         dateStr = "01/01/" + dateStr; // fixes Moment rounding error
@@ -850,7 +850,7 @@ module ViewModels.Activities {
                 isInstitution = true;
                 this.newEstablishment = null;
             }
-            newText = ( newText != null ) ? newText.trim() : null;
+            newText = ( newText != null ) ? $.trim(newText) : null;
             if ( ( newText != null ) &&
                           ( newText.length != 0 ) &&
                           ( !this.haveTag( newText ) ) ) {

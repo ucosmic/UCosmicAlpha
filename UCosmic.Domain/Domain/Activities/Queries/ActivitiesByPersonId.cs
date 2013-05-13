@@ -34,7 +34,7 @@ namespace UCosmic.Domain.Activities
              *  activities with no dates are listed last
              */
 
-            var employeeActivityTypesList = _entities.Query<EmployeeActivityType>().ToArray().AsQueryable();
+            //var employeeActivityTypesList = _entities.Query<EmployeeActivityType>().ToArray().AsQueryable();
 
             IQueryable<Activity> undatedResults = _entities.Query<Activity>()
                                                            .Where(
@@ -45,26 +45,37 @@ namespace UCosmic.Domain.Activities
                                                             )
                                                            .WithPersonId(query.PersonId)
                                                            .OrderBy(a => a.Values.FirstOrDefault().Title)
-                                                           //.ThenBy(x => x.Values.FirstOrDefault().Types.Select(y => y.Type).OrderBy(y => y.Rank).FirstOrDefault())
                                                            .ToArray().AsQueryable();
 
+            IQueryable<Activity> datedResults = _entities.Query<Activity>()
+                                                         .Where(
+                                                             a =>
+                                                             a.Values.Any(v => (!v.OnGoing.HasValue || !v.OnGoing.Value) &&
+                                                                               (v.ModeText == a.ModeText) &&
+                                                                               (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
+                                                             (a.EditSourceId == null)
+                )
+                                                         .WithPersonId(query.PersonId)
+                                                         .OrderByDescending(
+                                                             a =>
+                                                             a.Values.FirstOrDefault().EndsOn.HasValue
+                                                                 ? a.Values.FirstOrDefault().EndsOn.Value
+                                                                 : a.Values.FirstOrDefault().StartsOn.Value)
+                                                         .ThenBy(a => a.Values.FirstOrDefault().Title)
+                //.ThenBy(x => x.Values.FirstOrDefault().Types.Select(y => y.Type).OrderBy(y => y.Rank).FirstOrDefault())
+                                                         .ToArray().AsQueryable();
+
             IQueryable<Activity> results = _entities.Query<Activity>()
-                                                    .Where(
-                                                        a =>
-                                                        a.Values.Any(v => (v.ModeText == a.ModeText) && 
-                                                        (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
-                                                        (a.EditSourceId == null)
-                                                    )
-                                                    .WithPersonId(query.PersonId)
-                                                    .OrderByDescending(
-                                                        a =>
-                                                        a.Values.FirstOrDefault().EndsOn.HasValue
-                                                            ? a.Values.FirstOrDefault().EndsOn.Value
-                                                            : a.Values.FirstOrDefault().StartsOn.Value)
-                                                    .ThenBy(a => a.Values.FirstOrDefault().Title)
-                                                    //.ThenBy(x => x.Values.FirstOrDefault().Types.Select(y => y.Type).OrderBy(y => y.Rank).FirstOrDefault())
-                                                    .ToArray().AsQueryable()
-                                                    .Concat(undatedResults);
+                                                           .Where(
+                                                               a =>
+                                                               a.Values.Any(v => v.OnGoing.HasValue && v.OnGoing.Value))
+                                                           .WithPersonId(query.PersonId)
+                                                           .OrderByDescending(a => a.Values.FirstOrDefault().StartsOn.Value)
+                                                           .ThenBy(a => a.Values.FirstOrDefault().Title)
+                                                           .ToArray().AsQueryable()
+                                                           .Concat(datedResults)
+                                                           .Concat(undatedResults);
+
 
             var pagedResults = new PagedQueryResult<Activity>(results, query.PageSize, query.PageNumber);
 

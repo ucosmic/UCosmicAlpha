@@ -2604,6 +2604,7 @@ namespace Links
                 public static readonly string Degree_ts = Url("Degree.ts");
                 public static readonly string Degree_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degree.min.js") ? Url("Degree.min.js") : Url("Degree.js");
                               
+                public static readonly string Degree_min_js_map = Url("Degree.min.js.map");
                 public static readonly string Degree_min_js = Url("Degree.min.js");
                 public static readonly string Degrees_ts = Url("Degrees.ts");
                 public static readonly string Degrees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degrees.min.js") ? Url("Degrees.min.js") : Url("Degrees.js");
@@ -2722,6 +2723,7 @@ namespace Links
                 public static readonly string Profile_ts = Url("Profile.ts");
                 public static readonly string Profile_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile.min.js") ? Url("Profile.min.js") : Url("Profile.js");
                               
+                public static readonly string Profile_min_js_map = Url("Profile.min.js.map");
                 public static readonly string Profile_min_js = Url("Profile.min.js");
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }

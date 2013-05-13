@@ -1,7 +1,6 @@
 ﻿using System.Web.Mvc;
-using UCosmic.Domain.Activities;
-using UCosmic.Web.Mvc.Models;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -16,9 +15,10 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [Authorize]
         [GET("my/profile")]
-        public virtual ActionResult Index()
+        public virtual ActionResult Index(int? tab)
         {
-            return View();
+            var model = new ProfileModel { TabIndex = tab.HasValue ? tab.Value : 0 };
+            return View(model);
         }
 
         [Authorize]

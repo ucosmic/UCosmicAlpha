@@ -79,7 +79,7 @@ var ViewModels;
             Profile.prototype.startTab = function (tabName) {
                 var _this = this;
                 var viewModel;
-                if(tabName === "Activities") {
+                if((tabName === "Activities") || (tabName === "activities")) {
                     if(this._activitiesViewModel == null) {
                         this._activitiesViewModel = new ViewModels.Activities.ActivityList(this.personId);
                         this._activitiesViewModel.load().done(function () {
@@ -88,7 +88,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if(tabName === "Geographic Expertise") {
+                } else if((tabName === "Geographic Expertise") || (tabName === "geographic-expertise")) {
                     if(this._geographicExpertisesViewModel == null) {
                         this._geographicExpertisesViewModel = new ViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
                         this._geographicExpertisesViewModel.load().done(function () {
@@ -97,7 +97,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if(tabName === "Language Expertise") {
+                } else if((tabName === "Language Expertise") || (tabName === "language-expertise")) {
                     if(this._languageExpertisesViewModel == null) {
                         this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
                         this._languageExpertisesViewModel.load().done(function () {
@@ -106,7 +106,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if(tabName === "Formal Education") {
+                } else if((tabName === "Formal Education") || (tabName === "formal-education")) {
                     if(this._degreesViewModel == null) {
                         this._degreesViewModel = new ViewModels.Degrees.DegreeList(this.personId);
                         this._degreesViewModel.load().done(function () {
@@ -115,7 +115,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if(tabName === "Affiliations") {
+                } else if((tabName === "Affiliations") || (tabName === "affiliations")) {
                     if(this._affiliationsViewModel == null) {
                         this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList(this.personId);
                         this._affiliationsViewModel.load().done(function () {
@@ -127,7 +127,11 @@ var ViewModels;
                 }
             };
             Profile.prototype.tabClickHandler = function (event) {
-                this.startTab(event.item.innerText);
+                var tabName = event.item.innerText;
+                if(tabName == null) {
+                    tabName = event.item.textContent;
+                }
+                this.startTab(tabName);
             };
             Profile.prototype.startEditing = function () {
                 this.editMode(true);

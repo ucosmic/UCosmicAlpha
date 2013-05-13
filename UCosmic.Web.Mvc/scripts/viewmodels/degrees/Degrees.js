@@ -55,7 +55,7 @@ var ViewModels;
                             click: function () {
                                 viewModel.deleteEducationById(data.id());
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get();
+                                location.href = App.Routes.Mvc.My.Profile.get(3);
                             }
                         }, 
                         {

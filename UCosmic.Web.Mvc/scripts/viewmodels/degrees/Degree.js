@@ -57,7 +57,7 @@ var ViewModels;
                 var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
                 var value = (me.value() != null) ? me.value().toString() : null;
                 if(value != null) {
-                    value = value.trim();
+                    value = $.trim(value);
                 }
                 if((value == null) || (value.length == 0)) {
                     me.value(null);
@@ -106,7 +106,7 @@ var ViewModels;
                 }
                 if(this.yearAwarded() != null) {
                     var yearAwaredStr = this.yearAwarded().toString();
-                    yearAwaredStr = yearAwaredStr.trim();
+                    yearAwaredStr = $.trim(yearAwaredStr);
                     if(yearAwaredStr.length == 0) {
                         this.yearAwarded(null);
                     }
@@ -127,8 +127,16 @@ var ViewModels;
                         alert(textStatus + " | " + errorThrown);
                     }
                 });
+                location.href = App.Routes.Mvc.My.Profile.get(3);
+            };
+            Degree.prototype.isEmpty = function () {
+                if((this.title() == "New Degree") && (this.yearAwarded() == null) && (this.institutionId() == null)) {
+                    return true;
+                }
+                return false;
             };
             Degree.prototype.cancel = function (item, event, mode) {
+                var me = this;
                 $("#cancelConfirmDialog").dialog({
                     modal: true,
                     resizable: false,
@@ -139,7 +147,19 @@ var ViewModels;
                         },
                         "Cancel and lose changes": function () {
                             $(this).dialog("close");
-                            location.href = App.Routes.Mvc.My.Profile.get();
+                            if(me.isEmpty()) {
+                                $.ajax({
+                                    async: false,
+                                    type: "DELETE",
+                                    url: App.Routes.WebApi.Degrees.del(me.id()),
+                                    success: function (data, textStatus, jqXHR) {
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        alert(textStatus);
+                                    }
+                                });
+                            }
+                            location.href = App.Routes.Mvc.My.Profile.get(3);
                         }
                     }
                 });

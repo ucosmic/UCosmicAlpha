@@ -2036,6 +2036,9 @@
       <DependentUpon>Degree.js</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\my\Profile.min.js.map">
+      <DependentUpon>Profile.js</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />

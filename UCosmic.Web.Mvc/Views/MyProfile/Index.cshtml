@@ -1,4 +1,6 @@
-﻿@{
+﻿ @model UCosmic.Web.Mvc.Models.ProfileModel
+
+@{
     var customProfileTitle = "My UCosmic Profile";
     var tenancy = Request.Tenancy();
     if (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
@@ -26,15 +28,24 @@
 
         $( function () {        
             var profileViewModel = new ViewModels.My.Profile();
-            $(profileViewModel).on('ready', function () {
+            $( profileViewModel ).on( 'ready', function () {
+                
+                $( '#tabstrip' ).kendoTabStrip( {
+                    select: function ( e ) { profileViewModel.tabClickHandler( e ); },
+                    animation: false
+                } ).show();
+                
                 ko.applyBindings( profileViewModel, $( '#my_profile' )[0] );
-                profileViewModel.startTab("Activities");
+
+                /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
+                if (@Model.TabIndex == 0) {
+                    profileViewModel.startTab("activities");
+                } else {
+                    $( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.TabIndex );
+                }
+                
+                
             } );
-            
-            $( '#tabstrip' ).kendoTabStrip( {
-                activate: function ( e ) { profileViewModel.tabClickHandler( e ); },
-                animation: false
-            } ).show();
         });
 
     </script>

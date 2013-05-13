@@ -8,6 +8,10 @@ module App.Routes {
         return value.lastIndexOf('/') == value.length - 1;
     }
 
+    function hasTrailingQM(value: string): bool {
+        return value.lastIndexOf('?') == value.length - 1;
+    }
+
     export module WebApi {
 
         export var urlPrefix: string = 'api';
@@ -508,6 +512,12 @@ module App.Routes {
             return url;
         }
 
+        function makeUrlWithParams(relativeUrl: string): string {
+            var url = Routes.applicationPath + relativeUrl;
+            if (!hasTrailingQM(url)) url = url + '?';
+            return url;
+        }
+
         export module Establishments {
             export function show(establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);
@@ -532,8 +542,12 @@ module App.Routes {
         export module My
         {
             export module Profile {
-                export function get () {
-                    return makeUrl( 'my/profile' );
+                export function get (tabIndex?: number) {
+                    var url = makeUrl( 'my/profile' );
+                    if (tabIndex != null) {
+                        url = makeUrlWithParams( 'my/profile' ) + "tab=" + tabIndex;
+                    }
+                    return url;
                 }
                 export function activityEdit( activityId: string ) {
                     var url = makeUrl( 'my/activity/' );

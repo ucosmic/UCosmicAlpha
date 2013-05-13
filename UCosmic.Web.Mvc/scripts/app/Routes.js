@@ -5,6 +5,9 @@ var App;
         function hasTrailingSlash(value) {
             return value.lastIndexOf('/') == value.length - 1;
         }
+        function hasTrailingQM(value) {
+            return value.lastIndexOf('?') == value.length - 1;
+        }
         (function (WebApi) {
             WebApi.urlPrefix = 'api';
             function makeUrl(relativeUrl) {
@@ -554,6 +557,13 @@ var App;
                 }
                 return url;
             }
+            function makeUrlWithParams(relativeUrl) {
+                var url = Routes.applicationPath + relativeUrl;
+                if(!hasTrailingQM(url)) {
+                    url = url + '?';
+                }
+                return url;
+            }
             (function (Establishments) {
                 function show(establishmentId) {
                     return makeUrl('establishments/' + establishmentId);
@@ -585,8 +595,12 @@ var App;
             var Identity = Mvc.Identity;
             (function (My) {
                 (function (Profile) {
-                    function get() {
-                        return makeUrl('my/profile');
+                    function get(tabIndex) {
+                        var url = makeUrl('my/profile');
+                        if(tabIndex != null) {
+                            url = makeUrlWithParams('my/profile') + "tab=" + tabIndex;
+                        }
+                        return url;
                     }
                     Profile.get = get;
                     function activityEdit(activityId) {
