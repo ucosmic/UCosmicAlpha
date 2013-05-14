@@ -3,7 +3,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", './PagedSearch', './SearchResult', './places/ServerApiModel'], function(require, exports, __PagedSearch__, __SearchResult__, __Places__) {
+define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../places/ServerApiModel'], function(require, exports, __PagedSearch__, __SearchResult__, __Places__) {
     var PagedSearch = __PagedSearch__;
 
     var SearchResult = __SearchResult__;

@@ -1,5 +1,4 @@
-/// <reference path="../../require.d.ts" />
-/// <reference path="../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../../ko/knockout-2.2.d.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
@@ -11,7 +10,7 @@
 //    notifySubscribers(valueToWrite: Name[], topic?: string);
 //}
 
-import Places = module('./places/ServerApiModel'); 
+import Places = module('../places/ServerApiModel');
 
 export interface IServerApiFlatModel {
     id: number;

@@ -2,21 +2,21 @@
 /// <reference path="../../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../../google/google.maps.d.ts" />
 
-//interface KnockoutObservableCountryModelArray extends KnockoutObservableArrayFunctions {
-//    (): ViewModels.Places.IServerCountryApiModel[];
-//    (value: ViewModels.Places.IServerCountryApiModel[]): void;
+export interface KnockoutObservableCountryModelArray extends KnockoutObservableArrayFunctions {
+    (): IServerCountryApiModel[];
+    (value: IServerCountryApiModel[]): void;
 
-//    subscribe(callback: (newValue: ViewModels.Places.IServerCountryApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
-//    notifySubscribers(valueToWrite: ViewModels.Places.IServerCountryApiModel[], topic?: string);
-//}
+    subscribe(callback: (newValue: IServerCountryApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: IServerCountryApiModel[], topic?: string);
+}
 
-//interface KnockoutObservablePlaceModelArray extends KnockoutObservableArrayFunctions {
-//    (): ViewModels.Places.IServerApiModel[];
-//    (value: ViewModels.Places.IServerApiModel[]): void;
+export interface KnockoutObservablePlaceModelArray extends KnockoutObservableArrayFunctions {
+    (): IServerApiModel[];
+    (value: IServerApiModel[]): void;
 
-//    subscribe(callback: (newValue: ViewModels.Places.IServerApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
-//    notifySubscribers(valueToWrite: ViewModels.Places.IServerApiModel[], topic?: string);
-//}
+    subscribe(callback: (newValue: IServerApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: IServerApiModel[], topic?: string);
+}
 
 
     export interface IServerPointModel {

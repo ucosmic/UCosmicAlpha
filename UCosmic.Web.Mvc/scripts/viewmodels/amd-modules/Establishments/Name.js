@@ -1,4 +1,4 @@
-define(["require", "exports", './ServerApiModel', './Spinner'], function(require, exports, __SearchApiModel__, __Spinner__) {
+define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], function(require, exports, __SearchApiModel__, __Spinner__) {
     var SearchApiModel = __SearchApiModel__;
 
     

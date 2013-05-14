@@ -1,17 +1,17 @@
-/// <reference path="../../jquery/jquery-1.8.d.ts" />
-/// <reference path="../../ko/knockout-2.2.d.ts" />
-/// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../sammy/sammyjs-0.7.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../../jquery/jquery-1.8.d.ts" />
+/// <reference path="../../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../../ko/knockout.extensions.d.ts" />
+/// <reference path="../../../sammy/sammyjs-0.7.d.ts" />
+/// <reference path="../../../app/App.ts" />
+/// <reference path="../../../app/SideSwiper.ts" />
+/// <reference path="../../../app/Routes.ts" />
+ 
 
-
-import PagedSearch = module('./PagedSearch')
+import PagedSearch = module('../Widgets/PagedSearch')
 import SearchResult = module('./SearchResult');
-import Lens = module('./Lens');
-import Places = module('./places/ServerApiModel');
+import Lens = module('../Widgets/Lens');
+import Places = module('../places/ServerApiModel');
 import SearchApiModel = module('./ServerApiModel');
 export class Search extends PagedSearch.PagedSearch {
         

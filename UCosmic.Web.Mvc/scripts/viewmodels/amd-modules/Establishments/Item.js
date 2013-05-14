@@ -1,4 +1,4 @@
-define(["require", "exports", './SearchResult', './Search', './Name', './Location', './Url', './Spinner', 'languages/ServerApiModel'], function(require, exports, __SearchResult__, __Search__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
+define(["require", "exports", './SearchResult', './Search', './Name', './Location', './Url', '../Widgets/Spinner', 'languages/ServerApiModel'], function(require, exports, __SearchResult__, __Search__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
     
     var gm = google.maps;
     var SearchResult = __SearchResult__;

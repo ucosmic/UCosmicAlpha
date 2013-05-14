@@ -1,4 +1,4 @@
-define(["require", "exports", './places/ServerApiModel', './Spinner'], function(require, exports, __Places__, __Spinner__) {
+define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner'], function(require, exports, __Places__, __Spinner__) {
     
     var Places = __Places__;
 

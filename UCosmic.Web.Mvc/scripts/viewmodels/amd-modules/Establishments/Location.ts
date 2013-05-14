@@ -1,13 +1,13 @@
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
-/// <reference path="../Spinner.ts" />
-/// <reference path="../Flasher.ts" />
+/// <reference path="../../../google/ToolsOverlay.ts" />
+/// <reference path="../../../app/Routes.ts" />
+/// <reference path="../../places/ServerApiModel.ts" />
+/// <reference path="../../Spinner.ts" />
+/// <reference path="../../Flasher.ts" />
 
 
 import SearchApiModel = module('./ServerApiModel')
-import Places = module('./places/ServerApiModel');
-import Spinner = module('./Spinner')
+import Places = module('../places/ServerApiModel');
+import Spinner = module('../Widgets/Spinner')
 
     import gm = google.maps
 

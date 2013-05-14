@@ -1,17 +1,15 @@
-﻿/// <reference path="../../jquery/jquery-1.8.d.ts" />
-/// <reference path="../../ko/knockout-2.2.d.ts" />
-/// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../google/google.maps.d.ts" />
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../Spinner.ts" />
+﻿/// <reference path="../../../jquery/jquery-1.8.d.ts" />
+/// <reference path="../../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../../ko/knockout.extensions.d.ts" />
+/// <reference path="../../../google/google.maps.d.ts" />
+/// <reference path="../../../google/ToolsOverlay.ts" />
+/// <reference path="../../../app/App.ts" />
+/// <reference path="../../../app/SideSwiper.ts" />
+/// <reference path="../../../app/Routes.ts" />
+/// <reference path="../../Spinner.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
-/// <reference path="../languages/ServerApiModel.ts" />
-/// <reference path="Url.ts" />
-/// <reference path="Location.ts" />
+/// <reference path="../languages/ServerApiModel.ts" /> 
 
 
 import SearchApiModel = module('./ServerApiModel')
@@ -21,7 +19,7 @@ import Search = module('./Search')
 import Name = module('./Name')
 import Location = module('./Location')
 import Url = module('./Url')
-import Spinner = module('./Spinner')
+import Spinner = module('../Widgets/Spinner')
 import Languages = module('languages/ServerApiModel')
 
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
@@ -293,9 +291,9 @@ import Languages = module('languages/ServerApiModel')
         }
 
         //#region Names
-
+        
         // observables, computeds, & variables
-        languages: KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
+        languages: Languages.KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
         Names: KnockoutObservableArray = ko.observableArray();
         editingName: KnockoutObservableNumber = ko.observable(0);
         canAddName: KnockoutComputed;
