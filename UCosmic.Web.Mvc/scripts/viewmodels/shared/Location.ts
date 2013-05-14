@@ -358,7 +358,7 @@ import Spinner = module('./Spinner')
 
             if (this.ownerId) { // set up based on current owner id
                 this.isLoaded(false);
-                $.get(App.Routes.WebApi.Shared.Locations.get(this.ownerId))
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
                 .done((response: SearchApiModel.IServerLocationApiModel): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         this.loadMapZoom(response);
@@ -502,7 +502,7 @@ import Spinner = module('./Spinner')
 
             this.saveSpinner.start();
             $.ajax({
-                url: App.Routes.WebApi.Shared.Locations.put(me.ownerId),
+                url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
                 type: 'PUT',
                 data: me.serializeData()
             })
@@ -584,7 +584,7 @@ import Spinner = module('./Spinner')
 
             // restore initial values
             this.isLoaded(false);
-            $.get(App.Routes.WebApi.Shared.Locations.get(this.ownerId))
+            $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
                 .done((response: SearchApiModel.IServerLocationApiModel): void => {
                     // reset zoom
                     this.map.setZoom(1);

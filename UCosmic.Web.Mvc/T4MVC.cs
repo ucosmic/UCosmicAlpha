@@ -1336,8 +1336,6 @@ namespace Links
         }
     
         public static readonly string require_d_ts = Url("require.d.ts");
-        public static readonly string require_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/require.d.min.js") ? Url("require.d.min.js") : Url("require.d.js");
-                      
         public static readonly string require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/require.min.js") ? Url("require.min.js") : Url("require.js");
                       
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2605,8 +2603,6 @@ namespace Links
                 public static readonly string RequireAgreement_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireAgreement.min.js") ? Url("RequireAgreement.min.js") : Url("RequireAgreement.js");
                               
                 public static readonly string RequireAgreement_min_js = Url("RequireAgreement.min.js");
-                public static readonly string requireAgreements_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireAgreements.min.js") ? Url("requireAgreements.min.js") : Url("requireAgreements.js");
-                              
                 public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
                 public static readonly string modItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modItWorked.min.js") ? Url("modItWorked.min.js") : Url("modItWorked.js");
                               
@@ -2770,32 +2766,25 @@ namespace Links
                 public static readonly string RepModuleSettings_min_js = Url("RepModuleSettings.min.js");
             }
         
-            public static readonly string RequireTest_ts = Url("RequireTest.ts");
-            public static readonly string RequireTest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTest.min.js") ? Url("RequireTest.min.js") : Url("RequireTest.js");
-                          
-            public static readonly string RequireTest_min_js = Url("RequireTest.min.js");
-            public static readonly string spinnerRequireTest_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/spinnerRequireTest.min.js") ? Url("spinnerRequireTest.min.js") : Url("spinnerRequireTest.js");
-                          
-            public static readonly string spinnerRequireTest_min_js = Url("spinnerRequireTest.min.js");
-            public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
-            public static readonly string modItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/modItWorked.min.js") ? Url("modItWorked.min.js") : Url("modItWorked.js");
-                          
-            public static readonly string modItWorked_min_js = Url("modItWorked.min.js");
-            public static readonly string RequireTestModItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTestModItWorked.min.js") ? Url("RequireTestModItWorked.min.js") : Url("RequireTestModItWorked.js");
-                          
-            public static readonly string RequireTestModItWorked_min_js = Url("RequireTestModItWorked.min.js");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class shared {
-                private const string URLPATH = "~/scripts/viewmodels/shared";
+            public static class Shared {
+                private const string URLPATH = "~/scripts/viewmodels/Shared";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class Establishments {
+                    private const string URLPATH = "~/scripts/viewmodels/Shared/Establishments";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                }
+            
                 public static readonly string Item_ts = Url("Item.ts");
                 public static readonly string Item_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Item.min.js") ? Url("Item.min.js") : Url("Item.js");
                               
                 public static readonly string Item_min_js = Url("Item.min.js");
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class languages {
-                    private const string URLPATH = "~/scripts/viewmodels/shared/languages";
+                    private const string URLPATH = "~/scripts/viewmodels/Shared/languages";
                     public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                     public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                     public static readonly string ServerApiModel_ts = Url("ServerApiModel.ts");
@@ -2824,7 +2813,7 @@ namespace Links
                 public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class places {
-                    private const string URLPATH = "~/scripts/viewmodels/shared/places";
+                    private const string URLPATH = "~/scripts/viewmodels/Shared/places";
                     public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                     public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                     public static readonly string ServerApiModel_ts = Url("ServerApiModel.ts");
@@ -2847,6 +2836,13 @@ namespace Links
                 public static readonly string ServerApiModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.min.js") ? Url("ServerApiModel.min.js") : Url("ServerApiModel.js");
                               
                 public static readonly string ServerApiModel_min_js = Url("ServerApiModel.min.js");
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class Shared_ {
+                    private const string URLPATH = "~/scripts/viewmodels/Shared/Shared";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                }
+            
                 public static readonly string Spinner_ts = Url("Spinner.ts");
                 public static readonly string Spinner_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Spinner.min.js") ? Url("Spinner.min.js") : Url("Spinner.js");
                               

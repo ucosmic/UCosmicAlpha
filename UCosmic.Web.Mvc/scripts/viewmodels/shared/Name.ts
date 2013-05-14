@@ -38,7 +38,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
                 callback(true);
             }
             else if (!this._isAwaitingResponse) {
-                var route = App.Routes.WebApi.Shared.Names
+                var route = App.Routes.WebApi.Establishments.Names
                     .validateText(vm.ownerId(), vm.id());
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
@@ -220,7 +220,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
 
                 if (this.id()) {
                     $.ajax({ // submit ajax PUT request
-                        url: App.Routes.WebApi.Shared.Names.put(this.owner.id, this.id()),
+                        url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
                         type: 'PUT',
                         data: this.serializeData()
                     })
@@ -228,7 +228,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
                 }
                 else if (this.owner.id) {
                     $.ajax({ // submit ajax POST request
-                        url: App.Routes.WebApi.Shared.Names.post(this.owner.id),
+                        url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
                         type: 'POST',
                         data: this.serializeData()
                     })
@@ -284,7 +284,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
                             shouldRemainSpinning = true;
                             this.$confirmPurgeDialog.dialog('close');
                             $.ajax({ // submit ajax DELETE request
-                                url: App.Routes.WebApi.Shared.Names.del(this.owner.id, this.id()),
+                                url: App.Routes.WebApi.Establishments.Names.del(this.owner.id, this.id()),
                                 type: 'DELETE'
                             })
                             .done(this.mutationSuccess)

@@ -77,7 +77,7 @@ import Languages = module('languages/ServerApiModel')
         private _ruleName: string = 'validEstablishmentUCosmicCode';
         validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
             if (this._isValidatable(vm)) {
-                var route = App.Routes.WebApi.Shared
+                var route = App.Routes.WebApi.Establishments
                     .validateUCosmicCode(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
@@ -123,7 +123,7 @@ import Languages = module('languages/ServerApiModel')
         private _ruleName: string = 'validEstablishmentParentId';
         validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
             if (this._isValidatable(vm)) {
-                var route = App.Routes.WebApi.Shared
+                var route = App.Routes.WebApi.Establishments
                     .validateParentId(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
@@ -252,7 +252,7 @@ import Languages = module('languages/ServerApiModel')
 
             // load the scalars
             var categoriesPact = $.Deferred();
-            $.get(App.Routes.WebApi.Shared.Categories.get())
+            $.get(App.Routes.WebApi.Establishments.Categories.get())
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     categoriesPact.resolve(data);
                 })
@@ -305,7 +305,7 @@ import Languages = module('languages/ServerApiModel')
         // methods
         requestNames(callback?: (response?: SearchApiModel.IServerNameApiModel[]) => void ): void {
             this.NamesSpinner.start();
-            $.get(App.Routes.WebApi.Shared.Names.get(this.id))
+            $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
                 .done((response: SearchApiModel.IServerNameApiModel[]): void => {
                     this.receiveNames(response);
                     if (callback) callback(response);
@@ -377,7 +377,7 @@ import Languages = module('languages/ServerApiModel')
         // methods
         requestUrls(callback?: (response?: SearchApiModel.IServerUrlApiModel[]) => void ): void {
             this.urlsSpinner.start();
-            $.get(App.Routes.WebApi.Shared.Urls.get(this.id))
+            $.get(App.Routes.WebApi.Establishments.Urls.get(this.id))
                 .done((response: SearchApiModel.IServerUrlApiModel[]): void => {
                     this.receiveUrls(response);
                     if (callback) callback(response);
@@ -459,7 +459,7 @@ import Languages = module('languages/ServerApiModel')
                 }
                 this.validatingSpinner.stop();
                 if (officialName.isValid() && officialUrl.isValid() && this.isValid()) {
-                    var url = App.Routes.WebApi.Shared.post();
+                    var url = App.Routes.WebApi.Establishments.post();
                     var data = this.serializeData();
                     data.officialName = officialName.serializeData();
                     data.officialUrl = officialUrl.serializeData();
@@ -507,7 +507,7 @@ import Languages = module('languages/ServerApiModel')
         private _loadScalars(): JQueryDeferred {
             var deferred = $.Deferred();
             if (this.id) {
-                $.get(App.Routes.WebApi.Shared.get(this.id))
+                $.get(App.Routes.WebApi.Establishments.get(this.id))
                     .done((response: SearchApiModel.IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
                         deferred.resolve(response);
                     })
@@ -558,7 +558,7 @@ import Languages = module('languages/ServerApiModel')
                 var data = this.serializeData();
                 var originalValues = this.originalValues();
                 data.parentId = originalValues.parentId;
-                var url = App.Routes.WebApi.Shared.put(this.id);
+                var url = App.Routes.WebApi.Establishments.put(this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT',
@@ -680,7 +680,7 @@ import Languages = module('languages/ServerApiModel')
                     this.parentEstablishment(undefined);
                 }
                 else {
-                    var url = App.Routes.WebApi.Shared.get();
+                    var url = App.Routes.WebApi.Establishments.get();
                     $.get(url, { id: newValue })
                     .done((response: any): void => {
                         if (response && response.items && response.items.length) {
@@ -726,7 +726,7 @@ import Languages = module('languages/ServerApiModel')
                 data.typeId = originalValues.typeId;
                 data.ceebCode = originalValues.ceebCode;
                 data.uCosmicCode = originalValues.uCosmicCode;
-                var url = App.Routes.WebApi.Shared.put(this.id);
+                var url = App.Routes.WebApi.Establishments.put(this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT',

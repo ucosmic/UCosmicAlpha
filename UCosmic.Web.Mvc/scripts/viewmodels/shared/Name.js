@@ -32,7 +32,7 @@ define(["require", "exports", './ServerApiModel', './Spinner'], function(require
             if(!vm.isTextValidatableAsync()) {
                 callback(true);
             } else if(!this._isAwaitingResponse) {
-                var route = App.Routes.WebApi.Shared.Names.validateText(vm.ownerId(), vm.id());
+                var route = App.Routes.WebApi.Establishments.Names.validateText(vm.ownerId(), vm.id());
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData()).always(function () {
                     _this._isAwaitingResponse = false;
@@ -177,13 +177,13 @@ define(["require", "exports", './ServerApiModel', './Spinner'], function(require
                 this.saveSpinner.start();
                 if(this.id()) {
                     $.ajax({
-                        url: App.Routes.WebApi.Shared.Names.put(this.owner.id, this.id()),
+                        url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
                         type: 'PUT',
                         data: this.serializeData()
                     }).done(this.mutationSuccess).fail(this.mutationError);
                 } else if(this.owner.id) {
                     $.ajax({
-                        url: App.Routes.WebApi.Shared.Names.post(this.owner.id),
+                        url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
                         type: 'POST',
                         data: this.serializeData()
                     }).done(this.mutationSuccess).fail(this.mutationError);
@@ -242,7 +242,7 @@ define(["require", "exports", './ServerApiModel', './Spinner'], function(require
                             shouldRemainSpinning = true;
                             _this.$confirmPurgeDialog.dialog('close');
                             $.ajax({
-                                url: App.Routes.WebApi.Shared.Names.del(_this.owner.id, _this.id()),
+                                url: App.Routes.WebApi.Establishments.Names.del(_this.owner.id, _this.id()),
                                 type: 'DELETE'
                             }).done(_this.mutationSuccess).fail(_this.mutationError);
                         }

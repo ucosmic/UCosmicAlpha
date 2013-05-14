@@ -72,7 +72,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
         UCosmicCodeValidator.prototype.validator = function (val, vm, callback) {
             var _this = this;
             if(this._isValidatable(vm)) {
-                var route = App.Routes.WebApi.Shared.validateUCosmicCode(vm.id);
+                var route = App.Routes.WebApi.Establishments.validateUCosmicCode(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData()).always(function () {
                     _this._isAwaitingResponse = false;
@@ -117,7 +117,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
         ParentIdValidator.prototype.validator = function (val, vm, callback) {
             var _this = this;
             if(this._isValidatable(vm)) {
-                var route = App.Routes.WebApi.Shared.validateParentId(vm.id);
+                var route = App.Routes.WebApi.Establishments.validateParentId(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData()).always(function () {
                     _this._isAwaitingResponse = false;
@@ -236,7 +236,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
                 validEstablishmentParentId: this
             });
             var categoriesPact = $.Deferred();
-            $.get(App.Routes.WebApi.Shared.Categories.get()).done(function (data, textStatus, jqXHR) {
+            $.get(App.Routes.WebApi.Establishments.Categories.get()).done(function (data, textStatus, jqXHR) {
                 categoriesPact.resolve(data);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 categoriesPact.reject(jqXHR, textStatus, errorThrown);
@@ -262,7 +262,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
         Item.prototype.requestNames = function (callback) {
             var _this = this;
             this.NamesSpinner.start();
-            $.get(App.Routes.WebApi.Shared.Names.get(this.id)).done(function (response) {
+            $.get(App.Routes.WebApi.Establishments.Names.get(this.id)).done(function (response) {
                 _this.receiveNames(response);
                 if(callback) {
                     callback(response);
@@ -319,7 +319,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
         Item.prototype.requestUrls = function (callback) {
             var _this = this;
             this.urlsSpinner.start();
-            $.get(App.Routes.WebApi.Shared.Urls.get(this.id)).done(function (response) {
+            $.get(App.Routes.WebApi.Establishments.Urls.get(this.id)).done(function (response) {
                 _this.receiveUrls(response);
                 if(callback) {
                     callback(response);
@@ -391,7 +391,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
                 }
                 this.validatingSpinner.stop();
                 if(officialName.isValid() && officialUrl.isValid() && this.isValid()) {
-                    var url = App.Routes.WebApi.Shared.post();
+                    var url = App.Routes.WebApi.Establishments.post();
                     var data = this.serializeData();
                     data.officialName = officialName.serializeData();
                     data.officialUrl = officialUrl.serializeData();
@@ -435,7 +435,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
         Item.prototype._loadScalars = function () {
             var deferred = $.Deferred();
             if(this.id) {
-                $.get(App.Routes.WebApi.Shared.get(this.id)).done(function (response, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Establishments.get(this.id)).done(function (response, textStatus, jqXHR) {
                     deferred.resolve(response);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     deferred.reject(jqXHR, textStatus, errorThrown);
@@ -478,7 +478,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
                 var data = this.serializeData();
                 var originalValues = this.originalValues();
                 data.parentId = originalValues.parentId;
-                var url = App.Routes.WebApi.Shared.put(this.id);
+                var url = App.Routes.WebApi.Establishments.put(this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT',
@@ -569,7 +569,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
                 if(!newValue) {
                     _this.parentEstablishment(undefined);
                 } else {
-                    var url = App.Routes.WebApi.Shared.get();
+                    var url = App.Routes.WebApi.Establishments.get();
                     $.get(url, {
                         id: newValue
                     }).done(function (response) {
@@ -610,7 +610,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
                 data.typeId = originalValues.typeId;
                 data.ceebCode = originalValues.ceebCode;
                 data.uCosmicCode = originalValues.uCosmicCode;
-                var url = App.Routes.WebApi.Shared.put(this.id);
+                var url = App.Routes.WebApi.Establishments.put(this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT',

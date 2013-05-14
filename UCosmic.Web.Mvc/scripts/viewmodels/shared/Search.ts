@@ -218,7 +218,7 @@ export class Search extends PagedSearch.PagedSearch {
                 return;
             this.spinner.start();
 
-            $.get(App.Routes.WebApi.Shared.get(), {
+            $.get(App.Routes.WebApi.Establishments.get(), {
                 pageSize: this.pageSize(),
                 pageNumber: this.pageNumber(),
                 countryCode: this.countryCode(),

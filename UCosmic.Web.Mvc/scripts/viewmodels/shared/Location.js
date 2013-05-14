@@ -283,7 +283,7 @@ define(["require", "exports", './places/ServerApiModel', './Spinner'], function(
             });
             if(this.ownerId) {
                 this.isLoaded(false);
-                $.get(App.Routes.WebApi.Shared.Locations.get(this.ownerId)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                     gm.event.addListenerOnce(_this.map, 'idle', function () {
                         _this.loadMapZoom(response);
                         _this.loadMapMarker(response);
@@ -428,7 +428,7 @@ define(["require", "exports", './places/ServerApiModel', './Spinner'], function(
             }
             this.saveSpinner.start();
             $.ajax({
-                url: App.Routes.WebApi.Shared.Locations.put(me.ownerId),
+                url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
                 type: 'PUT',
                 data: me.serializeData()
             }).always(function () {
@@ -491,7 +491,7 @@ define(["require", "exports", './places/ServerApiModel', './Spinner'], function(
                 return;
             }
             this.isLoaded(false);
-            $.get(App.Routes.WebApi.Shared.Locations.get(this.ownerId)).done(function (response) {
+            $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                 _this.map.setZoom(1);
                 _this.loadMapZoom(response);
                 _this.mapTools().destroyMarker();
