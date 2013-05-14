@@ -2225,19 +2225,19 @@
     <Content Include="scripts\viewmodels\places\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Item.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Location.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Name.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Search.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\SearchResult.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Url.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Item.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Location.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Name.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Url.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\User.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\users\SearchResult.ts" />
-    <Content Include="scripts\viewmodels\amd-modules\Item.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Item.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Item.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Item.min.js">
       <DependentUpon>Item.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\languages\ServerApiModel.ts" />
@@ -2247,37 +2247,37 @@
     <Content Include="scripts\viewmodels\amd-modules\languages\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Lens.ts" />
-    <Content Include="scripts\viewmodels\amd-modules\Lens.js">
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\Lens.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\Lens.js">
       <DependentUpon>Lens.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Lens.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\Lens.min.js">
       <DependentUpon>Lens.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Location.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Location.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Location.min.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Location.min.js.map">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Location.min.js.map">
       <DependentUpon>Location.js</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Name.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Name.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Name.min.js">
       <DependentUpon>Name.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Name.min.js.map">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Name.min.js.map">
       <DependentUpon>Name.js</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\places\ServerApiModel.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\PagedSearch.ts" />
-    <Content Include="scripts\viewmodels\amd-modules\PagedSearch.js">
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\PagedSearch.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\PagedSearch.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\PagedSearch.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\PagedSearch.min.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\amd-modules\places\ServerApiModel.js">
@@ -2286,45 +2286,45 @@
     <Content Include="scripts\viewmodels\amd-modules\places\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Search.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Search.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Search.min.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Search.min.js.map">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Search.min.js.map">
       <DependentUpon>Search.js</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\SearchResult.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\SearchResult.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\SearchResult.min.js.map">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.min.js.map">
       <DependentUpon>SearchResult.js</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\ServerApiModel.ts" />
-    <Content Include="scripts\viewmodels\amd-modules\ServerApiModel.js">
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\ServerApiModel.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.min.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Spinner.ts" />
-    <Content Include="scripts\viewmodels\amd-modules\Spinner.js">
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\Spinner.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\Spinner.js">
       <DependentUpon>Spinner.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Spinner.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\Spinner.min.js">
       <DependentUpon>Spinner.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Url.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Url.js">
       <DependentUpon>Url.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Url.min.js">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Url.min.js">
       <DependentUpon>Url.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Url.min.js.map">
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\Url.min.js.map">
       <DependentUpon>Url.js</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\users\Search.js">
@@ -2769,8 +2769,6 @@
     <Folder Include="App_Data\mail\" />
     <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
-    <Folder Include="scripts\viewmodels\amd-modules\Establishments\" />
-    <Folder Include="scripts\viewmodels\amd-modules\Shared\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>
   <ItemGroup>
