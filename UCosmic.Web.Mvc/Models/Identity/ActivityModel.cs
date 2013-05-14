@@ -14,4 +14,9 @@
     {
         public int DegreeId { get; set; }
     }
+
+    public class GeographicExpertiseModel
+    {
+        public int ExpertiseId { get; set; }
+    }
 }

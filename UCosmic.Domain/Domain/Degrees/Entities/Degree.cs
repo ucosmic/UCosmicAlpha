@@ -7,8 +7,7 @@ namespace UCosmic.Domain.Degrees
     {
         protected bool Equals(Degree other)
         {
-            return  PersonId == other.PersonId &&
-                    string.Equals(Title, other.Title) &&
+            return  string.Equals(Title, other.Title) &&
                     YearAwarded == other.YearAwarded &&
                     InstitutionId == other.InstitutionId;
         }
@@ -25,8 +24,7 @@ namespace UCosmic.Domain.Degrees
         {
             unchecked
             {
-                int hashCode = PersonId;
-                hashCode = (hashCode*397) ^ (Title != null ? Title.GetHashCode() : 0);
+                int hashCode = (Title != null ? Title.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (YearAwarded.HasValue ? YearAwarded.Value : 0);
                 hashCode = (hashCode*397) ^ (InstitutionId.HasValue ? InstitutionId.Value : 0);
                 return hashCode;

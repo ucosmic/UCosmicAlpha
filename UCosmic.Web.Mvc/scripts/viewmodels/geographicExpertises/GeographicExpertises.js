@@ -1,11 +1,11 @@
 var ViewModels;
 (function (ViewModels) {
     (function (GeographicExpertises) {
-        var ExpertiseSearchInput = (function () {
-            function ExpertiseSearchInput() { }
-            return ExpertiseSearchInput;
+        var GeographicExpertiseSearchInput = (function () {
+            function GeographicExpertiseSearchInput() { }
+            return GeographicExpertiseSearchInput;
         })();
-        GeographicExpertises.ExpertiseSearchInput = ExpertiseSearchInput;        
+        GeographicExpertises.GeographicExpertiseSearchInput = GeographicExpertiseSearchInput;        
         var GeographicExpertiseList = (function () {
             function GeographicExpertiseList(personId) {
                 this.personId = personId;
@@ -13,32 +13,21 @@ var ViewModels;
             GeographicExpertiseList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.GeographicExpertises.Locations.get()).done(function (data, textStatus, jqXHR) {
-                    locationsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                });
-                var dataPact = $.Deferred();
-                var expertiseSearchInput = new ExpertiseSearchInput();
+                var expertiseSearchInput = new GeographicExpertiseSearchInput();
                 expertiseSearchInput.personId = this.personId;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = 2147483647;
                 $.get(App.Routes.WebApi.GeographicExpertises.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
  {
-                        dataPact.resolve(data);
+                        ko.mapping.fromJS(data, {
+                        }, _this);
+                        deferred.resolve();
                     }
                 }).fail(function (jqXhr, textStatus, errorThrown) {
  {
-                        dataPact.reject(jqXhr, textStatus, errorThrown);
+                        deferred.reject(jqXhr, textStatus, errorThrown);
                     }
-                });
-                $.when(locationsPact, dataPact).done(function (locations, data) {
-                    _this.expertiseLocationsList = locations;
-                    deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
                 });
                 return deferred;
             };
@@ -66,7 +55,7 @@ var ViewModels;
                             click: function () {
                                 viewModel.deleteExpertiseById(data.id());
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get();
+                                location.href = App.Routes.Mvc.My.Profile.get(1);
                             }
                         }, 
                         {
@@ -80,41 +69,17 @@ var ViewModels;
                 });
             };
             GeographicExpertiseList.prototype.editExpertise = function (data, event, expertiseId) {
-                $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.GeographicExpertises.getEditState(expertiseId),
-                    success: function (editState, textStatus, jqXHR) {
-                        if(editState.isInEdit) {
-                            $("#geographicExpertiseBeingEditedDialog").dialog({
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    Ok: function () {
-                                        $(this).dialog("close");
-                                        return;
-                                    }
-                                }
-                            });
-                        } else {
-                            var element = event.target;
-                            var url = null;
-                            while((element != null) && (element.nodeName != 'TR')) {
-                                element = element.parentElement;
-                            }
-                            if(element != null) {
-                                url = element.attributes["href"].value;
-                            }
-                            if(url != null) {
-                                location.href = url;
-                            }
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus + "|" + errorThrown);
-                    }
-                });
+                var element = event.target;
+                var url = null;
+                while((element != null) && (element.nodeName != 'TR')) {
+                    element = element.parentElement;
+                }
+                if(element != null) {
+                    url = element.attributes["href"].value;
+                }
+                if(url != null) {
+                    location.href = url;
+                }
             };
             GeographicExpertiseList.prototype.newExpertise = function (data, event) {
                 $.ajax({

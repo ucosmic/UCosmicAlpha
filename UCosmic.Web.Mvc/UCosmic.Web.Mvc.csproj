@@ -283,6 +283,7 @@
     <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
+    <Compile Include="ApiControllers\GeographicExpertisesController.cs" />
     <Compile Include="ApiControllers\GrantsController.cs" />
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
+    <Compile Include="Models\GeographicExpertiseApiModel.cs" />
     <Compile Include="Models\DegreeApiModel.cs" />
     <Compile Include="Models\Identity\ActivityModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
@@ -2036,6 +2038,9 @@
       <DependentUpon>Degree.js</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.min.js">
+      <DependentUpon>GeographicExpertise.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\my\Profile.min.js.map">
       <DependentUpon>Profile.js</DependentUpon>
     </Content>
@@ -2107,10 +2112,6 @@
       <DependentUpon>GeographicExpertises.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertises.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\ServiceApiModel.d.ts" />
-    <Content Include="scripts\viewmodels\geographicExpertises\ServiceApiModel.d.js">
-      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertise.js">
       <DependentUpon>LanguageExpertise.ts</DependentUpon>
     </Content>
@@ -2498,6 +2499,7 @@
     <Content Include="Views\MyProfile\_LanguageExpertises.cshtml" />
     <Content Include="Views\MyProfile\_Degrees.cshtml" />
     <Content Include="Views\MyProfile\DegreeEdit.cshtml" />
+    <Content Include="Views\MyProfile\GeographicExpertiseEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

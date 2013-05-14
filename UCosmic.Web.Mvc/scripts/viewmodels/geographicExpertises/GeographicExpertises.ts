@@ -7,28 +7,10 @@
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
+
 module ViewModels.GeographicExpertises
 {
-    export interface IGeographicExpertiseLocation {
-        id: number;
-        isCountry: bool;
-        isBodyOfWater: bool;
-        isEarth: bool;
-        officialName: string;
-    }
-
-    export interface IGeographicExpertise {
-    }
-
-    export interface IGeographicExpertisePage {
-        personId: KnockoutObservableNumber;
-        orderBy: KnockoutObservableString;
-        pageSize: KnockoutObservableNumber;
-        pageNumber: KnockoutObservableNumber;
-        items: KnockoutObservableArray;
-    }
-
-    export class ExpertiseSearchInput
+    export class GeographicExpertiseSearchInput
     {
         personId: number;
         orderBy: string;
@@ -40,11 +22,8 @@ module ViewModels.GeographicExpertises
     /* 
     */
     // ================================================================================
-    export class GeographicExpertiseList implements KnockoutValidationGroup
+    export class GeographicExpertiseList
     {
-
-        expertiseLocationsList: IGeographicExpertiseLocation[];
-
         personId: number;
         orderBy: string;
         pageSize: number;
@@ -67,19 +46,7 @@ module ViewModels.GeographicExpertises
         load(): JQueryPromise
         {
             var deferred: JQueryDeferred = $.Deferred();
-
-            var locationsPact = $.Deferred();
-            $.get(App.Routes.WebApi.GeographicExpertises.Locations.get())
-                .done((data: IGeographicExpertiseLocation[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    locationsPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                });
-
-
-            var dataPact = $.Deferred();
-            var expertiseSearchInput: ExpertiseSearchInput = new ExpertiseSearchInput();
+            var expertiseSearchInput: GeographicExpertiseSearchInput = new GeographicExpertiseSearchInput();
 
             expertiseSearchInput.personId = this.personId;
             expertiseSearchInput.orderBy = "";
@@ -87,24 +54,16 @@ module ViewModels.GeographicExpertises
             expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
             $.get(App.Routes.WebApi.GeographicExpertises.get(), expertiseSearchInput)
-                .done((data: IGeographicExpertise[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    { dataPact.resolve(data); }
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    {
+                        ko.mapping.fromJS(data, {}, this);
+                        deferred.resolve();
+                    }
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
-                });
-
-            // only process after all requests have been resolved
-            $.when(locationsPact, dataPact)
-                .done((locations: IGeographicExpertiseLocation[],
-                            data: IGeographicExpertisePage) => {
-
-                    this.expertiseLocationsList = locations;
-
-                    deferred.resolve();
-                })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                    {
+                        deferred.reject(jqXhr, textStatus, errorThrown);
+                    }
                 });
 
             return deferred;
@@ -145,7 +104,7 @@ module ViewModels.GeographicExpertises
                                     $(this).dialog("close");
 
                                     /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                    location.href = App.Routes.Mvc.My.Profile.get(1);
                                 }
                             },
                             {
@@ -162,47 +121,20 @@ module ViewModels.GeographicExpertises
         */
         // --------------------------------------------------------------------------------
         editExpertise(data: any, event: any, expertiseId: number): void {
-            $.ajax({
-                type: "GET",
-                url: App.Routes.WebApi.GeographicExpertises.getEditState(expertiseId),
-                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    if ( editState.isInEdit ) {
-                        $( "#geographicExpertiseBeingEditedDialog" ).dialog( {
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                Ok: function () {
-                                    $( this ).dialog( "close" );
-                                    return;
-                                }
-                            }
-                        } );
-                    }
-                    else {
-                        var element = event.target;
-                        var url = null;
+            var element = event.target;
+            var url = null;
 
-                        while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                            element = element.parentElement;
-                        }
+            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
+                element = element.parentElement;
+            }
 
-                        if ( element != null ) {
-                            url = element.attributes["href"].value;
-                        }
+            if ( element != null ) {
+                url = element.attributes["href"].value;
+            }
 
-                        if ( url != null ) {
-                            location.href = url;
-                        }
-                    }
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            if ( url != null ) {
+                location.href = url;
+            }
         }
 
         // --------------------------------------------------------------------------------

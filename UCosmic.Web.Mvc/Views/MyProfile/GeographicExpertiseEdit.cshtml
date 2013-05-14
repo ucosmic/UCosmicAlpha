@@ -1,7 +1,7 @@
-﻿ @model UCosmic.Web.Mvc.Models.DegreeModel
+﻿ @model UCosmic.Web.Mvc.Models.GeographicExpertiseModel
 
 @{
-    ViewBag.Title = "My Degree Outside the US";
+    ViewBag.Title = "My Geographic Expertise";
 }
 
 @section styles
@@ -30,17 +30,17 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/degree")
+    @Scripts.Render("~/bundles/geographic-expertises")
 
     <script type="text/javascript">
         $(function() {
-            var degreeId = @Model.DegreeId;
-            var degreeViewModel = new ViewModels.Degrees.Degree(degreeId);
-            degreeViewModel.load()
+            var expertiseId = @Model.ExpertiseId;
+            var expertiseViewModel = new ViewModels.GeographicExpertises.GeographicExpertise(expertiseId);
+            expertiseViewModel.load()
                 .done(function() {
-                    degreeViewModel.setupWidgets("institution");
-                    degreeViewModel.setupValidation();
-                    ko.applyBindings(degreeViewModel, $("#degree-edit")[0]);
+                    expertiseViewModel.setupWidgets("location");
+                    expertiseViewModel.setupValidation();
+                    ko.applyBindings(expertiseViewModel, $("#geographic-expertise-edit")[0]);
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
@@ -62,40 +62,28 @@
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
                 <div class="group">
-                    <div id="degree-edit" class="on-left from-top" style="width: 100%;">
+                    <div id="geographic-expertise-edit" class="on-left from-top" style="width: 100%;">
 				        
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
 
                         <div style="margin-bottom: 38px">
-                            <!-- TITLE -->
-                            <div style="margin-bottom: 8px">
-                                <span>
-                                    <label for="title" class="required-field">Title</label>
-                                    <input type="text" id="title" style="width: 400px; margin-right: 8px" data-bind="value: title" />
-                                </span>
-                            </div>
 
-                            <!-- YEAR AWARDED -->
-                            <div style="margin-bottom: 8px">
-                                <span>
-                                    <label for="yearAwarded" class="non-required-field">Year Awarded</label>
-                                    <input type="text" id="yearAwarded" style="width: 60px; margin-right: 8px" data-bind="value: yearAwarded" />
-                                </span>
-                            </div>
-
-                            <!-- INSTITUTION -->
+                            <!-- PLACE -->
                             <div style="margin-bottom: 14px">
                                 <span>
-                                    <label for="institution" class="non-required-field">Institution</label>
-                                    <input type="text" id="institution" style="width: 800px; height: 32px" data-bind="value: institutionOfficialName" />
+                                    <label for="location" class="required-field">Location</label>
+                                    <input type="text" id="location" style="width: 800px; height: 32px" data-bind="value: placeOfficialName" />
                                 </span>
                             </div>
-
-                            <!-- INSTITUTION COUNTRY -->
+                            
+                            <!-- DESCRIPTION -->
                             <div style="margin-bottom: 8px">
-                                <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
+                                <span>
+                                    <label for="title" class="non-required-field">Description</label>
+                                    <textarea rows="4" id="title" style="width: 600px; margin-right: 8px" data-bind="value: description"></textarea>
+                                </span>
                             </div>
                         </div>
                             
@@ -122,13 +110,7 @@
 <!-- JQUERY DIALOGS -->
 <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
     <div>By cancelling, you will lose all changes.</div>
-    <div style="font-weight: bold">Are you sure you want to Cancel editing this degree?</div>
-</div>
-
-<div id="degreeBeingEditedDialog" class="dialog" title="Error Renaming Document">
-    <div>The degree cannot be edited at this time because it is in use by:</div>
-    <div id="editingUserName" style="text-align: center"></div>
-    <a id="editingUserEmail" style="text-align: center"></a>
+    <div style="font-weight: bold">Are you sure you want to Cancel editing this expertise?</div>
 </div>
 
 

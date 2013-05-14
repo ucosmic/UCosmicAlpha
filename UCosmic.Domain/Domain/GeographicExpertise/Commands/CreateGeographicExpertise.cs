@@ -4,47 +4,46 @@ using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.Degrees
+namespace UCosmic.Domain.GeographicExpertises
 {
-    public class CreateDegree
+    public class CreateGeographicExpertise
     {
         public Guid? EntityId { get; set; }
         public IPrincipal Principal { get; protected set; }
-        public string Title { get; protected set; }
-        public int? YearAwarded { get; set; }
-        public int? InstitutionId { get; set; }
+        public int PlaceId { get; protected set; }
+        public string Description { get; set; }
         public bool NoCommit { get; set; }
-        public Degree CreatedDegree { get; protected internal set; }
+        public GeographicExpertise CreatedGeographicExpertise { get; protected internal set; }
 
-        public CreateDegree(IPrincipal principal, string title)
+        public CreateGeographicExpertise(IPrincipal principal, int placeId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
-            if (String.IsNullOrEmpty(title)) throw new ArgumentNullException("title");
+            if (placeId == 0) throw new ArgumentNullException("placeId");
             Principal = principal;
-            Title = title;
+            PlaceId = placeId;
         }
     }
 
-    public class ValidateCreateDegreeCommand : AbstractValidator<CreateDegree>
+    public class ValidateCreateGeographicExpertiseCommand : AbstractValidator<CreateGeographicExpertise>
     {
-        public ValidateCreateDegreeCommand(IQueryEntities entities)
+        public ValidateCreateGeographicExpertiseCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }
     }
 
-    public class HandleCreateDegreeCommand : IHandleCommands<CreateDegree>
+    public class HandleCreateGeographicExpertiseCommand : IHandleCommands<CreateGeographicExpertise>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateDegreeCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
+        public HandleCreateGeographicExpertiseCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
         }
 
-        public void Handle(CreateDegree command)
+        public void Handle(CreateGeographicExpertise command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -55,30 +54,29 @@ namespace UCosmic.Domain.Degrees
                 throw new Exception(message);
             }
 
-            var degree = new Degree
+            var expertise = new GeographicExpertise
             {
                 PersonId = person.RevisionId,
-                Title = command.Title,
-                YearAwarded = command.YearAwarded,
-                InstitutionId = command.InstitutionId,
-
+                PlaceId = command.PlaceId,
+                Description = command.Description,
+                
                 CreatedByPrincipal = command.Principal.Identity.Name,
                 CreatedOnUtc = DateTime.UtcNow
             };
 
             if (command.EntityId.HasValue)
             {
-                degree.EntityId = command.EntityId.Value;
+                expertise.EntityId = command.EntityId.Value;
             }
 
-            _entities.Create(degree);
+            _entities.Create(expertise);
 
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
             }
 
-            command.CreatedDegree = degree;
+            command.CreatedGeographicExpertise = expertise;
         }
     }
 }

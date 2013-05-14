@@ -59,6 +59,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GeographicExpertiseEdit()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GeographicExpertiseEdit);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public MyProfileController Actions { get { return MVC.MyProfile; } }
@@ -78,6 +84,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Index = "Index";
             public readonly string ActivityEdit = "ActivityEdit";
             public readonly string DegreeEdit = "DegreeEdit";
+            public readonly string GeographicExpertiseEdit = "GeographicExpertiseEdit";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -86,6 +93,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Index = "Index";
             public const string ActivityEdit = "ActivityEdit";
             public const string DegreeEdit = "DegreeEdit";
+            public const string GeographicExpertiseEdit = "GeographicExpertiseEdit";
         }
 
 
@@ -113,6 +121,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string degreeId = "degreeId";
         }
+        static readonly ActionParamsClass_GeographicExpertiseEdit s_params_GeographicExpertiseEdit = new ActionParamsClass_GeographicExpertiseEdit();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GeographicExpertiseEdit GeographicExpertiseEditParams { get { return s_params_GeographicExpertiseEdit; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GeographicExpertiseEdit
+        {
+            public readonly string expertiseId = "expertiseId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -132,6 +148,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _PersonalInfo = "_PersonalInfo";
                 public readonly string ActivityEdit = "ActivityEdit";
                 public readonly string DegreeEdit = "DegreeEdit";
+                public readonly string GeographicExpertiseEdit = "GeographicExpertiseEdit";
                 public readonly string Index = "Index";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
@@ -143,6 +160,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
             public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
             public readonly string DegreeEdit = "~/Views/MyProfile/DegreeEdit.cshtml";
+            public readonly string GeographicExpertiseEdit = "~/Views/MyProfile/GeographicExpertiseEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
         }
     }
@@ -170,6 +188,13 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "degreeId", degreeId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GeographicExpertiseEdit(int expertiseId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GeographicExpertiseEdit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "expertiseId", expertiseId);
             return callInfo;
         }
 

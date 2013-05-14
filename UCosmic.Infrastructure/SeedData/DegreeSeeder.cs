@@ -5,26 +5,22 @@ using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.SeedData
 {
     public class DegreeEntitySeeder : ISeedData
     {
-        private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateDegree> _createDegree;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DegreeEntitySeeder(IProcessQueries queryProcessor
-                                    , ICommandEntities entities
+        public DegreeEntitySeeder(  ICommandEntities entities
                                     , IHandleCommands<CreateDegree> createDegree
                                     , IUnitOfWork unitOfWork
         )
         {
             _createDegree = createDegree;
             _unitOfWork = unitOfWork;
-            _queryProcessor = queryProcessor;
             _entities = entities;
         }
 

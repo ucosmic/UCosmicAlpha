@@ -375,7 +375,7 @@ module App.Routes {
 
         export module GeographicExpertises {
             export function get (expertiseId?: number): string {
-                var url = makeUrl('geoexpertises');
+                var url = makeUrl('geographic-expertises');
                 if (expertiseId) {
                     url += '/' + expertiseId;
                 }
@@ -383,32 +383,32 @@ module App.Routes {
             }
 
             export function post(): string {
-                return makeUrl('geoexpertises');
+                return makeUrl('geographic-expertises');
             }
 
             export function getEdit (expertiseId: number): string {
-                return makeUrl('geoexpertises/' + expertiseId + "/edit");
+                return makeUrl('geographic-expertises/' + expertiseId + "/edit");
             }
 
             export function getEditState (expertiseId: number): string {
-                return makeUrl('geoexpertises/' + expertiseId + "/edit-state");
+                return makeUrl('geographic-expertises/' + expertiseId + "/edit-state");
             }
 
             export function put(expertiseId: number): string {
-                return makeUrl('geoexpertises/' + expertiseId);
+                return makeUrl('geographic-expertises/' + expertiseId);
             }
 
             export function putEdit(expertiseId: number): string {
-                return makeUrl('geoexpertises/' + expertiseId + "/edit");
+                return makeUrl('geographic-expertises/' + expertiseId + "/edit");
             }
 
             export function del(expertiseId: number): string {
-                return makeUrl('geoexpertises/' + expertiseId);
+                return makeUrl('geographic-expertises/' + expertiseId);
             }
 
             export module Locations {
                 export function get (): string {
-                    return makeUrl('geoexpertises-locations');
+                    return makeUrl('geographic-expertises-locations');
                 }
             }
         } // GeographicExpertises
@@ -554,11 +554,11 @@ module App.Routes {
                     return url + activityId;
                 }
                 export function geographicExpertiseEdit( expertiseId: string ) {
-                    var url = makeUrl( 'my/geoexpertise/' );
+                    var url = makeUrl( 'my/geographic-expertise/' );
                     return url + expertiseId;
                 }
                 export function languageExpertiseEdit( expertiseId: string ) {
-                    var url = makeUrl( 'my/langexpertise/' );
+                    var url = makeUrl( 'my/language-expertise/' );
                     return url + expertiseId;
                 }
                 export function degreeEdit( degreeId: string ) {
