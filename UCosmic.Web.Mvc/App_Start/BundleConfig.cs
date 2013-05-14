@@ -207,7 +207,6 @@ namespace UCosmic.Web.Mvc
 
             // activities
             bundles.Add(new ScriptBundle("~/bundles/agreements").Include(
-                "~/scripts/viewmodels/activities/Activities.js",
                 "~/scripts/viewmodels/agreements/RequireAgreement.js"));
 
         }

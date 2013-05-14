@@ -844,6 +844,7 @@
     <Content Include="images\_deprecated\transparent.png" />
     <Content Include="images\_deprecated\users\user-black-16.png" />
     <Content Include="images\_deprecated\warning\warning-16.png" />
+    <Content Include="r.js" />
     <Content Include="scripts\app\App.js">
       <DependentUpon>App.ts</DependentUpon>
     </Content>
@@ -1779,9 +1780,6 @@
     <Content Include="scripts\oss\moment.js" />
     <Content Include="scripts\oss\moment.min.js" />
     <TypeScriptCompile Include="scripts\require.d.ts" />
-    <Content Include="scripts\require.d.js">
-      <DependentUpon>require.d.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\require.js" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
