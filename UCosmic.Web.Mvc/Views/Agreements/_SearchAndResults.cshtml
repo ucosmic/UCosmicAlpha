@@ -1,0 +1,111 @@
+﻿<div class="field" style="margin-bottom: 0;">
+    <input type="hidden" data-bind="value: keyword" />
+    <input type="search" placeholder="Find an establishment by name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
+</div>
+<p data-bind="visible: hasNoItems" style="display: none;">
+    There are no results that match your search terms.
+</p>
+<div data-side-swiper="root" id="search">
+    <div data-side-swiper="deck">
+        <div data-side-swiper="on" class="left" data-bind="jqElement: '$itemsPage'">
+            <p data-bind="visible: spinner.isVisible">
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                <strong>Loading search results...</strong>
+            </p>
+            <p data-bind="visible: showStatus" style="display: none;">
+                <strong>Showing <span data-bind="text: firstNumber"></span>
+                    <span data-bind="visible: hasManyItems">- <span data-bind="text: lastNumber"></span></span>
+                    of <span data-bind="text: itemTotal"></span></strong>
+                <span data-bind="visible: hasManyPages">(page
+                    @*<select class="inline" data-bind="options: pageNumberOptions, value: selectedPageNumber">
+                    </select>*@
+                    <span data-bind="text: transitionedPageNumber"></span>
+                    of <span data-bind="text: pageCount"></span>)</span>
+            </p>
+            <div data-bind="visible: hasItems" style="display: none;">
+                <div data-bind="visible: lens() === 'table'">
+                    <table class="data">
+                        <colgroup>
+                            <col style="width: 75%;" />
+                            <col style="width: 25%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Establishment
+                                </th>
+                                <th>
+                                    Country
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: items">
+                            <tr data-bind="click: clickAction">
+                                <td>
+                                    <div>
+                                        <a href="#/" style="color: inherit;"
+                                           data-bind="attr: { href: detailHref, title: detailTooltip }">
+                                            <strong data-bind="text: translatedName"></strong>
+                                            <span data-bind="visible: officialNameDoesNotMatchTranslation">
+                                                @*<br/>*@
+                                                (<span data-bind="text: officialName"></span>)
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div data-bind="visible: officialUrl">
+                                        <a href="#" target="_blank"
+                                            data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span data-bind="text: nullDisplayCountryName"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div data-bind="visible: lens() === 'list'">
+                    <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Establishments.Show(0))">
+                        <li class="hover-hilite" data-bind="click: clickAction">
+                            <div>
+                                <div class="on-right" style="text-align: right;">
+                                    <div data-bind="text: nullDisplayCountryName"></div>
+                                    <div data-bind="visible: officialUrl">
+                                        <a href="#" target="_blank"
+                                            data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#/" style="color: inherit;"
+                                        data-bind="attr: { href: detailHref, title: detailTooltip }">
+                                        <strong data-bind="text: translatedName"></strong>
+                                        <span data-bind="visible: officialNameDoesNotMatchTranslation">
+                                            @*<br/>*@
+                                            (<span data-bind="text: officialName"></span>)
+                                        </span>
+                                    </a>
+                                </div>
+                                <div style="clear: right;"></div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <div data-bind="visible: lens() === 'grid'">
+                    <p>
+                        This is a placeholder for the Grid data lens. Grid data will go here.
+                    </p>
+                </div>
+                <div data-bind="visible: lens() === 'map'">
+                    <p>
+                        This is a placeholder for the Map data lens. Map data will go here.
+                    </p>
+                </div>
+                <div data-bind="visible: lens() === 'tree'">
+                    <p>
+                        This is a placeholder for the Tree data lens. Tree data will go here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

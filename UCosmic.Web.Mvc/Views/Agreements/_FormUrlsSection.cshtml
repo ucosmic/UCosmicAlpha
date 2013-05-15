@@ -1,0 +1,81 @@
+﻿<section id="urls" class="fieldset">
+    <header>
+        <h2>
+            <span data-bind="visible: id">URL(s)</span>
+            <span data-bind="visible: id === 0">Official URL</span>
+            <a href="#" title="Add a new URL" data-bind="visible: canAddUrl() && !urlsSpinner.isVisible(), click: addUrl" style="display: none;">
+                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new URL" />
+            </a>
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: urlsSpinner.isVisible" style="display: none;" />
+        </h2>
+    </header>
+    <ul class="data-items" data-bind="foreach: urls">
+        <li data-bind="css: { selected: editMode }">
+            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingUrl() }" style="display: none;">
+                <div class="group">
+                    <div class="on-left" style="max-width: 645px;">
+                        <span data-bind="text: value, css: { 'bold': isOfficialUrl() }" class="inline-block"></span>
+                        <span class="green badge" data-bind="visible: isOfficialUrl" style="display: none;">Official</span>
+                        @*<span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>*@
+                        <span class="red badge" data-bind="visible: isFormerUrl" style="display: none;">Former / Defunct</span>
+                        <a class="link badge" href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }">Link</a>
+                    </div>
+                    <div class="on-right" data-bind="visible: isDeletable">
+                        <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this URL">
+                            <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
+                    </div>
+                </div>
+            </div>
+            <div data-bind="visible: editMode" style="display: none;">
+                <div>
+                    <div class="field" style="margin-top: 0;">
+                        <textarea rows="1" class="no-resize" data-bind="value: value, jqElement: '$valueElement', css: { spinning: valueValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment URL here]"></textarea>
+                        <span class="example">
+                            <br />
+                            <span>Enter without protocol. For example, use <strong>www.domain.edu</strong> instead of <strong>http://www.domain.edu</strong>.</span>
+                            <a href="#/" target="_blank" data-bind="click: clickLink, attr: { href: valueHref }, visible: valueHref">Test Link</a>
+                            @*<span data-bind="visible: !valueHref()" style="color: #999;">Test Link</span>*@
+                        </span>
+                    </div>
+                    <div class="field" data-bind="visible: owner.id">
+                        <label data-bind="click: clickOfficialUrlCheckbox">
+                            <input type="checkbox" data-bind="checked: isOfficialUrl, enable: isOfficialUrlEnabled" />
+                            Offical URL
+                        </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="checkbox" data-bind="checked: isFormerUrl, enable: !isOfficialUrl()" />
+                            Former / Defunct URL
+                        </label>
+                    </div>
+                    <div data-bind="visible: owner.id">
+                        <input type="button" value="Save" data-bind="click: saveEditor, enable: !saveSpinner.isVisible()" />
+                        <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
+                        &nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: valueValidationSpinner.isVisible" />
+                        <strong data-bind="visible: valueValidationSpinner.isVisible">Validating...</strong>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                        <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
+                    </div>
+                </div>
+            </div>
+            <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                <div>
+                    <p>
+                        Are you sure you want to delete this establishment URL?
+                    </p>
+                    <div>
+                        <span data-bind="text: value, css: { 'bold': isOfficialUrl() }" class="inline-block"></span>
+                        <span class="green badge" data-bind="visible: isOfficialUrl" style="display: none;">Official</span>
+                        @*<span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>*@
+                        <span class="red badge" data-bind="visible: isFormerUrl" style="display: none;">Former / Defunct</span>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div data-bind="visible: !urls().length" style="display: none;">
+        [No URLs]
+    </div>
+</section>

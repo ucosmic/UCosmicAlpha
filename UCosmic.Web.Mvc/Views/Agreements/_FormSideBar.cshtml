@@ -1,0 +1,34 @@
+﻿<div data-bind="with: flasherProxy" class="side flasher">
+    <div data-bind="slideDownVisible: isVisible, click: dismiss" class="content" title="Click to dismiss" style="display: none;">
+        <img class="closer" src="~/images/icons/closer/closer-16-dark.png" alt="" />
+        <span data-bind="text: text">Here is my flash feedback message</span>
+    </div>
+</div>
+<nav class="side">
+    <ul>
+        <li class="current">
+            <a href="#/" class="group">
+                <div class="arrow"></div>
+                <div class="text">
+                    <span>Sidebar Item #1</span>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#/" class="group">
+                <div class="arrow"></div>
+                <div class="text">
+                    <span>Sidebar Item #2</span>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#/" class="group">
+                <div class="arrow"></div>
+                <div class="text">
+                    <span>Sidebar Item #3</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+</nav>

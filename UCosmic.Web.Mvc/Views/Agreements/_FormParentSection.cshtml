@@ -1,0 +1,40 @@
+﻿<section class="fieldset">
+    <header>
+        <h2>
+            <span>Parent Establishment</span>
+        </h2>
+    </header>
+    <div data-bind="visible: $data" style="display: none;">
+        <div>
+            <div class="text-box when-hovered" data-bind="click: function () { window.location.hash = '#/select-parent/page/1/'; }">
+                <div class="group">
+                    <div class="on-left" style="max-width: 645px;">
+                        <span class="inline-block" data-bind="with: parentEstablishment, visible: hasParent">
+                            <span data-bind="text: translatedName" class="bold"></span>
+                            <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="    text: officialName"></span>)
+                            </span>
+                        </span>
+                        <span data-bind="visible: !hasParent()">[None -- This is a top-level establishment]</span>
+                    </div>
+                    <div class="on-right" data-bind="visible: hasParent">
+                        <a href="#" data-bind="click: clearParent" title="Remove parent establishment">
+                            <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <input type="hidden" data-bind="value: parentId" />
+    </div>
+    <div data-bind="visible: isParentDirty" style="margin-top: 1em; display: none;">
+        <input type="button" value="Save" data-bind="click: clickToSaveParentId, disable: isParentIdSaveDisabled" />
+        &nbsp;&nbsp;&nbsp;
+        <a href="#/" data-bind="click: clickToCancelParentIdEdit">Cancel</a>
+        &nbsp;&nbsp;&nbsp;
+        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: parentIdSaveSpinner.isVisible" />
+        <strong data-bind="visible: parentIdSaveSpinner.isVisible">Saving...</strong>
+        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: parentIdValidatingSpinner.isVisible" />
+        <strong data-bind="visible: parentIdValidatingSpinner.isVisible">Validating...</strong>
+    </div>
+</section>

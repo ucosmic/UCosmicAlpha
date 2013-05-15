@@ -2599,6 +2599,10 @@ namespace Links
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string InstitutionalAgreementEditModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InstitutionalAgreementEditModel.min.js") ? Url("InstitutionalAgreementEditModel.min.js") : Url("InstitutionalAgreementEditModel.js");
                               
+                public static readonly string RequireAgreement_ts = Url("RequireAgreement.ts");
+                public static readonly string RequireAgreement_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireAgreement.min.js") ? Url("RequireAgreement.min.js") : Url("RequireAgreement.js");
+                              
+                public static readonly string RequireAgreement_min_js = Url("RequireAgreement.min.js");
                 public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
                 public static readonly string modItWorked_min_js = Url("modItWorked.min.js");
                 public static readonly string RequireTestModItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTestModItWorked.min.js") ? Url("RequireTestModItWorked.min.js") : Url("RequireTestModItWorked.js");
@@ -2678,6 +2682,10 @@ namespace Links
                     private const string URLPATH = "~/scripts/viewmodels/amd-modules/Widgets";
                     public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                     public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string Flasher_ts = Url("Flasher.ts");
+                    public static readonly string Flasher_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Flasher.min.js") ? Url("Flasher.min.js") : Url("Flasher.js");
+                                  
+                    public static readonly string Flasher_min_js = Url("Flasher.min.js");
                     public static readonly string Lens_ts = Url("Lens.ts");
                     public static readonly string Lens_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Lens.min.js") ? Url("Lens.min.js") : Url("Lens.js");
                                   

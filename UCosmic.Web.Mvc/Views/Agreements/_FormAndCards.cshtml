@@ -1,0 +1,49 @@
+﻿<form method="POST" data-bind="submit: submitToCreate, validationOptions: { decorateElement: true, errorClass: 'error' }">
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div data-side-swiper="on" class="left">
+                @Html.Partial(MVC.Establishments.Views._FormNamesSection)
+                @Html.Partial(MVC.Establishments.Views._FormUrlsSection)
+                @Html.Partial(MVC.Establishments.Views._FormParentSection)
+                @Html.Partial(MVC.Establishments.Views._FormLocationSection)
+                @Html.Partial(MVC.Establishments.Views._FormCodesAndCategorySection)
+                <section class="fieldset" data-bind="visible: !id" style="display: none;">
+                    <div>
+                        <input type="submit" value="Save" data-bind="disable: createSpinner.isVisible" />
+                        &nbsp;&nbsp;&nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: validatingSpinner.isVisible" />
+                        <strong data-bind="visible: validatingSpinner.isVisible">Validating...</strong>
+                        &nbsp;&nbsp;&nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: createSpinner.isVisible" />
+                        <strong data-bind="visible: createSpinner.isVisible">Saving...</strong>
+                    </div>
+                </section>
+                <section class="fieldset" data-bind="visible: isValidationSummaryVisible() && errors().length" style="display: none;">
+                    <div class="validation-summary">
+                        <h3>Please correct the following and try again:</h3>
+                        <div data-bind="foreach: names">
+                            <ol data-bind="foreach: errors">
+                                <li><span class="validationMessage" data-bind="text: $data"></span></li>
+                            </ol>
+                        </div>
+                        <div data-bind="foreach: urls">
+                            <ol data-bind="foreach: errors">
+                                <li><span class="validationMessage" data-bind="text: $data"></span></li>
+                            </ol>
+                        </div>
+                        <ol data-bind="foreach: errors">
+                            <li><span class="validationMessage" data-bind="text: $data"></span></li>
+                        </ol>
+                    </div>
+                </section>
+                <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">
+                    <div>
+                        <p class="content">
+                        </p>
+                    </div>
+                </div>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </div>
+        </div>
+    </div>
+</form>

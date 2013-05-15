@@ -1,0 +1,65 @@
+﻿<nav class="side">
+    <ul class="top">
+        <li>
+            <a href="@Url.Action(MVC.Establishments.New())" class="group" data-bind="click: gotoAddNew">
+                <div class="arrow"></div>
+                <span class="text">
+                    <img src="~/images/icons/plus/plus-20-green-disc.png" alt="" />
+                    <span>Add New</span>
+                </span>
+            </a>
+        </li>
+        <li class="static square-bottom">
+            <span class="text">Search options</span>
+            <div class="content">
+                <div class="field">
+                    <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode">
+                        <option>[Loading...]</option>
+                    </select>
+                    <input type="hidden" data-bind="value: countryCode" />
+                </div>
+                <div class="field">
+                    <select class="side" data-bind="value: orderBy">
+                        <option value="name-asc">Sort by name A-Z</option>
+                        <option value="name-desc">Sort by name Z-A</option>
+                        <option value="country-asc">Sort by country A-Z</option>
+                        <option value="country-desc">Sort by country Z-A</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <select class="side" data-bind="value: pageSize">
+                        <option value="10">Show 10 results per page</option>
+                        <option value="20">Show 20 results per page</option>
+                        <option value="50">Show 50 results per page</option>
+                        <option value="100">Show 100 results per page</option>
+                        <option value="250">Show 250 results per page</option>
+                        @*<option value="@int.MaxValue">Show all results</option>*@
+                    </select>
+                </div>
+                <div class="field" style="display: none;">
+                    <select class="side" data-bind="value: lens">
+                        <option value="table">Table</option>
+                        <option value="list">List</option>
+                        @*<option value="grid">Grid</option>
+                        <option value="map">Map</option>
+                        <option value="tree">Tree</option>*@
+                    </select>
+                </div>
+                <div class="field">
+                    <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                    |
+                    <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                    <input type="hidden" value="1" data-bind="value: pageNumber" />
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="bottom" data-bind="foreach: lenses">
+        <li data-bind="css: { current: $parent.lens() === value }">
+            <a href="#" class="group" data-bind="click: $parent.changeLens">
+                <div class="arrow"></div>
+                <span class="text" data-bind="text: text"></span>
+            </a>
+        </li>
+    </ul>
+</nav>

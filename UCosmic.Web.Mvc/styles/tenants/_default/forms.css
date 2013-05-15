@@ -233,7 +233,8 @@ button, input[type=submit], input[type=reset], input[type=button], a.button, a.b
   -moz-opacity: 0.9;
   opacity: 0.9;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  text-decoration: none !important; }
   button:hover, input[type=submit]:hover, input[type=reset]:hover, input[type=button]:hover, a.button:hover, a.button:visited:hover {
     cursor: pointer;
     -moz-opacity: 1;

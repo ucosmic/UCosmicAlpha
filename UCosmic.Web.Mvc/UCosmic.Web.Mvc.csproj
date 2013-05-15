@@ -2042,6 +2042,23 @@
     <Content Include="scripts\viewmodels\affiliations\Affiliation.min.js">
       <DependentUpon>Affiliation.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\affiliations\Affiliation.min.js">
+      <DependentUpon>Affiliation.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireAgreement.ts" />
+    <Content Include="scripts\viewmodels\agreements\RequireAgreement.js">
+      <DependentUpon>RequireAgreement.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\RequireAgreement.min.js">
+      <DependentUpon>RequireAgreement.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\Flasher.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\Flasher.js">
+      <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\amd-modules\Widgets\Flasher.min.js">
+      <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.min.js">
       <DependentUpon>GeographicExpertise.ts</DependentUpon>
@@ -2115,6 +2132,9 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.ts" />
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.js">
+      <DependentUpon>GeographicExpertise.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.min.js">
       <DependentUpon>GeographicExpertise.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.js">
@@ -2611,6 +2631,18 @@
     <Content Include="Views\MyProfile\_Degrees.cshtml" />
     <Content Include="Views\MyProfile\DegreeEdit.cshtml" />
     <Content Include="Views\MyProfile\GeographicExpertiseEdit.cshtml" />
+    <Content Include="Views\Agreements\_FormAndCards.cshtml" />
+    <Content Include="Views\Agreements\_FormCodesAndCategorySection.cshtml" />
+    <Content Include="Views\Agreements\_FormLocationSection.cshtml" />
+    <Content Include="Views\Agreements\_FormNamesSection.cshtml" />
+    <Content Include="Views\Agreements\_FormParentSection.cshtml" />
+    <Content Include="Views\Agreements\_FormSideBar.cshtml" />
+    <Content Include="Views\Agreements\_FormUrlsSection.cshtml" />
+    <Content Include="Views\Agreements\_SearchAndResults.cshtml" />
+    <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
+    <Content Include="Views\Agreements\Form.cshtml" />
+    <Content Include="Views\Agreements\Index.cshtml" />
+    <Content Include="Views\Agreements\_Bib.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2737,7 +2769,7 @@
     <None Include="styles\sass\sheets\_layout-banner.scss" />
     <None Include="styles\sass\sheets\_layout-content.scss" />
     <Content Include="Views\Shared\_LayoutCss.cshtml" />
-    <Content Include="Views\Agreements\Index.cshtml" />
+    <Content Include="Views\Agreements\Index2.cshtml" />
     <Content Include="Views\Shared\_SampleVerticalContent.cshtml" />
     <None Include="styles\tenants\suny.edu\forms.scss" />
     <None Include="styles\tenants\lehigh.edu\forms.scss" />

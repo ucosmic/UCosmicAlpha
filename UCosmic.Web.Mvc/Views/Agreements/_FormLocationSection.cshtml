@@ -1,0 +1,146 @@
+﻿<section id="location" class="fieldset" data-bind="with: location">
+    <header>
+        <h2>
+            <span>Location</span>
+            <a href="#/location/help/" title="Help with location" data-bind="click: clickForHelp">
+                <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help with location" />
+            </a>
+            <a href="#/location/edit/" title="Edit location" data-bind="visible: isEditIconVisible, click: clickToEdit" style="display: none;">
+                <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit location" />
+            </a>
+        </h2>
+    </header>
+    <div data-bind="visible: !isEditing()" style="display: none; margin-bottom: 16px;">
+        <div>
+            @* todo: turn this from div/span to ol/ul *@
+            <span data-bind="visible: continentId" style="display: none;">
+                <span data-bind="text: continentName"></span>
+            </span>
+            <span data-bind="visible: countryId" style="display: none;">&gt;&gt; <span data-bind="text: countryName"></span>
+            </span>
+            <span data-bind="visible: admin1Id" style="display: none;">&gt;&gt; <span data-bind="text: admin1Name"></span>
+            </span>
+            <span data-bind="visible: admin2Id" style="display: none;">&gt;&gt; <span data-bind="text: admin2Name"></span>
+            </span>
+            <span data-bind="visible: admin3Id" style="display: none;">&gt;&gt; <span data-bind="text: admin3Name"></span>
+            </span>
+            <span data-bind="foreach: subAdmins">
+                <span data-bind="visible: officialName" style="display: none;">&gt;&gt; <span data-bind="text: officialName"></span>
+                </span>
+            </span>
+        </div>
+        <span data-bind="visible: isLoaded() && !continentId()">[Location is unknown]</span>
+    </div>
+    <div class="field-table w690-l190-v500" data-bind="visible: isEditing" style="display: none;">
+        <div class="field-row">
+            <div class="field-label">
+                <label>Continent</label>
+            </div>
+            <div class="field-value">
+                <span data-bind="text: continentName"></span>
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-label">
+                <label for="establishment_location_country_menu">Country</label>
+            </div>
+            <div class="field-input">
+                <select data-bind="options: countries, optionsCaption: countryOptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: countryId,
+                    event: { change: changePlaceInLocation }"
+                    id="establishment_location_country_menu">
+                    <option>[Loading...]</option>
+                </select>
+            </div>
+        </div>
+        <div class="field-row" data-bind="visible: showAdmin1Input">
+            <div class="field-label">
+                <label for="establishment_location_admin1_menu">Admin #1</label>
+            </div>
+            <div class="field-input">
+                <select data-bind="options: admin1s, optionsCaption: admin1OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin1Id,
+                    event: { change: changePlaceInLocation }"
+                    id="establishment_location_admin1_menu">
+                    <option>[Loading...]</option>
+                </select>
+            </div>
+        </div>
+        <div class="field-row" data-bind="visible: showAdmin2Input">
+            <div class="field-label">
+                <label for="establishment_location_admin2_menu">Admin #2</label>
+            </div>
+            <div class="field-input">
+                <select data-bind="options: admin2s, optionsCaption: admin2OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin2Id,
+                    event: { change: changePlaceInLocation }"
+                    id="establishment_location_admin2_menu">
+                    <option>[Loading...]</option>
+                </select>
+            </div>
+        </div>
+        <div class="field-row" data-bind="visible: showAdmin3Input">
+            <div class="field-label">
+                <label for="establishment_location_admin3_menu">Admin #3</label>
+            </div>
+            <div class="field-input">
+                <select data-bind="options: admin3s, optionsCaption: admin3OptionsCaption, optionsText: 'officialName', optionsValue: 'id', value: admin3Id,
+                    event: { change: changePlaceInLocation }"
+                    id="establishment_location_admin3_menu">
+                    <option>[Loading...]</option>
+                </select>
+            </div>
+        </div>
+        <div data-bind="foreach: subAdmins, visible: subAdmins().length">
+            <div class="field-row">
+                <div class="field-label">
+                    <label data-bind="text: placeTypeEnglishName"></label>
+                </div>
+                <div class="field-value">
+                    <span data-bind="text: officialName"></span>
+                </div>
+            </div>
+        </div>
+        <div class="field-row" style="font-size: 14px;">
+            <div class="field-unlabeled-input">
+                <div style="float: left; width: 260px;">
+                    <strong>Latitude:</strong>
+                    <span data-bind="text: toolsMarkerLat"></span>
+                    <span data-bind="visible: !toolsMarkerLat()">[None]</span>
+                </div>
+                <div style="float: left; width: 260px; padding-left: 10px;">
+                    <strong>Longitude:</strong>
+                    <span data-bind="text: toolsMarkerLng, visible: toolsMarkerLng"></span>
+                    <span data-bind="visible: !toolsMarkerLng()">[None]</span>
+                </div>
+                <div style="float: left; width: 140px; padding-left: 10px;">
+                    <strong>Zoom level:</strong>
+                    <span data-bind="text: mapZoom"></span>
+                </div>
+            </div>
+        </div>
+        <div class="field-row" data-bind="visible: isEditable">
+            <div class="field-unlabeled-input">
+                <input type="button" value="Save" data-bind="click: clickToSave, attr: { disabled: saveSpinner.isVisible }" />
+                &nbsp;&nbsp;&nbsp;
+                <a href="#/cancel-location-edit/" data-bind="click: clickToCancelEdit">Cancel</a>
+                &nbsp;&nbsp;&nbsp;
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;">
+        Lat:
+        <input type="text" data-bind="value: toolsMarkerLat" />
+        Lng:
+        <input type="text" data-bind="value: toolsMarkerLng" />
+    </div>
+    <div id="map_canvas" class="map-canvas-w100-h500" data-bind="jqObservableElement: '$mapCanvas', visible: isMapVisible" style="display: none;"></div>
+    @Html.Partial(MVC.Shared.Views._GoogleMapsToolsOverlay)
+    <div data-bind="jqElement: '$dataLoadingDialog'" title="Loading Geographic Information" style="display: none;">
+        <div>
+            <p class="content">
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                Please wait a moment while geographic information is retrieved for this place marker.
+            </p>
+        </div>
+    </div>
+</section>

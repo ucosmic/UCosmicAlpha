@@ -206,6 +206,7 @@ button, input[type=submit], input[type=reset], input[type=button], a.button, a.b
     color: $button-text-color !important;
     background-color: $button-bg-color;
     @include opacity(.9);
+    text-decoration: none!important;
     &:hover {
         cursor: pointer;
         @include opacity(1);

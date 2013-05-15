@@ -1,0 +1,78 @@
+﻿<section id="names" class="fieldset">
+    <header>
+        <h2>
+            <span data-bind="visible: id">Name(s)</span>
+            <span data-bind="visible: id === 0">Official Name</span>
+            <a href="#" title="Add a new name" data-bind="visible: canAddName() && !namesSpinner.isVisible(), click: addName" style="display: none;">
+                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new name" />
+            </a>
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: namesSpinner.isVisible" style="display: none;" />
+        </h2>
+    </header>
+    <ul class="data-items" data-bind="foreach: names">
+        <li data-bind="css: { selected: editMode }">
+            <div class="text-box when-hovered" data-bind="click: showEditor, visible: !editMode(), css: { 'force-unhoverable': owner.editingName() }" style="display: none;">
+                <div class="group">
+                    <div class="on-left" style="max-width: 645px;">
+                        <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
+                        <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
+                        <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
+                        <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                    </div>
+                    <div class="on-right" data-bind="visible: !isOfficialName() && !owner.editingName()">
+                        <a href="#" data-bind="click: purge, visible: !purgeSpinner.isVisible()" title="Delete this name">
+                            <img src="~/images/icons/minus/minus-20-red.png" alt="" class="align-top" /></a>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" class="align-top" data-bind="visible: purgeSpinner.isVisible" />
+                    </div>
+                </div>
+            </div>
+            <div data-bind="visible: editMode" style="display: none;">
+                <div>
+                    <div class="field" style="margin-top: 0;">
+                        <textarea rows="1" class="no-resize" data-bind="value: text, jqElement: '$textElement', css: { spinning: textValidationSpinner.isVisible }" data-autosize="true" placeholder="[Enter establishment name here]"></textarea>
+                    </div>
+                    <div class="field" data-bind="visible: owner.id">
+                        <label data-bind="click: clickOfficialNameCheckbox">
+                            <input type="checkbox" data-bind="checked: isOfficialName, enable: isOfficialNameEnabled" />
+                            Offical Name
+                        </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="checkbox" data-bind="checked: isFormerName, enable: !isOfficialName()" />
+                            Former / Defunct Name
+                        </label>
+                    </div>
+                    <div class="field">
+                        <select data-bind="value: selectedLanguageCode, options: owner.languages, optionsText: 'name', optionsValue: 'code', jqElement: '$languagesElement', visible: owner.languages().length > 0" style="display: none;">
+                        </select>
+                        <select data-bind="visible: owner.languages().length < 1">
+                            <option>[Loading...]</option>
+                        </select>
+                    </div>
+                    <div data-bind="visible: owner.id">
+                        <input type="button" value="Save" data-bind="click: saveEditor, enable: !saveSpinner.isVisible()" />
+                        <input type="button" value="Cancel" data-bind="click: cancelEditor, enable: !saveSpinner.isVisible()" class="link" />
+                        &nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: textValidationSpinner.isVisible" />
+                        <strong data-bind="visible: textValidationSpinner.isVisible">Validating...</strong>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" />
+                        <strong data-bind="visible: saveSpinner.isVisible">Saving...</strong>
+                    </div>
+                </div>
+            </div>
+            <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                <div>
+                    <p>
+                        Are you sure you want to delete this establishment name?
+                    </p>
+                    <div>
+                        <span data-bind="text: text, css: { 'bold': isOfficialName() }" class="inline-block"></span>
+                        <span class="green badge" data-bind="visible: isOfficialName" style="display: none;">Official</span>
+                        <span class="blue badge" data-bind="visible: languageName, text: languageName" style="display: none;"></span>
+                        <span class="red badge" data-bind="visible: isFormerName" style="display: none;">Former / Defunct</span>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
