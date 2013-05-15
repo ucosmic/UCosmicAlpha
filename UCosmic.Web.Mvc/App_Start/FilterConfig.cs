@@ -8,6 +8,7 @@ namespace UCosmic.Web.Mvc
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new LocalApiAuthorizeAttribute());
+            filters.Add(new VersionAttribute());
 
 #if !DEBUG
             filters.Add(new EnforceHttpsAttribute());

@@ -307,7 +307,7 @@ body #main {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding-bottom: 60px;
+    padding-bottom: 70px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
     body #main > .content.to-top {
       padding-top: 0 !important; }
@@ -626,7 +626,7 @@ body .bold {
 body > footer {
   position: absolute;
   bottom: 0;
-  height: 40px;
+  height: 50px;
   width: 100%;
   min-width: 980px;
   background-color: #7a0019;
@@ -662,4 +662,15 @@ body > footer {
           body > footer nav.modules > ul > li > a {
             font-size: 14px;
             line-height: 20px; } }
+  body > footer small.powered-by {
+    display: block;
+    width: 960px;
+    margin-top: 6px;
+    font-size: 10px;
+    text-align: center; }
+    body > footer small.powered-by a {
+      color: #ffcc33;
+      text-decoration: underline; }
+      body > footer small.powered-by a:hover {
+        text-decoration: none; }
 

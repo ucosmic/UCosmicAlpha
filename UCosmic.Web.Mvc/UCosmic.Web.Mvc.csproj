@@ -274,6 +274,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AdminController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -291,6 +294,7 @@
     <Compile Include="ApiControllers\UsersController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
     <Compile Include="Helpers\FileSizeFormatter.cs" />
     <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />

@@ -39,5 +39,20 @@ body {
                 }
             }
         }
+        small.powered-by {
+            display: block;
+            width: $tube-inner-width;
+            margin-top: 6px;
+            font-size: 10px;
+            text-align: center;
+            a {
+                color: $footer-link-text-color;
+                text-decoration: underline;
+                &:hover {
+                    text-decoration: none;
+                }
+
+            }
+        }
     }
 }
