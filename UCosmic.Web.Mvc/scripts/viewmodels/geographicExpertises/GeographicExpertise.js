@@ -5,6 +5,7 @@ var ViewModels;
             function GeographicExpertise(educationId) {
                 this.inititializationErrors = "";
                 this.saving = false;
+                this.selectedLocations = ko.observableArray();
                 this._initialize(educationId);
             }
             GeographicExpertise.prototype._initialize = function (expertiseId) {
@@ -13,51 +14,46 @@ var ViewModels;
             GeographicExpertise.prototype.setupWidgets = function (locationSelectorId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
-                $("#" + locationSelectorId).kendoAutoComplete({
-                    minLength: 3,
-                    filter: "contains",
+                $("#" + locationSelectorId).kendoMultiSelect({
+                    filter: 'contains',
                     ignoreCase: true,
-                    placeholder: "[Enter Location]",
                     dataTextField: "officialName",
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function (options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Places.get(),
-                                    data: {
-                                        keyword: options.data.filter.filters[0].value,
-                                        pageNumber: 1,
-                                        pageSize: 2147483647
-                                    },
-                                    success: function (results) {
-                                        options.success(results.items);
-                                    }
-                                });
-                            }
-                        }
-                    }),
-                    select: function (e) {
-                        var me = $("#" + locationSelectorId).data("kendoAutoComplete");
-                        var dataItem = me.dataItem(e.item.index());
-                        _this.placeId(dataItem.id);
-                        if((dataItem.placeOfficialName != null) && (dataItem.placeOfficialName.length > 0)) {
-                            _this.placeOfficialName(dataItem.placeOfficialName);
-                        } else {
-                            _this.placeOfficialName(null);
-                        }
-                    }
+                    dataValueField: "id",
+                    minLength: 3,
+                    maxSelectedItems: 1,
+                    dataSource: this.locationsDataSource,
+                    value: this.selectedLocations(),
+                    change: function (event) {
+                        _this.updateLocations(event.sender.value());
+                    },
+                    placeholder: "[Select Country/Location, Body of Water or Global]"
                 });
             };
             GeographicExpertise.prototype.setupValidation = function () {
+                ko.validation.rules['numberNotNull'] = {
+                    validator: function (val, otherVal) {
+                        return val != null;
+                    },
+                    message: 'Required.'
+                };
+                ko.validation.registerExtenders();
                 this.placeId.extend({
-                    required: true
+                    numberNotNull: 0
+                });
+                this.description.extend({
+                    maxLength: 400
                 });
                 ko.validation.group(this);
             };
             GeographicExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
+                var locationsPact = $.Deferred();
+                $.get(App.Routes.WebApi.Places.get()).done(function (data, textStatus, jqXHR) {
+                    locationsPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    locationsPact.reject(jqXHR, textStatus, errorThrown);
+                });
                 var dataPact = $.Deferred();
                 $.ajax({
                     type: "GET",
@@ -69,9 +65,11 @@ var ViewModels;
                         dataPact.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
-                $.when(dataPact).done(function (data) {
+                $.when(locationsPact, dataPact).done(function (locations, data) {
+                    _this.locationsDataSource = locations;
                     ko.mapping.fromJS(data, {
                     }, _this);
+                    _this.selectedLocations.push(_this.placeId());
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
@@ -80,6 +78,9 @@ var ViewModels;
             };
             GeographicExpertise.prototype.save = function (viewModel, event) {
                 var _this = this;
+                if(!this.isValid()) {
+                    return;
+                }
                 while(this.saving) {
                     alert("Please wait while expertise is saved.");
                 }
@@ -92,13 +93,14 @@ var ViewModels;
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.saving = false;
+                        location.href = App.Routes.Mvc.My.Profile.get(1);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
+                        location.href = App.Routes.Mvc.My.Profile.get(1);
                     }
                 });
-                location.href = App.Routes.Mvc.My.Profile.get(3);
             };
             GeographicExpertise.prototype.isEmpty = function () {
                 if((this.placeOfficialName() == "Global") && (this.description() == null)) {
@@ -134,6 +136,9 @@ var ViewModels;
                         }
                     }
                 });
+            };
+            GeographicExpertise.prototype.updateLocations = function (locations) {
+                this.placeId(locations.length > 0 ? locations[0] : null);
             };
             return GeographicExpertise;
         })();

@@ -2044,6 +2044,9 @@
     <Content Include="scripts\viewmodels\my\Profile.min.js.map">
       <DependentUpon>Profile.js</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.min.js.map">
+      <DependentUpon>GeographicExpertise.js</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />

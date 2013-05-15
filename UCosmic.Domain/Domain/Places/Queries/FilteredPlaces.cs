@@ -16,6 +16,7 @@ namespace UCosmic.Domain.Places
         public bool? IsAdmin3 { get; set; }
         public IEnumerable<int> WoeIds { get; set; }
         public IEnumerable<int> GeoNameIds { get; set; }
+        public string Keyword { get; set; }
     }
 
     public class HandleFilteredPlacesQuery : IHandleQueries<FilteredPlaces, Place[]>
@@ -61,6 +62,9 @@ namespace UCosmic.Domain.Places
 
             if (query.GeoNameIds != null && query.GeoNameIds.Any())
                 results = results.Where(x => x.GeoNamesToponym != null && query.GeoNameIds.Contains(x.GeoNamesToponym.GeoNameId));
+
+            if (!String.IsNullOrEmpty(query.Keyword))
+                results = results.Where(x => x.OfficialName.Contains(query.Keyword));
 
             results = results.OrderBy(query.OrderBy);
 

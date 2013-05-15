@@ -18,6 +18,7 @@ namespace UCosmic.Web.Mvc.Models
         public bool? IsAdmin3 { get; set; }
         public IEnumerable<int> WoeIds { get; set; }
         public IEnumerable<int> GeoNameIds { get; set; }
+        public string Keyword { get; set; }
     }
 
     public static class PlaceFilterInputProfiler

@@ -19,11 +19,13 @@ module ViewModels.GeographicExpertises {
         /* Initialization errors. */
         inititializationErrors: string = "";
 
-        /* In the process of saving */
+        /* In the process of saving. */
         saving: bool = false;
 
-        /* Element id of place autocomplete */
+        /* Locations for multiselect. */
         locationSelectorId: string;
+        locationsDataSource: any;
+        selectedLocations: KnockoutObservableArray = ko.observableArray();
 
         /* IObservableDegree implemented */
         id: KnockoutObservableNumber;
@@ -52,43 +54,20 @@ module ViewModels.GeographicExpertises {
 
             this.locationSelectorId = locationSelectorId;
 
-            $( "#" + locationSelectorId ).kendoAutoComplete( {
-                minLength: 3,
-                filter: "contains",
+            $( "#" + locationSelectorId ).kendoMultiSelect( {
+                filter: 'contains',
                 ignoreCase: true,
-                placeholder: "[Enter Location]",
                 dataTextField: "officialName",
-                dataSource: new kendo.data.DataSource( {
-                    serverFiltering: true,
-                    transport: {
-                        read: ( options: any ): void => {
-                            $.ajax( {
-                                url: App.Routes.WebApi.Places.get(),
-                                data: {
-                                    keyword: options.data.filter.filters[0].value,
-                                    pageNumber: 1,
-                                    pageSize: 2147483647 /* C# Int32.Max */
-                                },
-                                success: ( results: any ): void => {
-                                    options.success( results.items );
-                                }
-                            } );
-                        }
-                    }
-                } ),
-                select: ( e: any ): void => {
-                    var me = $( "#" + locationSelectorId ).data( "kendoAutoComplete" );
-                    var dataItem = me.dataItem( e.item.index() );
-                    this.placeId(dataItem.id);
-                    if ( ( dataItem.placeOfficialName != null ) && ( dataItem.placeOfficialName.length > 0 ) ) {
-                        this.placeOfficialName(dataItem.placeOfficialName);
-                    }
-                    else {
-                        this.placeOfficialName(null);
-                    }
-                }
+                dataValueField: "id",
+                minLength: 3,
+                maxSelectedItems: 1,
+                dataSource: this.locationsDataSource,
+                value: this.selectedLocations(),
+                change: ( event: any ) => {
+                    this.updateLocations( event.sender.value() );
+                },
+                placeholder: "[Select Country/Location, Body of Water or Global]"
             } );
-
         }
 
         // --------------------------------------------------------------------------------
@@ -96,7 +75,17 @@ module ViewModels.GeographicExpertises {
         */
         // --------------------------------------------------------------------------------
         setupValidation(): void {
-            this.placeId.extend( { required: true } );
+            ko.validation.rules['numberNotNull'] = {
+                validator: ( val: any, otherVal: any ): bool => {
+                    return val != null;
+                },
+                message: 'Required.'
+            };
+
+            ko.validation.registerExtenders();
+            
+            this.placeId.extend( { numberNotNull: 0 } );
+            this.description.extend( { maxLength: 400 } );
 
             ko.validation.group( this );
         }
@@ -116,6 +105,15 @@ module ViewModels.GeographicExpertises {
         load(): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
+            var locationsPact = $.Deferred();
+            $.get(App.Routes.WebApi.Places.get())
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    locationsPact.resolve(data);
+                })
+                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    locationsPact.reject(jqXHR, textStatus, errorThrown);
+                });
+
             var dataPact = $.Deferred();
 
             $.ajax( {
@@ -128,9 +126,15 @@ module ViewModels.GeographicExpertises {
             } );
 
             // only process after all requests have been resolved
-            $.when( dataPact )
-                          .done( ( data: any ): void => {
+            $.when( locationsPact, dataPact )
+                          .done( ( locations: any, data: any ): void => {
+
+                              this.locationsDataSource = locations;
+
                               ko.mapping.fromJS( data, {}, this );
+
+                              this.selectedLocations.push( this.placeId() );
+
                               deferred.resolve();
                           } )
                           .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
@@ -145,6 +149,12 @@ module ViewModels.GeographicExpertises {
         */
         // --------------------------------------------------------------------------------
         save( viewModel: any, event: any ): void {
+
+            if (!this.isValid()) {
+                // TBD - need dialog here.
+                return;
+            }
+
             while ( this.saving ) {
                 alert( "Please wait while expertise is saved." ); // TBD: dialog
             }
@@ -159,14 +169,14 @@ module ViewModels.GeographicExpertises {
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     this.saving = false;
+                    location.href = App.Routes.Mvc.My.Profile.get(1);
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
                     this.saving = false;
                     alert( textStatus + " | " + errorThrown );
+                    location.href = App.Routes.Mvc.My.Profile.get(1);
                 }
             } );
-
-            location.href = App.Routes.Mvc.My.Profile.get(3);
         }
 
         // --------------------------------------------------------------------------------
@@ -219,6 +229,19 @@ module ViewModels.GeographicExpertises {
                 }
             } );
 
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        updateLocations( locations: Array ): void {
+            //this.values.locations.removeAll();
+            //for ( var i = 0; i < locations.length; i += 1 ) {
+            //    var location = ko.mapping.fromJS( { id: 0, placeId: locations[i], version: "" } );
+            //    this.values.locations.push( location );
+            //}
+            this.placeId(locations.length > 0 ? locations[0] : null);
         }
     }
 }

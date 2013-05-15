@@ -27,7 +27,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
-            var query = Mapper.Map<FilteredPlaces>(input);
+         var query = Mapper.Map<FilteredPlaces>(input);
             query.EagerLoad = new Expression<Func<Place, object>>[]
             {
                 x => x.Parent,

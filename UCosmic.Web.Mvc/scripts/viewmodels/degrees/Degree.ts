@@ -171,6 +171,11 @@ module ViewModels.Degrees {
         */
         // --------------------------------------------------------------------------------
         save( viewModel: any, event: any ): void {
+            if (!this.isValid()) {
+                // TBD - need dialog here.
+                return;
+            }
+
             while ( this.saving ) {
                 alert( "Please wait while degree is saved." ); // TBD: dialog
             }

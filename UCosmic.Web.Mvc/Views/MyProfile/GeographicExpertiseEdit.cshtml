@@ -12,12 +12,14 @@
         width: 120px;
         display:inline-block;
         text-align: right;
+        vertical-align: inherit;
     }        
     .required-field
     {
         width: 120px;
         display:inline-block;
         text-align: right;
+        vertical-align: inherit;
     }
     .required-field::after {
         content: "*";
@@ -30,7 +32,7 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/geographic-expertises")
+    @Scripts.Render("~/bundles/geographicExpertise")
 
     <script type="text/javascript">
         $(function() {
@@ -71,20 +73,22 @@
                         <div style="margin-bottom: 38px">
 
                             <!-- PLACE -->
-                            <div style="margin-bottom: 14px">
-                                <span>
-                                    <label for="location" class="required-field">Location</label>
-                                    <input type="text" id="location" style="width: 800px; height: 32px" data-bind="value: placeOfficialName" />
-                                </span>
+                            <div style="margin-bottom: 14px; display: inline-block; vertical-align: middle">
+                                <label for="location" class="required-field">Location</label>
+                                <div style="display: inline-block; vertical-align: middle">
+                                    <select id="location" style="width: 600px; overflow-y:auto" data-bind="selectedOptions: selectedLocations"></select>
+                                </div>
                             </div>
+                            <span data-bind="validationMessage: placeId" class="validationMessage"></span>
                             
                             <!-- DESCRIPTION -->
-                            <div style="margin-bottom: 8px">
-                                <span>
+                            <div>
+                                <span style="display: inline-block; vertical-align: middle">
                                     <label for="title" class="non-required-field">Description</label>
-                                    <textarea rows="4" id="title" style="width: 600px; margin-right: 8px" data-bind="value: description"></textarea>
+                                    <textarea rows="4" id="title" style="vertical-align: inherit; vertical-align: inherit; width: 600px; margin-right: 8px" data-bind="value: description"></textarea>
                                 </span>
                             </div>
+
                         </div>
                             
                         <!-- BUTTONS -->
@@ -94,7 +98,7 @@
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size:smaller; color:slategray">
                                 <span>Last updated</span>
-                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).toDate('MM/DD/YY') : ''"></label>
+                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
                                 <span> by </span>
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
@@ -119,6 +123,6 @@
     <span>
         <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
         <input type="button" value="Guide Me" style="margin-left: 50px"/>
-        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
+        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
     </span>
 </script>
