@@ -1,8 +1,7 @@
 require([
-    "viewmodels/amd-modules/establishments/search", 
-    "viewmodels/amd-modules/widgets/flasher"
+    "viewmodels/amd-modules/establishments/search"
 ], function (Search) {
     var establishmentSearchViewModel = new Search.Search();
-    ko.applyBindings(establishmentSearchViewModel, $('[data-current-module=admin]')[0]);
+    ko.applyBindings(establishmentSearchViewModel, $('#main')[0]);
     establishmentSearchViewModel.sammy.run();
 });

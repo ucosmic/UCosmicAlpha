@@ -2046,6 +2046,13 @@
       <DependentUpon>Affiliation.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireAgreement.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\AgreementVM.ts" />
+    <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
+      <DependentUpon>AgreementVM.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\AgreementVM.min.js">
+      <DependentUpon>AgreementVM.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\RequireAgreement.js">
       <DependentUpon>RequireAgreement.ts</DependentUpon>
     </Content>

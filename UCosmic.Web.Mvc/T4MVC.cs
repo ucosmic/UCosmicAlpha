@@ -2597,6 +2597,10 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/agreements";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string AgreementVM_ts = Url("AgreementVM.ts");
+                public static readonly string AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AgreementVM.min.js") ? Url("AgreementVM.min.js") : Url("AgreementVM.js");
+                              
+                public static readonly string AgreementVM_min_js = Url("AgreementVM.min.js");
                 public static readonly string InstitutionalAgreementEditModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InstitutionalAgreementEditModel.min.js") ? Url("InstitutionalAgreementEditModel.min.js") : Url("InstitutionalAgreementEditModel.js");
                               
                 public static readonly string RequireAgreement_ts = Url("RequireAgreement.ts");
