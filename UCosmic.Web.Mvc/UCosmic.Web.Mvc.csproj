@@ -2060,6 +2060,13 @@
       <DependentUpon>RequireAgreement.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\Flasher.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.ts" />
+    <Content Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.js">
+      <DependentUpon>RequireEstablishmentSearch.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.min.js">
+      <DependentUpon>RequireEstablishmentSearch.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\amd-modules\Widgets\Flasher.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
@@ -2650,6 +2657,7 @@
     <Content Include="Views\Agreements\Form.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
+    <Content Include="Views\Agreements\EstablishmentSearch.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2776,7 +2784,6 @@
     <None Include="styles\sass\sheets\_layout-banner.scss" />
     <None Include="styles\sass\sheets\_layout-content.scss" />
     <Content Include="Views\Shared\_LayoutCss.cshtml" />
-    <Content Include="Views\Agreements\Index2.cshtml" />
     <Content Include="Views\Shared\_SampleVerticalContent.cshtml" />
     <None Include="styles\tenants\suny.edu\forms.scss" />
     <None Include="styles\tenants\lehigh.edu\forms.scss" />

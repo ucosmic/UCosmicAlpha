@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Agreements";
+﻿@using UCosmic.Web.Mvc
+@{
+    ViewBag.Title = "Institutional Agreement";
 }
 @section bib
 {
@@ -7,29 +8,96 @@
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
-@section scripts {
-
-    @Scripts.Render("~/bundles/Agreements")
-
-
+@section scripts
+{
+      @Scripts.Render("~/bundles/agreements")
 }
+
 <div class="content fixed to-top" data-current-module="agreements">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
-            <div data-side-swiper="on">
-                <form class="group" data-bind="submit: requestResults">
+            <div id="all" data-side-swiper="on">
+                <form class="group">
                     <div class="on-left from-top">
                         <header>
                             <h1>
                                 @ViewBag.Title
                             </h1>
                         </header>
-                        @Html.Partial(MVC.Agreements.Views._SearchAndResults)
+                        <section id="participants">
+                            <header>
+                                <h2>
+                                    Participants
+                                    @{
+                                        // HACK ALERT this is only temporary
+                                        var tenancy = Request.Tenancy() != null
+                                            ? Request.Tenancy().StyleDomain
+                                            : "default";
+                                    }
+                                    <input type="hidden" value="@tenancy" id="tenancy_domain" />
+                                </h2>
+                            </header>
+                            <div data-bind="visible: isBound" style="display: none;">
+                                <ul data-bind="foreach: participants">
+                                    <li data-bind="element: 'participantEl'">
+                                        <div class="typed-item" data-bind="with: establishment">
+                                            <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
+                                            <div class="type">
+                                                <span data-bind="visible: $parent.isOwner">Home</span>
+                                                <span data-bind="visible: $parent.isNotOwner">Partner</span>
+                                            </div>
+                                            <div class="item">
+                                                <div>
+                                                    <strong data-bind="text: translatedName"></strong>
+                                                    <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
+                                                </div>
+                                                <div data-bind="visible: $parent.isNotOwner() && websiteUrl()">
+                                                    <a href="#" target="_blank" data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }"></a>
+                                                </div>
+                                                <div data-bind="visible: $parent.isNotOwner() && countryName()">
+                                                    <span data-bind="text: countryName"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <footer>
+                                <a href="#/participants/add/page/1" class="button">
+                                    <i class="green plus"></i>
+                                    <span class="text">Add a participant</span>
+                                </a>
+                            </footer>
+                        </section>
+                        @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
                     </div>
                     <aside class="on-right from-top" data-fixed-scroll="root">
                         <div data-fixed-scroll="anchor"></div>
                         <div data-fixed-scroll="content">
-                            @Html.Partial(MVC.Agreements.Views._SearchSideBar)
+                            @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+                        </div>
+                    </aside>
+                </form>
+            </div>
+            <div id="participants_add" data-side-swiper="off">
+                <form class="group">
+                    <div class="on-left from-top">
+                        <header>
+                            <a href="#/"><span class="breadcrumb-arrows">&lt;&lt;&nbsp;</span><h1>Institutional Agreement</h1>
+                            </a>
+                            <span class="breadcrumb-arrows">&gt;&gt;</span>
+                            <h2>
+                                Add a participant
+                            </h2>
+                        </header>
+                        <div data-bind="with: establishmentSearchViewModel">
+                            @Html.Partial(MVC.Establishments.Views._SearchAndResults)
+                        </div>
+                    </div>
+                    <aside class="on-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content" data-bind="with: establishmentSearchViewModel">
+                            @Html.Partial(MVC.Establishments.Views._SearchSideBar)
                         </div>
                     </aside>
                 </form>

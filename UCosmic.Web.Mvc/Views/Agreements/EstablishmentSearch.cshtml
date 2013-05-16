@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Agreements";
+}
+@section bib
+{
+    <nav class="bib hide" data-current-bib="agreements">
+        @Html.Partial(MVC.Agreements.Views._Bib)
+    </nav>
+}
+@section scripts {
+
+    @Scripts.Render("~/bundles/establishmentSearch")
+
+
+}
+<div class="content fixed to-top" data-current-module="agreements">
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div data-side-swiper="on">
+                <form class="group" data-bind="submit: requestResults">
+                    <div class="on-left from-top">
+                        <header>
+                            <h1>
+                                @ViewBag.Title
+                            </h1>
+                        </header>
+                        @Html.Partial(MVC.Agreements.Views._SearchAndResults)
+                    </div>
+                    <aside class="on-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content">
+                            @Html.Partial(MVC.Agreements.Views._SearchSideBar)
+                        </div>
+                    </aside>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

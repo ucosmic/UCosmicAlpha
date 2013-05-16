@@ -2607,6 +2607,10 @@ namespace Links
                 public static readonly string RequireAgreement_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireAgreement.min.js") ? Url("RequireAgreement.min.js") : Url("RequireAgreement.js");
                               
                 public static readonly string RequireAgreement_min_js = Url("RequireAgreement.min.js");
+                public static readonly string RequireEstablishmentSearch_ts = Url("RequireEstablishmentSearch.ts");
+                public static readonly string RequireEstablishmentSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireEstablishmentSearch.min.js") ? Url("RequireEstablishmentSearch.min.js") : Url("RequireEstablishmentSearch.js");
+                              
+                public static readonly string RequireEstablishmentSearch_min_js = Url("RequireEstablishmentSearch.min.js");
                 public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
                 public static readonly string modItWorked_min_js = Url("modItWorked.min.js");
                 public static readonly string RequireTestModItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTestModItWorked.min.js") ? Url("RequireTestModItWorked.min.js") : Url("RequireTestModItWorked.js");

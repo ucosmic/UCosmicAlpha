@@ -105,9 +105,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _FormUrlsSection = "_FormUrlsSection";
                 public readonly string _SearchAndResults = "_SearchAndResults";
                 public readonly string _SearchSideBar = "_SearchSideBar";
+                public readonly string EstablishmentSearch = "EstablishmentSearch";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
-                public readonly string Index2 = "Index2";
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
             public readonly string _FormAndCards = "~/Views/Agreements/_FormAndCards.cshtml";
@@ -119,9 +119,9 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _FormUrlsSection = "~/Views/Agreements/_FormUrlsSection.cshtml";
             public readonly string _SearchAndResults = "~/Views/Agreements/_SearchAndResults.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
+            public readonly string EstablishmentSearch = "~/Views/Agreements/EstablishmentSearch.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
-            public readonly string Index2 = "~/Views/Agreements/Index2.cshtml";
         }
     }
 

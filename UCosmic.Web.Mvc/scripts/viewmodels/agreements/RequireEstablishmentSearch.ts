@@ -1,9 +1,8 @@
-
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../require.d.ts" />
 
-require(["viewmodels/agreements/AgreementVM"],
+require(["viewmodels/amd-modules/establishments/search"],
 function (Search) {
 
 
