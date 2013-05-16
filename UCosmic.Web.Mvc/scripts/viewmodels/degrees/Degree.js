@@ -101,6 +101,9 @@ var ViewModels;
             };
             Degree.prototype.save = function (viewModel, event) {
                 var _this = this;
+                if(!this.isValid()) {
+                    return;
+                }
                 while(this.saving) {
                     alert("Please wait while degree is saved.");
                 }

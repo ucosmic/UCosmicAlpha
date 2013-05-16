@@ -2031,21 +2031,12 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
-    <Content Include="scripts\viewmodels\activities\Activity.min.js.map">
-      <DependentUpon>Activity.js</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\degrees\Degree.min.js.map">
-      <DependentUpon>Degree.js</DependentUpon>
+    <Content Include="scripts\viewmodels\affiliations\Affiliation.min.js">
+      <DependentUpon>Affiliation.ts</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.min.js">
       <DependentUpon>GeographicExpertise.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\my\Profile.min.js.map">
-      <DependentUpon>Profile.js</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.min.js.map">
-      <DependentUpon>GeographicExpertise.js</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />

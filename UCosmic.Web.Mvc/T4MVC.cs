@@ -2565,7 +2565,6 @@ namespace Links
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
-                public static readonly string Activity_min_js_map = Url("Activity.min.js.map");
                 public static readonly string Activity_min_js = Url("Activity.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
@@ -2578,6 +2577,7 @@ namespace Links
                 public static readonly string Affiliation_ts = Url("Affiliation.ts");
                 public static readonly string Affiliation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliation.min.js") ? Url("Affiliation.min.js") : Url("Affiliation.js");
                               
+                public static readonly string Affiliation_min_js = Url("Affiliation.min.js");
                 public static readonly string Affiliations_ts = Url("Affiliations.ts");
                 public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
                               
@@ -2604,7 +2604,6 @@ namespace Links
                 public static readonly string Degree_ts = Url("Degree.ts");
                 public static readonly string Degree_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degree.min.js") ? Url("Degree.min.js") : Url("Degree.js");
                               
-                public static readonly string Degree_min_js_map = Url("Degree.min.js.map");
                 public static readonly string Degree_min_js = Url("Degree.min.js");
                 public static readonly string Degrees_ts = Url("Degrees.ts");
                 public static readonly string Degrees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degrees.min.js") ? Url("Degrees.min.js") : Url("Degrees.js");
@@ -2667,13 +2666,11 @@ namespace Links
                 public static readonly string GeographicExpertise_ts = Url("GeographicExpertise.ts");
                 public static readonly string GeographicExpertise_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertise.min.js") ? Url("GeographicExpertise.min.js") : Url("GeographicExpertise.js");
                               
+                public static readonly string GeographicExpertise_min_js = Url("GeographicExpertise.min.js");
                 public static readonly string GeographicExpertises_ts = Url("GeographicExpertises.ts");
                 public static readonly string GeographicExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertises.min.js") ? Url("GeographicExpertises.min.js") : Url("GeographicExpertises.js");
                               
                 public static readonly string GeographicExpertises_min_js = Url("GeographicExpertises.min.js");
-                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
-                public static readonly string ServiceApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModel.d.min.js") ? Url("ServiceApiModel.d.min.js") : Url("ServiceApiModel.d.js");
-                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2723,7 +2720,6 @@ namespace Links
                 public static readonly string Profile_ts = Url("Profile.ts");
                 public static readonly string Profile_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile.min.js") ? Url("Profile.min.js") : Url("Profile.js");
                               
-                public static readonly string Profile_min_js_map = Url("Profile.min.js.map");
                 public static readonly string Profile_min_js = Url("Profile.min.js");
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }
