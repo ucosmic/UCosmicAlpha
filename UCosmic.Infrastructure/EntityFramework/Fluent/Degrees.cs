@@ -6,7 +6,7 @@ namespace UCosmic.EntityFramework
     {
         public DegreeOrm()
         {
-            ToTable(typeof (Degree).Name, DbSchemaName.Degrees);
+            ToTable(typeof (Degree).Name, DbSchemaName.Employees);
 
             HasRequired(d => d.Person)
                 .WithMany()

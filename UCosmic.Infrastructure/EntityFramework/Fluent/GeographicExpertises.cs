@@ -6,7 +6,7 @@ namespace UCosmic.EntityFramework
     {
         public GeographicExpertiseOrm()
         {
-            ToTable(typeof (GeographicExpertise).Name, DbSchemaName.GeographicExpertises);
+            ToTable(typeof (GeographicExpertise).Name, DbSchemaName.Employees);
 
             HasRequired(d => d.Person)
                 .WithMany()
