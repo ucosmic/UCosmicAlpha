@@ -416,7 +416,7 @@ var App;
                 function get(expertiseId) {
                     var url = makeUrl('geographic-expertises');
                     if(expertiseId) {
-                        url += '/' + expertiseId;
+                        url += expertiseId;
                     }
                     return url;
                 }
@@ -429,10 +429,6 @@ var App;
                     return makeUrl('geographic-expertises/' + expertiseId + "/edit");
                 }
                 GeographicExpertises.getEdit = getEdit;
-                function getEditState(expertiseId) {
-                    return makeUrl('geographic-expertises/' + expertiseId + "/edit-state");
-                }
-                GeographicExpertises.getEditState = getEditState;
                 function put(expertiseId) {
                     return makeUrl('geographic-expertises/' + expertiseId);
                 }
@@ -445,13 +441,6 @@ var App;
                     return makeUrl('geographic-expertises/' + expertiseId);
                 }
                 GeographicExpertises.del = del;
-                (function (Locations) {
-                    function get() {
-                        return makeUrl('geographic-expertises-locations');
-                    }
-                    Locations.get = get;
-                })(GeographicExpertises.Locations || (GeographicExpertises.Locations = {}));
-                var Locations = GeographicExpertises.Locations;
             })(WebApi.GeographicExpertises || (WebApi.GeographicExpertises = {}));
             var GeographicExpertises = WebApi.GeographicExpertises;
             (function (LanguageExpertises) {

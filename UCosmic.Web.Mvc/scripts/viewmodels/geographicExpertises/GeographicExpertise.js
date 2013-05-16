@@ -5,6 +5,7 @@ var ViewModels;
             function GeographicExpertise(educationId) {
                 this.inititializationErrors = "";
                 this.saving = false;
+                this.dirtyFlag = ko.observable(false);
                 this.selectedLocations = ko.observableArray();
                 this._initialize(educationId);
             }
@@ -15,13 +16,25 @@ var ViewModels;
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
                 $("#" + locationSelectorId).kendoMultiSelect({
-                    filter: 'contains',
                     ignoreCase: true,
                     dataTextField: "officialName",
                     dataValueField: "id",
                     minLength: 3,
-                    maxSelectedItems: 1,
-                    dataSource: this.locationsDataSource,
+                    dataSource: new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: function (options) {
+                                if(options.data.filter != null) {
+                                    $.ajax({
+                                        url: App.Routes.WebApi.Places.get(),
+                                        data: {
+                                            keyword: (options.data.filter != null) ? options.data.filter.filters[0].value : null
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }),
                     value: this.selectedLocations(),
                     change: function (event) {
                         _this.updateLocations(event.sender.value());
@@ -30,15 +43,15 @@ var ViewModels;
                 });
             };
             GeographicExpertise.prototype.setupValidation = function () {
-                ko.validation.rules['numberNotNull'] = {
+                ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
-                        return val != null;
+                        return val.length >= otherVal;
                     },
-                    message: 'Required.'
+                    message: 'At least {0} must be selected.'
                 };
                 ko.validation.registerExtenders();
-                this.placeId.extend({
-                    numberNotNull: 0
+                this.locations.extend({
+                    atLeast: 1
                 });
                 this.description.extend({
                     maxLength: 400
@@ -48,32 +61,46 @@ var ViewModels;
             GeographicExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Places.get()).done(function (data, textStatus, jqXHR) {
-                    locationsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                });
-                var dataPact = $.Deferred();
-                $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.GeographicExpertises.get(this.id()),
-                    success: function (data, textStatus, jqXhr) {
-                        dataPact.resolve(data);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        dataPact.reject(jqXhr, textStatus, errorThrown);
-                    }
-                });
-                $.when(locationsPact, dataPact).done(function (locations, data) {
-                    _this.locationsDataSource = locations;
-                    ko.mapping.fromJS(data, {
-                    }, _this);
-                    _this.selectedLocations.push(_this.placeId());
+                if(this.id() == 0) {
+                    this.version = ko.observable(null);
+                    this.entityId = ko.observable(null);
+                    this.description = ko.observable(null);
+                    this.locations = ko.observableArray();
+                    this.whenLastUpdated = ko.observable(null);
+                    this.whoLastUpdated = ko.observable(null);
                     deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
-                });
+                } else {
+                    var locationsPact = $.Deferred();
+                    $.get(App.Routes.WebApi.Places.get()).done(function (data, textStatus, jqXHR) {
+                        locationsPact.resolve(data);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        locationsPact.reject(jqXHR, textStatus, errorThrown);
+                    });
+                    var dataPact = $.Deferred();
+                    $.ajax({
+                        type: "GET",
+                        url: App.Routes.WebApi.GeographicExpertises.get(this.id()),
+                        success: function (data, textStatus, jqXhr) {
+                            dataPact.resolve(data);
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            dataPact.reject(jqXhr, textStatus, errorThrown);
+                        }
+                    });
+                    $.when(locationsPact, dataPact).done(function (locations, data) {
+                        ko.mapping.fromJS(data, {
+                        }, _this);
+                        for(var i = 0; i < _this.locations().length; i += 1) {
+                            _this.selectedLocations.push(_this.locations()[i].placeId());
+                        }
+                        _this.description.subscribe(function (newValue) {
+                            _this.dirtyFlag(true);
+                        });
+                        deferred.resolve();
+                    }).fail(function (xhr, textStatus, errorThrown) {
+                        deferred.reject(xhr, textStatus, errorThrown);
+                    });
+                }
                 return deferred;
             };
             GeographicExpertise.prototype.save = function (viewModel, event) {
@@ -102,43 +129,38 @@ var ViewModels;
                     }
                 });
             };
-            GeographicExpertise.prototype.isEmpty = function () {
-                if((this.placeOfficialName() == "Global") && (this.description() == null)) {
-                    return true;
-                }
-                return false;
+            GeographicExpertise.prototype.deleteExpertise = function (id) {
             };
             GeographicExpertise.prototype.cancel = function (item, event, mode) {
-                var me = this;
-                $("#cancelConfirmDialog").dialog({
-                    modal: true,
-                    resizable: false,
-                    width: 450,
-                    buttons: {
-                        "Do not cancel": function () {
-                            $(this).dialog("close");
-                        },
-                        "Cancel and lose changes": function () {
-                            $(this).dialog("close");
-                            if(me.isEmpty()) {
-                                $.ajax({
-                                    async: false,
-                                    type: "DELETE",
-                                    url: App.Routes.WebApi.GeographicExpertises.del(me.id()),
-                                    success: function (data, textStatus, jqXHR) {
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        alert(textStatus);
-                                    }
-                                });
+                if(this.dirtyFlag() == true) {
+                    var me = this;
+                    $("#cancelConfirmDialog").dialog({
+                        modal: true,
+                        resizable: false,
+                        width: 450,
+                        buttons: {
+                            "Do not cancel": function () {
+                                $(this).dialog("close");
+                            },
+                            "Cancel and lose changes": function () {
+                                $(this).dialog("close");
+                                location.href = App.Routes.Mvc.My.Profile.get(1);
                             }
-                            location.href = App.Routes.Mvc.My.Profile.get(1);
                         }
-                    }
-                });
+                    });
+                }
             };
             GeographicExpertise.prototype.updateLocations = function (locations) {
-                this.placeId(locations.length > 0 ? locations[0] : null);
+                this.locations.removeAll();
+                for(var i = 0; i < locations.length; i += 1) {
+                    var location = ko.mapping.fromJS({
+                        id: 0,
+                        placeId: locations[i],
+                        version: ""
+                    });
+                    this.locations.push(location);
+                }
+                this.dirtyFlag(true);
             };
             return GeographicExpertise;
         })();

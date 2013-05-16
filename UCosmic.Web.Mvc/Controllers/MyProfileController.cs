@@ -41,7 +41,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/geographic-expertise/{expertiseId}")]
         public virtual ActionResult GeographicExpertiseEdit(int expertiseId)
         {
-            var model = new GeographicExpertiseModel { ExpertiseId = expertiseId };
+            var model = new GeographicExpertiseModel {ExpertiseId = expertiseId};
             return View(model);
         }
     }

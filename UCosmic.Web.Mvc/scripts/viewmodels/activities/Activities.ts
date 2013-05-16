@@ -314,7 +314,7 @@ module ViewModels.Activities
             {
                 formattedDateRange = moment(startsOnStr).format(dateFormat);
                 if (onGoing) {
-                    formattedDateRange += " -";
+                    formattedDateRange += " (Ongoing)";
                 } else if (endsOnStr != null)
                 {
                     formattedDateRange += " - " + moment(endsOnStr).format(dateFormat);

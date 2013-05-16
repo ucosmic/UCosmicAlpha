@@ -1,5 +1,7 @@
-﻿using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.GeographicExpertises
 {
@@ -7,7 +9,7 @@ namespace UCosmic.Domain.GeographicExpertises
     {
         protected bool Equals(GeographicExpertise other)
         {
-            return  PlaceId == other.PlaceId &&
+            return Locations.SequenceEqual(other.Locations) &&
                     string.Equals(Description, other.Description);
         }
 
@@ -23,7 +25,7 @@ namespace UCosmic.Domain.GeographicExpertises
         {
             unchecked
             {
-                int hashCode = PlaceId;
+                int hashCode = Locations.GetHashCode();
                 hashCode = (hashCode * 397) ^ (Description != null ? Description.GetHashCode() : 0);
                 return hashCode;
             }
@@ -31,12 +33,12 @@ namespace UCosmic.Domain.GeographicExpertises
 
         public GeographicExpertise()
         {
+            Locations = new Collection<GeographicExpertiseLocation>();
         }
 
         public virtual Person Person { get; protected internal set; }
         public int PersonId { get; protected internal set; }
-        public virtual Place Place { get; protected internal set; }
-        public int PlaceId { get; protected internal set; }
+        public virtual ICollection<GeographicExpertiseLocation> Locations { get; protected internal set; }
         public string Description { get; protected internal set; }
     }
 }

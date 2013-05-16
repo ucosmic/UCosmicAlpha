@@ -82,16 +82,17 @@ var ViewModels;
                 }
             };
             GeographicExpertiseList.prototype.newExpertise = function (data, event) {
-                $.ajax({
-                    type: "POST",
-                    url: App.Routes.WebApi.GeographicExpertises.post(),
-                    success: function (newExpertiseId, textStatus, jqXHR) {
-                        location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit(newExpertiseId);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus + "|" + errorThrown);
+                location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("0");
+            };
+            GeographicExpertiseList.prototype.formatLocations = function (locations) {
+                var formattedLocations = "";
+                for(var i = 0; i < locations.length; i += 1) {
+                    if(i > 0) {
+                        formattedLocations += ", ";
                     }
-                });
+                    formattedLocations += locations[i].placeOfficialName();
+                }
+                return formattedLocations;
             };
             return GeographicExpertiseList;
         })();

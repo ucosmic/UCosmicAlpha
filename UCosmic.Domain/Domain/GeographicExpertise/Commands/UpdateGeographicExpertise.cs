@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
@@ -9,7 +10,7 @@ namespace UCosmic.Domain.GeographicExpertises
     {
         public IPrincipal Principal { get; set; }
         public int Id { get; set; }
-        public int PlaceId { get; set; }
+        public ICollection<GeographicExpertiseLocation> Locations { get; set; }
         public string Description { get; set; }
         public DateTime UpdatedOn { get; set; }
         public bool NoCommit { get; set; }
@@ -52,40 +53,78 @@ namespace UCosmic.Domain.GeographicExpertises
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<CreateGeographicExpertiseLocation> _createGeographicExpertiseLocation;
+        private readonly IHandleCommands<DeleteGeographicExpertiseLocation> _deleteGeographicExpertiseLocation;
 
 
         public HandleUpdateMyGeographicExpertiseCommand(ICommandEntities entities,
-                                             IUnitOfWork unitOfWork)
+                                                        IUnitOfWork unitOfWork,
+                                                        IHandleCommands<CreateGeographicExpertiseLocation> createGeographicExpertiseLocation,
+                                                        IHandleCommands<DeleteGeographicExpertiseLocation> deleteGeographicExpertiseLocation
+                                                        )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
+            _createGeographicExpertiseLocation = createGeographicExpertiseLocation;
+            _deleteGeographicExpertiseLocation = deleteGeographicExpertiseLocation;
         }
 
         public void Handle(UpdateGeographicExpertise command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            /* Retrieve the degree to update. */
-            var target = _entities.Get<GeographicExpertise>().Single(a => a.RevisionId == command.Id);
+            /* Retrieve the expertise to update. */
+            var target = _entities.Get<GeographicExpertise>().SingleOrDefault(a => a.RevisionId == command.Id);
             if (target == null)
             {
                 string message = String.Format("GeographicExpertise Id {0} not found.", command.Id);
                 throw new Exception(message);
             }
 
-            var updateExpertise = new GeographicExpertise
-            {
-                PlaceId = command.PlaceId,
-                Description = command.Description
-            };
+            /* Retrieve the expertise locations to update. */
+            var targetLocations = _entities.Get<GeographicExpertiseLocation>().Where(a => a.ExpertiseId == target.RevisionId).ToArray();
 
-            if (target.Equals(updateExpertise))
+            /* If target fields equal new field values, we do not proceed. */
+            if ((target.Description == command.Description) &&
+                targetLocations.SequenceEqual(command.Locations))
             {
                 return;
             }
 
+            /* Run through all new locations and attempt to find same in target.  If not found, create.*/
+            foreach (var location in command.Locations.ToList())
+            {
+                var targetLocation = target.Locations.SingleOrDefault(x => x.PlaceId == location.PlaceId);
+                if (targetLocation == null)
+                {
+                    var createGeographicExpertiseLocation = new CreateGeographicExpertiseLocation(
+                        command.Principal, target.RevisionId,location.PlaceId)
+                    {
+                        NoCommit = true
+                    };
+
+                    _createGeographicExpertiseLocation.Handle(createGeographicExpertiseLocation);
+                }
+            }
+
+            /* Delete activity locations. Run through the targets list of locations and try to find
+                a matching one in the updated list.  If not found, it must have been deleted. */
+            foreach (var location in target.Locations.ToList())
+            {
+                var updateLocation = command.Locations.SingleOrDefault(x => x.PlaceId == location.PlaceId);
+                if (updateLocation == null)
+                {
+                    var deleteGeographicExpertiseLocationCommand = new DeleteGeographicExpertiseLocation(
+                        command.Principal, location.RevisionId)
+                    {
+                        NoCommit = true
+                    };
+
+                    _deleteGeographicExpertiseLocation.Handle(deleteGeographicExpertiseLocationCommand);
+                }
+            }
+
             /* Update fields */
-            target.PlaceId = command.PlaceId;
             target.Description = command.Description;          
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
             target.UpdatedByPrincipal = command.Principal.Identity.Name;

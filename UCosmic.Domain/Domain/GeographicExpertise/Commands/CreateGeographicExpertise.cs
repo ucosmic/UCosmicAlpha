@@ -10,17 +10,14 @@ namespace UCosmic.Domain.GeographicExpertises
     {
         public Guid? EntityId { get; set; }
         public IPrincipal Principal { get; protected set; }
-        public int PlaceId { get; protected set; }
         public string Description { get; set; }
         public bool NoCommit { get; set; }
         public GeographicExpertise CreatedGeographicExpertise { get; protected internal set; }
 
-        public CreateGeographicExpertise(IPrincipal principal, int placeId)
+        public CreateGeographicExpertise(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
-            if (placeId == 0) throw new ArgumentNullException("placeId");
             Principal = principal;
-            PlaceId = placeId;
         }
     }
 
@@ -57,7 +54,6 @@ namespace UCosmic.Domain.GeographicExpertises
             var expertise = new GeographicExpertise
             {
                 PersonId = person.RevisionId,
-                PlaceId = command.PlaceId,
                 Description = command.Description,
                 
                 CreatedByPrincipal = command.Principal.Identity.Name,

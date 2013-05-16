@@ -142,18 +142,36 @@ module ViewModels.GeographicExpertises
         */
         // --------------------------------------------------------------------------------
         newExpertise(data: any, event: any): void {
-            $.ajax({
-                type: "POST",
-                url: App.Routes.WebApi.GeographicExpertises.post(),
-                success: (newExpertiseId: string, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit(newExpertiseId);
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            //$.ajax({
+            //    type: "POST",
+            //    url: App.Routes.WebApi.GeographicExpertises.post(),
+            //    success: (newExpertiseId: string, textStatus: string, jqXHR: JQueryXHR): void =>
+            //    {
+            //        location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit(newExpertiseId);
+            //    },
+            //    error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+            //    {
+            //        alert(textStatus + "|" + errorThrown);
+            //    }
+            //});
+            location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("0");
+        }
+
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        formatLocations(locations: any): string
+        {
+            var formattedLocations: string = "";
+
+            for (var i = 0; i < locations.length; i += 1)
+            {
+                if (i > 0) { formattedLocations += ", "; }
+                formattedLocations += locations[i].placeOfficialName();
+            }
+
+            return formattedLocations;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -17,17 +16,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class GeographicExpertisesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<CreateGeographicExpertise> _createGeographicExpertise;
+        private readonly IHandleCommands<CreateDeepGeographicExpertise> _createDeepGeographicExpertise;
         private readonly IHandleCommands<DeleteGeographicExpertise> _deleteGeographicExpertise;
         private readonly IHandleCommands<UpdateGeographicExpertise> _updateGeographicExpertise;
 
         public GeographicExpertisesController(IProcessQueries queryProcessor
-                                  , IHandleCommands<CreateGeographicExpertise> createGeographicExpertise
+                                  , IHandleCommands<CreateDeepGeographicExpertise> createDeepGeographicExpertise
                                   , IHandleCommands<DeleteGeographicExpertise> deleteGeographicExpertise
                                   , IHandleCommands<UpdateGeographicExpertise> updateGeographicExpertise)
         {
             _queryProcessor = queryProcessor;
-            _createGeographicExpertise = createGeographicExpertise;
+            _createDeepGeographicExpertise = createDeepGeographicExpertise;
             _deleteGeographicExpertise = deleteGeographicExpertise;
             _updateGeographicExpertise = updateGeographicExpertise;
         }
@@ -55,42 +54,45 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Get an degree
+         * Get an expertise
         */
         // --------------------------------------------------------------------------------
         [GET("{expertiseId}")]
         public GeographicExpertiseApiModel Get(int expertiseId)
         {
-            var degree = _queryProcessor.Execute(new GeographicExpertiseById(expertiseId));
-            if (degree == null)
+            var expertise = _queryProcessor.Execute(new GeographicExpertiseById(expertiseId));
+            if (expertise == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var model = Mapper.Map<GeographicExpertiseApiModel>(degree);
+            var model = Mapper.Map<GeographicExpertiseApiModel>(expertise);
             return model;
         }
 
         // --------------------------------------------------------------------------------
         /*
-         * Create an degree
+         * Create an expertose
         */
         // --------------------------------------------------------------------------------
         [POST("")]
         public HttpResponseMessage Post()
         {
-            var global = _queryProcessor.Execute(new PlacesWithName
-                { Term = "Global", MaxResults = 1, TermMatchStrategy = StringMatchStrategy.Equals }).ToArray();
-            var createDeepGeographicExpertiseCommand = new CreateGeographicExpertise(User, global[0].RevisionId);
-            _createGeographicExpertise.Handle(createDeepGeographicExpertiseCommand);
-
+            var globalPlace = _queryProcessor.Execute(new PlacesWithName()
+            {
+                Term = "Global",
+                MaxResults = 1,
+                TermMatchStrategy = StringMatchStrategy.Equals
+            });
+            var createDeepGeographicExpertiseCommand = new CreateDeepGeographicExpertise(User, globalPlace);
+            _createDeepGeographicExpertise.Handle(createDeepGeographicExpertiseCommand);
             var model = createDeepGeographicExpertiseCommand.CreatedGeographicExpertise.RevisionId;
             return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 
         // --------------------------------------------------------------------------------
         /*
-         * Update an degree
+         * Update an expertise
         */
         // --------------------------------------------------------------------------------
         [PUT("{expertiseId}")]
@@ -124,7 +126,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Delete an degree
+         * Delete an expertise
         */
         // --------------------------------------------------------------------------------
         [DELETE("{expertiseId}")]
