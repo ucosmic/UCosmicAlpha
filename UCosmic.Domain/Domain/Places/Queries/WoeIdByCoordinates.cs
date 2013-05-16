@@ -130,7 +130,7 @@ namespace UCosmic.Domain.Places
                     Latitude = query.Coordinates.Latitude.Value,
                     Longitude = query.Coordinates.Longitude.Value,
                     Language = "en",
-                }).ToArray();
+                });
             }
             if (geoNames == null)
                 throw new ApplicationException("Querying GeoNames service resulted in null result.");
