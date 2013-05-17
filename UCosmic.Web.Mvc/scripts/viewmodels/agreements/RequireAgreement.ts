@@ -4,10 +4,16 @@
 /// <reference path="../../require.d.ts" />
 
 require(["viewmodels/agreements/AgreementVM"],
-function (Search) {
+function (Agreement) {
 
 
-    var establishmentSearchViewModel = new Search.Search();
-    ko.applyBindings(establishmentSearchViewModel, $('#main')[0]);
-    establishmentSearchViewModel.sammy.run();
+    var agreementViewModel = new Agreement.InstitutionalAgreementEditModel();
+    ko.applyBindings(agreementViewModel, $('#main')[0]);
+    agreementViewModel.sammy.run();
 });
+
+//import agreement = module('../agreements/AgreementVM');
+
+//var establishmentSearchViewModel = new agreement.InstitutionalAgreementEditModel();
+//    ko.applyBindings(establishmentSearchViewModel, $('#main')[0]);
+//    establishmentSearchViewModel.sammy.run();

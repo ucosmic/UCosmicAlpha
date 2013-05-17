@@ -2583,6 +2583,7 @@ namespace Links
                 public static readonly string Affiliation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliation.min.js") ? Url("Affiliation.min.js") : Url("Affiliation.js");
                               
                 public static readonly string Affiliation_min_js = Url("Affiliation.min.js");
+                public static readonly string Affiliation_min_js = Url("Affiliation.min.js");
                 public static readonly string Affiliations_ts = Url("Affiliations.ts");
                 public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
                               
@@ -2623,6 +2624,17 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/amd-modules";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class app {
+                    private const string URLPATH = "~/scripts/viewmodels/amd-modules/app";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string App_ts = Url("App.ts");
+                    public static readonly string App_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/App.min.js") ? Url("App.min.js") : Url("App.js");
+                                  
+                    public static readonly string App_min_js = Url("App.min.js");
+                }
+            
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class Establishments {
                     private const string URLPATH = "~/scripts/viewmodels/amd-modules/Establishments";
@@ -2718,7 +2730,6 @@ namespace Links
                 public static readonly string Degree_ts = Url("Degree.ts");
                 public static readonly string Degree_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degree.min.js") ? Url("Degree.min.js") : Url("Degree.js");
                               
-                public static readonly string Degree_min_js_map = Url("Degree.min.js.map");
                 public static readonly string Degree_min_js = Url("Degree.min.js");
                 public static readonly string Degrees_ts = Url("Degrees.ts");
                 public static readonly string Degrees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Degrees.min.js") ? Url("Degrees.min.js") : Url("Degrees.js");
@@ -2781,6 +2792,7 @@ namespace Links
                 public static readonly string GeographicExpertise_ts = Url("GeographicExpertise.ts");
                 public static readonly string GeographicExpertise_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertise.min.js") ? Url("GeographicExpertise.min.js") : Url("GeographicExpertise.js");
                               
+                public static readonly string GeographicExpertise_min_js = Url("GeographicExpertise.min.js");
                 public static readonly string GeographicExpertise_min_js = Url("GeographicExpertise.min.js");
                 public static readonly string GeographicExpertises_ts = Url("GeographicExpertises.ts");
                 public static readonly string GeographicExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertises.min.js") ? Url("GeographicExpertises.min.js") : Url("GeographicExpertises.js");

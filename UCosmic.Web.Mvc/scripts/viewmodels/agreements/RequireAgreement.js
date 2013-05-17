@@ -1,7 +1,7 @@
 require([
     "viewmodels/agreements/AgreementVM"
-], function (Search) {
-    var establishmentSearchViewModel = new Search.Search();
-    ko.applyBindings(establishmentSearchViewModel, $('#main')[0]);
-    establishmentSearchViewModel.sammy.run();
+], function (Agreement) {
+    var agreementViewModel = new Agreement.InstitutionalAgreementEditModel();
+    ko.applyBindings(agreementViewModel, $('#main')[0]);
+    agreementViewModel.sammy.run();
 });

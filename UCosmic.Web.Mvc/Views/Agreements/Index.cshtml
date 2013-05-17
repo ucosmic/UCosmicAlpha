@@ -28,13 +28,13 @@
                             <header>
                                 <h2>
                                     Participants
-                                    @{
+                                    @*@{
                                         // HACK ALERT this is only temporary
                                         var tenancy = Request.Tenancy() != null
                                             ? Request.Tenancy().StyleDomain
                                             : "default";
-                                    }
-                                    <input type="hidden" value="@tenancy" id="tenancy_domain" />
+                                    }*@
+                                    @*<input type="hidden" value="@tenancy" id="tenancy_domain" />*@
                                 </h2>
                             </header>
                             <div data-bind="visible: isBound" style="display: none;">
@@ -52,7 +52,7 @@
                                                     <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
                                                 </div>
                                                 <div data-bind="visible: $parent.isNotOwner() && websiteUrl()">
-                                                    <a href="#" target="_blank" data-bind="text: fitWebsiteUrl, attr: { href: 'http://' + websiteUrl() }"></a>
+                                                    <a href="#" target="_blank" data-bind="text: officialUrl, attr: { href: 'http://' + officialUrl() }"></a>
                                                 </div>
                                                 <div data-bind="visible: $parent.isNotOwner() && countryName()">
                                                     <span data-bind="text: countryName"></span>
@@ -79,7 +79,7 @@
                     </aside>
                 </form>
             </div>
-            <div id="participants_add" data-side-swiper="off">
+            @*<div id="participants_add" data-side-swiper="off">
                 <form class="group">
                     <div class="on-left from-top">
                         <header>
@@ -101,7 +101,7 @@
                         </div>
                     </aside>
                 </form>
-            </div>
+            </div>*@
         </div>
     </div>
 </div>

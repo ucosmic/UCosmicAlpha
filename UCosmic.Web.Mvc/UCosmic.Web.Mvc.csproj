@@ -2067,6 +2067,13 @@
     <Content Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.min.js">
       <DependentUpon>RequireEstablishmentSearch.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\app\App.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\app\App.js">
+      <DependentUpon>App.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\amd-modules\app\App.min.js">
+      <DependentUpon>App.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\amd-modules\Widgets\Flasher.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>

@@ -1,19 +1,47 @@
 define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search'], function(require, exports, __SearchResultModule__, __SearchModule__) {
-    function InstitutionalAgreementParticipantModel(js) {
-        var self = this;
-        ko.mapping.fromJS(js, {
-        }, self);
-        self.isNotOwner = ko.computed(function () {
-            return !self.isOwner();
-        });
-        self.participantEl = undefined;
-    }
     var SearchResultModule = __SearchResultModule__;
 
+    
     var SearchModule = __SearchModule__;
 
     var SearchResult = SearchResultModule.SearchResult;
     var Search = SearchModule.Search;
+    var InstitutionalAgreementParticipantModel = (function () {
+        function InstitutionalAgreementParticipantModel(participan) {
+            this.establishment = new SearchResult({
+                id: 1,
+                officialName: 'University of Cincinnati',
+                translatedName: 'University of Cincinnati',
+                officialUrl: 'www.uc.edu',
+                countryName: 'United States',
+                countryCode: 'asdf',
+                uCosmicCode: 'asdf',
+                ceebCode: 'asdf'
+            }, new Search(false));
+            this.isNotOwner = ko.computed(function () {
+                return false;
+            });
+            isOwner:
+false
+            establishment:
+new SearchResult({
+                id: 1,
+                officialName: 'University of Cincinnati',
+                translatedName: 'University of Cincinnati',
+                officialUrl: 'www.uc.edu',
+                countryName: 'United States',
+                countryCode: 'asdf',
+                uCosmicCode: 'asdf',
+                ceebCode: 'asdf'
+            }, new Search(false))
+            isNotOwner:
+ko.computed(function () {
+                return !participan.isOwner;
+            })
+        }
+        return InstitutionalAgreementParticipantModel;
+    })();    
+    ;
     function InstitutionalAgreementEditModel() {
         var self = this;
         self.isBound = ko.observable();
@@ -26,8 +54,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             root: '[data-current-module=agreements]'
         });
         self.participants = ko.observableArray();
-        var owner;
-        var tenantDomain = $('#tenancy_domain').val();
+        var owner = new Search(false);
+        var tenantDomain = "uc.edu";
         var homeParticipant = new InstitutionalAgreementParticipantModel({
             isOwner: true,
             establishment: new SearchResult({
