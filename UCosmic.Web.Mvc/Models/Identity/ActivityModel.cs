@@ -17,6 +17,6 @@
 
     public class GeographicExpertiseModel
     {
-        public int ExpertiseId { get; set; }
+        public string ExpertiseId { get; set; }
     }
 }

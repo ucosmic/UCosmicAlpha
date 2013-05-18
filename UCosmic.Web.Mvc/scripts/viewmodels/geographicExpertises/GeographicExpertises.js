@@ -82,7 +82,7 @@ var ViewModels;
                 }
             };
             GeographicExpertiseList.prototype.newExpertise = function (data, event) {
-                location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("0");
+                location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
             };
             GeographicExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";

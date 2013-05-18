@@ -142,19 +142,7 @@ module ViewModels.GeographicExpertises
         */
         // --------------------------------------------------------------------------------
         newExpertise(data: any, event: any): void {
-            //$.ajax({
-            //    type: "POST",
-            //    url: App.Routes.WebApi.GeographicExpertises.post(),
-            //    success: (newExpertiseId: string, textStatus: string, jqXHR: JQueryXHR): void =>
-            //    {
-            //        location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit(newExpertiseId);
-            //    },
-            //    error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-            //    {
-            //        alert(textStatus + "|" + errorThrown);
-            //    }
-            //});
-            location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("0");
+            location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
         }
 
         // --------------------------------------------------------------------------------

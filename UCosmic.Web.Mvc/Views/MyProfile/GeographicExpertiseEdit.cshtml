@@ -36,17 +36,51 @@
 
     <script type="text/javascript">
         $(function() {
-            var expertiseId = @Model.ExpertiseId;
+            var expertiseId = "@Model.ExpertiseId";
             var expertiseViewModel = new ViewModels.GeographicExpertises.GeographicExpertise(expertiseId);
             expertiseViewModel.load()
                 .done(function() {
+
                     expertiseViewModel.setupWidgets("location");
                     expertiseViewModel.setupValidation();
                     ko.applyBindings(expertiseViewModel, $("#geographic-expertise-edit")[0]);
+
+                    var locationSelector = $( "#location" ).data( "kendoMultiSelect" );
+                    locationSelector.setDataSource( new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: function(options) {
+                                $.ajax({
+                                    url: App.Routes.WebApi.Places.get(),
+                                    
+                                    /*
+                                        Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
+                                        gets called as soon as the widget gets focus.  This is bad as the Place
+                                        service will response with all the Places in the DB since there is no 
+                                        filter being provided.  Our workaround is to trap the empty filter
+                                        and send a special character for the service to ignore.  Also,
+                                        If options.success() is not actually call, the widget stops functioning
+                                        altogether.
+                                    */
+                                    data: {
+                                        keyword: ((options.data.filter != null) &&
+                                            (options.data.filter.filters != null) &&
+                                            (options.data.filter.filters.length > 0) &&
+                                            (options.data.filter.filters[0].value != null)) ?
+                                            options.data.filter.filters[0].value : "~"
+                                    },
+                                    success: function(results) {
+                                        options.success(results);
+                                    }
+                                });
+                            }
+                        }
+                    }) );
+
                 })
-                .fail(function(jqXhr, textStatus, errorThrown) {
-                    alert(textStatus + "|" + errorThrown);
-                });
+            .fail(function(jqXhr, textStatus, errorThrown) {
+            alert(textStatus + "|" + errorThrown);
+        });
         });
 
     </script>
@@ -76,7 +110,7 @@
                             <div style="margin-bottom: 14px; display: inline-block; vertical-align: middle">
                                 <label for="location" class="required-field">Locations</label>
                                 <div style="display: inline-block; vertical-align: middle">
-                                    <select id="location" style="width: 600px; overflow-y:auto" data-bind="selectedOptions: selectedLocations"></select>
+                                    <select id="location" style="width: 600px; overflow-y:auto"></select>
                                 </div>
                             </div>
                             <span data-bind="validationMessage: locations" class="validationMessage"></span>

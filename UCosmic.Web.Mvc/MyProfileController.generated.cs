@@ -191,7 +191,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult GeographicExpertiseEdit(int expertiseId)
+        public override System.Web.Mvc.ActionResult GeographicExpertiseEdit(string expertiseId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GeographicExpertiseEdit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "expertiseId", expertiseId);

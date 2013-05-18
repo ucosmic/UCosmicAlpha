@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
@@ -25,16 +26,22 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CacheHttpGet(Duration = 3600)]
         public IEnumerable<PlaceApiModel> GetFiltered([FromUri] PlaceFilterInputModel input)
         {
+            IEnumerable<PlaceApiModel> models = new Collection<PlaceApiModel>();
             //System.Threading.Thread.Sleep(2000); // test api latency
 
-         var query = Mapper.Map<FilteredPlaces>(input);
-            query.EagerLoad = new Expression<Func<Place, object>>[]
+            /* TBD - To get around issue with KendoUI Multiselect. */
+            if (input.Keyword != "~")
             {
-                x => x.Parent,
-                x => x.GeoPlanetPlace,
-            };
-            var entities = _queryProcessor.Execute(query);
-            var models = Mapper.Map<PlaceApiModel[]>(entities);
+                var query = Mapper.Map<FilteredPlaces>(input);
+                query.EagerLoad = new Expression<Func<Place, object>>[]
+                {
+                    x => x.Parent,
+                    x => x.GeoPlanetPlace,
+                };
+                var entities = _queryProcessor.Execute(query);
+                models = Mapper.Map<PlaceApiModel[]>(entities);
+            }
+
             return models;
         }
 

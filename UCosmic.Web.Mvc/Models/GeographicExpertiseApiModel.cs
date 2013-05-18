@@ -28,7 +28,7 @@ namespace UCosmic.Web.Mvc.Models
         public string WhoLastUpdated { get; set; }
         public ICollection<GeographicExpertiseLocationApiModel> Locations { get; set; }
         public string Description { get; set; }
-        public bool IsNew { get; set; }
+        //public bool IsNew { get; set; }
     }
 
     public class GeographicExpertiseSearchInputModel
@@ -70,7 +70,6 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
                     .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
-                    .ForMember(d => d.IsNew, o => o.Ignore())
                     ;
 
                 CreateMap<GeographicExpertiseLocation, GeographicExpertiseLocationApiModel>()

@@ -13,15 +13,15 @@ namespace UCosmic.Domain.GeographicExpertises
             "User '{0}' is not authorized to perform this action on geographic expertise #{1}.";
 
         private readonly IQueryEntities _entities;
-        private readonly Func<T, int> _geographicExpertiseId;
+        private readonly Func<T, int> _geographicExpertiseLocationId;
 
-        internal MustOwnGeographicExpertiseLocation(IQueryEntities entities, Func<T, int> geographicExpertiseId)
+        internal MustOwnGeographicExpertiseLocation(IQueryEntities entities, Func<T, int> geographicExpertiseLocationId)
             : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
 
             _entities = entities;
-            _geographicExpertiseId = geographicExpertiseId;
+            _geographicExpertiseLocationId = geographicExpertiseLocationId;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
@@ -32,13 +32,13 @@ namespace UCosmic.Domain.GeographicExpertises
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var principle = (IPrincipal)context.PropertyValue;
-            var geographicExpertiseId = _geographicExpertiseId != null ? _geographicExpertiseId((T)context.Instance) : (int?)null;
+            var geographicExpertiseLocationId = _geographicExpertiseLocationId != null ? _geographicExpertiseLocationId((T)context.Instance) : (int?)null;
 
             Person person = null;
-            var geographicExpertise = _entities.Query<GeographicExpertise>().SingleOrDefault(x => x.RevisionId == geographicExpertiseId);
-            if (geographicExpertise != null)
+            var geographicExpertiseLocation = _entities.Query<GeographicExpertiseLocation>().SingleOrDefault(x => x.RevisionId == geographicExpertiseLocationId);
+            if (geographicExpertiseLocation != null)
             {
-                person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == geographicExpertise.PersonId);
+                person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == geographicExpertiseLocation.Expertise.PersonId);
             }
 
             return (person != null)

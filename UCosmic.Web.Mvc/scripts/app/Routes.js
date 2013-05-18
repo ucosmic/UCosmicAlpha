@@ -425,18 +425,10 @@ var App;
                     return makeUrl('geographic-expertises');
                 }
                 GeographicExpertises.post = post;
-                function getEdit(expertiseId) {
-                    return makeUrl('geographic-expertises/' + expertiseId + "/edit");
-                }
-                GeographicExpertises.getEdit = getEdit;
                 function put(expertiseId) {
                     return makeUrl('geographic-expertises/' + expertiseId);
                 }
                 GeographicExpertises.put = put;
-                function putEdit(expertiseId) {
-                    return makeUrl('geographic-expertises/' + expertiseId + "/edit");
-                }
-                GeographicExpertises.putEdit = putEdit;
                 function del(expertiseId) {
                     return makeUrl('geographic-expertises/' + expertiseId);
                 }

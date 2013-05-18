@@ -386,16 +386,8 @@ module App.Routes {
                 return makeUrl('geographic-expertises');
             }
 
-            export function getEdit (expertiseId: number): string {
-                return makeUrl('geographic-expertises/' + expertiseId + "/edit");
-            }
-
             export function put(expertiseId: number): string {
                 return makeUrl('geographic-expertises/' + expertiseId);
-            }
-
-            export function putEdit(expertiseId: number): string {
-                return makeUrl('geographic-expertises/' + expertiseId + "/edit");
             }
 
             export function del(expertiseId: number): string {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.GeographicExpertises
 {
@@ -12,17 +11,17 @@ namespace UCosmic.Domain.GeographicExpertises
     {
         public Guid? EntityId { get; set; }
         public IPrincipal Principal { get; protected set; }
-        public ICollection<Place> Places { get; protected set; }
+        public ICollection<int> PlaceIds { get; protected set; }
         public string Description { get; set; }
         public bool NoCommit { get; set; }
         public GeographicExpertise CreatedGeographicExpertise { get; protected internal set; }
 
-        public CreateDeepGeographicExpertise(IPrincipal principal, ICollection<Place> places)
+        public CreateDeepGeographicExpertise(IPrincipal principal, ICollection<int> placeIds)
         {
             if (principal == null) throw new ArgumentNullException("principal");
-            if ((places == null) || (places.Count == 0)) throw new ArgumentNullException("places");
+            if ((placeIds == null) || (placeIds.Count == 0)) throw new ArgumentNullException("placeIds");
             Principal = principal;
-            Places = places;
+            PlaceIds = placeIds;
         }
     }
 
@@ -70,12 +69,12 @@ namespace UCosmic.Domain.GeographicExpertises
 
             _createGeographicExpertise.Handle(createExpertiseCommand);
 
-            foreach (var place in command.Places)
+            foreach (var placeId in command.PlaceIds)
             {
                 var createExpertiseLocationCommand = new CreateGeographicExpertiseLocation(
                     command.Principal,
                     createExpertiseCommand.CreatedGeographicExpertise.RevisionId,
-                    place.RevisionId);
+                    placeId);
 
                 _createGeographicExpertiseLocation.Handle(createExpertiseLocationCommand);
             }

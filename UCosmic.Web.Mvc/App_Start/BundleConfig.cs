@@ -59,6 +59,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/sammy/sammy-{version}.js",
                 //"~/scripts/kendo/2012.3.1114/kendo.web.js",
 				"~/scripts/kendo/2013.1.226/kendo.web.js",
+                "~/scripts/kendo/knockout-kendo.min.js",
                 "~/scripts/oss/jquery.placeholder.js",
                 "~/scripts/oss/jquery.animate-enhanced.js",
                 "~/scripts/oss/jquery.autosize.js",

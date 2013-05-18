@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -72,22 +74,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Create an expertose
+         * Create an expertise
         */
         // --------------------------------------------------------------------------------
         [POST("")]
-        public HttpResponseMessage Post()
+        public HttpResponseMessage Post(GeographicExpertiseApiModel newModel)
         {
-            var globalPlace = _queryProcessor.Execute(new PlacesWithName()
+            var newLocations = new Collection<int>();
+            foreach (var location in newModel.Locations)
             {
-                Term = "Global",
-                MaxResults = 1,
-                TermMatchStrategy = StringMatchStrategy.Equals
-            });
-            var createDeepGeographicExpertiseCommand = new CreateDeepGeographicExpertise(User, globalPlace);
+                newLocations.Add(location.PlaceId);
+            }
+            var createDeepGeographicExpertiseCommand = new CreateDeepGeographicExpertise(User, newLocations)
+            {
+                Description = newModel.Description
+            };
             _createDeepGeographicExpertise.Handle(createDeepGeographicExpertiseCommand);
-            var model = createDeepGeographicExpertiseCommand.CreatedGeographicExpertise.RevisionId;
-            return Request.CreateResponse(HttpStatusCode.OK, model);
+            var id = createDeepGeographicExpertiseCommand.CreatedGeographicExpertise.RevisionId;
+            return Request.CreateResponse(HttpStatusCode.OK, id);
         }
 
         // --------------------------------------------------------------------------------
