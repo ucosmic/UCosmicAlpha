@@ -8,7 +8,7 @@
 /// <reference path="../../../app/Routes.ts" />
  
 
-import PagedSearch = module('../Widgets/PagedSearch')
+import PagedSearch = module('../Widgets/PagedSearch');
 import SearchResult = module('./SearchResult');
 import Lens = module('../Widgets/Lens');
 import Places = module('../places/ServerApiModel');
@@ -72,7 +72,7 @@ export class Search extends PagedSearch.PagedSearch {
         sammy: Sammy.Application = Sammy();
         sammyBeforeRoute: any = /\#\/page\/(.*)\//;
         sammyGetPageRoute: any = '#/page/:pageNumber/';
-        sammyDefaultPageRoute: any = '/Shared[\/]?';
+        sammyDefaultPageRoute: any = '/Establishments[\/]?';
 
         private _setupSammy(): void {
             var self = this;

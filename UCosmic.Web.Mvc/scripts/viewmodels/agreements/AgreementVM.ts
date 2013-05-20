@@ -2,13 +2,13 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
-import app = module('../amd-modules/app/app');
+//import app = module('../amd-modules/app/app');
 import SearchModule = module('../amd-modules/Establishments/Search');
 var SearchResult = SearchResultModule.SearchResult;
 var Search = SearchModule.Search;
@@ -235,66 +235,71 @@ export function InstitutionalAgreementEditModel() {
             e.stopPropagation();
             return false;
         };
-
+        self.sammy = Sammy();
         var dataSideSwiper = 'data-side-swiper';
-        var sam = undefined;
-        self.sammy = function () {
-            if (sam) return sam;
-            sam = Sammy(function () {
-                this.get('#/', function () {
-                    if ($('#participants_add').attr(dataSideSwiper) === 'on') {
-                        self.sideSwiper.prev();
-                    }
-                });
+        
+        //self.mySam.sammy() 
+        //SammyVM.SammyVM.sammy;//.SammyVM;
+    //var sam = undefined;
+        //self.sammy = function () {
+        //    if (sam) return sam;
+        //    sam = Sammy(function () {
+        //        this.get('#/', function () {
+        //            if ($('#participants_add').attr(dataSideSwiper) === 'on') {
+        //                self.sideSwiper.prev();
+        //            }
+        //        });
 
-                this.get('#/participants/add/page/:pageNumber', function () {
-                    if ($('#all').attr(dataSideSwiper) === 'on') {
-                        self.sideSwiper.next();
-                        self.establishmentSearchViewModel.trail().push(this.path);
-                    }
-                    else if ($('#participants_add').attr(dataSideSwiper) === 'on') {
-                        var pageNumber = this.params['pageNumber'],
-                            trail = self.establishmentSearchViewModel.trail(),
-                            clone;
-                        self.establishmentSearchViewModel.pageNumber(pageNumber);
-                        if (trail.length > 0 && trail[trail.length - 1] === this.path) return;
-                        if (trail.length > 1 && trail[trail.length - 2] === this.path) {
-                            // swipe backward
-                            trail.pop();
-                            clone = self.establishmentSearchViewModel.$itemsPage().clone(true)
-                                .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                            clone.appendTo(self.establishmentSearchViewModel.$itemsPage().parent());
-                            self.establishmentSearchViewModel.$itemsPage().attr('data-side-swiper', 'off').hide();
-                            self.establishmentSearchViewModel.lockAnimation();
-                            $(window).scrollTop(0);
-                            self.establishmentSearchViewModel.sideSwiper.prev(1, function () {
-                                self.establishmentSearchViewModel.$itemsPage().siblings().remove();
-                                self.establishmentSearchViewModel.unlockAnimation();
-                            });
-                            return;
-                        } else if (trail.length > 0) {
-                            // swipe forward
-                            clone = self.establishmentSearchViewModel.$itemsPage().clone(true)
-                                .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                            clone.insertBefore(self.establishmentSearchViewModel.$itemsPage());
-                            self.establishmentSearchViewModel.$itemsPage().attr('data-side-swiper', 'off').data('side-swiper', 'off').hide();
-                            self.establishmentSearchViewModel.lockAnimation();
-                            $(window).scrollTop(0);
-                            self.establishmentSearchViewModel.sideSwiper.next(1, function () {
-                                self.establishmentSearchViewModel.unlockAnimation();
-                                //self.establishmentSearchViewModel.nextForceDisabled(false);
-                            });
-                        }
-                        trail.push(this.path);
-                    }
-                });
+        //        this.get('#/participants/add/page/:pageNumber', function () {
+        //            if ($('#all').attr(dataSideSwiper) === 'on') {
+        //                self.sideSwiper.next();
+        //                self.establishmentSearchViewModel.trail().push(this.path);
+        //            }
+        //            else if ($('#participants_add').attr(dataSideSwiper) === 'on') {
+        //                var pageNumber = this.params['pageNumber'],
+        //                    trail = self.establishmentSearchViewModel.trail(),
+        //                    clone;
+        //                self.establishmentSearchViewModel.pageNumber(pageNumber);
+        //                if (trail.length > 0 && trail[trail.length - 1] === this.path) return;
+        //                if (trail.length > 1 && trail[trail.length - 2] === this.path) {
+        //                    // swipe backward
+        //                    trail.pop();
+        //                    clone = self.establishmentSearchViewModel.$itemsPage().clone(true)
+        //                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+        //                    clone.appendTo(self.establishmentSearchViewModel.$itemsPage().parent());
+        //                    self.establishmentSearchViewModel.$itemsPage().attr('data-side-swiper', 'off').hide();
+        //                    self.establishmentSearchViewModel.lockAnimation();
+        //                    $(window).scrollTop(0);
+        //                    self.establishmentSearchViewModel.sideSwiper.prev(1, function () {
+        //                        self.establishmentSearchViewModel.$itemsPage().siblings().remove();
+        //                        self.establishmentSearchViewModel.unlockAnimation();
+        //                    });
+        //                    return;
+        //                } else if (trail.length > 0) {
+        //                    // swipe forward
+        //                    clone = self.establishmentSearchViewModel.$itemsPage().clone(true)
+        //                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+        //                    clone.insertBefore(self.establishmentSearchViewModel.$itemsPage());
+        //                    self.establishmentSearchViewModel.$itemsPage().attr('data-side-swiper', 'off').data('side-swiper', 'off').hide();
+        //                    self.establishmentSearchViewModel.lockAnimation();
+        //                    $(window).scrollTop(0);
+        //                    self.establishmentSearchViewModel.sideSwiper.next(1, function () {
+        //                        self.establishmentSearchViewModel.unlockAnimation();
+        //                        //self.establishmentSearchViewModel.nextForceDisabled(false);
+        //                    });
+        //                }
+        //                trail.push(this.path);
+        //            }
+        //        });
 
-                this.get('', function () {
-                    this.app.runRoute('get', '#/');
-                });
-            });
-            return sam;
-        };
+        //        this.get('', function () {
+        //            this.app.runRoute('get', '#/');
+        //        });
+        //    });
+        //    return sam;
+    //};
+
+
 
         self.isBound(true);
     }

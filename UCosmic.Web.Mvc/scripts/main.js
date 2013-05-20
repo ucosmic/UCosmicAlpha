@@ -10,5 +10,12 @@ requirejs.config({
     paths: {
         app: '../app'
     }
+    
+
 });
 
+require(['jquery/jquery-1.8.2'],
+        function () {
+
+
+        });

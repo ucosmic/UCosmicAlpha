@@ -815,6 +815,9 @@
     <None Include="scripts\ko\knockout-2.2.d.ts" />
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
+    <None Include="scripts\sammy-0.7.1-vsdoc.js" />
+    <Content Include="scripts\sammy-0.7.1.js" />
+    <Content Include="scripts\sammy-0.7.1.min.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
     <Content Include="images\icons\closer\closer-16-dark.png" />
@@ -1781,6 +1784,8 @@
     <Content Include="scripts\oss\moment.min.js" />
     <TypeScriptCompile Include="scripts\require.d.ts" />
     <Content Include="scripts\require.js" />
+    <Content Include="scripts\sammy\sammy-0.7.4.js" />
+    <Content Include="scripts\sammy\sammy-0.7.4.min.js" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
     <Content Include="scripts\tinymce\license.txt" />
@@ -2442,9 +2447,6 @@
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
     <None Include="scripts\app\_deprecated\_routes.js" />
-    <None Include="scripts\sammy\sammy-0.7.1-vsdoc.js" />
-    <Content Include="scripts\sammy\sammy-0.7.1.js" />
-    <Content Include="scripts\sammy\sammy-0.7.1.min.js" />
     <None Include="startup\sql\CoreData.sql" />
     <None Include="startup\sql\DevelopmentData.sql" />
     <None Include="startup\sql\LanguagesData.sql" />

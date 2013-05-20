@@ -22,7 +22,7 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
             this.sammy = Sammy();
             this.sammyBeforeRoute = /\#\/page\/(.*)\//;
             this.sammyGetPageRoute = '#/page/:pageNumber/';
-            this.sammyDefaultPageRoute = '/Shared[\/]?';
+            this.sammyDefaultPageRoute = '/Establishments[\/]?';
             this.countries = ko.observableArray();
             this.countryCode = ko.observable();
             this.lenses = ko.observableArray([

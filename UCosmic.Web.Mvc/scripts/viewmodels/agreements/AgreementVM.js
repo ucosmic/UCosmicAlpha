@@ -1,7 +1,6 @@
 define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search'], function(require, exports, __SearchResultModule__, __SearchModule__) {
     var SearchResultModule = __SearchResultModule__;
 
-    
     var SearchModule = __SearchModule__;
 
     var SearchResult = SearchResultModule.SearchResult;
@@ -175,59 +174,8 @@ ko.computed(function () {
             e.stopPropagation();
             return false;
         };
+        self.sammy = Sammy();
         var dataSideSwiper = 'data-side-swiper';
-        var sam = undefined;
-        self.sammy = function () {
-            if(sam) {
-                return sam;
-            }
-            sam = Sammy(function () {
-                this.get('#/', function () {
-                    if($('#participants_add').attr(dataSideSwiper) === 'on') {
-                        self.sideSwiper.prev();
-                    }
-                });
-                this.get('#/participants/add/page/:pageNumber', function () {
-                    if($('#all').attr(dataSideSwiper) === 'on') {
-                        self.sideSwiper.next();
-                        self.establishmentSearchViewModel.trail().push(this.path);
-                    } else if($('#participants_add').attr(dataSideSwiper) === 'on') {
-                        var pageNumber = this.params['pageNumber'], trail = self.establishmentSearchViewModel.trail(), clone;
-                        self.establishmentSearchViewModel.pageNumber(pageNumber);
-                        if(trail.length > 0 && trail[trail.length - 1] === this.path) {
-                            return;
-                        }
-                        if(trail.length > 1 && trail[trail.length - 2] === this.path) {
-                            trail.pop();
-                            clone = self.establishmentSearchViewModel.$itemsPage().clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                            clone.appendTo(self.establishmentSearchViewModel.$itemsPage().parent());
-                            self.establishmentSearchViewModel.$itemsPage().attr('data-side-swiper', 'off').hide();
-                            self.establishmentSearchViewModel.lockAnimation();
-                            $(window).scrollTop(0);
-                            self.establishmentSearchViewModel.sideSwiper.prev(1, function () {
-                                self.establishmentSearchViewModel.$itemsPage().siblings().remove();
-                                self.establishmentSearchViewModel.unlockAnimation();
-                            });
-                            return;
-                        } else if(trail.length > 0) {
-                            clone = self.establishmentSearchViewModel.$itemsPage().clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                            clone.insertBefore(self.establishmentSearchViewModel.$itemsPage());
-                            self.establishmentSearchViewModel.$itemsPage().attr('data-side-swiper', 'off').data('side-swiper', 'off').hide();
-                            self.establishmentSearchViewModel.lockAnimation();
-                            $(window).scrollTop(0);
-                            self.establishmentSearchViewModel.sideSwiper.next(1, function () {
-                                self.establishmentSearchViewModel.unlockAnimation();
-                            });
-                        }
-                        trail.push(this.path);
-                    }
-                });
-                this.get('', function () {
-                    this.app.runRoute('get', '#/');
-                });
-            });
-            return sam;
-        };
         self.isBound(true);
     }
     exports.InstitutionalAgreementEditModel = InstitutionalAgreementEditModel;

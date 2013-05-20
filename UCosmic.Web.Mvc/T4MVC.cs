@@ -1343,14 +1343,17 @@ namespace Links
             private const string URLPATH = "~/scripts/sammy";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-            public static readonly string sammy_0_7_1_vsdoc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1-vsdoc.min.js") ? Url("sammy-0.7.1-vsdoc.min.js") : Url("sammy-0.7.1-vsdoc.js");
+            public static readonly string sammy_0_7_4_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.4.min.js") ? Url("sammy-0.7.4.min.js") : Url("sammy-0.7.4.js");
                           
-            public static readonly string sammy_0_7_1_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1.min.js") ? Url("sammy-0.7.1.min.js") : Url("sammy-0.7.1.js");
-                          
-            public static readonly string sammy_0_7_1_min_js = Url("sammy-0.7.1.min.js");
+            public static readonly string sammy_0_7_4_min_js = Url("sammy-0.7.4.min.js");
             public static readonly string sammyjs_0_7_d_ts = Url("sammyjs-0.7.d.ts");
         }
     
+        public static readonly string sammy_0_7_1_vsdoc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1-vsdoc.min.js") ? Url("sammy-0.7.1-vsdoc.min.js") : Url("sammy-0.7.1-vsdoc.js");
+                      
+        public static readonly string sammy_0_7_1_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/sammy-0.7.1.min.js") ? Url("sammy-0.7.1.min.js") : Url("sammy-0.7.1.js");
+                      
+        public static readonly string sammy_0_7_1_min_js = Url("sammy-0.7.1.min.js");
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class tinymce {
             private const string URLPATH = "~/scripts/tinymce";
