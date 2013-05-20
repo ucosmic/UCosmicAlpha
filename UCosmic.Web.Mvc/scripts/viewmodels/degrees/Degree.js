@@ -124,13 +124,14 @@ var ViewModels;
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.saving = false;
+                        location.href = App.Routes.Mvc.My.Profile.get(3);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
+                        location.href = App.Routes.Mvc.My.Profile.get(3);
                     }
                 });
-                location.href = App.Routes.Mvc.My.Profile.get(3);
             };
             Degree.prototype.isEmpty = function () {
                 if((this.title() == "New Degree") && (this.yearAwarded() == null) && (this.institutionId() == null)) {

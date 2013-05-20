@@ -202,14 +202,14 @@ module ViewModels.Degrees {
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     this.saving = false;
+                    location.href = App.Routes.Mvc.My.Profile.get(3);
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
                     this.saving = false;
                     alert( textStatus + " | " + errorThrown );
+                    location.href = App.Routes.Mvc.My.Profile.get(3);
                 }
             } );
-
-            location.href = App.Routes.Mvc.My.Profile.get(3);
         }
 
         // --------------------------------------------------------------------------------

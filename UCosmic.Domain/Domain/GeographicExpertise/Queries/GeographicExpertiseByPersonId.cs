@@ -25,7 +25,7 @@ namespace UCosmic.Domain.GeographicExpertises
 
             IQueryable<GeographicExpertise> results = _entities.Query<GeographicExpertise>()
                                                   .Where(a => a.PersonId == query.PersonId)
-                                                  .OrderBy(a => a.RevisionId);
+                                                  .OrderBy(a => a.Locations.FirstOrDefault().Place.OfficialName);
 
             var pagedResults = new PagedQueryResult<GeographicExpertise>(results, query.PageSize, query.PageNumber);
 
