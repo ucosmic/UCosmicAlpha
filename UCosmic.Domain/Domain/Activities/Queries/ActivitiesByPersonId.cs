@@ -39,7 +39,7 @@ namespace UCosmic.Domain.Activities
             IQueryable<Activity> undatedResults = _entities.Query<Activity>()
                                                            .Where(
                                                                a =>
-                                                               a.Values.Any(v => (v.ModeText == a.ModeText) && 
+                                                               a.Values.Any(v => (v.ModeText == a.ModeText) &&
                                                                !v.StartsOn.HasValue && !v.EndsOn.HasValue) &&
                                                                (a.EditSourceId == null)
                                                             )
@@ -48,27 +48,28 @@ namespace UCosmic.Domain.Activities
                                                            .ToArray().AsQueryable();
 
             IQueryable<Activity> datedResults = _entities.Query<Activity>()
+
                                                          .Where(
                                                              a =>
                                                              a.Values.Any(v => (!v.OnGoing.HasValue || !v.OnGoing.Value) &&
                                                                                (v.ModeText == a.ModeText) &&
                                                                                (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
-                                                             (a.EditSourceId == null)
-                )
+                                                                               (a.EditSourceId == null)
+                                                          )
                                                          .WithPersonId(query.PersonId)
-                                                         .OrderByDescending(
-                                                             a =>
-                                                             a.Values.FirstOrDefault().EndsOn.HasValue
-                                                                 ? a.Values.FirstOrDefault().EndsOn.Value
-                                                                 : a.Values.FirstOrDefault().StartsOn.Value)
+                                                         .OrderByDescending(o =>
+                                                             o.Values.FirstOrDefault().EndsOn.HasValue
+                                                                 ? o.Values.FirstOrDefault().EndsOn.Value
+                                                                 : o.Values.FirstOrDefault().StartsOn.Value)
                                                          .ThenBy(a => a.Values.FirstOrDefault().Title)
-                //.ThenBy(x => x.Values.FirstOrDefault().Types.Select(y => y.Type).OrderBy(y => y.Rank).FirstOrDefault())
                                                          .ToArray().AsQueryable();
 
             IQueryable<Activity> results = _entities.Query<Activity>()
                                                            .Where(
                                                                a =>
-                                                               a.Values.Any(v => v.OnGoing.HasValue && v.OnGoing.Value))
+                                                               a.Values.Any(v => v.OnGoing.HasValue && v.OnGoing.Value) &&
+                                                               (a.EditSourceId == null)
+                                                            )
                                                            .WithPersonId(query.PersonId)
                                                            .OrderByDescending(a => a.Values.FirstOrDefault().StartsOn.Value)
                                                            .ThenBy(a => a.Values.FirstOrDefault().Title)

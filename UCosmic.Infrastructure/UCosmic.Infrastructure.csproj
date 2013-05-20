@@ -163,6 +163,7 @@
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="Cryptography\AesExtensions.cs" />
+    <Compile Include="EntityFramework\Fluent\LanguageExpertises.cs" />
     <Compile Include="EntityFramework\Fluent\GeographicExpertises.cs" />
     <Compile Include="EntityFramework\Fluent\Degrees.cs" />
     <Compile Include="EntityFramework\DropCreateDbOnEveryBuild.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
+    <Compile Include="SeedData\LanguageExpertiseSeeder.cs" />
     <Compile Include="SeedData\GeographicExpertiseSeeder.cs" />
     <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\DegreeSeeder.cs" />

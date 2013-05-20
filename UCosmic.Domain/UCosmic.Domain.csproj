@@ -249,6 +249,8 @@
     <Compile Include="Domain\Identity\Validation\MustBeInAnyRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
+    <Compile Include="Domain\LanguageExpertise\Commands\CreateLanguageExpertise.cs" />
+    <Compile Include="Domain\LanguageExpertise\Entities\LanguageExpertise.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
@@ -534,7 +536,10 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Domain\LanguageExpertise\Queries\" />
+    <Folder Include="Domain\LanguageExpertise\Validation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

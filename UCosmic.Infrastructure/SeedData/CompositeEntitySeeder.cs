@@ -25,6 +25,7 @@
         private readonly ImageEntitySeeder _imageEntitySeeder;
         private readonly DegreeEntitySeeder _degreeEntitySeeder;
         private readonly GeographicExpertiseEntitySeeder _geographicExpertiseEntitySeeder;
+        private readonly LanguageExpertiseEntitySeeder _languageExpertiseEntitySeeder;
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
@@ -49,6 +50,7 @@
             , ImageEntitySeeder imageEntitySeeder
             , DegreeEntitySeeder degreeEntitySeeder
             , GeographicExpertiseEntitySeeder geographicExpertiseEntitySeeder
+            , LanguageExpertiseEntitySeeder languageExpertiseEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -74,6 +76,7 @@
             _imageEntitySeeder = imageEntitySeeder;
             _degreeEntitySeeder = degreeEntitySeeder;
             _geographicExpertiseEntitySeeder = geographicExpertiseEntitySeeder;
+            _languageExpertiseEntitySeeder = languageExpertiseEntitySeeder;
         }
 
         public void Seed()
@@ -103,6 +106,7 @@
             _activityEntitySeeder.Seed();
             _degreeEntitySeeder.Seed();
             _geographicExpertiseEntitySeeder.Seed();
+            _languageExpertiseEntitySeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }

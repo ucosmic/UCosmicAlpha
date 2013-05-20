@@ -28,7 +28,6 @@ namespace UCosmic.Web.Mvc.Models
         public string WhoLastUpdated { get; set; }
         public ICollection<GeographicExpertiseLocationApiModel> Locations { get; set; }
         public string Description { get; set; }
-        //public bool IsNew { get; set; }
     }
 
     public class GeographicExpertiseSearchInputModel
