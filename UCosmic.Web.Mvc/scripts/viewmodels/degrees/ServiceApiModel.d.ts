@@ -17,10 +17,12 @@ module Service.ApiModels.Degree {
     export interface IObservableDegree {
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;      // byte[] converted to base64
-        entityId: KnockoutObservableString;     // guid converted to string
+        personId: KnockoutObservableNumber;
+        whenLastUpdated: KnockoutObservableString;
+        whoLastUpdated: KnockoutObservableString;
         title: KnockoutObservableString;
-        yearAwarded: KnockoutObservableNumber;
-        institutionId: KnockoutObservableNumber;
+        yearAwarded: KnockoutObservableAny;
+        institutionId: KnockoutObservableAny;
         institutionOfficialName: KnockoutObservableString;
         institutionCountryOfficialName: KnockoutObservableString;
 

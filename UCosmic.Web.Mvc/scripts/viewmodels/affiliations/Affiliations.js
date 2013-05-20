@@ -74,7 +74,7 @@ var ViewModels;
             AffiliationList.prototype.editAffiliation = function (data, event, expertiseId) {
                 $.ajax({
                     type: "GET",
-                    url: App.Routes.WebApi.Affiliations.getEditState(expertiseId),
+                    url: App.Routes.WebApi.Affiliations.get(expertiseId),
                     success: function (editState, textStatus, jqXHR) {
                         if(editState.isInEdit) {
                             $("#AffiliationBeingEditedDialog").dialog({

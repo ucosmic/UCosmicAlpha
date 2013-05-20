@@ -12,7 +12,7 @@
 
     public class DegreeModel
     {
-        public int DegreeId { get; set; }
+        public string DegreeId { get; set; }
     }
 
     public class GeographicExpertiseModel

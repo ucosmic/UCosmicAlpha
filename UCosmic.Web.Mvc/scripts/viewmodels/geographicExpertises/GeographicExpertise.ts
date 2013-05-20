@@ -244,17 +244,8 @@ module ViewModels.GeographicExpertises {
         /*  
         */
         // --------------------------------------------------------------------------------
-        deleteExpertise( id: number ) {
-
-        }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             if ( this.dirtyFlag() == true ) {
-                var me: any = this;
                 $( "#cancelConfirmDialog" ).dialog( {
                     modal: true,
                     resizable: false,
@@ -269,6 +260,9 @@ module ViewModels.GeographicExpertises {
                         }
                     }
                 } );
+            }
+            else {
+                location.href = App.Routes.Mvc.My.Profile.get( 1 );
             }
         }
 

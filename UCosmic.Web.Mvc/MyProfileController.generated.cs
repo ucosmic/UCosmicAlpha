@@ -184,7 +184,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult DegreeEdit(int degreeId)
+        public override System.Web.Mvc.ActionResult DegreeEdit(string degreeId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "degreeId", degreeId);

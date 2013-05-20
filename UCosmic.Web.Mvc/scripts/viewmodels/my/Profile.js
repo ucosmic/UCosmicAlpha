@@ -98,14 +98,6 @@ var ViewModels;
                         });
                     }
                 } else if((tabName === "Language Expertise") || (tabName === "language-expertise")) {
-                    if(this._languageExpertisesViewModel == null) {
-                        this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
-                        this._languageExpertisesViewModel.load().done(function () {
-                            ko.applyBindings(_this._languageExpertisesViewModel, $("#language-expertises")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + "|" + errorThrown);
-                        });
-                    }
                 } else if((tabName === "Formal Education") || (tabName === "formal-education")) {
                     if(this._degreesViewModel == null) {
                         this._degreesViewModel = new ViewModels.Degrees.DegreeList(this.personId);
@@ -116,14 +108,6 @@ var ViewModels;
                         });
                     }
                 } else if((tabName === "Affiliations") || (tabName === "affiliations")) {
-                    if(this._affiliationsViewModel == null) {
-                        this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList(this.personId);
-                        this._affiliationsViewModel.load().done(function () {
-                            ko.applyBindings(_this._affiliationsViewModel, $("#affiliations")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + "|" + errorThrown);
-                        });
-                    }
                 }
             };
             Profile.prototype.tabClickHandler = function (event) {

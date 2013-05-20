@@ -157,16 +157,16 @@ module ViewModels.My {
                         } );
                 }
             } else if ( (tabName === "Language Expertise") || (tabName === "language-expertise") ) {
-                if ( this._languageExpertisesViewModel == null ) {
-                    this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
-                    this._languageExpertisesViewModel.load()
-                        .done( (): void => {
-                            ko.applyBindings( this._languageExpertisesViewModel, $( "#language-expertises" )[0] );
-                        } )
-                        .fail( function ( jqXhr, textStatus, errorThrown ) {
-                            alert( textStatus + "|" + errorThrown );
-                        } );
-                }
+                //if ( this._languageExpertisesViewModel == null ) {
+                //    this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
+                //    this._languageExpertisesViewModel.load()
+                //        .done( (): void => {
+                //            ko.applyBindings( this._languageExpertisesViewModel, $( "#language-expertises" )[0] );
+                //        } )
+                //        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                //            alert( textStatus + "|" + errorThrown );
+                //        } );
+                //}
             } else if ( (tabName === "Formal Education") || (tabName === "formal-education") ) {
                 if ( this._degreesViewModel == null ) {
                     this._degreesViewModel = new ViewModels.Degrees.DegreeList( this.personId );
@@ -179,16 +179,16 @@ module ViewModels.My {
                         } );
                 }
             } else if ( (tabName === "Affiliations") || (tabName === "affiliations") ) {
-                if ( this._affiliationsViewModel == null ) {
-                    this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
-                    this._affiliationsViewModel.load()
-                        .done( (): void => {
-                            ko.applyBindings( this._affiliationsViewModel, $( "#affiliations" )[0] );
-                        } )
-                        .fail( function ( jqXhr, textStatus, errorThrown ) {
-                            alert( textStatus + "|" + errorThrown );
-                        } );
-                }
+                //if ( this._affiliationsViewModel == null ) {
+                //    this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
+                //    this._affiliationsViewModel.load()
+                //        .done( (): void => {
+                //            ko.applyBindings( this._affiliationsViewModel, $( "#affiliations" )[0] );
+                //        } )
+                //        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                //            alert( textStatus + " |" + errorThrown );
+                //        } );
+                //}
             }
         }
 

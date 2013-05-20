@@ -408,20 +408,8 @@ module App.Routes {
                 return makeUrl('langexpertises');
             }
 
-            export function getEdit (expertiseId: number): string {
-                return makeUrl('langexpertises/' + expertiseId + "/edit");
-            }
-
-            export function getEditState (expertiseId: number): string {
-                return makeUrl('langexpertises/' + expertiseId + "/edit-state");
-            }
-
             export function put(expertiseId: number): string {
                 return makeUrl('langexpertises/' + expertiseId);
-            }
-
-            export function putEdit(expertiseId: number): string {
-                return makeUrl('langexpertises/' + expertiseId + "/edit");
             }
 
             export function del(expertiseId: number): string {
@@ -464,20 +452,8 @@ module App.Routes {
                 return makeUrl('affiliations');
             }
 
-            export function getEdit (affiliationId: number): string {
-                return makeUrl('affiliations/' + affiliationId + "/edit");
-            }
-
-            export function getEditState (affiliationId: number): string {
-                return makeUrl('affiliations/' + affiliationId + "/edit-state");
-            }
-
             export function put(affiliationId: number): string {
                 return makeUrl('affiliations/' + affiliationId);
-            }
-
-            export function putEdit(affiliationId: number): string {
-                return makeUrl('affiliations/' + affiliationId + "/edit");
             }
 
             export function del(affiliationId: number): string {

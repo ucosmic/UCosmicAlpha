@@ -142,18 +142,7 @@ module ViewModels.Degrees
         */
         // --------------------------------------------------------------------------------
         newEducation(data: any, event: any): void {
-            $.ajax({
-                type: "POST",
-                url: App.Routes.WebApi.Degrees.post(),
-                success: (newEducationId: string, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    location.href = App.Routes.Mvc.My.Profile.degreeEdit(newEducationId);
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            location.href = App.Routes.Mvc.My.Profile.degreeEdit("new");
         }
     }
 }

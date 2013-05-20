@@ -138,7 +138,7 @@ module ViewModels.Affiliations
         editAffiliation(data: any, event: any, expertiseId: number): void {
             $.ajax({
                 type: "GET",
-                url: App.Routes.WebApi.Affiliations.getEditState(expertiseId),
+                url: App.Routes.WebApi.Affiliations.get(expertiseId),
                 success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 {
                     if ( editState.isInEdit ) {

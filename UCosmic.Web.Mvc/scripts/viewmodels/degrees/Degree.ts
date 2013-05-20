@@ -22,16 +22,21 @@ module ViewModels.Degrees {
         /* In the process of saving */
         saving: bool = false;
 
+        /* True if any field changes. */
+        dirtyFlag: KnockoutObservableBool = ko.observable( false );
+
         /* Element id of institution autocomplete */
         institutionSelectorId: string;
 
         /* IObservableDegree implemented */
         id: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        entityId: KnockoutObservableString;     // guid converted to string
+        version: KnockoutObservableString;
+        personId: KnockoutObservableNumber;
+        whenLastUpdated: KnockoutObservableString;
+        whoLastUpdated: KnockoutObservableString;
         title: KnockoutObservableString;
-        yearAwarded: KnockoutObservableNumber;
-        institutionId: KnockoutObservableNumber;
+        yearAwarded: KnockoutObservableAny;
+        institutionId: KnockoutObservableAny;
         institutionOfficialName: KnockoutObservableString;
         institutionCountryOfficialName: KnockoutObservableString;
         errors: KnockoutValidationErrors;
@@ -42,8 +47,12 @@ module ViewModels.Degrees {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize( degreeId: number ): void {
-            this.id = ko.observable( degreeId );
+        _initialize( degreeId: string ): void {
+            if (degreeId === "new") {
+                this.id = ko.observable( 0 );
+            } else {
+                this.id = ko.observable( Number(degreeId) );
+            }
         }
 
         // --------------------------------------------------------------------------------
@@ -94,7 +103,6 @@ module ViewModels.Degrees {
                     }
                 }
             } );
-
         }
 
         // --------------------------------------------------------------------------------
@@ -129,7 +137,7 @@ module ViewModels.Degrees {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( educationId: number ) {
+        constructor( educationId: string ) {
             this._initialize( educationId );
         }
 
@@ -140,28 +148,46 @@ module ViewModels.Degrees {
         load(): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
-            var dataPact = $.Deferred();
+            if ( this.id() == 0 ) {
+                this.version = ko.observable( null );
+                this.personId = ko.observable( 0 );
+                this.title = ko.observable( null );
+                this.yearAwarded = ko.observable( null );
+                this.whenLastUpdated = ko.observable( null );
+                this.whoLastUpdated = ko.observable( null );
+                this.institutionId = ko.observable( null );
+                this.institutionOfficialName = ko.observable( null );
+                this.institutionCountryOfficialName = ko.observable( null );
+                deferred.resolve();
+            }
+            else {
+                var dataPact = $.Deferred();
 
-            $.ajax( {
-                type: "GET",
-                url: App.Routes.WebApi.Degrees.get( this.id() ),
-                success: function ( data: Service.ApiModels.Degree.IDegreePage, textStatus: string, jqXhr: JQueryXHR ): void
-                    { dataPact.resolve( data ); },
-                error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
-                    { dataPact.reject( jqXhr, textStatus, errorThrown ); },
-            } );
+                $.ajax( {
+                    type: "GET",
+                    url: App.Routes.WebApi.Degrees.get( this.id() ),
+                    success: function ( data: Service.ApiModels.Degree.IDegreePage, textStatus: string, jqXhr: JQueryXHR ): void
+                        { dataPact.resolve( data ); },
+                    error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
+                        { dataPact.reject( jqXhr, textStatus, errorThrown ); },
+                } );
 
-            // only process after all requests have been resolved
-            $.when( dataPact )
-                          .done( ( data: Service.ApiModels.Degree.IObservableDegree ): void => {
+                // only process after all requests have been resolved
+                $.when( dataPact )
+                              .done( ( data: Service.ApiModels.Degree.IObservableDegree ): void => {
 
-                              ko.mapping.fromJS( data, {}, this );
+                                  ko.mapping.fromJS( data, {}, this );
 
-                              deferred.resolve();
-                          } )
-                          .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                              deferred.reject( xhr, textStatus, errorThrown );
-                          } );
+                                  this.title.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+                                  this.yearAwarded.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+                                  this.institutionId.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+
+                                  deferred.resolve();
+                              } )
+                              .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
+                                  deferred.reject( xhr, textStatus, errorThrown );
+                              } );
+            }
 
             return deferred;
         }
@@ -189,15 +215,30 @@ module ViewModels.Degrees {
                 }
             }
 
-            /* If there is no istitution, return institutionId as null, not 0 */
+            /* If there is no institution, return institutionId as null, not 0 */
             this.checkInstitutionForNull();
 
-            var model = ko.mapping.toJS( this );
+            var mapSource = {
+                id : this.id,
+                version : this.version,
+                personId : this.personId,
+                whenLastUpdated : this.whenLastUpdated,
+                whoLastUpdated : this.whoLastUpdated,
+                title : this.title,
+                yearAwarded : this.yearAwarded,
+                institutionId : this.institutionId
+            };
+
+            var model = ko.mapping.toJS( mapSource );
+            var url = (viewModel.id() == 0) ?
+                        App.Routes.WebApi.Degrees.post() :
+                        App.Routes.WebApi.Degrees.put( viewModel.id() );
+            var type = (viewModel.id() == 0) ?  "POST" : "PUT";
 
             this.saving = true;
             $.ajax( {
-                type: 'PUT',
-                url: App.Routes.WebApi.Degrees.put( viewModel.id() ),
+                type: type,
+                url: url,
                 data: model,
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
@@ -216,53 +257,25 @@ module ViewModels.Degrees {
         /*  
         */
         // --------------------------------------------------------------------------------
-        isEmpty(): bool {
-            if ( ( this.title() == "New Degree" ) &&
-                ( this.yearAwarded() == null ) &&
-                ( this.institutionId() == null ) ) {
-                return true;
-            }
-
-            return false;
-        }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
-            var me: any = this;
-            $( "#cancelConfirmDialog" ).dialog( {
-                modal: true,
-                resizable: false,
-                width: 450,
-                buttons: {
-                    "Do not cancel": function () {
-                        $( this ).dialog( "close" );
-                    },
-                    "Cancel and lose changes": function () {
-                        $( this ).dialog( "close" );
-
-                        if ( me.isEmpty() ) {
-                            $.ajax( {
-                                async: false,
-                                type: "DELETE",
-                                url: App.Routes.WebApi.Degrees.del( me.id() ),
-                                success: ( data: any, textStatus: string, jqXHR: JQueryXHR ): void =>
-                                {
-                                },
-                                error: ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void =>
-                                {
-                                    alert( textStatus );
-                                }
-                            } );
+            if ( this.dirtyFlag() == true ) {
+                $( "#cancelConfirmDialog" ).dialog( {
+                    modal: true,
+                    resizable: false,
+                    width: 450,
+                    buttons: {
+                        "Do not cancel": function () {
+                            $( this ).dialog( "close" );
+                        },
+                        "Cancel and lose changes": function () {
+                            $( this ).dialog( "close" );
+                            location.href = App.Routes.Mvc.My.Profile.get( 3 );
                         }
-
-                        location.href = App.Routes.Mvc.My.Profile.get(3);
                     }
-                }
-            } );
-
+                } );
+            } else {
+                location.href = App.Routes.Mvc.My.Profile.get( 3 );
+            }
         }
     }
 }

@@ -141,11 +141,8 @@ var ViewModels;
                     }
                 });
             };
-            GeographicExpertise.prototype.deleteExpertise = function (id) {
-            };
             GeographicExpertise.prototype.cancel = function (item, event, mode) {
                 if(this.dirtyFlag() == true) {
-                    var me = this;
                     $("#cancelConfirmDialog").dialog({
                         modal: true,
                         resizable: false,
@@ -160,6 +157,8 @@ var ViewModels;
                             }
                         }
                     });
+                } else {
+                    location.href = App.Routes.Mvc.My.Profile.get(1);
                 }
             };
             GeographicExpertise.prototype.updateLocations = function (items) {

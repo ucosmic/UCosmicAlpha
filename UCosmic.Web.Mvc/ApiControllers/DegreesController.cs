@@ -75,13 +75,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [POST("")]
-        public HttpResponseMessage Post()
+        public HttpResponseMessage Post(DegreeApiModel newModel)
         {
-            var createDeepDegreeCommand = new CreateDegree(User, "New Degree");
+            if ( (newModel == null) ||
+                 (newModel.Title == null) )
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            var createDeepDegreeCommand = new CreateDegree(User, newModel.Title)
+            {
+                YearAwarded = newModel.YearAwarded,
+                InstitutionId = newModel.InstitutionId
+            };
             _createDegree.Handle(createDeepDegreeCommand);
 
-            var model = createDeepDegreeCommand.CreatedDegree.RevisionId;
-            return Request.CreateResponse(HttpStatusCode.OK, model);
+            var id = createDeepDegreeCommand.CreatedDegree.RevisionId;
+            return Request.CreateResponse(HttpStatusCode.OK, id);
         }
 
         // --------------------------------------------------------------------------------

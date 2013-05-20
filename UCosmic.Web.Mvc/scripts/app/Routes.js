@@ -448,22 +448,10 @@ var App;
                     return makeUrl('langexpertises');
                 }
                 LanguageExpertises.post = post;
-                function getEdit(expertiseId) {
-                    return makeUrl('langexpertises/' + expertiseId + "/edit");
-                }
-                LanguageExpertises.getEdit = getEdit;
-                function getEditState(expertiseId) {
-                    return makeUrl('langexpertises/' + expertiseId + "/edit-state");
-                }
-                LanguageExpertises.getEditState = getEditState;
                 function put(expertiseId) {
                     return makeUrl('langexpertises/' + expertiseId);
                 }
                 LanguageExpertises.put = put;
-                function putEdit(expertiseId) {
-                    return makeUrl('langexpertises/' + expertiseId + "/edit");
-                }
-                LanguageExpertises.putEdit = putEdit;
                 function del(expertiseId) {
                     return makeUrl('langexpertises/' + expertiseId);
                 }
@@ -506,22 +494,10 @@ var App;
                     return makeUrl('affiliations');
                 }
                 Affiliations.post = post;
-                function getEdit(affiliationId) {
-                    return makeUrl('affiliations/' + affiliationId + "/edit");
-                }
-                Affiliations.getEdit = getEdit;
-                function getEditState(affiliationId) {
-                    return makeUrl('affiliations/' + affiliationId + "/edit-state");
-                }
-                Affiliations.getEditState = getEditState;
                 function put(affiliationId) {
                     return makeUrl('affiliations/' + affiliationId);
                 }
                 Affiliations.put = put;
-                function putEdit(affiliationId) {
-                    return makeUrl('affiliations/' + affiliationId + "/edit");
-                }
-                Affiliations.putEdit = putEdit;
                 function del(affiliationId) {
                     return makeUrl('affiliations/' + affiliationId);
                 }

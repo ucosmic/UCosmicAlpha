@@ -82,16 +82,7 @@ var ViewModels;
                 }
             };
             DegreeList.prototype.newEducation = function (data, event) {
-                $.ajax({
-                    type: "POST",
-                    url: App.Routes.WebApi.Degrees.post(),
-                    success: function (newEducationId, textStatus, jqXHR) {
-                        location.href = App.Routes.Mvc.My.Profile.degreeEdit(newEducationId);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus + "|" + errorThrown);
-                    }
-                });
+                location.href = App.Routes.Mvc.My.Profile.degreeEdit("new");
             };
             return DegreeList;
         })();

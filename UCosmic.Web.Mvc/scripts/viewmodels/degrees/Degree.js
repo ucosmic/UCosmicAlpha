@@ -5,10 +5,15 @@ var ViewModels;
             function Degree(educationId) {
                 this.inititializationErrors = "";
                 this.saving = false;
+                this.dirtyFlag = ko.observable(false);
                 this._initialize(educationId);
             }
             Degree.prototype._initialize = function (degreeId) {
-                this.id = ko.observable(degreeId);
+                if(degreeId === "new") {
+                    this.id = ko.observable(0);
+                } else {
+                    this.id = ko.observable(Number(degreeId));
+                }
             };
             Degree.prototype.setupWidgets = function (institutionSelectorId) {
                 var _this = this;
@@ -79,24 +84,46 @@ var ViewModels;
             Degree.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                var dataPact = $.Deferred();
-                $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.Degrees.get(this.id()),
-                    success: function (data, textStatus, jqXhr) {
-                        dataPact.resolve(data);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        dataPact.reject(jqXhr, textStatus, errorThrown);
-                    }
-                });
-                $.when(dataPact).done(function (data) {
-                    ko.mapping.fromJS(data, {
-                    }, _this);
+                if(this.id() == 0) {
+                    this.version = ko.observable(null);
+                    this.personId = ko.observable(0);
+                    this.title = ko.observable(null);
+                    this.yearAwarded = ko.observable(null);
+                    this.whenLastUpdated = ko.observable(null);
+                    this.whoLastUpdated = ko.observable(null);
+                    this.institutionId = ko.observable(null);
+                    this.institutionOfficialName = ko.observable(null);
+                    this.institutionCountryOfficialName = ko.observable(null);
                     deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
-                });
+                } else {
+                    var dataPact = $.Deferred();
+                    $.ajax({
+                        type: "GET",
+                        url: App.Routes.WebApi.Degrees.get(this.id()),
+                        success: function (data, textStatus, jqXhr) {
+                            dataPact.resolve(data);
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            dataPact.reject(jqXhr, textStatus, errorThrown);
+                        }
+                    });
+                    $.when(dataPact).done(function (data) {
+                        ko.mapping.fromJS(data, {
+                        }, _this);
+                        _this.title.subscribe(function (newValue) {
+                            _this.dirtyFlag(true);
+                        });
+                        _this.yearAwarded.subscribe(function (newValue) {
+                            _this.dirtyFlag(true);
+                        });
+                        _this.institutionId.subscribe(function (newValue) {
+                            _this.dirtyFlag(true);
+                        });
+                        deferred.resolve();
+                    }).fail(function (xhr, textStatus, errorThrown) {
+                        deferred.reject(xhr, textStatus, errorThrown);
+                    });
+                }
                 return deferred;
             };
             Degree.prototype.save = function (viewModel, event) {
@@ -115,11 +142,23 @@ var ViewModels;
                     }
                 }
                 this.checkInstitutionForNull();
-                var model = ko.mapping.toJS(this);
+                var mapSource = {
+                    id: this.id,
+                    version: this.version,
+                    personId: this.personId,
+                    whenLastUpdated: this.whenLastUpdated,
+                    whoLastUpdated: this.whoLastUpdated,
+                    title: this.title,
+                    yearAwarded: this.yearAwarded,
+                    institutionId: this.institutionId
+                };
+                var model = ko.mapping.toJS(mapSource);
+                var url = (viewModel.id() == 0) ? App.Routes.WebApi.Degrees.post() : App.Routes.WebApi.Degrees.put(viewModel.id());
+                var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 this.saving = true;
                 $.ajax({
-                    type: 'PUT',
-                    url: App.Routes.WebApi.Degrees.put(viewModel.id()),
+                    type: type,
+                    url: url,
                     data: model,
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
@@ -133,40 +172,25 @@ var ViewModels;
                     }
                 });
             };
-            Degree.prototype.isEmpty = function () {
-                if((this.title() == "New Degree") && (this.yearAwarded() == null) && (this.institutionId() == null)) {
-                    return true;
-                }
-                return false;
-            };
             Degree.prototype.cancel = function (item, event, mode) {
-                var me = this;
-                $("#cancelConfirmDialog").dialog({
-                    modal: true,
-                    resizable: false,
-                    width: 450,
-                    buttons: {
-                        "Do not cancel": function () {
-                            $(this).dialog("close");
-                        },
-                        "Cancel and lose changes": function () {
-                            $(this).dialog("close");
-                            if(me.isEmpty()) {
-                                $.ajax({
-                                    async: false,
-                                    type: "DELETE",
-                                    url: App.Routes.WebApi.Degrees.del(me.id()),
-                                    success: function (data, textStatus, jqXHR) {
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        alert(textStatus);
-                                    }
-                                });
+                if(this.dirtyFlag() == true) {
+                    $("#cancelConfirmDialog").dialog({
+                        modal: true,
+                        resizable: false,
+                        width: 450,
+                        buttons: {
+                            "Do not cancel": function () {
+                                $(this).dialog("close");
+                            },
+                            "Cancel and lose changes": function () {
+                                $(this).dialog("close");
+                                location.href = App.Routes.Mvc.My.Profile.get(3);
                             }
-                            location.href = App.Routes.Mvc.My.Profile.get(3);
                         }
-                    }
-                });
+                    });
+                } else {
+                    location.href = App.Routes.Mvc.My.Profile.get(3);
+                }
             };
             return Degree;
         })();

@@ -74,7 +74,7 @@ var ViewModels;
             LanguageExpertiseList.prototype.editExpertise = function (data, event, expertiseId) {
                 $.ajax({
                     type: "GET",
-                    url: App.Routes.WebApi.LanguageExpertises.getEditState(expertiseId),
+                    url: App.Routes.WebApi.LanguageExpertises.get(expertiseId),
                     success: function (editState, textStatus, jqXHR) {
                         if(editState.isInEdit) {
                             $("#languageExpertiseBeingEditedDialog").dialog({

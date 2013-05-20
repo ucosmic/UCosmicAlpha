@@ -31,7 +31,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [Authorize]
         [GET("my/degree/{degreeId}")]
-        public virtual ActionResult DegreeEdit(int degreeId)
+        public virtual ActionResult DegreeEdit(string degreeId)
         {
             var model = new DegreeModel { DegreeId = degreeId };
             return View(model);

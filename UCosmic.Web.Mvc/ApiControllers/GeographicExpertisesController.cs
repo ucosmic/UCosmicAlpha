@@ -80,6 +80,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post(GeographicExpertiseApiModel newModel)
         {
+            if ( (newModel == null) ||
+                 (newModel.Locations == null) ||
+                 (newModel.Locations.Count == 0) )
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
             var newLocations = new Collection<int>();
             foreach (var location in newModel.Locations)
             {

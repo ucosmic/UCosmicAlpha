@@ -138,7 +138,7 @@ module ViewModels.LanguageExpertises
         editExpertise(data: any, event: any, expertiseId: number): void {
             $.ajax({
                 type: "GET",
-                url: App.Routes.WebApi.LanguageExpertises.getEditState(expertiseId),
+                url: App.Routes.WebApi.LanguageExpertises.get(expertiseId),
                 success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 {
                     if ( editState.isInEdit ) {
