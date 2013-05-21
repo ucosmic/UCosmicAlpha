@@ -2586,7 +2586,6 @@ namespace Links
                 public static readonly string Affiliation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliation.min.js") ? Url("Affiliation.min.js") : Url("Affiliation.js");
                               
                 public static readonly string Affiliation_min_js = Url("Affiliation.min.js");
-                public static readonly string Affiliation_min_js = Url("Affiliation.min.js");
                 public static readonly string Affiliations_ts = Url("Affiliations.ts");
                 public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
                               
@@ -2795,7 +2794,6 @@ namespace Links
                 public static readonly string GeographicExpertise_ts = Url("GeographicExpertise.ts");
                 public static readonly string GeographicExpertise_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertise.min.js") ? Url("GeographicExpertise.min.js") : Url("GeographicExpertise.js");
                               
-                public static readonly string GeographicExpertise_min_js = Url("GeographicExpertise.min.js");
                 public static readonly string GeographicExpertise_min_js = Url("GeographicExpertise.min.js");
                 public static readonly string GeographicExpertises_ts = Url("GeographicExpertises.ts");
                 public static readonly string GeographicExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertises.min.js") ? Url("GeographicExpertises.min.js") : Url("GeographicExpertises.js");
