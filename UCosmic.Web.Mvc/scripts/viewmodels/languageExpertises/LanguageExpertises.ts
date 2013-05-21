@@ -7,20 +7,10 @@
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
+
 module ViewModels.LanguageExpertises
 {
-    export interface ILanguageExpertise {
-    }
-
-    export interface ILanguageExpertisePage {
-        personId: KnockoutObservableNumber;
-        orderBy: KnockoutObservableString;
-        pageSize: KnockoutObservableNumber;
-        pageNumber: KnockoutObservableNumber;
-        items: KnockoutObservableArray;
-    }
-
-    export class ExpertiseSearchInput
+    export class LanguageExpertiseSearchInput
     {
         personId: number;
         orderBy: string;
@@ -32,7 +22,7 @@ module ViewModels.LanguageExpertises
     /* 
     */
     // ================================================================================
-    export class LanguageExpertiseList implements KnockoutValidationGroup
+    export class LanguageExpertiseList
     {
         personId: number;
         orderBy: string;
@@ -56,29 +46,24 @@ module ViewModels.LanguageExpertises
         load(): JQueryPromise
         {
             var deferred: JQueryDeferred = $.Deferred();
-
-            var dataPact = $.Deferred();
-            var expertiseSearchInput: ExpertiseSearchInput = new ExpertiseSearchInput();
+            var expertiseSearchInput: LanguageExpertiseSearchInput = new LanguageExpertiseSearchInput();
 
             expertiseSearchInput.personId = this.personId;
             expertiseSearchInput.orderBy = "";
             expertiseSearchInput.pageNumber = 1;
-            expertiseSearchInput.pageSize = 10;
+            expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
             $.get(App.Routes.WebApi.LanguageExpertises.get(), expertiseSearchInput)
-                .done((data: ILanguageExpertise[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    { dataPact.resolve(data); }
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    {
+                        ko.mapping.fromJS(data, {}, this);
+                        deferred.resolve();
+                    }
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
-                });
-
-            $.when(dataPact)
-                .done((data: ILanguageExpertisePage) => {
-                    deferred.resolve();
-                })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                    {
+                        deferred.reject(jqXhr, textStatus, errorThrown);
+                    }
                 });
 
             return deferred;
@@ -119,7 +104,7 @@ module ViewModels.LanguageExpertises
                                     $(this).dialog("close");
 
                                     /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                    location.href = App.Routes.Mvc.My.Profile.get(2);
                                 }
                             },
                             {
@@ -136,47 +121,20 @@ module ViewModels.LanguageExpertises
         */
         // --------------------------------------------------------------------------------
         editExpertise(data: any, event: any, expertiseId: number): void {
-            $.ajax({
-                type: "GET",
-                url: App.Routes.WebApi.LanguageExpertises.get(expertiseId),
-                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    if ( editState.isInEdit ) {
-                        $( "#languageExpertiseBeingEditedDialog" ).dialog( {
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                Ok: function () {
-                                    $( this ).dialog( "close" );
-                                    return;
-                                }
-                            }
-                        } );
-                    }
-                    else {
-                        var element = event.target;
-                        var url = null;
+            var element = event.target;
+            var url = null;
 
-                        while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                            element = element.parentElement;
-                        }
+            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
+                element = element.parentElement;
+            }
 
-                        if ( element != null ) {
-                            url = element.attributes["href"].value;
-                        }
+            if ( element != null ) {
+                url = element.attributes["href"].value;
+            }
 
-                        if ( url != null ) {
-                            location.href = url;
-                        }
-                    }
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            if ( url != null ) {
+                location.href = url;
+            }
         }
 
         // --------------------------------------------------------------------------------
@@ -184,18 +142,24 @@ module ViewModels.LanguageExpertises
         */
         // --------------------------------------------------------------------------------
         newExpertise(data: any, event: any): void {
-            $.ajax({
-                type: "POST",
-                url: App.Routes.WebApi.LanguageExpertises.post(),
-                success: (newExpertiseId: string, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    location.href = App.Routes.Mvc.My.Profile.languageExpertiseEdit(newExpertiseId);
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
+        }
+
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        formatLocations(locations: any): string
+        {
+            var formattedLocations: string = "";
+
+            for (var i = 0; i < locations.length; i += 1)
+            {
+                if (i > 0) { formattedLocations += ", "; }
+                formattedLocations += locations[i].placeOfficialName();
+            }
+
+            return formattedLocations;
         }
     }
 }

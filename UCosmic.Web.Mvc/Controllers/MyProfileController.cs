@@ -44,5 +44,13 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = new GeographicExpertiseModel {ExpertiseId = expertiseId};
             return View(model);
         }
+
+        [Authorize]
+        [GET("my/language-expertise/{expertiseId}")]
+        public virtual ActionResult LanguageExpertiseEdit(string expertiseId)
+        {
+            var model = new LanguageExpertiseModel { ExpertiseId = expertiseId };
+            return View(model);
+        }
     }
 }

@@ -1,0 +1,137 @@
+﻿ @model UCosmic.Web.Mvc.Models.LanguageExpertiseModel
+
+@{
+    ViewBag.Title = "My Language Expertise";
+}
+
+@section styles
+{
+    <style>
+    .non-required-field
+    {
+        width: 120px;
+        display:inline-block;
+        text-align: right;
+        vertical-align: inherit;
+    }        
+    .required-field
+    {
+        width: 120px;
+        display:inline-block;
+        text-align: right;
+        vertical-align: inherit;
+    }
+    .required-field::after {
+        content: "*";
+        font-size: large;
+        vertical-align: text-top;
+        color: red;
+    }
+    </style>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/languageExpertise")
+
+    <script type="text/javascript">
+        $(function() {
+            var expertiseId = "@Model.ExpertiseId";
+            var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(expertiseId);
+            expertiseViewModel.load()
+                .done(function() {
+
+                    expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");
+                    expertiseViewModel.setupValidation();
+                    ko.applyBindings(expertiseViewModel, $("#language-expertise-edit")[0]);
+
+                })
+            .fail(function(jqXhr, textStatus, errorThrown) {
+            alert(textStatus + "|" + errorThrown);
+        });
+    });
+
+    </script>
+}
+
+@section bib
+{
+    <nav class="bib hide" data-current-bib="my">
+        @Html.Partial(MVC.Home.Views._Bib)
+    </nav>
+}
+
+<div class="content fixed to-top" data-current-module="home">
+    <div data-side-swiper="root">
+        <div data-side-swiper="deck">
+            <div data-side-swiper="on">
+                <div class="group">
+                    <div id="language-expertise-edit" class="on-left from-top" style="width: 100%;">
+				        
+                        <header>
+                            <h1>@ViewBag.Title</h1>
+                        </header>
+
+                        <div style="margin-bottom: 38px">
+
+                            <!-- LANGUAGE -->
+                            <div style="margin-bottom: 14px;">
+                                <input id="language" style="width: 400px" />
+                            </div>
+                            
+                            <!-- MAIN LANGUAGE DIALECT -->
+                            <div data-bind="visible: languageId != null">
+                                <input type="text" id="main-dialect" data-bind="value: dialect"/>
+                            </div>
+
+                             <!-- OTHER LANGUAGE AND DIALECT -->
+                            <div data-bind="visible: languageId == null">
+                                <input type="text" id="other" data-bind="value: other"/>
+                                <input type="text" id="other-dialect" data-bind="value: dialect"/>
+                            </div>    
+                                                   
+                            <!-- PROFICIENCIES -->
+                            <div>
+                                <input id="speaking" style="width: 500px" />
+                                <input id="listening" style="width: 500px" />
+                                <input id="reading" style="width: 500px" />
+                                <input id="writing" style="width: 500px" />
+                            </div>
+
+                        </div>
+                            
+                        <!-- BUTTONS -->
+                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+
+                        <!-- LAST UPDATED -->
+                        <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
+                            <span style="font-size:smaller; color:slategray">
+                                <span>Last updated</span>
+                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
+                                <span> by </span>
+                                <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
+                            </span>
+                        </div>
+                    </div>                      
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                  
+<!-- JQUERY DIALOGS -->
+<div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
+    <div>By cancelling, you will lose all changes.</div>
+    <div style="font-weight: bold">Are you sure you want to Cancel editing this expertise?</div>
+</div>
+
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="buttons-template">
+    <span>
+        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
+        <input type="button" value="Guide Me" style="margin-left: 50px"/>
+        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
+    </span>
+</script>

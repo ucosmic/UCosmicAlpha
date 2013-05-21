@@ -26,7 +26,9 @@ namespace UCosmic.Domain.LanguageExpertises
 
         protected bool Equals(LanguageExpertise other)
         {
-            return (LanguageId == other.LanguageId) &&
+            return (LanguageId.HasValue == other.LanguageId.HasValue) &&
+                   ((LanguageId.HasValue && other.LanguageId.HasValue && (LanguageId.Value == other.LanguageId.Value)) ||
+                   (!LanguageId.HasValue && !other.LanguageId.HasValue)) &&
                    string.Equals(Dialect, other.Dialect) &&
                    string.Equals(Other, other.Other) &&
                    SpeakingProficiency == other.SpeakingProficiency &&
@@ -47,7 +49,7 @@ namespace UCosmic.Domain.LanguageExpertises
         {
             unchecked
             {
-                int hashCode = LanguageId.GetHashCode();
+                int hashCode = LanguageId.HasValue ? LanguageId.Value.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (Dialect != null ? Dialect.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Other != null ? Other.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ SpeakingProficiency.GetHashCode();
@@ -60,6 +62,7 @@ namespace UCosmic.Domain.LanguageExpertises
 
         public LanguageExpertise()
         {
+            LanguageId = null;
             SpeakingProficiency = (int)Proficiency.None;
             ListeningProficiency = (int)Proficiency.None;
             ReadingProficiency = (int)Proficiency.None;
@@ -69,9 +72,9 @@ namespace UCosmic.Domain.LanguageExpertises
         public virtual Person Person { get; protected internal set; }
         public int PersonId { get; protected internal set; }
         public virtual Language Language { get; protected internal set; }
-        public int LanguageId { get; protected internal set; }
-        public string Dialect { get; protected internal set; }
+        public int? LanguageId { get; protected internal set; } // If null, Other must not be null/empty
         public string Other { get; protected internal set; }
+        public string Dialect { get; protected internal set; }
         public int SpeakingProficiency { get; protected internal set; }
         public int ListeningProficiency { get; protected internal set; }
         public int ReadingProficiency { get; protected internal set; }

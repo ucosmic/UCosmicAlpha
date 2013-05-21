@@ -61,13 +61,13 @@ namespace UCosmic.SeedData
 
                     createLanguageExpertiseCommand = new CreateLanguageExpertise(
                         principal,
-                        languageName.LanguageId,
                         (int) LanguageExpertise.Proficiency.GeneralProfessional,
                         (int) LanguageExpertise.Proficiency.FunctionallyNative,
                         (int) LanguageExpertise.Proficiency.LimitedWorking,
                         (int) LanguageExpertise.Proficiency.Elementary)
                     {
-                        EntityId = entityId
+                        EntityId = entityId,
+                        LanguageId = languageName.LanguageId
                     };
 
                     _createLanguageExpertise.Handle(createLanguageExpertiseCommand);
@@ -85,12 +85,12 @@ namespace UCosmic.SeedData
 
                     createLanguageExpertiseCommand = new CreateLanguageExpertise(
                         principal,
-                        languageName.LanguageId,
                         (int) LanguageExpertise.Proficiency.Elementary,
                         (int) LanguageExpertise.Proficiency.LimitedWorking,
                         (int) LanguageExpertise.Proficiency.None,
                         (int) LanguageExpertise.Proficiency.None)
                     {
+                        LanguageId = languageName.LanguageId,
                         Dialect = "Mandarin",
                         EntityId = entityId
                     };
@@ -105,18 +105,15 @@ namespace UCosmic.SeedData
                 expertiseExists = _entities.Get<LanguageExpertise>().Count(x => x.EntityId == entityId) > 0;
                 if (!expertiseExists)
                 {
-                    languageName = _entities.Get<LanguageName>().FirstOrDefault(x => x.Text == "German");
-                    if (languageName == null) { throw new Exception("Language not found."); }
-
                     createLanguageExpertiseCommand = new CreateLanguageExpertise(
                         principal,
-                        languageName.LanguageId,
                         (int) LanguageExpertise.Proficiency.FunctionallyNative,
                         (int) LanguageExpertise.Proficiency.FunctionallyNative,
                         (int) LanguageExpertise.Proficiency.GeneralProfessional,
                         (int) LanguageExpertise.Proficiency.GeneralProfessional)
                     {
-                        Other = "Walser",
+                        Other = "Franco-Germanic",
+                        Dialect = "Walser",
                         EntityId = entityId
                     };
 

@@ -2,13 +2,13 @@ var ViewModels;
 (function (ViewModels) {
     (function (GeographicExpertises) {
         var GeographicExpertise = (function () {
-            function GeographicExpertise(educationId) {
+            function GeographicExpertise(expertiseId) {
                 this.inititializationErrors = "";
                 this.saving = false;
                 this.dirtyFlag = ko.observable(false);
                 this.initialLocations = new Array();
                 this.selectedLocationValues = new Array();
-                this._initialize(educationId);
+                this._initialize(expertiseId);
             }
             GeographicExpertise.prototype._initialize = function (expertiseId) {
                 if(expertiseId === "new") {

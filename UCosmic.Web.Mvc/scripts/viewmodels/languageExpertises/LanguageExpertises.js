@@ -1,36 +1,33 @@
 var ViewModels;
 (function (ViewModels) {
     (function (LanguageExpertises) {
-        var ExpertiseSearchInput = (function () {
-            function ExpertiseSearchInput() { }
-            return ExpertiseSearchInput;
+        var LanguageExpertiseSearchInput = (function () {
+            function LanguageExpertiseSearchInput() { }
+            return LanguageExpertiseSearchInput;
         })();
-        LanguageExpertises.ExpertiseSearchInput = ExpertiseSearchInput;        
+        LanguageExpertises.LanguageExpertiseSearchInput = LanguageExpertiseSearchInput;        
         var LanguageExpertiseList = (function () {
             function LanguageExpertiseList(personId) {
                 this.personId = personId;
             }
             LanguageExpertiseList.prototype.load = function () {
+                var _this = this;
                 var deferred = $.Deferred();
-                var dataPact = $.Deferred();
-                var expertiseSearchInput = new ExpertiseSearchInput();
+                var expertiseSearchInput = new LanguageExpertiseSearchInput();
                 expertiseSearchInput.personId = this.personId;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
-                expertiseSearchInput.pageSize = 10;
+                expertiseSearchInput.pageSize = 2147483647;
                 $.get(App.Routes.WebApi.LanguageExpertises.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
  {
-                        dataPact.resolve(data);
+                        ko.mapping.fromJS(data, {
+                        }, _this);
+                        deferred.resolve();
                     }
                 }).fail(function (jqXhr, textStatus, errorThrown) {
  {
-                        dataPact.reject(jqXhr, textStatus, errorThrown);
+                        deferred.reject(jqXhr, textStatus, errorThrown);
                     }
-                });
-                $.when(dataPact).done(function (data) {
-                    deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
                 });
                 return deferred;
             };
@@ -58,7 +55,7 @@ var ViewModels;
                             click: function () {
                                 viewModel.deleteExpertiseById(data.id());
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get();
+                                location.href = App.Routes.Mvc.My.Profile.get(2);
                             }
                         }, 
                         {
@@ -72,53 +69,30 @@ var ViewModels;
                 });
             };
             LanguageExpertiseList.prototype.editExpertise = function (data, event, expertiseId) {
-                $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.LanguageExpertises.get(expertiseId),
-                    success: function (editState, textStatus, jqXHR) {
-                        if(editState.isInEdit) {
-                            $("#languageExpertiseBeingEditedDialog").dialog({
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    Ok: function () {
-                                        $(this).dialog("close");
-                                        return;
-                                    }
-                                }
-                            });
-                        } else {
-                            var element = event.target;
-                            var url = null;
-                            while((element != null) && (element.nodeName != 'TR')) {
-                                element = element.parentElement;
-                            }
-                            if(element != null) {
-                                url = element.attributes["href"].value;
-                            }
-                            if(url != null) {
-                                location.href = url;
-                            }
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus + "|" + errorThrown);
-                    }
-                });
+                var element = event.target;
+                var url = null;
+                while((element != null) && (element.nodeName != 'TR')) {
+                    element = element.parentElement;
+                }
+                if(element != null) {
+                    url = element.attributes["href"].value;
+                }
+                if(url != null) {
+                    location.href = url;
+                }
             };
             LanguageExpertiseList.prototype.newExpertise = function (data, event) {
-                $.ajax({
-                    type: "POST",
-                    url: App.Routes.WebApi.LanguageExpertises.post(),
-                    success: function (newExpertiseId, textStatus, jqXHR) {
-                        location.href = App.Routes.Mvc.My.Profile.languageExpertiseEdit(newExpertiseId);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus + "|" + errorThrown);
+                location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
+            };
+            LanguageExpertiseList.prototype.formatLocations = function (locations) {
+                var formattedLocations = "";
+                for(var i = 0; i < locations.length; i += 1) {
+                    if(i > 0) {
+                        formattedLocations += ", ";
                     }
-                });
+                    formattedLocations += locations[i].placeOfficialName();
+                }
+                return formattedLocations;
             };
             return LanguageExpertiseList;
         })();

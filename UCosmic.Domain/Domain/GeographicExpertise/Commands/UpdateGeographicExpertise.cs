@@ -9,7 +9,7 @@ namespace UCosmic.Domain.GeographicExpertises
     public class UpdateGeographicExpertise
     {
         public IPrincipal Principal { get; set; }
-        public int Id { get; set; }
+        public int Id { get; protected set; }
         public ICollection<GeographicExpertiseLocation> Locations { get; set; }
         public string Description { get; set; }
         public DateTime UpdatedOn { get; set; }

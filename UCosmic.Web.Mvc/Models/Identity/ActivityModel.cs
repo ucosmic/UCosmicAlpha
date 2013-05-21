@@ -19,4 +19,9 @@
     {
         public string ExpertiseId { get; set; }
     }
+
+    public class LanguageExpertiseModel
+    {
+        public string ExpertiseId { get; set; }
+    }
 }

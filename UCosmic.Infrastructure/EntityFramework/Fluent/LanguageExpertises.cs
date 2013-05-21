@@ -13,7 +13,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.PersonId)
                 .WillCascadeOnDelete(false);
 
-            HasRequired(p => p.Language)
+            HasOptional(p => p.Language)
                 .WithMany()
                 .HasForeignKey(d => d.LanguageId)
                 .WillCascadeOnDelete(false);

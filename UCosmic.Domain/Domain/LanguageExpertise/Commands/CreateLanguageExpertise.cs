@@ -10,18 +10,17 @@ namespace UCosmic.Domain.LanguageExpertises
     {
         public Guid? EntityId { get; set; }
         public IPrincipal Principal { get; protected set; }
-        public int LanguageId { get; protected set; }
+        public int? LanguageId { get; set; }
+        public string Other { get; set; }
+        public string Dialect { get; set; }
         public int SpeakingProficiency { get; protected set; }
         public int ListeningProficiency { get; protected set; }
         public int ReadingProficiency { get; protected set; }
         public int WritingProficiency { get; protected set; }
-        public string Dialect { get; set; }
-        public string Other { get; set; }
         public bool NoCommit { get; set; }
         public LanguageExpertise CreatedLanguageExpertise { get; protected internal set; }
 
         public CreateLanguageExpertise( IPrincipal principal,
-                                        int languageId,
                                         int speakingProficiency,
                                         int listeningProficiency,
                                         int readingProficiency,
@@ -29,7 +28,6 @@ namespace UCosmic.Domain.LanguageExpertises
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
-            LanguageId = languageId;
             SpeakingProficiency = speakingProficiency;
             ListeningProficiency = listeningProficiency;
             ReadingProficiency = readingProficiency;

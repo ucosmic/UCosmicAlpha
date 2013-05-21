@@ -459,23 +459,27 @@ var App;
             var GeographicExpertises = WebApi.GeographicExpertises;
             (function (LanguageExpertises) {
                 function get(expertiseId) {
-                    var url = makeUrl('langexpertises');
+                    var url = makeUrl('language-expertises');
                     if(expertiseId) {
                         url += '/' + expertiseId;
                     }
                     return url;
                 }
                 LanguageExpertises.get = get;
+                function getProficiencies() {
+                    return makeUrl('language-expertises/proficiencies');
+                }
+                LanguageExpertises.getProficiencies = getProficiencies;
                 function post() {
-                    return makeUrl('langexpertises');
+                    return makeUrl('language-expertises');
                 }
                 LanguageExpertises.post = post;
                 function put(expertiseId) {
-                    return makeUrl('langexpertises/' + expertiseId);
+                    return makeUrl('language-expertises/' + expertiseId);
                 }
                 LanguageExpertises.put = put;
                 function del(expertiseId) {
-                    return makeUrl('langexpertises/' + expertiseId);
+                    return makeUrl('language-expertises/' + expertiseId);
                 }
                 LanguageExpertises.del = del;
             })(WebApi.LanguageExpertises || (WebApi.LanguageExpertises = {}));

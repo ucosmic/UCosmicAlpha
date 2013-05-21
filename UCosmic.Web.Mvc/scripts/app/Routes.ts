@@ -415,23 +415,27 @@ module App.Routes {
 
         export module LanguageExpertises {
             export function get (expertiseId?: number): string {
-                var url = makeUrl('langexpertises');
+                var url = makeUrl('language-expertises');
                 if (expertiseId) {
                     url += '/' + expertiseId;
                 }
                 return url;
             }
 
+            export function getProficiencies (): string {
+                return makeUrl('language-expertises/proficiencies');
+            }
+
             export function post(): string {
-                return makeUrl('langexpertises');
+                return makeUrl('language-expertises');
             }
 
             export function put(expertiseId: number): string {
-                return makeUrl('langexpertises/' + expertiseId);
+                return makeUrl('language-expertises/' + expertiseId);
             }
 
             export function del(expertiseId: number): string {
-                return makeUrl('langexpertises/' + expertiseId);
+                return makeUrl('language-expertises/' + expertiseId);
             }
         } // LanguageExpertises
 

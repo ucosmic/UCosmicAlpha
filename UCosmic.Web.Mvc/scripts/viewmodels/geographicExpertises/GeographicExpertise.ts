@@ -117,8 +117,8 @@ module ViewModels.GeographicExpertises {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( educationId: string ) {
-            this._initialize( educationId );
+        constructor( expertiseId: string ) {
+            this._initialize( expertiseId );
         }
 
         // --------------------------------------------------------------------------------
