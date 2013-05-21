@@ -285,6 +285,7 @@
     </Compile>
     <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\ActivityElementsController.cs" />
+    <Compile Include="ApiControllers\AgreementsController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
     <Compile Include="ApiControllers\GeographicExpertisesController.cs" />
     <Compile Include="ApiControllers\GrantsController.cs" />
@@ -304,6 +305,8 @@
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
+    <Compile Include="Models\Agreements\AgreementApiModel.cs" />
+    <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
     <Compile Include="Models\DegreeApiModel.cs" />
     <Compile Include="Models\Identity\ActivityModel.cs" />
