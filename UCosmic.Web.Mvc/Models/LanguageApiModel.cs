@@ -7,6 +7,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public string Name { get; set; }
         public string Code { get; set; }
+        public int Id { get; set; }
     }
 
     public static class LanguageApiModelProfiler
@@ -18,6 +19,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<LanguageView, LanguageApiModel>()
                     .ForMember(d => d.Code, o => o.MapFrom(s => s.TwoLetterIsoCode))
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.TranslatedName))
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                 ;
             }
         }

@@ -5,25 +5,6 @@ namespace UCosmic.Domain.LanguageExpertises
 {
     public class LanguageExpertise : RevisableEntity
     {
-        public enum Component
-        {
-            Speaking,
-            Listening,
-            Reading,
-            Writing,
-            NumberOfComponents
-        };
-
-        public enum Proficiency
-        {
-            None,
-            Elementary,
-            LimitedWorking,
-            GeneralProfessional,
-            AdvancedProfessional,
-            FunctionallyNative
-        };
-
         protected bool Equals(LanguageExpertise other)
         {
             return (LanguageId.HasValue == other.LanguageId.HasValue) &&
@@ -63,10 +44,10 @@ namespace UCosmic.Domain.LanguageExpertises
         public LanguageExpertise()
         {
             LanguageId = null;
-            SpeakingProficiency = (int)Proficiency.None;
-            ListeningProficiency = (int)Proficiency.None;
-            ReadingProficiency = (int)Proficiency.None;
-            WritingProficiency = (int)Proficiency.None;
+            SpeakingProficiency = 0;
+            ListeningProficiency = 0;
+            ReadingProficiency = 0;
+            WritingProficiency = 0;
         }
 
         public virtual Person Person { get; protected internal set; }

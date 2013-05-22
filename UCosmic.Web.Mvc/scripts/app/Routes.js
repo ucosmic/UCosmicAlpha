@@ -98,6 +98,13 @@ var App;
                 Languages.get = get;
             })(WebApi.Languages || (WebApi.Languages = {}));
             var Languages = WebApi.Languages;
+            (function (LanguageProficiency) {
+                function get() {
+                    return makeUrl('language-proficiency');
+                }
+                LanguageProficiency.get = get;
+            })(WebApi.LanguageProficiency || (WebApi.LanguageProficiency = {}));
+            var LanguageProficiency = WebApi.LanguageProficiency;
             (function (Countries) {
                 function get() {
                     return makeUrl('countries');
@@ -461,7 +468,7 @@ var App;
                 function get(expertiseId) {
                     var url = makeUrl('language-expertises');
                     if(expertiseId) {
-                        url += '/' + expertiseId;
+                        url += expertiseId;
                     }
                     return url;
                 }

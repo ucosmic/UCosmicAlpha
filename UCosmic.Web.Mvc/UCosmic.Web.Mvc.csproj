@@ -286,6 +286,7 @@
     <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\AgreementsController.cs" />
+    <Compile Include="ApiControllers\LanguageProficiencyController.cs" />
     <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
     <Compile Include="ApiControllers\GeographicExpertisesController.cs" />

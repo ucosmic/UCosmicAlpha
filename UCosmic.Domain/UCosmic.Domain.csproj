@@ -254,6 +254,7 @@
     <Compile Include="Domain\LanguageExpertise\Commands\CreateLanguageExpertise.cs" />
     <Compile Include="Domain\LanguageExpertise\Commands\DeleteLanguageExpertise.cs" />
     <Compile Include="Domain\LanguageExpertise\Commands\UpdateLanguageExpertise.cs" />
+    <Compile Include="Domain\LanguageExpertise\Entities\LanguageProficiency.cs" />
     <Compile Include="Domain\LanguageExpertise\Entities\LanguageExpertise.cs" />
     <Compile Include="Domain\LanguageExpertise\Queries\LanguageExpertiseById.cs" />
     <Compile Include="Domain\LanguageExpertise\Queries\LanguageExpertiseByPersonId.cs" />

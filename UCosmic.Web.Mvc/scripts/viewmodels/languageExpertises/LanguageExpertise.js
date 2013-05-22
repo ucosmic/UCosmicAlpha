@@ -16,33 +16,43 @@ var ViewModels;
                 }
             };
             LanguageExpertise.prototype.setupWidgets = function (languageInputId, speakingInputId, listeningInputId, readingInputId, writingInputId) {
+                var _this = this;
                 $("#" + languageInputId).kendoDropDownList({
-                    dataTextField: "text",
-                    dataValueField: "value",
-                    dataSource: this.languageList()
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: this.languageList,
+                    value: this.languageId() != null ? this.languageId() : 1,
+                    change: function (e) {
+                        var item = _this.languageList[e.sender.selectedIndex];
+                        if(item.name == "Other") {
+                            _this.languageId(null);
+                        } else {
+                            _this.languageId(item.id);
+                        }
+                    }
                 });
                 $("#" + speakingInputId).kendoDropDownList({
-                    dataTextField: "text",
-                    dataValueField: "value",
-                    dataSource: this.proficiencyList(),
+                    dataTextField: "description",
+                    dataValueField: "proficiency",
+                    dataSource: this.proficiencyInfo.speakingMeanings,
                     value: this.speakingProficiency
                 });
                 $("#" + listeningInputId).kendoDropDownList({
-                    dataTextField: "text",
-                    dataValueField: "value",
-                    dataSource: this.proficiencyList(),
+                    dataTextField: "description",
+                    dataValueField: "proficiency",
+                    dataSource: this.proficiencyInfo.listeningMeanings,
                     value: this.listeningProficiency
                 });
                 $("#" + readingInputId).kendoDropDownList({
-                    dataTextField: "text",
-                    dataValueField: "value",
-                    dataSource: this.proficiencyList(),
+                    dataTextField: "description",
+                    dataValueField: "proficiency",
+                    dataSource: this.proficiencyInfo.readingMeanings,
                     value: this.readingProficiency
                 });
                 $("#" + writingInputId).kendoDropDownList({
-                    dataTextField: "text",
-                    dataValueField: "value",
-                    dataSource: this.proficiencyList(),
+                    dataTextField: "description",
+                    dataValueField: "proficiency",
+                    dataSource: this.proficiencyInfo.writingMeanings,
                     value: this.writingProficiency
                 });
             };
@@ -80,7 +90,7 @@ var ViewModels;
                         languagesPact.reject(jqXHR, textStatus, errorThrown);
                     });
                     var proficienciesPact = $.Deferred();
-                    $.get(App.Routes.WebApi.LanguageExpertises.getProficiencies()).done(function (data, textStatus, jqXHR) {
+                    $.get(App.Routes.WebApi.LanguageProficiency.get()).done(function (data, textStatus, jqXHR) {
                         proficienciesPact.resolve(data);
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         proficienciesPact.reject(jqXHR, textStatus, errorThrown);
@@ -96,9 +106,14 @@ var ViewModels;
                             dataPact.reject(jqXhr, textStatus, errorThrown);
                         }
                     });
-                    $.when(languagesPact, proficienciesPact, dataPact).done(function (languages, proficiencies, data) {
+                    $.when(languagesPact, proficienciesPact, dataPact).done(function (languages, proficiencyInfo, data) {
                         _this.languageList = languages;
-                        _this.proficiencyList = proficiencies;
+                        _this.languageList.push({
+                            name: "Other",
+                            code: "",
+                            id: 0
+                        });
+                        _this.proficiencyInfo = proficiencyInfo;
                         ko.mapping.fromJS(data, {
                         }, _this);
                         _this.languageId.subscribe(function (newValue) {

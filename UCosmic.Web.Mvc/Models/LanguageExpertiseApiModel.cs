@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
@@ -21,7 +22,16 @@ namespace UCosmic.Web.Mvc.Models
         public int ListeningProficiency { get; set; }
         public int ReadingProficiency { get; set; }
         public int WritingProficiency { get; set; }
-        public string LanguageName { get; set; }
+        public string LanguageName { get; set; }    // For Language Expertises page
+    }
+
+    public class LanguageProficiencyApiModel
+    {
+        public ICollection<LanguageProficiency.ScaleEntry> Scale;
+        public ICollection<LanguageProficiency.Meaning> SpeakingMeanings;
+        public ICollection<LanguageProficiency.Meaning> ListeningMeanings;
+        public ICollection<LanguageProficiency.Meaning> ReadingMeanings;
+        public ICollection<LanguageProficiency.Meaning> WritingMeanings;
     }
 
     public class LanguageExpertiseSearchInputModel

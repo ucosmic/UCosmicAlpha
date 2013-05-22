@@ -65,6 +65,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GeographicExpertiseEdit);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult LanguageExpertiseEdit()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguageExpertiseEdit);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public MyProfileController Actions { get { return MVC.MyProfile; } }
@@ -85,6 +91,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string ActivityEdit = "ActivityEdit";
             public readonly string DegreeEdit = "DegreeEdit";
             public readonly string GeographicExpertiseEdit = "GeographicExpertiseEdit";
+            public readonly string LanguageExpertiseEdit = "LanguageExpertiseEdit";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -94,6 +101,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string ActivityEdit = "ActivityEdit";
             public const string DegreeEdit = "DegreeEdit";
             public const string GeographicExpertiseEdit = "GeographicExpertiseEdit";
+            public const string LanguageExpertiseEdit = "LanguageExpertiseEdit";
         }
 
 
@@ -129,6 +137,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string expertiseId = "expertiseId";
         }
+        static readonly ActionParamsClass_LanguageExpertiseEdit s_params_LanguageExpertiseEdit = new ActionParamsClass_LanguageExpertiseEdit();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_LanguageExpertiseEdit LanguageExpertiseEditParams { get { return s_params_LanguageExpertiseEdit; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_LanguageExpertiseEdit
+        {
+            public readonly string expertiseId = "expertiseId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -150,6 +166,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string DegreeEdit = "DegreeEdit";
                 public readonly string GeographicExpertiseEdit = "GeographicExpertiseEdit";
                 public readonly string Index = "Index";
+                public readonly string LanguageExpertiseEdit = "LanguageExpertiseEdit";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
             public readonly string _Affiliations = "~/Views/MyProfile/_Affiliations.cshtml";
@@ -162,6 +179,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string DegreeEdit = "~/Views/MyProfile/DegreeEdit.cshtml";
             public readonly string GeographicExpertiseEdit = "~/Views/MyProfile/GeographicExpertiseEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
+            public readonly string LanguageExpertiseEdit = "~/Views/MyProfile/LanguageExpertiseEdit.cshtml";
         }
     }
 
@@ -194,6 +212,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult GeographicExpertiseEdit(string expertiseId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GeographicExpertiseEdit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "expertiseId", expertiseId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult LanguageExpertiseEdit(string expertiseId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguageExpertiseEdit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "expertiseId", expertiseId);
             return callInfo;
         }

@@ -9,14 +9,14 @@
     <style>
     .non-required-field
     {
-        width: 120px;
+        width: 100px;
         display:inline-block;
         text-align: right;
         vertical-align: inherit;
     }        
     .required-field
     {
-        width: 120px;
+        width: 100px;
         display:inline-block;
         text-align: right;
         vertical-align: inherit;
@@ -76,26 +76,44 @@
 
                             <!-- LANGUAGE -->
                             <div style="margin-bottom: 14px;">
+                                <label for="language" class="required-field" data-bind="css: { 'required-field': languageId() != null, 'non-required-field': languageId() == null }">Language</label>
                                 <input id="language" style="width: 400px" />
                             </div>
                             
                             <!-- MAIN LANGUAGE DIALECT -->
-                            <div data-bind="visible: languageId != null">
-                                <input type="text" id="main-dialect" data-bind="value: dialect"/>
+                            <div data-bind="visible: languageId() != null">
+                                <label for="main-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
+                                <input type="text" id="main-dialect" style="width: 400px" data-bind="value: dialect"/>
                             </div>
 
                              <!-- OTHER LANGUAGE AND DIALECT -->
-                            <div data-bind="visible: languageId == null">
-                                <input type="text" id="other" data-bind="value: other"/>
-                                <input type="text" id="other-dialect" data-bind="value: dialect"/>
-                            </div>    
+                            <div data-bind="visible: languageId() == null">
+                                <label for="other" class="required-field" style="margin-left: 20px">Other</label>
+                                <input type="text" id="other" style="width: 400px" data-bind="value: other"/>
+                            </div>
+                            <div data-bind="visible: languageId() == null">
+                                <label for="other-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
+                                <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect"/>
+                            </div>
+                            
+                            <br/>
                                                    
                             <!-- PROFICIENCIES -->
                             <div>
-                                <input id="speaking" style="width: 500px" />
-                                <input id="listening" style="width: 500px" />
-                                <input id="reading" style="width: 500px" />
-                                <input id="writing" style="width: 500px" />
+                                <label for="speaking" class="non-required-field">Speaking</label>
+                                <input id="speaking" style="width: 600px;" />
+                            </div>
+                            <div>
+                                <label for="listening" class="non-required-field">Listening</label>
+                                <input id="listening" style="width: 600px" />
+                            </div>
+                            <div>
+                                <label for="reading" class="non-required-field">Reading</label>
+                                <input id="reading" style="width: 600px" />
+                            </div>
+                            <div>
+                                <label for="writing" class="non-required-field">Writing</label>
+                                <input id="writing" style="width: 600px" />
                             </div>
 
                         </div>

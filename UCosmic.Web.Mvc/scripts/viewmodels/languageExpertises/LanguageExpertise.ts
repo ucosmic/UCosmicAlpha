@@ -29,7 +29,7 @@ module ViewModels.LanguageExpertises {
         languageList: any;
 
         /* Proficiencies */
-        proficiencyList: any;
+        proficiencyInfo: any;
 
         /* Api Model */
         id: KnockoutObservableNumber;           // if 0, new expertise
@@ -74,36 +74,45 @@ module ViewModels.LanguageExpertises {
              ): void {
 
             $("#" + languageInputId).kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: this.languageList()
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: this.languageList,
+                value: this.languageId() != null ? this.languageId() : 1,
+                change: (e: any) => {
+                    var item = this.languageList[e.sender.selectedIndex];
+                    if ( item.name == "Other" ) {
+                        this.languageId(null);
+                    } else {
+                        this.languageId(item.id);
+                    }
+                }
             });
 
             $("#" + speakingInputId).kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: this.proficiencyList(),
+                dataTextField: "description",
+                dataValueField: "proficiency",
+                dataSource: this.proficiencyInfo.speakingMeanings,
                 value: this.speakingProficiency
             });
 
             $("#" + listeningInputId).kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: this.proficiencyList(),
+                dataTextField: "description",
+                dataValueField: "proficiency",
+                dataSource: this.proficiencyInfo.listeningMeanings,
                 value: this.listeningProficiency
             });
 
             $("#" + readingInputId).kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: this.proficiencyList(),
+                dataTextField: "description",
+                dataValueField: "proficiency",
+                dataSource: this.proficiencyInfo.readingMeanings,
                 value: this.readingProficiency
             });
 
             $("#" + writingInputId).kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: this.proficiencyList(),
+                dataTextField: "description",
+                dataValueField: "proficiency",
+                dataSource: this.proficiencyInfo.writingMeanings,
                 value: this.writingProficiency
             });
         }
@@ -169,7 +178,7 @@ module ViewModels.LanguageExpertises {
                                 } );
 
                 var proficienciesPact = $.Deferred();
-                $.get( App.Routes.WebApi.LanguageExpertises.getProficiencies() )
+                $.get( App.Routes.WebApi.LanguageProficiency.get() )
                                 .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
                                     proficienciesPact.resolve( data );
                                 } )
@@ -189,10 +198,12 @@ module ViewModels.LanguageExpertises {
 
                 // only process after all requests have been resolved
                 $.when( languagesPact, proficienciesPact, dataPact )
-                              .done( ( languages: any, proficiencies: any, data: any ): void => {
+                              .done( ( languages: any, proficiencyInfo: any, data: any ): void => {
 
                                   this.languageList = languages;
-                                  this.proficiencyList = proficiencies;
+                                  this.languageList.push( {name: "Other", code: "", id: 0 } );
+
+                                  this.proficiencyInfo = proficiencyInfo;
 
                                   ko.mapping.fromJS( data, {}, this );
 

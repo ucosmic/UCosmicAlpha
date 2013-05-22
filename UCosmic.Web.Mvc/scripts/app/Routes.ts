@@ -94,6 +94,13 @@ module App.Routes {
             }
         }
 
+        export module LanguageProficiency {
+
+            export function get (): string {
+                return makeUrl('language-proficiency');
+            }
+        }
+
         export module Countries {
 
             export function get (): string {
@@ -417,7 +424,7 @@ module App.Routes {
             export function get (expertiseId?: number): string {
                 var url = makeUrl('language-expertises');
                 if (expertiseId) {
-                    url += '/' + expertiseId;
+                    url += expertiseId;
                 }
                 return url;
             }

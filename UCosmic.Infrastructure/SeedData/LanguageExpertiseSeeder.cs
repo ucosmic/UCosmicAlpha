@@ -61,10 +61,10 @@ namespace UCosmic.SeedData
 
                     createLanguageExpertiseCommand = new CreateLanguageExpertise(
                         principal,
-                        (int) LanguageExpertise.Proficiency.GeneralProfessional,
-                        (int) LanguageExpertise.Proficiency.FunctionallyNative,
-                        (int) LanguageExpertise.Proficiency.LimitedWorking,
-                        (int) LanguageExpertise.Proficiency.Elementary)
+                        (int)LanguageProficiency.Proficiency.Elementary,
+                        (int) LanguageProficiency.Proficiency.FunctionallyNative,
+                        (int) LanguageProficiency.Proficiency.LimitedWorking,
+                        (int) LanguageProficiency.Proficiency.Elementary)
                     {
                         EntityId = entityId,
                         LanguageId = languageName.LanguageId
@@ -85,10 +85,10 @@ namespace UCosmic.SeedData
 
                     createLanguageExpertiseCommand = new CreateLanguageExpertise(
                         principal,
-                        (int) LanguageExpertise.Proficiency.Elementary,
-                        (int) LanguageExpertise.Proficiency.LimitedWorking,
-                        (int) LanguageExpertise.Proficiency.None,
-                        (int) LanguageExpertise.Proficiency.None)
+                        (int) LanguageProficiency.Proficiency.Elementary,
+                        (int) LanguageProficiency.Proficiency.LimitedWorking,
+                        (int) LanguageProficiency.Proficiency.None,
+                        (int) LanguageProficiency.Proficiency.None)
                     {
                         LanguageId = languageName.LanguageId,
                         Dialect = "Mandarin",
@@ -107,10 +107,10 @@ namespace UCosmic.SeedData
                 {
                     createLanguageExpertiseCommand = new CreateLanguageExpertise(
                         principal,
-                        (int) LanguageExpertise.Proficiency.FunctionallyNative,
-                        (int) LanguageExpertise.Proficiency.FunctionallyNative,
-                        (int) LanguageExpertise.Proficiency.GeneralProfessional,
-                        (int) LanguageExpertise.Proficiency.GeneralProfessional)
+                        (int) LanguageProficiency.Proficiency.FunctionallyNative,
+                        (int) LanguageProficiency.Proficiency.FunctionallyNative,
+                        (int) LanguageProficiency.Proficiency.GeneralProfessional,
+                        (int) LanguageProficiency.Proficiency.GeneralProfessional)
                     {
                         Other = "Franco-Germanic",
                         Dialect = "Walser",
