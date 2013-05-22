@@ -14,8 +14,8 @@ requirejs.config({
 
 });
 
-require(['jquery/jquery-1.8.2'],
-        function () {
+//require(['jquery/jquery-1.8.2'],
+//        function () {
 
 
-        });
+//        });

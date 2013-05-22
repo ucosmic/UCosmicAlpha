@@ -2,7 +2,7 @@
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../require.d.ts" />
 
-require(["viewmodels/amd-modules/establishments/search"],
+require(["../../scripts/viewmodels/amd-modules/establishments/search"],
 function (Search) {
 
 

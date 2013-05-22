@@ -39,8 +39,7 @@ ko.computed(function () {
             })
         }
         return InstitutionalAgreementParticipantModel;
-    })();
-    exports.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;    
+    })();    
     ;
     var InstitutionalAgreementEditModel = (function () {
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
@@ -71,6 +70,7 @@ ko.computed(function () {
             this.setupSearchVM();
             this._setupSammy();
             this.isBound(true);
+            this.removeParticipant = this.removeParticipant.bind(this);
         }
         InstitutionalAgreementEditModel.prototype.populateParticipants = function () {
             var homeParticipant = new InstitutionalAgreementParticipantModel({
@@ -174,10 +174,11 @@ ko.computed(function () {
         };
         InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             if(confirm('Are you sure you want to remove "' + establishmentResultViewModel.translatedName() + '" as a participant from this agreement?')) {
-                this.participants.remove(function (item) {
+                var self = this;
+                self.participants.remove(function (item) {
                     if(item.establishment.id() === establishmentResultViewModel.id()) {
                         $(item.participantEl).slideUp('fast', function () {
-                            this.participants.remove(item);
+                            self.participants.remove(item);
                         });
                     }
                     return false;

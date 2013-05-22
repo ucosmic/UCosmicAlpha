@@ -37,6 +37,9 @@
                                 <th>
                                     Country
                                 </th>
+                                <th>
+                                    Participant
+                                </th>
                             </tr>
                         </thead>
                         <tbody data-bind="foreach: items">
@@ -59,6 +62,12 @@
                                 </td>
                                 <td>
                                     <span data-bind="text: nullDisplayCountryName"></span>
+                                </td>
+                                <td>
+                                    <span data-bind="click: $root.addParticipant" class="text">
+                                        <img src="/images/icons/plus/plus-20-green-disc.png" alt="">
+                                        <span>Add New</span>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>

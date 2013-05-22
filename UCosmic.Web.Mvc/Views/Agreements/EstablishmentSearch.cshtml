@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Agreements";
+﻿@using UCosmic.Web.Mvc
+@{
+    ViewBag.Title = "Institutional Agreement";
 }
 @section bib
 {
@@ -7,11 +8,9 @@
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
-@section scripts {
-
+@section scripts
+{
     @Scripts.Render("~/bundles/establishmentSearch")
-
-
 }
 <div class="content fixed to-top" data-current-module="agreements">
     <div data-side-swiper="root">

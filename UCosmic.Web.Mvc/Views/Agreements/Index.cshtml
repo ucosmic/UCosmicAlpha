@@ -38,7 +38,7 @@
                                 </h2>
                             </header>
                             <div data-bind="visible: isBound" style="display: none;">
-                                <ul data-bind="foreach: participants">
+                                <ul data-bind="foreach: participants()">
                                     <li data-bind="element: 'participantEl'">
                                         <div class="typed-item" data-bind="with: establishment">
                                             <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
@@ -63,7 +63,7 @@
                                 </ul>
                             </div>
                             <footer>
-                                <a href="#/participants/add/page/1" class="button">
+                                <a href="new/" class="button">
                                     <i class="green plus"></i>
                                     <span class="text">Add a participant</span>
                                 </a>

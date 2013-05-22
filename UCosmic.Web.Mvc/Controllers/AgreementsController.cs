@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ViewResult New()
         {
             ViewBag.Id = 0;
-            return View(MVC.Establishments.Views.Form);
+            return View(MVC.Agreements.Views.EstablishmentSearch);
         }
 
         [GET("created")]

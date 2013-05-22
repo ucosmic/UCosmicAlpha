@@ -24,7 +24,7 @@ var Search = SearchModule.Search;
 //    self.participantEl = undefined;
 //}
 
-export class InstitutionalAgreementParticipantModel {
+class InstitutionalAgreementParticipantModel {
 
     constructor(participan: any) {
         isOwner: false;
@@ -81,6 +81,7 @@ export class InstitutionalAgreementEditModel {
         this.setupSearchVM();
         this._setupSammy();
         this.isBound(true);
+        this.removeParticipant = <() => bool > this.removeParticipant.bind(this);
     }
 
 
@@ -211,14 +212,16 @@ export class InstitutionalAgreementEditModel {
         });
     }
 
+     
     removeParticipant(establishmentResultViewModel, e): bool {
         if (confirm('Are you sure you want to remove "' +
             establishmentResultViewModel.translatedName() +
             '" as a participant from this agreement?')) {
-            this.participants.remove(function (item) {
+            var self = this;
+            self.participants.remove(function (item) {
                 if (item.establishment.id() === establishmentResultViewModel.id()) {
                     $(item.participantEl).slideUp('fast', function () {
-                        this.participants.remove(item);
+                        self.participants.remove(item);
                     });
                 }
                 return false;

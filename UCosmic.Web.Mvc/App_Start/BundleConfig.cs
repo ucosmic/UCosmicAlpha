@@ -212,7 +212,7 @@ namespace UCosmic.Web.Mvc
 
             // agreements
             bundles.Add(new ScriptBundle("~/bundles/establishmentSearch").Include(
-                "~/scripts/viewmodels/agreements/RequirEstablishmentSearch.js"));
+                "~/scripts/viewmodels/agreements/RequireEstablishmentSearch.js"));
 
         }
     }

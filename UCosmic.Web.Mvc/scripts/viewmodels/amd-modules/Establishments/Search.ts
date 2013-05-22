@@ -256,6 +256,11 @@ export class Search extends PagedSearch.PagedSearch {
         detailTooltip(): string {
             return 'View & edit this establishment\'s details';
         }
+
+        id;
+        addParticipant(): void {
+            alert(this.id())
+        }
     }
 
 
