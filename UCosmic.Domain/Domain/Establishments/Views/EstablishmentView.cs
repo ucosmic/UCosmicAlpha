@@ -23,7 +23,7 @@ namespace UCosmic.Domain.Establishments
             {
                 // try to translate to ui culture
                 var cultureCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-                var name = Names.FirstOrDefault(x => x.LanguageCode.Equals(cultureCode));
+                var name = Names.FirstOrDefault(x => !x.IsFormerName && x.LanguageCode.Equals(cultureCode));
                 return name != null ? name.Text : OfficialName;
             }
         }
