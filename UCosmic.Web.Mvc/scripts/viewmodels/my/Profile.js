@@ -3,6 +3,7 @@ var ViewModels;
     (function (My) {
         var Profile = (function () {
             function Profile() {
+                this._sammy = Sammy();
                 this._isInitialized = false;
                 this._activitiesViewModel = null;
                 this._geographicExpertisesViewModel = null;
@@ -42,6 +43,7 @@ var ViewModels;
                 this.editMode = ko.observable(false);
                 this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this._initialize();
+                this._setupRouting();
                 this._setupValidation();
                 this._setupKendoWidgets();
                 this._setupDisplayNameDerivation();
@@ -98,8 +100,6 @@ var ViewModels;
                         });
                     }
                 } else if((tabName === "Language Expertise") || (tabName === "language-expertise")) {
-                    debugger;
-
                     if(this._languageExpertisesViewModel == null) {
                         this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
                         this._languageExpertisesViewModel.load().done(function () {
@@ -217,6 +217,27 @@ var ViewModels;
                     }));
                 }).fail(function () {
                     _this.isPhotoFailureUnexpected(true);
+                });
+            };
+            Profile.prototype._setupRouting = function () {
+                var _this = this;
+                this._sammy.route('get', '#/', function () {
+                    _this.startTab('activities');
+                });
+                this._sammy.route('get', '#/activities', function () {
+                    _this.startTab('activities');
+                });
+                this._sammy.route('get', '#/geographic-expertise', function () {
+                    _this.startTab('geographic-expertise');
+                });
+                this._sammy.route('get', '#/language-expertise', function () {
+                    _this.startTab('language-expertise');
+                });
+                this._sammy.route('get', '#/formal-education', function () {
+                    _this.startTab('formal-education');
+                });
+                this._sammy.route('get', '#/affiliations', function () {
+                    _this.startTab('affiliations');
                 });
             };
             Profile.prototype._setupValidation = function () {

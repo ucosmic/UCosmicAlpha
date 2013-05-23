@@ -5,6 +5,7 @@
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
+/// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../Spinner.ts" />
@@ -20,6 +21,7 @@ module ViewModels.My {
 
     export class Profile implements KnockoutValidationGroup {
 
+        private _sammy: Sammy.Application = Sammy();
         private _isInitialized: bool = false;
         private _originalValues: IServerProfileApiModel;
         private _activitiesViewModel: ViewModels.Activities.ActivityList = null;
@@ -79,10 +81,14 @@ module ViewModels.My {
         constructor() {
             this._initialize();
 
+            this._setupRouting();
             this._setupValidation();
             this._setupKendoWidgets();
             this._setupDisplayNameDerivation();
             this._setupCardComputeds();
+
+
+            //this._sammy.run('#/');
         }
 
         private _initialize() {
@@ -157,7 +163,6 @@ module ViewModels.My {
                         } );
                 }
             } else if ( (tabName === "Language Expertise") || (tabName === "language-expertise") ) {
-                debugger;
                 if ( this._languageExpertisesViewModel == null ) {
                     this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
                     this._languageExpertisesViewModel.load()
@@ -298,6 +303,15 @@ module ViewModels.My {
             .fail((): void => {
                 this.isPhotoFailureUnexpected(true);
             });
+        }
+
+        private _setupRouting(): void {
+            this._sammy.route('get', '#/', (): void => {this.startTab('activities');});
+            this._sammy.route('get', '#/activities', (): void => {this.startTab('activities');});
+            this._sammy.route('get', '#/geographic-expertise', (): void => {this.startTab('geographic-expertise');});
+            this._sammy.route('get', '#/language-expertise', (): void => {this.startTab('language-expertise');});
+            this._sammy.route('get', '#/formal-education', (): void => {this.startTab('formal-education');});
+            this._sammy.route('get', '#/affiliations', (): void => {this.startTab('affiliations');});
         }
 
         // client validation rules

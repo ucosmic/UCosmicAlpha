@@ -40,15 +40,13 @@
             var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(expertiseId);
             expertiseViewModel.load()
                 .done(function() {
-
                     expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");
                     expertiseViewModel.setupValidation();
                     ko.applyBindings(expertiseViewModel, $("#language-expertise-edit")[0]);
-
                 })
-            .fail(function(jqXhr, textStatus, errorThrown) {
-            alert(textStatus + "|" + errorThrown);
-        });
+                .fail(function(jqXhr, textStatus, errorThrown) {
+                    alert(textStatus + "|" + errorThrown);
+                });
     });
 
     </script>

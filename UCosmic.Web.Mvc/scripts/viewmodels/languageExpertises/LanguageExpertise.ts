@@ -86,7 +86,7 @@ module ViewModels.LanguageExpertises {
                         this.languageId(item.id);
                     }
                 }
-            });
+            }); 
 
             $("#" + speakingInputId).kendoDropDownList({
                 dataTextField: "title",

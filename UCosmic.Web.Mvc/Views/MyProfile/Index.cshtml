@@ -30,6 +30,12 @@
             var profileViewModel = new ViewModels.My.Profile();
             $( profileViewModel ).on( 'ready', function () {
                 
+
+
+
+
+
+                
                 $( '#tabstrip' ).kendoTabStrip( {
                     select: function ( e ) { profileViewModel.tabClickHandler( e ); },
                     animation: false
@@ -43,8 +49,7 @@
                 } else {
                     $( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.TabIndex );
                 }
-                
-                
+
             } );
         });
 
