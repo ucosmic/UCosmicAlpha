@@ -220,6 +220,24 @@ module App.Routes {
                 }
             }
         }
+
+        export module Agreements {
+
+            export function get (agreementId?: number): string {
+                var url = 'agreements';
+                if (agreementId) url += '/' + agreementId;
+                return makeUrl(url);
+            }
+
+            export module Participants {
+
+                export function get (agreementId?: number): string {
+                    var url = 'agreements/0/participants';
+                    if (agreementId) url = url.replace('0', agreementId.toString())
+                    return makeUrl(url);
+                }
+            }
+        }
         
         export module My {
             export module Profile {

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
@@ -30,7 +33,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{agreementId}/participants")]
         public IEnumerable<AgreementParticipantApiModel> GetParticipants(int agreementId)
         {
-            return null;
+            var entities = _queryProcessor.Execute(new ParticipantsByAgreementId(User, agreementId)
+            {
+                EagerLoad = new Expression<Func<InstitutionalAgreementParticipant, object>>[]
+                {
+                    x => x.Establishment.Names,
+                },
+                OrderBy = new Dictionary<Expression<Func<InstitutionalAgreementParticipant, object>>, OrderByDirection>
+                {
+                    { x => x.IsOwner, OrderByDirection.Descending },
+                },
+            });
+            if (entities == null || !entities.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var models = Mapper.Map<AgreementParticipantApiModel[]>(entities);
+            return models;
         }
     }
 }
