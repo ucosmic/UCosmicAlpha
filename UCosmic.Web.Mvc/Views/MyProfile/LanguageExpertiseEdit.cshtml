@@ -96,24 +96,26 @@
                                 <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect"/>
                             </div>
                             
-                            <br/>
+                            <div style="margin-top: 20px; margin-bottom: 20px">
+                                <span>Please assess your level of proficiency:</span>
+                            </div>
                                                    
                             <!-- PROFICIENCIES -->
-                            <div>
+                            <div style="margin-bottom: 8px">
                                 <label for="speaking" class="non-required-field">Speaking</label>
-                                <input id="speaking" style="width: 600px;" />
+                                <select  id="speaking" style="width: 600px;" data-bind="value: speakingProficiency"></select>
                             </div>
-                            <div>
+                            <div style="margin-bottom: 8px">
                                 <label for="listening" class="non-required-field">Listening</label>
-                                <input id="listening" style="width: 600px" />
+                                <select  id="listening" style="width: 600px" data-bind="value: listeningProficiency"></select>
                             </div>
-                            <div>
+                            <div style="margin-bottom: 8px">
                                 <label for="reading" class="non-required-field">Reading</label>
-                                <input id="reading" style="width: 600px" />
+                                <select  id="reading" style="width: 600px" data-bind="value: readingProficiency"></select>
                             </div>
-                            <div>
+                            <div style="margin-bottom: 8px">
                                 <label for="writing" class="non-required-field">Writing</label>
-                                <input id="writing" style="width: 600px" />
+                                <select  id="writing" style="width: 600px" data-bind="value: writingProficiency"></select>
                             </div>
 
                         </div>
@@ -144,6 +146,11 @@
     <div style="font-weight: bold">Are you sure you want to Cancel editing this expertise?</div>
 </div>
 
+<!-- KENDOUI TEMPLATES -->
+<script id="proficiency-template" type="text/x-kendo-tmpl">
+    <div><b>${ data.title }</b></div>
+    <div>${ data.description }</div>
+</script>  
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">

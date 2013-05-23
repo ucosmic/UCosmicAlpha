@@ -10,6 +10,10 @@ interface JQuery {
     kendoAutoComplete(arg1?: any): JQuery;
 }
 
+module kendo {
+    declare function template(template: string, options?: any): (data: any) => string;
+}
+
 declare module kendo.data {
     export class DataSource {
         constructor(arg1?: any);

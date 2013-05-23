@@ -29,9 +29,9 @@
             public string Description;
         };
 
-        public static ScaleEntry[] Scale =
+        public static ScaleEntry[] Scales =
         {
-            new ScaleEntry { Weight = 0, Proficiency = Proficiency.None, Description  = "No/Memorized Proficiency" },
+            new ScaleEntry { Weight = 0, Proficiency = Proficiency.None, Description  = "No Proficiency" },
             new ScaleEntry { Weight = 1, Proficiency = Proficiency.Elementary, Description  = "Elementary Proficiency" },
             new ScaleEntry { Weight = 2, Proficiency = Proficiency.LimitedWorking, Description  = "Limited Working Proficiency" },
             new ScaleEntry { Weight = 3, Proficiency = Proficiency.GeneralProfessional, Description  = "General Professional Proficiency" },
@@ -45,9 +45,9 @@
             public string Description;
         }
 
-        public static Meaning[] Reading =
+        public static Meaning[] ReadingMeanings =
         {
-            new Meaning { Proficiency = Proficiency.None, Description = "Nothing to basic alpha-numeric standards." },
+            new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited understanding of words, announcements, phrases, and descriptions." },
             new Meaning { Proficiency = Proficiency.LimitedWorking, Description = "Limited understanding of words, announcements, phrases, and descriptions." },
             new Meaning { Proficiency = Proficiency.GeneralProfessional, Description = "Normal rate of speed reading and comprehension, including commensurate with personal experiences; nuances, subtleties, and idioms sometime missed or misinterpreted." },
@@ -55,9 +55,9 @@
             new Meaning { Proficiency = Proficiency.FunctionallyNative, Description = "Proficiency equivalent to a well-educated native reader including full comprehension of archaic, technical, and highly colloquial writings." }
         };
 
-        public static Meaning[] Speaking =
+        public static Meaning[] SpeakingMeanings =
         {
-            new Meaning { Proficiency = Proficiency.None, Description = "Nothing to basic alpha-numeric standards." },
+            new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited expression of basic courtesy wants and needs but limited knowledge with conventisame as or custom." },
             new Meaning { Proficiency = Proficiency.LimitedWorking, Description = "Can satisfy basic social demands and work requirements; is at ease speaking the language but often has to be corrected with unfamiliar or in local customary usages." },
             new Meaning { Proficiency = Proficiency.GeneralProfessional, Description = "Normal rate of speaking and little exchange misunderstanding; pauses in conversation are filled appropriately." },
@@ -65,9 +65,9 @@
             new Meaning { Proficiency = Proficiency.FunctionallyNative, Description = "Speaking proficiency is functionally equivalent to that of a highly articulate well-educated native speaker and reflects the cultural standards of the country where the language is natively spoken." }
         };
 
-        public static Meaning[] Listening =
+        public static Meaning[] ListeningMeanings =
         {
-            new Meaning { Proficiency = Proficiency.None, Description = "Nothing to basic alpha-numeric standards." },
+            new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited understanding of basic survival needs, limited social demands, and job requirements." },
             new Meaning { Proficiency = Proficiency.LimitedWorking, Description = "Understands conversations on routine social demands and limited job requirements at normal speed with some repetition and rewording; also has comprehension of other special interests, but understanding may break down under pressure." },
             new Meaning { Proficiency = Proficiency.GeneralProfessional, Description = "Understands all of the essentials in a standard dialect including technical discussions at normal clarity and speed; able to understand sociolinguistic and cultural references." },
@@ -75,9 +75,9 @@
             new Meaning { Proficiency = Proficiency.FunctionallyNative, Description = "Proficiency equivalent to a well-educated native listener and understand how a native thinker creates discourse." }
         };
 
-        public static Meaning[] Writing =
+        public static Meaning[] WritingMeanings =
         {
-            new Meaning { Proficiency = Proficiency.None, Description = "Nothing to basic alpha-numeric standards." },
+            new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited ability to convey limited practical needs on familiar topics." },
             new Meaning { Proficiency = Proficiency.LimitedWorking, Description = "Able to write routine social correspondence and prepare documentary materials required for most limited work requirements; writing is generally accurate and easily understood; usually strong in vocabulary or grammar, but generally not both." },
             new Meaning { Proficiency = Proficiency.GeneralProfessional, Description = "Able to write the language in a few prose styles pertinent to professional/educational needs but not always able to tailor it to a particular audience; grammatical and vocabulary errors are minimal." },

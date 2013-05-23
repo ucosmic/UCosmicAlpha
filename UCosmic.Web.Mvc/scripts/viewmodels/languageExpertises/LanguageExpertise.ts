@@ -89,31 +89,35 @@ module ViewModels.LanguageExpertises {
             });
 
             $("#" + speakingInputId).kendoDropDownList({
-                dataTextField: "description",
-                dataValueField: "proficiency",
+                dataTextField: "title",
+                dataValueField: "weight",
                 dataSource: this.proficiencyInfo.speakingMeanings,
-                value: this.speakingProficiency
+                value: this.speakingProficiency(),
+                template: kendo.template($("#proficiency-template").html())
             });
 
             $("#" + listeningInputId).kendoDropDownList({
-                dataTextField: "description",
-                dataValueField: "proficiency",
+                dataTextField: "title",
+                dataValueField: "weight",
                 dataSource: this.proficiencyInfo.listeningMeanings,
-                value: this.listeningProficiency
+                value: this.listeningProficiency(),
+                template: kendo.template($("#proficiency-template").html())
             });
 
             $("#" + readingInputId).kendoDropDownList({
-                dataTextField: "description",
-                dataValueField: "proficiency",
+                dataTextField: "title",
+                dataValueField: "weight",
                 dataSource: this.proficiencyInfo.readingMeanings,
-                value: this.readingProficiency
+                value: this.readingProficiency(),
+                template: kendo.template($("#proficiency-template").html())
             });
 
             $("#" + writingInputId).kendoDropDownList({
-                dataTextField: "description",
-                dataValueField: "proficiency",
+                dataTextField: "title",
+                dataValueField: "weight",
                 dataSource: this.proficiencyInfo.writingMeanings,
-                value: this.writingProficiency
+                value: this.writingProficiency(),
+                template: kendo.template($("#proficiency-template").html())
             });
         }
 
@@ -205,6 +209,8 @@ module ViewModels.LanguageExpertises {
 
                                   this.proficiencyInfo = proficiencyInfo;
 
+                                  debugger;
+
                                   ko.mapping.fromJS( data, {}, this );
 
                                   this.languageId.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
@@ -239,6 +245,8 @@ module ViewModels.LanguageExpertises {
             while ( this.saving ) {
                 alert( "Please wait while expertise is saved." ); // TBD: dialog
             }
+
+            debugger;
 
             var mapSource = {
                 id : this.id,

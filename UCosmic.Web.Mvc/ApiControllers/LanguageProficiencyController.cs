@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -14,13 +15,51 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public LanguageProficiencyApiModel Get()
         {
             var model = new LanguageProficiencyApiModel
+            {
+                SpeakingMeanings = new Collection<LanguageProficiencyMeaningApiModel>(),
+                ListeningMeanings = new Collection<LanguageProficiencyMeaningApiModel>(),
+                ReadingMeanings = new Collection<LanguageProficiencyMeaningApiModel>(),
+                WritingMeanings = new Collection<LanguageProficiencyMeaningApiModel>()
+            };
+
+            foreach (var scale in LanguageProficiency.Scales)
+            {
+                var meaning = LanguageProficiency.SpeakingMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                var meaningApi = new LanguageProficiencyMeaningApiModel
                 {
-                    Scale = new Collection<LanguageProficiency.ScaleEntry>(LanguageProficiency.Scale),
-                    SpeakingMeanings = new Collection<LanguageProficiency.Meaning>(LanguageProficiency.Speaking),
-                    ListeningMeanings = new Collection<LanguageProficiency.Meaning>(LanguageProficiency.Listening),
-                    ReadingMeanings = new Collection<LanguageProficiency.Meaning>(LanguageProficiency.Reading),
-                    WritingMeanings = new Collection<LanguageProficiency.Meaning>(LanguageProficiency.Writing)
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Description = meaning.Description
                 };
+                model.SpeakingMeanings.Add(meaningApi);
+
+                meaning = LanguageProficiency.ListeningMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Description = meaning.Description
+                };
+                model.ListeningMeanings.Add(meaningApi);
+
+                meaning = LanguageProficiency.ReadingMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Description = meaning.Description
+                };
+                model.ReadingMeanings.Add(meaningApi);
+
+                meaning = LanguageProficiency.WritingMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Description = meaning.Description
+                };
+                model.WritingMeanings.Add(meaningApi);
+            }
 
             return model;
         }

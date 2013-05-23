@@ -25,13 +25,19 @@ namespace UCosmic.Web.Mvc.Models
         public string LanguageName { get; set; }    // For Language Expertises page
     }
 
+    public class LanguageProficiencyMeaningApiModel
+    {
+        public int Weight { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+    }
+
     public class LanguageProficiencyApiModel
     {
-        public ICollection<LanguageProficiency.ScaleEntry> Scale;
-        public ICollection<LanguageProficiency.Meaning> SpeakingMeanings;
-        public ICollection<LanguageProficiency.Meaning> ListeningMeanings;
-        public ICollection<LanguageProficiency.Meaning> ReadingMeanings;
-        public ICollection<LanguageProficiency.Meaning> WritingMeanings;
+        public ICollection<LanguageProficiencyMeaningApiModel> SpeakingMeanings { get; set; }
+        public ICollection<LanguageProficiencyMeaningApiModel> ListeningMeanings { get; set; }
+        public ICollection<LanguageProficiencyMeaningApiModel> ReadingMeanings { get; set; }
+        public ICollection<LanguageProficiencyMeaningApiModel> WritingMeanings { get; set; }
     }
 
     public class LanguageExpertiseSearchInputModel

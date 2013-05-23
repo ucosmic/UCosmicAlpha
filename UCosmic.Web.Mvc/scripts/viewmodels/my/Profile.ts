@@ -157,6 +157,7 @@ module ViewModels.My {
                         } );
                 }
             } else if ( (tabName === "Language Expertise") || (tabName === "language-expertise") ) {
+                debugger;
                 if ( this._languageExpertisesViewModel == null ) {
                     this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
                     this._languageExpertisesViewModel.load()
