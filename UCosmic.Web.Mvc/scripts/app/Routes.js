@@ -131,6 +131,21 @@ var App;
                 var ByCoordinates = Places.ByCoordinates;
             })(WebApi.Places || (WebApi.Places = {}));
             var Places = WebApi.Places;
+            (function (Agreements) {
+                function get(agreementId) {
+                    var url = 'agreements';
+                    if(agreementId) {
+                        url += '/' + agreementId;
+                    }
+                    return makeUrl(url);
+                }
+                Agreements.get = get;
+                function put(agreementId) {
+                    return get(agreementId);
+                }
+                Agreements.put = put;
+            })(WebApi.Agreements || (WebApi.Agreements = {}));
+            var Agreements = WebApi.Agreements;
             (function (Establishments) {
                 function get(establishmentId) {
                     var url = 'establishments';

@@ -57,10 +57,6 @@ ko.computed(function () {
             this.participants = ko.observableArray();
             this.owner = new Search(false);
             this.tenantDomain = "uc.edu";
-            this.sammy = Sammy();
-            this.sammyBeforeRoute = /\#\/page\/(.*)\//;
-            this.sammyGetPageRoute = '#/page/:pageNumber/';
-            this.sammyDefaultPageRoute = '/Establishments[\/]?';
             this.trail = ko.observableArray([]);
             this.$itemsPage = undefined;
             this.nextForceDisabled = ko.observable(false);
@@ -68,7 +64,6 @@ ko.computed(function () {
             this.pageNumber = ko.observable();
             this.populateParticipants();
             this.setupSearchVM();
-            this._setupSammy();
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
         }
@@ -150,7 +145,6 @@ ko.computed(function () {
         };
         InstitutionalAgreementEditModel.prototype.setupSearchVM = function () {
             var establishmentSearchViewModel = new Search();
-            establishmentSearchViewModel.sammy = undefined;
             establishmentSearchViewModel.nextPage = function () {
                 if(establishmentSearchViewModel.nextEnabled()) {
                     var pageNumber = parseInt(establishmentSearchViewModel.pageNumber()) + 1;
@@ -196,20 +190,6 @@ ko.computed(function () {
             this.participants.push(participant);
             location.hash = "#/";
         };
-        InstitutionalAgreementEditModel.prototype._setupSammy = function () {
-            var self = this;
-            self.sammy.before(self.sammyBeforeRoute, function () {
-                self.beforePage(this);
-            });
-            self.sammy.get(self.sammyGetPageRoute, function () {
-                self.getPage(this);
-            });
-            if(self.initDefaultPageRoute) {
-                self.sammy.get(self.sammyDefaultPageRoute, function () {
-                    self.initPageHash(this);
-                });
-            }
-        };
         InstitutionalAgreementEditModel.prototype.swipeCallback = function () {
         };
         InstitutionalAgreementEditModel.prototype.lockAnimation = function () {
@@ -219,59 +199,6 @@ ko.computed(function () {
         InstitutionalAgreementEditModel.prototype.unlockAnimation = function () {
             this.nextForceDisabled(false);
             this.prevForceDisabled(false);
-        };
-        InstitutionalAgreementEditModel.prototype.getPage = function (sammyContext) {
-            var _this = this;
-            var trail = this.trail(), clone;
-            if(trail.length > 0 && trail[trail.length - 1] === sammyContext.path) {
-                return;
-            }
-            if(trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
-                trail.pop();
-                this.swipeCallback = function () {
-                    clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    clone.appendTo(_this.$itemsPage.parent());
-                    _this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                    _this.lockAnimation();
-                    $(window).scrollTop(0);
-                    _this.sideSwiper.prev(1, function () {
-                        _this.$itemsPage.siblings().remove();
-                        _this.unlockAnimation();
-                    });
-                };
-                return;
-            } else if(trail.length > 0) {
-                this.swipeCallback = function () {
-                    clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    clone.insertBefore(_this.$itemsPage);
-                    _this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                    _this.lockAnimation();
-                    $(window).scrollTop(0);
-                    _this.sideSwiper.next(1, function () {
-                        _this.unlockAnimation();
-                    });
-                };
-            }
-            trail.push(sammyContext.path);
-        };
-        InstitutionalAgreementEditModel.prototype.beforePage = function (sammyContext) {
-            if(this.nextForceDisabled() || this.prevForceDisabled()) {
-                return false;
-            }
-            var pageNumber = sammyContext.params['pageNumber'];
-            if(pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber())) {
-                this.pageNumber(parseInt(pageNumber));
-            }
-            return true;
-        };
-        InstitutionalAgreementEditModel.prototype.initPageHash = function (sammyContext) {
-            sammyContext.app.setLocation('#/page/1/');
-        };
-        InstitutionalAgreementEditModel.prototype.setLocation = function () {
-            var location = '#/page/' + this.pageNumber() + '/';
-            if(this.sammy.getLocation() !== location) {
-                this.sammy.setLocation(location);
-            }
         };
         return InstitutionalAgreementEditModel;
     })();

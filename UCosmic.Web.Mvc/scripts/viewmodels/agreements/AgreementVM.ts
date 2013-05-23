@@ -79,7 +79,7 @@ export class InstitutionalAgreementEditModel {
 
         this.populateParticipants();
         this.setupSearchVM();
-        this._setupSammy();
+        //this._setupSammy();
         this.isBound(true);
         this.removeParticipant = <() => bool > this.removeParticipant.bind(this);
     }
@@ -185,7 +185,7 @@ export class InstitutionalAgreementEditModel {
     setupSearchVM(): void {
         // nest the establishment search viewmodel
         var establishmentSearchViewModel = new Search()
-        establishmentSearchViewModel.sammy = undefined;
+        //establishmentSearchViewModel.sammy = undefined;
 
         // override next & prev page clicks
         establishmentSearchViewModel.nextPage = function () {
@@ -244,28 +244,28 @@ export class InstitutionalAgreementEditModel {
 
 
 
-    sammy: Sammy.Application = Sammy();
-    sammyBeforeRoute: any = /\#\/page\/(.*)\//;
-    sammyGetPageRoute: any = '#/page/:pageNumber/';
-    sammyDefaultPageRoute: any = '/Establishments[\/]?';
+    //sammy: Sammy.Application = Sammy();
+    //sammyBeforeRoute: any = /\#\/page\/(.*)\//;
+    //sammyGetPageRoute: any = '#/page/:pageNumber/';
+    //sammyDefaultPageRoute: any = '/agreements[\/]?';
 
-    private _setupSammy(): void {
-        var self = this;
-        self.sammy.before(self.sammyBeforeRoute, function () {
-            self.beforePage(this);
-        });
+    //private _setupSammy(): void {
+    //    var self = this;
+    //    self.sammy.before(self.sammyBeforeRoute, function () {
+    //        self.beforePage(this);
+    //    });
 
-        self.sammy.get(self.sammyGetPageRoute, function () {
-            self.getPage(this);
-        });
+    //    self.sammy.get(self.sammyGetPageRoute, function () {
+    //        self.getPage(this);
+    //    });
 
-        if (self.initDefaultPageRoute) {
-            // match /Shared or /Shared/
-            self.sammy.get(self.sammyDefaultPageRoute, function () {
-                self.initPageHash(this);
-            });
-        }
-    }
+    //    if (self.initDefaultPageRoute) {
+    //        // match /Shared or /Shared/
+    //        self.sammy.get(self.sammyDefaultPageRoute, function () {
+    //            self.initPageHash(this);
+    //        });
+    //    }
+    //}
     trail: KnockoutObservableStringArray = ko.observableArray([]);
     swipeCallback(): void {
     }
@@ -282,64 +282,64 @@ export class InstitutionalAgreementEditModel {
         this.prevForceDisabled(false);
     }
 
-    getPage(sammyContext: Sammy.EventContext): void {
-        var trail = this.trail(),
-            clone;
-        if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path) return;
-        if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
-            // swipe backward
-            trail.pop();
-            this.swipeCallback = (): void => {
-                clone = this.$itemsPage.clone(true)
-                    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                clone.appendTo(this.$itemsPage.parent());
-                this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                this.lockAnimation();
-                $(window).scrollTop(0);
-                this.sideSwiper.prev(1, (): void => {
-                    this.$itemsPage.siblings().remove();
-                    this.unlockAnimation();
-                });
-            };
-            return;
-        } else if (trail.length > 0) {
-            // swipe forward
-            this.swipeCallback = (): void => {
-                clone = this.$itemsPage.clone(true)
-                    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                clone.insertBefore(this.$itemsPage);
-                this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                this.lockAnimation();
-                $(window).scrollTop(0);
-                this.sideSwiper.next(1, (): void => {
-                    this.unlockAnimation();
-                });
-            };
-        }
-        trail.push(sammyContext.path);
-    }
+    //getPage(sammyContext: Sammy.EventContext): void {
+    //    var trail = this.trail(),
+    //        clone;
+    //    if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path) return;
+    //    if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
+    //        // swipe backward
+    //        trail.pop();
+    //        this.swipeCallback = (): void => {
+    //            clone = this.$itemsPage.clone(true)
+    //                .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+    //            clone.appendTo(this.$itemsPage.parent());
+    //            this.$itemsPage.attr('data-side-swiper', 'off').hide();
+    //            this.lockAnimation();
+    //            $(window).scrollTop(0);
+    //            this.sideSwiper.prev(1, (): void => {
+    //                this.$itemsPage.siblings().remove();
+    //                this.unlockAnimation();
+    //            });
+    //        };
+    //        return;
+    //    } else if (trail.length > 0) {
+    //        // swipe forward
+    //        this.swipeCallback = (): void => {
+    //            clone = this.$itemsPage.clone(true)
+    //                .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+    //            clone.insertBefore(this.$itemsPage);
+    //            this.$itemsPage.attr('data-side-swiper', 'off').hide();
+    //            this.lockAnimation();
+    //            $(window).scrollTop(0);
+    //            this.sideSwiper.next(1, (): void => {
+    //                this.unlockAnimation();
+    //            });
+    //        };
+    //    }
+    //    trail.push(sammyContext.path);
+    //}
 
-    beforePage(sammyContext: Sammy.EventContext): bool {
-        if (this.nextForceDisabled() || this.prevForceDisabled())
-            return false;
+    //beforePage(sammyContext: Sammy.EventContext): bool {
+    //    if (this.nextForceDisabled() || this.prevForceDisabled())
+    //        return false;
 
-        var pageNumber = sammyContext.params['pageNumber'];
+    //    var pageNumber = sammyContext.params['pageNumber'];
 
-        // make sure the viewmodel pagenumber is in sync with the route
-        if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
-            this.pageNumber(parseInt(pageNumber));
-        return true;
-    }
+    //    // make sure the viewmodel pagenumber is in sync with the route
+    //    if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
+    //        this.pageNumber(parseInt(pageNumber));
+    //    return true;
+    //}
 
-    initPageHash(sammyContext: Sammy.EventContext): void {
-        sammyContext.app.setLocation('#/page/1/');
-    }
+    //initPageHash(sammyContext: Sammy.EventContext): void {
+    //    sammyContext.app.setLocation('#/page/1/');
+    //}
 
-    setLocation(): void {
-        var location = '#/page/' + this.pageNumber() + '/';
-        if (this.sammy.getLocation() !== location)
-            this.sammy.setLocation(location);
-    }
+    //setLocation(): void {
+    //    var location = '#/page/' + this.pageNumber() + '/';
+    //    if (this.sammy.getLocation() !== location)
+    //        this.sammy.setLocation(location);
+    //}
 
 }
 

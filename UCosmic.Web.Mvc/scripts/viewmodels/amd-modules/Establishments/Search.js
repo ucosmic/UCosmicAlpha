@@ -3,7 +3,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../places/ServerApiModel'], function(require, exports, __PagedSearch__, __SearchResult__, __Places__) {
+define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../places/ServerApiModel', '../Widgets/Spinner'], function(require, exports, __PagedSearch__, __SearchResult__, __Places__, __Spinner__) {
     var PagedSearch = __PagedSearch__;
 
     var SearchResult = __SearchResult__;
@@ -12,6 +12,8 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
     var Places = __Places__;
 
     
+    var Spinner = __Spinner__;
+
     var Search = (function (_super) {
         __extends(Search, _super);
         function Search(initDefaultPageRoute) {
@@ -22,7 +24,7 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
             this.sammy = Sammy();
             this.sammyBeforeRoute = /\#\/page\/(.*)\//;
             this.sammyGetPageRoute = '#/page/:pageNumber/';
-            this.sammyDefaultPageRoute = '/Establishments[\/]?';
+            this.sammyDefaultPageRoute = '/agreements[\/]?';
             this.countries = ko.observableArray();
             this.countryCode = ko.observable();
             this.lenses = ko.observableArray([
@@ -216,6 +218,24 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
         };
         Search.prototype.addParticipant = function () {
             alert(this.id());
+            var serializeData;
+            var originalValues = ko.observable();
+            var typeIdSaveSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
+            typeIdSaveSpinner.start();
+            var data;
+            var originalValues = originalValues();
+            var url = App.Routes.WebApi.Agreements.put(this.id);
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: data
+            }).always(function () {
+                typeIdSaveSpinner.stop();
+            }).done(function (response, statusText, xhr) {
+                typeIdSaveSpinner.stop();
+                window.location.href = "../../agreements";
+            });
+            window.location.href = "../../agreements";
         };
         return Search;
     })(PagedSearch.PagedSearch);

@@ -13,6 +13,7 @@ import SearchResult = module('./SearchResult');
 import Lens = module('../Widgets/Lens');
 import Places = module('../places/ServerApiModel');
 import SearchApiModel = module('./ServerApiModel');
+import Spinner = module('../Widgets/Spinner')
 export class Search extends PagedSearch.PagedSearch {
         
 
@@ -72,7 +73,7 @@ export class Search extends PagedSearch.PagedSearch {
         sammy: Sammy.Application = Sammy();
         sammyBeforeRoute: any = /\#\/page\/(.*)\//;
         sammyGetPageRoute: any = '#/page/:pageNumber/';
-        sammyDefaultPageRoute: any = '/Establishments[\/]?';
+        sammyDefaultPageRoute: any = '/agreements[\/]?';
 
         private _setupSammy(): void {
             var self = this;
@@ -258,8 +259,48 @@ export class Search extends PagedSearch.PagedSearch {
         }
 
         id;
+        //serializeData(): any {
+        //    var data: any = {};
+        //    //data.parentId = this.parentId();
+        //    //data.typeId = this.typeId();
+        //    //data.ceebCode = this.ceebCode();
+        //    //data.uCosmicCode = this.uCosmicCode();
+        //    //return data;
+        //}
+        //originalValues: KnockoutObservableAny = ko.observable();
+        //typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         addParticipant(): void {
-            alert(this.id())
+            alert(this.id());
+
+
+            var serializeData;
+            
+            var originalValues: KnockoutObservableAny = ko.observable();
+            var typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
+            
+            typeIdSaveSpinner.start();
+            var data;// = serializeData();
+            var originalValues = originalValues();
+            var url = App.Routes.WebApi.Agreements.put(this.id);
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: data
+            })
+            .always((): void => {
+                typeIdSaveSpinner.stop();
+            })
+            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                //App.flasher.flash(response);
+                typeIdSaveSpinner.stop();
+                //this.clickToCancelTypeIdEdit();
+                
+                window.location.href = "../../agreements"
+            });
+
+            //pretend good
+            window.location.href = "../../agreements"
+
         }
     }
 

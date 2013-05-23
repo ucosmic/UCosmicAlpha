@@ -123,7 +123,16 @@ module App.Routes {
                 }
             }
         }
-
+        export module Agreements {
+            export function get (agreementId?: number): string {
+                var url = 'agreements';
+                if (agreementId) url += '/' + agreementId;
+                return makeUrl(url);
+            }
+            export function put(agreementId: number): string {
+                return get(agreementId);
+            }
+        }
         export module Establishments {
 
             export function get (establishmentId?: number): string {

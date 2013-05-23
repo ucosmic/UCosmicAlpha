@@ -130,9 +130,9 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         public T4MVC_AgreementsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ViewResult Index()
+        public override System.Web.Mvc.ActionResult Index()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Index);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
             return callInfo;
         }
 

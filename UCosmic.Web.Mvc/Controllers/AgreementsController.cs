@@ -15,7 +15,7 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        public virtual ViewResult Index()
+        public virtual ActionResult Index()
         {
             return View();
         }
