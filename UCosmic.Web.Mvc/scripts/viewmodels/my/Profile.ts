@@ -22,7 +22,7 @@ module ViewModels.My {
     export class Profile implements KnockoutValidationGroup {
 
         private _sammy: Sammy.Application = Sammy();
-        private _isInitialized: bool = false;
+        //private _isInitialized: bool = false;
         private _originalValues: IServerProfileApiModel;
         private _activitiesViewModel: ViewModels.Activities.ActivityList = null;
         private _geographicExpertisesViewModel: ViewModels.GeographicExpertises.GeographicExpertiseList = null;
@@ -78,20 +78,23 @@ module ViewModels.My {
         editMode: KnockoutObservableBool = ko.observable(false);
         saveSpinner = new Spinner(new SpinnerOptions(200));
 
+        private _initialize() {
+        }
+
         constructor() {
             this._initialize();
 
-            this._setupRouting();
-            this._setupValidation();
-            this._setupKendoWidgets();
-            this._setupDisplayNameDerivation();
-            this._setupCardComputeds();
+            //this._setupRouting();
+            //this._setupValidation();
+            //this._setupKendoWidgets();
+            //this._setupDisplayNameDerivation();
+            //this._setupCardComputeds();
 
-
-            //this._sammy.run('#/');
+            //this._sammy.run('#/activities');
         }
 
-        private _initialize() {
+        load(): JQueryPromise {
+            var deferred: JQueryDeferred = $.Deferred();
 
             // start both requests at the same time
             var facultyRanksPact = $.Deferred();
@@ -113,9 +116,9 @@ module ViewModels.My {
                 });
 
             // only process after both requests have been resolved
-            $.when(facultyRanksPact, viewModelPact).then(
-
-                // all requests succeeded
+            $.when(facultyRanksPact, viewModelPact)
+                //.then(
+                .done(
                 (facultyRanks: Employees.IServerFacultyRankApiModel[], viewModel: IServerProfileApiModel): void => {
 
                     this.facultyRanks(facultyRanks); // populate the faculty ranks menu
@@ -125,22 +128,37 @@ module ViewModels.My {
 
                     this._originalValues = viewModel;
 
-                    if (!this._isInitialized) {
-                        $(this).trigger('ready'); // ready to apply bindings
-                        this._isInitialized = true; // bindings have been applied
-                        this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
-                    }
-                },
+                    //if (!this._isInitialized) {
+                    //    $(this).trigger('ready'); // ready to apply bindings
+                    //    this._isInitialized = true; // bindings have been applied
+                    //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
+                    //}
 
+                    this._setupRouting();
+                    this._setupValidation();
+                    this._setupKendoWidgets();
+                    this._setupDisplayNameDerivation();
+                    this._setupCardComputeds();
+
+                    this._sammy.run('#/activities');
+
+                    deferred.resolve();
+                })
+                //,
                 // one of the responses failed (never called more than once, even on multifailures)
-                (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    //alert('a GET API call failed :(');
-                });
+                //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                //    //alert('a GET API call failed :(');
+                //});
+                .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
+                    deferred.reject( xhr, textStatus, errorThrown );
+                } );
+
+            return deferred;
         }
 
-        startTab(tabName: string): void {
+        private _startTab(tabName: string): void {
             var viewModel: any;
-            if ( (tabName === "Activities") || (tabName === "activities") ) {
+            if ( tabName === "activities" ) {
                 if ( this._activitiesViewModel == null ) {
                     this._activitiesViewModel = new ViewModels.Activities.ActivityList( this.personId );
                     this._activitiesViewModel.load()
@@ -151,7 +169,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( (tabName === "Geographic Expertise") || (tabName === "geographic-expertise") ) {
+            } else if ( tabName === "geographic-expertise" ) {
                 if ( this._geographicExpertisesViewModel == null ) {
                     this._geographicExpertisesViewModel = new ViewModels.GeographicExpertises.GeographicExpertiseList( this.personId );
                     this._geographicExpertisesViewModel.load()
@@ -162,7 +180,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( (tabName === "Language Expertise") || (tabName === "language-expertise") ) {
+            } else if ( tabName === "language-expertise" ) {
                 if ( this._languageExpertisesViewModel == null ) {
                     this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
                     this._languageExpertisesViewModel.load()
@@ -173,7 +191,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( (tabName === "Formal Education") || (tabName === "formal-education") ) {
+            } else if ( tabName === "formal-education" ) {
                 if ( this._degreesViewModel == null ) {
                     this._degreesViewModel = new ViewModels.Degrees.DegreeList( this.personId );
                     this._degreesViewModel.load()
@@ -184,7 +202,7 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
-            } else if ( (tabName === "Affiliations") || (tabName === "affiliations") ) {
+            } else if ( tabName === "affiliations" ) {
                 //if ( this._affiliationsViewModel == null ) {
                 //    this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
                 //    this._affiliationsViewModel.load()
@@ -201,7 +219,13 @@ module ViewModels.My {
         tabClickHandler(event: any): void {
             var tabName = event.item.innerText; // IE
             if (tabName == null) tabName = event.item.textContent; // FF
-           this.startTab( tabName );
+            if (tabName === "Activities" ) tabName = "activities";
+            if (tabName === "Geographic Expertise" ) tabName = "geographic-expertise";
+            if (tabName === "Language Expertise" ) tabName = "language-expertise";
+            if (tabName === "Formal Education" ) tabName = "formal-education";
+            if (tabName === "Affiliations" ) tabName = "affiliations";
+            //this._startTab( tabName );
+            location.href = "#/" + tabName;
         }
 
         startEditing(): void { // show the editor
@@ -306,12 +330,12 @@ module ViewModels.My {
         }
 
         private _setupRouting(): void {
-            this._sammy.route('get', '#/', (): void => {this.startTab('activities');});
-            this._sammy.route('get', '#/activities', (): void => {this.startTab('activities');});
-            this._sammy.route('get', '#/geographic-expertise', (): void => {this.startTab('geographic-expertise');});
-            this._sammy.route('get', '#/language-expertise', (): void => {this.startTab('language-expertise');});
-            this._sammy.route('get', '#/formal-education', (): void => {this.startTab('formal-education');});
-            this._sammy.route('get', '#/affiliations', (): void => {this.startTab('affiliations');});
+            this._sammy.route('get', '#/', (): void => {this._startTab('activities');});
+            this._sammy.route('get', '#/activities', (): void => {this._startTab('activities');});
+            this._sammy.route('get', '#/geographic-expertise', (): void => {this._startTab('geographic-expertise');});
+            this._sammy.route('get', '#/language-expertise', (): void => {this._startTab('language-expertise');});
+            this._sammy.route('get', '#/formal-education', (): void => {this._startTab('formal-education');});
+            this._sammy.route('get', '#/affiliations', (): void => {this._startTab('affiliations');});
         }
 
         // client validation rules
@@ -479,7 +503,7 @@ module ViewModels.My {
 
             ko.computed((): void => {
                 // generate display name if it has been API-initialized
-                if (this.isDisplayNameDerived() && this._isInitialized) {
+                if (this.isDisplayNameDerived() /* && this._isInitialized */) {
                     var data = ko.mapping.toJS(this);
                     $.ajax({
                         url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
@@ -490,7 +514,7 @@ module ViewModels.My {
                         this.displayName(result);
                     });
                 }
-                else if (this._isInitialized) {
+                else /* if (this._isInitialized) */ {
                     // prevent user display name from being blank
                     if (!this._userDisplayName)
                         this._userDisplayName = this.displayName();

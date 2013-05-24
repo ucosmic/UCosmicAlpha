@@ -547,6 +547,10 @@ module App.Routes {
                     }
                     return url;
                 }
+                export function getTab (tabName: string) {
+                    var url = makeUrl( 'my/profile' ) + tabName;
+                    return url;
+                }
                 export function activityEdit( activityId: string ) {
                     var url = makeUrl( 'my/activity/' );
                     return url + activityId;

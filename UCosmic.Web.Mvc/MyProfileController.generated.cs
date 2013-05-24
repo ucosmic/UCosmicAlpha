@@ -188,7 +188,7 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         public T4MVC_MyProfileController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Index(int? tab)
+        public override System.Web.Mvc.ActionResult Index(string tab)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "tab", tab);

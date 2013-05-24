@@ -1338,6 +1338,10 @@ namespace Links
         public static readonly string require_d_ts = Url("require.d.ts");
         public static readonly string require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/require.min.js") ? Url("require.min.js") : Url("require.js");
                       
+        public static readonly string requireConfig_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireConfig.min.js") ? Url("requireConfig.min.js") : Url("requireConfig.js");
+                      
+        public static readonly string requireConfig_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireConfig_debug.min.js") ? Url("requireConfig_debug.min.js") : Url("requireConfig_debug.js");
+                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class sammy {
             private const string URLPATH = "~/scripts/sammy";

@@ -4,7 +4,6 @@ var ViewModels;
         var Profile = (function () {
             function Profile() {
                 this._sammy = Sammy();
-                this._isInitialized = false;
                 this._activitiesViewModel = null;
                 this._geographicExpertisesViewModel = null;
                 this._languageExpertisesViewModel = null;
@@ -43,14 +42,12 @@ var ViewModels;
                 this.editMode = ko.observable(false);
                 this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this._initialize();
-                this._setupRouting();
-                this._setupValidation();
-                this._setupKendoWidgets();
-                this._setupDisplayNameDerivation();
-                this._setupCardComputeds();
             }
             Profile.prototype._initialize = function () {
+            };
+            Profile.prototype.load = function () {
                 var _this = this;
+                var deferred = $.Deferred();
                 var facultyRanksPact = $.Deferred();
                 $.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get()).done(function (data, textStatus, jqXHR) {
                     facultyRanksPact.resolve(data);
@@ -63,25 +60,29 @@ var ViewModels;
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                $.when(facultyRanksPact, viewModelPact).then(function (facultyRanks, viewModel) {
+                $.when(facultyRanksPact, viewModelPact).done(function (facultyRanks, viewModel) {
                     _this.facultyRanks(facultyRanks);
                     ko.mapping.fromJS(viewModel, {
                         ignore: "personId"
                     }, _this);
                     _this.personId = viewModel.personId;
                     _this._originalValues = viewModel;
-                    if(!_this._isInitialized) {
-                        $(_this).trigger('ready');
-                        _this._isInitialized = true;
-                        _this.$facultyRanks().kendoDropDownList();
-                    }
-                }, function (xhr, textStatus, errorThrown) {
+                    _this._setupRouting();
+                    _this._setupValidation();
+                    _this._setupKendoWidgets();
+                    _this._setupDisplayNameDerivation();
+                    _this._setupCardComputeds();
+                    _this._sammy.run('#/activities');
+                    deferred.resolve();
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    deferred.reject(xhr, textStatus, errorThrown);
                 });
+                return deferred;
             };
-            Profile.prototype.startTab = function (tabName) {
+            Profile.prototype._startTab = function (tabName) {
                 var _this = this;
                 var viewModel;
-                if((tabName === "Activities") || (tabName === "activities")) {
+                if(tabName === "activities") {
                     if(this._activitiesViewModel == null) {
                         this._activitiesViewModel = new ViewModels.Activities.ActivityList(this.personId);
                         this._activitiesViewModel.load().done(function () {
@@ -90,7 +91,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if((tabName === "Geographic Expertise") || (tabName === "geographic-expertise")) {
+                } else if(tabName === "geographic-expertise") {
                     if(this._geographicExpertisesViewModel == null) {
                         this._geographicExpertisesViewModel = new ViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
                         this._geographicExpertisesViewModel.load().done(function () {
@@ -99,7 +100,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if((tabName === "Language Expertise") || (tabName === "language-expertise")) {
+                } else if(tabName === "language-expertise") {
                     if(this._languageExpertisesViewModel == null) {
                         this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
                         this._languageExpertisesViewModel.load().done(function () {
@@ -108,7 +109,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if((tabName === "Formal Education") || (tabName === "formal-education")) {
+                } else if(tabName === "formal-education") {
                     if(this._degreesViewModel == null) {
                         this._degreesViewModel = new ViewModels.Degrees.DegreeList(this.personId);
                         this._degreesViewModel.load().done(function () {
@@ -117,7 +118,7 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
-                } else if((tabName === "Affiliations") || (tabName === "affiliations")) {
+                } else if(tabName === "affiliations") {
                 }
             };
             Profile.prototype.tabClickHandler = function (event) {
@@ -125,7 +126,22 @@ var ViewModels;
                 if(tabName == null) {
                     tabName = event.item.textContent;
                 }
-                this.startTab(tabName);
+                if(tabName === "Activities") {
+                    tabName = "activities";
+                }
+                if(tabName === "Geographic Expertise") {
+                    tabName = "geographic-expertise";
+                }
+                if(tabName === "Language Expertise") {
+                    tabName = "language-expertise";
+                }
+                if(tabName === "Formal Education") {
+                    tabName = "formal-education";
+                }
+                if(tabName === "Affiliations") {
+                    tabName = "affiliations";
+                }
+                location.href = "#/" + tabName;
             };
             Profile.prototype.startEditing = function () {
                 this.editMode(true);
@@ -222,22 +238,22 @@ var ViewModels;
             Profile.prototype._setupRouting = function () {
                 var _this = this;
                 this._sammy.route('get', '#/', function () {
-                    _this.startTab('activities');
+                    _this._startTab('activities');
                 });
                 this._sammy.route('get', '#/activities', function () {
-                    _this.startTab('activities');
+                    _this._startTab('activities');
                 });
                 this._sammy.route('get', '#/geographic-expertise', function () {
-                    _this.startTab('geographic-expertise');
+                    _this._startTab('geographic-expertise');
                 });
                 this._sammy.route('get', '#/language-expertise', function () {
-                    _this.startTab('language-expertise');
+                    _this._startTab('language-expertise');
                 });
                 this._sammy.route('get', '#/formal-education', function () {
-                    _this.startTab('formal-education');
+                    _this._startTab('formal-education');
                 });
                 this._sammy.route('get', '#/affiliations', function () {
-                    _this.startTab('affiliations');
+                    _this._startTab('affiliations');
                 });
             };
             Profile.prototype._setupValidation = function () {
@@ -395,7 +411,7 @@ var ViewModels;
                     }
                 });
                 ko.computed(function () {
-                    if(_this.isDisplayNameDerived() && _this._isInitialized) {
+                    if(_this.isDisplayNameDerived()) {
                         var data = ko.mapping.toJS(_this);
                         $.ajax({
                             url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
@@ -405,7 +421,7 @@ var ViewModels;
                         }).done(function (result) {
                             _this.displayName(result);
                         });
-                    } else if(_this._isInitialized) {
+                    } else {
                         if(!_this._userDisplayName) {
                             _this._userDisplayName = _this.displayName();
                         }

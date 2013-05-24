@@ -822,6 +822,8 @@
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <None Include="scripts\sammy-0.7.1-vsdoc.js" />
+    <Content Include="scripts\requireConfig_debug.js" />
+    <Content Include="scripts\requireConfig.js" />
     <Content Include="scripts\sammy-0.7.1.js" />
     <Content Include="scripts\sammy-0.7.1.min.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />

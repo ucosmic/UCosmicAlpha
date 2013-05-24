@@ -2,7 +2,7 @@
 {
     public class ProfileModel
     {
-        public int TabIndex { get; set; }
+        public string Tab { get; set; }
     }
 
     public class ActivityModel

@@ -28,29 +28,33 @@
 
         $( function () {        
             var profileViewModel = new ViewModels.My.Profile();
-            $( profileViewModel ).on( 'ready', function () {
+            //$( profileViewModel ).on( 'ready', function () {
+            profileViewModel.load()
+                .done( function () {
+                    
+                    ko.applyBindings( profileViewModel, $( '#my_profile' )[0] );
+                    
+                    $( '#tabstrip' ).kendoTabStrip( {
+                        select: function ( e ) { profileViewModel.tabClickHandler( e ); },
+                        animation: false
+                    } ).show();
+
+                    debugger;
                 
-
-
-
-
-
-                
-                $( '#tabstrip' ).kendoTabStrip( {
-                    select: function ( e ) { profileViewModel.tabClickHandler( e ); },
-                    animation: false
-                } ).show();
-                
-                ko.applyBindings( profileViewModel, $( '#my_profile' )[0] );
-
-                /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
-                if (@Model.TabIndex == 0) {
-                    profileViewModel.startTab("activities");
-                } else {
-                    $( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.TabIndex );
-                }
-
-            } );
+                    /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
+                    if ( "@Model.Tab" === "" ) {
+                        //profileViewModel.startTab("activities");
+                        location.href = "#/activities";
+                    } else {
+                        //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.Tab);
+                        debugger;
+                        var url = App.Routes.Mvc.My.Profile.get() + "#/" + "@Model.Tab";
+                        location.href = url;
+                    }
+                })
+                .fail(function(jqXhr, textStatus, errorThrown) {
+                    alert(textStatus + "|" + errorThrown);
+                });
         });
 
     </script>

@@ -256,13 +256,13 @@ module ViewModels.GeographicExpertises {
                         },
                         "Cancel and lose changes": function () {
                             $( this ).dialog( "close" );
-                            location.href = App.Routes.Mvc.My.Profile.get( 1 );
+                            location.href = App.Routes.Mvc.My.Profile.getTab( "geographic-expertise" );
                         }
                     }
                 } );
             }
-            else {
-                location.href = App.Routes.Mvc.My.Profile.get( 1 );
+            else { 
+                location.href = App.Routes.Mvc.My.Profile.getTab( "geographic-expertise" );
             }
         }
 

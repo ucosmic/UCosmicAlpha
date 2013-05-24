@@ -608,6 +608,11 @@ var App;
                         return url;
                     }
                     Profile.get = get;
+                    function getTab(tabName) {
+                        var url = makeUrl('my/profile') + tabName;
+                        return url;
+                    }
+                    Profile.getTab = getTab;
                     function activityEdit(activityId) {
                         var url = makeUrl('my/activity/');
                         return url + activityId;
