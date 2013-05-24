@@ -26,7 +26,8 @@
                 <div data-bind="visible: lens() === 'table'">
                     <table class="data">
                         <colgroup>
-                            <col style="width: 75%;" />
+                            <col style="width: 50%;" />
+                            <col style="width: 25%;" />
                             <col style="width: 25%;" />
                         </colgroup>
                         <thead>
@@ -63,11 +64,11 @@
                                 <td>
                                     <span data-bind="text: nullDisplayCountryName"></span>
                                 </td>
-                                <td>
-                                    <span data-bind="click: $root.addParticipant" class="text">
-                                        <img src="/images/icons/plus/plus-20-green-disc.png" alt="">
-                                        <span>Add New</span>
-                                    </span>
+                                <td style="vertical-align: middle;">
+                                    <a href=""  data-bind="click: $root.addParticipant" class="button">
+                                        <i class="green plus"></i>
+                                        <span class="text">Add New</span>
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>

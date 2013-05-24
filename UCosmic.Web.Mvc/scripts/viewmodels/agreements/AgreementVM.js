@@ -183,12 +183,8 @@ ko.computed(function () {
             return false;
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
-            var participant = new InstitutionalAgreementParticipantModel({
-                isOwner: false,
-                establishment: establishmentResultViewModel
-            });
-            this.participants.push(participant);
-            location.hash = "#/";
+            window.location.href = "../Agreements/new/#/page/1/";
+            sessionStorage.setItem("Agreement", "1");
         };
         InstitutionalAgreementEditModel.prototype.swipeCallback = function () {
         };

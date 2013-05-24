@@ -233,12 +233,14 @@ export class InstitutionalAgreementEditModel {
     };
         // override establishment item click to add as participant
     addParticipant(establishmentResultViewModel): void {
-        var participant = new InstitutionalAgreementParticipantModel({
-            isOwner: false,
-            establishment: establishmentResultViewModel
-        });
-        this.participants.push(participant);
-        location.hash = "#/";
+        window.location.href = "../Agreements/new/#/page/1/"
+        sessionStorage.setItem("Agreement", "1");
+        //var participant = new InstitutionalAgreementParticipantModel({
+        //    isOwner: false,
+        //    establishment: establishmentResultViewModel
+        //});
+        //this.participants.push(participant);
+        //location.hash = "#/";
     };
        
 

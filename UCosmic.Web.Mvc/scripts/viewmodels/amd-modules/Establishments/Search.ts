@@ -270,7 +270,7 @@ export class Search extends PagedSearch.PagedSearch {
         //originalValues: KnockoutObservableAny = ko.observable();
         //typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         addParticipant(): void {
-            alert(this.id());
+            alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
 
 
             var serializeData;

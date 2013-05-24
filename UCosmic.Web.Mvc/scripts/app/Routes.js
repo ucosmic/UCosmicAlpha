@@ -255,14 +255,6 @@ var App;
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
             (function (Agreements) {
-                function get(agreementId) {
-                    var url = 'agreements';
-                    if(agreementId) {
-                        url += '/' + agreementId;
-                    }
-                    return makeUrl(url);
-                }
-                Agreements.get = get;
                 (function (Participants) {
                     function get(agreementId) {
                         var url = 'agreements/0/participants';

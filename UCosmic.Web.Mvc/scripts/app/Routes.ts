@@ -244,11 +244,11 @@ module App.Routes {
 
         export module Agreements {
 
-            export function get (agreementId?: number): string {
-                var url = 'agreements';
-                if (agreementId) url += '/' + agreementId;
-                return makeUrl(url);
-            }
+            //export function get (agreementId?: number): string {
+            //    var url = 'agreements';
+            //    if (agreementId) url += '/' + agreementId;
+            //    return makeUrl(url);
+            //}
 
             export module Participants {
 

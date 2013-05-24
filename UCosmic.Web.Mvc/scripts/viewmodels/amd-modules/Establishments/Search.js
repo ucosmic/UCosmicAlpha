@@ -217,7 +217,7 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
             return 'View & edit this establishment\'s details';
         };
         Search.prototype.addParticipant = function () {
-            alert(this.id());
+            alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
             var serializeData;
             var originalValues = ko.observable();
             var typeIdSaveSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
