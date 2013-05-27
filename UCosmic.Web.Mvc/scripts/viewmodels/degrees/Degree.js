@@ -163,12 +163,12 @@ var ViewModels;
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.saving = false;
-                        location.href = App.Routes.Mvc.My.Profile.get(3);
+                        location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
-                        location.href = App.Routes.Mvc.My.Profile.get(3);
+                        location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                     }
                 });
             };
@@ -184,12 +184,12 @@ var ViewModels;
                             },
                             "Cancel and lose changes": function () {
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get(3);
+                                location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                             }
                         }
                     });
                 } else {
-                    location.href = App.Routes.Mvc.My.Profile.get(3);
+                    location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                 }
             };
             return Degree;

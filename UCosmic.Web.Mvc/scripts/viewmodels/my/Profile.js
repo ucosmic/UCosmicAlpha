@@ -45,7 +45,7 @@ var ViewModels;
             }
             Profile.prototype._initialize = function () {
             };
-            Profile.prototype.load = function () {
+            Profile.prototype.load = function (startTab) {
                 var _this = this;
                 var deferred = $.Deferred();
                 var facultyRanksPact = $.Deferred();
@@ -72,7 +72,19 @@ var ViewModels;
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
-                    _this._sammy.run('#/activities');
+                    if(startTab === "") {
+                        _this._sammy.run("#/activities");
+                    } else {
+                        debugger;
+
+                        var url = location.href;
+                        var index = url.lastIndexOf("?");
+                        if(index != -1) {
+                            _this._startTab(startTab);
+                        } else {
+                            _this._sammy.run("#/" + startTab);
+                        }
+                    }
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
@@ -82,6 +94,7 @@ var ViewModels;
             Profile.prototype._startTab = function (tabName) {
                 var _this = this;
                 var viewModel;
+                var tabStrip = $("#tabstrip").data("kendoTabStrip");
                 if(tabName === "activities") {
                     if(this._activitiesViewModel == null) {
                         this._activitiesViewModel = new ViewModels.Activities.ActivityList(this.personId);
@@ -90,6 +103,9 @@ var ViewModels;
                         }).fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });
+                    }
+                    if(tabStrip.select() != 0) {
+                        tabStrip.select(0);
                     }
                 } else if(tabName === "geographic-expertise") {
                     if(this._geographicExpertisesViewModel == null) {
@@ -100,6 +116,9 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
+                    if(tabStrip.select() != 1) {
+                        tabStrip.select(1);
+                    }
                 } else if(tabName === "language-expertise") {
                     if(this._languageExpertisesViewModel == null) {
                         this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
@@ -108,6 +127,9 @@ var ViewModels;
                         }).fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });
+                    }
+                    if(tabStrip.select() != 2) {
+                        tabStrip.select(2);
                     }
                 } else if(tabName === "formal-education") {
                     if(this._degreesViewModel == null) {
@@ -118,7 +140,13 @@ var ViewModels;
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
+                    if(tabStrip.select() != 3) {
+                        tabStrip.select(3);
+                    }
                 } else if(tabName === "affiliations") {
+                    if(tabStrip.select() != 4) {
+                        tabStrip.select(4);
+                    }
                 }
             };
             Profile.prototype.tabClickHandler = function (event) {
@@ -288,6 +316,13 @@ var ViewModels;
             };
             Profile.prototype._setupKendoWidgets = function () {
                 var _this = this;
+                var tabstrip = $('#tabstrip');
+                tabstrip.kendoTabStrip({
+                    select: function (e) {
+                        _this.tabClickHandler(e);
+                    },
+                    animation: false
+                }).show();
                 this.$nameSalutation.subscribe(function (newValue) {
                     if(newValue && newValue.length) {
                         newValue.kendoComboBox({

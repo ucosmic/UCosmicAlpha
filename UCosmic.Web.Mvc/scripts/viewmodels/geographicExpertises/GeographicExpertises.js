@@ -55,7 +55,7 @@ var ViewModels;
                             click: function () {
                                 viewModel.deleteExpertiseById(data.id());
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get(1);
+                                location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                             }
                         }, 
                         {

@@ -243,12 +243,12 @@ module ViewModels.Degrees {
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     this.saving = false;
-                    location.href = App.Routes.Mvc.My.Profile.get(3);
+                    location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
                     this.saving = false;
                     alert( textStatus + " | " + errorThrown );
-                    location.href = App.Routes.Mvc.My.Profile.get(3);
+                    location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                 }
             } );
         }
@@ -269,12 +269,12 @@ module ViewModels.Degrees {
                         },
                         "Cancel and lose changes": function () {
                             $( this ).dialog( "close" );
-                            location.href = App.Routes.Mvc.My.Profile.get( 3 );
+                            location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                         }
                     }
                 } );
             } else {
-                location.href = App.Routes.Mvc.My.Profile.get( 3 );
+                location.href = App.Routes.Mvc.My.Profile.get("formal-education");
             }
         }
     }

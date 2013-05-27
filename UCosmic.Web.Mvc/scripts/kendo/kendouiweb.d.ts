@@ -8,6 +8,7 @@ interface JQuery {
     kendoDatePicker(arg1?: any): JQuery;
     kendoMultiSelect(arg1?: any): JQuery;
     kendoAutoComplete(arg1?: any): JQuery;
+    kendoTabStrip(arg1?: any): JQuery;
 }
 
 module kendo {

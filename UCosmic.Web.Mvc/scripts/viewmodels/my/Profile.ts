@@ -93,7 +93,7 @@ module ViewModels.My {
             //this._sammy.run('#/activities');
         }
 
-        load(): JQueryPromise {
+        load(startTab: string): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
             // start both requests at the same time
@@ -140,7 +140,19 @@ module ViewModels.My {
                     this._setupDisplayNameDerivation();
                     this._setupCardComputeds();
 
-                    this._sammy.run('#/activities');
+                    if ( startTab === "" ) {
+                        this._sammy.run("#/activities");
+                    }
+                    else {
+                        debugger;
+                        var url = location.href;
+                        var index = url.lastIndexOf( "?" );
+                        if ( index != -1 ) {
+                            this._startTab( startTab );
+                        } else {
+                            this._sammy.run("#/" + startTab);
+                        }
+                    }
 
                     deferred.resolve();
                 })
@@ -158,6 +170,8 @@ module ViewModels.My {
 
         private _startTab(tabName: string): void {
             var viewModel: any;
+            var tabStrip = $("#tabstrip").data("kendoTabStrip");
+
             if ( tabName === "activities" ) {
                 if ( this._activitiesViewModel == null ) {
                     this._activitiesViewModel = new ViewModels.Activities.ActivityList( this.personId );
@@ -168,6 +182,9 @@ module ViewModels.My {
                         .fail( function ( jqXhr, textStatus, errorThrown ) {
                             alert( textStatus + "|" + errorThrown );
                         } );
+                }
+                if (tabStrip.select() != 0) {
+                    tabStrip.select(0);
                 }
             } else if ( tabName === "geographic-expertise" ) {
                 if ( this._geographicExpertisesViewModel == null ) {
@@ -180,6 +197,9 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
+                if (tabStrip.select() != 1) {
+                    tabStrip.select(1);
+                }
             } else if ( tabName === "language-expertise" ) {
                 if ( this._languageExpertisesViewModel == null ) {
                     this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList( this.personId );
@@ -190,6 +210,9 @@ module ViewModels.My {
                         .fail( function ( jqXhr, textStatus, errorThrown ) {
                             alert( textStatus + "|" + errorThrown );
                         } );
+                }
+                if (tabStrip.select() != 2) {
+                    tabStrip.select(2);
                 }
             } else if ( tabName === "formal-education" ) {
                 if ( this._degreesViewModel == null ) {
@@ -202,6 +225,9 @@ module ViewModels.My {
                             alert( textStatus + "|" + errorThrown );
                         } );
                 }
+                if (tabStrip.select() != 3) {
+                    tabStrip.select(3);
+                }
             } else if ( tabName === "affiliations" ) {
                 //if ( this._affiliationsViewModel == null ) {
                 //    this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
@@ -213,6 +239,9 @@ module ViewModels.My {
                 //            alert( textStatus + " |" + errorThrown );
                 //        } );
                 //}
+                if (tabStrip.select() != 4) {
+                    tabStrip.select(4);
+                }
             }
         }
 
@@ -380,6 +409,13 @@ module ViewModels.My {
 
         // comboboxes for salutation & suffix
         private _setupKendoWidgets(): void {
+
+            var tabstrip = $( '#tabstrip' );
+            tabstrip.kendoTabStrip( {
+                select: ( e:any ): void => { this.tabClickHandler( e ); },
+                animation: false
+            } ).show();
+
             // when the $element observables are bound, they will have length
             // use this opportinity to apply kendo extensions
             this.$nameSalutation.subscribe((newValue: JQuery): void => {

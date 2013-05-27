@@ -55,7 +55,7 @@ var ViewModels;
                             click: function () {
                                 viewModel.deleteExpertiseById(data.id());
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get(2);
+                                location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                             }
                         }, 
                         {

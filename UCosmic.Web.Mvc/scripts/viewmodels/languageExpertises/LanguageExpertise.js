@@ -185,12 +185,12 @@ var ViewModels;
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.saving = false;
-                        location.href = App.Routes.Mvc.My.Profile.get(2);
+                        location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
-                        location.href = App.Routes.Mvc.My.Profile.get(2);
+                        location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                     }
                 });
             };
@@ -206,12 +206,12 @@ var ViewModels;
                             },
                             "Cancel and lose changes": function () {
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get(2);
+                                location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                             }
                         }
                     });
                 } else {
-                    location.href = App.Routes.Mvc.My.Profile.get(2);
+                    location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                 }
             };
             return LanguageExpertise;

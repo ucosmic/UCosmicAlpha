@@ -26,31 +26,32 @@
 
     <script type="text/javascript">
 
-        $( function () {        
+        $( function () {
+            debugger;
             var profileViewModel = new ViewModels.My.Profile();
             //$( profileViewModel ).on( 'ready', function () {
-            profileViewModel.load()
+            profileViewModel.load( "@Model.Tab" )
                 .done( function () {
+                    
+                    //$( '#tabstrip' ).kendoTabStrip( {
+                    //    select: function ( e ) { profileViewModel.tabClickHandler( e ); },
+                    //    animation: false
+                    //} ).show();
                     
                     ko.applyBindings( profileViewModel, $( '#my_profile' )[0] );
                     
-                    $( '#tabstrip' ).kendoTabStrip( {
-                        select: function ( e ) { profileViewModel.tabClickHandler( e ); },
-                        animation: false
-                    } ).show();
-
-                    debugger;
+                    //debugger;
                 
                     /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
-                    if ( "@Model.Tab" === "" ) {
-                        //profileViewModel.startTab("activities");
-                        location.href = "#/activities";
-                    } else {
-                        //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.Tab);
-                        debugger;
-                        var url = App.Routes.Mvc.My.Profile.get() + "#/" + "@Model.Tab";
-                        location.href = url;
-                    }
+                    //if ( "@Model.Tab" === "" ) {
+                    //    //profileViewModel.startTab("activities");
+                    //    location.href = "#/activities";
+                    //} else {
+                    //    //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.Tab);
+                    //    debugger;
+                    //    var url = App.Routes.Mvc.My.Profile.get() + "#/" + "@Model.Tab";
+                    //    location.href = url;
+                    //}
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
@@ -116,7 +117,7 @@
                                 </fieldset>
                             </section>
                         </div>
-                        <div id="tabstrip" class="profile-tabs" style="display: none;" data-bind="click: tabClickHandler(item,event)">
+                        <div id="tabstrip" class="profile-tabs" style="display: none;" @*data-bind="click: tabClickHandler(item,event)"*@>
                             <ul>
                                 <li class="k-state-active">Activities</li>
                                 <li>Geographic Expertise</li>

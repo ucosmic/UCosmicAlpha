@@ -14,7 +14,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        [GET("my/profile/{tab?}")]
+        [GET("my/profile")]
         public virtual ActionResult Index(string tab)
         {
             var model = new ProfileModel { Tab = tab };

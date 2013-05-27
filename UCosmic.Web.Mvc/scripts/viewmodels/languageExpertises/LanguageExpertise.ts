@@ -278,12 +278,12 @@ module ViewModels.LanguageExpertises {
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     this.saving = false;
-                    location.href = App.Routes.Mvc.My.Profile.get(2);
+                    location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
                     this.saving = false;
                     alert( textStatus + " | " + errorThrown );
-                    location.href = App.Routes.Mvc.My.Profile.get(2);
+                    location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                 }
             } );
         }
@@ -304,13 +304,13 @@ module ViewModels.LanguageExpertises {
                         },
                         "Cancel and lose changes": function () {
                             $( this ).dialog( "close" );
-                            location.href = App.Routes.Mvc.My.Profile.get( 2 );
+                            location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                         }
                     }
                 } );
             }
             else {
-                location.href = App.Routes.Mvc.My.Profile.get( 2 );
+                location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
             }
         }
     }

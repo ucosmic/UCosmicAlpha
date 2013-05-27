@@ -104,7 +104,7 @@ module ViewModels.LanguageExpertises
                                     $(this).dialog("close");
 
                                     /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get(2);
+                                    location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
                                 }
                             },
                             {

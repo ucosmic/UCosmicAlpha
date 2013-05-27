@@ -600,19 +600,14 @@ var App;
             var Identity = Mvc.Identity;
             (function (My) {
                 (function (Profile) {
-                    function get(tabIndex) {
+                    function get(tab) {
                         var url = makeUrl('my/profile');
-                        if(tabIndex != null) {
-                            url = makeUrlWithParams('my/profile') + "tab=" + tabIndex;
+                        if(tab != null) {
+                            url = makeUrlWithParams('my/profile') + "tab=" + tab;
                         }
                         return url;
                     }
                     Profile.get = get;
-                    function getTab(tabName) {
-                        var url = makeUrl('my/profile') + tabName;
-                        return url;
-                    }
-                    Profile.getTab = getTab;
                     function activityEdit(activityId) {
                         var url = makeUrl('my/activity/');
                         return url + activityId;

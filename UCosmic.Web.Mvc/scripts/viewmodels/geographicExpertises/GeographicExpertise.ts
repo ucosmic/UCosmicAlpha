@@ -230,12 +230,12 @@ module ViewModels.GeographicExpertises {
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     this.saving = false;
-                    location.href = App.Routes.Mvc.My.Profile.get(1);
+                    location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
                     this.saving = false;
                     alert( textStatus + " | " + errorThrown );
-                    location.href = App.Routes.Mvc.My.Profile.get(1);
+                    location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
                 }
             } );
         }
@@ -256,13 +256,13 @@ module ViewModels.GeographicExpertises {
                         },
                         "Cancel and lose changes": function () {
                             $( this ).dialog( "close" );
-                            location.href = App.Routes.Mvc.My.Profile.getTab( "geographic-expertise" );
+                            location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
                         }
                     }
                 } );
             }
             else { 
-                location.href = App.Routes.Mvc.My.Profile.getTab( "geographic-expertise" );
+                location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
             }
         }
 

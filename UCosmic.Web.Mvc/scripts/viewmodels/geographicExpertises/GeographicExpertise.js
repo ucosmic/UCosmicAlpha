@@ -132,12 +132,12 @@ var ViewModels;
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.saving = false;
-                        location.href = App.Routes.Mvc.My.Profile.get(1);
+                        location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
-                        location.href = App.Routes.Mvc.My.Profile.get(1);
+                        location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                     }
                 });
             };
@@ -153,12 +153,12 @@ var ViewModels;
                             },
                             "Cancel and lose changes": function () {
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.getTab("geographic-expertise");
+                                location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                             }
                         }
                     });
                 } else {
-                    location.href = App.Routes.Mvc.My.Profile.getTab("geographic-expertise");
+                    location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                 }
             };
             GeographicExpertise.prototype.updateLocations = function (items) {

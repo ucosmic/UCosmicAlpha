@@ -540,15 +540,11 @@ module App.Routes {
         export module My
         {
             export module Profile {
-                export function get (tabIndex?: number) {
+                export function get (tab?: string) {
                     var url = makeUrl( 'my/profile' );
-                    if (tabIndex != null) {
-                        url = makeUrlWithParams( 'my/profile' ) + "tab=" + tabIndex;
+                    if (tab != null) {
+                        url = makeUrlWithParams( 'my/profile' ) + "tab=" + tab;
                     }
-                    return url;
-                }
-                export function getTab (tabName: string) {
-                    var url = makeUrl( 'my/profile' ) + tabName;
                     return url;
                 }
                 export function activityEdit( activityId: string ) {

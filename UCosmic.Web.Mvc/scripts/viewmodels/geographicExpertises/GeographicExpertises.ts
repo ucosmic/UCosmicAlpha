@@ -104,7 +104,7 @@ module ViewModels.GeographicExpertises
                                     $(this).dialog("close");
 
                                     /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get(1);
+                                    location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                                 }
                             },
                             {
