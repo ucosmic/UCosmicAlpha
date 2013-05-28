@@ -602,9 +602,6 @@ var App;
                 (function (Profile) {
                     function get(tab) {
                         var url = makeUrl('my/profile');
-                        if(tab != null) {
-                            url = makeUrlWithParams('my/profile') + "tab=" + tab;
-                        }
                         return url;
                     }
                     Profile.get = get;

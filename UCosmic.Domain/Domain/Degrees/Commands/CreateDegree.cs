@@ -11,6 +11,7 @@ namespace UCosmic.Domain.Degrees
         public Guid? EntityId { get; set; }
         public IPrincipal Principal { get; protected set; }
         public string Title { get; protected set; }
+        public string FieldOfStudy { get; set; }
         public int? YearAwarded { get; set; }
         public int? InstitutionId { get; set; }
         public bool NoCommit { get; set; }
@@ -59,6 +60,7 @@ namespace UCosmic.Domain.Degrees
             {
                 PersonId = person.RevisionId,
                 Title = command.Title,
+                FieldOfStudy = command.FieldOfStudy,
                 YearAwarded = command.YearAwarded,
                 InstitutionId = command.InstitutionId,
 

@@ -9,6 +9,7 @@ namespace UCosmic.Web.Mvc.Models
         public int? ParentId { get; set; }
         public int TypeId { get; set; }
         public string UCosmicCode { get; set; }
+        public string ExternalId { get; set; }
         public string CeebCode { get; set; }
     }
 

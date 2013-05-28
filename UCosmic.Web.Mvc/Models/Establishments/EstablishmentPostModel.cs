@@ -11,6 +11,7 @@ namespace UCosmic.Web.Mvc.Models
         public EstablishmentUrlApiModel OfficialUrl { get; set; }
         public EstablishmentLocationPutModel Location { get; set; }
         public string UCosmicCode { get; set; }
+        public string ExternalId { get; set; }
         public string CeebCode { get; set; }
     }
 

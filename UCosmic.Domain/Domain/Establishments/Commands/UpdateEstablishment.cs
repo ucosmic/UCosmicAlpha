@@ -36,6 +36,8 @@ namespace UCosmic.Domain.Establishments
             set { _uCosmicCode = value == null ? null : value.Trim(); }
         }
 
+        public string ExternalId { get; set; }
+
         internal bool NoCommit { get; set; }
     }
 
@@ -150,6 +152,7 @@ namespace UCosmic.Domain.Establishments
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
+                    ExternalId = command.ExternalId
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };
@@ -163,6 +166,7 @@ namespace UCosmic.Domain.Establishments
             }
             entity.CollegeBoardDesignatedIndicator = command.CeebCode;
             entity.UCosmicCode = command.UCosmicCode;
+            entity.ExternalId = command.ExternalId;
 
             // update parent
             if (parentChanged)

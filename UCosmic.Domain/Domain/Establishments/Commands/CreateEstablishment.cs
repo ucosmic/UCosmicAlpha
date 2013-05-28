@@ -36,6 +36,8 @@ namespace UCosmic.Domain.Establishments
             set { _uCosmicCode = value == null ? null : value.Trim(); }
         }
 
+        public string ExternalId { get; set; }
+
         public int CreatedEstablishmentId { get; internal set; }
     }
 
@@ -146,6 +148,7 @@ namespace UCosmic.Domain.Establishments
                 Location = new EstablishmentLocation(),
                 CollegeBoardDesignatedIndicator = command.CeebCode,
                 UCosmicCode = command.UCosmicCode,
+                ExternalId = command.ExternalId
             };
 
             // log audit
@@ -159,6 +162,7 @@ namespace UCosmic.Domain.Establishments
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
+                    command.ExternalId,
                     OfficialName = command.OfficialName.Text,
                     OfficialNameLanguageCode = command.OfficialName.LanguageCode,
                     OfficialUrl = hasOfficialUrl ? command.OfficialUrl.Value : null,

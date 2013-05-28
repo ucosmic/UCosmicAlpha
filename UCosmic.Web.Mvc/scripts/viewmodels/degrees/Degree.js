@@ -88,6 +88,7 @@ var ViewModels;
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
                     this.title = ko.observable(null);
+                    this.fieldOfStudy = ko.observable(null);
                     this.yearAwarded = ko.observable(null);
                     this.whenLastUpdated = ko.observable(null);
                     this.whoLastUpdated = ko.observable(null);
@@ -111,6 +112,9 @@ var ViewModels;
                         ko.mapping.fromJS(data, {
                         }, _this);
                         _this.title.subscribe(function (newValue) {
+                            _this.dirtyFlag(true);
+                        });
+                        _this.fieldOfStudy.subscribe(function (newValue) {
                             _this.dirtyFlag(true);
                         });
                         _this.yearAwarded.subscribe(function (newValue) {
@@ -149,6 +153,7 @@ var ViewModels;
                     whenLastUpdated: this.whenLastUpdated,
                     whoLastUpdated: this.whoLastUpdated,
                     title: this.title,
+                    fieldOfStudy: this.fieldOfStudy,
                     yearAwarded: this.yearAwarded,
                     institutionId: this.institutionId
                 };

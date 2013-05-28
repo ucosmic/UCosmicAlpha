@@ -77,6 +77,8 @@ namespace UCosmic.Domain.Establishments
         public EstablishmentContactInfo PublicContactInfo { get; protected internal set; }
         public EstablishmentContactInfo PartnerContactInfo { get; protected internal set; }
 
+        public string ExternalId { get; protected internal set; }
+
         // TODO: // remove this property to make EmployeeModuleSettings uni-directional
         //public virtual EmployeeModuleSettings EmployeeModuleSettings { get; set; }
 

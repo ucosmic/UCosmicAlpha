@@ -11,6 +11,7 @@ namespace UCosmic.Domain.Degrees
         public IPrincipal Principal { get; set; }
         public int Id { get; set; }
         public string Title { get; set; }
+        public string FieldOfStudy { get; set; }
         public int? YearAwarded { get; set; }
         public int? InstitutionId { get; set; }
         public DateTime UpdatedOn { get; set; }
@@ -78,6 +79,7 @@ namespace UCosmic.Domain.Degrees
             var updateDegree = new Degree()
             {
                 Title = command.Title,
+                FieldOfStudy = command.FieldOfStudy,
                 YearAwarded = command.YearAwarded,
                 InstitutionId = command.InstitutionId
             };
@@ -89,6 +91,7 @@ namespace UCosmic.Domain.Degrees
 
             /* Update fields */
             target.Title = command.Title;
+            target.FieldOfStudy = command.FieldOfStudy;
             target.YearAwarded = command.YearAwarded;
             target.InstitutionId = command.InstitutionId;
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();

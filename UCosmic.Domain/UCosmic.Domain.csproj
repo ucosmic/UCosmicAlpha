@@ -167,6 +167,7 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
+    <Compile Include="Domain\Affiliation\Entities\Affiliation.cs" />
     <Compile Include="Domain\Degrees\Commands\CreateDegree.cs" />
     <Compile Include="Domain\Degrees\Commands\DeleteDegree.cs" />
     <Compile Include="Domain\Degrees\Commands\UpdateDegree.cs" />
@@ -545,7 +546,11 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Domain\Affiliation\Commands\" />
+    <Folder Include="Domain\Affiliation\Queries\" />
+    <Folder Include="Domain\Affiliation\Validation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

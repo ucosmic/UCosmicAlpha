@@ -69,6 +69,7 @@ namespace UCosmic.SeedData
                     createDegreeCommand = new CreateDegree(principal, "Master of Science")
                     {
                         EntityId = entityId,
+                        FieldOfStudy = "Molecular Biology",
                         YearAwarded = 2005,
                         InstitutionId = institution.RevisionId
                     };

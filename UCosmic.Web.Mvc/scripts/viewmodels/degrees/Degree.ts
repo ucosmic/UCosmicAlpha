@@ -35,6 +35,7 @@ module ViewModels.Degrees {
         whenLastUpdated: KnockoutObservableString;
         whoLastUpdated: KnockoutObservableString;
         title: KnockoutObservableString;
+        fieldOfStudy: KnockoutObservableString;
         yearAwarded: KnockoutObservableAny;
         institutionId: KnockoutObservableAny;
         institutionOfficialName: KnockoutObservableString;
@@ -152,6 +153,7 @@ module ViewModels.Degrees {
                 this.version = ko.observable( null );
                 this.personId = ko.observable( 0 );
                 this.title = ko.observable( null );
+                this.fieldOfStudy = ko.observable( null );
                 this.yearAwarded = ko.observable( null );
                 this.whenLastUpdated = ko.observable( null );
                 this.whoLastUpdated = ko.observable( null );
@@ -179,6 +181,7 @@ module ViewModels.Degrees {
                                   ko.mapping.fromJS( data, {}, this );
 
                                   this.title.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+                                  this.fieldOfStudy.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
                                   this.yearAwarded.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
                                   this.institutionId.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
 
@@ -225,6 +228,7 @@ module ViewModels.Degrees {
                 whenLastUpdated : this.whenLastUpdated,
                 whoLastUpdated : this.whoLastUpdated,
                 title : this.title,
+                fieldOfStudy : this.fieldOfStudy,
                 yearAwarded : this.yearAwarded,
                 institutionId : this.institutionId
             };

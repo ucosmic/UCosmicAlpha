@@ -25,7 +25,9 @@ namespace UCosmic.Domain.LanguageExpertises
 
             IQueryable<LanguageExpertise> results = _entities.Query<LanguageExpertise>()
                                                              .Where(a => a.PersonId == query.PersonId)
-                                                             .OrderBy(a => a.Language.Names.FirstOrDefault().Text);
+                                                             .OrderBy(a => (a.LanguageId != null) ? 
+                                                                 a.Language.Names.FirstOrDefault().Text :
+                                                                 a.Other );
 
             var pagedResults = new PagedQueryResult<LanguageExpertise>(results, query.PageSize, query.PageNumber);
 

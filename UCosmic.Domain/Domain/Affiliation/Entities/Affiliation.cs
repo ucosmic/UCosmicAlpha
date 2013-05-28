@@ -1,13 +1,13 @@
 ﻿using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.Degrees
+namespace UCosmic.Domain.Affiliations
 {
-    public class Degree : RevisableEntity
+    public class Affiliation : RevisableEntity
     {
-        protected bool Equals(Degree other)
+        protected bool Equals(Affiliation other)
         {
-            return  string.Equals(Title, other.Title) &&
+            return string.Equals(Title, other.Title) &&
                     string.Equals(FieldOfStudy, other.FieldOfStudy) &&
                     YearAwarded == other.YearAwarded &&
                     InstitutionId == other.InstitutionId;
@@ -18,7 +18,7 @@ namespace UCosmic.Domain.Degrees
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             //if (obj.GetType() != this.GetType()) return false;
-            return Equals((Degree) obj);
+            return Equals((Affiliation)obj);
         }
 
         public override int GetHashCode()
@@ -27,13 +27,13 @@ namespace UCosmic.Domain.Degrees
             {
                 int hashCode = (Title != null ? Title.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (FieldOfStudy != null ? FieldOfStudy.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (YearAwarded.HasValue ? YearAwarded.Value : 0);
-                hashCode = (hashCode*397) ^ (InstitutionId.HasValue ? InstitutionId.Value : 0);
+                hashCode = (hashCode * 397) ^ (YearAwarded.HasValue ? YearAwarded.Value : 0);
+                hashCode = (hashCode * 397) ^ (InstitutionId.HasValue ? InstitutionId.Value : 0);
                 return hashCode;
             }
         }
 
-        public Degree()
+        public Affiliation()
         {
         }
 

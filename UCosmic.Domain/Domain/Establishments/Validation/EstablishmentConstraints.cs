@@ -4,6 +4,7 @@
     {
         public const int CeebCodeLength = 6;
         public const int UCosmicCodeLength = 6;
+        public const int ExternalIdLength = 32;
     }
 
     public static class EstablishmentNameConstraints

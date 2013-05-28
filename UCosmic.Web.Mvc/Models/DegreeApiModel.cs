@@ -16,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public DateTime? WhenLastUpdated { get; set; }
         public string WhoLastUpdated { get; set; }
         public string Title { get; set; }
+        public string FieldOfStudy { get; set; }
         public int? YearAwarded { get; set; }
         public int? InstitutionId { get; set; }
         public string InstitutionOfficialName { get; set; }
@@ -155,6 +156,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
                     .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+                    .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
                     .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
                     .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
                     .ForMember(d => d.InstitutionOfficialName, o => o.ResolveUsing<InstitutionNameResolver>()
@@ -179,6 +181,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.CreatedDegree, o => o.Ignore())
                     .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+                    .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
                     .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
                     .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
                     .ForMember(d => d.EntityId, o => o.Ignore())
@@ -190,6 +193,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
+                    .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
                     .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
                     .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
                     ;
