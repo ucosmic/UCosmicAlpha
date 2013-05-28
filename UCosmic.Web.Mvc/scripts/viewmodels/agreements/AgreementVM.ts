@@ -1,3 +1,4 @@
+/// <reference path="../../typings/knockout.postbox/knockout-postbox.d.ts" />
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
@@ -10,8 +11,10 @@
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
 //import app = module('../amd-modules/app/app');
 import SearchModule = module('../amd-modules/Establishments/Search');
-var SearchResult = SearchResultModule.SearchResult;
 var Search = SearchModule.Search;
+var SearchResult = SearchResultModule.SearchResult;
+var InstitutionalAgreementParticipantModel = SearchModule.InstitutionalAgreementParticipantModel;
+
 
 //function InstitutionalAgreementParticipantModel2(js) {
 //    var self = this;
@@ -23,56 +26,6 @@ var Search = SearchModule.Search;
 
 //    self.participantEl = undefined;
 //}
-
-class InstitutionalAgreementParticipantModel {
-
-    constructor(participan: any) {
-        isOwner: false;
-        //establishment: new SearchResult;
-        establishment: new SearchResult({
-            id: 1,
-            officialName: 'University of Cincinnati',
-            translatedName: 'University of Cincinnati',
-            officialUrl: 'www.uc.edu',
-            countryName: 'United States',
-            countryCode: 'asdf',
-            uCosmicCode: 'asdf',
-            ceebCode: 'asdf'
-        }, new Search(false));
-        isNotOwner: ko.computed(function () {
-            return !participan.isOwner;
-                });
-    }
-
-    
-    establishment = new SearchResult({
-        id: 1,
-        officialName: 'University of Cincinnati',
-        translatedName: 'University of Cincinnati',
-        officialUrl: 'www.uc.edu',
-        countryName: 'United States',
-        countryCode: 'asdf',
-        uCosmicCode: 'asdf',
-        ceebCode: 'asdf'
-    }, new Search(false));
-
-    isNotOwner = ko.computed(function () {
-        return false; //participant.isOwner();
-            });
-    //isOwner = false;
-    ////establishment: new SearchResult;
-    //establishment2 = new SearchResult({
-    //    id: 1,
-    //    officialName: 'University of Cincinnati',
-    //    translatedName: 'University of Cincinnati',
-    //    officialUrl: 'www.uc.edu',
-    //    countryName: 'United States',
-    //    countryCode: 'asdf',
-    //    uCosmicCode: 'asdf',
-    //    ceebCode: 'asdf'
-    //}, new Search(false));
-
-};
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
@@ -98,8 +51,9 @@ export class InstitutionalAgreementEditModel {
     });
 
     // participants
-
-    participants = ko.observableArray();
+    x = ko.observable().publishOn("test");
+    participants = ko.observableArray().syncWith("participants");
+    //participants = ko.observableArray();
     owner = new Search(false);
     tenantDomain = "uc.edu"; //$('#tenancy_domain').val();
 
@@ -233,14 +187,11 @@ export class InstitutionalAgreementEditModel {
     };
         // override establishment item click to add as participant
     addParticipant(establishmentResultViewModel): void {
-        window.location.href = "../Agreements/new/#/page/1/"
+        $("#allParticipants").fadeOut(500, function () {
+            $("#estSearch").fadeIn(500);
+        });
+
         sessionStorage.setItem("Agreement", "1");
-        //var participant = new InstitutionalAgreementParticipantModel({
-        //    isOwner: false,
-        //    establishment: establishmentResultViewModel
-        //});
-        //this.participants.push(participant);
-        //location.hash = "#/";
     };
        
 

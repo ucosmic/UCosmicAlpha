@@ -11,13 +11,11 @@
 @section scripts
 {
       @Scripts.Render("~/bundles/agreements")
+    @Scripts.Render("~/bundles/establishmentSearch")
 }
 
-<div class="content fixed to-top" data-current-module="agreements">
-    <div data-side-swiper="root">
-        <div data-side-swiper="deck">
-            <div id="all" data-side-swiper="on">
-                <form class="group">
+<div class="content fixed to-top" data-current-module="agreements"  id="allParticipants" >
+                <form class="group"  >
                     <div class="on-left from-top">
                         <header>
                             <h1>
@@ -79,29 +77,18 @@
                     </aside>
                 </form>
             </div>
-            @*<div id="participants_add" data-side-swiper="off">
-                <form class="group">
-                    <div class="on-left from-top">
-                        <header>
-                            <a href="#/"><span class="breadcrumb-arrows">&lt;&lt;&nbsp;</span><h1>Institutional Agreement</h1>
-                            </a>
-                            <span class="breadcrumb-arrows">&gt;&gt;</span>
-                            <h2>
-                                Add a participant
-                            </h2>
-                        </header>
-                        <div data-bind="with: establishmentSearchViewModel">
-                            @Html.Partial(MVC.Establishments.Views._SearchAndResults)
-                        </div>
-                    </div>
-                    <aside class="on-right from-top" data-fixed-scroll="root">
-                        <div data-fixed-scroll="anchor"></div>
-                        <div data-fixed-scroll="content" data-bind="with: establishmentSearchViewModel">
-                            @Html.Partial(MVC.Establishments.Views._SearchSideBar)
-                        </div>
-                    </aside>
-                </form>
-            </div>*@
+            
+<div id="estSearch" class="content fixed to-top"  style="display: none">
+    <form class="group" data-bind="submit: requestResults">
+        <div class="on-left from-top">
+            @Html.Partial(MVC.Agreements.Views._SearchAndResults)
         </div>
-    </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Agreements.Views._SearchSideBar)
+            </div>
+        </aside>
+    </form>
 </div>
+

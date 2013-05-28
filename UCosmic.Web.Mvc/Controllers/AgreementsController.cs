@@ -20,39 +20,17 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-        public virtual ViewResult New()
+        public virtual ViewResult EstSearch()
         {
             ViewBag.Id = 0;
             return View(MVC.Agreements.Views.EstablishmentSearch);
         }
 
-        [GET("created")]
-        public virtual ActionResult Created(string location)
+        public virtual ViewResult New()
         {
-            if (!string.IsNullOrWhiteSpace(location))
-            {
-                // strip id out of location header
-                var id = location.GetLastInt();
-
-                if (id.HasValue)
-                {
-                    TempData.Flash("Establishment was successfully created.");
-                    return RedirectToAction(MVC.Establishments.Show(id.Value));
-                }
-            }
-            return HttpNotFound();
+            ViewBag.Id = 0;
+            return View(MVC.Agreements.Views.Form);
         }
-
-        //public virtual ActionResult Show(int id)
-        //{
-        //    var entity = _queryProcessor.Execute(new EstablishmentById(id));
-        //    if (entity == null)
-        //        return HttpNotFound();
-
-        //    ViewBag.Id = id;
-        //    return View(MVC.Establishments.Views.Form);
-        //}
-
 
     }
 }

@@ -55,6 +55,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/ko/knockout-{version}.js",
                 "~/scripts/ko/knockout.mapping-latest.js",
                 "~/scripts/ko/knockout.validation.js",
+                "~/scripts/ko/knockout-postbox.js",
                 "~/scripts/ko/knockout.binding-handlers.js",
                 "~/scripts/sammy/sammy-{version}.js",
                 //"~/scripts/kendo/2012.3.1114/kendo.web.js",

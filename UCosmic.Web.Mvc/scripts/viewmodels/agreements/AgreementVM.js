@@ -3,44 +3,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
 
     var SearchModule = __SearchModule__;
 
-    var SearchResult = SearchResultModule.SearchResult;
     var Search = SearchModule.Search;
-    var InstitutionalAgreementParticipantModel = (function () {
-        function InstitutionalAgreementParticipantModel(participan) {
-            this.establishment = new SearchResult({
-                id: 1,
-                officialName: 'University of Cincinnati',
-                translatedName: 'University of Cincinnati',
-                officialUrl: 'www.uc.edu',
-                countryName: 'United States',
-                countryCode: 'asdf',
-                uCosmicCode: 'asdf',
-                ceebCode: 'asdf'
-            }, new Search(false));
-            this.isNotOwner = ko.computed(function () {
-                return false;
-            });
-            isOwner:
-false
-            establishment:
-new SearchResult({
-                id: 1,
-                officialName: 'University of Cincinnati',
-                translatedName: 'University of Cincinnati',
-                officialUrl: 'www.uc.edu',
-                countryName: 'United States',
-                countryCode: 'asdf',
-                uCosmicCode: 'asdf',
-                ceebCode: 'asdf'
-            }, new Search(false))
-            isNotOwner:
-ko.computed(function () {
-                return !participan.isOwner;
-            })
-        }
-        return InstitutionalAgreementParticipantModel;
-    })();    
-    ;
+    var SearchResult = SearchResultModule.SearchResult;
+    var InstitutionalAgreementParticipantModel = SearchModule.InstitutionalAgreementParticipantModel;
     var InstitutionalAgreementEditModel = (function () {
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
@@ -54,7 +19,8 @@ ko.computed(function () {
                 frameWidth: 970,
                 root: '[data-current-module=agreements]'
             });
-            this.participants = ko.observableArray();
+            this.x = ko.observable().publishOn("test");
+            this.participants = ko.observableArray().syncWith("participants");
             this.owner = new Search(false);
             this.tenantDomain = "uc.edu";
             this.trail = ko.observableArray([]);
@@ -183,7 +149,9 @@ ko.computed(function () {
             return false;
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
-            window.location.href = "../Agreements/new/#/page/1/";
+            $("#allParticipants").fadeOut(500, function () {
+                $("#estSearch").fadeIn(500);
+            });
             sessionStorage.setItem("Agreement", "1");
         };
         InstitutionalAgreementEditModel.prototype.swipeCallback = function () {

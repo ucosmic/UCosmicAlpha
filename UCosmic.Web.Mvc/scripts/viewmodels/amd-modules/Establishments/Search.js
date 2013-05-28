@@ -3,7 +3,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../places/ServerApiModel', '../Widgets/Spinner'], function(require, exports, __PagedSearch__, __SearchResult__, __Places__, __Spinner__) {
+define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../places/ServerApiModel'], function(require, exports, __PagedSearch__, __SearchResult__, __Places__) {
     var PagedSearch = __PagedSearch__;
 
     var SearchResult = __SearchResult__;
@@ -12,8 +12,44 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
     var Places = __Places__;
 
     
-    var Spinner = __Spinner__;
-
+    
+    var InstitutionalAgreementParticipantModel = (function () {
+        function InstitutionalAgreementParticipantModel(participan) {
+            this.establishment = new SearchResult.SearchResult({
+                id: 1,
+                officialName: 'University of Cincinnati',
+                translatedName: 'University of Cincinnati',
+                officialUrl: 'www.uc.edu',
+                countryName: 'United States',
+                countryCode: 'asdf',
+                uCosmicCode: 'asdf',
+                ceebCode: 'asdf'
+            }, new Search(false));
+            this.isNotOwner = ko.computed(function () {
+                return false;
+            });
+            isOwner:
+false
+            establishment:
+new SearchResult.SearchResult({
+                id: 1,
+                officialName: 'University of Cincinnati',
+                translatedName: 'University of Cincinnati',
+                officialUrl: 'www.uc.edu',
+                countryName: 'United States',
+                countryCode: 'asdf',
+                uCosmicCode: 'asdf',
+                ceebCode: 'asdf'
+            }, new Search(false))
+            isNotOwner:
+ko.computed(function () {
+                return !participan.isOwner;
+            })
+        }
+        return InstitutionalAgreementParticipantModel;
+    })();
+    exports.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;    
+    ;
     var Search = (function (_super) {
         __extends(Search, _super);
         function Search(initDefaultPageRoute) {
@@ -59,6 +95,7 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
                     'pageNumber'
                 ]
             };
+            this.participants = ko.observableArray().syncWith("participants");
             this._setupCountryDropDown();
             this._setupPagingSubscriptions();
             this._setupLensing();
@@ -217,25 +254,14 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
             return 'View & edit this establishment\'s details';
         };
         Search.prototype.addParticipant = function () {
-            alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
-            var serializeData;
-            var originalValues = ko.observable();
-            var typeIdSaveSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
-            typeIdSaveSpinner.start();
-            var data;
-            var originalValues = originalValues();
-            var url = App.Routes.WebApi.Agreements.put(this.id);
-            $.ajax({
-                url: url,
-                type: 'PUT',
-                data: data
-            }).always(function () {
-                typeIdSaveSpinner.stop();
-            }).done(function (response, statusText, xhr) {
-                typeIdSaveSpinner.stop();
-                window.location.href = "../../agreements";
+            $("#estSearch").fadeOut(500, function () {
+                $("#allParticipants").fadeIn(500);
             });
-            window.location.href = "../../agreements";
+            var participant = new InstitutionalAgreementParticipantModel({
+                isOwner: false,
+                establishment: SearchResult.SearchResult
+            });
+            this.participants.push(participant);
         };
         return Search;
     })(PagedSearch.PagedSearch);

@@ -1,3 +1,4 @@
+/// <reference path="../../../typings/knockout.postbox/knockout-postbox.d.ts" />
 /// <reference path="../../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../../ko/knockout.mapping-2.0.d.ts" />
@@ -13,7 +14,58 @@ import SearchResult = module('./SearchResult');
 import Lens = module('../Widgets/Lens');
 import Places = module('../places/ServerApiModel');
 import SearchApiModel = module('./ServerApiModel');
-import Spinner = module('../Widgets/Spinner')
+import Spinner = module('../Widgets/Spinner');
+
+export class InstitutionalAgreementParticipantModel {
+
+    constructor(participan: any) {
+        isOwner: false;
+        //establishment: new SearchResult;
+        establishment: new SearchResult.SearchResult({
+            id: 1,
+            officialName: 'University of Cincinnati',
+            translatedName: 'University of Cincinnati',
+            officialUrl: 'www.uc.edu',
+            countryName: 'United States',
+            countryCode: 'asdf',
+            uCosmicCode: 'asdf',
+            ceebCode: 'asdf'
+        }, new Search(false));
+        isNotOwner: ko.computed(function () {
+            return !participan.isOwner;
+        });
+    }
+
+
+    establishment = new SearchResult.SearchResult({
+        id: 1,
+        officialName: 'University of Cincinnati',
+        translatedName: 'University of Cincinnati',
+        officialUrl: 'www.uc.edu',
+        countryName: 'United States',
+        countryCode: 'asdf',
+        uCosmicCode: 'asdf',
+        ceebCode: 'asdf'
+    }, new Search(false));
+
+    isNotOwner = ko.computed(function () {
+        return false; //participant.isOwner();
+    });
+    //isOwner = false;
+    ////establishment: new SearchResult;
+    //establishment2 = new SearchResult({
+    //    id: 1,
+    //    officialName: 'University of Cincinnati',
+    //    translatedName: 'University of Cincinnati',
+    //    officialUrl: 'www.uc.edu',
+    //    countryName: 'United States',
+    //    countryCode: 'asdf',
+    //    uCosmicCode: 'asdf',
+    //    ceebCode: 'asdf'
+    //}, new Search(false));
+
+};
+
 export class Search extends PagedSearch.PagedSearch {
         
 
@@ -269,37 +321,50 @@ export class Search extends PagedSearch.PagedSearch {
         //}
         //originalValues: KnockoutObservableAny = ko.observable();
         //typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
+
+        participants = ko.observableArray().syncWith("participants"); 
+        
         addParticipant(): void {
-            alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
+            //alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
 
 
-            var serializeData;
-            
-            var originalValues: KnockoutObservableAny = ko.observable();
-            var typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
-            
-            typeIdSaveSpinner.start();
-            var data;// = serializeData();
-            var originalValues = originalValues();
-            var url = App.Routes.WebApi.Agreements.put(this.id);
-            $.ajax({
-                url: url,
-                type: 'PUT',
-                data: data
-            })
-            .always((): void => {
-                typeIdSaveSpinner.stop();
-            })
-            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                //App.flasher.flash(response);
-                typeIdSaveSpinner.stop();
-                //this.clickToCancelTypeIdEdit();
-                
-                window.location.href = "../../agreements"
+            $("#estSearch").fadeOut(500, function () {
+                $("#allParticipants").fadeIn(500);
             });
 
-            //pretend good
-            window.location.href = "../../agreements"
+            var participant = new InstitutionalAgreementParticipantModel({
+                isOwner: false,
+                establishment: SearchResult.SearchResult
+            });
+            this.participants.push(participant);
+
+            //var serializeData;
+            
+            //var originalValues: KnockoutObservableAny = ko.observable();
+            //var typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
+            
+            //typeIdSaveSpinner.start();
+            //var data;// = serializeData();
+            //var originalValues = originalValues();
+            //var url = App.Routes.WebApi.Agreements.put(this.id);
+            //$.ajax({
+            //    url: url,
+            //    type: 'PUT',
+            //    data: data
+            //})
+            //.always((): void => {
+            //    typeIdSaveSpinner.stop();
+            //})
+            //.done((response: string, statusText: string, xhr: JQueryXHR): void => {
+            //    //App.flasher.flash(response);
+            //    typeIdSaveSpinner.stop();
+            //    //this.clickToCancelTypeIdEdit();
+                
+            //    window.location.href = "../../agreements"
+            //});
+
+            ////pretend good
+            //window.location.href = "../../agreements"
 
         }
     }

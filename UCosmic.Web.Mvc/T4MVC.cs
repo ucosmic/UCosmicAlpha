@@ -1249,6 +1249,10 @@ namespace Links
             public static readonly string knockout_2_2_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout-2.2.0.min.js") ? Url("knockout-2.2.0.min.js") : Url("knockout-2.2.0.js");
                           
             public static readonly string knockout_2_2_d_ts = Url("knockout-2.2.d.ts");
+            public static readonly string knockout_postbox_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout-postbox.min.js") ? Url("knockout-postbox.min.js") : Url("knockout-postbox.js");
+                          
+            public static readonly string knockout_postbox_min_js_map = Url("knockout-postbox.min.js.map");
+            public static readonly string knockout_postbox_min_js = Url("knockout-postbox.min.js");
             public static readonly string knockout_binding_handlers_ts = Url("knockout.binding-handlers.ts");
             public static readonly string knockout_binding_handlers_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/knockout.binding-handlers.min.js") ? Url("knockout.binding-handlers.min.js") : Url("knockout.binding-handlers.js");
                           
@@ -2516,6 +2520,21 @@ namespace Links
                               
                 public static readonly string validate_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/validate.min.js") ? Url("validate.min.js") : Url("validate.js");
                               
+            }
+        
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class typings {
+            private const string URLPATH = "~/scripts/typings";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class knockout_postbox {
+                private const string URLPATH = "~/scripts/typings/knockout.postbox";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string knockout_postbox_d_ts = Url("knockout-postbox.d.ts");
             }
         
         }

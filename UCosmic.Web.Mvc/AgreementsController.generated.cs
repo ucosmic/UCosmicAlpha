@@ -41,12 +41,6 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult Created()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Created);
-        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public AgreementsController Actions { get { return MVC.Agreements; } }
@@ -64,27 +58,19 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string EstSearch = "EstSearch";
             public readonly string New = "New";
-            public readonly string Created = "Created";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string EstSearch = "EstSearch";
             public const string New = "New";
-            public const string Created = "Created";
         }
 
 
-        static readonly ActionParamsClass_Created s_params_Created = new ActionParamsClass_Created();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_Created CreatedParams { get { return s_params_Created; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Created
-        {
-            public readonly string location = "location";
-        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -136,16 +122,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult New()
+        public override System.Web.Mvc.ViewResult EstSearch()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.EstSearch);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Created(string location)
+        public override System.Web.Mvc.ViewResult New()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Created);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "location", location);
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
             return callInfo;
         }
 
