@@ -10,6 +10,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
             this.initDefaultPageRoute = initDefaultPageRoute;
+            var _this = this;
             this.isBound = ko.observable();
             this.back = function () {
                 history.back();
@@ -19,19 +20,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 frameWidth: 970,
                 root: '[data-current-module=agreements]'
             });
-            this.x = ko.observable().publishOn("test");
-            this.participants = ko.observableArray().syncWith("participants");
             this.owner = new Search(false);
             this.tenantDomain = "uc.edu";
+            this.establishmentSearchViewModel = new Search();
+            this.x = ko.observable().publishOn("test");
+            this.newParticipant = ko.observable().syncWith("participants", true);
+            this.participants = ko.observableArray();
             this.trail = ko.observableArray([]);
             this.$itemsPage = undefined;
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
             this.populateParticipants();
-            this.setupSearchVM();
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
+            this.addNewParticipant = ko.computed(function () {
+                if(_this.newParticipant() !== undefined) {
+                    _this.participants.push(_this.newParticipant());
+                }
+            });
         }
         InstitutionalAgreementEditModel.prototype.populateParticipants = function () {
             var homeParticipant = new InstitutionalAgreementParticipantModel({
@@ -109,29 +116,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             }
             this.participants.push(homeParticipant);
         };
-        InstitutionalAgreementEditModel.prototype.setupSearchVM = function () {
-            var establishmentSearchViewModel = new Search();
-            establishmentSearchViewModel.nextPage = function () {
-                if(establishmentSearchViewModel.nextEnabled()) {
-                    var pageNumber = parseInt(establishmentSearchViewModel.pageNumber()) + 1;
-                    location.hash = '/participants/add/page/' + pageNumber;
-                }
-            };
-            establishmentSearchViewModel.prevPage = function () {
-                if(establishmentSearchViewModel.prevEnabled()) {
-                    history.back();
-                }
-            };
-            establishmentSearchViewModel.items.subscribe(function (newValue) {
-                if(newValue && newValue.length) {
-                    for(var i = 0; i < newValue.length; i++) {
-                        if(newValue[i].clickAction !== this.addParticipant) {
-                            newValue[i].clickAction = this.addParticipant;
-                        }
-                    }
-                }
-            });
-        };
         InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             if(confirm('Are you sure you want to remove "' + establishmentResultViewModel.translatedName() + '" as a participant from this agreement?')) {
                 var self = this;
@@ -149,6 +133,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             return false;
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
+            ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+            this.establishmentSearchViewModel.sammy.run();
             $("#allParticipants").fadeOut(500, function () {
                 $("#estSearch").fadeIn(500);
             });

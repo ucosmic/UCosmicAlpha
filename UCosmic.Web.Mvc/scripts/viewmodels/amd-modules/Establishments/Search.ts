@@ -80,6 +80,7 @@ export class Search extends PagedSearch.PagedSearch {
             ko.computed((): void => {
                 this.requestResults();
             }).extend({ throttle: 1 });
+            this.addParticipant = <() => bool > this.addParticipant.bind(this);
         }
 
         // countries dropdown
@@ -322,9 +323,10 @@ export class Search extends PagedSearch.PagedSearch {
         //originalValues: KnockoutObservableAny = ko.observable();
         //typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
 
-        participants = ko.observableArray().syncWith("participants"); 
-        
-        addParticipant(): void {
+        newParticipant = ko.observable().syncWith("participants");
+
+       
+        addParticipant(context): void {
             //alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
 
 
@@ -332,11 +334,20 @@ export class Search extends PagedSearch.PagedSearch {
                 $("#allParticipants").fadeIn(500);
             });
 
-            var participant = new InstitutionalAgreementParticipantModel({
+            this.newParticipant({
                 isOwner: false,
-                establishment: SearchResult.SearchResult
+                establishment: {
+                    id: 1,
+                    officialName: 'University of Cincinnati',
+                    translatedName: 'University of Cincinnati',
+                    officialUrl: 'www.uc.edu',
+                    countryName: 'United States',
+                    countryCode: 'asdf',
+                    uCosmicCode: 'asdf',
+                    ceebCode: 'asdf'
+                }
             });
-            this.participants.push(participant);
+            
 
             //var serializeData;
             

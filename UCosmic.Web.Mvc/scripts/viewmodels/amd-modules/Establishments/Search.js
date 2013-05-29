@@ -95,7 +95,7 @@ ko.computed(function () {
                     'pageNumber'
                 ]
             };
-            this.participants = ko.observableArray().syncWith("participants");
+            this.newParticipant = ko.observable().syncWith("participants");
             this._setupCountryDropDown();
             this._setupPagingSubscriptions();
             this._setupLensing();
@@ -105,6 +105,7 @@ ko.computed(function () {
             }).extend({
                 throttle: 1
             });
+            this.addParticipant = this.addParticipant.bind(this);
         }
         Search.prototype._setupCountryDropDown = function () {
             var _this = this;
@@ -253,15 +254,23 @@ ko.computed(function () {
         Search.prototype.detailTooltip = function () {
             return 'View & edit this establishment\'s details';
         };
-        Search.prototype.addParticipant = function () {
+        Search.prototype.addParticipant = function (context) {
             $("#estSearch").fadeOut(500, function () {
                 $("#allParticipants").fadeIn(500);
             });
-            var participant = new InstitutionalAgreementParticipantModel({
+            this.newParticipant({
                 isOwner: false,
-                establishment: SearchResult.SearchResult
+                establishment: {
+                    id: 1,
+                    officialName: 'University of Cincinnati',
+                    translatedName: 'University of Cincinnati',
+                    officialUrl: 'www.uc.edu',
+                    countryName: 'United States',
+                    countryCode: 'asdf',
+                    uCosmicCode: 'asdf',
+                    ceebCode: 'asdf'
+                }
             });
-            this.participants.push(participant);
         };
         return Search;
     })(PagedSearch.PagedSearch);
