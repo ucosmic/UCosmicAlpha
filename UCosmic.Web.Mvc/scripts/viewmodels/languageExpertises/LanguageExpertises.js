@@ -82,7 +82,7 @@ var ViewModels;
                 }
             };
             LanguageExpertiseList.prototype.newExpertise = function (data, event) {
-                location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
+                location.href = App.Routes.Mvc.My.Profile.languageExpertiseEdit("new");
             };
             LanguageExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";

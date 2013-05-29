@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
@@ -78,7 +77,14 @@ namespace UCosmic.Domain.LanguageExpertises
                 throw new Exception(message);
             }
 
-            /* Update fields */        
+            /* Update fields */
+            target.LanguageId = command.LanguageId;
+            target.Other = command.Other;
+            target.Dialect = command.Dialect;
+            target.SpeakingProficiency = command.SpeakingProficiency;
+            target.ListeningProficiency = command.ListeningProficiency;
+            target.ReadingProficiency = command.ReadingProficiency;
+            target.WritingProficiency = command.WritingProficiency;
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
 

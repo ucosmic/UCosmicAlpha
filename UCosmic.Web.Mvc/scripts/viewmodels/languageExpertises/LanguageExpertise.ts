@@ -88,8 +88,8 @@ module ViewModels.LanguageExpertises {
                 }
             }); 
 
-            /* For some reason, setting the value in the droplist creation above does not
-                set the item to "Other" */
+            /* For some reason, setting the value in the droplist creation above to 0,
+                does not set the item to "Other" */
             if (this.languageId() == null) {
                 var dropdownlist = $("#" + languageInputId).data("kendoDropDownList");
                 dropdownlist.select(function(dataItem) { return dataItem.name === "Other"} );
@@ -163,6 +163,24 @@ module ViewModels.LanguageExpertises {
         load(): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
+            var proficienciesPact = $.Deferred();
+            $.get( App.Routes.WebApi.LanguageProficiency.get() )
+                            .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
+                                proficienciesPact.resolve( data );
+                            } )
+                            .fail( ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void => {
+                                proficienciesPact.reject( jqXHR, textStatus, errorThrown );
+                            } );
+
+            var languagesPact = $.Deferred();
+            $.get( App.Routes.WebApi.Languages.get() )
+                            .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
+                                languagesPact.resolve( data );
+                            } )
+                            .fail( ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void => {
+                                languagesPact.reject( jqXHR, textStatus, errorThrown );
+                            } );
+
             if ( this.id() == 0 ) {
                 this.version = ko.observable(null);
                 this.personId = ko.observable(0);
@@ -176,27 +194,21 @@ module ViewModels.LanguageExpertises {
                 this.readingProficiency = ko.observable(0);
                 this.writingProficiency = ko.observable(0);
 
-                deferred.resolve();
+                $.when( languagesPact, proficienciesPact )
+                                .done( ( languages: any, proficiencyInfo: any, data: any ): void => {
+
+                                    this.languageList = languages;
+                                    this.languageList.push( {name: "Other", code: "", id: 0 } );
+
+                                    this.proficiencyInfo = proficiencyInfo;
+
+                                    deferred.resolve();
+                                } )
+                                .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
+                                    deferred.reject( xhr, textStatus, errorThrown );
+                                } );
             }
             else {
-                var languagesPact = $.Deferred();
-                $.get( App.Routes.WebApi.Languages.get() )
-                                .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
-                                    languagesPact.resolve( data );
-                                } )
-                                .fail( ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                                    languagesPact.reject( jqXHR, textStatus, errorThrown );
-                                } );
-
-                var proficienciesPact = $.Deferred();
-                $.get( App.Routes.WebApi.LanguageProficiency.get() )
-                                .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
-                                    proficienciesPact.resolve( data );
-                                } )
-                                .fail( ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                                    proficienciesPact.reject( jqXHR, textStatus, errorThrown );
-                                } );
-
                 var dataPact = $.Deferred();
                 $.ajax( {
                     type: "GET",
@@ -207,7 +219,6 @@ module ViewModels.LanguageExpertises {
                         { dataPact.reject( jqXhr, textStatus, errorThrown ); },
                 } );
 
-                // only process after all requests have been resolved
                 $.when( languagesPact, proficienciesPact, dataPact )
                               .done( ( languages: any, proficiencyInfo: any, data: any ): void => {
 

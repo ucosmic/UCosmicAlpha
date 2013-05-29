@@ -79,6 +79,18 @@ var ViewModels;
             LanguageExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
+                var proficienciesPact = $.Deferred();
+                $.get(App.Routes.WebApi.LanguageProficiency.get()).done(function (data, textStatus, jqXHR) {
+                    proficienciesPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    proficienciesPact.reject(jqXHR, textStatus, errorThrown);
+                });
+                var languagesPact = $.Deferred();
+                $.get(App.Routes.WebApi.Languages.get()).done(function (data, textStatus, jqXHR) {
+                    languagesPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    languagesPact.reject(jqXHR, textStatus, errorThrown);
+                });
                 if(this.id() == 0) {
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
@@ -91,20 +103,19 @@ var ViewModels;
                     this.listeningProficiency = ko.observable(0);
                     this.readingProficiency = ko.observable(0);
                     this.writingProficiency = ko.observable(0);
-                    deferred.resolve();
+                    $.when(languagesPact, proficienciesPact).done(function (languages, proficiencyInfo, data) {
+                        _this.languageList = languages;
+                        _this.languageList.push({
+                            name: "Other",
+                            code: "",
+                            id: 0
+                        });
+                        _this.proficiencyInfo = proficiencyInfo;
+                        deferred.resolve();
+                    }).fail(function (xhr, textStatus, errorThrown) {
+                        deferred.reject(xhr, textStatus, errorThrown);
+                    });
                 } else {
-                    var languagesPact = $.Deferred();
-                    $.get(App.Routes.WebApi.Languages.get()).done(function (data, textStatus, jqXHR) {
-                        languagesPact.resolve(data);
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        languagesPact.reject(jqXHR, textStatus, errorThrown);
-                    });
-                    var proficienciesPact = $.Deferred();
-                    $.get(App.Routes.WebApi.LanguageProficiency.get()).done(function (data, textStatus, jqXHR) {
-                        proficienciesPact.resolve(data);
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        proficienciesPact.reject(jqXHR, textStatus, errorThrown);
-                    });
                     var dataPact = $.Deferred();
                     $.ajax({
                         type: "GET",

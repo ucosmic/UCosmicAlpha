@@ -142,7 +142,7 @@ module ViewModels.LanguageExpertises
         */
         // --------------------------------------------------------------------------------
         newExpertise(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
+            location.href = App.Routes.Mvc.My.Profile.languageExpertiseEdit("new");
         }
 
         // --------------------------------------------------------------------------------
