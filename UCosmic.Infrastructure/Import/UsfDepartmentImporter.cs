@@ -1,16 +1,23 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization;
 using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Import
 {
     class UsfDepartmentImporter : StreamDataImporter
     {
-        private struct Record
+        [DataContract]
+        private class Record
         {
-            public string deptid;
-            public string institutionName;
-            public string collegeName;
-            public string departmentName;
+            [DataMember]
+            public string DEPTID;
+            [DataMember]
+            public string INSTITUTION;
+            [DataMember]
+            public string COLLEGE;
+            [DataMember]
+            public string DEPARTMENT;
         }
 
         UsfDepartmentImporter(Stream stream, ICommandEntities entities)
@@ -20,19 +27,14 @@ namespace UCosmic.Import
 
         public new void Import()
         {
-            Record record = new Record();
-            Establishment establishment = null;
-
-            while (GetNextRecord(ref record))
+            DataContractSerializer serializer = new DataContractSerializer(typeof(Record[]));
+            Record[] records = (Record[])serializer.ReadObject(Stream);
+            int numRecords = records.Length;
+            if (numRecords == 0)
             {
-                
+                throw new Exception();
             }
         }
 
-        private bool GetNextRecord(ref Record record)
-        {
-
-            return false;
-        }
     }
 }

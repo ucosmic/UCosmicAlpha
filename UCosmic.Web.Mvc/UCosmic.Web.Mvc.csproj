@@ -2828,6 +2828,7 @@
     <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
     <Folder Include="scripts\_deprecated\areas\languages\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
