@@ -77,7 +77,7 @@ module ViewModels.LanguageExpertises {
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: this.languageList,
-                value: this.languageId() != null ? this.languageId() : 1,
+                value: this.languageId() != null ? this.languageId() : 0,
                 change: (e: any) => {
                     var item = this.languageList[e.sender.selectedIndex];
                     if ( item.name == "Other" ) {
@@ -87,6 +87,13 @@ module ViewModels.LanguageExpertises {
                     }
                 }
             }); 
+
+            /* For some reason, setting the value in the droplist creation above does not
+                set the item to "Other" */
+            if (this.languageId() == null) {
+                var dropdownlist = $("#" + languageInputId).data("kendoDropDownList");
+                dropdownlist.select(function(dataItem) { return dataItem.name === "Other"} );
+            }
 
             $("#" + speakingInputId).kendoDropDownList({
                 dataTextField: "title",
@@ -209,8 +216,6 @@ module ViewModels.LanguageExpertises {
 
                                   this.proficiencyInfo = proficiencyInfo;
 
-                                  debugger;
-
                                   ko.mapping.fromJS( data, {}, this );
 
                                   this.languageId.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
@@ -245,8 +250,6 @@ module ViewModels.LanguageExpertises {
             while ( this.saving ) {
                 alert( "Please wait while expertise is saved." ); // TBD: dialog
             }
-
-            debugger;
 
             var mapSource = {
                 id : this.id,

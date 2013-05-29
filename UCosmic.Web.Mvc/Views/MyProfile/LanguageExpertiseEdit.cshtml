@@ -27,6 +27,16 @@
         vertical-align: text-top;
         color: red;
     }
+    .menu-item-header {
+        font-weight: bold;
+        line-height: 100%;
+        margin-bottom: 4px;
+    }
+    .menu-item {
+        font-size: smaller;
+        line-height: 120%;
+        margin-bottom: 8px;
+    }
     </style>
 }
 
@@ -94,7 +104,7 @@
                                 <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect"/>
                             </div>
                             
-                            <div style="margin-top: 20px; margin-bottom: 20px">
+                            <div style="margin-top: 20px; margin-bottom: 20px; font-weight: bold">
                                 <span>Please assess your level of proficiency:</span>
                             </div>
                                                    
@@ -146,8 +156,8 @@
 
 <!-- KENDOUI TEMPLATES -->
 <script id="proficiency-template" type="text/x-kendo-tmpl">
-    <div><b>${ data.title }</b></div>
-    <div>${ data.description }</div>
+    <div class="menu-item-header">${ data.title }</div>
+    <div class="menu-item">${ data.description }</div>
 </script>  
 
 <!-- KNOCKOUT TEMPLATES -->

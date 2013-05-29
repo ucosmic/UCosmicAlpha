@@ -21,7 +21,7 @@ var ViewModels;
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: this.languageList,
-                    value: this.languageId() != null ? this.languageId() : 1,
+                    value: this.languageId() != null ? this.languageId() : 0,
                     change: function (e) {
                         var item = _this.languageList[e.sender.selectedIndex];
                         if(item.name == "Other") {
@@ -31,6 +31,12 @@ var ViewModels;
                         }
                     }
                 });
+                if(this.languageId() == null) {
+                    var dropdownlist = $("#" + languageInputId).data("kendoDropDownList");
+                    dropdownlist.select(function (dataItem) {
+                        return dataItem.name === "Other";
+                    });
+                }
                 $("#" + speakingInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
@@ -118,8 +124,6 @@ var ViewModels;
                             id: 0
                         });
                         _this.proficiencyInfo = proficiencyInfo;
-                        debugger;
-
                         ko.mapping.fromJS(data, {
                         }, _this);
                         _this.languageId.subscribe(function (newValue) {
@@ -158,8 +162,6 @@ var ViewModels;
                 while(this.saving) {
                     alert("Please wait while expertise is saved.");
                 }
-                debugger;
-
                 var mapSource = {
                     id: this.id,
                     version: this.version,

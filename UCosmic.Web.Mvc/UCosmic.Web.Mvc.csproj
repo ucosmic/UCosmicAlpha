@@ -2091,6 +2091,9 @@
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertise.min.js.map">
+      <DependentUpon>LanguageExpertise.js</DependentUpon>
+    </Content>
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
