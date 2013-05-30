@@ -38,22 +38,22 @@
                             <div data-bind="visible: isBound" style="display: none;">
                                 <ul data-bind="foreach: participants">
                                     <li data-bind="element: 'participantEl'">
-                                        <div class="typed-item" data-bind="with: establishment">
+                                        <div class="typed-item" >
                                             <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
                                             <div class="type">
                                                 <span data-bind="visible: $parent.isOwner">Home</span>
-                                                <span data-bind="visible: $parent.isNotOwner">Partner</span>
+                                                <span data-bind="visible: isNotOwner">Partner</span>
                                             </div>
                                             <div class="item">
                                                 <div>
-                                                    <strong data-bind="text: translatedName"></strong>
-                                                    <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
+                                                    <strong data-bind="text: establishment.translatedName"></strong>
+                                                    <span data-bind="visible: establishment.officialNameDoesNotMatchTranslation">(<span data-bind="    text: establishment.officialName"></span>)</span>
                                                 </div>
-                                                <div data-bind="visible: $parent.isNotOwner() && websiteUrl()">
-                                                    <a href="#" target="_blank" data-bind="text: officialUrl, attr: { href: 'http://' + officialUrl }"></a>
+                                                <div data-bind="visible: isNotOwner() && websiteUrl()">
+                                                    <a href="#" target="_blank" data-bind="text: establishment.officialUrl, attr: { href: 'http://' + establishment.officialUrl }"></a>
                                                 </div>
-                                                <div data-bind="visible: $parent.isNotOwner() && countryName()">
-                                                    <span data-bind="text: countryName"></span>
+                                                <div data-bind="visible: isNotOwner() && establishment.countryName()">
+                                                    <span data-bind="text: establishment.countryName"></span>
                                                 </div>
                                             </div>
                                         </div>

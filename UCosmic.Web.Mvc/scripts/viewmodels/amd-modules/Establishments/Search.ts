@@ -16,55 +16,6 @@ import Places = module('../places/ServerApiModel');
 import SearchApiModel = module('./ServerApiModel');
 import Spinner = module('../Widgets/Spinner');
 
-export class InstitutionalAgreementParticipantModel {
-
-    constructor(participan: any) {
-        isOwner: false;
-        //establishment: new SearchResult;
-        establishment: new SearchResult.SearchResult({
-            id: 1,
-            officialName: 'University of Cincinnati',
-            translatedName: 'University of Cincinnati',
-            officialUrl: 'www.uc.edu',
-            countryName: 'United States',
-            countryCode: 'asdf',
-            uCosmicCode: 'asdf',
-            ceebCode: 'asdf'
-        }, new Search(false));
-        isNotOwner: ko.computed(function () {
-            return !participan.isOwner;
-        });
-    }
-
-
-    establishment = new SearchResult.SearchResult({
-        id: 1,
-        officialName: 'University of Cincinnati',
-        translatedName: 'University of Cincinnati',
-        officialUrl: 'www.uc.edu',
-        countryName: 'United States',
-        countryCode: 'asdf',
-        uCosmicCode: 'asdf',
-        ceebCode: 'asdf'
-    }, new Search(false));
-
-    isNotOwner = ko.computed(function () {
-        return false; //participant.isOwner();
-    });
-    //isOwner = false;
-    ////establishment: new SearchResult;
-    //establishment2 = new SearchResult({
-    //    id: 1,
-    //    officialName: 'University of Cincinnati',
-    //    translatedName: 'University of Cincinnati',
-    //    officialUrl: 'www.uc.edu',
-    //    countryName: 'United States',
-    //    countryCode: 'asdf',
-    //    uCosmicCode: 'asdf',
-    //    ceebCode: 'asdf'
-    //}, new Search(false));
-
-};
 
 export class Search extends PagedSearch.PagedSearch {
         
@@ -80,7 +31,7 @@ export class Search extends PagedSearch.PagedSearch {
             ko.computed((): void => {
                 this.requestResults();
             }).extend({ throttle: 1 });
-            this.addParticipant = <() => bool > this.addParticipant.bind(this);
+            //this.addParticipant = <() => bool > this.addParticipant.bind(this);
         }
 
         // countries dropdown
@@ -323,93 +274,41 @@ export class Search extends PagedSearch.PagedSearch {
         //originalValues: KnockoutObservableAny = ko.observable();
         //typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
 
-        newParticipant = ko.observable().syncWith("participants");
+        //newParticipant = ko.observable().syncWith("participants");
 
+    addParticipant(context): void {
+
+    }
        
-        addParticipant(context): void {
-            //alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
+        //addParticipant(context): void {
+        //    //alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
 
 
-            $("#estSearch").fadeOut(500, function () {
-                $("#allParticipants").fadeIn(500);
-            });
+        //    $("#estSearch").fadeOut(500, function () {
+        //        $("#allParticipants").fadeIn(500);
+        //    });
 
-            //this.newParticipant({
-            //    isOwner: false,
-            //    establishment: {
-            //        id: 1,
-            //        officialName: 'University of Cincinnati',
-            //        translatedName: 'University of Cincinnati',
-            //        officialUrl: 'www.uc.edu',
-            //        countryName: 'United States',
-            //        countryCode: 'asdf',
-            //        uCosmicCode: 'asdf',
-            //        ceebCode: 'asdf'
-            //    }
-            //});
-            this.newParticipant(new InstitutionalAgreementParticipantModel(context));
-            //this.newParticipant({
+        //    this.newParticipant(new InstitutionalAgreementParticipantModel(context));
+        //    //this.newParticipant({
                 
-            //        isOwner: false,
-            //        establishment: {
-            //            id: context.id(),
-            //            officialName: 'University of Cincinnati',
-            //            translatedName: 'University of Cincinnati',
-            //            officialUrl: context.officialUrl(),
-            //            countryName: 'United States',
-            //            countryCode: 'asdf',
-            //            uCosmicCode: 'asdf',
-            //            ceebCode: 'asdf',
-            //            officialNameDoesNotMatchTranslation: context.officialNameDoesNotMatchTranslation()
-            //        },
-            //        isNotOwner: ko.computed(function () {
-            //            return false; //participant.isOwner();
-            //        })
-            //});
-            //this.newParticipant({
-            //    isOwner: false,
-            //    establishment: new SearchResult.SearchResult({
-            //        id: 1,
-            //        officialName: 'University of Cincinnati',
-            //        translatedName: 'University of Cincinnati',
-            //        officialUrl: 'www.uc.edu',
-            //        countryName: 'United States',
-            //        countryCode: 'asdf',
-            //        uCosmicCode: 'asdf',
-            //        ceebCode: 'asdf'
-            //    }, new Search(false))
-            //});
+        //    //        isOwner: false,
+        //    //        establishment: {
+        //    //            id: context.id(),
+        //    //            officialName: 'University of Cincinnati',
+        //    //            translatedName: 'University of Cincinnati',
+        //    //            officialUrl: context.officialUrl(),
+        //    //            countryName: 'United States',
+        //    //            countryCode: 'asdf',
+        //    //            uCosmicCode: 'asdf',
+        //    //            ceebCode: 'asdf',
+        //    //            officialNameDoesNotMatchTranslation: context.officialNameDoesNotMatchTranslation()
+        //    //        },
+        //    //        isNotOwner: ko.computed(function () {
+        //    //            return false; //participant.isOwner();
+        //    //        })
+        //    //});
            
-
-            //var serializeData;
-            
-            //var originalValues: KnockoutObservableAny = ko.observable();
-            //var typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
-            
-            //typeIdSaveSpinner.start();
-            //var data;// = serializeData();
-            //var originalValues = originalValues();
-            //var url = App.Routes.WebApi.Agreements.put(this.id);
-            //$.ajax({
-            //    url: url,
-            //    type: 'PUT',
-            //    data: data
-            //})
-            //.always((): void => {
-            //    typeIdSaveSpinner.stop();
-            //})
-            //.done((response: string, statusText: string, xhr: JQueryXHR): void => {
-            //    //App.flasher.flash(response);
-            //    typeIdSaveSpinner.stop();
-            //    //this.clickToCancelTypeIdEdit();
-                
-            //    window.location.href = "../../agreements"
-            //});
-
-            ////pretend good
-            //window.location.href = "../../agreements"
-
-        }
+        //}
     }
 
 

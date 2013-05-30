@@ -13,43 +13,6 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
 
     
     
-    var InstitutionalAgreementParticipantModel = (function () {
-        function InstitutionalAgreementParticipantModel(participan) {
-            this.establishment = new SearchResult.SearchResult({
-                id: 1,
-                officialName: 'University of Cincinnati',
-                translatedName: 'University of Cincinnati',
-                officialUrl: 'www.uc.edu',
-                countryName: 'United States',
-                countryCode: 'asdf',
-                uCosmicCode: 'asdf',
-                ceebCode: 'asdf'
-            }, new Search(false));
-            this.isNotOwner = ko.computed(function () {
-                return false;
-            });
-            isOwner:
-false
-            establishment:
-new SearchResult.SearchResult({
-                id: 1,
-                officialName: 'University of Cincinnati',
-                translatedName: 'University of Cincinnati',
-                officialUrl: 'www.uc.edu',
-                countryName: 'United States',
-                countryCode: 'asdf',
-                uCosmicCode: 'asdf',
-                ceebCode: 'asdf'
-            }, new Search(false))
-            isNotOwner:
-ko.computed(function () {
-                return !participan.isOwner;
-            })
-        }
-        return InstitutionalAgreementParticipantModel;
-    })();
-    exports.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;    
-    ;
     var Search = (function (_super) {
         __extends(Search, _super);
         function Search(initDefaultPageRoute) {
@@ -95,7 +58,6 @@ ko.computed(function () {
                     'pageNumber'
                 ]
             };
-            this.newParticipant = ko.observable().syncWith("participants");
             this._setupCountryDropDown();
             this._setupPagingSubscriptions();
             this._setupLensing();
@@ -105,7 +67,6 @@ ko.computed(function () {
             }).extend({
                 throttle: 1
             });
-            this.addParticipant = this.addParticipant.bind(this);
         }
         Search.prototype._setupCountryDropDown = function () {
             var _this = this;
@@ -255,10 +216,6 @@ ko.computed(function () {
             return 'View & edit this establishment\'s details';
         };
         Search.prototype.addParticipant = function (context) {
-            $("#estSearch").fadeOut(500, function () {
-                $("#allParticipants").fadeIn(500);
-            });
-            this.newParticipant(new InstitutionalAgreementParticipantModel(context));
         };
         return Search;
     })(PagedSearch.PagedSearch);
