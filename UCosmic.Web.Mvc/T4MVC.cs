@@ -793,29 +793,6 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-                public static class css {
-                    private const string URLPATH = "~/scripts/kendo/2013.1.226/css";
-                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                    public static readonly string kendo_common_min_css = Url("kendo.common.min.css");
-                    public static readonly string kendo_uniform_min_css = Url("kendo.uniform.min.css");
-                    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-                    public static class Uniform {
-                        private const string URLPATH = "~/scripts/kendo/2013.1.226/css/Uniform";
-                        public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                        public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                        public static readonly string editor_png = Url("editor.png");
-                        public static readonly string imagebrowser_png = Url("imagebrowser.png");
-                        public static readonly string loading_image_gif = Url("loading-image.gif");
-                        public static readonly string loading_gif = Url("loading.gif");
-                        public static readonly string slider_h_gif = Url("slider-h.gif");
-                        public static readonly string slider_v_gif = Url("slider-v.gif");
-                        public static readonly string sprite_png = Url("sprite.png");
-                    }
-                
-                }
-            
-                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class cultures {
                     private const string URLPATH = "~/scripts/kendo/2013.1.226/cultures";
                     public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
