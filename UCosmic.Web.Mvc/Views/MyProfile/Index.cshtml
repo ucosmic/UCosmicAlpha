@@ -39,6 +39,7 @@
                     //} ).show();
                     
                     ko.applyBindings( profileViewModel, $( '#my_profile' )[0] );
+                    profileViewModel.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     
                     //debugger;
                 

@@ -8,7 +8,7 @@
         </h2>
     </header>
     <div>
-        <span>Degrees will be displayed in the order they are received.</span>
+        <span>Degrees will be displayed in the order they are entered.</span>
     </div>
     <table class="data">
         <tbody data-bind="template: { name: 'degrees-template', foreach: items }">
@@ -27,8 +27,10 @@
         data-bind="click: function (item, event) { $parent.editEducation(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.degreeEdit(id()) }">
         <!-- Description -->
         <td>
-            <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: title()"></span>
+            <div style="height: 30px; font-size: large; ">
+                <span style="font-weight: bold" data-bind="text: title()"></span>
+                <span data-bind="visible: fieldOfStudy() != null">,&nbsp;</span>
+                <span data-bind="text: fieldOfStudy(), visible: fieldOfStudy() != null"></span>
             </div>
             <div style="height: 30px">
                 <span style="vertical-align: middle" data-bind="text: formattedInfo()"></span>

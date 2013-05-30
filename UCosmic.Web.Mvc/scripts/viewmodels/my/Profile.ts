@@ -134,22 +134,24 @@ module ViewModels.My {
                     //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     //}
 
-                    this._setupRouting();
+                    
                     this._setupValidation();
                     this._setupKendoWidgets();
                     this._setupDisplayNameDerivation();
                     this._setupCardComputeds();
 
                     if ( startTab === "" ) {
+                        this._setupRouting();
                         this._sammy.run("#/activities");
                     }
                     else {
-                        debugger;
                         var url = location.href;
                         var index = url.lastIndexOf( "?" );
                         if ( index != -1 ) {
                             this._startTab( startTab );
+                            this._setupRouting();
                         } else {
+                            this._setupRouting();
                             this._sammy.run("#/" + startTab);
                         }
                     }

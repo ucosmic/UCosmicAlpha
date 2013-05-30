@@ -542,7 +542,7 @@ module App.Routes {
             export module Profile {
                 export function get (tab?: string) {
                     var url = makeUrl( 'my/profile' );
-                    // TBD - Remove until problem is corrected returning to tabs
+                    // Workaround until we figure out how to go from ?tab to #/
                     //if (tab != null) {
                     //    url = makeUrlWithParams( 'my/profile' ) + "tab=" + tab;
                     //}

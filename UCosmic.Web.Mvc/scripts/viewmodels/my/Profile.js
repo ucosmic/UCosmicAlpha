@@ -67,21 +67,21 @@ var ViewModels;
                     }, _this);
                     _this.personId = viewModel.personId;
                     _this._originalValues = viewModel;
-                    _this._setupRouting();
                     _this._setupValidation();
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
                     if(startTab === "") {
+                        _this._setupRouting();
                         _this._sammy.run("#/activities");
                     } else {
-                        debugger;
-
                         var url = location.href;
                         var index = url.lastIndexOf("?");
                         if(index != -1) {
                             _this._startTab(startTab);
+                            _this._setupRouting();
                         } else {
+                            _this._setupRouting();
                             _this._sammy.run("#/" + startTab);
                         }
                     }

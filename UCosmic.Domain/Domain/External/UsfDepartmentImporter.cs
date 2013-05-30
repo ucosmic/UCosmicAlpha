@@ -2,10 +2,11 @@
 using System.IO;
 using System.Runtime.Serialization;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Identity;
 
-namespace UCosmic.Import
+namespace UCosmic.Domain.External
 {
-    class UsfDepartmentImporter : StreamDataImporter
+    public class UsfDepartmentImporter
     {
         [DataContract]
         private class Record
@@ -20,12 +21,15 @@ namespace UCosmic.Import
             public string DEPARTMENT;
         }
 
-        UsfDepartmentImporter(Stream stream, ICommandEntities entities)
-            : base(stream, entities)
+        public Stream Stream { get; set; }
+        private readonly IQueryEntities _entities;
+
+        public UsfDepartmentImporter(IQueryEntities entities)
         {
+            _entities = entities;
         }
 
-        public new void Import()
+        public void Import()
         {
             DataContractSerializer serializer = new DataContractSerializer(typeof(Record[]));
             Record[] records = (Record[])serializer.ReadObject(Stream);
@@ -36,5 +40,9 @@ namespace UCosmic.Import
             }
         }
 
+        public void Handle(UserCreated @event)
+        {
+            Import();
+        }
     }
 }

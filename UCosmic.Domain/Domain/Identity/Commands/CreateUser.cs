@@ -112,13 +112,18 @@ namespace UCosmic.Domain.Identity
 
     public class HandleCreateUserCommand : IHandleCommands<CreateUser>
     {
+        private const int CreatedUserEventTimeoutMS = 15000;
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProcessEvents _eventProcessor;
 
-        public HandleCreateUserCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
+        public HandleCreateUserCommand( ICommandEntities entities,
+                                        IUnitOfWork unitOfWork,
+                                        IProcessEvents eventProcessor )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(CreateUser command)
@@ -167,6 +172,19 @@ namespace UCosmic.Domain.Identity
             _unitOfWork.SaveChanges();
 
             command.CreatedUserId = user.RevisionId;
+
+            var userCreatedEvent = new UserCreated(command.CreatedUserId);
+            _eventProcessor.Raise(userCreatedEvent);
+
+            try
+            {
+                userCreatedEvent.Signal.WaitOne(CreatedUserEventTimeoutMS);
+            }
+            catch
+            {
+                throw;
+            }
+            
         }
     }
 }
