@@ -258,19 +258,7 @@ ko.computed(function () {
             $("#estSearch").fadeOut(500, function () {
                 $("#allParticipants").fadeIn(500);
             });
-            this.newParticipant({
-                isOwner: false,
-                establishment: {
-                    id: 1,
-                    officialName: 'University of Cincinnati',
-                    translatedName: 'University of Cincinnati',
-                    officialUrl: 'www.uc.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }
-            });
+            this.newParticipant(new InstitutionalAgreementParticipantModel(context));
         };
         return Search;
     })(PagedSearch.PagedSearch);

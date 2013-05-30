@@ -334,20 +334,52 @@ export class Search extends PagedSearch.PagedSearch {
                 $("#allParticipants").fadeIn(500);
             });
 
-            this.newParticipant({
-                isOwner: false,
-                establishment: {
-                    id: 1,
-                    officialName: 'University of Cincinnati',
-                    translatedName: 'University of Cincinnati',
-                    officialUrl: 'www.uc.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }
-            });
-            
+            //this.newParticipant({
+            //    isOwner: false,
+            //    establishment: {
+            //        id: 1,
+            //        officialName: 'University of Cincinnati',
+            //        translatedName: 'University of Cincinnati',
+            //        officialUrl: 'www.uc.edu',
+            //        countryName: 'United States',
+            //        countryCode: 'asdf',
+            //        uCosmicCode: 'asdf',
+            //        ceebCode: 'asdf'
+            //    }
+            //});
+            this.newParticipant(new InstitutionalAgreementParticipantModel(context));
+            //this.newParticipant({
+                
+            //        isOwner: false,
+            //        establishment: {
+            //            id: context.id(),
+            //            officialName: 'University of Cincinnati',
+            //            translatedName: 'University of Cincinnati',
+            //            officialUrl: context.officialUrl(),
+            //            countryName: 'United States',
+            //            countryCode: 'asdf',
+            //            uCosmicCode: 'asdf',
+            //            ceebCode: 'asdf',
+            //            officialNameDoesNotMatchTranslation: context.officialNameDoesNotMatchTranslation()
+            //        },
+            //        isNotOwner: ko.computed(function () {
+            //            return false; //participant.isOwner();
+            //        })
+            //});
+            //this.newParticipant({
+            //    isOwner: false,
+            //    establishment: new SearchResult.SearchResult({
+            //        id: 1,
+            //        officialName: 'University of Cincinnati',
+            //        translatedName: 'University of Cincinnati',
+            //        officialUrl: 'www.uc.edu',
+            //        countryName: 'United States',
+            //        countryCode: 'asdf',
+            //        uCosmicCode: 'asdf',
+            //        ceebCode: 'asdf'
+            //    }, new Search(false))
+            //});
+           
 
             //var serializeData;
             

@@ -36,7 +36,7 @@
                                 </h2>
                             </header>
                             <div data-bind="visible: isBound" style="display: none;">
-                                <ul data-bind="foreach: participants()">
+                                <ul data-bind="foreach: participants">
                                     <li data-bind="element: 'participantEl'">
                                         <div class="typed-item" data-bind="with: establishment">
                                             <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
@@ -50,7 +50,7 @@
                                                     <span data-bind="visible: officialNameDoesNotMatchTranslation">(<span data-bind="text: officialName"></span>)</span>
                                                 </div>
                                                 <div data-bind="visible: $parent.isNotOwner() && websiteUrl()">
-                                                    <a href="#" target="_blank" data-bind="text: officialUrl, attr: { href: 'http://' + officialUrl() }"></a>
+                                                    <a href="#" target="_blank" data-bind="text: officialUrl, attr: { href: 'http://' + officialUrl }"></a>
                                                 </div>
                                                 <div data-bind="visible: $parent.isNotOwner() && countryName()">
                                                     <span data-bind="text: countryName"></span>

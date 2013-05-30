@@ -27,7 +27,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.newParticipant = ko.observable().syncWith("participants", true);
             this.participants = ko.observableArray();
             this.trail = ko.observableArray([]);
-            this.$itemsPage = undefined;
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
@@ -52,7 +51,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     countryCode: 'asdf',
                     uCosmicCode: 'asdf',
                     ceebCode: 'asdf'
-                }, this.owner)
+                }, this.owner),
+                isNotOwner: false
             });
             if(this.tenantDomain === 'usf.edu') {
                 homeParticipant.establishment = new SearchResult({

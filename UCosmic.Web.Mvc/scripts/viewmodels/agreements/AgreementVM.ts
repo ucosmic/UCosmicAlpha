@@ -72,7 +72,8 @@ export class InstitutionalAgreementEditModel {
                 countryCode: 'asdf',
                 uCosmicCode: 'asdf',
                 ceebCode: 'asdf'
-            }, this.owner)
+            }, this.owner),
+            isNotOwner: false
         });
         if (this.tenantDomain === 'usf.edu') {
             homeParticipant.establishment = new SearchResult({
@@ -183,7 +184,7 @@ export class InstitutionalAgreementEditModel {
     trail: KnockoutObservableStringArray = ko.observableArray([]);
     swipeCallback(): void {
     }
-    $itemsPage: JQuery = undefined;
+    //$itemsPage: JQuery = undefined;
     nextForceDisabled: KnockoutObservableBool = ko.observable(false);
     prevForceDisabled: KnockoutObservableBool = ko.observable(false);
     pageNumber: KnockoutObservableNumber = ko.observable();
