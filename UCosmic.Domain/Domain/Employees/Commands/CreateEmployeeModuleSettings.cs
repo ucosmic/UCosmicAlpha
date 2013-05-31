@@ -27,6 +27,7 @@ namespace UCosmic.Domain.Employees
         public bool OfferActivityTypes { get; set; }
         public bool OfferFundingQuestions { get; set; }
         public string InternationalPedigreeTitle { get; set; }
+        public DateTime? EstablishmentsExternalSyncDate { get; set; }
 
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; internal set; }
     }
@@ -68,7 +69,8 @@ namespace UCosmic.Domain.Employees
                 OfferCountry = command.OfferCountry,
                 OfferActivityType = command.OfferActivityTypes,
                 OfferFundingQuestions = command.OfferFundingQuestions,
-                InternationalPedigreeTitle = command.InternationalPedigreeTitle
+                InternationalPedigreeTitle = command.InternationalPedigreeTitle,
+                EstablishmentsExternalSyncDate = command.EstablishmentsExternalSyncDate
             };
 
             _entities.Create(employeeModuleSettings);

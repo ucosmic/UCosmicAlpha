@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -26,6 +27,9 @@ namespace UCosmic.Domain.Identity
         public IPrincipal Principal { get; private set; }
         public string Name { get; private set; }
         public string PersonDisplayName { get; set; }
+
+        /* ----- Not persisted ----- */
+        public bool Seeding { get; set; }
         public int CreatedUserId { get; internal set; }
     }
 
@@ -112,7 +116,11 @@ namespace UCosmic.Domain.Identity
 
     public class HandleCreateUserCommand : IHandleCommands<CreateUser>
     {
+#if DEBUG
+        private const int CreatedUserEventTimeoutMS = 0;
+#else
         private const int CreatedUserEventTimeoutMS = 15000;
+#endif
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
@@ -173,16 +181,22 @@ namespace UCosmic.Domain.Identity
 
             command.CreatedUserId = user.RevisionId;
 
-            var userCreatedEvent = new UserCreated(command.CreatedUserId);
+            var userCreatedEvent = new UserCreated(command.CreatedUserId) {Seeding = command.Seeding};
             _eventProcessor.Raise(userCreatedEvent);
 
+            /*
+             * It is possible that some classes that handle UserCreated events
+             * may take a relatively long time to complete.  Because this event
+             * is actually spawned in a different Task, for this instance, we
+             * want to make sure all actions complete before we consider a User
+             * created.
+             */
             try
             {
                 userCreatedEvent.Signal.WaitOne(CreatedUserEventTimeoutMS);
             }
             catch
             {
-                throw;
             }
             
         }

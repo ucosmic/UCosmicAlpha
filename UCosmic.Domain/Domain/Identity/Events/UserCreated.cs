@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 
 namespace UCosmic.Domain.Identity
@@ -8,13 +7,28 @@ namespace UCosmic.Domain.Identity
     {
         public EventWaitHandle Signal { get; set; }
         public int UserId { get; set; }
+        public bool Seeding { get; set; }
 
         public UserCreated(int userId)
         {
             UserId = userId;
-            Signal = new EventWaitHandle(false, EventResetMode.ManualReset);
+            Signal = new EventWaitHandle(false, EventResetMode.AutoReset);
         }
 
-        /* Implement Dispose */
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+            
+            if (Signal != null) { Signal.Dispose(); }
+        }
     }
 }
