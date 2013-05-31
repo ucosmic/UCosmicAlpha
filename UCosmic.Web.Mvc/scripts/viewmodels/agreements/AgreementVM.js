@@ -166,7 +166,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.establishmentSearchViewModel.sammy.run();
             }
             this.hasBoundSearch = true;
-            this.establishmentSearchViewModel.addParticipant = function (context) {
+            this.establishmentSearchViewModel.detailTooltip = function () {
+                return 'Choose this establishment as a participant';
+            };
+            $("#cancelAddParticipant").on("click", function () {
+                $("#estSearch").fadeOut(500, function () {
+                    $("#allParticipants").fadeIn(500);
+                });
+            });
+            this.establishmentSearchViewModel.clickAction = function (context) {
                 $("#estSearch").fadeOut(500, function () {
                     $("#allParticipants").fadeIn(500);
                 });
@@ -190,7 +198,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $("#allParticipants").fadeOut(500, function () {
                 $("#estSearch").fadeIn(500);
             });
-            sessionStorage.setItem("Agreement", "1");
         };
         InstitutionalAgreementEditModel.prototype.swipeCallback = function () {
         };

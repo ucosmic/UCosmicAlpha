@@ -81,12 +81,20 @@
 <div id="estSearch" class="content fixed to-top"  style="display: none">
     <form class="group" data-bind="submit: requestResults">
         <div class="on-left from-top">
-            @Html.Partial(MVC.Agreements.Views._SearchAndResults)
+            <header>
+                <h1>
+                    Choose parent establishment
+                </h1>
+                <div style="float: right">
+                    <a href="#/" id="cancelAddParticipant" class="button">Cancel</a>
+                </div>
+            </header>
+            @Html.Partial(MVC.Establishments.Views._SearchAndResults)
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Agreements.Views._SearchSideBar)
+                @Html.Partial(MVC.Establishments.Views._SearchSideBar)
             </div>
         </aside>
     </form>

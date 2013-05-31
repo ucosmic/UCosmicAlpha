@@ -215,8 +215,6 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
         Search.prototype.detailTooltip = function () {
             return 'View & edit this establishment\'s details';
         };
-        Search.prototype.addParticipant = function (context) {
-        };
         return Search;
     })(PagedSearch.PagedSearch);
     exports.Search = Search;    

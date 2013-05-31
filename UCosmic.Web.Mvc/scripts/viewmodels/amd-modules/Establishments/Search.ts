@@ -263,52 +263,7 @@ export class Search extends PagedSearch.PagedSearch {
         }
 
         id;
-        //serializeData(): any {
-        //    var data: any = {};
-        //    //data.parentId = this.parentId();
-        //    //data.typeId = this.typeId();
-        //    //data.ceebCode = this.ceebCode();
-        //    //data.uCosmicCode = this.uCosmicCode();
-        //    //return data;
-        //}
-        //originalValues: KnockoutObservableAny = ko.observable();
-        //typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
-
-        //newParticipant = ko.observable().syncWith("participants");
-
-    addParticipant(context): void {
-
-    }
        
-        //addParticipant(context): void {
-        //    //alert("participant ID: " + this.id() + " Agreement ID:" + sessionStorage.getItem("Agreement"));
-
-
-        //    $("#estSearch").fadeOut(500, function () {
-        //        $("#allParticipants").fadeIn(500);
-        //    });
-
-        //    this.newParticipant(new InstitutionalAgreementParticipantModel(context));
-        //    //this.newParticipant({
-                
-        //    //        isOwner: false,
-        //    //        establishment: {
-        //    //            id: context.id(),
-        //    //            officialName: 'University of Cincinnati',
-        //    //            translatedName: 'University of Cincinnati',
-        //    //            officialUrl: context.officialUrl(),
-        //    //            countryName: 'United States',
-        //    //            countryCode: 'asdf',
-        //    //            uCosmicCode: 'asdf',
-        //    //            ceebCode: 'asdf',
-        //    //            officialNameDoesNotMatchTranslation: context.officialNameDoesNotMatchTranslation()
-        //    //        },
-        //    //        isNotOwner: ko.computed(function () {
-        //    //            return false; //participant.isOwner();
-        //    //        })
-        //    //});
-           
-        //}
     }
 
 
