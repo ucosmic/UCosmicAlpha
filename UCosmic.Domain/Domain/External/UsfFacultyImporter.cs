@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
@@ -24,7 +25,7 @@ namespace UCosmic.Domain.External
         [DataContract]
         private class Record
         {
-            [DataMember] public string LAST_ACTIVITY;
+            [DataMember] public string LAST_ACTIVITY_DATE;
             [DataMember] public string LASTNAME;
             [DataMember] public string FIRSTNAME;
             [DataMember] public string MIDDLENAME;
@@ -35,10 +36,15 @@ namespace UCosmic.Domain.External
         }
 
         private readonly ICommandEntities _entities;
+        private readonly Establishment _usf;
 
         public UsfFacultyImporter(ICommandEntities entities)
         {
             _entities = entities;
+
+            /* Get root USF Establishment. */
+            _usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            if (_usf == null) { throw new Exception("USF Establishment not found."); }
         }
 
         public void Import(int userId)
@@ -47,15 +53,24 @@ namespace UCosmic.Domain.External
 
             /* Wait for data. */
                 /* If we timeout or error, nothing is imported leave. */
+            Record record = null;
 
-            //DateTime? lastFacultyListActivityDate = GetLastDepartmentListActivityDate();
+            DateTime? facultyInfoLastActivityDate = null;
+            if (!String.IsNullOrEmpty(record.LAST_ACTIVITY_DATE))
+            {
+                facultyInfoLastActivityDate = DateTime.Parse(record.LAST_ACTIVITY_DATE);
+            }
 
             /* Compare the last activity date to what we have stored. */
-            //DateTime? lastDepartmentListActivityDate = GetLastDepartmentListActivityDate();
+            var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                         .SingleOrDefault(s => s.Establishment.RevisionId == _usf.RevisionId);
 
-            /* If the LAD does not match, we need to update the USF departments. */
-            /* Call UsfDepartementImporter.Import() */
-            /* UpdateUsfEstablishmentHierarchy() That's going to be fun to write */
+            /* If the LAD does not match, we need to update the USF department list. */
+            if (facultyInfoLastActivityDate != employeeModuleSettings.EstablishmentsExternalSyncDate)
+            {
+                var departmentImporter = new UsfDepartmentImporter(_entities, facultyInfoLastActivityDate);
+                departmentImporter.Import();
+            }
 
             /* Update faculty profile information. */
         }
@@ -69,10 +84,6 @@ namespace UCosmic.Domain.External
             var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == @event.UserId);
             if (user == null) { goto Exit; }
 
-            /* Get root USF Establishment. */
-            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (usf == null) { goto Exit; }
-
             /* Get root Establishment of User. */
             Establishment establishment = user.Person.DefaultAffiliation.Establishment;
             while (establishment.Parent != null)
@@ -81,7 +92,7 @@ namespace UCosmic.Domain.External
             }
 
             /* If this user is not affiliated with USF, leave. */
-            if (establishment.RevisionId != usf.RevisionId) { goto Exit; }
+            if (establishment.RevisionId != _usf.RevisionId) { goto Exit; }
 
             try
             {
