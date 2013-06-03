@@ -36,11 +36,17 @@ namespace UCosmic.Domain.External
         }
 
         private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<UsfCreateEstablishment> _createEstablishment;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly Establishment _usf;
 
-        public UsfFacultyImporter(ICommandEntities entities)
+        public UsfFacultyImporter( ICommandEntities entities,
+                                   IHandleCommands<UsfCreateEstablishment> createEstablishment,
+                                   IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _createEstablishment = createEstablishment;
+            _unitOfWork = unitOfWork;
 
             /* Get root USF Establishment. */
             _usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
@@ -68,8 +74,13 @@ namespace UCosmic.Domain.External
             /* If the LAD does not match, we need to update the USF department list. */
             if (facultyInfoLastActivityDate != employeeModuleSettings.EstablishmentsExternalSyncDate)
             {
-                var departmentImporter = new UsfDepartmentImporter(_entities, facultyInfoLastActivityDate);
-                departmentImporter.Import();
+                Stream stream = null; // UsfDepartmentListService.get()
+
+                var departmentImporter = new UsfDepartmentImporter( _entities,
+                                                                    _createEstablishment,
+                                                                    _unitOfWork,
+                                                                    facultyInfoLastActivityDate);
+                departmentImporter.Import(stream);
             }
 
             /* Update faculty profile information. */

@@ -22,6 +22,7 @@ namespace UCosmic.Domain.External
         public NonOfficialUrl[] NonOfficialUrls { get; set; }
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
+        public string ExternalId { get; set; }
 
         public Establishment CreatedEstablishment { get; internal set; }
 
@@ -86,6 +87,7 @@ namespace UCosmic.Domain.External
                 IsMember = command.IsMember,
                 Type = type,
                 Location = new EstablishmentLocation(),
+                ExternalId = command.ExternalId
             };
 
             // add official name to list

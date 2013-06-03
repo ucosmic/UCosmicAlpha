@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.External;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.SeedData
@@ -1502,6 +1505,15 @@ namespace UCosmic.SeedData
                     CenterLatitude = 28.061680,
                     CenterLongitude = -82.414803,
                 });
+
+            //using (var stream = new FileStream("USFDepartmentList.csv", FileMode.Open))
+            //{
+            //    var departmentImporter = new UsfDepartmentImporter( _entities,
+            //                                                        _createEstablishment,
+            //                                                        _unitOfWork,
+            //                                                        null );
+            //    departmentImporter.Import(stream);
+            //}
 
             var campus = Seed(new SeedEstablishment
                 {
