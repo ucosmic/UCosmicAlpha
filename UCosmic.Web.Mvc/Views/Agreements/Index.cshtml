@@ -15,68 +15,55 @@
 }
 
 <div class="content fixed to-top" data-current-module="agreements"  id="allParticipants" >
-                <form class="group"  >
-                    <div class="on-left from-top">
-                        <header>
-                            <h1>
-                                @ViewBag.Title
-                            </h1>
-                        </header>
-                        <section id="participants">
-                            <header>
-                                <h2>
-                                    Participants
-                                    @*@{
-                                        // HACK ALERT this is only temporary
-                                        var tenancy = Request.Tenancy() != null
-                                            ? Request.Tenancy().StyleDomain
-                                            : "default";
-                                    }*@
-                                    @*<input type="hidden" value="@tenancy" id="tenancy_domain" />*@
-                                </h2>
-                            </header>
-                            <div data-bind="visible: isBound" style="display: none;">
-                                <ul data-bind="foreach: participants">
-                                    <li data-bind="element: 'participantEl'">
-                                        <div class="typed-item" >
-                                            <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
-                                            <div class="type">
-                                                <span data-bind="visible: $parent.isOwner">Home</span>
-                                                <span data-bind="visible: isNotOwner">Partner</span>
-                                            </div>
-                                            <div class="item">
-                                                <div>
-                                                    <strong data-bind="text: establishment.translatedName"></strong>
-                                                    <span data-bind="visible: establishment.officialNameDoesNotMatchTranslation">(<span data-bind="    text: establishment.officialName"></span>)</span>
-                                                </div>
-                                                <div data-bind="visible: isNotOwner() && websiteUrl()">
-                                                    <a href="#" target="_blank" data-bind="text: establishment.officialUrl, attr: { href: 'http://' + establishment.officialUrl }"></a>
-                                                </div>
-                                                <div data-bind="visible: isNotOwner() && establishment.countryName()">
-                                                    <span data-bind="text: establishment.countryName"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+    <form class="group"  >
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            <section id="participants">
+                <header>
+                    <h2>
+                        Participants
+                    </h2>
+                </header>
+                <div data-bind="visible: isBound" style="display: none;">
+                    <ul data-bind="foreach: participants">
+                        <li data-bind="element: 'participantEl'">
+                            <div class="typed-item" >
+                                <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
+                                <div class="type">
+                                    <span data-bind="visible: isOwner">Home</span>
+                                    <span data-bind="visible: !isOwner()">Partner</span>
+                                </div>
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: establishmentTranslatedName"></strong>
+                                        <span data-bind="visible: $root.officialNameDoesNotMatchTranslation">(<span data-bind="    text: establishmentOfficialName"></span>)</span>
+                                    </div>
+                                </div>
                             </div>
-                            <footer>
-                                <a href="" data-bind="click: $root.addParticipant" class="button">
-                                    <i class="green plus"></i>
-                                    <span class="text">Add a participant</span>
-                                </a>
-                            </footer>
-                        </section>
-                        @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
-                    </div>
-                    <aside class="on-right from-top" data-fixed-scroll="root">
-                        <div data-fixed-scroll="anchor"></div>
-                        <div data-fixed-scroll="content">
-                            @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
-                        </div>
-                    </aside>
-                </form>
+                        </li>
+                    </ul>
+                </div>
+                <footer>
+                    <a href="" data-bind="click: $root.addParticipant" class="button">
+                        <i class="green plus"></i>
+                        <span class="text">Add a participant</span>
+                    </a>
+                </footer>
+            </section>
+            @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
             </div>
+        </aside>
+    </form>
+</div>
             
 <div id="estSearch" class="content fixed to-top"  style="display: none">
     <form class="group" data-bind="submit: requestResults">

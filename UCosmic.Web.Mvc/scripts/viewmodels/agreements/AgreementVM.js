@@ -1,14 +1,26 @@
-define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search'], function(require, exports, __SearchResultModule__, __SearchModule__) {
+define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Widgets/Spinner'], function(require, exports, __SearchResultModule__, __SearchModule__, __Spinner__) {
     var SearchResultModule = __SearchResultModule__;
 
     var SearchModule = __SearchModule__;
 
+    
+    var Spinner = __Spinner__;
+
     var Search = SearchModule.Search;
     var SearchResult = SearchResultModule.SearchResult;
     var InstitutionalAgreementParticipantModel = (function () {
-        function InstitutionalAgreementParticipantModel(participan) {
-            this.isNotOwner = ko.computed(function () {
-                return false;
+        function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
+            this.isOwner = ko.computed(function () {
+                return isOwner;
+            });
+            this.establishmentId = ko.computed(function () {
+                return establishmentId;
+            });
+            this.establishmentOfficialName = ko.computed(function () {
+                return establishmentOfficialName;
+            });
+            this.establishmentTranslatedName = ko.computed(function () {
+                return establishmentTranslatedName;
             });
         }
         return InstitutionalAgreementParticipantModel;
@@ -19,6 +31,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
             this.initDefaultPageRoute = initDefaultPageRoute;
+            this.participants = ko.mapping.fromJS([]);
+            this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
+            });
             this.isBound = ko.observable();
             this.back = function () {
                 history.back();
@@ -31,9 +47,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.owner = new Search(false);
             this.owner2 = new Search(false);
             this.tenantDomain = "uc.edu";
+            this.spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
-            this.participants = ko.observableArray();
             this.trail = ko.observableArray([]);
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
@@ -42,112 +58,29 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
         }
+        InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {
+            if(!js) {
+                ko.mapping.fromJS({
+                    items: [],
+                    itemTotal: 0
+                }, this.participants);
+            } else {
+                ko.mapping.fromJS(js, this.participants);
+            }
+            this.spinner.stop();
+        };
         InstitutionalAgreementEditModel.prototype.populateParticipants = function () {
-            var homeParticipant = new InstitutionalAgreementParticipantModel({
-                isOwner: true,
-                establishment: new SearchResult({
-                    id: 1,
-                    officialName: 'University of Cincinnati22',
-                    translatedName: 'University of Cincinnati22',
-                    officialUrl: 'www.uc.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner),
-                isNotOwner: false
+            var _this = this;
+            this.spinner.start();
+            $.get(App.Routes.WebApi.Agreements.Participants.get()).done(function (response) {
+                _this.receiveResults(response);
             });
-            var homeParticipant2 = new InstitutionalAgreementParticipantModel({
-                isOwner: true,
-                establishment: new SearchResult({
-                    id: 1,
-                    officialName: 'University of Cincinnati232',
-                    translatedName: 'University of Cincinnati232',
-                    officialUrl: 'www.uc.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner2),
-                isNotOwner: false
-            });
-            if(this.tenantDomain === 'usf.edu') {
-                homeParticipant.establishment = new SearchResult({
-                    id: 1,
-                    officialName: 'University of South Florida',
-                    translatedName: 'University of South Florida',
-                    officialUrl: 'www.usf.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner);
-            }
-            if(this.tenantDomain === 'lehigh.edu') {
-                homeParticipant.establishment = new SearchResult({
-                    id: 1,
-                    officialName: 'Lehigh University',
-                    translatedName: 'Lehigh University',
-                    officialUrl: 'www.lehigh.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner);
-            }
-            if(this.tenantDomain === 'umn.edu') {
-                homeParticipant.establishment = new SearchResult({
-                    id: 1,
-                    officialName: 'University of Minnesota',
-                    translatedName: 'University of Minnesota',
-                    officialUrl: 'www.umn.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner);
-            }
-            if(this.tenantDomain === 'uc.edu') {
-                homeParticipant.establishment = new SearchResult({
-                    id: 1,
-                    officialName: 'University of Cincinnati33',
-                    translatedName: 'University of Cincinnati33',
-                    officialUrl: 'www.uc.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner);
-                homeParticipant2.establishment = new SearchResult({
-                    id: 1,
-                    officialName: 'University of Cincinnati33',
-                    translatedName: 'University of Cincinnati33',
-                    officialUrl: 'www.uc.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner);
-            }
-            if(this.tenantDomain === 'suny.edu') {
-                homeParticipant.establishment = new SearchResult({
-                    id: 1,
-                    officialName: 'State University of New York',
-                    translatedName: 'State University of New York',
-                    officialUrl: 'www.suny.edu',
-                    countryName: 'United States',
-                    countryCode: 'asdf',
-                    uCosmicCode: 'asdf',
-                    ceebCode: 'asdf'
-                }, this.owner);
-            }
-            this.participants.push(homeParticipant);
         };
         InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
-            if(confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishment.translatedName() + '" as a participant from this agreement?')) {
+            if(confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
                 var self = this;
                 self.participants.remove(function (item) {
-                    if(item.establishment.id() === establishmentResultViewModel.establishment.id()) {
+                    if(item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                         $(item.participantEl).slideUp('fast', function () {
                             self.participants.remove(item);
                         });
@@ -175,25 +108,22 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 });
             });
             this.establishmentSearchViewModel.clickAction = function (context) {
-                $("#estSearch").fadeOut(500, function () {
-                    $("#allParticipants").fadeIn(500);
-                });
-                var test = new InstitutionalAgreementParticipantModel({
-                    isOwner: true,
-                    establishment: new SearchResult({
-                        id: 1,
-                        officialName: 'University of Cincinnati22',
-                        translatedName: 'University of Cincinnati22',
-                        officialUrl: 'www.uc.edu',
-                        countryName: 'United States',
-                        countryCode: 'asdf',
-                        uCosmicCode: 'asdf',
-                        ceebCode: 'asdf'
-                    }, _this.owner),
-                    isNotOwner: false
-                });
-                test.establishment = context;
-                _this.participants.push(test);
+                var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName());
+                var alreadyExist = false;
+                for(var i = 0; i < _this.participants().length; i++) {
+                    if(_this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                        alreadyExist = true;
+                        break;
+                    }
+                }
+                if(alreadyExist !== true) {
+                    _this.participants.push(myParticipant);
+                    $("#estSearch").fadeOut(500, function () {
+                        $("#allParticipants").fadeIn(500);
+                    });
+                } else {
+                    alert("This Participant has already been added.");
+                }
             };
             $("#allParticipants").fadeOut(500, function () {
                 $("#estSearch").fadeIn(500);
