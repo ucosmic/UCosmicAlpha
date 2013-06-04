@@ -432,7 +432,7 @@ namespace UCosmic.SeedData
                 if (person == null) throw new Exception("Could not find Margaret Kusenbach by name (did name change?).");
 
                 establishment = _entities.Get<Establishment>()
-                    .SingleOrDefault(x => x.OfficialName == "USF College of Arts & Sciences Department of Sociology");
+                                         .SingleOrDefault(x => x.OfficialName == "Department of Criminology");
                 if (establishment == null) throw new Exception("Establishment is null");
 
                 Seed(new CreateAffiliation

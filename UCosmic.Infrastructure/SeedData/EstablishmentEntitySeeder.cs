@@ -1481,14 +1481,25 @@ namespace UCosmic.SeedData
     public class EstablishmentUsfEntitySeeder : BaseEstablishmentEntitySeeder
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
+        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
+        private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
         public EstablishmentUsfEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<SeedEstablishment> createEstablishment
+            , IHandleCommands<UsfCreateEstablishment> createUsfEstablishment
+            , IHandleCommands<UpdateEstablishmentHierarchy> hierarchy
+            , ICommandEntities entities
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
         {
             _queryProcessor = queryProcessor;
+            _entities = entities;
+            _hierarchy = hierarchy;
+            _unitOfWork = unitOfWork;
+            _createUsfEstablishment = createUsfEstablishment;
         }
 
         public override void Seed()
@@ -1500,198 +1511,234 @@ namespace UCosmic.SeedData
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                         KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
                     OfficialWebsiteUrl = "www.usf.edu",
-                    EmailDomains = new[] { "@usf.edu", "@iac.usf.edu", "@mail.usf.edu" },
+                    EmailDomains = new[] { "@usf.edu", "@iac.usf.edu", "@mail.usf.edu", "@usfsp.edu", "@usfsm.edu" },
                     FindPlacesByCoordinates = true,
                     CenterLatitude = 28.061680,
                     CenterLongitude = -82.414803,
                 });
 
-            //using (var stream = new FileStream("USFDepartmentList.csv", FileMode.Open))
-            //{
-            //    var departmentImporter = new UsfDepartmentImporter( _entities,
-            //                                                        _createEstablishment,
-            //                                                        _unitOfWork,
-            //                                                        null );
-            //    departmentImporter.Import(stream);
-            //}
 
-            var campus = Seed(new SeedEstablishment
+#if SEED_WITH_USF_DEPARTMENT_LIST
+            string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                                @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
+
+            if (File.Exists(filePath))
+            {
+                using (var stream = new FileStream(filePath, FileMode.Open))
+                {
+                    var departmentImporter = new UsfDepartmentImporter( _entities,
+                                                                        _createUsfEstablishment,
+                                                                        _unitOfWork,
+                                                                        _hierarchy,
+                                                                        null /* no last activity date */ );
+                    departmentImporter.Import(stream);
+                }
+            }
+            else
+#endif
+            {
+                var campus = Seed(new SeedEstablishment
                 {
                     OfficialName = "USF Tampa Campus",
                     IsMember = true,
                     ParentId = university.RevisionId,
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                        KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                                                         KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
+                                            .RevisionId,
                 });
 
-            var college = Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Arts & Sciences",
-                IsMember = true,
-                ParentId = campus.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cas.usf.edu",
-            });
+                var college = Seed(new SeedEstablishment
+                {
+                    OfficialName = "College of Arts and Sciences",
+                    IsMember = true,
+                    ParentId = campus.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.College.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "www.cas.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Arts & Sciences Department of Africana Studies",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "africanastudies.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Africana Studies",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "africanastudies.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Arts & Sciences Department of Anthropology",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "anthropology.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Chemistry",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "anthropology.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Arts & Sciences Department of Cell Biology, Microbiology and Molecular Biology",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "biology.usf.edu/cmmb",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName =
+                        "Department of Physics",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "biology.usf.edu/cmmb",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Arts & Sciences Department of Chemistry",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "chemistry.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Chemistry",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "chemistry.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Arts & Sciences Department of Sociology",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "sociology.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "School of Information",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "sociology.usf.edu",
+                });
 
-            /* TODO: Seed the other departments */
+                college = Seed(new SeedEstablishment
+                {
+                    OfficialName = "College of Behavioral and Community Sciences",
+                    IsMember = true,
+                    ParentId = campus.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.College.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "www.cbcs.usf.edu",
+                });
 
-            college = Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Behavioral and Community Sciences",
-                IsMember = true,
-                ParentId = campus.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cbcs.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName =
+                        "Department of Child and Family Studies",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "cfs.cbcs.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Behavioral and Community Sciences Department of Child & Family Studies",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "cfs.cbcs.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName =
+                        "Department of Communication Sciences and Disorders",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "csd.cbcs.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Behavioral and Community Sciences Department of Communication Sciences & Disorders",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "csd.cbcs.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Criminology",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "criminology.cbcs.usf.edu",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of Behavioral and Community Sciences Department of Criminology",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "criminology.cbcs.usf.edu",
-            });
+                college = Seed(new SeedEstablishment
+                {
+                    OfficialName = "College of Business",
+                    IsMember = true,
+                    ParentId = campus.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.College.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "business.usf.edu",
+                });
 
-            /* TODO: Seed the other departments */
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "School of Accountancy",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "business.usf.edu/departments/accountancy",
+                });
 
-            college = Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of School of Accountancy",
-                IsMember = true,
-                ParentId = campus.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "business.usf.edu",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Information Systems and Decision Sciences",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "business.usf.edu/departments/isds",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of School of Accountancy Department of Finance",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "business.usf.edu/departments/accountancy",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Management and Organization",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "business.usf.edu/departments/management",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of School of Accountancy Department of Information Systems / Decision Sciences",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "business.usf.edu/departments/isds",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Department of Marketing",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.Department.AsSentenceFragment()))
+                                            .RevisionId,
+                    OfficialWebsiteUrl = "business.usf.edu/departments/marketing",
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of School of Accountancy Department of Management & Organization",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "business.usf.edu/departments/management",
-            });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "USF St. Petersburg Campus",
+                    OfficialWebsiteUrl = "www.usfsp.edu",
+                    EmailDomains = new[] {"@usfsp.edu"},
+                    IsMember = true,
+                    ParentId = university.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
+                                            .RevisionId,
+                });
 
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF College of School of Accountancy Department of Marketing",
-                IsMember = true,
-                ParentId = college.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "business.usf.edu/departments/marketing",
-            });
-
-            /* TODO: Seed other colleges */
-
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "USF St. Petersburg Campus",
-                OfficialWebsiteUrl = "www.usfsp.edu",
-                EmailDomains = new[] { "@usfsp.edu" },
-                IsMember = true,
-                ParentId = university.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
-            });
-
-            /* TODO: Seed other campuses */
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "USF Sarasota-Manatee Campus",
+                    OfficialWebsiteUrl = "www.usfsm.edu",
+                    EmailDomains = new[] { "@usfsm.edu" },
+                    IsMember = true,
+                    ParentId = university.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
+                                            .RevisionId,
+                });
+            }
         }
     }
 

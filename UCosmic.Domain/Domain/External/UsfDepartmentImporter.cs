@@ -2,7 +2,10 @@
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.External
@@ -12,8 +15,6 @@ namespace UCosmic.Domain.External
         [DataContract]
         private class DepartmentRecord
         {
-            [DataMember]
-            public string LAST_ACTIVITY_DATE;
             [DataMember]
             public string DEPTID;
             [DataMember]
@@ -36,6 +37,7 @@ namespace UCosmic.Domain.External
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UsfCreateEstablishment> _createEstablishment;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
         private DateTime? _lastFacultyProfileActivityDate;
         private Establishment _usf;
         private StringDictionary _campuses;
@@ -50,13 +52,14 @@ namespace UCosmic.Domain.External
         public UsfDepartmentImporter(ICommandEntities entities,
                                      IHandleCommands<UsfCreateEstablishment> createEstablishment,
                                      IUnitOfWork unitOfWork,
-                                     DateTime? lastFacultyProfileActivityDate)
+                                     IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
+                                     DateTime? lastFacultyProfileActivityDate )
         {
             _entities = entities;
             _createEstablishment = createEstablishment;
             _unitOfWork = unitOfWork;
             _lastFacultyProfileActivityDate = lastFacultyProfileActivityDate;
-
+            _hierarchy = hierarchy;
             _usf = null;
         }
 
@@ -71,25 +74,25 @@ namespace UCosmic.Domain.External
 
             _campuses = new StringDictionary();
             _campuses.Add("TAMPA", "USF Tampa Campus");
+            _campuses.Add("USF Tampa", "USF Tampa Campus");
             _campuses.Add("ST.PETE", "USF St. Petersburg Campus");
+            _campuses.Add("USF St. Petersburg", "USF St. Petersburg Campus");
             _campuses.Add("SARASOTA", "USF Sarasota-Manatee Campus");
+            _campuses.Add("USF Sarasota", "USF Sarasota-Manatee Campus");
 
+            string establishmentType = KnownEstablishmentType.UniversityCampus.AsSentenceFragment();
             _campusEstablishmentType =
-                _entities.Get<EstablishmentType>()
-                         .SingleOrDefault(
-                             t => t.EnglishName == KnownEstablishmentType.UniversityCampus.AsSentenceFragment());
+                _entities.Get<EstablishmentType>().SingleOrDefault(t => t.EnglishName == establishmentType);
             if (_campusEstablishmentType == null) { throw new Exception("Campus EstablishmentType not found."); }
 
+            establishmentType = KnownEstablishmentType.College.AsSentenceFragment();
             _collegeEstablishmentType =
-                _entities.Get<EstablishmentType>()
-                         .SingleOrDefault(
-                             t => t.EnglishName == KnownEstablishmentType.College.AsSentenceFragment());
+                _entities.Get<EstablishmentType>().SingleOrDefault(t => t.EnglishName == establishmentType);
             if (_collegeEstablishmentType == null) { throw new Exception("College EstablishmentType not found."); }
 
+            establishmentType = KnownEstablishmentType.Department.AsSentenceFragment();
             _departmentEstablishmentType =
-                _entities.Get<EstablishmentType>()
-                         .SingleOrDefault(
-                             t => t.EnglishName == KnownEstablishmentType.Department.AsSentenceFragment());
+                _entities.Get<EstablishmentType>().SingleOrDefault(t => t.EnglishName == establishmentType);
             if (_departmentEstablishmentType == null) { throw new Exception("Department EstablishmentType not found."); }
 
             /* Make sure campuses exist. */
@@ -118,7 +121,7 @@ namespace UCosmic.Domain.External
         // ----------------------------------------------------------------------
         public void Import(Stream stream)
         {
-            var serializer = new DataContractSerializer(typeof(Record[]));
+            var serializer = new DataContractJsonSerializer(typeof(Record));
             var record = (Record)serializer.ReadObject(stream);
 
             /* If the department list last activity date does not exists, error (?). */
@@ -144,24 +147,26 @@ namespace UCosmic.Domain.External
 
             for (int i = 0; i < record.DEPARTMENTS.Length; i += 1)
             {
+                DepartmentRecord department = record.DEPARTMENTS[i];
+
                 /* Attempt to find existing department by id */
                 var existingDepartment =
-                    _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == record.DEPARTMENTS[i].DEPTID);
+                    _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DEPTID);
 
                 /* If not found, add. */
                 if ((existingDepartment == null) &&
-                    (!String.IsNullOrWhiteSpace(record.DEPARTMENTS[i].DEPARTMENT)) &&
-                    (!String.IsNullOrWhiteSpace(record.DEPARTMENTS[i].COLLEGE))
+                    (!String.IsNullOrWhiteSpace(department.DEPARTMENT)) &&
+                    (!String.IsNullOrWhiteSpace(department.COLLEGE))
                    )
                 {
                     /* Make sure we have USF and Campuses. */
                     if (_usf == null) { UsfEstablishmentsSetup(); }
 
                     /* Get the campus name. */
-                    var campusOfficialName = _campuses[record.DEPARTMENTS[i].INSTITUTION];
+                    var campusOfficialName = _campuses[department.INSTITUTION];
                     if (campusOfficialName == null)
                     {
-                        string message = String.Format("USF campus name {0} not found", record.DEPARTMENTS[i].INSTITUTION);
+                        string message = String.Format("USF campus name {0} not found", department.INSTITUTION);
                         throw new Exception(message);
                     }
 
@@ -174,12 +179,12 @@ namespace UCosmic.Domain.External
                     }
 
                     /* Does the college exist? If not, create it. */
-                    var college = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == record.DEPARTMENTS[i].COLLEGE);
+                    var college = _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.COLLEGE);
                     if (college == null)
                     {
                         var createCollege = new UsfCreateEstablishment()
                         {
-                            OfficialName = record.DEPARTMENTS[i].COLLEGE,
+                            OfficialName = department.COLLEGE,
                             IsMember = true,
                             ParentId = campus.RevisionId,
                             TypeId = _collegeEstablishmentType.RevisionId
@@ -193,8 +198,8 @@ namespace UCosmic.Domain.External
                     /* Create department/program. */
                     var createDepartment = new UsfCreateEstablishment()
                     {
-                        OfficialName = record.DEPARTMENTS[i].COLLEGE,
-                        ExternalId = record.DEPARTMENTS[i].DEPTID,
+                        OfficialName = department.DEPARTMENT,
+                        ExternalId = department.DEPTID,
                         IsMember = true,
                         ParentId = college.RevisionId,
                         TypeId = _departmentEstablishmentType.RevisionId
@@ -203,6 +208,26 @@ namespace UCosmic.Domain.External
                     _unitOfWork.SaveChanges();
                 }
             }
+
+            _usf = _entities.Get<Establishment>()
+                            //.EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
+                            //{
+                            //    e => e.Offspring.Select(o => o.Ancestor.Parent),
+                            //    e => e.Offspring.Select(o => o.Offspring.Parent),
+                            //    e => e.Offspring.Select(o => o.Ancestor.Children),
+                            //    e => e.Offspring.Select(o => o.Offspring.Children),
+                            //    e => e.Children.Select(c => c.Children.Select(g => g.Children)),
+                            //    e => e.Children.Select(c => c.Ancestors.Select(a => a.Ancestor))
+                            //})
+                            .SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            _hierarchy.Handle(new UpdateEstablishmentHierarchy(_usf));
+
+            EmployeeModuleSettings employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                .SingleOrDefault(p => p.Establishment.RevisionId == _usf.RevisionId);
+            if (employeeModuleSettings == null) { throw new Exception("No EmployeeModuleSettings for USF."); }
+
+
+            /* TBD = Update ExternalSyncDate */
         }
     }
 }

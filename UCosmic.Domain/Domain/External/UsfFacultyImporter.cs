@@ -37,20 +37,18 @@ namespace UCosmic.Domain.External
 
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UsfCreateEstablishment> _createEstablishment;
+        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly Establishment _usf;
 
         public UsfFacultyImporter( ICommandEntities entities,
                                    IHandleCommands<UsfCreateEstablishment> createEstablishment,
+                                   IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
                                    IUnitOfWork unitOfWork)
         {
             _entities = entities;
             _createEstablishment = createEstablishment;
+            _hierarchy = hierarchy;
             _unitOfWork = unitOfWork;
-
-            /* Get root USF Establishment. */
-            _usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (_usf == null) { throw new Exception("USF Establishment not found."); }
         }
 
         public void Import(int userId)
@@ -67,9 +65,13 @@ namespace UCosmic.Domain.External
                 facultyInfoLastActivityDate = DateTime.Parse(record.LAST_ACTIVITY_DATE);
             }
 
+            /* Get root USF Establishment. */
+            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            if (usf == null) { throw new Exception("USF Establishment not found."); }
+
             /* Compare the last activity date to what we have stored. */
             var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                         .SingleOrDefault(s => s.Establishment.RevisionId == _usf.RevisionId);
+                         .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
 
             /* If the LAD does not match, we need to update the USF department list. */
             if (facultyInfoLastActivityDate != employeeModuleSettings.EstablishmentsExternalSyncDate)
@@ -79,9 +81,12 @@ namespace UCosmic.Domain.External
                 var departmentImporter = new UsfDepartmentImporter( _entities,
                                                                     _createEstablishment,
                                                                     _unitOfWork,
+                                                                    _hierarchy,
                                                                     facultyInfoLastActivityDate);
                 departmentImporter.Import(stream);
             }
+
+
 
             /* Update faculty profile information. */
         }
@@ -102,8 +107,12 @@ namespace UCosmic.Domain.External
                 establishment = establishment.Parent;
             }
 
+            /* Get root USF Establishment. */
+            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            if (usf == null) { throw new Exception("USF Establishment not found."); }
+
             /* If this user is not affiliated with USF, leave. */
-            if (establishment.RevisionId != _usf.RevisionId) { goto Exit; }
+            if (establishment.RevisionId != usf.RevisionId) { goto Exit; }
 
             try
             {

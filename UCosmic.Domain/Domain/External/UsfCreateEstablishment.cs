@@ -57,7 +57,7 @@ namespace UCosmic.Domain.External
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
+        //private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
 
         public HandleUsfCreateEstablishmentCommand(IProcessQueries queryProcessor
             , ICommandEntities entities
@@ -66,7 +66,7 @@ namespace UCosmic.Domain.External
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
-            _hierarchy = hierarchy;
+            //_hierarchy = hierarchy;
         }
 
         public void Handle(UsfCreateEstablishment command)
@@ -179,7 +179,7 @@ namespace UCosmic.Domain.External
 
 
             _entities.Create(entity);
-            _hierarchy.Handle(new UpdateEstablishmentHierarchy(entity));
+            //_hierarchy.Handle(new UpdateEstablishmentHierarchy(entity));
             command.CreatedEstablishment = entity;
         }
     }
