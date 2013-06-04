@@ -8,8 +8,6 @@
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Spinner.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
-/// <reference path="../languages/ServerApiModel.ts" /> 
 
 
 import SearchApiModel = module('./ServerApiModel')
@@ -21,6 +19,7 @@ import Location = module('./Location')
 import Url = module('./Url')
 import Spinner = module('../Widgets/Spinner')
 import Languages = module('languages/ServerApiModel')
+import Languages = module('../languages/ServerApiModel')
 
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
         async: bool = true;

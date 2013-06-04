@@ -11,9 +11,11 @@
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
 //import app = module('../amd-modules/app/app');
 import SearchModule = module('../amd-modules/Establishments/Search');
+import ItemModule = module('../amd-modules/Establishments/Item');
 import SearchApiModel = module('../amd-modules/Establishments/ServerApiModel');
 import Spinner = module('../amd-modules/Widgets/Spinner');
 var Search = SearchModule.Search;
+var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
 
 
@@ -182,6 +184,30 @@ export class InstitutionalAgreementEditModel {
 
 
         }
+
+
+        $("#searchSideBarAddNew").on("click", function (e) {
+            $("#estSearch").fadeOut(500, function () {
+                $("#addEstablishment").fadeIn(500);
+            });
+            e.preventDefault();
+            var establishmentItemViewModel = new Item(1);
+            ko.applyBindings(establishmentItemViewModel, $('#addEstablishment')[0]);
+            establishmentItemViewModel.sammy.run();
+            return true;
+        });
+        ////this should work, but does not override the function correctly
+        //probably something to do with ko bindings because the above clickaction works
+        //this.establishmentSearchViewModel.gotoAddNew = (viewModel: any, e: JQueryEventObject): bool => {
+
+        //    $("#estSearch").fadeOut(500, function () {
+        //        $("#addEstablishment").fadeIn(500);
+        //    });
+        //    e.stopPropagation();
+        //    e.preventDefault();
+        //    return true;
+
+        //}
 
         $("#allParticipants").fadeOut(500, function () {
             $("#estSearch").fadeIn(500);

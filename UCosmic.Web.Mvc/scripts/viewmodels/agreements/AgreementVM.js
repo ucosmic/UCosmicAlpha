@@ -1,12 +1,15 @@
-define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Widgets/Spinner'], function(require, exports, __SearchResultModule__, __SearchModule__, __Spinner__) {
+define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner'], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
     var SearchResultModule = __SearchResultModule__;
 
     var SearchModule = __SearchModule__;
+
+    var ItemModule = __ItemModule__;
 
     
     var Spinner = __Spinner__;
 
     var Search = SearchModule.Search;
+    var Item = ItemModule.Item;
     var SearchResult = SearchResultModule.SearchResult;
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
@@ -125,6 +128,16 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     alert("This Participant has already been added.");
                 }
             };
+            $("#searchSideBarAddNew").on("click", function (e) {
+                $("#estSearch").fadeOut(500, function () {
+                    $("#addEstablishment").fadeIn(500);
+                });
+                e.preventDefault();
+                var establishmentItemViewModel = new Item(1);
+                ko.applyBindings(establishmentItemViewModel, $('#addEstablishment')[0]);
+                establishmentItemViewModel.sammy.run();
+                return true;
+            });
             $("#allParticipants").fadeOut(500, function () {
                 $("#estSearch").fadeIn(500);
             });
