@@ -43,7 +43,6 @@ namespace UCosmic.Domain.External
         private EstablishmentType _campusEstablishmentType;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
-        private bool _seeding;
 
         // ----------------------------------------------------------------------
         /*
@@ -53,8 +52,7 @@ namespace UCosmic.Domain.External
                                      IHandleCommands<UsfCreateEstablishment> createEstablishment,
                                      IUnitOfWork unitOfWork,
                                      IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                     DateTime? lastFacultyProfileActivityDate,
-                                     bool seeding = false)
+                                     DateTime? lastFacultyProfileActivityDate)
         {
             _entities = entities;
             _createEstablishment = createEstablishment;
@@ -62,7 +60,6 @@ namespace UCosmic.Domain.External
             _lastFacultyProfileActivityDate = lastFacultyProfileActivityDate;
             _hierarchy = hierarchy;
             _usf = null;
-            _seeding = seeding;
         }
 
         // ----------------------------------------------------------------------
@@ -223,21 +220,8 @@ namespace UCosmic.Domain.External
                             //    e => e.Children.Select(c => c.Ancestors.Select(a => a.Ancestor))
                             //})
                             .SingleOrDefault(e => e.OfficialName == "University of South Florida");
+
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(_usf));
-
-            if (!_seeding)
-            {
-                EmployeeModuleSettings employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                                                                         .SingleOrDefault(
-                                                                             p => p.Establishment.RevisionId == _usf.RevisionId);
-                if (employeeModuleSettings == null)
-                {
-                    throw new Exception("No EmployeeModuleSettings for USF.");
-                }
-
-
-                /* TBD = Update ExternalSyncDate */
-            }
         }
     }
 }

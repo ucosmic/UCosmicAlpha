@@ -28,6 +28,9 @@ namespace UCosmic.Domain.Employees
         public bool OfferFundingQuestions { get; set; }
         public string InternationalPedigreeTitle { get; set; }
         public DateTime? EstablishmentsExternalSyncDate { get; set; }
+        public DateTime? EstablishmentsLastUpdateAttempt { get; set; }
+        public int? EstablishmentsUpdateFailCount { get; set; }
+        public string EstablishmentsLastUpdateResult { get; set; } /* success, inprogress, failed */
 
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; internal set; }
     }

@@ -32,6 +32,10 @@ namespace UCosmic.Domain.Employees
         public bool OfferActivityType { get; protected internal set; }
         public bool OfferFundingQuestions { get; protected internal set; }
         public string InternationalPedigreeTitle { get; protected internal set; }
+        /* We should probably move these elsewhere. */
         public DateTime? EstablishmentsExternalSyncDate { get; protected internal set; }
+        public DateTime? EstablishmentsLastUpdateAttempt { get; protected internal set; }
+        public int? EstablishmentsUpdateFailCount { get; protected internal set; }
+        public string EstablishmentsLastUpdateResult { get; protected internal set; } /* success, inprogress, failed */
     }
 }

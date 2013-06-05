@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using System;
+using System.Data.Entity.ModelConfiguration;
 using UCosmic.Domain.Employees;
 
 namespace UCosmic.EntityFramework
@@ -54,6 +55,11 @@ namespace UCosmic.EntityFramework
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
             Property(p => p.InternationalPedigreeTitle).HasMaxLength(64);
+
+            Property(p => p.EstablishmentsExternalSyncDate).IsOptional();
+            Property(p => p.EstablishmentsLastUpdateAttempt).IsOptional();
+            Property(p => p.EstablishmentsUpdateFailCount).IsOptional();
+            Property(p => p.EstablishmentsLastUpdateResult).HasMaxLength(16).IsUnicode(false);
         }
     }
 

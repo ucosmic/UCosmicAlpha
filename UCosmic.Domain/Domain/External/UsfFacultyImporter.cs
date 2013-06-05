@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Establishments;
@@ -72,23 +73,63 @@ namespace UCosmic.Domain.External
             /* Compare the last activity date to what we have stored. */
             var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
                          .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
+            if (employeeModuleSettings == null) { throw new Exception("USF EmployeeModuleSettings not found."); }
 
             /* If the LAD does not match, we need to update the USF department list. */
             if (facultyInfoLastActivityDate != employeeModuleSettings.EstablishmentsExternalSyncDate)
             {
+                /* Update if not already in progress. */
+                if (employeeModuleSettings.EstablishmentsLastUpdateResult != "inprogress")
+                {
+                    Task.Factory.StartNew(() => ImportDepartments( _entities,
+                                                                   _createEstablishment,
+                                                                   _unitOfWork,
+                                                                   _hierarchy,
+                                                                   facultyInfoLastActivityDate,
+                                                                   employeeModuleSettings
+                                                                   ));
+                }
+            }
+            else
+            {
+                /* Update faculty profile information. */                
+            }
+        }
+
+        public static void ImportDepartments( ICommandEntities entities,
+                                              IHandleCommands<UsfCreateEstablishment> createEstablishment,
+                                              IUnitOfWork unitOfWork,
+                                              IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
+                                              DateTime? lastFacultyProfileActivityDate,
+                                              EmployeeModuleSettings employeeModuleSettings )
+        {
+            try
+            {
                 Stream stream = null; // UsfDepartmentListService.get()
 
-                var departmentImporter = new UsfDepartmentImporter( _entities,
-                                                                    _createEstablishment,
-                                                                    _unitOfWork,
-                                                                    _hierarchy,
-                                                                    facultyInfoLastActivityDate);
+                var departmentImporter = new UsfDepartmentImporter( entities,
+                                                                    createEstablishment,
+                                                                    unitOfWork,
+                                                                    hierarchy,
+                                                                    lastFacultyProfileActivityDate );
                 departmentImporter.Import(stream);
+
+
+                /* TBD = Update ExternalSyncDate */
             }
+            catch (Exception ex)
+            {
+                string errorMessage = ex.Message;
 
+                employeeModuleSettings.EstablishmentsLastUpdateAttempt = DateTime.Now;
+                employeeModuleSettings.EstablishmentsLastUpdateResult = "failed";
+                employeeModuleSettings.EstablishmentsUpdateFailCount += 1;
 
-
-            /* Update faculty profile information. */
+                if (employeeModuleSettings.EstablishmentsUpdateFailCount > 5)
+                {
+                    /* Send warning email */
+                }
+            }
         }
 
         public void Handle(UserCreated @event)
@@ -116,7 +157,7 @@ namespace UCosmic.Domain.External
 
             try
             {
-                Import(@event.UserId);
+                /* WIP Import(@event.UserId); */
             }
             catch
             {
