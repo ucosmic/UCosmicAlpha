@@ -1518,7 +1518,7 @@ namespace UCosmic.SeedData
                 });
 
 
-#if SEED_WITH_USF_DEPARTMENT_LIST
+#if true
             string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
                                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
 
@@ -1530,7 +1530,8 @@ namespace UCosmic.SeedData
                                                                         _createUsfEstablishment,
                                                                         _unitOfWork,
                                                                         _hierarchy,
-                                                                        null /* no last activity date */ );
+                                                                        null /* no last activity date */,
+                                                                        true /* seeding */ );
                     departmentImporter.Import(stream);
                 }
             }

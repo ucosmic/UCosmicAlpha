@@ -104,7 +104,7 @@ namespace UCosmic.SeedData
                     new EmployeeFacultyRank {Rank = "Other"},
                 },
                 NotifyAdminOnUpdate = false,
-                PersonalInfoAnchorText = "My USF World Profile",
+                PersonalInfoAnchorText = "My USF Profile",
                 EstablishmentId = establishment.RevisionId,
                 EmployeeActivityTypes = new Collection<EmployeeActivityType>
                 {

@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using UCosmic.Domain.Employees;
@@ -44,6 +43,7 @@ namespace UCosmic.Domain.External
         private EstablishmentType _campusEstablishmentType;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
+        private bool _seeding;
 
         // ----------------------------------------------------------------------
         /*
@@ -53,7 +53,8 @@ namespace UCosmic.Domain.External
                                      IHandleCommands<UsfCreateEstablishment> createEstablishment,
                                      IUnitOfWork unitOfWork,
                                      IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                     DateTime? lastFacultyProfileActivityDate )
+                                     DateTime? lastFacultyProfileActivityDate,
+                                     bool seeding = false)
         {
             _entities = entities;
             _createEstablishment = createEstablishment;
@@ -61,6 +62,7 @@ namespace UCosmic.Domain.External
             _lastFacultyProfileActivityDate = lastFacultyProfileActivityDate;
             _hierarchy = hierarchy;
             _usf = null;
+            _seeding = seeding;
         }
 
         // ----------------------------------------------------------------------
@@ -206,6 +208,7 @@ namespace UCosmic.Domain.External
                     };
                     _createEstablishment.Handle(createDepartment);
                     _unitOfWork.SaveChanges();
+
                 }
             }
 
@@ -222,12 +225,19 @@ namespace UCosmic.Domain.External
                             .SingleOrDefault(e => e.OfficialName == "University of South Florida");
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(_usf));
 
-            EmployeeModuleSettings employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                .SingleOrDefault(p => p.Establishment.RevisionId == _usf.RevisionId);
-            if (employeeModuleSettings == null) { throw new Exception("No EmployeeModuleSettings for USF."); }
+            if (!_seeding)
+            {
+                EmployeeModuleSettings employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                                                                         .SingleOrDefault(
+                                                                             p => p.Establishment.RevisionId == _usf.RevisionId);
+                if (employeeModuleSettings == null)
+                {
+                    throw new Exception("No EmployeeModuleSettings for USF.");
+                }
 
 
-            /* TBD = Update ExternalSyncDate */
+                /* TBD = Update ExternalSyncDate */
+            }
         }
     }
 }
