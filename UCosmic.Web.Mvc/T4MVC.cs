@@ -2678,6 +2678,17 @@ namespace Links
                 }
             
                 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class google {
+                    private const string URLPATH = "~/scripts/viewmodels/amd-modules/google";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string ToolsOverlay_ts = Url("ToolsOverlay.ts");
+                    public static readonly string ToolsOverlay_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ToolsOverlay.min.js") ? Url("ToolsOverlay.min.js") : Url("ToolsOverlay.js");
+                                  
+                    public static readonly string ToolsOverlay_min_js = Url("ToolsOverlay.min.js");
+                }
+            
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
                 public static class languages {
                     private const string URLPATH = "~/scripts/viewmodels/amd-modules/languages";
                     public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

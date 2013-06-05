@@ -186,15 +186,17 @@ export class InstitutionalAgreementEditModel {
         }
 
 
-        $("#searchSideBarAddNew").on("click", function (e) {
+
+        $("#searchSideBarAddNew").on("click", function (e) => {
             $("#estSearch").fadeOut(500, function () {
                 $("#addEstablishment").fadeIn(500);
             });
             e.preventDefault();
-            var establishmentItemViewModel = new Item(1);
-            ko.applyBindings(establishmentItemViewModel, $('#addEstablishment')[0]);
-            establishmentItemViewModel.sammy.run();
-            return true;
+            var establishmentItemViewModel = new Item();
+            this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
+            ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+            //establishmentItemViewModel.sammy.run();
+            return false;
         });
         ////this should work, but does not override the function correctly
         //probably something to do with ko bindings because the above clickaction works

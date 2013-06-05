@@ -2083,6 +2083,13 @@
     <Content Include="scripts\viewmodels\amd-modules\app\App.min.js">
       <DependentUpon>App.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.js">
+      <DependentUpon>ToolsOverlay.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.min.js">
+      <DependentUpon>ToolsOverlay.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\amd-modules\Widgets\Flasher.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>

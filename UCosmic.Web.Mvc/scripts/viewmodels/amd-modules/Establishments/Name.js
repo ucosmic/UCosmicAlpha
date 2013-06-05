@@ -198,7 +198,7 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 }, this);
                 this.editMode(false);
             } else {
-                this.owner.Names.shift();
+                this.owner.names.shift();
             }
         };
         Name.prototype.purge = function (vm, e) {

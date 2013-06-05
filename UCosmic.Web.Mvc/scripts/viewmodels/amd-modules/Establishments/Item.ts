@@ -18,7 +18,6 @@ import Name = module('./Name')
 import Location = module('./Location')
 import Url = module('./Url')
 import Spinner = module('../Widgets/Spinner')
-import Languages = module('languages/ServerApiModel')
 import Languages = module('../languages/ServerApiModel')
 
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
@@ -258,7 +257,7 @@ import Languages = module('../languages/ServerApiModel')
                 });
 
             var viewModelPact = this._loadScalars();
-
+            
             $.when(categoriesPact, viewModelPact).then(
 
                 // all requests succeeded
@@ -293,34 +292,34 @@ import Languages = module('../languages/ServerApiModel')
         
         // observables, computeds, & variables
         languages: Languages.KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
-        Names: KnockoutObservableArray = ko.observableArray();
+        names: KnockoutObservableArray = ko.observableArray();
         editingName: KnockoutObservableNumber = ko.observable(0);
         canAddName: KnockoutComputed;
         private _NamesMapping: any;
-        NamesSpinner: Spinner.Spinner= new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
-
+        namesSpinner: Spinner.Spinner= new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
+        //NamesSpinner.isVisible = false;
         // methods
         requestNames(callback?: (response?: SearchApiModel.IServerNameApiModel[]) => void ): void {
-            this.NamesSpinner.start();
+            this.namesSpinner.start();
             $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
                 .done((response: SearchApiModel.IServerNameApiModel[]): void => {
                     this.receiveNames(response);
                     if (callback) callback(response);
-                });
+                }); 
         }
 
         receiveNames(js: SearchApiModel.IServerNameApiModel[]): void {
-            ko.mapping.fromJS(js || [], this._NamesMapping, this.Names);
-            this.NamesSpinner.stop();
+            ko.mapping.fromJS(js || [], this._NamesMapping, this.names);
+            this.namesSpinner.stop();
             App.Obtruder.obtrude(document);
         }
 
         addName(): void {
             var apiModel = new Name.ServerNameApiModel(this.id);
-            if (this.Names().length === 0)
+            if (this.names().length === 0)
                 apiModel.isOfficialName = true;
             var newName = new Name.Name(apiModel, this);
-            this.Names.unshift(newName);
+            this.names.unshift(newName);
             newName.showEditor();
             App.Obtruder.obtrude(document);
         }
@@ -346,7 +345,7 @@ import Languages = module('../languages/ServerApiModel')
             };
 
             this.canAddName = ko.computed((): bool => {
-                return !this.NamesSpinner.isVisible() && this.editingName() === 0 && this.id !== 0;
+                return !this.namesSpinner.isVisible() && this.editingName() === 0 && this.id !== 0;
             });
 
             // request Names
@@ -355,7 +354,7 @@ import Languages = module('../languages/ServerApiModel')
                     this.requestNames();
 
                 else setTimeout(() => { // otherwise, stop spinning and load a single Name.Name form
-                    this.NamesSpinner.stop();
+                    this.namesSpinner.stop();
                     this.addName();
                 }, 0);
             }).extend({ throttle: 1 });
@@ -429,7 +428,7 @@ import Languages = module('../languages/ServerApiModel')
                 this.validatingSpinner.start();
 
                 // reference the single Name.Name and url
-                var officialName: Name.Name = this.Names()[0];
+                var officialName: Name.Name = this.names()[0];
                 var officialUrl: Url.Url = this.urls()[0];
                 var location = this.location;
 

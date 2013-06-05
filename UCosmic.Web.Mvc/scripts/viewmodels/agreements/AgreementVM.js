@@ -133,10 +133,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     $("#addEstablishment").fadeIn(500);
                 });
                 e.preventDefault();
-                var establishmentItemViewModel = new Item(1);
-                ko.applyBindings(establishmentItemViewModel, $('#addEstablishment')[0]);
-                establishmentItemViewModel.sammy.run();
-                return true;
+                var establishmentItemViewModel = new Item();
+                _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
+                ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+                return false;
             });
             $("#allParticipants").fadeOut(500, function () {
                 $("#estSearch").fadeIn(500);

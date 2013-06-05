@@ -41,9 +41,9 @@ export class Search extends PagedSearch.PagedSearch {
                 // populate countryCode based on last value when paging backwards
                 var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
 
-                $.get(App.Routes.WebApi.Countries.get()) // hit the API
-                .done((response: Places.IServerCountryApiModel[]): void => {
-                    // setup empty value
+                $.get(App.Routes.WebApi.Countries.get()) // hit the API 
+                .done((response: Places.IServerCountryApiModel[]): void => { 
+                    // setup empty value 
                     var emptyValue = new Places
                         .ServerCountryApiModel('-1', '[Without country]');
                     response.splice(response.length, 0, emptyValue);
@@ -157,7 +157,7 @@ export class Search extends PagedSearch.PagedSearch {
         }
 
         // filtering
-        countries: KnockoutObservableCountryModelArray = ko.observableArray();
+        countries: Places.KnockoutObservableCountryModelArray = ko.observableArray();
         countryCode: KnockoutObservableString = ko.observable();
 
         // lensing

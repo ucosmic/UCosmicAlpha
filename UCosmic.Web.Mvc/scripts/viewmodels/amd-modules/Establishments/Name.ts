@@ -245,7 +245,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
                 this.editMode(false); // hide the form, show the view
             }
             else {
-                this.owner.Names.shift(); // remove the new empty Item.Item
+                this.owner.names.shift(); // remove the new empty Item.Item
             }
         }
 

@@ -1,8 +1,10 @@
-define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner'], function(require, exports, __Places__, __Spinner__) {
+define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', '../google/ToolsOverlay'], function(require, exports, __Places__, __Spinner__, __ToolsOverlay__) {
     
     var Places = __Places__;
 
     var Spinner = __Spinner__;
+
+    var ToolsOverlay = __ToolsOverlay__;
 
     var gm = google.maps;
     var Location = (function () {
@@ -249,7 +251,7 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner'],
             this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
             this.isMapVisible(true);
             gm.event.addListenerOnce(this.map, 'idle', function () {
-                _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
+                _this.mapTools(new ToolsOverlay.ToolsOverlay(_this.map));
                 _this.mapTools().hideMarkerTools();
                 gm.event.addListener(_this.map, 'zoom_changed', function () {
                     _this.mapZoom(_this.map.getZoom());

@@ -7,13 +7,6 @@
 //    subscribe(callback: (newValue: ViewModels.Languages.IServerApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
 //    notifySubscribers(valueToWrite: ViewModels.Languages.IServerApiModel[], topic?: string);
 //}
-export interface KnockoutObservableLanguageModelArray extends KnockoutObservableArrayFunctions {
-    (): IServerApiModel[];
-    (value: IServerApiModel[]): void;
-
-    subscribe(callback: (newValue: IServerApiModel[]) => void , target?: any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: IServerApiModel[], topic?: string);
-}
     export interface IServerApiModel {
         code: string;
         name: string;
@@ -23,4 +16,12 @@ export interface KnockoutObservableLanguageModelArray extends KnockoutObservable
         
         constructor (public code: string, public name: string) {
         }
+    }
+
+    export interface KnockoutObservableLanguageModelArray extends KnockoutObservableArrayFunctions {
+        (): IServerApiModel[];
+        (value: IServerApiModel[]): void;
+        //IServerApiModel;
+        subscribe(callback: (newValue: any[]) => void , target?: any, topic?: string): KnockoutSubscription;
+        notifySubscribers(valueToWrite: any[], topic?: string);
     }

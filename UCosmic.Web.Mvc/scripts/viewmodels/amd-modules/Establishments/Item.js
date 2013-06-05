@@ -1,4 +1,4 @@
-define(["require", "exports", './SearchResult', './Search', './Name', './Location', './Url', '../Widgets/Spinner', 'languages/ServerApiModel'], function(require, exports, __SearchResult__, __Search__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
+define(["require", "exports", './SearchResult', './Search', './Name', './Location', './Url', '../Widgets/Spinner', '../languages/ServerApiModel'], function(require, exports, __SearchResult__, __Search__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
     
     var gm = google.maps;
     var SearchResult = __SearchResult__;
@@ -170,9 +170,9 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
             this.isValidationSummaryVisible = ko.observable(false);
             this.flasherProxy = new App.FlasherProxy();
             this.languages = ko.observableArray();
-            this.Names = ko.observableArray();
+            this.names = ko.observableArray();
             this.editingName = ko.observable(0);
-            this.NamesSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
+            this.namesSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
             this.urls = ko.observableArray();
             this.editingUrl = ko.observable(0);
             this.urlsSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
@@ -261,7 +261,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
         }
         Item.prototype.requestNames = function (callback) {
             var _this = this;
-            this.NamesSpinner.start();
+            this.namesSpinner.start();
             $.get(App.Routes.WebApi.Establishments.Names.get(this.id)).done(function (response) {
                 _this.receiveNames(response);
                 if(callback) {
@@ -270,17 +270,17 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
             });
         };
         Item.prototype.receiveNames = function (js) {
-            ko.mapping.fromJS(js || [], this._NamesMapping, this.Names);
-            this.NamesSpinner.stop();
+            ko.mapping.fromJS(js || [], this._NamesMapping, this.names);
+            this.namesSpinner.stop();
             App.Obtruder.obtrude(document);
         };
         Item.prototype.addName = function () {
             var apiModel = new Name.ServerNameApiModel(this.id);
-            if(this.Names().length === 0) {
+            if(this.names().length === 0) {
                 apiModel.isOfficialName = true;
             }
             var newName = new Name.Name(apiModel, this);
-            this.Names.unshift(newName);
+            this.names.unshift(newName);
             newName.showEditor();
             App.Obtruder.obtrude(document);
         };
@@ -301,14 +301,14 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
                 }
             };
             this.canAddName = ko.computed(function () {
-                return !_this.NamesSpinner.isVisible() && _this.editingName() === 0 && _this.id !== 0;
+                return !_this.namesSpinner.isVisible() && _this.editingName() === 0 && _this.id !== 0;
             });
             ko.computed(function () {
                 if(_this.id) {
                     _this.requestNames();
                 } else {
                     setTimeout(function () {
-                        _this.NamesSpinner.stop();
+                        _this.namesSpinner.stop();
                         _this.addName();
                     }, 0);
                 }
@@ -369,7 +369,7 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
             if(!this.id || this.id === 0) {
                 var me = this;
                 this.validatingSpinner.start();
-                var officialName = this.Names()[0];
+                var officialName = this.names()[0];
                 var officialUrl = this.urls()[0];
                 var location = this.location;
                 if(officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {

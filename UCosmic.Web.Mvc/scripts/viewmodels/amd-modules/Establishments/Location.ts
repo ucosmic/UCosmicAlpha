@@ -1,13 +1,14 @@
-/// <reference path="../../../google/ToolsOverlay.ts" />
+
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../places/ServerApiModel.ts" />
 /// <reference path="../../Spinner.ts" />
 /// <reference path="../../Flasher.ts" />
 
 
-import SearchApiModel = module('./ServerApiModel')
+import SearchApiModel = module('./ServerApiModel');
 import Places = module('../places/ServerApiModel');
-import Spinner = module('../Widgets/Spinner')
+import Spinner = module('../Widgets/Spinner');
+import ToolsOverlay = module('../google/ToolsOverlay');
 
     import gm = google.maps
 
@@ -16,7 +17,7 @@ import Spinner = module('../Widgets/Spinner')
         ownerId: number;
         map: google.maps.Map;
         mapZoom: KnockoutObservableNumber = ko.observable(1);
-        mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
+        mapTools: ToolsOverlay.KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
         toolsMarkerLat: KnockoutComputed;
         toolsMarkerLng: KnockoutComputed;
         $mapCanvas: KnockoutObservableJQuery = ko.observable();
@@ -312,7 +313,8 @@ import Spinner = module('../Widgets/Spinner')
             this.isMapVisible(true);
 
             gm.event.addListenerOnce(this.map, 'idle', (): void => {
-                this.mapTools(new App.GoogleMaps.ToolsOverlay(this.map));
+                this.mapTools(new ToolsOverlay.ToolsOverlay(this.map));
+
                 this.mapTools().hideMarkerTools(); // initially hide the marker tools
 
                 gm.event.addListener(this.map, 'zoom_changed', (): void => {
