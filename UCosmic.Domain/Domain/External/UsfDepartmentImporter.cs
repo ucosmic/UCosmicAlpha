@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using UCosmic.Domain.Employees;
@@ -43,6 +45,8 @@ namespace UCosmic.Domain.External
         private EstablishmentType _campusEstablishmentType;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
+
+        public DateTime LastDepartmentListActivityDate { get; set; }
 
         // ----------------------------------------------------------------------
         /*
@@ -120,6 +124,12 @@ namespace UCosmic.Domain.External
         // ----------------------------------------------------------------------
         public void Import(Stream stream)
         {
+#if DEBUG
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Debug.WriteLine("Department import start:");
+#endif
+
             var serializer = new DataContractJsonSerializer(typeof(Record));
             var record = (Record)serializer.ReadObject(stream);
 
@@ -129,11 +139,11 @@ namespace UCosmic.Domain.External
                 return;
             }
 
-            DateTime lastDepartmentListActivityDate = DateTime.Parse(record.LAST_ACTIVITY_DATE);
+            LastDepartmentListActivityDate = DateTime.Parse(record.LAST_ACTIVITY_DATE);
 
             /* If the faculty and department list last activity dates match, leave. */
             if (_lastFacultyProfileActivityDate.HasValue &&
-                (_lastFacultyProfileActivityDate.Value == lastDepartmentListActivityDate))
+                (_lastFacultyProfileActivityDate.Value == LastDepartmentListActivityDate))
             {
                 return;
             }
@@ -210,18 +220,18 @@ namespace UCosmic.Domain.External
             }
 
             _usf = _entities.Get<Establishment>()
-                            //.EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
-                            //{
-                            //    e => e.Offspring.Select(o => o.Ancestor.Parent),
-                            //    e => e.Offspring.Select(o => o.Offspring.Parent),
-                            //    e => e.Offspring.Select(o => o.Ancestor.Children),
-                            //    e => e.Offspring.Select(o => o.Offspring.Children),
-                            //    e => e.Children.Select(c => c.Children.Select(g => g.Children)),
-                            //    e => e.Children.Select(c => c.Ancestors.Select(a => a.Ancestor))
-                            //})
+                            .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
+                            {
+                                e => e.Offspring
+                            })
                             .SingleOrDefault(e => e.OfficialName == "University of South Florida");
 
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(_usf));
+
+#if DEBUG
+            stopwatch.Stop();
+            Debug.WriteLine("Time to import departments: " + stopwatch.ElapsedMilliseconds.ToString() + " ms");
+#endif
         }
     }
 }

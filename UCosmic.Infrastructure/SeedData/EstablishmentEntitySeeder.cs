@@ -1517,7 +1517,6 @@ namespace UCosmic.SeedData
                     CenterLongitude = -82.414803,
                 });
 
-
 #if false
             string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
                                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");

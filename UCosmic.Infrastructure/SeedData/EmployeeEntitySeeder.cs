@@ -115,7 +115,7 @@ namespace UCosmic.SeedData
                     new EmployeeActivityType {Type = "Professional Development, Service or Consulting", Rank = 5}
                 },
                 OfferCountry = true,
-                OfferActivityTypes = true,
+                OfferActivityType = true,
                 OfferFundingQuestions = true,
                 InternationalPedigreeTitle = "My Formal Education Outside the US"
             });

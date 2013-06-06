@@ -13,7 +13,7 @@ namespace UCosmic.Domain.Employees
         {
             NotifyAdminOnUpdate = false;
             OfferCountry = false;
-            OfferActivityTypes = false;
+            OfferActivityType = false;
             OfferFundingQuestions = false;
         }
 
@@ -24,7 +24,7 @@ namespace UCosmic.Domain.Employees
         public int EstablishmentId { get; set; }
         public ICollection<EmployeeActivityType> EmployeeActivityTypes { get; set; }
         public bool OfferCountry { get; set; }
-        public bool OfferActivityTypes { get; set; }
+        public bool OfferActivityType { get; set; }
         public bool OfferFundingQuestions { get; set; }
         public string InternationalPedigreeTitle { get; set; }
         public DateTime? EstablishmentsExternalSyncDate { get; set; }
@@ -70,7 +70,7 @@ namespace UCosmic.Domain.Employees
                 Establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.RevisionId == command.EstablishmentId),
                 ActivityTypes = command.EmployeeActivityTypes,
                 OfferCountry = command.OfferCountry,
-                OfferActivityType = command.OfferActivityTypes,
+                OfferActivityType = command.OfferActivityType,
                 OfferFundingQuestions = command.OfferFundingQuestions,
                 InternationalPedigreeTitle = command.InternationalPedigreeTitle,
                 EstablishmentsExternalSyncDate = command.EstablishmentsExternalSyncDate

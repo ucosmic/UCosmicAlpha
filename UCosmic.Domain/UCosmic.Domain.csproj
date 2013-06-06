@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
@@ -176,6 +177,7 @@
     <Compile Include="Domain\Degrees\Queries\DegreesByPersonId.cs" />
     <Compile Include="Domain\Degrees\Validation\MustFindDegreeById.cs" />
     <Compile Include="Domain\Degrees\Validation\MustOwnDegree.cs" />
+    <Compile Include="Domain\Employees\Commands\UpdateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">

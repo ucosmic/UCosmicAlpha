@@ -266,6 +266,8 @@
     <None Include="SeedData\SeedMediaFiles\10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls" />
     <None Include="SeedData\SeedMediaFiles\1322FF22-E863-435E-929E-765EB95FB460.ppt" />
     <None Include="SeedData\SeedMediaFiles\817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf" />
+    <None Include="SeedData\SeedMediaFiles\USFDepartmentList.json" />
+    <None Include="SeedData\SeedMediaFiles\USFSampleFacultyProfile.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UCosmic.Domain\UCosmic.Domain.csproj">
