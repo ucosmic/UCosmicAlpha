@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -10,6 +11,8 @@ using UCosmic.Domain.Employees;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
+
+#pragma warning disable 649
 
 
 namespace UCosmic.Domain.External
@@ -39,29 +42,26 @@ namespace UCosmic.Domain.External
             [DataMember(Name = "profile")] public ProfileRecord[] Profiles;
         }
 
-        private readonly static object _lock1 = new object();
+        private readonly static object Lock1 = new object();
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
         private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
-        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProcessEvents _eventProcessor;
 
         public UsfFacultyImporter( ICommandEntities entities,
-                                   IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
                                    IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
-                                   IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                   IUnitOfWork unitOfWork)
+                                   IProcessEvents eventProcessor)
         {
             _entities = entities;
-            _createUsfEstablishment = createUsfEstablishment;
             _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
-            _hierarchy = hierarchy;
-            _unitOfWork = unitOfWork;
+            _eventProcessor= eventProcessor;
         }
 
         public void Import(int userId)
         {
             Record record = null;
+#if DEBUG
+            string rawRecord = null;
+#endif
 
 #if true
             string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
@@ -73,11 +73,19 @@ namespace UCosmic.Domain.External
                 {
                     var serializer = new DataContractJsonSerializer(typeof(Record));
                     record = (Record)serializer.ReadObject(stream);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+                    StreamReader reader = new StreamReader(stream);
+                    rawRecord = reader.ReadToEnd();
                 }
             }
 #else
             /* Service here */
 #endif
+
+            Debug.WriteLine(DateTime.Now + " USF: ----- BEGIN RECORD -----");
+            Debug.WriteLine(rawRecord);
+            Debug.WriteLine(DateTime.Now + " USF: ----- END RECORD -----");
 
             DateTime? facultyInfoLastActivityDate = null;
             if (!String.IsNullOrEmpty(record.LastActivityDate))
@@ -89,14 +97,13 @@ namespace UCosmic.Domain.External
             var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
             if (usf == null) { throw new Exception("USF Establishment not found."); }
 
-            EmployeeModuleSettings employeeModuleSettings = null;
             bool updateDepartments = false;
 
-            lock (_lock1)
-            {      
-                employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+            lock (Lock1)
+            {
+                var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
                                                       .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
-                if ( (employeeModuleSettings != null) &&
+                if ((employeeModuleSettings != null) &&
                      (!employeeModuleSettings.EstablishmentsExternalSyncDate.HasValue ||
                      (facultyInfoLastActivityDate != employeeModuleSettings.EstablishmentsExternalSyncDate))
                    )
@@ -113,96 +120,29 @@ namespace UCosmic.Domain.External
 
                         updateDepartments = true;
                     }
+                    else
+                    {
+                        Debug.WriteLine(DateTime.Now + " USF: Establishment update in-progress.  Started: " + employeeModuleSettings.EstablishmentsLastUpdateAttempt);
+                    }
                 }
             }
 
-            if ((employeeModuleSettings != null) && updateDepartments)
+            if (updateDepartments)
             {
-                Task.Factory.StartNew(() => UpdateDepartments( _entities,
-                                                                _createUsfEstablishment,
-                                                                _updateEmployeeModuleSettings,
-                                                                _hierarchy,
-                                                                _unitOfWork,
-                                                                facultyInfoLastActivityDate,
-                                                                employeeModuleSettings ));
+                _eventProcessor.Raise(new UsfStaleEstablishmentHierarchy());
+                Debug.WriteLine(DateTime.Now + " USF: UsfStaleEstablishmentHierarchy event raised.");
             }
             else
             {
-                /* Update faculty profile information. */                
+                /* Update faculty profile information. */
             }
         }
 
-        public static void UpdateDepartments( ICommandEntities entities,
-                                              IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
-                                              IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
-                                              IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                              IUnitOfWork unitOfWork,
-                                              DateTime? lastFacultyProfileActivityDate,
-                                              EmployeeModuleSettings employeeModuleSettings )
-        {
-            try
-            {
-                UsfDepartmentImporter departmentImporter = null;
 
-#if true
-                string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
-                                   @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
-
-                if (File.Exists(filePath))
-                {
-                    using (var stream = new FileStream(filePath, FileMode.Open))
-                    {
-                        departmentImporter = new UsfDepartmentImporter( entities,
-                                                                        createUsfEstablishment,
-                                                                        unitOfWork,
-                                                                        hierarchy,
-                                                                        lastFacultyProfileActivityDate
-                                                                       );
-                        departmentImporter.Import(stream);
-                    }
-                }
-#else
-                var departmentImporter = new UsfDepartmentImporter( entities,
-                                                                    createEstablishment,
-                                                                    unitOfWork,
-                                                                    hierarchy,
-                                                                    lastFacultyProfileActivityDate );
-
-                departmentImporter.Import(stream);
-#endif
-
-                var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
-                {
-                    EstablishmentsExternalSyncDate = departmentImporter.LastDepartmentListActivityDate,
-                    EstablishmentsLastUpdateResult = "succeeded",
-                    EstablishmentsUpdateFailCount = 0
-                };
-
-                updateEmployeeModuleSettings.Handle(updateSettings);
-            }
-            catch (Exception ex)
-            {
-                string errorMessage = ex.Message;
-
-                var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
-                {
-                    EstablishmentsLastUpdateResult = "failed",
-                    EstablishmentsUpdateFailCount = employeeModuleSettings.EstablishmentsUpdateFailCount + 1
-                };
-
-                updateEmployeeModuleSettings.Handle(updateSettings);
-
-                int maxFailCount = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentListUpdateMaxFailCountBeforeErrorMail"]);
-                if (employeeModuleSettings.EstablishmentsUpdateFailCount >= maxFailCount)
-                {
-                    //MailMessage message = new MailMessage( fromAddress,
-                    //                                       toAddress,
-                    //                                       "UCosmic: Error updating USF Departments",
-                    //                                       body );
-                }
-            }
-        }
-
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
         public void Handle(UserCreated @event)
         {
             /* Don't import faculty profile information if seeding. */
@@ -228,11 +168,12 @@ namespace UCosmic.Domain.External
 
             try
             {
+                Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Person.DefaultEmail);
                 Import(@event.UserId);
             }
             catch
             {
-
+                /* Maybe ElmahLog here? */
             }
 
 

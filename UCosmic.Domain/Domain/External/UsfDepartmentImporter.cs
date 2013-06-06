@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,60 +10,63 @@ using System.Runtime.Serialization.Json;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 
+#pragma warning disable 649
+
+
 namespace UCosmic.Domain.External
 {
-    public class UsfDepartmentImporter
+    /*
+     * NOTE: This event handler is not thread-safe.  It's instantiation is controlled by a lock
+     * in UsfFacultyImporter.  If you wish to raise UsfStaleEstablishmentHierarchy event
+     * in a class other than UsfFacultyImporter, you will need to re-think synchronization.
+     */
+    public class UsfDepartmentImporter : IHandleEvents<UsfStaleEstablishmentHierarchy>
     {
         [DataContract]
         private class DepartmentRecord
         {
-            [DataMember]
-            public string DEPTID;
-            [DataMember]
-            public string INSTITUTION;
-            [DataMember]
-            public string COLLEGE;
-            [DataMember]
-            public string DEPARTMENT;
+            [DataMember(Name = "DEPTID")] public string DeptId;
+            [DataMember(Name = "INSTITUTION")] public string Institution;
+            [DataMember(Name = "COLLEGE")] public string College;
+            [DataMember(Name = "DEPARTMENT")] public string Department;
         }
 
         [DataContract]
         private class Record
         {
-            [DataMember]
-            public string LAST_ACTIVITY_DATE;
-            [DataMember]
-            public DepartmentRecord[] DEPARTMENTS;
+            [DataMember(Name = "LAST_ACTIVITY_DATE")] public string LastActivityDate;
+            [DataMember(Name = "DEPARTMENTS")] public DepartmentRecord[] Departments;
         }
 
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<UsfCreateEstablishment> _createEstablishment;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
+        private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
-        private DateTime? _lastFacultyProfileActivityDate;
+        private readonly IUnitOfWork _unitOfWork;
+        
         private Establishment _usf;
         private StringDictionary _campuses;
         private EstablishmentType _campusEstablishmentType;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
 
-        public DateTime LastDepartmentListActivityDate { get; set; }
+        public DateTime? LastDepartmentListActivityDate { get; set; }
 
         // ----------------------------------------------------------------------
         /*
         */
         // ----------------------------------------------------------------------
-        public UsfDepartmentImporter(ICommandEntities entities,
-                                     IHandleCommands<UsfCreateEstablishment> createEstablishment,
-                                     IUnitOfWork unitOfWork,
-                                     IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                     DateTime? lastFacultyProfileActivityDate)
+        public UsfDepartmentImporter( ICommandEntities entities,
+                                      IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
+                                      IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
+                                      IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
+                                      IUnitOfWork unitOfWork )
         {
             _entities = entities;
-            _createEstablishment = createEstablishment;
-            _unitOfWork = unitOfWork;
-            _lastFacultyProfileActivityDate = lastFacultyProfileActivityDate;
+            _createUsfEstablishment = createUsfEstablishment;
+            _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
             _hierarchy = hierarchy;
+            _unitOfWork = unitOfWork;
             _usf = null;
         }
 
@@ -112,7 +116,7 @@ namespace UCosmic.Domain.External
                         TypeId = _campusEstablishmentType.RevisionId
                     };
 
-                    _createEstablishment.Handle(createCampus);
+                    _createUsfEstablishment.Handle(createCampus);
                     _unitOfWork.SaveChanges();
                 }
             }
@@ -127,55 +131,54 @@ namespace UCosmic.Domain.External
 #if DEBUG
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Debug.WriteLine("Department import start:");
+            Debug.WriteLine(DateTime.Now + " USF: Department import start:");
 #endif
 
             var serializer = new DataContractJsonSerializer(typeof(Record));
             var record = (Record)serializer.ReadObject(stream);
 
+            LastDepartmentListActivityDate = null;
+
+            Debug.WriteLine(DateTime.Now + " USF: Record last activity date: " + record.LastActivityDate);
+
             /* If the department list last activity date does not exists, error (?). */
-            if (String.IsNullOrWhiteSpace(record.LAST_ACTIVITY_DATE))
+            if (String.IsNullOrWhiteSpace(record.LastActivityDate))
             {
                 return;
             }
 
-            LastDepartmentListActivityDate = DateTime.Parse(record.LAST_ACTIVITY_DATE);
+            LastDepartmentListActivityDate = DateTime.Parse(record.LastActivityDate);
 
-            /* If the faculty and department list last activity dates match, leave. */
-            if (_lastFacultyProfileActivityDate.HasValue &&
-                (_lastFacultyProfileActivityDate.Value == LastDepartmentListActivityDate))
-            {
-                return;
-            }
+            Debug.WriteLine(DateTime.Now + " USF: Number of records: " + record.Departments.Length);
 
             /* If the department list is empty, leave. */
-            if (record.DEPARTMENTS.Length == 0)
+            if (record.Departments.Length == 0)
             {
                 return;
             }
 
-            for (int i = 0; i < record.DEPARTMENTS.Length; i += 1)
+            for (int i = 0; i < record.Departments.Length; i += 1)
             {
-                DepartmentRecord department = record.DEPARTMENTS[i];
+                DepartmentRecord department = record.Departments[i];
 
                 /* Attempt to find existing department by id */
                 var existingDepartment =
-                    _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DEPTID);
+                    _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DeptId);
 
                 /* If not found, add. */
                 if ((existingDepartment == null) &&
-                    (!String.IsNullOrWhiteSpace(department.DEPARTMENT)) &&
-                    (!String.IsNullOrWhiteSpace(department.COLLEGE))
+                    (!String.IsNullOrWhiteSpace(department.Department)) &&
+                    (!String.IsNullOrWhiteSpace(department.College))
                    )
                 {
                     /* Make sure we have USF and Campuses. */
                     if (_usf == null) { UsfEstablishmentsSetup(); }
 
                     /* Get the campus name. */
-                    var campusOfficialName = _campuses[department.INSTITUTION];
+                    var campusOfficialName = _campuses[department.Institution];
                     if (campusOfficialName == null)
                     {
-                        string message = String.Format("USF campus name {0} not found", department.INSTITUTION);
+                        string message = String.Format("USF campus name {0} not found", department.Institution);
                         throw new Exception(message);
                     }
 
@@ -188,17 +191,17 @@ namespace UCosmic.Domain.External
                     }
 
                     /* Does the college exist? If not, create it. */
-                    var college = _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.COLLEGE);
+                    var college = _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
                     if (college == null)
                     {
                         var createCollege = new UsfCreateEstablishment()
                         {
-                            OfficialName = department.COLLEGE,
+                            OfficialName = department.College,
                             IsMember = true,
                             ParentId = campus.RevisionId,
                             TypeId = _collegeEstablishmentType.RevisionId
                         };
-                        _createEstablishment.Handle(createCollege);
+                        _createUsfEstablishment.Handle(createCollege);
                         _unitOfWork.SaveChanges();
 
                         college = createCollege.CreatedEstablishment;
@@ -207,13 +210,13 @@ namespace UCosmic.Domain.External
                     /* Create department/program. */
                     var createDepartment = new UsfCreateEstablishment()
                     {
-                        OfficialName = department.DEPARTMENT,
-                        ExternalId = department.DEPTID,
+                        OfficialName = department.Department,
+                        ExternalId = department.DeptId,
                         IsMember = true,
                         ParentId = college.RevisionId,
                         TypeId = _departmentEstablishmentType.RevisionId
                     };
-                    _createEstablishment.Handle(createDepartment);
+                    _createUsfEstablishment.Handle(createDepartment);
                     _unitOfWork.SaveChanges();
 
                 }
@@ -230,8 +233,98 @@ namespace UCosmic.Domain.External
 
 #if DEBUG
             stopwatch.Stop();
-            Debug.WriteLine("Time to import departments: " + stopwatch.ElapsedMilliseconds.ToString() + " ms");
+            Debug.WriteLine(DateTime.Now + " USF: Time to import departments: " + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 #endif
+        }
+
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        public void Handle(UsfStaleEstablishmentHierarchy @event)
+        {
+            Debug.WriteLine(DateTime.Now + " USF: Begin establishment hierarchy update.");
+
+            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            if (usf == null)
+            {
+                /* TBD - Better error handling. */
+                return;
+            }
+
+            var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                    .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
+            if (employeeModuleSettings == null)
+            {
+                /* TBD - Better error handling. */
+                return;
+            }
+
+            try
+            {
+                UsfDepartmentImporter departmentImporter = null;
+
+#if true
+                string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                                   @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
+
+                if (File.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Open))
+                    {
+                        departmentImporter = new UsfDepartmentImporter( _entities,
+                                                                        _createUsfEstablishment,
+                                                                        _updateEmployeeModuleSettings,
+                                                                        _hierarchy,
+                                                                        _unitOfWork );
+                        departmentImporter.Import(stream);
+                    }
+                }
+#else
+                var departmentImporter = new UsfDepartmentImporter( _entities,
+                                                                    _createUsfEstablishment,
+                                                                    _updateEmployeeModuleSettings,
+                                                                    _hierarchy,
+                                                                    _unitOfWork );
+
+                departmentImporter.Import(stream);
+#endif
+
+                var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
+                {
+                    EstablishmentsExternalSyncDate = departmentImporter.LastDepartmentListActivityDate,
+                    EstablishmentsLastUpdateResult = "succeeded",
+                    EstablishmentsUpdateFailCount = 0
+                };
+
+                _updateEmployeeModuleSettings.Handle(updateSettings);
+
+                Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update SUCCEEDED.");
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = ex.Message;
+
+                var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
+                {
+                    EstablishmentsLastUpdateResult = "failed",
+                    EstablishmentsUpdateFailCount = employeeModuleSettings.EstablishmentsUpdateFailCount + 1
+                };
+
+                _updateEmployeeModuleSettings.Handle(updateSettings);
+
+                int maxFailCount = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentListUpdateMaxFailCountBeforeErrorMail"]);
+                if (employeeModuleSettings.EstablishmentsUpdateFailCount >= maxFailCount)
+                {
+                    //MailMessage message = new MailMessage( fromAddress,
+                    //                                       toAddress,
+                    //                                       "UCosmic: Error updating USF Departments",
+                    //                                       body );
+                }
+
+                Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update FAILED. " + ex.Message);
+            }
         }
     }
 }

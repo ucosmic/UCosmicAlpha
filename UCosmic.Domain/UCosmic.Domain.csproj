@@ -217,6 +217,7 @@
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotHaveCyclicHierarchy.cs" />
+    <Compile Include="Domain\External\Events\UsfStaleEstablishmentHierarchy.cs" />
     <Compile Include="Domain\External\UsfCreateEstablishment.cs" />
     <Compile Include="Domain\Files\Entities\ExternalFile.cs" />
     <Compile Include="Domain\GeographicExpertise\Commands\CreateDeepGeographicExpertise.cs" />
