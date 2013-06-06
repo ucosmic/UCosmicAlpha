@@ -24,12 +24,10 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
     public class HandleParticipantByEstablishmentIdQuery : IHandleQueries<ParticipantByEstablishmentId, InstitutionalAgreementParticipant>
     {
-        private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queryProcessor;
 
-        public HandleParticipantByEstablishmentIdQuery(IQueryEntities entities, IProcessQueries queryProcessor)
+        public HandleParticipantByEstablishmentIdQuery(IProcessQueries queryProcessor)
         {
-            _entities = entities;
             _queryProcessor = queryProcessor;
         }
 
