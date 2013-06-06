@@ -37,7 +37,10 @@ namespace UCosmic.Domain.InstitutionalAgreements
             // when agreement id is not known or valid, return user's default affiliation
             if (!query.AgreementId.HasValue || query.AgreementId == 0)
             {
+                // return nothing when there is no username
                 if (string.IsNullOrWhiteSpace(query.Principal.Identity.Name)) return null;
+
+                // return nothing when user is not an agreement manager or supervisor
                 if (!query.Principal.IsInAnyRole(RoleName.InstitutionalAgreementManagers)) return null;
 
                 var user = _queryProcessor.Execute(new UserByName(query.Principal.Identity.Name)

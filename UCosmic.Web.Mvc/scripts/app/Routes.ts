@@ -244,6 +244,16 @@ module App.Routes {
                     return makeUrl(url);
                 }
             }
+
+            export module Participant {
+
+                export function get (establishmentId: number, agreementId?: number): string {
+                    var url = 'agreements/0/participant/';
+                    if (agreementId) url = url.replace('0', agreementId.toString())
+                    url += establishmentId;
+                    return makeUrl(url);
+                }
+            }
         }
         
         export module My {

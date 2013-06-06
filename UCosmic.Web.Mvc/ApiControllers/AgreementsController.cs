@@ -48,5 +48,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var models = Mapper.Map<AgreementParticipantApiModel[]>(entities);
             return models;
         }
+
+        [GET("{agreementId}/participant/{establishmentId}")]
+        public AgreementParticipantApiModel GetParticipant(int agreementId, int establishmentId)
+        {
+            var entity = _queryProcessor.Execute(new ParticipantByEstablishmentId(User, establishmentId, agreementId)
+            {
+                EagerLoad = new Expression<Func<InstitutionalAgreementParticipant, object>>[]
+                {
+                    x => x.Establishment.Names,
+                },
+            });
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<AgreementParticipantApiModel>(entity);
+            return model;
+        }
     }
 }

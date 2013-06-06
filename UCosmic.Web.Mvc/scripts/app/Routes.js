@@ -254,6 +254,18 @@ var App;
                     Participants.get = get;
                 })(Agreements.Participants || (Agreements.Participants = {}));
                 var Participants = Agreements.Participants;
+                (function (Participant) {
+                    function get(establishmentId, agreementId) {
+                        var url = 'agreements/0/participant/';
+                        if(agreementId) {
+                            url = url.replace('0', agreementId.toString());
+                        }
+                        url += establishmentId;
+                        return makeUrl(url);
+                    }
+                    Participant.get = get;
+                })(Agreements.Participant || (Agreements.Participant = {}));
+                var Participant = Agreements.Participant;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
             (function (My) {

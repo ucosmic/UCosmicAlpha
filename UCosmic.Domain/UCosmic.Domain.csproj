@@ -253,6 +253,7 @@
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\AgreementById.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Queries\ParticipantByEstablishmentId.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\ParticipantsByAgreementId.cs" />
     <Compile Include="Domain\LanguageExpertise\Commands\CreateLanguageExpertise.cs" />
     <Compile Include="Domain\LanguageExpertise\Commands\DeleteLanguageExpertise.cs" />
