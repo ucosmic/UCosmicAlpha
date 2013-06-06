@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using System.Threading.Tasks;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.People;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 
