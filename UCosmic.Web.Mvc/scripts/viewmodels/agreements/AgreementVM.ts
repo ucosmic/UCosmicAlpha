@@ -58,7 +58,7 @@ export class InstitutionalAgreementEditModel {
         this.isBound(true);
         this.removeParticipant = <() => bool> this.removeParticipant.bind(this);
 
-
+        this.hideOtherGroups();
     }
 
     participants = ko.mapping.fromJS([]);
@@ -109,9 +109,14 @@ export class InstitutionalAgreementEditModel {
                 this.receiveResults(response);
                
             });
+
+
     }
     
-
+    hideOtherGroups(): void {
+        $("#estSearch").css("visibility", "").hide();
+        $("#addEstablishment").css("visibility", "").hide();
+    }
 
 
      
@@ -159,7 +164,6 @@ export class InstitutionalAgreementEditModel {
         });
         this.establishmentSearchViewModel.clickAction = function (context): bool => {
 
-
             var myParticipant = new InstitutionalAgreementParticipantModel(
                 false,
                 context.id(),
@@ -188,13 +192,14 @@ export class InstitutionalAgreementEditModel {
 
 
         $("#searchSideBarAddNew").on("click", function (e) => {
-            $("#estSearch").fadeOut(500, function () {
-                $("#addEstablishment").fadeIn(500);
-            });
-            e.preventDefault();
             var establishmentItemViewModel = new Item();
             this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
-            ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+            $("#estSearch").fadeOut(500, function () {
+                $("#addEstablishment").fadeIn(500, function () {
+                    ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+                });
+            });
+            e.preventDefault();
             //establishmentItemViewModel.sammy.run();
             return false;
         });

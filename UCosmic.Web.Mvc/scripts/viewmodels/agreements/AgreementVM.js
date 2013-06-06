@@ -60,6 +60,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.populateParticipants();
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
+            this.hideOtherGroups();
         }
         InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {
             if(!js) {
@@ -78,6 +79,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $.get(App.Routes.WebApi.Agreements.Participants.get()).done(function (response) {
                 _this.receiveResults(response);
             });
+        };
+        InstitutionalAgreementEditModel.prototype.hideOtherGroups = function () {
+            $("#estSearch").css("visibility", "").hide();
+            $("#addEstablishment").css("visibility", "").hide();
         };
         InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             if(confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
@@ -129,13 +134,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 }
             };
             $("#searchSideBarAddNew").on("click", function (e) {
-                $("#estSearch").fadeOut(500, function () {
-                    $("#addEstablishment").fadeIn(500);
-                });
-                e.preventDefault();
                 var establishmentItemViewModel = new Item();
                 _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
-                ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+                $("#estSearch").fadeOut(500, function () {
+                    $("#addEstablishment").fadeIn(500, function () {
+                        ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+                    });
+                });
+                e.preventDefault();
                 return false;
             });
             $("#allParticipants").fadeOut(500, function () {
