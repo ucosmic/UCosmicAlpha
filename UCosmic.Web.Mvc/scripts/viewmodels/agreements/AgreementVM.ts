@@ -23,18 +23,22 @@ export class InstitutionalAgreementParticipantModel {
 
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
         establishmentTranslatedName: string) {
-        this.isOwner = ko.computed(function () {
-            return isOwner
-        });
-        this.establishmentId = ko.computed(function () {
-            return establishmentId
-        });
-        this.establishmentOfficialName = ko.computed(function () {
-            return establishmentOfficialName
-        });
-        this.establishmentTranslatedName = ko.computed(function () {
-            return establishmentTranslatedName
-        });
+        this.isOwner = ko.observable(isOwner);
+        this.establishmentId = ko.observable(establishmentId);
+        this.establishmentOfficialName = ko.observable(establishmentOfficialName);
+        this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
+        //this.isOwner = ko.computed(function () {
+        //    return isOwner
+        //});
+        //this.establishmentId = ko.computed(function () {
+        //    return establishmentId
+        //});
+        //this.establishmentOfficialName = ko.computed(function () {
+        //    return establishmentOfficialName
+        //});
+        //this.establishmentTranslatedName = ko.computed(function () {
+        //    return establishmentTranslatedName
+        //});
     }
 
     isOwner;
@@ -178,9 +182,24 @@ export class InstitutionalAgreementEditModel {
                 }
             }
             if (alreadyExist !== true) {
-                this.participants.push(myParticipant);
-                $("#estSearch").fadeOut(500, function () {
-                    $("#allParticipants").fadeIn(500);
+                $.ajax({
+                    url: App.Routes.WebApi.Agreements.Participant.get(1),
+                    type: 'GET',
+                    async: false
+                })
+                .done(function (response) => {
+                    myParticipant.isOwner(response.isOwner);
+                    this.participants.push(myParticipant);
+                    $("#estSearch").fadeOut(500, function () {
+                        $("#allParticipants").fadeIn(500);
+                    });
+                })
+                .fail(function () => {
+                    //alert('fail');
+                    this.participants.push(myParticipant);
+                    $("#estSearch").fadeOut(500, function () {
+                        $("#allParticipants").fadeIn(500);
+                    });
                 });
             } else {
                 alert("This Participant has already been added.")
@@ -192,11 +211,13 @@ export class InstitutionalAgreementEditModel {
 
 
         $("#searchSideBarAddNew").on("click", function (e) => {
-            var establishmentItemViewModel = new Item();
-            this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
-            $("#estSearch").fadeOut(500, function () {
-                $("#addEstablishment").fadeIn(500, function () {
-                    ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
+            var $addEstablishment = $("#addEstablishment");
+            //$addEstablishment.css("visibility", "hidden").show();
+            $("#estSearch").fadeOut(500, function () => {
+                $addEstablishment.css("visibility", "").hide().fadeIn(500, function () =>{
+                    var establishmentItemViewModel = new Item();
+                    this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
+                    ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
                 });
             });
             e.preventDefault();
