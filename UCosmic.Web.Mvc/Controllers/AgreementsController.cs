@@ -8,7 +8,7 @@ namespace UCosmic.Web.Mvc.Controllers
     [TryAuthorize(Roles = RoleName.InstitutionalAgreementManagers)]
     public partial class AgreementsController : Controller
     {
-         private readonly IProcessQueries _queryProcessor;
+        private readonly IProcessQueries _queryProcessor;
 
         public AgreementsController(IProcessQueries queryProcessor)
         {
