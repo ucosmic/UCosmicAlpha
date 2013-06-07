@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Security.Principal;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
+using UCosmic.Domain.People;
 
 #pragma warning disable 649
 
@@ -41,18 +43,21 @@ namespace UCosmic.Domain.External
         private readonly static object Lock1 = new object();
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
+        private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
         private readonly IProcessEvents _eventProcessor;
 
         public UsfFacultyImporter( ICommandEntities entities,
                                    IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
+                                   IHandleCommands<UpdateMyProfile> updateMyProfile,
                                    IProcessEvents eventProcessor)
         {
             _entities = entities;
             _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
+            _updateMyProfile = updateMyProfile;
             _eventProcessor= eventProcessor;
         }
 
-        public void Import(int userId)
+        public void Import(IPrincipal principal, int userId)
         {
             Record record = null;
 #if DEBUG
@@ -123,6 +128,19 @@ namespace UCosmic.Domain.External
                 }
             }
 
+            /*
+             * We are making a tradeoff, here, between responsiveness and convenience.  If we determine
+             * that the USF hierarchy needs to be updated, we will start a new task to do so.  However,
+             * we will not import the profile info for this person.   Why?
+             * 
+             * 1. Obtaining the department list data and then processing it is a long process. Making
+             * the user wait is not a good practice. ( > 50 seconds )
+             * 
+             * 2. Since the USF service does not notify us when the department list has changed, the
+             * only time we CAN know is when faculty profile data is imported.
+             * 
+             * 3. This is not mission critical data.  The user can always manually enter profile info.
+            */
             if (updateDepartments)
             {
                 _eventProcessor.Raise(new UsfStaleEstablishmentHierarchy());
@@ -130,10 +148,37 @@ namespace UCosmic.Domain.External
             }
             else
             {
-                /* Update faculty profile information. */
+                var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                   .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
+                var person = _entities.Get<Person>().SingleOrDefault(p => p.DisplayName == record.UsfEmailAddress);
+
+                if ((employeeModuleSettings != null) && (person != null))
+                {
+                    string title = record.Profiles[0].PositionTitle;
+                    var facultyRank = employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Rank == title);
+                    int? facultyRankId = (facultyRank != null) ? (int?)facultyRank.Id : null;
+
+                    var updateProfile = new UpdateMyProfile(principal)
+                    {
+                        PersonId = person.RevisionId,
+                        IsActive = true,
+                        IsDisplayNameDerived = false,
+                        DisplayName = String.Format("{0} {1}", record.FirstName, record.LastName),
+                        Salutation = null,
+                        FirstName = record.FirstName,
+                        MiddleName = record.MiddleName,
+                        LastName = record.LastName,
+                        Suffix = record.Suffix,
+                        Gender = record.Gender[0].ToString().ToUpper(),
+                        FacultyRankId = facultyRankId,
+                        JobTitles = record.Profiles[0].PositionTitle,
+                        AdministrativeAppointments = ""
+                    };
+
+                    _updateMyProfile.Handle(updateProfile);
+                }
             }
         }
-
 
         // --------------------------------------------------------------------------------
         /*
@@ -165,7 +210,7 @@ namespace UCosmic.Domain.External
             try
             {
                 Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Person.DefaultEmail);
-                Import(@event.UserId);
+                Import(@event.Principal, @event.UserId);
             }
             catch
             {

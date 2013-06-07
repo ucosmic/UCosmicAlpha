@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Threading;
 
 namespace UCosmic.Domain.Identity
@@ -9,8 +10,9 @@ namespace UCosmic.Domain.Identity
         public int UserId { get; set; }
         public bool Seeding { get; set; }
 
-        public UserCreated(int userId)
+        public UserCreated(IPrincipal principal,int userId)
         {
+            Principal = principal;
             UserId = userId;
             Signal = new EventWaitHandle(false, EventResetMode.AutoReset);
         }

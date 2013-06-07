@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Mail;
@@ -129,6 +130,7 @@ namespace UCosmic.EntityFramework
                 }
                 message.Body = body.ToString();
                 mailSender.Send(message);
+                Debug.WriteLine(message.Body);
                 throw;
             }
         }

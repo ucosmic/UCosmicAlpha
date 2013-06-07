@@ -181,7 +181,10 @@ namespace UCosmic.Domain.Identity
 
             command.CreatedUserId = user.RevisionId;
 
-            var userCreatedEvent = new UserCreated(command.CreatedUserId) {Seeding = command.Seeding};
+            var userCreatedEvent = new UserCreated(command.Principal, command.CreatedUserId)
+            {
+                Seeding = command.Seeding
+            };
             _eventProcessor.Raise(userCreatedEvent);
 
             /*
@@ -198,7 +201,6 @@ namespace UCosmic.Domain.Identity
             catch
             {
             }
-            
         }
     }
 }

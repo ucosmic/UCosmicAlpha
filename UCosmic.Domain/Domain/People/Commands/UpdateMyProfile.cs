@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
@@ -62,12 +63,12 @@ namespace UCosmic.Domain.People
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdateMyProfileCommand(ICommandEntities entities
-            , IHandleCommands<UpdatePerson> updatePerson
-            , IHandleCommands<CreateEmployee> createEmployee
-            , IHandleCommands<UpdateEmployee> updateEmployee
-            , IHandleCommands<DeleteEmployee> deleteEmployee
-            , IUnitOfWork unitOfWork
-        )
+                                            , IHandleCommands<UpdatePerson> updatePerson
+                                            , IHandleCommands<CreateEmployee> createEmployee
+                                            , IHandleCommands<UpdateEmployee> updateEmployee
+                                            , IHandleCommands<DeleteEmployee> deleteEmployee
+                                            , IUnitOfWork unitOfWork
+            )
         {
             _entities = entities;
             _updatePerson = updatePerson;
@@ -79,78 +80,96 @@ namespace UCosmic.Domain.People
 
         public void Handle(UpdateMyProfile command)
         {
-            if (command == null) { throw new ArgumentNullException("command"); }
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
 
-            var person = _entities.Get<Person>()
-                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
-                {
-                    x => x.Employee,
-                })
-                .ByUserName(command.Principal.Identity.Name);
+            Person person = null;
+
+            if (command.PersonId == 0)
+            {
+                person = _entities.Get<Person>()
+                                  .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+                                  {
+                                      x => x.Employee,
+                                  })
+                                  .ByUserName(command.Principal.Identity.Name);
+            }
+            else
+            {
+                person = _entities.Get<Person>()
+                                  .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+                                  {
+                                      x => x.Employee,
+                                  })
+                                  .SingleOrDefault(p => p.RevisionId == command.PersonId);
+            }
+
             if (person == null) // person should never be null thanks to validator
-                throw new InvalidOperationException(string.Format(
-                    "User '{0}' does not exist", command.Principal.Identity.Name));
+                    throw new InvalidOperationException(string.Format(
+                        "User '{0}' does not exist", command.Principal.Identity.Name));
 
-            // delegate to other commands
-            _updatePerson.Handle(new UpdatePerson(person.RevisionId)
-            {
-                NoCommit = true,
-                IsActive = command.IsActive,
-                IsDisplayNameDerived = command.IsDisplayNameDerived,
-                DisplayName = command.DisplayName,
-                Salutation = command.Salutation,
-                FirstName = command.FirstName,
-                MiddleName = command.MiddleName,
-                LastName = command.LastName,
-                Suffix = command.Suffix,
-                Gender = command.Gender,
-            });
-
-            var hasEmployee = person.Employee != null;
-            var shouldHaveEmployee = command.FacultyRankId.HasValue ||
-                                     !string.IsNullOrWhiteSpace(command.JobTitles) ||
-                                     !string.IsNullOrWhiteSpace(command.AdministrativeAppointments);
-
-            // create employee
-            if (!hasEmployee && shouldHaveEmployee)
-            {
-                _createEmployee.Handle(new CreateEmployee
+                // delegate to other commands
+                _updatePerson.Handle(new UpdatePerson(person.RevisionId)
                 {
                     NoCommit = true,
-                    PersonId = person.RevisionId,
-                    FacultyRankId = command.FacultyRankId,
-                    JobTitles = command.JobTitles,
-                    AdministrativeAppointments = command.AdministrativeAppointments,
+                    IsActive = command.IsActive,
+                    IsDisplayNameDerived = command.IsDisplayNameDerived,
+                    DisplayName = command.DisplayName,
+                    Salutation = command.Salutation,
+                    FirstName = command.FirstName,
+                    MiddleName = command.MiddleName,
+                    LastName = command.LastName,
+                    Suffix = command.Suffix,
+                    Gender = command.Gender,
                 });
-            }
 
-            // update employee
-            if (hasEmployee && shouldHaveEmployee)
-            {
-                _updateEmployee.Handle(new UpdateEmployee
+                var hasEmployee = person.Employee != null;
+                var shouldHaveEmployee = command.FacultyRankId.HasValue ||
+                                         !string.IsNullOrWhiteSpace(command.JobTitles) ||
+                                         !string.IsNullOrWhiteSpace(command.AdministrativeAppointments);
+
+                // create employee
+                if (!hasEmployee && shouldHaveEmployee)
                 {
-                    NoCommit = true,
-                    Id = person.Employee.Id,
-                    FacultyRankId = command.FacultyRankId,
-                    JobTitles = command.JobTitles,
-                    AdministrativeAppointments = command.AdministrativeAppointments,
-                });
-            }
+                    _createEmployee.Handle(new CreateEmployee
+                    {
+                        NoCommit = true,
+                        PersonId = person.RevisionId,
+                        FacultyRankId = command.FacultyRankId,
+                        JobTitles = command.JobTitles,
+                        AdministrativeAppointments = command.AdministrativeAppointments,
+                    });
+                }
 
-            // delete employee
-            if (hasEmployee && !shouldHaveEmployee)
-            {
-                _deleteEmployee.Handle(new DeleteEmployee(command.Principal, person.Employee.Id)
+                // update employee
+                if (hasEmployee && shouldHaveEmployee)
                 {
-                    NoCommit = true,
-                });
-            }
+                    _updateEmployee.Handle(new UpdateEmployee
+                    {
+                        NoCommit = true,
+                        Id = person.Employee.Id,
+                        FacultyRankId = command.FacultyRankId,
+                        JobTitles = command.JobTitles,
+                        AdministrativeAppointments = command.AdministrativeAppointments,
+                    });
+                }
 
-            if (!command.NoCommit)
-            {
-                _unitOfWork.SaveChanges();
+                // delete employee
+                if (hasEmployee && !shouldHaveEmployee)
+                {
+                    _deleteEmployee.Handle(new DeleteEmployee(command.Principal, person.Employee.Id)
+                    {
+                        NoCommit = true,
+                    });
+                }
+
+                if (!command.NoCommit)
+                {
+                    _unitOfWork.SaveChanges();
+                }
             }
         }
     }
-}
  
