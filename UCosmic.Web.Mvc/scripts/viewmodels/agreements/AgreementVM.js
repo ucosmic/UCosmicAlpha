@@ -96,6 +96,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             if(!this.hasBoundSearch) {
                 ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+                this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
+                    if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
+                        $("#estSearch").fadeOut(500, function () {
+                            $("#allParticipants").fadeIn(500);
+                        });
+                    }
+                });
+                this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
                 this.establishmentSearchViewModel.sammy.run();
             }
             this.hasBoundSearch = true;
@@ -103,6 +111,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 return 'Choose this establishment as a participant';
             };
             $("#cancelAddParticipant").on("click", function () {
+                this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
                 $("#estSearch").fadeOut(500, function () {
                     $("#allParticipants").fadeIn(500);
                 });

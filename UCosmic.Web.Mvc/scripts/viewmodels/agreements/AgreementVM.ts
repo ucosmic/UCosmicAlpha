@@ -151,6 +151,14 @@ export class InstitutionalAgreementEditModel {
         //var establishmentSearchViewModel = new Search();
         if (!this.hasBoundSearch) {
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+            this.establishmentSearchViewModel.sammy.bind("location-changed", function () => {
+                if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
+                    $("#estSearch").fadeOut(500, function () {
+                        $("#allParticipants").fadeIn(500);
+                    });
+                }        
+            });
+            this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
             this.establishmentSearchViewModel.sammy.run();
         }
         this.hasBoundSearch = true;
@@ -162,6 +170,7 @@ export class InstitutionalAgreementEditModel {
         };
 
         $("#cancelAddParticipant").on("click", function () {
+            this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
             $("#estSearch").fadeOut(500, function () {
                 $("#allParticipants").fadeIn(500);
             });
@@ -207,12 +216,8 @@ export class InstitutionalAgreementEditModel {
 
 
         }
-
-
-
         $("#searchSideBarAddNew").on("click", function (e) => {
             var $addEstablishment = $("#addEstablishment");
-            //$addEstablishment.css("visibility", "hidden").show();
             $("#estSearch").fadeOut(500, function () => {
                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () =>{
                     var establishmentItemViewModel = new Item();
@@ -221,19 +226,22 @@ export class InstitutionalAgreementEditModel {
                 });
             });
             e.preventDefault();
-            //establishmentItemViewModel.sammy.run();
             return false;
         });
         ////this should work, but does not override the function correctly
         //probably something to do with ko bindings because the above clickaction works
         //this.establishmentSearchViewModel.gotoAddNew = (viewModel: any, e: JQueryEventObject): bool => {
 
-        //    $("#estSearch").fadeOut(500, function () {
-        //        $("#addEstablishment").fadeIn(500);
+        //var $addEstablishment = $("#addEstablishment");
+        //$("#estSearch").fadeOut(500, function () => {
+        //    $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
+        //        var establishmentItemViewModel = new Item();
+        //        this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
+        //        ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
         //    });
-        //    e.stopPropagation();
-        //    e.preventDefault();
-        //    return true;
+        //});
+        //e.preventDefault();
+        //return false;
 
         //}
 
