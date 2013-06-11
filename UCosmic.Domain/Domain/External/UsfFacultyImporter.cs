@@ -63,25 +63,41 @@ namespace UCosmic.Domain.External
 #if DEBUG
             string rawRecord = null;
 #endif
+            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            if (usf == null) { throw new Exception("USF Establishment not found."); }
 
-#if true
-            string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
-                                @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFSampleFacultyProfile.json");
 
-            if (File.Exists(filePath))
+#if false
             {
-                using (var stream = new FileStream(filePath, FileMode.Open))
-                {
-                    var serializer = new DataContractJsonSerializer(typeof(Record));
-                    record = (Record)serializer.ReadObject(stream);
+                string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                                                @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFSampleFacultyProfile.json");
 
-                    stream.Seek(0, SeekOrigin.Begin);
-                    StreamReader reader = new StreamReader(stream);
-                    rawRecord = reader.ReadToEnd();
+                if (File.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Open))
+                    {
+                        var serializer = new DataContractJsonSerializer(typeof (Record));
+                        record = (Record) serializer.ReadObject(stream);
+
+                        stream.Seek(0, SeekOrigin.Begin);
+                        StreamReader reader = new StreamReader(stream);
+                        rawRecord = reader.ReadToEnd();
+                    }
                 }
             }
 #else
-            /* Service here */
+            {
+                var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                                      .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
+
+                if (employeeModuleSettings != null)
+                {
+                    string serviceToken = UsfCas.GetServiceTicket(employeeModuleSettings.EstablishmentServiceUsername,
+                                                                  employeeModuleSettings.EstablishmentServicePassword,
+                                                                  UsfFacultyInfo.Uri);
+                }
+                return;
+            }
 #endif
 
             Debug.WriteLine(DateTime.Now + " USF: ----- BEGIN RECORD -----");
@@ -94,9 +110,6 @@ namespace UCosmic.Domain.External
                 facultyInfoLastActivityDate = DateTime.Parse(record.LastActivityDate);
             }
 
-            /* Get root USF Establishment. */
-            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (usf == null) { throw new Exception("USF Establishment not found."); }
 
             bool updateDepartments = false;
 

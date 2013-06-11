@@ -218,7 +218,10 @@
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotHaveCyclicHierarchy.cs" />
     <Compile Include="Domain\External\Events\UsfStaleEstablishmentHierarchy.cs" />
+    <Compile Include="Domain\External\Services\UsfCas.cs" />
+    <Compile Include="Domain\External\Services\UsfDepartmentIdLookup.cs" />
     <Compile Include="Domain\External\UsfCreateEstablishment.cs" />
+    <Compile Include="Domain\External\Services\UsfFacultyInfo.cs" />
     <Compile Include="Domain\Files\Entities\ExternalFile.cs" />
     <Compile Include="Domain\GeographicExpertise\Commands\CreateDeepGeographicExpertise.cs" />
     <Compile Include="Domain\GeographicExpertise\Commands\UpdateGeographicExpertiseLocation.cs" />
@@ -538,8 +541,6 @@
     <Compile Include="Domain\_Etc\RevisableEntity.cs" />
     <Compile Include="Domain\_Etc\UnicodeToAsciiConverter.cs" />
     <Compile Include="Domain\External\UsfFacultyImporter.cs" />
-    <Compile Include="Domain\External\IStreamDataImporter.cs" />
-    <Compile Include="Domain\External\StreamDataImporter.cs" />
     <Compile Include="Domain\External\UsfDepartmentImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

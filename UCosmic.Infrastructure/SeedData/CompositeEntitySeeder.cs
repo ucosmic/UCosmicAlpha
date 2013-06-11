@@ -4,6 +4,7 @@
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly CoreSqlSeeder _coreSqlSeeder;
+        private readonly SensativeSqlSeeder _sensativeSqlSeeder;
         //private readonly LanguageEntitySeeder _languageEntitySeeder;
         //private readonly LanguageSqlSeeder _languageSqlSeeder;
         //private readonly CountryAndAdmin1ByGeoPlanetEntitySeeder _countryAndAdmin1ByGeoPlanetEntitySeeder;
@@ -29,6 +30,7 @@
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
+            , SensativeSqlSeeder sensativeSqlSeeder
             //, LanguageEntitySeeder languageEntitySeeder // this or CoreSqlSeeder
             //, LanguageSqlSeeder languageSqlSeeder // this or CoreSqlSeeder
             //, CountryAndAdmin1ByGeoPlanetEntitySeeder countryAndAdmin1ByGeoPlanetEntitySeeder // this or CoreSqlSeeder
@@ -55,6 +57,7 @@
         {
             _unitOfWork = unitOfWork;
             _coreSqlSeeder = coreSqlSeeder;
+            _sensativeSqlSeeder = sensativeSqlSeeder;
             //_languageSqlSeeder = languageSqlSeeder; // this or CoreSqlSeeder
             //_languageEntitySeeder = languageEntitySeeder; // this or CoreSqlSeeder
             //_countryAndAdmin1ByGeoPlanetEntitySeeder = countryAndAdmin1ByGeoPlanetEntitySeeder; // this or CoreSqlSeeder
@@ -107,6 +110,8 @@
             _degreeEntitySeeder.Seed();
             _geographicExpertiseEntitySeeder.Seed();
             _languageExpertiseEntitySeeder.Seed();
+
+            _sensativeSqlSeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }

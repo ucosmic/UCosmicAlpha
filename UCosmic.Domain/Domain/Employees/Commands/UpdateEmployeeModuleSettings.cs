@@ -24,6 +24,8 @@ namespace UCosmic.Domain.Employees
         public DateTime? EstablishmentsLastUpdateAttempt { get; set; }
         public int? EstablishmentsUpdateFailCount { get; set; }
         public string EstablishmentsLastUpdateResult { get; set; } /* success, inprogress, failed */
+        public string EstablishmentServiceUsername { get; set; }
+        public string EstablishmentServicePassword { get; set; }
 
         internal bool NoCommit { get; set; }
 
@@ -125,6 +127,14 @@ namespace UCosmic.Domain.Employees
             if (command.EstablishmentsLastUpdateResult != null)
             {
                 settings.EstablishmentsLastUpdateResult = command.EstablishmentsLastUpdateResult;
+            }
+            if (command.EstablishmentServiceUsername != null)
+            {
+                settings.EstablishmentServiceUsername = command.EstablishmentServiceUsername;
+            }
+            if (command.EstablishmentServicePassword != null)
+            {
+                settings.EstablishmentServicePassword = command.EstablishmentServicePassword;
             }
 
             _entities.Update(settings);

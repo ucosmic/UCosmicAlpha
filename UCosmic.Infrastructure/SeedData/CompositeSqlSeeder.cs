@@ -13,6 +13,7 @@ namespace UCosmic.SeedData
         private readonly LoadableFileEntitySeeder _loadableFileEntitySeeder;
         private readonly ImageEntitySeeder _imageEntitySeeder;
         private readonly ExternalFileEntitySeeder _externalFileEntitySeeder;
+        private readonly SensativeSqlSeeder _sensativeSeeder;
 
         public CompositeSqlSeeder(IUnitOfWork unitOfWork
             , IQueryEntities entities
@@ -21,6 +22,7 @@ namespace UCosmic.SeedData
             , LoadableFileEntitySeeder loadableFileEntitySeeder
             , ImageEntitySeeder imageEntitySeeder
             , ExternalFileEntitySeeder externalFileEntitySeeder
+            , SensativeSqlSeeder sensativeSeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -30,6 +32,7 @@ namespace UCosmic.SeedData
             _loadableFileEntitySeeder = loadableFileEntitySeeder;
             _imageEntitySeeder = imageEntitySeeder;
             _externalFileEntitySeeder = externalFileEntitySeeder;
+            _sensativeSeeder = sensativeSeeder;
         }
 
         public void Seed()
@@ -56,6 +59,8 @@ namespace UCosmic.SeedData
 
             var members = Membership.GetAllUsers().Cast<MembershipUser>();
             if (!members.Any()) _memberEntitySeeder.Seed();
+
+            _sensativeSeeder.Seed();
         }
     }
 }

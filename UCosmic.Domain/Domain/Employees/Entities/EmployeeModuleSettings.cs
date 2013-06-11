@@ -37,5 +37,8 @@ namespace UCosmic.Domain.Employees
         public DateTime? EstablishmentsLastUpdateAttempt { get; protected internal set; }
         public int? EstablishmentsUpdateFailCount { get; protected internal set; }
         public string EstablishmentsLastUpdateResult { get; protected internal set; } /* success, inprogress, failed */
+        /* May need to make a collection in the future. */
+        public string EstablishmentServiceUsername { get; protected internal set; }
+        public string EstablishmentServicePassword { get; protected internal set; }
     }
 }

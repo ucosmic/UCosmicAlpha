@@ -111,11 +111,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
@@ -216,6 +213,7 @@
     <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\LoadableFileEntitySeeder.cs" />
     <Compile Include="SeedData\RegionsByGeoServicesEntitySeeder.cs" />
+    <Compile Include="SeedData\SensativeSqlSeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />
     <Compile Include="SeedData\WaterBodiesByGeoServicesEntitySeeder.cs" />
     <Compile Include="WebApi\SimpleInjectorNGeoRegistration.cs" />
