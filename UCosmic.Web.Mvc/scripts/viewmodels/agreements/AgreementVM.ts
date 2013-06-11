@@ -151,16 +151,45 @@ export class InstitutionalAgreementEditModel {
         //var establishmentSearchViewModel = new Search();
         if (!this.hasBoundSearch) {
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+            var lastURL = "asdf";
             this.establishmentSearchViewModel.sammy.bind("location-changed", function () => {
-                if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
-                    $("#estSearch").fadeOut(500, function () {
-                        $("#allParticipants").fadeIn(500);
-                    });
-                }        
+                if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
+                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
+                        //use jquery defered to fade out all other pages - then fade in
+                        $("#estSearch").fadeOut(500, function () {
+                            $("#allParticipants").fadeIn(500);
+                        });
+                        lastURL = "agreements";
+                    }
+                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("establishments/new/#/") > 0) {
+                        var $addEstablishment = $("#addEstablishment");
+                        $("#estSearch").fadeOut(500, function () => {
+                            $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
+                                var establishmentItemViewModel = new Item();
+                                establishmentItemViewModel.goToSearch = function () => {
+                                    this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
+                                    this.establishmentSearchViewModel.clickAction = function (context): bool => {
+                                        //add context here to the parent establishment inn item
+                                        this.establishmentSearchViewModel.sammy.setLocation('establishments/new/#/');
+                                    };
+                                }
+                                ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
+                            });
+                        });
+                        lastURL = "establishments/new/#/";
+                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("establishments/#/page/") > 0) {
+                        $("#allParticipants").fadeOut(500, function () {
+                            $("#estSearch").fadeIn(500);
+                        });
+                        lastURL = "establishments/#/page/";
+                    }
+
+                }
             });
-            this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
+
             this.establishmentSearchViewModel.sammy.run();
         }
+        this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
         this.hasBoundSearch = true;
 
         //this.establishmentSearchViewModel.newParticipant = ko.observable();
@@ -169,11 +198,11 @@ export class InstitutionalAgreementEditModel {
             return 'Choose this establishment as a participant';
         };
 
-        $("#cancelAddParticipant").on("click", function () {
+        $("#cancelAddParticipant").on("click", function () => {
             this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
-            $("#estSearch").fadeOut(500, function () {
-                $("#allParticipants").fadeIn(500);
-            });
+            //$("#estSearch").fadeOut(500, function () {
+            //    $("#allParticipants").fadeIn(500);
+            //});
         });
         this.establishmentSearchViewModel.clickAction = function (context): bool => {
 
@@ -199,16 +228,18 @@ export class InstitutionalAgreementEditModel {
                 .done(function (response) => {
                     myParticipant.isOwner(response.isOwner);
                     this.participants.push(myParticipant);
-                    $("#estSearch").fadeOut(500, function () {
-                        $("#allParticipants").fadeIn(500);
-                    });
+                    this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                    //$("#estSearch").fadeOut(500, function () {
+                    //    $("#allParticipants").fadeIn(500);
+                    //});
                 })
                 .fail(function () => {
                     //alert('fail');
                     this.participants.push(myParticipant);
-                    $("#estSearch").fadeOut(500, function () {
-                        $("#allParticipants").fadeIn(500);
-                    });
+                    this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                    //$("#estSearch").fadeOut(500, function () {
+                    //    $("#allParticipants").fadeIn(500);
+                    //});
                 });
             } else {
                 alert("This Participant has already been added.")
@@ -217,14 +248,7 @@ export class InstitutionalAgreementEditModel {
 
         }
         $("#searchSideBarAddNew").on("click", function (e) => {
-            var $addEstablishment = $("#addEstablishment");
-            $("#estSearch").fadeOut(500, function () => {
-                $addEstablishment.css("visibility", "").hide().fadeIn(500, function () =>{
-                    var establishmentItemViewModel = new Item();
-                    this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
-                    ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
-                });
-            });
+            this.establishmentSearchViewModel.sammy.setLocation('Establishments/new/#/');
             e.preventDefault();
             return false;
         });
@@ -245,9 +269,6 @@ export class InstitutionalAgreementEditModel {
 
         //}
 
-        $("#allParticipants").fadeOut(500, function () {
-            $("#estSearch").fadeIn(500);
-        });
 
     };
        

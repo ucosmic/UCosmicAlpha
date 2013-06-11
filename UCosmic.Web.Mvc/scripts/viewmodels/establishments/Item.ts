@@ -309,6 +309,10 @@ module ViewModels.Establishments {
                 });
         }
 
+        goToSearch(): void {
+            window.location.hash = '#/select-parent/page/1/';
+        }
+
         receiveNames(js: IServerNameApiModel[]): void {
             ko.mapping.fromJS(js || [], this._namesMapping, this.names);
             this.namesSpinner.stop();

@@ -256,9 +256,11 @@ define(["require", "exports", './SearchResult', './Search', './Name', './Locatio
             }, function (xhr, textStatus, errorThrown) {
             });
             ko.validation.group(this);
-            this._setupSammy();
             this._setupParentComputeds();
         }
+        Item.prototype.goToSearch = function () {
+            window.location.hash = '#/select-parent/page/1/';
+        };
         Item.prototype.requestNames = function (callback) {
             var _this = this;
             this.namesSpinner.start();

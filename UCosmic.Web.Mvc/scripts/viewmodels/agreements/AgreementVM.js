@@ -96,25 +96,47 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             if(!this.hasBoundSearch) {
                 ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+                var lastURL = "asdf";
                 this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
-                    if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
-                        $("#estSearch").fadeOut(500, function () {
-                            $("#allParticipants").fadeIn(500);
-                        });
+                    if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
+                        if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
+                            $("#estSearch").fadeOut(500, function () {
+                                $("#allParticipants").fadeIn(500);
+                            });
+                            lastURL = "agreements";
+                        }
+                        if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("establishments/new/#/") > 0) {
+                            var $addEstablishment = $("#addEstablishment");
+                            $("#estSearch").fadeOut(500, function () {
+                                $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
+                                    var establishmentItemViewModel = new Item();
+                                    establishmentItemViewModel.goToSearch = function () {
+                                        _this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
+                                        _this.establishmentSearchViewModel.clickAction = function (context) {
+                                            _this.establishmentSearchViewModel.sammy.setLocation('establishments/new/#/');
+                                        };
+                                    };
+                                    ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
+                                });
+                            });
+                            lastURL = "establishments/new/#/";
+                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("establishments/#/page/") > 0) {
+                            $("#allParticipants").fadeOut(500, function () {
+                                $("#estSearch").fadeIn(500);
+                            });
+                            lastURL = "establishments/#/page/";
+                        }
                     }
                 });
-                this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
                 this.establishmentSearchViewModel.sammy.run();
             }
+            this.establishmentSearchViewModel.sammy.setLocation('Establishments/#/page/1/');
             this.hasBoundSearch = true;
             this.establishmentSearchViewModel.detailTooltip = function () {
                 return 'Choose this establishment as a participant';
             };
             $("#cancelAddParticipant").on("click", function () {
-                this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
-                $("#estSearch").fadeOut(500, function () {
-                    $("#allParticipants").fadeIn(500);
-                });
+                _this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
             });
             this.establishmentSearchViewModel.clickAction = function (context) {
                 var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName());
@@ -133,33 +155,19 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     }).done(function (response) {
                         myParticipant.isOwner(response.isOwner);
                         _this.participants.push(myParticipant);
-                        $("#estSearch").fadeOut(500, function () {
-                            $("#allParticipants").fadeIn(500);
-                        });
+                        _this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
                     }).fail(function () {
                         _this.participants.push(myParticipant);
-                        $("#estSearch").fadeOut(500, function () {
-                            $("#allParticipants").fadeIn(500);
-                        });
+                        _this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
                     });
                 } else {
                     alert("This Participant has already been added.");
                 }
             };
             $("#searchSideBarAddNew").on("click", function (e) {
-                var $addEstablishment = $("#addEstablishment");
-                $("#estSearch").fadeOut(500, function () {
-                    $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
-                        var establishmentItemViewModel = new Item();
-                        _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
-                        ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
-                    });
-                });
+                _this.establishmentSearchViewModel.sammy.setLocation('Establishments/new/#/');
                 e.preventDefault();
                 return false;
-            });
-            $("#allParticipants").fadeOut(500, function () {
-                $("#estSearch").fadeIn(500);
             });
         };
         InstitutionalAgreementEditModel.prototype.swipeCallback = function () {

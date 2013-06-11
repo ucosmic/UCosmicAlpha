@@ -6,7 +6,7 @@
     </header>
     <div data-bind="visible: $data" style="display: none;">
         <div>
-            <div class="text-box when-hovered" data-bind="click: function () { window.location.hash = '#/select-parent/page/1/'; }">
+            <div class="text-box when-hovered" data-bind="click: goToSearch">
                 <div class="group">
                     <div class="on-left" style="max-width: 645px;">
                         <span class="inline-block" data-bind="with: parentEstablishment, visible: hasParent">

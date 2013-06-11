@@ -284,10 +284,13 @@ import Languages = module('../languages/ServerApiModel')
 
             ko.validation.group(this);
 
-            this._setupSammy();
+            //this._setupSammy();
             this._setupParentComputeds();
         }
 
+        goToSearch():  void {
+            window.location.hash = '#/select-parent/page/1/';
+        }
         //#region Names
         
         // observables, computeds, & variables
@@ -591,7 +594,7 @@ import Languages = module('../languages/ServerApiModel')
         parentIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         parentIdValidatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
 
-        private _setupSammy(): void {
+        _setupSammy(): void {
             var self = this;
 
             this.parentSearch.sammyBeforeRoute = /\#\/select-parent\/page\/(.*)\//;

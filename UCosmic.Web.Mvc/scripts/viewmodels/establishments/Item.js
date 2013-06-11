@@ -256,6 +256,9 @@ var ViewModels;
                     }
                 });
             };
+            Item.prototype.goToSearch = function () {
+                window.location.hash = '#/select-parent/page/1/';
+            };
             Item.prototype.receiveNames = function (js) {
                 ko.mapping.fromJS(js || [], this._namesMapping, this.names);
                 this.namesSpinner.stop();
