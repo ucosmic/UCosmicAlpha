@@ -103,16 +103,7 @@
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[None]"
-                    data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
-            </div>
-        </div>
-        <div class="field-row" data-bind="visible: isFacultyRankEditable" style="display: none;">
-            <div class="field-label">
-                <label>Faculty Rank</label>
-            </div>
-            <div class="field-input">
-                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
-                </select>
+                       data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
             </div>
         </div>
         <div class="field-row">
@@ -125,10 +116,49 @@
         </div>
         <div class="field-row">
             <div class="field-label">
-                <label>Administrative Appointments</label>
+                <label>USF Affiliations</label>
             </div>
             <div class="field-input">
-                <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
+                <!--<ul data-bind="template: { name: 'affiliations-template', foreach: affiliations }"></ul>-->
+                <div style="display: inline-block">
+                    <div style="width: 200px; display: inherit">
+                        <span>Institutional Affiliation:</span>
+                    </div>
+                    <div style="display: inherit; font-weight: bold">
+                        <span>USF Tampa</span>
+                    </div>
+                </div>
+                <div style="display: inline-block">
+                    <div style="width: 200px; display: inherit">
+                        <span>College:</span>
+                    </div>
+                    <div style="display: inherit; font-weight: bold">
+                        <span>College of Medicine</span>
+                    </div>
+                </div>
+                <div style="display: inline-block">
+                    <div style="width: 200px; display: inherit">
+                        <span>Department:</span>
+                    </div>
+                    <div style="display: inherit; font-weight: bold">
+                        <span>Center for Aging/Neuroscience</span>
+                    </div>
+                </div>
+                <div style="display: inline-block">
+                    <div style="width: 200px; display: inherit">
+                        <span>Position Title:</span>
+                    </div>
+                    <div style="display: inherit; font-weight: bold">
+                        <span>Distinquished University Professor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-label">
+            </div>
+            <div class="field-input">
+                <input type="button" value="Add"/>
             </div>
         </div>
         @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
@@ -154,6 +184,31 @@
                     </label>
                 </div>
             </div>
+        }        
+        
+        
+        <!--
+        <div class="field-row" data-bind="visible: isFacultyRankEditable" style="display: none;">
+            <div class="field-label">
+                <label>Faculty Rank</label>
+            </div>
+            <div class="field-input">
+                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
+                </select>
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-label">
+                <label>Administrative Appointments</label>
+            </div>
+            <div class="field-input">
+                <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
+            </div>
+        </div>
+        -->
+
+        @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
+        {
             <div class="field-row">
                 <div class="field-unlabeled-input">
                     <label>
@@ -176,3 +231,41 @@
         </div>
     </div>
 </form>
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="affiliations-template">
+    <li>
+        <div class="field-row">
+            <div class="field-label">
+                Institutional Affiliation:
+            </div>
+            <div class="field-input">
+                <input type="text" value="USF Tampa" disabled/>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    College:
+                </div>
+                <div class="field-input">
+                    <input type="text" value="College of Medicine" disabled/>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    Department:
+                </div>
+                <div class="field-input">
+                    <input type="text" value="Center for Aging/Neuroscience" disabled/>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    Position Title:
+                </div>
+                <div class="field-input">
+                    <input type="text" value="Distinquished University Professor" disabled/>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>

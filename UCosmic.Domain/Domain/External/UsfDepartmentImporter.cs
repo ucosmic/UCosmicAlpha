@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.External.Services;
 
 #pragma warning disable 649
 
@@ -43,14 +44,14 @@ namespace UCosmic.Domain.External
         private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogExceptions _exceptionLogger;
         
         private Establishment _usf;
         private StringDictionary _campuses;
         private EstablishmentType _campusEstablishmentType;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
-
-        public DateTime? LastDepartmentListActivityDate { get; set; }
+        private DateTime? _lastDepartmentListActivityDate;
 
         // ----------------------------------------------------------------------
         /*
@@ -60,7 +61,8 @@ namespace UCosmic.Domain.External
                                       IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
                                       IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
                                       IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                      IUnitOfWork unitOfWork )
+                                      IUnitOfWork unitOfWork,
+                                      ILogExceptions exceptionLogger )
         {
             _entities = entities;
             _createUsfEstablishment = createUsfEstablishment;
@@ -68,6 +70,7 @@ namespace UCosmic.Domain.External
             _hierarchy = hierarchy;
             _unitOfWork = unitOfWork;
             _usf = null;
+            _exceptionLogger = exceptionLogger;
         }
 
         // ----------------------------------------------------------------------
@@ -136,18 +139,19 @@ namespace UCosmic.Domain.External
 
             var serializer = new DataContractJsonSerializer(typeof(Record));
             var record = (Record)serializer.ReadObject(stream);
+            stream.Close();
 
-            LastDepartmentListActivityDate = null;
+            _lastDepartmentListActivityDate = null;
 
             Debug.WriteLine(DateTime.Now + " USF: Record last activity date: " + record.LastActivityDate);
 
             /* If the department list last activity date does not exists, error (?). */
             if (String.IsNullOrWhiteSpace(record.LastActivityDate))
             {
-                return;
+                throw new Exception("Last activity date not provided.");
             }
 
-            LastDepartmentListActivityDate = DateTime.Parse(record.LastActivityDate);
+            _lastDepartmentListActivityDate = DateTime.Parse(record.LastActivityDate);
 
             Debug.WriteLine(DateTime.Now + " USF: Number of records: " + record.Departments.Length);
 
@@ -249,7 +253,8 @@ namespace UCosmic.Domain.External
             var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
             if (usf == null)
             {
-                /* TBD - Better error handling. */
+                var ex = new Exception("Could not find establishment University of South Florida");
+                _exceptionLogger.Log(ex);
                 return;
             }
 
@@ -257,7 +262,8 @@ namespace UCosmic.Domain.External
                     .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
             if (employeeModuleSettings == null)
             {
-                /* TBD - Better error handling. */
+                var ex = new Exception("Could not find EmployeeModuleSettings.");
+                _exceptionLogger.Log(ex);
                 return;
             }
 
@@ -265,35 +271,50 @@ namespace UCosmic.Domain.External
             {
                 UsfDepartmentImporter departmentImporter = null;
 
-#if true
-                string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
-                                   @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
-
-                if (File.Exists(filePath))
+#if false
                 {
-                    using (var stream = new FileStream(filePath, FileMode.Open))
+                    string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                                                    @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
+
+                    if (File.Exists(filePath))
                     {
-                        departmentImporter = new UsfDepartmentImporter( _entities,
-                                                                        _createUsfEstablishment,
-                                                                        _updateEmployeeModuleSettings,
-                                                                        _hierarchy,
-                                                                        _unitOfWork );
-                        departmentImporter.Import(stream);
+                        using (var stream = new FileStream(filePath, FileMode.Open))
+                        {
+                            Import(stream);
+                        }
                     }
                 }
 #else
-                var departmentImporter = new UsfDepartmentImporter( _entities,
-                                                                    _createUsfEstablishment,
-                                                                    _updateEmployeeModuleSettings,
-                                                                    _hierarchy,
-                                                                    _unitOfWork );
+                {
+                    string serviceTicket = UsfCas.GetServiceTicket(employeeModuleSettings.EstablishmentServiceUsername,
+                                                                   employeeModuleSettings.EstablishmentServicePassword,
+                                                                   UsfDepartmentIdLookup.CasUri);
+                    if (!String.IsNullOrEmpty(serviceTicket))
+                    {
+                        var service = new UsfDepartmentIdLookup();
 
-                departmentImporter.Import(stream);
+                        using (var stream = service.Open(serviceTicket))
+                        {
+                            try
+                            {
+                                Import(stream);
+                            }
+                            finally
+                            {
+                                service.Close();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Unable to obtain service ticket to USF CAS service.");
+                    }
+                }
 #endif
 
                 var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
                 {
-                    EstablishmentsExternalSyncDate = departmentImporter.LastDepartmentListActivityDate,
+                    EstablishmentsExternalSyncDate = _lastDepartmentListActivityDate,
                     EstablishmentsLastUpdateResult = "succeeded",
                     EstablishmentsUpdateFailCount = 0
                 };
@@ -304,7 +325,7 @@ namespace UCosmic.Domain.External
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                _exceptionLogger.Log(ex);
 
                 var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
                 {
@@ -317,10 +338,11 @@ namespace UCosmic.Domain.External
                 int maxFailCount = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentListUpdateMaxFailCountBeforeErrorMail"]);
                 if (employeeModuleSettings.EstablishmentsUpdateFailCount >= maxFailCount)
                 {
-                    //MailMessage message = new MailMessage( fromAddress,
-                    //                                       toAddress,
-                    //                                       "UCosmic: Error updating USF Departments",
-                    //                                       body );
+                    string message =
+                        String.Format("USF: DepartmentIdLookup service has failed (consecutively) {0} times.",
+                                      employeeModuleSettings.EstablishmentsUpdateFailCount.ToString());
+                    var ex1 = new Exception(message);
+                    _exceptionLogger.Log(ex1);
                 }
 
                 Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update FAILED. " + ex.Message);

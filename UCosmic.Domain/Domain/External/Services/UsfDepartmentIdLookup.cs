@@ -4,31 +4,40 @@ using System.Net;
 
 namespace UCosmic.Domain.External.Services
 {
-    class UsfDepartmentIdLookup
+    public class UsfDepartmentIdLookup
     {
         /* Department ID Lookup Sevice */
-        public static readonly string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/deptIdLookup";
+        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
+        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/deptIdLookup";
+        private Stream _stream;
 
-        private static string Get(string casTicket, string usfNetId)
+        public Stream Open(string casTicket)
         {
-            string data = null;
-            var request = (HttpWebRequest)WebRequest.Create(Uri);
+            if (_stream != null)
+            {
+                return _stream;
+            }
+
+            string url = String.Format("{0}?ticket={1}", Uri, casTicket);
+            var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
 
-            try
+            request.Timeout = 15000;
+            var response = request.GetResponse();
+            _stream = response.GetResponseStream();
+
+            return _stream;
+        }
+
+        public void Close()
+        {
+            if (_stream == null)
             {
-                request.Timeout = 15000;
-                var response = request.GetResponse();
-                var responseStream = new StreamReader(response.GetResponseStream());
-                data = responseStream.ReadToEnd();
-                responseStream.Close();
-            }
-            catch (Exception)
-            {
-                /* Elmah Log Here? */
+                return;
             }
 
-            return data;
+            _stream.Close();
+            _stream = null;
         }
     }
 }

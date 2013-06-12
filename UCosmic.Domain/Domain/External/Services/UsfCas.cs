@@ -20,41 +20,34 @@ namespace UCosmic.Domain.External
             requestStream.Write(requestBody);
             requestStream.Close();
 
-            try
-            {
-                request.Timeout = 15000;
-                var response = request.GetResponse();
+            request.Timeout = 15000;
+            var response = request.GetResponse();
 
-                var responseStream = new StreamReader(response.GetResponseStream());
-                var responseBody = responseStream.ReadToEnd();
-                responseStream.Close();
+            var responseStream = new StreamReader(response.GetResponseStream());
+            var responseBody = responseStream.ReadToEnd();
+            responseStream.Close();
 
-                /*
-                 * <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-                 * <html>
-                 *  <head>
-                 *      <title>201 The request has been fulfilled and resulted in a new resource being created</title>
-                 * </head>
-                 * <body>
-                 *  <h1>TGT Created</h1>
-                 *  <form action="https://authtest.it.usf.edu:444/v1/tickets/TGT-1152-OBHag3uftwa4gbCNffGo0o5MHpwfNI7Le9UUruzrpt30MtJfeo-IMPERS" method="POST">
-                 *      Service:
-                 *      <input type="text" name="service" value=""><br>
-                 *      <input type="submit" value="Submit">
-                 *  </form>
-                 * </body>
-                 * </html>
-                 */
+            /*
+                * <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+                * <html>
+                *  <head>
+                *      <title>201 The request has been fulfilled and resulted in a new resource being created</title>
+                * </head>
+                * <body>
+                *  <h1>TGT Created</h1>
+                *  <form action="https://authtest.it.usf.edu:444/v1/tickets/TGT-1152-OBHag3uftwa4gbCNffGo0o5MHpwfNI7Le9UUruzrpt30MtJfeo-IMPERS" method="POST">
+                *      Service:
+                *      <input type="text" name="service" value=""><br>
+                *      <input type="submit" value="Submit">
+                *  </form>
+                * </body>
+                * </html>
+                */
 
-                const string pattern = "action=";
-                int startIndex = responseBody.IndexOf(pattern) + pattern.Length + 1 /* skip first quote */;
-                int length = responseBody.IndexOf("\"", startIndex) - startIndex;
-                tgtResource = responseBody.Substring(startIndex, length);
-            }
-            catch (Exception)
-            {
-                /* Elmah Log Here? */
-            }
+            const string pattern = "action=";
+            int startIndex = responseBody.IndexOf(pattern) + pattern.Length + 1 /* skip first quote */;
+            int length = responseBody.IndexOf("\"", startIndex) - startIndex;
+            tgtResource = responseBody.Substring(startIndex, length);
 
             return tgtResource;            
         }
@@ -70,18 +63,11 @@ namespace UCosmic.Domain.External
             requestStream.Write(requestBody);
             requestStream.Close();
 
-            try
-            {
-                request.Timeout = 15000;
-                var response = request.GetResponse();
-                var responseStream = new StreamReader(response.GetResponseStream());
-                ticket = responseStream.ReadToEnd();
-                responseStream.Close();
-            }
-            catch (Exception)
-            {
-                /* Elmah Log Here? */
-            }
+            request.Timeout = 15000;
+            var response = request.GetResponse();
+            var responseStream = new StreamReader(response.GetResponseStream());
+            ticket = responseStream.ReadToEnd();
+            responseStream.Close();
 
             return ticket;                
         }

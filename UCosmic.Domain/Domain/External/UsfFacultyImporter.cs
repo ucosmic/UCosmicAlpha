@@ -45,16 +45,19 @@ namespace UCosmic.Domain.External
         private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
         private readonly IProcessEvents _eventProcessor;
+        private readonly ILogExceptions _exceptionLogger;
 
         public UsfFacultyImporter( ICommandEntities entities,
                                    IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
                                    IHandleCommands<UpdateMyProfile> updateMyProfile,
-                                   IProcessEvents eventProcessor)
+                                   IProcessEvents eventProcessor,
+                                   ILogExceptions exceptionLogger )
         {
             _entities = entities;
             _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
             _updateMyProfile = updateMyProfile;
-            _eventProcessor= eventProcessor;
+            _eventProcessor = eventProcessor;
+            _exceptionLogger = exceptionLogger;
         }
 
         public void Import(IPrincipal principal, int userId)
@@ -63,11 +66,25 @@ namespace UCosmic.Domain.External
 #if DEBUG
             string rawRecord = null;
 #endif
+
+            var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == userId);
+            if (user == null)
+            {
+                string message = String.Format("User id {0} not found.", userId);
+                throw new Exception(message);
+            }
+            if (user.Person == null)
+            {
+                throw new Exception("Person not found.");
+            }
+
             var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (usf == null) { throw new Exception("USF Establishment not found."); }
+            if (usf == null)
+            {
+                throw new Exception("USF Establishment not found.");
+            }
 
-
-#if false
+#if STREAM_FROM_FILE
             {
                 string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
                                                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFSampleFacultyProfile.json");
@@ -88,15 +105,39 @@ namespace UCosmic.Domain.External
 #else
             {
                 var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                                      .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
+                                                      .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
 
                 if (employeeModuleSettings != null)
                 {
-                    string serviceToken = UsfCas.GetServiceTicket(employeeModuleSettings.EstablishmentServiceUsername,
-                                                                  employeeModuleSettings.EstablishmentServicePassword,
-                                                                  UsfFacultyInfo.Uri);
+                    string serviceTicket = UsfCas.GetServiceTicket(employeeModuleSettings.EstablishmentServiceUsername,
+                                                                   employeeModuleSettings.EstablishmentServicePassword,
+                                                                   UsfFacultyInfo.CasUri);
+                    if (!String.IsNullOrEmpty(serviceTicket))
+                    {
+                        var service = new UsfFacultyInfo();
+
+                        /* We might want to set User.Person.DefaultEmail when user is created. */
+                        using (var stream = service.Open(serviceTicket, user.Name))
+                        {
+                            var serializer = new DataContractJsonSerializer(typeof (Record));
+                            record = (Record)serializer.ReadObject(stream);
+
+#if DEBUG
+                            rawRecord = serializer.ToString();
+#endif
+                        }
+
+                        service.Close();
+                    }
+                    else
+                    {
+                        throw new Exception("Unable to obtain service ticket to USF CAS service.");
+                    }
                 }
-                return;
+                else
+                {
+                    throw new Exception("Unable to call UsfFacultyInfo service. EmployeeModuleSettings not found.");
+                }
             }
 #endif
 
@@ -104,12 +145,26 @@ namespace UCosmic.Domain.External
             Debug.WriteLine(rawRecord);
             Debug.WriteLine(DateTime.Now + " USF: ----- END RECORD -----");
 
+            if (record == null)
+            {
+                throw new Exception("Error getting faculty record.");
+            }
+
+            if (record.UsfEmailAddress == null)
+            {
+                return;
+            }
+
+            if (record.UsfEmailAddress != user.Person.DefaultEmail.Value)
+            {
+                throw new Exception("Error getting faculty record (emails don't match).");
+            }
+
             DateTime? facultyInfoLastActivityDate = null;
             if (!String.IsNullOrEmpty(record.LastActivityDate))
             {
                 facultyInfoLastActivityDate = DateTime.Parse(record.LastActivityDate);
             }
-
 
             bool updateDepartments = false;
 
@@ -163,9 +218,8 @@ namespace UCosmic.Domain.External
             {
                 var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
                    .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
-                var person = _entities.Get<Person>().SingleOrDefault(p => p.DisplayName == record.UsfEmailAddress);
 
-                if ((employeeModuleSettings != null) && (person != null))
+                if (employeeModuleSettings != null)
                 {
                     string title = record.Profiles[0].PositionTitle;
                     var facultyRank = employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Rank == title);
@@ -173,7 +227,7 @@ namespace UCosmic.Domain.External
 
                     var updateProfile = new UpdateMyProfile(principal)
                     {
-                        PersonId = person.RevisionId,
+                        PersonId = user.Person.RevisionId,
                         IsActive = true,
                         IsDisplayNameDerived = false,
                         DisplayName = String.Format("{0} {1}", record.FirstName, record.LastName),
@@ -189,6 +243,8 @@ namespace UCosmic.Domain.External
                     };
 
                     _updateMyProfile.Handle(updateProfile);
+
+                    Debug.WriteLine(DateTime.Now + " USF: " + user.Person.DefaultEmail.Value + " updated.");
                 }
             }
         }
@@ -200,38 +256,48 @@ namespace UCosmic.Domain.External
         public void Handle(UserCreated @event)
         {
             /* Don't import faculty profile information if seeding. */
-            if (@event.Seeding) { goto Exit; }
-
-            /* Get the user. */
-            var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == @event.UserId);
-            if (user == null) { goto Exit; }
-
-            /* Get root Establishment of User. */
-            Establishment establishment = user.Person.DefaultAffiliation.Establishment;
-            while (establishment.Parent != null)
+            if (@event.Seeding)
             {
-                establishment = establishment.Parent;
+                goto Exit;
             }
-
-            /* Get root USF Establishment. */
-            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (usf == null) { throw new Exception("USF Establishment not found."); }
-
-            /* If this user is not affiliated with USF, leave. */
-            if (establishment.RevisionId != usf.RevisionId) { goto Exit; }
 
             try
             {
-                Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Person.DefaultEmail);
-                Import(@event.Principal, @event.UserId);
+                /* Get the user. */
+                var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == @event.UserId);
+                if (user == null)
+                {
+                    string message = String.Format("Unable to get user id {0}", @event.UserId);
+                    throw new Exception(message);
+                }
+
+                /* Get root Establishment of User. */
+                Establishment establishment = user.Person.DefaultAffiliation.Establishment;
+                while (establishment.Parent != null)
+                {
+                    establishment = establishment.Parent;
+                }
+
+                /* Get root USF Establishment. */
+                var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+                if (usf == null)
+                {
+                    throw new Exception("Unable to get establishment University of South Florida");
+                }
+
+                /* If this user is not affiliated with USF, ignore. */
+                if (establishment.RevisionId == usf.RevisionId)
+                {
+                    Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Person.DefaultEmail);
+                    Import(@event.Principal, @event.UserId);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                /* Maybe ElmahLog here? */
+                _exceptionLogger.Log(ex);
             }
 
-
-        Exit:;
+            Exit:;
 
             /* For those callers that need synchronization. */
             @event.Signal.Set();

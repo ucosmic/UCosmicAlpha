@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Establishments
 
             return _entities.Query<Establishment>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault(x => query.OfficialName.Equals(x.OfficialName, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault(x => query.OfficialName.Equals(x.OfficialName, StringComparison.OrdinalIgnoreCase))
             ;
         }
     }
