@@ -859,7 +859,6 @@
     <Content Include="images\_deprecated\transparent.png" />
     <Content Include="images\_deprecated\users\user-black-16.png" />
     <Content Include="images\_deprecated\warning\warning-16.png" />
-    <Content Include="r.js" />
     <Content Include="scripts\app\App.js">
       <DependentUpon>App.ts</DependentUpon>
     </Content>

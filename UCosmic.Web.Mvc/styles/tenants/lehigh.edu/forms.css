@@ -298,7 +298,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
 i.red.minus {
   width: 24px;
   height: 24px;
-  background-image: url(../../../images/icons/closer/closer-24-red.png);
+  background-image: url(../../../images/icons/minus/minus-20-red.png);
   background-position: top left;
   background-repeat: no-repeat; }
   i.red.minus.on-right {

@@ -22,24 +22,26 @@
                 </select>
             </div>
         </div>
-        <div class="field-row">
-            <div class="field-label">
-                <label>CEEB Code</label>
+        @if (User.IsInRole(RoleName.EstablishmentAdministrator)){
+            <div class="field-row">
+                <div class="field-label">
+                    <label>CEEB Code</label>
+                </div>
+                <div class="field-input">
+                    <div class="text-box when-hovered" data-bind="text: ceebCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                    <input type="text" data-bind="value: ceebCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+                </div>
             </div>
-            <div class="field-input">
-                <div class="text-box when-hovered" data-bind="text: ceebCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
-                <input type="text" data-bind="value: ceebCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+            <div class="field-row">
+                <div class="field-label">
+                    <label>UCosmic Code</label>
+                </div>
+                <div class="field-input">
+                    <div class="text-box when-hovered" data-bind="text: uCosmicCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
+                    <input type="text" data-bind="value: uCosmicCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
+                </div>
             </div>
-        </div>
-        <div class="field-row">
-            <div class="field-label">
-                <label>UCosmic Code</label>
-            </div>
-            <div class="field-input">
-                <div class="text-box when-hovered" data-bind="text: uCosmicCode() || '[None]', click: clickToEditTypeId, visible: !isEditingTypeId()"></div>
-                <input type="text" data-bind="value: uCosmicCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
-            </div>
-        </div>
+            }
         <div class="field-row" data-bind="visible: id && isEditingTypeId" style="display: none;">
             <div class="field-unlabeled-input">
                 <input type="button" value="Save" data-bind="click: clickToSaveTypeId, disable: isTypeIdSaveDisabled" />

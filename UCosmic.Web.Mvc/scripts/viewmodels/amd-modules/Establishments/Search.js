@@ -24,6 +24,7 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
             this.sammyBeforeRoute = /\#\/page\/(.*)\//;
             this.sammyGetPageRoute = '#/page/:pageNumber/';
             this.sammyDefaultPageRoute = '/agreements[\/]?';
+            this.header = ko.observable();
             this.countries = ko.observableArray();
             this.countryCode = ko.observable();
             this.lenses = ko.observableArray([

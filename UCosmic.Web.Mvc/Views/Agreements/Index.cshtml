@@ -55,7 +55,6 @@
                     </a>
                 </footer>
             </section>
-            @*@Html.Partial(MVC.Shared.Views._SampleVerticalContent)*@
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
@@ -70,8 +69,8 @@
     <form class="group" data-bind="submit: requestResults">
         <div class="on-left from-top">
             <header>
-                <h1>
-                    Choose parent establishment
+                <h1 data-bind="text: header">
+                    Choose a participant
                 </h1>
                 <div style="float: right">
                     <a href="#/" id="cancelAddParticipant" class="button">Cancel</a>
@@ -97,7 +96,7 @@
                     <div class="on-left from-top">
                         <header>
                             <h1>
-                                @ViewBag.Title
+                                Add an establishment
                             </h1>
                         </header>
                         @Html.Partial(MVC.Establishments.Views._FormAndCards)
@@ -109,27 +108,6 @@
                         </div>
                     </aside>
                 </div>
-            </div>
-            <div data-side-swiper="off" class="left" style="width: 960px;" data-bind="with: parentSearch">
-                <form class="group">
-                    <div class="on-left from-top">
-                        <header>
-                            <div style="float: right">
-                                <a href="#/" class="button">Cancel</a>
-                            </div>
-                            <h1>
-                                Choose parent establishment
-                            </h1>
-                        </header>
-                        @Html.Partial(MVC.Establishments.Views._SearchAndResults)
-                    </div>
-                    <aside class="on-right from-top" data-fixed-scroll="root">
-                        <div data-fixed-scroll="anchor"></div>
-                        <div data-fixed-scroll="content">
-                            @Html.Partial(MVC.Establishments.Views._SearchSideBar)
-                        </div>
-                    </aside>
-                </form>
             </div>
         </div>
     </div>

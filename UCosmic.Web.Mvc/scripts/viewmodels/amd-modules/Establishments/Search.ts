@@ -97,6 +97,7 @@ export class Search extends PagedSearch.PagedSearch {
             }
         }
 
+        header = ko.observable();
         getPage(sammyContext: Sammy.EventContext): void {
             var trail = this.trail(),
                 clone;
