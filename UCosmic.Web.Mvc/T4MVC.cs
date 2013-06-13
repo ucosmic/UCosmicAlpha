@@ -1271,8 +1271,6 @@ namespace Links
         }
     
         public static readonly string lib_ext_d_ts = Url("lib-ext.d.ts");
-        public static readonly string main_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/main.min.js") ? Url("main.min.js") : Url("main.js");
-                      
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class modernizr {
             private const string URLPATH = "~/scripts/modernizr";
@@ -1316,13 +1314,22 @@ namespace Links
             public static readonly string moment_min_js = Url("moment.min.js");
         }
     
-        public static readonly string require_d_ts = Url("require.d.ts");
-        public static readonly string require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/require.min.js") ? Url("require.min.js") : Url("require.js");
-                      
-        public static readonly string requireConfig_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireConfig.min.js") ? Url("requireConfig.min.js") : Url("requireConfig.js");
-                      
-        public static readonly string requireConfig_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireConfig_debug.min.js") ? Url("requireConfig_debug.min.js") : Url("requireConfig_debug.js");
-                      
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class require {
+            private const string URLPATH = "~/scripts/require";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string main_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/main.min.js") ? Url("main.min.js") : Url("main.js");
+                          
+            public static readonly string require_d_ts = Url("require.d.ts");
+            public static readonly string require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/require.min.js") ? Url("require.min.js") : Url("require.js");
+                          
+            public static readonly string requireConfig_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireConfig.min.js") ? Url("requireConfig.min.js") : Url("requireConfig.js");
+                          
+            public static readonly string requireConfig_debug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/requireConfig_debug.min.js") ? Url("requireConfig_debug.min.js") : Url("requireConfig_debug.js");
+                          
+        }
+    
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class sammy {
             private const string URLPATH = "~/scripts/sammy";
@@ -2599,21 +2606,10 @@ namespace Links
                 public static readonly string AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AgreementVM.min.js") ? Url("AgreementVM.min.js") : Url("AgreementVM.js");
                               
                 public static readonly string AgreementVM_min_js = Url("AgreementVM.min.js");
-                public static readonly string InstitutionalAgreementEditModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InstitutionalAgreementEditModel.min.js") ? Url("InstitutionalAgreementEditModel.min.js") : Url("InstitutionalAgreementEditModel.js");
-                              
                 public static readonly string RequireAgreement_ts = Url("RequireAgreement.ts");
                 public static readonly string RequireAgreement_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireAgreement.min.js") ? Url("RequireAgreement.min.js") : Url("RequireAgreement.js");
                               
                 public static readonly string RequireAgreement_min_js = Url("RequireAgreement.min.js");
-                public static readonly string RequireEstablishmentSearch_ts = Url("RequireEstablishmentSearch.ts");
-                public static readonly string RequireEstablishmentSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireEstablishmentSearch.min.js") ? Url("RequireEstablishmentSearch.min.js") : Url("RequireEstablishmentSearch.js");
-                              
-                public static readonly string RequireEstablishmentSearch_min_js = Url("RequireEstablishmentSearch.min.js");
-                public static readonly string RequireTestModItWorked_ts = Url("RequireTestModItWorked.ts");
-                public static readonly string modItWorked_min_js = Url("modItWorked.min.js");
-                public static readonly string RequireTestModItWorked_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireTestModItWorked.min.js") ? Url("RequireTestModItWorked.min.js") : Url("RequireTestModItWorked.js");
-                              
-                public static readonly string RequireTestModItWorked_min_js = Url("RequireTestModItWorked.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

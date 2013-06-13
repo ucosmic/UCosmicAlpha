@@ -59,8 +59,22 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     e.preventDefault();
                     return false;
                 });
-                $("#allParticipants").css("display", "block").fadeOut(500, function () {
+                var dfd = $.Deferred();
+                var dfd2 = $.Deferred();
+                var $obj = $("#allParticipants");
+                var $obj2 = $("#addEstablishment");
+                var time = 500;
+                this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                $.when(dfd, dfd2).done(function () {
                     $("#estSearch").fadeIn(500);
+                });
+            };
+            this.fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
+                $obj.fadeOut(time, function () {
+                    dfd.resolve();
+                });
+                $obj2.fadeOut(time, function () {
+                    dfd2.resolve();
                 });
             };
             this.trail = ko.observableArray([]);
@@ -119,7 +133,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                         if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/new/") > 0) {
                             var $addEstablishment = $("#addEstablishment");
-                            $("#estSearch").fadeOut(500, function () {
+                            var dfd = $.Deferred();
+                            var dfd2 = $.Deferred();
+                            var $obj = $("#estSearch");
+                            var $obj2 = $("#allParticipants");
+                            var time = 500;
+                            _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                            $.when(dfd, dfd2).done(function () {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                     if(!_this.hasBoundItem) {
                                         var establishmentItemViewModel = new Item();
@@ -139,6 +159,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             });
                             lastURL = "#/new/";
                         } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/page/") > 0) {
+                            $("#asideRootSearch").show();
+                            $("#asideParentSearch").hide();
                             _this.SearchPageBind();
                             _this.establishmentSearchViewModel.header("Choose a participant");
                             _this.establishmentSearchViewModel.clickAction = function (context) {
@@ -169,11 +191,19 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             };
                             lastURL = "#/page/";
                         } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/addest/page/") > 0) {
+                            $("#asideRootSearch").hide();
+                            $("#asideParentSearch").show();
                             _this.SearchPageBind();
                             lastURL = "#/addest/page/";
                         } else {
                             _this.establishmentSearchViewModel.sammy.setLocation('#/');
-                            $("#estSearch").fadeOut(500, function () {
+                            var dfd = $.Deferred();
+                            var dfd2 = $.Deferred();
+                            var $obj = $("#estSearch");
+                            var $obj2 = $("#addEstablishment");
+                            var time = 500;
+                            _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                            $.when(dfd, dfd2).done(function () {
                                 $("#allParticipants").fadeIn(500);
                             });
                             lastURL = "#/index";

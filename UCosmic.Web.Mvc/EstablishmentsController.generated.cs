@@ -118,6 +118,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _FormParentSection = "_FormParentSection";
                 public readonly string _FormSideBar = "_FormSideBar";
                 public readonly string _FormUrlsSection = "_FormUrlsSection";
+                public readonly string _ParentSearchSideBar = "_ParentSearchSideBar";
                 public readonly string _SearchAndResults = "_SearchAndResults";
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Form = "Form";
@@ -130,6 +131,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _FormParentSection = "~/Views/Establishments/_FormParentSection.cshtml";
             public readonly string _FormSideBar = "~/Views/Establishments/_FormSideBar.cshtml";
             public readonly string _FormUrlsSection = "~/Views/Establishments/_FormUrlsSection.cshtml";
+            public readonly string _ParentSearchSideBar = "~/Views/Establishments/_ParentSearchSideBar.cshtml";
             public readonly string _SearchAndResults = "~/Views/Establishments/_SearchAndResults.cshtml";
             public readonly string _SearchSideBar = "~/Views/Establishments/_SearchSideBar.cshtml";
             public readonly string Form = "~/Views/Establishments/Form.cshtml";

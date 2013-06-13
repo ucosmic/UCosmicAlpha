@@ -11,8 +11,9 @@
 @*<script data-main="../scripts/main.js" src="~/scripts/require.js"></script>*@
 @section scripts
 {
-      @Scripts.Render("~/bundles/agreements")
-    @Scripts.Render("~/bundles/establishmentSearch")
+    <script data-main="../../scripts/viewmodels/agreements/RequireAgreement.js"  src="~/scripts/require/require.js"></script>
+  @*     @Scripts.Render("~/bundles/agreements")
+  @Scripts.Render("~/bundles/establishmentSearch")*@
 }
 
 <div class="content fixed to-top" data-current-module="agreements"  id="allParticipants" >
@@ -78,10 +79,16 @@
             </header>
             @Html.Partial(MVC.Establishments.Views._SearchAndResults)
         </div>
-        <aside class="on-right from-top" data-fixed-scroll="root">
+        <aside id="asideRootSearch" class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
                 @Html.Partial(MVC.Establishments.Views._SearchSideBar)
+            </div>
+        </aside>
+        <aside id="asideParentSearch" class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Establishments.Views._ParentSearchSideBar)
             </div>
         </aside>
     </form>

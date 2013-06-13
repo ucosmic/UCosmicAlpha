@@ -9,7 +9,6 @@
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
-//import app = module('../amd-modules/app/app');
 import SearchModule = module('../amd-modules/Establishments/Search');
 import ItemModule = module('../amd-modules/Establishments/Item');
 import SearchApiModel = module('../amd-modules/Establishments/ServerApiModel');
@@ -27,18 +26,6 @@ export class InstitutionalAgreementParticipantModel {
         this.establishmentId = ko.observable(establishmentId);
         this.establishmentOfficialName = ko.observable(establishmentOfficialName);
         this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
-        //this.isOwner = ko.computed(function () {
-        //    return isOwner
-        //});
-        //this.establishmentId = ko.computed(function () {
-        //    return establishmentId
-        //});
-        //this.establishmentOfficialName = ko.computed(function () {
-        //    return establishmentOfficialName
-        //});
-        //this.establishmentTranslatedName = ko.computed(function () {
-        //    return establishmentTranslatedName
-        //});
     }
 
     isOwner;
@@ -46,11 +33,6 @@ export class InstitutionalAgreementParticipantModel {
     establishmentId;
     establishmentOfficialName;
     establishmentTranslatedName;
-
-
-    //isNotOwner = ko.computed(function () {
-    //    return false; //participant.isOwner();
-    //});
 
 };
 
@@ -88,8 +70,7 @@ export class InstitutionalAgreementEditModel {
     // participants
     owner = new Search(false);
     owner2 = new Search(false);
-    //mySR = new SearchResult();
-    tenantDomain = "uc.edu"; //$('#tenancy_domain').val();
+    tenantDomain = "uc.edu"; 
     spinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
     receiveResults(js: SearchApiModel.IServerApiFlatModel[]): void {
         if (!js) {
@@ -101,7 +82,6 @@ export class InstitutionalAgreementEditModel {
         else {
             ko.mapping.fromJS(js, this.participants);
         }
-        //App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
         this.spinner.stop();
     }
 
@@ -157,53 +137,71 @@ export class InstitutionalAgreementEditModel {
 
         $("#cancelAddParticipant").on("click", function () => {
             this.establishmentSearchViewModel.sammy.setLocation('#/');
-            //$("#estSearch").fadeOut(500, function () {
-            //    $("#allParticipants").fadeIn(500);
-            //});
         });
         $("#searchSideBarAddNew").on("click", function (e) => {
             this.establishmentSearchViewModel.sammy.setLocation('#/new/');
             e.preventDefault();
             return false;
         });
-        $("#allParticipants").css("display", "block").fadeOut(500, function () {
+        var dfd = $.Deferred();
+        var dfd2 = $.Deferred();
+        var $obj = $("#allParticipants");
+        var $obj2 = $("#addEstablishment");
+        var time = 500;
+        this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+        $.when(dfd, dfd2)
+            .done(function () => {
             $("#estSearch").fadeIn(500);
         });
         
     };
+    fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
+        $obj.fadeOut(time, function () {
+            dfd.resolve();
+        });
+        $obj2.fadeOut(time, function () {
+            dfd2.resolve();
+        });
+    };
+    
     addParticipant(establishmentResultViewModel): void {
-        
-        //var establishmentSearchViewModel = new Search();
         if (!this.hasBoundSearch) {
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
             var lastURL = "asdf";
             this.establishmentSearchViewModel.sammy.bind("location-changed", function () => {
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
-                    //if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements") > 0) {
-                    //    //use jquery defered to fade out all other pages - then fade in
-                    //}
+                   
                     if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/new/") > 0) {
                         var $addEstablishment = $("#addEstablishment");
-                        $("#estSearch").fadeOut(500, function () => {
-                            $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
-                                if (!this.hasBoundItem) {
-                                    var establishmentItemViewModel = new Item();
-                                    establishmentItemViewModel.goToSearch = function () => {
-                                        this.establishmentSearchViewModel.clickAction = function (context): bool => {
-                                            establishmentItemViewModel.parentEstablishment(context);
-                                            establishmentItemViewModel.parentId(context.id());
-                                            this.establishmentSearchViewModel.sammy.setLocation('#/new/');
-                                        };
-                                        this.establishmentSearchViewModel.header("Choose a parent establishment");
-                                        this.establishmentSearchViewModel.sammy.setLocation('#/addest/page/1/');
+                        var dfd = $.Deferred();
+                        var dfd2 = $.Deferred();
+                        var $obj = $("#estSearch");
+                        var $obj2 = $("#allParticipants");
+                        var time = 500;
+                        this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                        $.when(dfd, dfd2)
+                            .done(function () => {
+                                $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
+                                    if (!this.hasBoundItem) {
+                                        var establishmentItemViewModel = new Item();
+                                        establishmentItemViewModel.goToSearch = function () => {
+                                            this.establishmentSearchViewModel.clickAction = function (context): bool => {
+                                                establishmentItemViewModel.parentEstablishment(context);
+                                                establishmentItemViewModel.parentId(context.id());
+                                                this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                                            };
+                                            this.establishmentSearchViewModel.header("Choose a parent establishment");
+                                            this.establishmentSearchViewModel.sammy.setLocation('#/addest/page/1/');
+                                        }
+                                        ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
+                                        this.hasBoundItem = true;
                                     }
-                                    ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
-                                    this.hasBoundItem = true;
-                                }
-                            });
-                        });
+                                });
+                            })
                         lastURL = "#/new/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/page/") > 0) {
+                        $("#asideRootSearch").show();
+                        $("#asideParentSearch").hide();
                         this.SearchPageBind();
                         this.establishmentSearchViewModel.header("Choose a participant");
 
@@ -232,31 +230,32 @@ export class InstitutionalAgreementEditModel {
                                     myParticipant.isOwner(response.isOwner);
                                     this.participants.push(myParticipant);
                                     this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
-                                    //$("#estSearch").fadeOut(500, function () {
-                                    //    $("#allParticipants").fadeIn(500);
-                                    //});
                                 })
                                 .fail(function () => {
                                     //alert('fail');
                                     this.participants.push(myParticipant);
                                     this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
-                                    //$("#estSearch").fadeOut(500, function () {
-                                    //    $("#allParticipants").fadeIn(500);
-                                    //});
                                 });
                             } else {
                                 alert("This Participant has already been added.")
                             }
-
-
                         }
                         lastURL = "#/page/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/addest/page/") > 0) {
+                        $("#asideRootSearch").hide();
+                        $("#asideParentSearch").show();
                         this.SearchPageBind();
                         lastURL = "#/addest/page/";
                     } else {
                         this.establishmentSearchViewModel.sammy.setLocation('#/');
-                        $("#estSearch").fadeOut(500, function () {
+                        var dfd = $.Deferred();
+                        var dfd2 = $.Deferred();
+                        var $obj = $("#estSearch");
+                        var $obj2 = $("#addEstablishment");
+                        var time = 500;
+                        this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                        $.when(dfd, dfd2)
+                            .done(function () => {
                             $("#allParticipants").fadeIn(500);
                         });
                         lastURL = "#/index";

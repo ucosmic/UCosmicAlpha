@@ -826,8 +826,8 @@
     </Content>
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
-    <Content Include="scripts\requireConfig_debug.js" />
-    <Content Include="scripts\requireConfig.js" />
+    <Content Include="scripts\require\requireConfig_debug.js" />
+    <Content Include="scripts\require\requireConfig.js" />
     <Content Include="scripts\ko\knockout-postbox.js" />
     <Content Include="scripts\ko\knockout-postbox.min.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
@@ -1779,13 +1779,13 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
-    <Content Include="scripts\main.js" />
+    <Content Include="scripts\require\main.js" />
     <Content Include="scripts\oss\jquery.tinymce.d.ts" />
     <Content Include="scripts\oss\jquery.tinymce.js" />
     <Content Include="scripts\oss\moment.js" />
     <Content Include="scripts\oss\moment.min.js" />
-    <TypeScriptCompile Include="scripts\require.d.ts" />
-    <Content Include="scripts\require.js" />
+    <TypeScriptCompile Include="scripts\require\require.d.ts" />
+    <Content Include="scripts\require\require.js" />
     <Content Include="scripts\sammy\sammy-0.7.4.js" />
     <Content Include="scripts\sammy\sammy-0.7.4.min.js" />
     <Content Include="scripts\tinymce\css\content.css" />
@@ -2065,13 +2065,6 @@
       <DependentUpon>RequireAgreement.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\Flasher.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.ts" />
-    <Content Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.js">
-      <DependentUpon>RequireEstablishmentSearch.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\RequireEstablishmentSearch.min.js">
-      <DependentUpon>RequireEstablishmentSearch.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\app\App.ts" />
     <Content Include="scripts\viewmodels\amd-modules\app\App.js">
       <DependentUpon>App.ts</DependentUpon>
@@ -2124,9 +2117,6 @@
     <Content Include="scripts\viewmodels\affiliations\ServiceApiModel.d.js">
       <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\agreements\modItWorked.min.js">
-      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degree.ts" />
     <Content Include="scripts\viewmodels\degrees\Degree.js">
       <DependentUpon>Degree.ts</DependentUpon>
@@ -2140,13 +2130,6 @@
     </Content>
     <Content Include="scripts\viewmodels\degrees\Degrees.min.js">
       <DependentUpon>Degrees.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireTestModItWorked.ts" />
-    <Content Include="scripts\viewmodels\agreements\RequireTestModItWorked.js">
-      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\RequireTestModItWorked.min.js">
-      <DependentUpon>RequireTestModItWorked.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
@@ -2427,7 +2410,6 @@
     </Content>
     <Content Include="scripts\viewmodels\_deprecated\_EstablishmentSearchViewModel.js" />
     <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
-    <Content Include="scripts\viewmodels\agreements\InstitutionalAgreementEditModel.js" />
     <None Include="scripts\app\_deprecated\_app.js" />
     <None Include="scripts\app\_deprecated\_fixed-scroll.js" />
     <None Include="scripts\app\_deprecated\_side-swiper.js" />
@@ -2672,6 +2654,7 @@
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
     <Content Include="Views\Agreements\EstablishmentSearch.cshtml" />
+    <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
