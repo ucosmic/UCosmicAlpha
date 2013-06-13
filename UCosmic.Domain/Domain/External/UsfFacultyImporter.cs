@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Principal;
+using System.Threading;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
@@ -40,22 +42,28 @@ namespace UCosmic.Domain.External
             [DataMember(Name = "profile")] public ProfileRecord[] Profiles;
         }
 
-        private readonly static object Lock1 = new object();
+        private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
+        private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
+        private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
         private readonly ILogExceptions _exceptionLogger;
 
-        public UsfFacultyImporter( ICommandEntities entities,
-                                   IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
-                                   IHandleCommands<UpdateMyProfile> updateMyProfile,
-                                   IProcessEvents eventProcessor,
-                                   ILogExceptions exceptionLogger )
+        public UsfFacultyImporter(ICommandEntities entities,
+                                  IHandleCommands<UpdateServiceSync> updateServiceSync,
+                                  IHandleCommands<UpdateMyProfile> updateMyProfile,
+                                  IHandleCommands<CreateServiceSync> createServiceSync,
+                                  IUnitOfWork unitOfWork,
+                                  IProcessEvents eventProcessor,
+                                  ILogExceptions exceptionLogger)
         {
             _entities = entities;
-            _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
+            _updateServiceSync = updateServiceSync;
             _updateMyProfile = updateMyProfile;
+            _createServiceSync = createServiceSync;
+            _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
             _exceptionLogger = exceptionLogger;
         }
@@ -78,13 +86,8 @@ namespace UCosmic.Domain.External
                 throw new Exception("Person not found.");
             }
 
-            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (usf == null)
-            {
-                throw new Exception("USF Establishment not found.");
-            }
 
-#if STREAM_FROM_FILE
+#if true
             {
                 string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
                                                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFSampleFacultyProfile.json");
@@ -119,7 +122,7 @@ namespace UCosmic.Domain.External
                         /* We might want to set User.Person.DefaultEmail when user is created. */
                         using (var stream = service.Open(serviceTicket, user.Name))
                         {
-                            var serializer = new DataContractJsonSerializer(typeof (Record));
+                            var serializer = new DataContractJsonSerializer(typeof(Record));
                             record = (Record)serializer.ReadObject(stream);
 
 #if DEBUG
@@ -145,107 +148,161 @@ namespace UCosmic.Domain.External
             Debug.WriteLine(rawRecord);
             Debug.WriteLine(DateTime.Now + " USF: ----- END RECORD -----");
 
+            /* No record, done. */
             if (record == null)
             {
                 throw new Exception("Error getting faculty record.");
             }
 
+            /* If no email address, we're done. */
             if (record.UsfEmailAddress == null)
             {
                 return;
             }
 
-            if (record.UsfEmailAddress != user.Person.DefaultEmail.Value)
+            /* The record's email address does not match? */
+            if (record.UsfEmailAddress != user.Name)
             {
                 throw new Exception("Error getting faculty record (emails don't match).");
             }
 
+            /* Get the last activity date from the record */
             DateTime? facultyInfoLastActivityDate = null;
             if (!String.IsNullOrEmpty(record.LastActivityDate))
             {
                 facultyInfoLastActivityDate = DateTime.Parse(record.LastActivityDate);
             }
 
-            bool updateDepartments = false;
-
-            lock (Lock1)
+            /* Check for our ServiceSync table entry.  Create if necessary */
+            var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
+            if (serviceSync == null)
             {
-                var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                                                      .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
-                if ((employeeModuleSettings != null) &&
-                     (!employeeModuleSettings.EstablishmentsExternalSyncDate.HasValue ||
-                     (facultyInfoLastActivityDate != employeeModuleSettings.EstablishmentsExternalSyncDate))
-                   )
+                var createServiceSyncCommand = new CreateServiceSync
                 {
-                    if (employeeModuleSettings.EstablishmentsLastUpdateResult != "inprogress")
+                    Name = ServiceSyncName
+                };
+
+                _createServiceSync.Handle(createServiceSyncCommand);
+                _unitOfWork.SaveChanges();
+
+                serviceSync = createServiceSyncCommand.CreatedServiceSync;
+            }
+
+            bool hiearchyUpdateInProgress = false;
+
+            /* Determine if we need to update the USF Hiearchy. */
+            if (serviceSync != null)
+            {
+                if (!serviceSync.ExternalSyncDate.HasValue ||
+                    (facultyInfoLastActivityDate != serviceSync.ExternalSyncDate))
+                {
+                    if (serviceSync.LastUpdateResult != "inprogress")
                     {
-                        var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
+                        var updateServiceSync = new UpdateServiceSync(serviceSync.Id)
                         {
-                            EstablishmentsLastUpdateAttempt = DateTime.UtcNow,
-                            EstablishmentsLastUpdateResult = "inprogress"
+                            LastUpdateAttempt = DateTime.UtcNow,
+                            LastUpdateResult = "inprogress"
                         };
 
-                        _updateEmployeeModuleSettings.Handle(updateSettings);
+                        _updateServiceSync.Handle(updateServiceSync);
 
-                        updateDepartments = true;
+                        try
+                        {
+                            _unitOfWork.SaveChanges();
+
+                            _eventProcessor.Raise(new UsfStaleEstablishmentHierarchy());
+                            hiearchyUpdateInProgress = true; // inprogress because we just started it
+                            Debug.WriteLine(DateTime.Now + " USF: UsfStaleEstablishmentHierarchy event raised.");
+                        }
+                        catch (OptimisticConcurrencyException)
+                        {
+                            hiearchyUpdateInProgress = true; // inprogress because another thread beat us to it
+                            Debug.WriteLine(DateTime.Now + " USF: Establishment update in-progress.  Started: " +
+                                            serviceSync.LastUpdateAttempt);
+                        }
+
                     }
                     else
                     {
-                        Debug.WriteLine(DateTime.Now + " USF: Establishment update in-progress.  Started: " + employeeModuleSettings.EstablishmentsLastUpdateAttempt);
+                        hiearchyUpdateInProgress = true; // inprogress because the current state is such
+                        Debug.WriteLine(DateTime.Now + " USF: Establishment update in-progress.  Started: " +
+                                        serviceSync.LastUpdateAttempt);
                     }
                 }
             }
-
-            /*
-             * We are making a tradeoff, here, between responsiveness and convenience.  If we determine
-             * that the USF hierarchy needs to be updated, we will start a new task to do so.  However,
-             * we will not import the profile info for this person.   Why?
-             * 
-             * 1. Obtaining the department list data and then processing it is a long process. Making
-             * the user wait is not a good practice. ( > 50 seconds )
-             * 
-             * 2. Since the USF service does not notify us when the department list has changed, the
-             * only time we CAN know is when faculty profile data is imported.
-             * 
-             * 3. This is not mission critical data.  The user can always manually enter profile info.
-            */
-            if (updateDepartments)
+            else
             {
-                _eventProcessor.Raise(new UsfStaleEstablishmentHierarchy());
-                Debug.WriteLine(DateTime.Now + " USF: UsfStaleEstablishmentHierarchy event raised.");
+                Debug.WriteLine(DateTime.Now + " USF: Could get ServiceSync name " + ServiceSyncName);
+                string message = String.Format("Could get ServiceSync name {0}", ServiceSyncName);
+                throw new Exception(message);
+            }
+
+            /* Wait for department list update to complete. */
+            while (hiearchyUpdateInProgress)
+            {
+                serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
+                if (serviceSync == null)
+                {
+                    throw new Exception("ServiceSync deleted?");
+                }
+
+                if (serviceSync.LastUpdateResult != "inprogress")
+                {
+                    hiearchyUpdateInProgress = false;
+                }
+                else
+                {
+                    Thread.Sleep(1000);
+                }
+            }
+
+            if (serviceSync.LastUpdateResult == "succeeded")
+            {
+                var usf = _entities.Get<Establishment>()
+                    .SingleOrDefault(e => e.OfficialName == "University of South Florida");
+                if (usf == null)
+                {
+                    Debug.WriteLine(DateTime.Now + " USF: Establishment not found.");
+                    throw new Exception("USF Establishment not found.");
+                } 
+                
+                var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
+                    .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
+                if (employeeModuleSettings == null)
+                {
+                    Debug.WriteLine(DateTime.Now + " USF: Could not get EmployeeModuleSettings.");
+                    throw new Exception("Could not get EmployeeModuleSettings for USF");
+                }
+                
+                string title = record.Profiles[0].PositionTitle;
+                var facultyRank = employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Rank == title);
+                int? facultyRankId = (facultyRank != null) ? (int?) facultyRank.Id : null;
+
+                var updateProfile = new UpdateMyProfile(principal)
+                {
+                    PersonId = user.Person.RevisionId,
+                    IsActive = true,
+                    IsDisplayNameDerived = false,
+                    DisplayName = String.Format("{0} {1}", record.FirstName, record.LastName),
+                    Salutation = null,
+                    FirstName = record.FirstName,
+                    MiddleName = record.MiddleName,
+                    LastName = record.LastName,
+                    Suffix = record.Suffix,
+                    Gender = record.Gender[0].ToString().ToUpper(),
+                    FacultyRankId = facultyRankId,
+                    JobTitles = record.Profiles[0].PositionTitle,
+                    AdministrativeAppointments = ""
+                };
+
+                _updateMyProfile.Handle(updateProfile);
+                _unitOfWork.SaveChanges();
+
+                Debug.WriteLine(DateTime.Now + " USF: " + user.Person.DefaultEmail.Value + " updated.");
             }
             else
             {
-                var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                   .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
-
-                if (employeeModuleSettings != null)
-                {
-                    string title = record.Profiles[0].PositionTitle;
-                    var facultyRank = employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Rank == title);
-                    int? facultyRankId = (facultyRank != null) ? (int?)facultyRank.Id : null;
-
-                    var updateProfile = new UpdateMyProfile(principal)
-                    {
-                        PersonId = user.Person.RevisionId,
-                        IsActive = true,
-                        IsDisplayNameDerived = false,
-                        DisplayName = String.Format("{0} {1}", record.FirstName, record.LastName),
-                        Salutation = null,
-                        FirstName = record.FirstName,
-                        MiddleName = record.MiddleName,
-                        LastName = record.LastName,
-                        Suffix = record.Suffix,
-                        Gender = record.Gender[0].ToString().ToUpper(),
-                        FacultyRankId = facultyRankId,
-                        JobTitles = record.Profiles[0].PositionTitle,
-                        AdministrativeAppointments = ""
-                    };
-
-                    _updateMyProfile.Handle(updateProfile);
-
-                    Debug.WriteLine(DateTime.Now + " USF: " + user.Person.DefaultEmail.Value + " updated.");
-                }
+                Debug.WriteLine(DateTime.Now + " USF: Faculty not imported.  Departments not synced.");
             }
         }
 
@@ -294,10 +351,23 @@ namespace UCosmic.Domain.External
             }
             catch (Exception ex)
             {
+                /* Force state to 'failed' */
+                var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
+                if (serviceSync != null)
+                {
+                    var updateServiceSync = new UpdateServiceSync(serviceSync.Id)
+                    {
+                        LastUpdateResult = "failed"
+                    };
+
+                    _updateServiceSync.Handle(updateServiceSync);
+                    _unitOfWork.SaveChanges();
+                }
+
                 _exceptionLogger.Log(ex);
             }
 
-            Exit:;
+        Exit: ;
 
             /* For those callers that need synchronization. */
             @event.Signal.Set();

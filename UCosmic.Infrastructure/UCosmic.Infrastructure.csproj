@@ -160,6 +160,7 @@
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="Cryptography\AesExtensions.cs" />
+    <Compile Include="EntityFramework\Fluent\Externals.cs" />
     <Compile Include="EntityFramework\Fluent\LanguageExpertises.cs" />
     <Compile Include="EntityFramework\Fluent\GeographicExpertises.cs" />
     <Compile Include="EntityFramework\Fluent\Degrees.cs" />

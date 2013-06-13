@@ -217,6 +217,9 @@
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnInfo.cs" />
     <Compile Include="Domain\Establishments\Commands\UpdateSamlSignOnMetadata.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotHaveCyclicHierarchy.cs" />
+    <Compile Include="Domain\External\Commands\CreateServiceSync.cs" />
+    <Compile Include="Domain\External\Commands\UpdateServiceSync.cs" />
+    <Compile Include="Domain\External\Entities\ServiceSync.cs" />
     <Compile Include="Domain\External\Events\UsfStaleEstablishmentHierarchy.cs" />
     <Compile Include="Domain\External\Services\UsfCas.cs" />
     <Compile Include="Domain\External\Services\UsfDepartmentIdLookup.cs" />

@@ -27,12 +27,7 @@ namespace UCosmic.Domain.Employees
         public bool OfferActivityType { get; set; }
         public bool OfferFundingQuestions { get; set; }
         public string InternationalPedigreeTitle { get; set; }
-        public DateTime? EstablishmentsExternalSyncDate { get; set; }
-        public DateTime? EstablishmentsLastUpdateAttempt { get; set; }
-        public int? EstablishmentsUpdateFailCount { get; set; }
-        public string EstablishmentsLastUpdateResult { get; set; } /* success, inprogress, failed */
-        public string EstablishmentServiceUsername { get; set; }
-        public string EstablishmentServicePassword { get; set; }
+
 
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; internal set; }
     }
@@ -75,9 +70,6 @@ namespace UCosmic.Domain.Employees
                 OfferActivityType = command.OfferActivityType,
                 OfferFundingQuestions = command.OfferFundingQuestions,
                 InternationalPedigreeTitle = command.InternationalPedigreeTitle,
-                EstablishmentsExternalSyncDate = command.EstablishmentsExternalSyncDate,
-                EstablishmentServiceUsername = command.EstablishmentServiceUsername,
-                EstablishmentServicePassword = command.EstablishmentServicePassword
             };
 
             _entities.Create(employeeModuleSettings);

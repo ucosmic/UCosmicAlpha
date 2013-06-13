@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.External.Services;
@@ -26,26 +27,33 @@ namespace UCosmic.Domain.External
         [DataContract]
         private class DepartmentRecord
         {
-            [DataMember(Name = "DEPTID")] public string DeptId;
-            [DataMember(Name = "INSTITUTION")] public string Institution;
-            [DataMember(Name = "COLLEGE")] public string College;
-            [DataMember(Name = "DEPARTMENT")] public string Department;
+            [DataMember(Name = "DEPTID")]
+            public string DeptId;
+            [DataMember(Name = "INSTITUTION")]
+            public string Institution;
+            [DataMember(Name = "COLLEGE")]
+            public string College;
+            [DataMember(Name = "DEPARTMENT")]
+            public string Department;
         }
 
         [DataContract]
         private class Record
         {
-            [DataMember(Name = "LAST_ACTIVITY_DATE")] public string LastActivityDate;
-            [DataMember(Name = "DEPARTMENTS")] public DepartmentRecord[] Departments;
+            [DataMember(Name = "LAST_ACTIVITY_DATE")]
+            public string LastActivityDate;
+            [DataMember(Name = "DEPARTMENTS")]
+            public DepartmentRecord[] Departments;
         }
 
+        private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
-        private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
+        private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogExceptions _exceptionLogger;
-        
+
         private Establishment _usf;
         private StringDictionary _campuses;
         private EstablishmentType _campusEstablishmentType;
@@ -59,14 +67,14 @@ namespace UCosmic.Domain.External
         // ----------------------------------------------------------------------
         public UsfDepartmentImporter( ICommandEntities entities,
                                       IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
-                                      IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings,
+                                      IHandleCommands<UpdateServiceSync> updateServiceSync,
                                       IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
                                       IUnitOfWork unitOfWork,
                                       ILogExceptions exceptionLogger )
         {
             _entities = entities;
             _createUsfEstablishment = createUsfEstablishment;
-            _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
+            _updateServiceSync = updateServiceSync;
             _hierarchy = hierarchy;
             _unitOfWork = unitOfWork;
             _usf = null;
@@ -234,6 +242,7 @@ namespace UCosmic.Domain.External
                             .SingleOrDefault(e => e.OfficialName == "University of South Florida");
 
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(_usf));
+            _unitOfWork.SaveChanges();
 
 #if DEBUG
             stopwatch.Stop();
@@ -250,28 +259,17 @@ namespace UCosmic.Domain.External
         {
             Debug.WriteLine(DateTime.Now + " USF: Begin establishment hierarchy update.");
 
-            var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
-            if (usf == null)
+            var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
+            if (serviceSync == null)
             {
-                var ex = new Exception("Could not find establishment University of South Florida");
-                _exceptionLogger.Log(ex);
-                return;
-            }
-
-            var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
-                    .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
-            if (employeeModuleSettings == null)
-            {
-                var ex = new Exception("Could not find EmployeeModuleSettings.");
+                var ex = new Exception("Could not find ServiceSync for USF.");
                 _exceptionLogger.Log(ex);
                 return;
             }
 
             try
             {
-                UsfDepartmentImporter departmentImporter = null;
-
-#if false
+#if true
                 {
                     string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
                                                     @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");
@@ -286,8 +284,8 @@ namespace UCosmic.Domain.External
                 }
 #else
                 {
-                    string serviceTicket = UsfCas.GetServiceTicket(employeeModuleSettings.EstablishmentServiceUsername,
-                                                                   employeeModuleSettings.EstablishmentServicePassword,
+                    string serviceTicket = UsfCas.GetServiceTicket(serviceSync.ServiceUsername,
+                                                                   serviceSync.ServicePassword,
                                                                    UsfDepartmentIdLookup.CasUri);
                     if (!String.IsNullOrEmpty(serviceTicket))
                     {
@@ -312,14 +310,15 @@ namespace UCosmic.Domain.External
                 }
 #endif
 
-                var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
+                var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
                 {
-                    EstablishmentsExternalSyncDate = _lastDepartmentListActivityDate,
-                    EstablishmentsLastUpdateResult = "succeeded",
-                    EstablishmentsUpdateFailCount = 0
+                    ExternalSyncDate = _lastDepartmentListActivityDate,
+                    LastUpdateResult = "succeeded",
+                    UpdateFailCount = 0
                 };
 
-                _updateEmployeeModuleSettings.Handle(updateSettings);
+                _updateServiceSync.Handle(updateServiceSyncCommand);
+                _unitOfWork.SaveChanges();
 
                 Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update SUCCEEDED.");
             }
@@ -327,20 +326,28 @@ namespace UCosmic.Domain.External
             {
                 _exceptionLogger.Log(ex);
 
-                var updateSettings = new UpdateEmployeeModuleSettings(employeeModuleSettings.Id)
+                var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
                 {
-                    EstablishmentsLastUpdateResult = "failed",
-                    EstablishmentsUpdateFailCount = employeeModuleSettings.EstablishmentsUpdateFailCount + 1
+                    LastUpdateResult = "failed",
+                    UpdateFailCount = serviceSync.UpdateFailCount + 1
                 };
 
-                _updateEmployeeModuleSettings.Handle(updateSettings);
+                try
+                {
+                    _updateServiceSync.Handle(updateServiceSyncCommand);
+                    _unitOfWork.SaveChanges();
+                }
+                catch
+                {
+                    /* Ignore concurrency errors. */
+                }
 
                 int maxFailCount = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentListUpdateMaxFailCountBeforeErrorMail"]);
-                if (employeeModuleSettings.EstablishmentsUpdateFailCount >= maxFailCount)
+                if (serviceSync.UpdateFailCount >= maxFailCount)
                 {
                     string message =
                         String.Format("USF: DepartmentIdLookup service has failed (consecutively) {0} times.",
-                                      employeeModuleSettings.EstablishmentsUpdateFailCount.ToString());
+                                      serviceSync.UpdateFailCount.ToString());
                     var ex1 = new Exception(message);
                     _exceptionLogger.Log(ex1);
                 }

@@ -55,13 +55,6 @@ namespace UCosmic.EntityFramework
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
             Property(p => p.InternationalPedigreeTitle).HasMaxLength(64);
-
-            Property(p => p.EstablishmentsExternalSyncDate).IsOptional();
-            Property(p => p.EstablishmentsLastUpdateAttempt).IsOptional();
-            Property(p => p.EstablishmentsUpdateFailCount).IsOptional();
-            Property(p => p.EstablishmentsLastUpdateResult).HasMaxLength(16).IsUnicode(false);
-            Property(p => p.EstablishmentServiceUsername).HasMaxLength(128);
-            Property(p => p.EstablishmentServicePassword).HasMaxLength(128);
         }
     }
 
