@@ -44,6 +44,7 @@ namespace UCosmic.Domain.External
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
+        private readonly IQueryEntities _query;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
         private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
@@ -52,6 +53,7 @@ namespace UCosmic.Domain.External
         private readonly ILogExceptions _exceptionLogger;
 
         public UsfFacultyImporter(ICommandEntities entities,
+                                  IQueryEntities query,
                                   IHandleCommands<UpdateServiceSync> updateServiceSync,
                                   IHandleCommands<UpdateMyProfile> updateMyProfile,
                                   IHandleCommands<CreateServiceSync> createServiceSync,
@@ -60,6 +62,7 @@ namespace UCosmic.Domain.External
                                   ILogExceptions exceptionLogger)
         {
             _entities = entities;
+            _query = query;
             _updateServiceSync = updateServiceSync;
             _updateMyProfile = updateMyProfile;
             _createServiceSync = createServiceSync;
@@ -96,8 +99,8 @@ namespace UCosmic.Domain.External
                 {
                     using (var stream = new FileStream(filePath, FileMode.Open))
                     {
-                        var serializer = new DataContractJsonSerializer(typeof (Record));
-                        record = (Record) serializer.ReadObject(stream);
+                        var serializer = new DataContractJsonSerializer(typeof(Record));
+                        record = (Record)serializer.ReadObject(stream);
 
                         stream.Seek(0, SeekOrigin.Begin);
                         StreamReader reader = new StreamReader(stream);
@@ -237,22 +240,33 @@ namespace UCosmic.Domain.External
                 throw new Exception(message);
             }
 
-            /* Wait for department list update to complete. */
-            while (hiearchyUpdateInProgress)
+            /* Wait for department list update to complete, or timeout. */
             {
-                serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
-                if (serviceSync == null)
+                const long timeoutMs = 240000;
+                long start = DateTime.Now.Ticks;
+                long duration = 0;
+#if DEBUG
+                while (hiearchyUpdateInProgress)
+#else
+                while (hiearchyUpdateInProgress && (duration < timeoutMs))
+#endif
                 {
-                    throw new Exception("ServiceSync deleted?");
-                }
+                    serviceSync = _query.Query<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
+                    if (serviceSync == null)
+                    {
+                        throw new Exception("ServiceSync deleted?");
+                    }
 
-                if (serviceSync.LastUpdateResult != "inprogress")
-                {
-                    hiearchyUpdateInProgress = false;
-                }
-                else
-                {
-                    Thread.Sleep(1000);
+                    if (serviceSync.LastUpdateResult != "inprogress")
+                    {
+                        hiearchyUpdateInProgress = false;
+                    }
+                    else
+                    {
+                        Thread.Sleep(1000);
+                    }
+
+                    duration = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
                 }
             }
 
@@ -264,8 +278,8 @@ namespace UCosmic.Domain.External
                 {
                     Debug.WriteLine(DateTime.Now + " USF: Establishment not found.");
                     throw new Exception("USF Establishment not found.");
-                } 
-                
+                }
+
                 var employeeModuleSettings = _entities.Get<EmployeeModuleSettings>()
                     .SingleOrDefault(s => s.Establishment.RevisionId == usf.RevisionId);
                 if (employeeModuleSettings == null)
@@ -273,10 +287,10 @@ namespace UCosmic.Domain.External
                     Debug.WriteLine(DateTime.Now + " USF: Could not get EmployeeModuleSettings.");
                     throw new Exception("Could not get EmployeeModuleSettings for USF");
                 }
-                
+
                 string title = record.Profiles[0].PositionTitle;
                 var facultyRank = employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Rank == title);
-                int? facultyRankId = (facultyRank != null) ? (int?) facultyRank.Id : null;
+                int? facultyRankId = (facultyRank != null) ? (int?)facultyRank.Id : null;
 
                 var updateProfile = new UpdateMyProfile(principal)
                 {
@@ -298,7 +312,7 @@ namespace UCosmic.Domain.External
                 _updateMyProfile.Handle(updateProfile);
                 _unitOfWork.SaveChanges();
 
-                Debug.WriteLine(DateTime.Now + " USF: " + user.Person.DefaultEmail.Value + " updated.");
+                Debug.WriteLine(DateTime.Now + " USF: " + user.Name + " updated.");
             }
             else
             {

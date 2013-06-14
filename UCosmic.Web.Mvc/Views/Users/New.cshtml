@@ -45,13 +45,16 @@
                     </div>
                 </section>
             </div>
-            <footer>
+            <div style="margin-bottom: 10px" data-bind="visible: errorMessage">
+                <span class="field-validation-error" data-bind="text: errorMessage"></span>
+            </div>
+            <div>
                 <input type="submit" value="Save" />
-                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible"/>
-                <div data-bind="visible: errorMessage">
-                    <span class="field-validation-error" data-bind="text: errorMessage"></span>
-                </div>
-            </footer>
+                <span data-bind="visible: saveSpinner.isVisible">
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <span style="font-weight: bold"> Please wait while user is created...</span>
+                </span>
+            </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

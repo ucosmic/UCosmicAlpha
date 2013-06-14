@@ -115,11 +115,6 @@ namespace UCosmic.Domain.Identity
 
     public class HandleCreateUserCommand : IHandleCommands<CreateUser>
     {
-#if DEBUG
-        private const int CreatedUserEventTimeoutMS = 0;
-#else
-        private const int CreatedUserEventTimeoutMS = 15000;
-#endif
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
@@ -193,9 +188,10 @@ namespace UCosmic.Domain.Identity
              * want to make sure all actions complete before we consider a User
              * created.
              */
+            const int CreatedUserEventTimeoutMs = 360000;
             try
             {
-                userCreatedEvent.Signal.WaitOne(CreatedUserEventTimeoutMS);
+                userCreatedEvent.Signal.WaitOne(CreatedUserEventTimeoutMs);
             }
             catch
             {
