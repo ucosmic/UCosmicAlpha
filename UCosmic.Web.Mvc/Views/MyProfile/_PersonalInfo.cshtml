@@ -168,20 +168,24 @@
                     <label>Gender</label>
                 </div>
                 <div class="field-input for-checkables">
-                    <label>
-                        <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Male" data-bind="checked: gender" />
-                        <span>Male</span>
-                    </label>
-                    &nbsp;&nbsp;&nbsp;
-                    <label>
-                        <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Female" data-bind="checked: gender" />
-                        <span>Female</span>
-                    </label>
-                    &nbsp;&nbsp;&nbsp;
-                    <label>
-                        <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.NonDisclosed" data-bind="checked: gender" />
-                        <span>Undisclosed</span>
-                    </label>
+                    <div>
+                        <label>
+                            <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Male" data-bind="checked: gender" />
+                            <span>Male</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Female" data-bind="checked: gender" />
+                            <span>Female</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.NonDisclosed" data-bind="checked: gender" />
+                            <span>Undisclosed</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         }        
@@ -211,14 +215,23 @@
         {
             <div class="field-row">
                 <div class="field-unlabeled-input">
-                    <label>
+                    <span>
                         <input type="checkbox" data-bind="checked: isActive" />
                         This profile is currently active.
-                    </label>
-                    <span style="float: right"><a href="#">Request my profile be deleted</a></span>
+                    </span>
+                </div>
+                <div>
+                    <span style="display: inline-block; float: right"><a href="#">Delete profile</a></span>
                 </div>
             </div>
         }
+        else
+        {
+            <div>
+                <span style="display: inline-block; float: right"><a href="#">Request my profile be deleted</a></span>
+            </div>
+        }
+
         <div class="field-row">
             <div class="field-unlabeled-input">
                 <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
