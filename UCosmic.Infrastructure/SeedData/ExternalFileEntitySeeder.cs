@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using UCosmic.Domain.Files;
+using UCosmic.Domain.InstitutionalAgreements;
 
 namespace UCosmic.SeedData
 {
@@ -20,18 +21,23 @@ namespace UCosmic.SeedData
 
         public void Seed()
         {
-            var basePath = AppDomain.CurrentDomain.BaseDirectory +
-                              @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\";
-
             var externalFiles = _entities.Query<ExternalFile>().ToArray();
             foreach (var externalFile in externalFiles.Where(x => !_binaryData.Exists(x.Path)))
-            {
-                using (var fileStream = File.OpenRead(string.Format("{0}{1}", basePath, externalFile.Name)))
-                {
-                    var content = fileStream.ReadFully();
-                    _binaryData.Put(externalFile.Path, content);
-                }
-            }
+                CopyFile(externalFile.Name, externalFile.Path);
+
+            var agreementFiles = _entities.Query<InstitutionalAgreementFile>().ToArray();
+            foreach (var agreementFile in agreementFiles.Where(x => !_binaryData.Exists(x.Path)))
+                CopyFile(agreementFile.Name, agreementFile.Path);
+        }
+
+        private void CopyFile(string fileName, string filePath)
+        {
+            var basePath = string.Format("{0}{1}",
+                AppDomain.CurrentDomain.BaseDirectory,
+                @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\");
+
+            using (var fileStream = File.OpenRead(string.Format("{0}{1}", basePath, fileName)))
+                _binaryData.Put(filePath, fileStream.ReadFully());
         }
     }
 }

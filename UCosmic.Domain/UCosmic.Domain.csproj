@@ -258,6 +258,7 @@
     <Compile Include="Domain\Identity\Validation\MustBeInAnyRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindRoleById.cs" />
     <Compile Include="Domain\Identity\Validation\MustFindUserById.cs" />
+    <Compile Include="Domain\InstitutionalAgreements\Commands\PurgeInstitutionalAgreement.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Entities\InstitutionalAgreementContactPhone.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\AgreementById.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\ParticipantByEstablishmentId.cs" />
