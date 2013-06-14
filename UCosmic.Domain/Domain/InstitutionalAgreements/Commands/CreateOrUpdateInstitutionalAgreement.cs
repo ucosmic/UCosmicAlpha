@@ -40,6 +40,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
     public class HandleCreateOrUpdateInstitutionalAgreementCommand : IHandleCommands<CreateOrUpdateInstitutionalAgreement>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<RemoveParticipantFromAgreement> _participantRemover;
         private readonly IHandleCommands<AddParticipantToAgreement> _participantAdder;
         private readonly IHandleCommands<RemoveContactFromAgreement> _contactRemover;
@@ -49,6 +51,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
         private readonly IHandleCommands<UpdateInstitutionalAgreementHierarchy> _hierarchyHandler;
 
         public HandleCreateOrUpdateInstitutionalAgreementCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            , IStoreBinaryData binaryData
             , IHandleCommands<RemoveParticipantFromAgreement> participantRemover
             , IHandleCommands<AddParticipantToAgreement> participantAdder
             , IHandleCommands<RemoveContactFromAgreement> contactRemover
@@ -59,6 +63,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
         )
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
+            _binaryData = binaryData;
             _participantRemover = participantRemover;
             _participantAdder = participantAdder;
             _contactRemover = contactRemover;
@@ -175,6 +181,22 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 else if (command.ChangeCount > 0) _entities.Update(entity);
                 DeriveNodes(entity, previousUmbrella);
                 command.Id = entity.Id;
+                _unitOfWork.SaveChanges();
+            }
+
+            // fix file path(s)
+            foreach (var file in entity.Files)
+            {
+                var oldPath = file.Path;
+                var zeroPath = string.Format(InstitutionalAgreementFile.PathFormat, 0, "");
+                if (oldPath.StartsWith(zeroPath))
+                {
+                    var guid = oldPath.Substring(zeroPath.Length);
+                    var newPath = string.Format(InstitutionalAgreementFile.PathFormat, entity.Id, guid);
+                    file.Path = newPath;
+                    _unitOfWork.SaveChanges();
+                    _binaryData.Move(oldPath, newPath);
+                }
             }
         }
 

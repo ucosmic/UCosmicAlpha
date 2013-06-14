@@ -98,5 +98,12 @@ namespace UCosmic.BinaryData
             var fullPath = GetFullPath(path);
             File.Delete(fullPath);
         }
+
+        public void Move(string oldPath, string newPath)
+        {
+            var content = Get(oldPath);
+            Put(newPath, content);
+            Delete(oldPath);
+        }
     }
 }

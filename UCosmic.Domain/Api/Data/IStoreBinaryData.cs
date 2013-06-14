@@ -6,5 +6,6 @@
         void Put(string path, byte[] data, bool overwrite = false);
         byte[] Get(string path);
         void Delete(string path);
+        void Move(string oldPath, string newPath);
     }
 }

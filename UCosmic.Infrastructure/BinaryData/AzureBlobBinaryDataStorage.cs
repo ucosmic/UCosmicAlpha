@@ -118,5 +118,12 @@ namespace UCosmic.BinaryData
 
             blob.Delete();
         }
+
+        public void Move(string oldPath, string newPath)
+        {
+            var content = Get(oldPath);
+            Put(newPath, content);
+            Delete(oldPath);
+        }
     }
 }

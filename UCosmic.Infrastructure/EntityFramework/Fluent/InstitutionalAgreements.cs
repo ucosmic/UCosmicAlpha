@@ -91,7 +91,7 @@ namespace UCosmic.EntityFramework
             // has 0 or 1 umbrella
             HasOptional(d => d.Umbrella)
                 .WithMany(p => p.Children)
-                .Map(m => m.MapKey("UmbrellaId"))
+                .HasForeignKey(d => d.UmbrellaId)
                 .WillCascadeOnDelete(false);
 
             // has many participants
@@ -205,7 +205,7 @@ namespace UCosmic.EntityFramework
 
             HasKey(p => p.Id);
 
-            // has one erson
+            // has one person
             HasRequired(d => d.Owner)
                 .WithMany(p => p.PhoneNumbers)
                 .HasForeignKey(d => d.OwnerId)

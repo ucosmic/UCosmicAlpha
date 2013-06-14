@@ -27,7 +27,9 @@ namespace UCosmic.Domain.InstitutionalAgreements
         public int Id { get; protected set; }
         public Guid Guid { get; protected internal set; } // TODO: deprecate this
 
+        public int? UmbrellaId { get; protected internal set; }
         public virtual InstitutionalAgreement Umbrella { get; protected internal set; }
+
         public virtual ICollection<InstitutionalAgreementNode> Ancestors { get; protected internal set; }
         public virtual ICollection<InstitutionalAgreement> Children { get; protected internal set; }
         public virtual ICollection<InstitutionalAgreementNode> Offspring { get; protected internal set; }
