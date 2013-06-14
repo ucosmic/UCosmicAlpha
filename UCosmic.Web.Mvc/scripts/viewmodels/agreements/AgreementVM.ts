@@ -45,6 +45,7 @@ export class InstitutionalAgreementEditModel {
         this.removeParticipant = <() => bool> this.removeParticipant.bind(this);
 
         this.hideOtherGroups();
+        this.bindSearch();
     }
 
     participants = ko.mapping.fromJS([]);
@@ -129,20 +130,34 @@ export class InstitutionalAgreementEditModel {
 
     hasBoundItem = false;
 
-    SearchPageBind = function () {
 
+    SearchPageBind = function (parentOrParticipant: string) {
+
+        var $cancelAddParticipant = $("#cancelAddParticipant");
+        var $searchSideBarAddNew = $("#searchSideBarAddNew");
         this.establishmentSearchViewModel.detailTooltip = (): string => {
-            return 'Choose this establishment as a participant';
+            return 'Choose this establishment as a ' + parentOrParticipant;
         };
-
-        $("#cancelAddParticipant").on("click", function () => {
-            this.establishmentSearchViewModel.sammy.setLocation('#/');
-        });
-        $("#searchSideBarAddNew").on("click", function (e) => {
+        $cancelAddParticipant.off();
+        $searchSideBarAddNew.off();
+        $searchSideBarAddNew.on("click", function (e) => {
             this.establishmentSearchViewModel.sammy.setLocation('#/new/');
             e.preventDefault();
             return false;
         });
+        if (parentOrParticipant === "parent") {
+            $cancelAddParticipant.on("click", function (e) => {
+                this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                e.preventDefault();
+                return false;
+            });
+        } else {
+            $cancelAddParticipant.on("click", function (e) => {
+                this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                e.preventDefault();
+                return false;
+            });
+        }
         var dfd = $.Deferred();
         var dfd2 = $.Deferred();
         var $obj = $("#allParticipants");
@@ -151,10 +166,12 @@ export class InstitutionalAgreementEditModel {
         this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
         $.when(dfd, dfd2)
             .done(function () => {
-            $("#estSearch").fadeIn(500);
-        });
+                $("#estSearch").fadeIn(500);
+            });
+
         
     };
+
     fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
         $obj.fadeOut(time, function () {
             dfd.resolve();
@@ -164,13 +181,14 @@ export class InstitutionalAgreementEditModel {
         });
     };
     
-    addParticipant(establishmentResultViewModel): void {
+    bindSearch = function () {
         if (!this.hasBoundSearch) {
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
             var lastURL = "asdf";
             this.establishmentSearchViewModel.sammy.bind("location-changed", function () => {
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
-                   
+                    var $asideRootSearch = $("#asideRootSearch");
+                    var $asideParentSearch = $("#asideParentSearch");
                     if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/new/") > 0) {
                         var $addEstablishment = $("#addEstablishment");
                         var dfd = $.Deferred();
@@ -194,15 +212,22 @@ export class InstitutionalAgreementEditModel {
                                             this.establishmentSearchViewModel.sammy.setLocation('#/addest/page/1/');
                                         }
                                         ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
+                                        var $cancelAddEstablishment = $("#cancelAddEstablishment");
+                                        $cancelAddEstablishment.on("click", function (e) => {
+                                            this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                            e.preventDefault();
+                                            return false;
+                                        });
                                         this.hasBoundItem = true;
                                     }
                                 });
                             })
                         lastURL = "#/new/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/page/") > 0) {
-                        $("#asideRootSearch").show();
-                        $("#asideParentSearch").hide();
-                        this.SearchPageBind();
+
+                        $asideRootSearch.show();
+                        $asideParentSearch.hide();
+                        this.SearchPageBind("participant");
                         this.establishmentSearchViewModel.header("Choose a participant");
 
                         this.establishmentSearchViewModel.clickAction = function (context): bool => {
@@ -242,12 +267,13 @@ export class InstitutionalAgreementEditModel {
                         }
                         lastURL = "#/page/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/addest/page/") > 0) {
-                        $("#asideRootSearch").hide();
-                        $("#asideParentSearch").show();
-                        this.SearchPageBind();
+                        $asideRootSearch.hide();
+                        $asideParentSearch.show();
+                        this.SearchPageBind("parent");
                         lastURL = "#/addest/page/";
                     } else {
-                        this.establishmentSearchViewModel.sammy.setLocation('#/');
+                        lastURL = "#/index";
+                        this.establishmentSearchViewModel.sammy.setLocation('#/index');
                         var dfd = $.Deferred();
                         var dfd2 = $.Deferred();
                         var $obj = $("#estSearch");
@@ -256,9 +282,8 @@ export class InstitutionalAgreementEditModel {
                         this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
                         $.when(dfd, dfd2)
                             .done(function () => {
-                            $("#allParticipants").fadeIn(500);
-                        });
-                        lastURL = "#/index";
+                                $("#allParticipants").fadeIn(500);
+                            });
                     }
 
                 }
@@ -266,41 +291,17 @@ export class InstitutionalAgreementEditModel {
 
             this.establishmentSearchViewModel.sammy.run();
         }
+    };
+
+    addParticipant(establishmentResultViewModel): void {
         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
         this.hasBoundSearch = true;
-
-        //this.establishmentSearchViewModel.newParticipant = ko.observable();
-
-        ////this should work, but does not override the function correctly
-        //probably something to do with ko bindings because the above clickaction works
-        //this.establishmentSearchViewModel.gotoAddNew = (viewModel: any, e: JQueryEventObject): bool => {
-
-        //var $addEstablishment = $("#addEstablishment");
-        //$("#estSearch").fadeOut(500, function () => {
-        //    $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
-        //        var establishmentItemViewModel = new Item();
-        //        this.establishmentSearchViewModel.sammy.setLocation('agreements/new/#/');
-        //        ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
-        //    });
-        //});
-        //e.preventDefault();
-        //return false;
-
-        //}
-
-
     };
        
-
-    //x = ko.observable().publishOn("test");
-   // newParticipant = ko.observable().syncWith("participants", true);
-    
-
-
     trail: KnockoutObservableStringArray = ko.observableArray([]);
     swipeCallback(): void {
     }
-    //$itemsPage: JQuery = undefined;
+
     nextForceDisabled: KnockoutObservableBool = ko.observable(false);
     prevForceDisabled: KnockoutObservableBool = ko.observable(false);
     pageNumber: KnockoutObservableNumber = ko.observable();
