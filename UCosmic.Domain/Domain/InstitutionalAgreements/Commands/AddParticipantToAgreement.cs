@@ -9,33 +9,33 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class AddParticipantToAgreement
     {
-        public AddParticipantToAgreement(IPrincipal principal, Guid establishmentGuid, Guid agreementGuid)
+        public AddParticipantToAgreement(IPrincipal principal, int establishmentId, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (establishmentGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "establishmentGuid");
-            EstablishmentGuid = establishmentGuid;
+            if (establishmentId == 0) throw new ArgumentOutOfRangeException("establishmentId", "Cannot be zero");
+            EstablishmentId = establishmentId;
 
-            if (agreementGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "agreementGuid");
-            AgreementGuid = agreementGuid;
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be zero");
+            AgreementId = agreementId;
         }
 
-        internal AddParticipantToAgreement(IPrincipal principal, Guid establishmentGuid, InstitutionalAgreement agreement)
+        internal AddParticipantToAgreement(IPrincipal principal, int establishmentId, InstitutionalAgreement agreement)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (establishmentGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "establishmentGuid");
-            EstablishmentGuid = establishmentGuid;
+            if (establishmentId == 0) throw new ArgumentOutOfRangeException("establishmentId", "Cannot be zero");
+            EstablishmentId = establishmentId;
 
             if (agreement == null) throw new ArgumentNullException("agreement");
             Agreement = agreement;
         }
 
         public IPrincipal Principal { get; private set; }
-        public Guid EstablishmentGuid { get; private set; }
-        public Guid AgreementGuid { get; private set; }
+        public int EstablishmentId { get; private set; }
+        public int AgreementId { get; private set; }
         internal InstitutionalAgreement Agreement { get; set; }
         public bool IsNewlyAdded { get; internal set; }
     }
@@ -59,12 +59,12 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 {
                     r => r.Participants,
                 })
-                .SingleOrDefault(x => x.EntityId == command.AgreementGuid);
+                .ById(command.AgreementId);
             if (agreement == null)
-                throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementGuid));
+                throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementId));
 
             var participant = agreement.Participants.SingleOrDefault(
-                x => x.Establishment.EntityId == command.EstablishmentGuid);
+                x => x.Establishment.RevisionId == command.EstablishmentId);
             if (participant != null) return;
 
             var establishment = _entities.Get<Establishment>()
@@ -75,9 +75,9 @@ namespace UCosmic.Domain.InstitutionalAgreements
                     e => e.Ancestors.Select(h => h.Ancestor.Affiliates.Select(a => a.Person.User)),
                     e => e.Ancestors.Select(h => h.Ancestor.Names.Select(n => n.TranslationToLanguage))
                 })
-                .SingleOrDefault(x => x.EntityId == command.EstablishmentGuid);
+                .SingleOrDefault(x => x.RevisionId == command.EstablishmentId);
             if (establishment == null)
-                throw new InvalidOperationException(string.Format("Establishment with id '{0}' could not be found.", command.EstablishmentGuid));
+                throw new InvalidOperationException(string.Format("Establishment with id '{0}' could not be found.", command.EstablishmentId));
 
 
             participant = new InstitutionalAgreementParticipant

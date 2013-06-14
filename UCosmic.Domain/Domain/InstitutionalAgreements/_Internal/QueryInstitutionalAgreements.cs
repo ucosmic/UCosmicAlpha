@@ -10,6 +10,11 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     internal static class QueryInstitutionalAgreements
     {
+        internal static InstitutionalAgreement ById(this IQueryable<InstitutionalAgreement> queryable, int id)
+        {
+            return queryable.SingleOrDefault(x => x.Id == id);
+        }
+
         internal static IQueryable<InstitutionalAgreement> IsRoot(this IQueryable<InstitutionalAgreement> queryable)
         {
             return queryable.Where(a => a.Umbrella == null);
@@ -59,8 +64,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
             return queryable.Where
             (
                 a =>
-                a.RevisionId != institutionalAgreementId &&
-                a.Ancestors.All(h => h.Ancestor.RevisionId != institutionalAgreementId)
+                a.Id != institutionalAgreementId &&
+                a.Ancestors.All(h => h.Ancestor.Id != institutionalAgreementId)
             );
         }
 

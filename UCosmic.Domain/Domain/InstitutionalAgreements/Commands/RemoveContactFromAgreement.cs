@@ -6,21 +6,21 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class RemoveContactFromAgreement
     {
-        public RemoveContactFromAgreement(IPrincipal principal, Guid contactGuid, Guid agreementGuid)
+        public RemoveContactFromAgreement(IPrincipal principal, int contactId, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (contactGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "contactGuid");
-            ContactGuid = contactGuid;
+            if (contactId == 0) throw new ArgumentOutOfRangeException("contactId", "Cannot be zero");
+            ContactId = contactId;
 
-            if (agreementGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "agreementGuid");
-            AgreementGuid = agreementGuid;
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be zero");
+            AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
-        public Guid ContactGuid { get; private set; }
-        public Guid AgreementGuid { get; private set; }
+        public int ContactId { get; private set; }
+        public int AgreementId { get; private set; }
         public bool IsNewlyRemoved { get; internal set; }
     }
 
@@ -39,9 +39,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
             // todo: this should be FindByPrimaryKey
             var entity = _entities.Get<InstitutionalAgreementContact>()
-                .SingleOrDefault(x =>
-                    x.EntityId == command.ContactGuid
-                );
+                .SingleOrDefault(x => x.Id == command.ContactId);
 
             if (entity == null) return;
             _entities.Purge(entity);

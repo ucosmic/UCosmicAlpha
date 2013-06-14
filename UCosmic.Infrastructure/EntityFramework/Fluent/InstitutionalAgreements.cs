@@ -71,11 +71,19 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementOrm : RevisableEntityTypeConfiguration<InstitutionalAgreement>
+    public class InstitutionalAgreementOrm : EntityTypeConfiguration<InstitutionalAgreement>
     {
         public InstitutionalAgreementOrm()
         {
             ToTable(typeof(InstitutionalAgreement).Name, DbSchemaName.InstitutionalAgreements);
+
+            HasKey(x => x.Id);
+            Property(p => p.Guid).IsRequired();
+            Property(p => p.CreatedOnUtc).IsRequired().HasColumnType("datetime");
+            Property(p => p.CreatedByPrincipal).HasMaxLength(256);
+            Property(p => p.UpdatedByPrincipal).HasMaxLength(256);
+            Property(p => p.UpdatedOnUtc).HasColumnType("datetime");
+            Property(p => p.Version).IsConcurrencyToken(true).IsRowVersion();
 
             // offspring is no longer derived from children
             //Ignore(p => p.Offspring);
@@ -95,7 +103,7 @@ namespace UCosmic.EntityFramework
             // has many contacts
             HasMany(p => p.Contacts)
                 .WithRequired(d => d.Agreement)
-                .Map(m => m.MapKey("AgreementId"))
+                .HasForeignKey(d => d.AgreementId)
                 .WillCascadeOnDelete(true);
 
             // has many files
@@ -118,6 +126,8 @@ namespace UCosmic.EntityFramework
 
             Property(p => p.Title).IsRequired().HasMaxLength(500);
             Property(p => p.Type).IsRequired().HasMaxLength(150);
+            Property(p => p.StartsOn).HasColumnType("datetime");
+            Property(p => p.ExpiresOn).HasColumnType("datetime");
             Property(p => p.Status).IsRequired().HasMaxLength(50);
             Property(p => p.Description).IsMaxLength();
             Property(p => p.VisibilityText).HasColumnName("Visibility").IsRequired().HasMaxLength(20);
@@ -150,19 +160,59 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementContactOrm : RevisableEntityTypeConfiguration<InstitutionalAgreementContact>
+    public class InstitutionalAgreementContactOrm : EntityTypeConfiguration<InstitutionalAgreementContact>
     {
         public InstitutionalAgreementContactOrm()
         {
             ToTable(typeof(InstitutionalAgreementContact).Name, DbSchemaName.InstitutionalAgreements);
 
-            // has one establishment
+            HasKey(x => x.Id);
+            Property(p => p.Guid).IsRequired();
+            Property(p => p.CreatedOnUtc).IsRequired().HasColumnType("datetime");
+            Property(p => p.CreatedByPrincipal).HasMaxLength(256);
+            Property(p => p.UpdatedByPrincipal).HasMaxLength(256);
+            Property(p => p.UpdatedOnUtc).HasColumnType("datetime");
+            Property(p => p.Version).IsConcurrencyToken(true).IsRowVersion();
+
+            // has one person
             HasRequired(d => d.Person)
                 .WithMany()
-                .Map(m => m.MapKey("PersonId"))
+                .HasForeignKey(d => d.PersonId)
+                .WillCascadeOnDelete(true);
+
+            // has zero or 1 affiliation
+            HasOptional(d => d.ParticipantAffiliation)
+                .WithMany()
+                .HasForeignKey(d => d.ParticipantAffiliationId)
+                .WillCascadeOnDelete(true);
+
+            // has zero or many phones
+            HasMany(p => p.PhoneNumbers)
+                .WithRequired(d => d.Owner)
                 .WillCascadeOnDelete(true);
 
             Property(p => p.Type).IsRequired().HasMaxLength(150);
+            Property(p => p.Title).IsOptional().HasMaxLength(300);
+        }
+    }
+
+
+    public class InstitutionalAgreementContactPhoneOrm : EntityTypeConfiguration<InstitutionalAgreementContactPhone>
+    {
+        public InstitutionalAgreementContactPhoneOrm()
+        {
+            ToTable(typeof(InstitutionalAgreementContactPhone).Name, DbSchemaName.InstitutionalAgreements);
+
+            HasKey(p => p.Id);
+
+            // has one erson
+            HasRequired(d => d.Owner)
+                .WithMany(p => p.PhoneNumbers)
+                .HasForeignKey(d => d.OwnerId)
+                .WillCascadeOnDelete(true);
+
+            Property(p => p.Type).IsOptional().HasMaxLength(150);
+            Property(p => p.Value).IsRequired().HasMaxLength(150);
         }
     }
 

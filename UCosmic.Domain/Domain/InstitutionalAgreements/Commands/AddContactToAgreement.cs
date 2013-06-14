@@ -16,8 +16,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
         }
 
         public IPrincipal Principal { get; private set; }
-        public Guid EntityId { get; set; }
-        public Guid AgreementEntityId { get; set; }
+        public int Id { get; set; }
+        public int AgreementId { get; set; }
         internal InstitutionalAgreement Agreement { get; set; }
         public string ContactType { get; set; }
         public Guid PersonEntityId { get; set; }
@@ -50,12 +50,12 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 {
                     r => r.Contacts.Select(c => c.Person),
                 })
-                .SingleOrDefault(e => e.EntityId == command.AgreementEntityId);
+                .ById(command.AgreementId);
 
-            if (command.EntityId != Guid.Empty && agreement != null)
+            if (command.Id != 0 && agreement != null)
             {
                 var entity = agreement.Contacts.SingleOrDefault(
-                    e => e.EntityId == command.EntityId);
+                    e => e.Id == command.Id);
                 if (entity != null) return;
             }
 

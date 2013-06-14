@@ -6,7 +6,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class DetachFileFromAgreement
     {
-        public DetachFileFromAgreement(IPrincipal principal, Guid fileGuid, Guid agreementGuid)
+        public DetachFileFromAgreement(IPrincipal principal, Guid fileGuid, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -14,13 +14,13 @@ namespace UCosmic.Domain.InstitutionalAgreements
             if (fileGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "fileGuid");
             FileGuid = fileGuid;
 
-            if (agreementGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "agreementGuid");
-            AgreementGuid = agreementGuid;
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be empty");
+            AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
         public Guid FileGuid { get; private set; }
-        public Guid AgreementGuid { get; private set; }
+        public int AgreementId { get; private set; }
         public bool IsNewlyDetached { get; internal set; }
     }
 
@@ -41,7 +41,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
             var entity = _entities.Get<InstitutionalAgreementFile>()
                 .SingleOrDefault(x =>
                     x.EntityId == command.FileGuid &&
-                    x.Agreement.EntityId == command.AgreementGuid
+                    x.Agreement.Id == command.AgreementId
                 );
 
             if (entity == null) return;

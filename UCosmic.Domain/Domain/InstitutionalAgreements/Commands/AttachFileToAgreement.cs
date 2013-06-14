@@ -8,7 +8,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class AttachFileToAgreement
     {
-        public AttachFileToAgreement(IPrincipal principal, Guid fileGuid, Guid agreementGuid)
+        public AttachFileToAgreement(IPrincipal principal, Guid fileGuid, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -16,8 +16,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
             if (fileGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "fileGuid");
             FileGuid = fileGuid;
 
-            if (agreementGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "agreementGuid");
-            AgreementGuid = agreementGuid;
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be empty");
+            AgreementId = agreementId;
         }
 
         internal AttachFileToAgreement(IPrincipal principal, Guid fileGuid, InstitutionalAgreement agreement)
@@ -34,7 +34,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
         public IPrincipal Principal { get; private set; }
         public Guid FileGuid { get; private set; }
-        public Guid AgreementGuid { get; private set; }
+        public int AgreementId { get; private set; }
         internal InstitutionalAgreement Agreement { get; set; }
         public bool IsNewlyAttached { get; internal set; }
     }
@@ -58,9 +58,9 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 {
                     r => r.Files,
                 })
-                .SingleOrDefault(x => x.EntityId == command.AgreementGuid);
+                .ById(command.AgreementId);
             if (agreement == null)
-                throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementGuid));
+                throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementId));
 
             var file = agreement.Files.SingleOrDefault(g => g.EntityId == command.FileGuid);
             if (file != null) return;

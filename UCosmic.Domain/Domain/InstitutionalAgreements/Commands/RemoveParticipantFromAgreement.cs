@@ -6,21 +6,21 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class RemoveParticipantFromAgreement
     {
-        public RemoveParticipantFromAgreement(IPrincipal principal, Guid establishmentGuid, Guid agreementGuid)
+        public RemoveParticipantFromAgreement(IPrincipal principal, int establishmentId, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (establishmentGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "establishmentGuid");
-            EstablishmentGuid = establishmentGuid;
+            if (establishmentId == 0) throw new ArgumentOutOfRangeException("establishmentId", "Cannot be empty");
+            EstablishmentId = establishmentId;
 
-            if (agreementGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "agreementGuid");
-            AgreementGuid = agreementGuid;
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be empty");
+            AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
-        public Guid EstablishmentGuid { get; private set; }
-        public Guid AgreementGuid { get; private set; }
+        public int EstablishmentId { get; private set; }
+        public int AgreementId { get; private set; }
         public bool IsNewlyRemoved { get; internal set; }
     }
 
@@ -40,8 +40,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
             // todo: this should be FindByPrimaryKey
             var entity = _entities.Get<InstitutionalAgreementParticipant>()
                 .SingleOrDefault(x =>
-                    x.Establishment.EntityId == command.EstablishmentGuid &&
-                    x.Agreement.EntityId == command.AgreementGuid
+                    x.Establishment.RevisionId == command.EstablishmentId &&
+                    x.Agreement.Id == command.AgreementId
                 );
 
             if (entity == null) return;

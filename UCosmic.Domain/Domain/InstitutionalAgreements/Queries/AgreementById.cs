@@ -36,7 +36,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
             var agreement = _entities.Query<InstitutionalAgreement>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault(x => x.RevisionId == query.Id);
+                .ById(query.Id);
             if (agreement == null) return null;
 
             // make sure user is authorized to view this data

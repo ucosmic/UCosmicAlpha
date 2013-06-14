@@ -56,7 +56,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 var participant = new InstitutionalAgreementParticipant
                 {
                     IsOwner = true,
-                    Agreement = new InstitutionalAgreement { RevisionId = 0 },
+                    Agreement = new InstitutionalAgreement(),
                     Establishment = owningEstablishment,
                 };
                 return new[] { participant };
@@ -64,7 +64,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
             var participants = _entities.Query<InstitutionalAgreementParticipant>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .Where(x => x.Agreement.RevisionId == query.AgreementId.Value)
+                .Where(x => x.Agreement.Id == query.AgreementId.Value)
                 .OrderBy(query.OrderBy)
             ;
 

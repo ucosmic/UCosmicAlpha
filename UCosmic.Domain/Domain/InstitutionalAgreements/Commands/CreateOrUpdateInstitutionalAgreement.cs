@@ -15,7 +15,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
         }
 
         public IPrincipal Principal { get; private set; }
-        public int RevisionId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public bool IsTitleDerived { get; set; }
         public string Type { get; set; }
@@ -26,15 +26,15 @@ namespace UCosmic.Domain.InstitutionalAgreements
         public DateTime ExpiresOn { get; set; }
         public bool IsExpirationEstimated { get; set; }
         public InstitutionalAgreementVisibility Visibility { get; set; }
-        public Guid? UmbrellaEntityId { get; set; }
-        public IEnumerable<Guid> RemoveParticipantEstablishmentEntityIds { get; set; }
-        public IEnumerable<Guid> AddParticipantEstablishmentEntityIds { get; set; }
-        public IEnumerable<Guid> RemoveContactEntityIds { get; set; }
+        public int? UmbrellaId { get; set; }
+        public IEnumerable<int> RemoveParticipantEstablishmentIds { get; set; }
+        public IEnumerable<int> AddParticipantEstablishmentIds { get; set; }
+        public IEnumerable<int> RemoveContactIds { get; set; }
         public IEnumerable<AddContactToAgreement> AddContactCommands { get; set; }
         public IEnumerable<Guid> DetachFileEntityIds { get; set; }
         public IEnumerable<Guid> AttachFileEntityIds { get; set; }
         public int ChangeCount { get; internal set; }
-        public Guid EntityId { get; internal set; }
+        //public Guid EntityId { get; internal set; }
     }
 
     public class HandleCreateOrUpdateInstitutionalAgreementCommand : IHandleCommands<CreateOrUpdateInstitutionalAgreement>
@@ -78,12 +78,12 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 {
                     a => a.Umbrella,
                 })
-                .SingleOrDefault(x => x.RevisionId == command.RevisionId);
-            if (entity == null && command.RevisionId == 0)
+                .SingleOrDefault(x => x.Id == command.Id);
+            if (entity == null && command.Id == 0)
                 entity = new InstitutionalAgreement();
             if (entity == null)
                 throw new InvalidOperationException(string.Format(
-                    "Agreement with id '{0}' does not exist.", command.RevisionId));
+                    "Agreement with id '{0}' does not exist.", command.Id));
 
             // update scalars
             CopyScalars(command, entity);
@@ -94,13 +94,13 @@ namespace UCosmic.Domain.InstitutionalAgreements
             // scenario 4: with previous umbrella, different current umbrella.
             // scenario 5: with previous umbrella, no current umbrella.
             var previousUmbrella = entity.Umbrella;
-            if (command.UmbrellaEntityId.HasValue &&
-                (previousUmbrella == null || previousUmbrella.EntityId != command.UmbrellaEntityId.Value))
+            if (command.UmbrellaId.HasValue &&
+                (previousUmbrella == null || previousUmbrella.Id != command.UmbrellaId.Value))
             {
-                entity.Umbrella = _entities.Get<InstitutionalAgreement>().SingleOrDefault(x => x.EntityId == command.UmbrellaEntityId.Value);
+                entity.Umbrella = _entities.Get<InstitutionalAgreement>().ById(command.UmbrellaId.Value);
                 ++command.ChangeCount;
             }
-            else if (previousUmbrella != null && !command.UmbrellaEntityId.HasValue)
+            else if (previousUmbrella != null && !command.UmbrellaId.HasValue)
             {
                 entity.Umbrella = null;
                 ++command.ChangeCount;
@@ -108,17 +108,17 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
             #region Participants
 
-            if (command.RemoveParticipantEstablishmentEntityIds != null)
-                foreach (var removedParticipantEstablishmentId in command.RemoveParticipantEstablishmentEntityIds)
+            if (command.RemoveParticipantEstablishmentIds != null)
+                foreach (var removedParticipantEstablishmentId in command.RemoveParticipantEstablishmentIds)
                 {
                     var remove = new RemoveParticipantFromAgreement(
-                        command.Principal, removedParticipantEstablishmentId, entity.EntityId);
+                        command.Principal, removedParticipantEstablishmentId, entity.Id);
                     _participantRemover.Handle(remove);
                     if (remove.IsNewlyRemoved) ++command.ChangeCount;
                 }
 
-            if (command.AddParticipantEstablishmentEntityIds != null)
-                foreach (var addedParticipantEstablishmentId in command.AddParticipantEstablishmentEntityIds)
+            if (command.AddParticipantEstablishmentIds != null)
+                foreach (var addedParticipantEstablishmentId in command.AddParticipantEstablishmentIds)
                 {
                     var add = new AddParticipantToAgreement(command.Principal, addedParticipantEstablishmentId, entity);
                     _participantAdder.Handle(add);
@@ -128,11 +128,11 @@ namespace UCosmic.Domain.InstitutionalAgreements
             #endregion
             #region Contacts
 
-            if (command.RemoveContactEntityIds != null)
-                foreach (var removedContactEntityId in command.RemoveContactEntityIds.Where(v => v != Guid.Empty))
+            if (command.RemoveContactIds != null)
+                foreach (var removedContactEntityId in command.RemoveContactIds.Where(v => v != 0))
                 {
                     var remove = new RemoveContactFromAgreement(
-                        command.Principal, removedContactEntityId, entity.EntityId);
+                        command.Principal, removedContactEntityId, entity.Id);
                     _contactRemover.Handle(remove);
                     if (remove.IsNewlyRemoved) ++command.ChangeCount;
                 }
@@ -152,7 +152,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
                 foreach (var removedFileEntityId in command.DetachFileEntityIds)
                 {
                     var detach = new DetachFileFromAgreement(
-                        command.Principal, removedFileEntityId, entity.EntityId);
+                        command.Principal, removedFileEntityId, entity.Id);
                     _fileDetacher.Handle(detach);
                     if (detach.IsNewlyDetached) ++command.ChangeCount;
 
@@ -168,13 +168,13 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
             #endregion
 
-            command.EntityId = entity.EntityId;
-            if (entity.RevisionId == 0 || command.ChangeCount > 0)
+            command.Id = entity.Id;
+            if (entity.Id == 0 || command.ChangeCount > 0)
             {
-                if (entity.RevisionId == 0) _entities.Create(entity);
+                if (entity.Id == 0) _entities.Create(entity);
                 else if (command.ChangeCount > 0) _entities.Update(entity);
                 DeriveNodes(entity, previousUmbrella);
-                command.RevisionId = entity.RevisionId;
+                command.Id = entity.Id;
             }
         }
 
@@ -182,7 +182,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
         {
             _hierarchyHandler.Handle(new UpdateInstitutionalAgreementHierarchy(agreement));
             if (previousUmbrella != null &&
-                (agreement.Umbrella == null || agreement.Umbrella.EntityId != previousUmbrella.EntityId))
+                (agreement.Umbrella == null || agreement.Umbrella.Id != previousUmbrella.Id))
                 _hierarchyHandler.Handle(new UpdateInstitutionalAgreementHierarchy(previousUmbrella));
         }
 

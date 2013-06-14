@@ -15,7 +15,6 @@ namespace UCosmic.Web.Mvc.Models.Agreements
             protected override void Configure()
             {
                 CreateMap<InstitutionalAgreement, AgreementApiModel>()
-                    .ForMember(d => d.Id, o => o.MapFrom(d => d.RevisionId))
                 ;
             }
         }

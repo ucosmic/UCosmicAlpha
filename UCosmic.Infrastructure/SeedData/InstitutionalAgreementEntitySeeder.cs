@@ -33,7 +33,8 @@ namespace UCosmic.SeedData
         public void Seed()
         {
             PurgeCurrentAgreements();
-            var ucEntityId = _queryProcessor.Execute(new EstablishmentByEmail("@uc.edu")).EntityId;
+            var uc = _queryProcessor.Execute(new EstablishmentByEmail("@uc.edu"));
+            var ucId = uc.RevisionId;
             var principal = GetPrincipal("uc.edu");
 
             Seed(new CreateOrUpdateInstitutionalAgreement(principal)
@@ -46,7 +47,7 @@ namespace UCosmic.SeedData
                 IsTitleDerived = false,
                 IsAutoRenew = true,
                 Description = "This agreement is used to test scenarios for automatically generating a summary description.",
-                AddParticipantEstablishmentEntityIds = new[] { ucEntityId },
+                AddParticipantEstablishmentIds = new[] { ucId },
                 AddContactCommands = new[]
                 {
                     new AddContactToAgreement(principal)
@@ -67,10 +68,10 @@ namespace UCosmic.SeedData
                 IsAutoRenew = false,
                 Description = "The University of Cincinnati and Jinan University have a mutual interest in promoting training, " +
                     "research, education and publication through joint activities.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.jnu.edu.cn")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.jnu.edu.cn")).RevisionId,
                 },
                 AttachFileEntityIds = new[] { CreateLooseFile1() },
                 AddContactCommands = new[]
@@ -93,10 +94,10 @@ namespace UCosmic.SeedData
                 IsTitleDerived = true,
                 IsAutoRenew = false,
                 Description = "Typical international collaboration agreement",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.swinburne.edu.au")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.swinburne.edu.au")).RevisionId,
                 },
             });
 
@@ -110,10 +111,10 @@ namespace UCosmic.SeedData
                 IsTitleDerived = true,
                 IsAutoRenew = false,
                 Description = "Multiple collaboration",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.fhnw.ch")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.fhnw.ch")).RevisionId,
                 },
             });
 
@@ -127,10 +128,10 @@ namespace UCosmic.SeedData
                 IsTitleDerived = true,
                 IsAutoRenew = true,
                 Description = "Original ICA signed in 1999 and valid for 3 years; new MOU signed in 2000; addendum signed in 2005.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.jku.at")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.jku.at")).RevisionId,
                 },
             });
 
@@ -145,14 +146,14 @@ namespace UCosmic.SeedData
                 IsAutoRenew = false,
                 Description = "The University of Cincinnati and the Université catholique de Louvain have a mutual interest " +
                     "in promoting training, research, education and publication through joint activities.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.uclouvain.be")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.uclouvain.be")).RevisionId,
                 },
             });
 
-            var umbrella1EntityId = Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            var umbrella1Id = Seed(new CreateOrUpdateInstitutionalAgreement(principal)
             {
                 Type = "Activity Agreement",
                 Title = "FIPSE Brazil Activity Agreement",
@@ -166,18 +167,18 @@ namespace UCosmic.SeedData
                     "lead institution), and the Universidade Federal do Parana. \r\n\r\nAgreement is for undergraduate and graduate " +
                     "student exchange. \r\n\r\nThis agreement actually contains two different end dates: Page 1, Article 4, cites a " +
                     "four-year span, ending July 31, 2013. Page 5, Article 22, says it is a 5-year span.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufl.edu")).EntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufrj.br")).EntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufl.edu")).RevisionId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufrj.br")).RevisionId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).RevisionId,
                 },
             });
 
             Seed(new CreateOrUpdateInstitutionalAgreement(principal)
             {
-                UmbrellaEntityId = umbrella1EntityId,
+                UmbrellaId = umbrella1Id,
                 Type = "Memorandum of Cooperation",
                 Title = "Memorandum of Cooperation between University of Cincinnati and Universidade Federal do Paraná - Status is Unknown",
                 StartsOn = new DateTime(1990, 7, 11),
@@ -188,10 +189,10 @@ namespace UCosmic.SeedData
                 Description = "Memorandum of Cooperation between University of Cincinnati. Cincinnati, Oh U.S.A. " +
                     "and Universidade Federal DO Parana. Curitiba, Parana, Brazil and, as facilitators, the " +
                     "Ohio-Parana and Parana-Ohio Committees of the Nation Association of the Partners of the Americas",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).RevisionId,
                 },
             });
 
@@ -205,10 +206,10 @@ namespace UCosmic.SeedData
                 IsTitleDerived = true,
                 IsAutoRenew = false,
                 Description = "Multiple collabation",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ippuc.org.br")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.ippuc.org.br")).RevisionId,
                 },
             });
 
@@ -223,10 +224,10 @@ namespace UCosmic.SeedData
                 IsAutoRenew = false,
                 Description = "The University of Cincinnati and the Universidade Positivo have a mutual interest " +
                     "in promotin training, research, education and publication through joint activities.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.up.com.br")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.up.com.br")).RevisionId,
                 },
             });
 
@@ -240,10 +241,10 @@ namespace UCosmic.SeedData
                 IsTitleDerived = true,
                 IsAutoRenew = false,
                 Description = "To promote academic cooperation for exchange of teaching staff, joint research projects, exchange of students, shared courses and subjects, etc.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.med.uc.edu")).EntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.usp.br")).EntityId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.med.uc.edu")).RevisionId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.usp.br")).RevisionId,
                 },
             });
 
@@ -257,20 +258,20 @@ namespace UCosmic.SeedData
                 IsTitleDerived = true,
                 IsAutoRenew = true,
                 Description = "Update ICA - Auto Renews for 3 year periods.",
-                AddParticipantEstablishmentEntityIds = new[]
+                AddParticipantEstablishmentIds = new[]
                 {
-                    ucEntityId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.udd.cl")).EntityId,
+                    ucId,
+                    _queryProcessor.Execute(new EstablishmentByUrl("www.udd.cl")).RevisionId,
                 },
             });
 
         }
 
-        protected Guid Seed(CreateOrUpdateInstitutionalAgreement command)
+        protected int Seed(CreateOrUpdateInstitutionalAgreement command)
         {
             _agreementHandler.Handle(command);
             _unitOfWork.SaveChanges();
-            return command.EntityId;
+            return command.Id;
         }
 
         private IPrincipal GetPrincipal(string domain)
