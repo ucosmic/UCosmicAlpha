@@ -88,17 +88,17 @@ export class InstitutionalAgreementEditModel {
 
     populateParticipants(): void {
 
-        this.spinner.start();
         $.get(App.Routes.WebApi.Agreements.Participants.get())
             .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
-               
+                $("#LoadingPage").hide();
             });
 
 
     }
     
     hideOtherGroups(): void {
+        $("#allParticipants").css("visibility", "").hide();
         $("#estSearch").css("visibility", "").hide();
         $("#addEstablishment").css("visibility", "").hide();
     }
@@ -125,6 +125,8 @@ export class InstitutionalAgreementEditModel {
     };
     establishmentSearchViewModel = new Search();
 
+
+    establishmentItemViewModel; 
 
     hasBoundSearch = false;
 
@@ -183,8 +185,14 @@ export class InstitutionalAgreementEditModel {
     
     bindSearch = function () {
         if (!this.hasBoundSearch) {
+            this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/page\/(.*)\//;
+            this.establishmentSearchViewModel.sammyGetPageRoute = '#/page/:pageNumber/';
+            this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
             var lastURL = "asdf";
+            if (sessionStorage.getItem("addest") == undefined) {
+                sessionStorage.setItem("addest", "no");
+            }
             this.establishmentSearchViewModel.sammy.bind("location-changed", function () => {
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                     var $asideRootSearch = $("#asideRootSearch");
@@ -201,19 +209,15 @@ export class InstitutionalAgreementEditModel {
                             .done(function () => {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
                                     if (!this.hasBoundItem) {
-                                        var establishmentItemViewModel = new Item();
-                                        establishmentItemViewModel.goToSearch = function () => {
-                                            this.establishmentSearchViewModel.clickAction = function (context): bool => {
-                                                establishmentItemViewModel.parentEstablishment(context);
-                                                establishmentItemViewModel.parentId(context.id());
-                                                this.establishmentSearchViewModel.sammy.setLocation('#/new/');
-                                            };
-                                            this.establishmentSearchViewModel.header("Choose a parent establishment");
-                                            this.establishmentSearchViewModel.sammy.setLocation('#/addest/page/1/');
+                                        this.establishmentItemViewModel = new Item();
+                                        this.establishmentItemViewModel.goToSearch = function () => {
+                                            sessionStorage.setItem("addest", "yes");
+                                            this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
                                         }
-                                        ko.applyBindings(establishmentItemViewModel, $addEstablishment[0]);
+                                        ko.applyBindings(this.establishmentItemViewModel, $addEstablishment[0]);
                                         var $cancelAddEstablishment = $("#cancelAddEstablishment");
                                         $cancelAddEstablishment.on("click", function (e) => {
+                                            sessionStorage.setItem("addest", "no");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
                                             e.preventDefault();
                                             return false;
@@ -224,54 +228,61 @@ export class InstitutionalAgreementEditModel {
                             })
                         lastURL = "#/new/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/page/") > 0) {
-
-                        $asideRootSearch.show();
-                        $asideParentSearch.hide();
-                        this.SearchPageBind("participant");
-                        this.establishmentSearchViewModel.header("Choose a participant");
-
-                        this.establishmentSearchViewModel.clickAction = function (context): bool => {
-
-                            var myParticipant = new InstitutionalAgreementParticipantModel(
-                                false,
-                                context.id(),
-                                context.officialName(),
-                                context.translatedName()
-                            );
-                            var alreadyExist = false;
-                            for (var i = 0; i < this.participants().length; i++) {
-                                if (this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
-                                    alreadyExist = true;
-                                    break;
+                        if (sessionStorage.getItem("addest") === "yes") {
+                            this.establishmentSearchViewModel.clickAction = function (context): bool => {
+                                this.establishmentItemViewModel.parentEstablishment(context);
+                                this.establishmentItemViewModel.parentId(context.id());
+                                this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                            };
+                            this.establishmentSearchViewModel.header("Choose a parent establishment");
+                            $asideRootSearch.hide();
+                            $asideParentSearch.show();
+                            this.SearchPageBind("parent");
+                            this.establishmentSearchViewModel.header("Choose a parent establishment");
+                        }
+                        else {
+                            $asideRootSearch.show();
+                            $asideParentSearch.hide();
+                            this.SearchPageBind("participant");
+                            this.establishmentSearchViewModel.header("Choose a participant");
+                            this.establishmentSearchViewModel.clickAction = function (context): bool => {
+                                var myParticipant = new InstitutionalAgreementParticipantModel(
+                                    false,
+                                    context.id(),
+                                    context.officialName(),
+                                    context.translatedName()
+                                );
+                                var alreadyExist = false;
+                                for (var i = 0; i < this.participants().length; i++) {
+                                    if (this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                                        alreadyExist = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (alreadyExist !== true) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Agreements.Participant.get(myParticipant.establishmentId()),
-                                    type: 'GET',
-                                    async: false
-                                })
-                                .done(function (response) => {
-                                    myParticipant.isOwner(response.isOwner);
-                                    this.participants.push(myParticipant);
-                                    this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
-                                })
-                                .fail(function () => {
-                                    //alert('fail');
-                                    this.participants.push(myParticipant);
-                                    this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
-                                });
-                            } else {
-                                alert("This Participant has already been added.")
+                                if (alreadyExist !== true) {
+                                    $.ajax({
+                                        url: App.Routes.WebApi.Agreements.Participant.get(myParticipant.establishmentId()),
+                                        type: 'GET',
+                                        async: false
+                                    })
+                                    .done(function (response) => {
+                                        myParticipant.isOwner(response.isOwner);
+                                        this.participants.push(myParticipant);
+                                        this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                                    })
+                                    .fail(function () => {
+                                        //alert('fail');
+                                        this.participants.push(myParticipant);
+                                        this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                                    });
+                                } else {
+                                    alert("This Participant has already been added.")
+                                }
                             }
                         }
                         lastURL = "#/page/";
-                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/addest/page/") > 0) {
-                        $asideRootSearch.hide();
-                        $asideParentSearch.show();
-                        this.SearchPageBind("parent");
-                        lastURL = "#/addest/page/";
                     } else {
+                        sessionStorage.setItem("addest", "no");
                         lastURL = "#/index";
                         this.establishmentSearchViewModel.sammy.setLocation('#/index');
                         var dfd = $.Deferred();
@@ -285,10 +296,8 @@ export class InstitutionalAgreementEditModel {
                                 $("#allParticipants").fadeIn(500);
                             });
                     }
-
                 }
             });
-
             this.establishmentSearchViewModel.sammy.run();
         }
     };
