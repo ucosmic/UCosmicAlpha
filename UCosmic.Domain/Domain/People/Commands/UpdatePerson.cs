@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -13,7 +14,24 @@ namespace UCosmic.Domain.People
             Id = id;
         }
 
-        /* Person */
+        public class Affiliation
+        {
+            public int EstablishmentId { get; set; }
+            public string JobTitles { get; set; }
+            public bool IsDefault { get; set; }
+            public bool IsPrimary { get; set; }
+            public bool IsAcknowledged { get; set; }
+            public bool IsClaimingStudent { get; set; }
+            public bool IsClaimingEmployee { get; set; }
+            public bool IsClaimingInternationalOffice { get; set; }
+            public bool IsClaimingAdministrator { get; set; }
+            public bool IsClaimingFaculty { get; set; }
+            public bool IsClaimingStaff { get; set; }
+            public int? CollegeId { get; set; }
+            public int? DepartmentId { get; set; }
+            public int? FacultyRankId { get; set; }
+        }
+
         public int Id { get; private set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
@@ -24,11 +42,8 @@ namespace UCosmic.Domain.People
         public string LastName { get; set; }
         public string Suffix { get; set; }
         public string Gender { get; set; }
-        ///* Employee */
-        //public int? EmployeeId { get; set; }
-        //public int? EmployeeFacultyRankId { get; set; }
-        //public string EmployeeAdministrativeAppointments { get; set; }
-        //public string EmployeeJobTitles { get; set; }
+        public ICollection<Affiliation> Affiliations { get; set; }
+
 
         internal bool NoCommit { get; set; }
     }

@@ -1,6 +1,31 @@
 var ViewModels;
 (function (ViewModels) {
     (function (My) {
+        var Affiliation = (function () {
+            function Affiliation() {
+                this.establishmentId = ko.observable();
+                this.establishment = ko.observable();
+                this.jobTitles = ko.observable();
+                this.isDefault = ko.observable(false);
+                this.isPrimary = ko.observable(false);
+                this.isAcknowledged = ko.observable(false);
+                this.isClaimingStudent = ko.observable(false);
+                this.isClaimingEmployee = ko.observable(false);
+                this.isClaimingInternationalOffice = ko.observable(false);
+                this.isClaimingAdministrator = ko.observable(false);
+                this.isClaimingFaculty = ko.observable(false);
+                this.isClaimingStaff = ko.observable(false);
+                this.campusId = ko.observable();
+                this.campus = ko.observable();
+                this.collegeId = ko.observable();
+                this.college = ko.observable();
+                this.departmentId = ko.observable();
+                this.department = ko.observable();
+                this.facultyRankId = ko.observable();
+                this.facultyRank = ko.observable();
+            }
+            return Affiliation;
+        })();        
         var Profile = (function () {
             function Profile() {
                 this._sammy = Sammy();
@@ -31,8 +56,7 @@ var ViewModels;
                 this.suffix = ko.observable();
                 this.facultyRanks = ko.observableArray();
                 this.facultyRankId = ko.observable();
-                this.jobTitles = ko.observable();
-                this.administrativeAppointments = ko.observable();
+                this.preferredTitle = ko.observable();
                 this.gender = ko.observable();
                 this.isActive = ko.observable();
                 this.$photo = ko.observable();
@@ -306,10 +330,7 @@ var ViewModels;
                 this.suffix.extend({
                     maxLength: 50
                 });
-                this.jobTitles.extend({
-                    maxLength: 500
-                });
-                this.administrativeAppointments.extend({
+                this.preferredTitle.extend({
                     maxLength: 500
                 });
                 ko.validation.group(this);

@@ -90,7 +90,7 @@
                                         </div>
                                         <div class="on-left name-and-title">
                                             <div class="display-name" data-bind="text: displayName"></div>
-                                            <div class="titles" data-bind="multilineText: jobTitles"></div>
+                                            <div class="titles" data-bind="multilineText: preferredTitle"></div>
                                             @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
                                             {
                                                 <div class="admin-only">
@@ -100,10 +100,10 @@
                                         </div>
                                         <div class="on-left faculty">
                                             <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
-                                            <div class="appointments" data-bind="multilineText: administrativeAppointments">
+                                            <!--<div class="appointments" data-bind="multilineText: administrativeAppointments">
                                                 <br />
                                                 <br />
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>

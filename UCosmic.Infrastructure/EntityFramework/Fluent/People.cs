@@ -124,6 +124,7 @@ namespace UCosmic.EntityFramework
 
             Property(p => p.JobTitles).HasMaxLength(500);
 
+            Property(p => p.CampusId).IsOptional();
             Property(p => p.CollegeId).IsOptional();
             Property(p => p.DepartmentId).IsOptional();
             Property(p => p.FacultyRankId).IsOptional();

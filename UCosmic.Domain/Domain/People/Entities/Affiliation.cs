@@ -32,8 +32,10 @@ namespace UCosmic.Domain.People
         public bool IsClaimingFaculty { get; protected internal set; }
         public bool IsClaimingStaff { get; protected internal set; }
 
+        public int? CampusId { get; protected internal set; }
         public int? CollegeId { get; protected internal set; }
         public int? DepartmentId { get; protected internal set; }
+
         public int? FacultyRankId { get; protected internal set; }
 
         public override string ToString()

@@ -13,6 +13,10 @@ namespace UCosmic.Domain.People
         public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
+        public int? CampusId { get; set; }
+        public int? CollegeId { get; set; }
+        public int? DepartmentId { get; set; }
+        public int? FacultyRankId { get; set; }
 
         public Affiliation CreatedAffiliation { get; set; }
     }
@@ -78,6 +82,9 @@ namespace UCosmic.Domain.People
                 IsClaimingEmployee = command.IsClaimingEmployee,
                 IsDefault = !person.Affiliations.Any(a => a.IsDefault),
                 IsPrimary = command.IsPrimary,
+                CollegeId = command.CollegeId,
+                DepartmentId = command.DepartmentId,
+                FacultyRankId = command.FacultyRankId
             };
             person.Affiliations.Add(affiliation);
 

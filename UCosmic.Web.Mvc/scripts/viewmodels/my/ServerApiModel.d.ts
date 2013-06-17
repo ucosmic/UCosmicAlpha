@@ -6,7 +6,6 @@
 //}
 
 module ViewModels.My {
-
     export interface IServerProfileApiModel {
         hasPhoto: bool;
         isActive: bool;
@@ -20,8 +19,7 @@ module ViewModels.My {
         suffix: string;
         gender: string;
         facultyRankId: string;
-        administrativeAppointments: string;
-        jobTitles: string;
+        preferredTitle: string;
+        affiliations: any[];
     }
-
 }

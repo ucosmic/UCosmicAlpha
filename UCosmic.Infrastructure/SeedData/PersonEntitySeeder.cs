@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
@@ -393,15 +394,18 @@ namespace UCosmic.SeedData
     public class AffiliationEntitySeeder : BaseAffiliationEntitySeeder
     {
         private readonly ICommandEntities _entities;
+        //private readonly IHandleCommands<UpdateMyProfile> _updateProfile;
 
         public AffiliationEntitySeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IHandleCommands<CreateAffiliation> createAffiliation
+            //, IHandleCommands<UpdateMyProfile> updateProfile
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createAffiliation, unitOfWork)
         {
             _entities = entities;
+            //_updateProfile = updateProfile;
         }
 
         public override void Seed()
@@ -409,13 +413,23 @@ namespace UCosmic.SeedData
             /* USF Affiliations */
             {
                 /* ------------------------------------------------------------------------ */
-                var person = _entities.Get<Person>()
-                    .SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
+                var person = _entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
                 if (person == null) throw new Exception("Could not find Douglas Corarito by name (did name change?).");
 
-                var establishment = _entities.Get<Establishment>()
-                    .SingleOrDefault(x => x.OfficialName == "University of South Florida");
+                //var updateMyProfile = new UpdateMyProfile(person.User)
+                //{
+                //    JobTitles = "USF Distinquished Professor"
+                //};
+                //_updateProfile.Handle(updateMyProfile);            
+
+                var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
                 if (establishment == null) throw new Exception("Establishment is null");
+
+                var campus = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "USF Tampa Campus");
+                if (campus == null) throw new Exception("Campus is null");
+
+                var college = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "College of Medicine" && e.Parent.RevisionId == campus.RevisionId);
+                if (college == null) throw new Exception("College is null");
 
                 Seed(new CreateAffiliation
                 {
@@ -424,6 +438,72 @@ namespace UCosmic.SeedData
                     IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
+                    CampusId = campus.RevisionId,
+                    CollegeId = college.RevisionId,
+                    DepartmentId = _entities.Get<Establishment>()
+                        .SingleOrDefault(e => e.OfficialName == "Center for Aging/Neuroscience" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                    FacultyRankId = _entities.Get<EmployeeModuleSettings>()
+                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                });
+
+                Seed(new CreateAffiliation
+                {
+                    PersonId = person.RevisionId,
+                    EstablishmentId = establishment.RevisionId,
+                    IsPrimary = false,
+                    IsClaimingEmployee = true,
+                    IsClaimingStudent = false,
+                    CampusId = campus.RevisionId,
+                    CollegeId = college.RevisionId,
+                    DepartmentId = _entities.Get<Establishment>()
+                        .SingleOrDefault(e => e.OfficialName == "Department of Neurology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                    FacultyRankId = _entities.Get<EmployeeModuleSettings>()
+                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                });
+
+                Seed(new CreateAffiliation
+                {
+                    PersonId = person.RevisionId,
+                    EstablishmentId = establishment.RevisionId,
+                    IsPrimary = false,
+                    IsClaimingEmployee = true,
+                    IsClaimingStudent = false,
+                    CampusId = campus.RevisionId,
+                    CollegeId = college.RevisionId,
+                    DepartmentId = _entities.Get<Establishment>()
+                        .SingleOrDefault(e => e.OfficialName == "Department of Psychology & Behavior" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                    FacultyRankId = _entities.Get<EmployeeModuleSettings>()
+                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                });
+
+                Seed(new CreateAffiliation
+                {
+                    PersonId = person.RevisionId,
+                    EstablishmentId = establishment.RevisionId,
+                    IsPrimary = false,
+                    IsClaimingEmployee = true,
+                    IsClaimingStudent = false,
+                    CampusId = campus.RevisionId,
+                    CollegeId = college.RevisionId,
+                    DepartmentId = _entities.Get<Establishment>()
+                        .SingleOrDefault(e => e.OfficialName == "Molecular Pharmacology & Physiology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                    FacultyRankId = _entities.Get<EmployeeModuleSettings>()
+                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                });
+
+                Seed(new CreateAffiliation
+                {
+                    PersonId = person.RevisionId,
+                    EstablishmentId = establishment.RevisionId,
+                    IsPrimary = false,
+                    IsClaimingEmployee = true,
+                    IsClaimingStudent = false,
+                    CampusId = campus.RevisionId,
+                    CollegeId = college.RevisionId,
+                    DepartmentId = _entities.Get<Establishment>()
+                        .SingleOrDefault(e => e.OfficialName == "Pathology and Cell Biology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                    FacultyRankId = _entities.Get<EmployeeModuleSettings>()
+                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Professor").Id
                 });
 
                 /* ------------------------------------------------------------------------ */
@@ -489,7 +569,26 @@ namespace UCosmic.SeedData
             Affiliation affiliation = _queryProcessor.Execute(
                 new AffiliationByPrimaryKey(command.PersonId, command.EstablishmentId));
 
-            if (affiliation != null) return affiliation;
+            /* This needs to be changed to prevent duplicate affiliations. */
+
+            if (affiliation != null)
+            {
+                if (affiliation.CampusId.HasValue ||
+                    affiliation.CollegeId.HasValue ||
+                    affiliation.DepartmentId.HasValue)
+                {
+                    if ((affiliation.CampusId == command.CampusId) &&
+                        (affiliation.CollegeId == command.CollegeId) &&
+                        (affiliation.DepartmentId == command.DepartmentId))
+                    {
+                        return affiliation;
+                    }
+                }
+                else
+                {
+                    return affiliation;
+                }
+            }
 
             _createAffiliation.Handle(command);
 

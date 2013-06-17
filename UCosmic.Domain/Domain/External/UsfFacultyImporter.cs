@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -288,9 +289,39 @@ namespace UCosmic.Domain.External
                     throw new Exception("Could not get EmployeeModuleSettings for USF");
                 }
 
-                string title = record.Profiles[0].PositionTitle;
-                var facultyRank = employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Rank == title);
-                int? facultyRankId = (facultyRank != null) ? (int?)facultyRank.Id : null;
+                var affiliations = new Collection<UpdatePerson.Affiliation>();
+
+                for (int i = 0; i < record.Profiles.Count(); i += 1)
+                {
+                    var college =
+                        _entities.Get<Establishment>()
+                                 .SingleOrDefault(e => e.OfficialName == record.Profiles[i].College);
+                    int? collegeId = (college != null) ? (int?) college.RevisionId : null;
+                    var department =
+                        _entities.Get<Establishment>()
+                                 .SingleOrDefault(e => e.OfficialName == record.Profiles[i].Department);
+                    int? departmentId = (department != null) ? (int?) department.RevisionId : null;
+
+                    var affiliation = new UpdatePerson.Affiliation
+                    {
+                        EstablishmentId = usf.RevisionId,
+                        JobTitles = record.Profiles[i].PositionTitle,
+                        IsDefault = false,
+                        IsPrimary = false,
+                        IsAcknowledged = true,
+                        IsClaimingStudent = false,
+                        IsClaimingEmployee = true,
+                        IsClaimingInternationalOffice = false,
+                        IsClaimingAdministrator = false,
+                        IsClaimingFaculty = true,
+                        IsClaimingStaff = false,
+                        CollegeId = collegeId,
+                        DepartmentId = departmentId,
+                        FacultyRankId = (Int32.Parse(record.Profiles[i].FacultyRank))
+                    };
+
+                    affiliations.Add(affiliation);
+                }
 
                 var updateProfile = new UpdateMyProfile(principal)
                 {
@@ -304,9 +335,7 @@ namespace UCosmic.Domain.External
                     LastName = record.LastName,
                     Suffix = record.Suffix,
                     Gender = record.Gender[0].ToString().ToUpper(),
-                    FacultyRankId = facultyRankId,
-                    JobTitles = record.Profiles[0].PositionTitle,
-                    AdministrativeAppointments = ""
+                    Affiliations = affiliations
                 };
 
                 _updateMyProfile.Handle(updateProfile);

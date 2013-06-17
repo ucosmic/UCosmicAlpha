@@ -19,6 +19,29 @@
 
 module ViewModels.My {
 
+    class Affiliation {
+        establishmentId: KnockoutObservableNumber = ko.observable();
+        establishment: KnockoutObservableString = ko.observable();
+        jobTitles: KnockoutObservableNumber = ko.observable();
+        isDefault: KnockoutObservableBool = ko.observable(false);
+        isPrimary: KnockoutObservableBool = ko.observable(false);
+        isAcknowledged: KnockoutObservableBool = ko.observable(false);
+        isClaimingStudent: KnockoutObservableBool = ko.observable(false);
+        isClaimingEmployee: KnockoutObservableBool = ko.observable(false);
+        isClaimingInternationalOffice: KnockoutObservableBool = ko.observable(false);
+        isClaimingAdministrator: KnockoutObservableBool = ko.observable(false);
+        isClaimingFaculty: KnockoutObservableBool = ko.observable(false);
+        isClaimingStaff: KnockoutObservableBool = ko.observable(false);
+        campusId: KnockoutObservableAny = ko.observable();     // nullable
+        campus: KnockoutObservableString = ko.observable();
+        collegeId: KnockoutObservableAny = ko.observable();     // nullable
+        college: KnockoutObservableString = ko.observable();
+        departmentId: KnockoutObservableAny = ko.observable();  // nullable
+        department: KnockoutObservableString = ko.observable();
+        facultyRankId: KnockoutObservableAny = ko.observable(); // nullable
+        facultyRank: KnockoutObservableString = ko.observable();
+    }
+
     export class Profile implements KnockoutValidationGroup {
 
         private _sammy: Sammy.Application = Sammy();
@@ -58,8 +81,8 @@ module ViewModels.My {
         facultyRankText: () => string;
         facultyRanks: KnockoutObservableFacultyRankModelArray = ko.observableArray();
         facultyRankId: KnockoutObservableNumber = ko.observable();
-        jobTitles: KnockoutObservableString = ko.observable();
-        administrativeAppointments: KnockoutObservableString = ko.observable();
+        preferredTitle: KnockoutObservableString = ko.observable();
+        affiliations: any[];
 
         gender: KnockoutObservableString = ko.observable();
         isActive: KnockoutObservableBool = ko.observable();
@@ -398,11 +421,7 @@ module ViewModels.My {
                 maxLength: 50
             });
 
-            this.jobTitles.extend({
-                maxLength: 500
-            });
-
-            this.administrativeAppointments.extend({
+            this.preferredTitle.extend({
                 maxLength: 500
             });
 

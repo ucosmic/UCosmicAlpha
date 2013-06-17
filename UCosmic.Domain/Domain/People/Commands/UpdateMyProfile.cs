@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -29,11 +30,10 @@ namespace UCosmic.Domain.People
         public string LastName { get; set; }
         public string Suffix { get; set; }
         public string Gender { get; set; }
+        public ICollection<UpdatePerson.Affiliation> Affiliations { get; set; }
 
         /* Employee */
-        public int? FacultyRankId { get; set; }
         public string JobTitles { get; set; }
-        public string AdministrativeAppointments { get; set; }
 
         internal bool NoCommit { get; set; }
     }
@@ -123,12 +123,11 @@ namespace UCosmic.Domain.People
                     LastName = command.LastName,
                     Suffix = command.Suffix,
                     Gender = command.Gender,
+                    Affiliations = command.Affiliations
                 });
 
                 var hasEmployee = person.Employee != null;
-                var shouldHaveEmployee = command.FacultyRankId.HasValue ||
-                                         !string.IsNullOrWhiteSpace(command.JobTitles) ||
-                                         !string.IsNullOrWhiteSpace(command.AdministrativeAppointments);
+                var shouldHaveEmployee = !string.IsNullOrWhiteSpace(command.JobTitles);
 
                 // create employee
                 if (!hasEmployee && shouldHaveEmployee)
@@ -137,9 +136,7 @@ namespace UCosmic.Domain.People
                     {
                         NoCommit = true,
                         PersonId = person.RevisionId,
-                        FacultyRankId = command.FacultyRankId,
-                        JobTitles = command.JobTitles,
-                        AdministrativeAppointments = command.AdministrativeAppointments,
+                        JobTitles = command.JobTitles
                     });
                 }
 
@@ -150,9 +147,7 @@ namespace UCosmic.Domain.People
                     {
                         NoCommit = true,
                         Id = person.Employee.Id,
-                        FacultyRankId = command.FacultyRankId,
-                        JobTitles = command.JobTitles,
-                        AdministrativeAppointments = command.AdministrativeAppointments,
+                        JobTitles = command.JobTitles
                     });
                 }
 
