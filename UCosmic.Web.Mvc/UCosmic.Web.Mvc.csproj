@@ -285,8 +285,8 @@
     </Compile>
     <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\ActivityElementsController.cs" />
-    <Compile Include="ApiControllers\AgreementsController.cs" />
-    <Compile Include="ApiControllers\AgreementSettingsController.cs" />
+    <Compile Include="ApiControllers\Agreements\AgreementsController.cs" />
+    <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\LanguageProficiencyController.cs" />
     <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
