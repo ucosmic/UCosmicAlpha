@@ -300,7 +300,10 @@
     <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
     <Compile Include="ApiControllers\GeographicExpertisesController.cs" />
-    <Compile Include="ApiControllers\PeopleController.cs" />
+    <Compile Include="ApiControllers\People\PeopleController.cs" />
+    <Compile Include="ApiControllers\People\PersonNamesController.cs" />
+    <Compile Include="ApiControllers\Places\CountriesController.cs" />
+    <Compile Include="ApiControllers\Places\PlacesController.cs" />
     <Compile Include="ApiControllers\ProfileElementsController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -336,9 +339,6 @@
     <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\LanguagesController.cs" />
-    <Compile Include="ApiControllers\CountriesController.cs" />
-    <Compile Include="ApiControllers\PersonNamesController.cs" />
-    <Compile Include="ApiControllers\PlacesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
     <Compile Include="App_Start\_Deprecated\_AttributeRouting.cs" />
