@@ -16,8 +16,8 @@
         private readonly PersonEntitySeeder _personEntitySeeder;
         private readonly UserEntitySeeder _userEntitySeeder;
         private readonly MemberEntitySeeder _memberEntitySeeder;
-        private readonly InstitutionalAgreementEntitySeeder _institutionalAgreementEntitySeeder;
-        private readonly InstitutionalAgreementSettingsEntitySeeder _institutionalAgreementSettingsEntitySeeder;
+        private readonly AgreementEntitySeeder _agreementEntitySeeder;
+        private readonly AgreementSettingsEntitySeeder _agreementSettingsEntitySeeder;
         private readonly EmployeeModuleSettingsEntitySeeder _employeeModuleSettingsEntitySeeder;
         private readonly EmployeeEntitySeeder _employeeEntitySeeder;
         private readonly AffiliationEntitySeeder _affiliationEntitySeeder;
@@ -42,8 +42,8 @@
             , PersonEntitySeeder personEntitySeeder
             , UserEntitySeeder userEntitySeeder
             , MemberEntitySeeder memberEntitySeeder
-            , InstitutionalAgreementEntitySeeder institutionalAgreementEntitySeeder
-            , InstitutionalAgreementSettingsEntitySeeder institutionalAgreementSettingsEntitySeeder
+            , AgreementEntitySeeder agreementEntitySeeder
+            , AgreementSettingsEntitySeeder agreementSettingsEntitySeeder
             , EmployeeModuleSettingsEntitySeeder employeeModuleSettingsEntitySeeder
             , AffiliationEntitySeeder affiliationEntitySeeder
             , EmployeeEntitySeeder employeeEntitySeeder
@@ -71,8 +71,8 @@
             _personEntitySeeder = personEntitySeeder;
             _userEntitySeeder = userEntitySeeder;
             _memberEntitySeeder = memberEntitySeeder;
-            _institutionalAgreementEntitySeeder = institutionalAgreementEntitySeeder;
-            _institutionalAgreementSettingsEntitySeeder = institutionalAgreementSettingsEntitySeeder;
+            _agreementEntitySeeder = agreementEntitySeeder;
+            _agreementSettingsEntitySeeder = agreementSettingsEntitySeeder;
             _affiliationEntitySeeder = affiliationEntitySeeder;
             _activityEntitySeeder = activityEntitySeeder;
             _loadableFileEntitySeeder = loadableFileEntitySeeder;
@@ -102,8 +102,8 @@
             _personEntitySeeder.Seed();
             _userEntitySeeder.Seed();
             _memberEntitySeeder.Seed();
-            _institutionalAgreementEntitySeeder.Seed();
-            _institutionalAgreementSettingsEntitySeeder.Seed();
+            _agreementEntitySeeder.Seed();
+            _agreementSettingsEntitySeeder.Seed();
             _affiliationEntitySeeder.Seed();
             _employeeEntitySeeder.Seed();
             _activityEntitySeeder.Seed();

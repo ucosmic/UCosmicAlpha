@@ -5,13 +5,13 @@ using UCosmic.Domain.Agreements;
 
 namespace UCosmic.SeedData
 {
-    public class InstitutionalAgreementSettingsEntitySeeder : ISeedData
+    public class AgreementSettingsEntitySeeder : ISeedData
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateOrUpdateSettings> _settingsHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public InstitutionalAgreementSettingsEntitySeeder(ICommandEntities entities
+        public AgreementSettingsEntitySeeder(ICommandEntities entities
             , IHandleCommands<CreateOrUpdateSettings> settingsHandler
             , IUnitOfWork unitOfWork
         )

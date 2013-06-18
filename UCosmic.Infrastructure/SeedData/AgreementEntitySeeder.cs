@@ -9,7 +9,7 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.SeedData
 {
-    public class InstitutionalAgreementEntitySeeder : ISeedData
+    public class AgreementEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
@@ -17,7 +17,7 @@ namespace UCosmic.SeedData
         private readonly IHandleCommands<CreateLooseFile> _fileHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public InstitutionalAgreementEntitySeeder(IProcessQueries queryProcessor
+        public AgreementEntitySeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IHandleCommands<CreateOrUpdateAgreement> agreementHandler
             , IHandleCommands<CreateLooseFile> fileHandler

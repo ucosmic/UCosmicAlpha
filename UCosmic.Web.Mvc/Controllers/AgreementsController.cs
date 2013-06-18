@@ -4,7 +4,7 @@ using AttributeRouting.Web.Mvc;
 namespace UCosmic.Web.Mvc.Controllers
 {
     [RestfulRouteConvention]
-    [UserVoiceForum(UserVoiceForum.InstitutionalAgreements)]
+    [UserVoiceForum(UserVoiceForum.Agreements)]
     [TryAuthorize(Roles = RoleName.AgreementManagers)]
     public partial class AgreementsController : Controller
     {

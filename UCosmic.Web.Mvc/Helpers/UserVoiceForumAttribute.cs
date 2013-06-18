@@ -26,7 +26,7 @@ namespace UCosmic.Web.Mvc
 
             switch (Forum)
             {
-                case UserVoiceForum.InstitutionalAgreements:
+                case UserVoiceForum.Agreements:
                     viewData[ForumId] = "foaDhAccc9p9GWHsSl81dg";
                     viewData[ForumHref] = "https://ucosmic.uservoice.com/forums/133860-institutional-agreements";
                     break;
@@ -68,7 +68,7 @@ namespace UCosmic.Web.Mvc
 
     public enum UserVoiceForum
     {
-        InstitutionalAgreements,
+        Agreements,
         Employees,
         Alumni,
         Students,
