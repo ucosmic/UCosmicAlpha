@@ -286,7 +286,7 @@
     <Compile Include="ApiControllers\ActivitiesController.cs" />
     <Compile Include="ApiControllers\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\AgreementsController.cs" />
-    <Compile Include="ApiControllers\ProfileElementsController.cs" />
+    <Compile Include="ApiControllers\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\LanguageProficiencyController.cs" />
     <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
@@ -294,6 +294,7 @@
     <Compile Include="ApiControllers\GrantsController.cs" />
     <Compile Include="ApiControllers\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\PeopleController.cs" />
+    <Compile Include="ApiControllers\ProfileElementsController.cs" />
     <Compile Include="ApiControllers\RolesController.cs" />
     <Compile Include="ApiControllers\UsersController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
@@ -309,6 +310,7 @@
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
     <Compile Include="Models\Agreements\AgreementApiModel.cs" />
+    <Compile Include="Models\Agreements\AgreementSettingsApiModel.cs" />
     <Compile Include="Models\LanguageExpertiseApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
