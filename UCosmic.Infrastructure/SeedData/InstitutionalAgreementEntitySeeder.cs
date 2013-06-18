@@ -74,7 +74,7 @@ namespace UCosmic.SeedData
                     ucId,
                     _queryProcessor.Execute(new EstablishmentByUrl("www.jnu.edu.cn")).RevisionId,
                 },
-                AttachFileEntityIds = new[] { CreateLooseFile1() },
+                AttachFileIds = new[] { CreateLooseFile1() },
                 AddContactCommands = new[]
                 {
                     new AddContactToAgreement(principal)
@@ -296,9 +296,9 @@ namespace UCosmic.SeedData
             });
         }
 
-        private Guid CreateLooseFile1()
+        private int CreateLooseFile1()
         {
-            var fileName = "Jinan University ICA.pdf";
+            const string fileName = "Jinan University ICA.pdf";
             using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\", fileName)))
             {
@@ -310,9 +310,8 @@ namespace UCosmic.SeedData
                     Content = content,
                 };
                 _fileHandler.Handle(fileCommand);
-                return fileCommand.CreatedLooseFileGuid;
+                return fileCommand.CreatedLooseFileId;
             }
-
         }
     }
 }

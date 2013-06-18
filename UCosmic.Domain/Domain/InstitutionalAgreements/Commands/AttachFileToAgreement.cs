@@ -8,32 +8,32 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class AttachFileToAgreement
     {
-        public AttachFileToAgreement(IPrincipal principal, Guid fileGuid, int agreementId)
+        public AttachFileToAgreement(IPrincipal principal, int fileId, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (fileGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "fileGuid");
-            FileGuid = fileGuid;
+            if (fileId == 0) throw new ArgumentOutOfRangeException("fileId", "Cannot be zero");
+            FileId = fileId;
 
-            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be empty");
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be zero");
             AgreementId = agreementId;
         }
 
-        internal AttachFileToAgreement(IPrincipal principal, Guid fileGuid, InstitutionalAgreement agreement)
+        internal AttachFileToAgreement(IPrincipal principal, int fileId, InstitutionalAgreement agreement)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (fileGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "fileGuid");
-            FileGuid = fileGuid;
+            if (fileId == 0) throw new ArgumentOutOfRangeException("fileId", "Cannot be zero");
+            FileId = fileId;
 
             if (agreement == null) throw new ArgumentNullException("agreement");
             Agreement = agreement;
         }
 
         public IPrincipal Principal { get; private set; }
-        public Guid FileGuid { get; private set; }
+        public int FileId { get; private set; }
         public int AgreementId { get; private set; }
         internal InstitutionalAgreement Agreement { get; set; }
         public bool IsNewlyAttached { get; internal set; }
@@ -64,10 +64,10 @@ namespace UCosmic.Domain.InstitutionalAgreements
             if (agreement == null)
                 throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementId));
 
-            var file = agreement.Files.SingleOrDefault(g => g.EntityId == command.FileGuid);
+            var file = agreement.Files.SingleOrDefault(g => g.Id == command.FileId);
             if (file != null) return;
 
-            var looseFile = _entities.Get<LooseFile>().SingleOrDefault(x => x.EntityId == command.FileGuid);
+            var looseFile = _entities.Get<LooseFile>().SingleOrDefault(x => x.RevisionId == command.FileId);
             if (looseFile == null) return;
 
             // also store in binary data

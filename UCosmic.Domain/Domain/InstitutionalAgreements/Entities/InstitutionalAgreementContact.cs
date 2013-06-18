@@ -16,7 +16,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
         }
 
         public int Id { get; protected set; }
-        public Guid Guid { get; protected internal set; }
+        public Guid Guid { get; protected set; }
 
         public int AgreementId { get; protected internal set; }
         public virtual InstitutionalAgreement Agreement { get; protected internal set; }

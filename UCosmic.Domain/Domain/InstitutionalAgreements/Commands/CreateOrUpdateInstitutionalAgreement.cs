@@ -31,8 +31,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
         public IEnumerable<int> AddParticipantEstablishmentIds { get; set; }
         public IEnumerable<int> RemoveContactIds { get; set; }
         public IEnumerable<AddContactToAgreement> AddContactCommands { get; set; }
-        public IEnumerable<Guid> DetachFileEntityIds { get; set; }
-        public IEnumerable<Guid> AttachFileEntityIds { get; set; }
+        public IEnumerable<int> DetachFileIds { get; set; }
+        public IEnumerable<int> AttachFileIds { get; set; }
         public int ChangeCount { get; internal set; }
         //public Guid EntityId { get; internal set; }
     }
@@ -154,8 +154,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
             #endregion
             #region Files
 
-            if (command.DetachFileEntityIds != null)
-                foreach (var removedFileEntityId in command.DetachFileEntityIds)
+            if (command.DetachFileIds != null)
+                foreach (var removedFileEntityId in command.DetachFileIds)
                 {
                     var detach = new DetachFileFromAgreement(
                         command.Principal, removedFileEntityId, entity.Id);
@@ -164,8 +164,8 @@ namespace UCosmic.Domain.InstitutionalAgreements
 
                 }
 
-            if (command.AttachFileEntityIds != null)
-                foreach (var attachedFileIds in command.AttachFileEntityIds)
+            if (command.AttachFileIds != null)
+                foreach (var attachedFileIds in command.AttachFileIds)
                 {
                     var attach = new AttachFileToAgreement(command.Principal, attachedFileIds, entity);
                     _fileAttacher.Handle(attach);

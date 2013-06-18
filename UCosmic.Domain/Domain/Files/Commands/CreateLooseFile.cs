@@ -7,7 +7,7 @@ namespace UCosmic.Domain.Files
         public byte[] Content { get; set; }
         public string Name { get; set; }
         public string MimeType { get; set; }
-        public Guid CreatedLooseFileGuid { get; internal set; }
+        public int CreatedLooseFileId { get; internal set; }
     }
 
     public class HandleCreateLooseFileCommand : IHandleCommands<CreateLooseFile>
@@ -35,7 +35,7 @@ namespace UCosmic.Domain.Files
 
             _entities.Create(entity);
             _unitOfWork.SaveChanges();
-            command.CreatedLooseFileGuid = entity.EntityId;
+            command.CreatedLooseFileId = entity.RevisionId;
         }
     }
 }

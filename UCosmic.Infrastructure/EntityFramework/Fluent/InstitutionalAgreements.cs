@@ -79,10 +79,9 @@ namespace UCosmic.EntityFramework
 
             HasKey(x => x.Id);
             Property(p => p.Guid).IsRequired();
-            Property(p => p.CreatedOnUtc).IsRequired().HasColumnType("datetime");
+            Property(p => p.CreatedOnUtc).IsRequired();
             Property(p => p.CreatedByPrincipal).HasMaxLength(256);
             Property(p => p.UpdatedByPrincipal).HasMaxLength(256);
-            Property(p => p.UpdatedOnUtc).HasColumnType("datetime");
             Property(p => p.Version).IsConcurrencyToken(true).IsRowVersion();
 
             // offspring is no longer derived from children
@@ -109,7 +108,7 @@ namespace UCosmic.EntityFramework
             // has many files
             HasMany(p => p.Files)
                 .WithRequired(d => d.Agreement)
-                .Map(m => m.MapKey("AgreementId"))
+                .HasForeignKey(d => d.AgreementId)
                 .WillCascadeOnDelete(true);
 
             // has many ancestors
@@ -126,8 +125,8 @@ namespace UCosmic.EntityFramework
 
             Property(p => p.Title).IsRequired().HasMaxLength(500);
             Property(p => p.Type).IsRequired().HasMaxLength(150);
-            Property(p => p.StartsOn).HasColumnType("datetime");
-            Property(p => p.ExpiresOn).HasColumnType("datetime");
+            Property(p => p.StartsOn);
+            Property(p => p.ExpiresOn);
             Property(p => p.Status).IsRequired().HasMaxLength(50);
             Property(p => p.Description).IsMaxLength();
             Property(p => p.VisibilityText).HasColumnName("Visibility").IsRequired().HasMaxLength(20);
@@ -168,10 +167,9 @@ namespace UCosmic.EntityFramework
 
             HasKey(x => x.Id);
             Property(p => p.Guid).IsRequired();
-            Property(p => p.CreatedOnUtc).IsRequired().HasColumnType("datetime");
+            Property(p => p.CreatedOnUtc).IsRequired();
             Property(p => p.CreatedByPrincipal).HasMaxLength(256);
             Property(p => p.UpdatedByPrincipal).HasMaxLength(256);
-            Property(p => p.UpdatedOnUtc).HasColumnType("datetime");
             Property(p => p.Version).IsConcurrencyToken(true).IsRowVersion();
 
             // has one person
@@ -216,12 +214,17 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementFileOrm : RevisableEntityTypeConfiguration<InstitutionalAgreementFile>
+    public class InstitutionalAgreementFileOrm : EntityTypeConfiguration<InstitutionalAgreementFile>
     {
         public InstitutionalAgreementFileOrm()
         {
             ToTable(typeof(InstitutionalAgreementFile).Name, DbSchemaName.InstitutionalAgreements);
-            HasKey(m => m.RevisionId);
+            HasKey(m => m.Id);
+            Property(p => p.Guid).IsRequired();
+            Property(p => p.CreatedOnUtc).IsRequired();
+            Property(p => p.CreatedByPrincipal).HasMaxLength(256);
+            Property(p => p.UpdatedByPrincipal).HasMaxLength(256);
+            Property(p => p.Version).IsConcurrencyToken(true).IsRowVersion();
         }
     }
 }

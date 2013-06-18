@@ -6,20 +6,20 @@ namespace UCosmic.Domain.InstitutionalAgreements
 {
     public class DetachFileFromAgreement
     {
-        public DetachFileFromAgreement(IPrincipal principal, Guid fileGuid, int agreementId)
+        public DetachFileFromAgreement(IPrincipal principal, int fileId, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
 
-            if (fileGuid == Guid.Empty) throw new ArgumentException("Cannot be empty", "fileGuid");
-            FileGuid = fileGuid;
+            if (fileId == 0) throw new ArgumentOutOfRangeException("fileId", "Cannot be zero");
+            FileId = fileId;
 
-            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be empty");
+            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be zero");
             AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
-        public Guid FileGuid { get; private set; }
+        public int FileId { get; private set; }
         public int AgreementId { get; private set; }
         public bool IsNewlyDetached { get; internal set; }
     }
@@ -44,7 +44,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
             // todo: this should be FindByPrimaryKey
             var entity = _entities.Get<InstitutionalAgreementFile>()
                 .SingleOrDefault(x =>
-                    x.EntityId == command.FileGuid &&
+                    x.Id == command.FileId &&
                     x.Agreement.Id == command.AgreementId
                 );
 

@@ -69,10 +69,10 @@ namespace UCosmic.Domain.InstitutionalAgreements
             );
         }
 
-        internal static InstitutionalAgreement ByFileGuid(this IQueryable<InstitutionalAgreement> queryable, Guid guid)
-        {
-            return queryable.SingleOrDefault(a => a.Files.Any(f => f.EntityId == guid));
-        }
+        //internal static InstitutionalAgreement ByFileGuid(this IQueryable<InstitutionalAgreement> queryable, Guid guid)
+        //{
+        //    return queryable.SingleOrDefault(a => a.Files.Any(f => f.Guid == guid));
+        //}
 
         internal static IQueryable<InstitutionalAgreement> OwnedByEstablishment(this IQueryable<InstitutionalAgreement> queryable, object establishmentKey)
         {
