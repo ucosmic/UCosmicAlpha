@@ -6,7 +6,7 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class AgreementById : BaseEntityQuery<InstitutionalAgreement>, IDefineQuery<InstitutionalAgreement>
+    public class AgreementById : BaseEntityQuery<Agreement>, IDefineQuery<Agreement>
     {
         public AgreementById(IPrincipal principal, int id)
         {
@@ -19,7 +19,7 @@ namespace UCosmic.Domain.Agreements
         public int Id { get; private set; }
     }
 
-    public class HandleAgreementByIdQuery : IHandleQueries<AgreementById, InstitutionalAgreement>
+    public class HandleAgreementByIdQuery : IHandleQueries<AgreementById, Agreement>
     {
         private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queryProcessor;
@@ -30,11 +30,11 @@ namespace UCosmic.Domain.Agreements
             _queryProcessor = queryProcessor;
         }
 
-        public InstitutionalAgreement Handle(AgreementById query)
+        public Agreement Handle(AgreementById query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var agreement = _entities.Query<InstitutionalAgreement>()
+            var agreement = _entities.Query<Agreement>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .ById(query.Id);
             if (agreement == null) return null;
@@ -48,7 +48,7 @@ namespace UCosmic.Domain.Agreements
                 }
             });
 
-            var userVisibility = InstitutionalAgreementVisibility.Public;
+            var userVisibility = AgreementVisibility.Public;
             if (user != null)
             {
                 var defaultAffiliation = user.Person.DefaultAffiliation;
@@ -59,19 +59,19 @@ namespace UCosmic.Domain.Agreements
                 // user has protected visibility when default affiliation is with
                 // an owning participant or one of its ancestors
                 if (ownedEstablishmentIds.Any(owningParticipantIds.Contains))
-                    userVisibility = InstitutionalAgreementVisibility.Protected;
+                    userVisibility = AgreementVisibility.Protected;
 
-                if (userVisibility == InstitutionalAgreementVisibility.Protected &&
-                    query.Principal.IsInAnyRole(RoleName.InstitutionalAgreementManagers))
-                    userVisibility = InstitutionalAgreementVisibility.Private;
+                if (userVisibility == AgreementVisibility.Protected &&
+                    query.Principal.IsInAnyRole(RoleName.AgreementManagers))
+                    userVisibility = AgreementVisibility.Private;
             }
 
             const string privateData = "[Private Data]";
             switch (userVisibility)
             {
-                case InstitutionalAgreementVisibility.Public:
+                case AgreementVisibility.Public:
                     // when user is public and agreement is not public, hide it 
-                    if (agreement.Visibility != InstitutionalAgreementVisibility.Public) return null;
+                    if (agreement.Visibility != AgreementVisibility.Public) return null;
 
                     // when user is public and agreement is public, obfuscate protected & private data
                     agreement.Notes = privateData;
@@ -83,9 +83,9 @@ namespace UCosmic.Domain.Agreements
                     agreement.Files = agreement.Files != null ? null : agreement.Files;
                     break;
 
-                case InstitutionalAgreementVisibility.Protected:
+                case AgreementVisibility.Protected:
                     // when user is protected and agreement is private, hide it
-                    if (agreement.Visibility == InstitutionalAgreementVisibility.Private) return null;
+                    if (agreement.Visibility == AgreementVisibility.Private) return null;
 
                     // when user is protected and agreement is not private, hide private data
                     agreement.Status = privateData;

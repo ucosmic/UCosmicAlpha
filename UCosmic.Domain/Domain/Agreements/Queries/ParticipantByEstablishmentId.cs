@@ -7,7 +7,7 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class ParticipantByEstablishmentId : BaseEntityQuery<InstitutionalAgreementParticipant>, IDefineQuery<InstitutionalAgreementParticipant>
+    public class ParticipantByEstablishmentId : BaseEntityQuery<AgreementParticipant>, IDefineQuery<AgreementParticipant>
     {
         public ParticipantByEstablishmentId(IPrincipal principal, int establishmentId, int? agreementId = null)
         {
@@ -22,7 +22,7 @@ namespace UCosmic.Domain.Agreements
         public int? AgreementId { get; private set; }
     }
 
-    public class HandleParticipantByEstablishmentIdQuery : IHandleQueries<ParticipantByEstablishmentId, InstitutionalAgreementParticipant>
+    public class HandleParticipantByEstablishmentIdQuery : IHandleQueries<ParticipantByEstablishmentId, AgreementParticipant>
     {
         private readonly IProcessQueries _queryProcessor;
 
@@ -31,7 +31,7 @@ namespace UCosmic.Domain.Agreements
             _queryProcessor = queryProcessor;
         }
 
-        public InstitutionalAgreementParticipant Handle(ParticipantByEstablishmentId query)
+        public AgreementParticipant Handle(ParticipantByEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -58,7 +58,7 @@ namespace UCosmic.Domain.Agreements
 
             var agreement = query.AgreementId.HasValue ? _queryProcessor.Execute(new AgreementById(query.Principal, query.AgreementId.Value)) : null;
 
-            var participant = new InstitutionalAgreementParticipant
+            var participant = new AgreementParticipant
             {
                 Agreement = agreement,
                 Establishment = establishment,

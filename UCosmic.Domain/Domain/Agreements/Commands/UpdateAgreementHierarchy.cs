@@ -4,22 +4,22 @@ using System.Linq;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class UpdateInstitutionalAgreementHierarchy
+    public class UpdateAgreementHierarchy
     {
-        public UpdateInstitutionalAgreementHierarchy(InstitutionalAgreement institutionalAgreement)
+        public UpdateAgreementHierarchy(Agreement agreement)
         {
-            if (institutionalAgreement == null) throw new ArgumentNullException("institutionalAgreement");
-            InstitutionalAgreement = institutionalAgreement;
+            if (agreement == null) throw new ArgumentNullException("agreement");
+            Agreement = agreement;
         }
 
-        public InstitutionalAgreement InstitutionalAgreement { get; private set; }
+        public Agreement Agreement { get; private set; }
     }
 
-    public class HandleUpdateInstitutionalAgreementHierarchyCommand : IHandleCommands<UpdateInstitutionalAgreementHierarchy>
+    public class HandleUpdateAgreementHierarchyCommand : IHandleCommands<UpdateAgreementHierarchy>
     {
         private readonly ICommandEntities _entities;
 
-        public HandleUpdateInstitutionalAgreementHierarchyCommand(ICommandEntities entities
+        public HandleUpdateAgreementHierarchyCommand(ICommandEntities entities
         )
         {
             _entities = entities;
@@ -32,11 +32,11 @@ namespace UCosmic.Domain.Agreements
         // however, they only change when the agreement's umbrella has changed.
         // each ancestor in the old tree must have its offspring and children updated.
         // each ancestor and offspring in the new tree must have its offspring and ancestors updated.
-        public void Handle(UpdateInstitutionalAgreementHierarchy command)
+        public void Handle(UpdateAgreementHierarchy command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var umbrella = command.InstitutionalAgreement;
+            var umbrella = command.Agreement;
             while (umbrella.Umbrella != null)
                 umbrella = umbrella.Umbrella;
 
@@ -44,11 +44,11 @@ namespace UCosmic.Domain.Agreements
             BuildNodesRecursive(umbrella);
         }
 
-        private void ClearNodesRecursive(InstitutionalAgreement umbrella)
+        private void ClearNodesRecursive(Agreement umbrella)
         {
             // ensure that the offspring and children properties are not null
-            umbrella.Offspring = umbrella.Offspring ?? new List<InstitutionalAgreementNode>();
-            umbrella.Children = umbrella.Children ?? new List<InstitutionalAgreement>();
+            umbrella.Offspring = umbrella.Offspring ?? new List<AgreementNode>();
+            umbrella.Children = umbrella.Children ?? new List<Agreement>();
 
             // delete all of this umbrella's offspring nodes
             while (umbrella.Offspring.FirstOrDefault() != null)
@@ -58,7 +58,7 @@ namespace UCosmic.Domain.Agreements
             foreach (var child in umbrella.Children)
             {
                 // ensure that the child's ancestor nodes are not null
-                child.Ancestors = child.Ancestors ?? new List<InstitutionalAgreementNode>();
+                child.Ancestors = child.Ancestors ?? new List<AgreementNode>();
 
                 // delete each of the child's ancestor nodes
                 while (child.Ancestors.FirstOrDefault() != null)
@@ -69,13 +69,13 @@ namespace UCosmic.Domain.Agreements
             }
         }
 
-        private static void BuildNodesRecursive(InstitutionalAgreement umbrella)
+        private static void BuildNodesRecursive(Agreement umbrella)
         {
             // operate recursively over children
             foreach (var child in umbrella.Children)
             {
                 // create & add ancestor node for this child
-                var node = new InstitutionalAgreementNode
+                var node = new AgreementNode
                 {
                     Ancestor = umbrella,
                     Offspring = child,
@@ -84,13 +84,13 @@ namespace UCosmic.Domain.Agreements
                 child.Ancestors.Add(node);
 
                 // ensure the umbrella's ancestors nodes are not null
-                umbrella.Ancestors = umbrella.Ancestors ?? new List<InstitutionalAgreementNode>();
+                umbrella.Ancestors = umbrella.Ancestors ?? new List<AgreementNode>();
 
                 // loop over the umbrella's ancestors
                 foreach (var ancestor in umbrella.Ancestors)
                 {
                     // create & add ancestor node for this child
-                    node = new InstitutionalAgreementNode
+                    node = new AgreementNode
                     {
                         Ancestor = ancestor.Ancestor,
                         Offspring = child,

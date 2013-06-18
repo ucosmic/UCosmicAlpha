@@ -3,11 +3,11 @@ using UCosmic.Domain.Agreements;
 
 namespace UCosmic.EntityFramework
 {
-    public class InstitutionalAgreementConfigurationOrm : RevisableEntityTypeConfiguration<InstitutionalAgreementConfiguration>
+    public class InstitutionalAgreementConfigurationOrm : RevisableEntityTypeConfiguration<AgreementSettings>
     {
         public InstitutionalAgreementConfigurationOrm()
         {
-            ToTable(typeof(InstitutionalAgreementConfiguration).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementSettings).Name, DbSchemaName.InstitutionalAgreements);
 
             // has one establishment
             HasOptional(d => d.ForEstablishment)
@@ -17,16 +17,16 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementTypeValueOrm : EntityTypeConfiguration<InstitutionalAgreementTypeValue>
+    public class InstitutionalAgreementTypeValueOrm : EntityTypeConfiguration<AgreementSettingsTypeValue>
     {
         public InstitutionalAgreementTypeValueOrm()
         {
-            ToTable(typeof(InstitutionalAgreementTypeValue).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementSettingsTypeValue).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(p => p.Id);
 
             // has one configuration
-            HasRequired(d => d.Configuration)
+            HasRequired(d => d.Settings)
                 .WithMany(p => p.AllowedTypeValues)
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
@@ -35,16 +35,16 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementStatusValueOrm : EntityTypeConfiguration<InstitutionalAgreementStatusValue>
+    public class InstitutionalAgreementStatusValueOrm : EntityTypeConfiguration<AgreementSettingsStatusValue>
     {
         public InstitutionalAgreementStatusValueOrm()
         {
-            ToTable(typeof(InstitutionalAgreementStatusValue).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementSettingsStatusValue).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(p => p.Id);
 
             // has one configuration
-            HasRequired(d => d.Configuration)
+            HasRequired(d => d.Settings)
                 .WithMany(p => p.AllowedStatusValues)
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
@@ -53,16 +53,16 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementContactTypeValueOrm : EntityTypeConfiguration<InstitutionalAgreementContactTypeValue>
+    public class InstitutionalAgreementContactTypeValueOrm : EntityTypeConfiguration<AgreementSettingsContactTypeValue>
     {
         public InstitutionalAgreementContactTypeValueOrm()
         {
-            ToTable(typeof(InstitutionalAgreementContactTypeValue).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementSettingsContactTypeValue).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(p => p.Id);
 
             // has one configuration
-            HasRequired(d => d.Configuration)
+            HasRequired(d => d.Settings)
                 .WithMany(p => p.AllowedContactTypeValues)
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
@@ -71,11 +71,11 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementOrm : EntityTypeConfiguration<InstitutionalAgreement>
+    public class InstitutionalAgreementOrm : EntityTypeConfiguration<Agreement>
     {
         public InstitutionalAgreementOrm()
         {
-            ToTable(typeof(InstitutionalAgreement).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(Agreement).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(x => x.Id);
             Property(p => p.Guid).IsRequired();
@@ -133,21 +133,21 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementNodeOrm : EntityTypeConfiguration<InstitutionalAgreementNode>
+    public class InstitutionalAgreementNodeOrm : EntityTypeConfiguration<AgreementNode>
     {
         public InstitutionalAgreementNodeOrm()
         {
-            ToTable(typeof(InstitutionalAgreementNode).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementNode).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(p => new { p.AncestorId, p.OffspringId });
         }
     }
 
-    public class InstitutionalAgreementParticipantOrm : EntityTypeConfiguration<InstitutionalAgreementParticipant>
+    public class InstitutionalAgreementParticipantOrm : EntityTypeConfiguration<AgreementParticipant>
     {
         public InstitutionalAgreementParticipantOrm()
         {
-            ToTable(typeof(InstitutionalAgreementParticipant).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementParticipant).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(k => k.Id);
 
@@ -159,11 +159,11 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementContactOrm : EntityTypeConfiguration<InstitutionalAgreementContact>
+    public class InstitutionalAgreementContactOrm : EntityTypeConfiguration<AgreementContact>
     {
         public InstitutionalAgreementContactOrm()
         {
-            ToTable(typeof(InstitutionalAgreementContact).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementContact).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(x => x.Id);
             Property(p => p.Guid).IsRequired();
@@ -195,11 +195,11 @@ namespace UCosmic.EntityFramework
     }
 
 
-    public class InstitutionalAgreementContactPhoneOrm : EntityTypeConfiguration<InstitutionalAgreementContactPhone>
+    public class InstitutionalAgreementContactPhoneOrm : EntityTypeConfiguration<AgreementContactPhone>
     {
         public InstitutionalAgreementContactPhoneOrm()
         {
-            ToTable(typeof(InstitutionalAgreementContactPhone).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementContactPhone).Name, DbSchemaName.InstitutionalAgreements);
 
             HasKey(p => p.Id);
 
@@ -214,11 +214,11 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class InstitutionalAgreementFileOrm : EntityTypeConfiguration<InstitutionalAgreementFile>
+    public class InstitutionalAgreementFileOrm : EntityTypeConfiguration<AgreementFile>
     {
         public InstitutionalAgreementFileOrm()
         {
-            ToTable(typeof(InstitutionalAgreementFile).Name, DbSchemaName.InstitutionalAgreements);
+            ToTable(typeof(AgreementFile).Name, DbSchemaName.InstitutionalAgreements);
             HasKey(m => m.Id);
             Property(p => p.Guid).IsRequired();
             Property(p => p.CreatedOnUtc).IsRequired();

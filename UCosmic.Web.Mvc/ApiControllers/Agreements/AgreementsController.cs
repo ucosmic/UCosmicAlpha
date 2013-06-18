@@ -46,11 +46,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var entities = _queryProcessor.Execute(new ParticipantsByAgreementId(User, agreementId)
             {
-                EagerLoad = new Expression<Func<InstitutionalAgreementParticipant, object>>[]
+                EagerLoad = new Expression<Func<AgreementParticipant, object>>[]
                 {
                     x => x.Establishment.Names,
                 },
-                OrderBy = new Dictionary<Expression<Func<InstitutionalAgreementParticipant, object>>, OrderByDirection>
+                OrderBy = new Dictionary<Expression<Func<AgreementParticipant, object>>, OrderByDirection>
                 {
                     { x => x.IsOwner, OrderByDirection.Descending },
                 },
@@ -65,7 +65,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var entity = _queryProcessor.Execute(new ParticipantByEstablishmentId(User, establishmentId, agreementId)
             {
-                EagerLoad = new Expression<Func<InstitutionalAgreementParticipant, object>>[]
+                EagerLoad = new Expression<Func<AgreementParticipant, object>>[]
                 {
                     x => x.Establishment.Names,
                 },

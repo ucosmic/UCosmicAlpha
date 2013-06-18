@@ -45,24 +45,24 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             // make sure user is authorized to update settings
-            if (!command.Principal.IsInRole(RoleName.InstitutionalAgreementSupervisor))
+            if (!command.Principal.IsInRole(RoleName.AgreementSupervisor))
                 throw new SecurityAccessDeniedException(string.Format(
                     "User '{0}' does not have privileges to invoke this function.",
                         command.Principal.Identity.Name));
 
             var configuration = command.Id != 0
                 ? _queryProcessor.Execute(
-                    new MyInstitutionalAgreementSettings(command.Principal)
+                    new MyAgreementSettings(command.Principal)
                     {
                         IsWritable = true,
-                        EagerLoad = new Expression<Func<InstitutionalAgreementConfiguration, object>>[]
+                        EagerLoad = new Expression<Func<AgreementSettings, object>>[]
                         {
                             c => c.AllowedTypeValues,
                             c => c.AllowedStatusValues,
                             c => c.AllowedContactTypeValues,
                         }
                     })
-                : new InstitutionalAgreementConfiguration
+                : new AgreementSettings
                     {
                         ForEstablishment = _entities.Get<Person>()
                             .EagerLoad(_entities, new Expression<Func<Person, object>>[]
@@ -77,7 +77,7 @@ namespace UCosmic.Domain.Agreements
                 throw new SecurityAccessDeniedException(string.Format(
                     "User '{0}' does not own '{1}' with id '{2}'.",
                         command.Principal.Identity.Name,
-                        typeof(InstitutionalAgreementConfiguration).Name,
+                        typeof(AgreementSettings).Name,
                         command.Id));
 
             configuration.IsCustomTypeAllowed = command.IsCustomTypeAllowed;
@@ -99,9 +99,9 @@ namespace UCosmic.Domain.Agreements
                     // add when does not exist in entity
                     var add = entityItems.All(p => p.Text != commandItem);
                     if (add) _entities.Create(
-                        new InstitutionalAgreementTypeValue
+                        new AgreementSettingsTypeValue
                         {
-                            Configuration = configuration,
+                            Settings = configuration,
                             Text = commandItem,
                         });
                 }
@@ -122,9 +122,9 @@ namespace UCosmic.Domain.Agreements
                     // add when does not exist in entity
                     var add = entityItems.All(p => p.Text != commandItem);
                     if (add) _entities.Create(
-                        new InstitutionalAgreementStatusValue
+                        new AgreementSettingsStatusValue
                         {
-                            Configuration = configuration,
+                            Settings = configuration,
                             Text = commandItem,
                         });
                 }
@@ -145,9 +145,9 @@ namespace UCosmic.Domain.Agreements
                     // add when does not exist in entity
                     var add = entityItems.All(p => p.Text != commandItem);
                     if (add) _entities.Create(
-                        new InstitutionalAgreementContactTypeValue
+                        new AgreementSettingsContactTypeValue
                         {
-                            Configuration = configuration,
+                            Settings = configuration,
                             Text = commandItem,
                         });
                 }

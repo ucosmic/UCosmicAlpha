@@ -6,7 +6,7 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class ParticipantsByAgreementId : BaseEntitiesQuery<InstitutionalAgreementParticipant>, IDefineQuery<InstitutionalAgreementParticipant[]>
+    public class ParticipantsByAgreementId : BaseEntitiesQuery<AgreementParticipant>, IDefineQuery<AgreementParticipant[]>
     {
         public ParticipantsByAgreementId(IPrincipal principal, int? agreementId)
         {
@@ -19,7 +19,7 @@ namespace UCosmic.Domain.Agreements
         public int? AgreementId { get; private set; }
     }
 
-    public class HandleParticipantsByAgreementIdQuery : IHandleQueries<ParticipantsByAgreementId, InstitutionalAgreementParticipant[]>
+    public class HandleParticipantsByAgreementIdQuery : IHandleQueries<ParticipantsByAgreementId, AgreementParticipant[]>
     {
         private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queryProcessor;
@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Agreements
             _queryProcessor = queryProcessor;
         }
 
-        public InstitutionalAgreementParticipant[] Handle(ParticipantsByAgreementId query)
+        public AgreementParticipant[] Handle(ParticipantsByAgreementId query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -41,7 +41,7 @@ namespace UCosmic.Domain.Agreements
                 if (string.IsNullOrWhiteSpace(query.Principal.Identity.Name)) return null;
 
                 // return nothing when user is not an agreement manager or supervisor
-                if (!query.Principal.IsInAnyRole(RoleName.InstitutionalAgreementManagers)) return null;
+                if (!query.Principal.IsInAnyRole(RoleName.AgreementManagers)) return null;
 
                 var user = _queryProcessor.Execute(new UserByName(query.Principal.Identity.Name)
                 {
@@ -53,16 +53,16 @@ namespace UCosmic.Domain.Agreements
                 if (user == null) return null;
 
                 var owningEstablishment = user.Person.DefaultAffiliation.Establishment;
-                var participant = new InstitutionalAgreementParticipant
+                var participant = new AgreementParticipant
                 {
                     IsOwner = true,
-                    Agreement = new InstitutionalAgreement(),
+                    Agreement = new Agreement(),
                     Establishment = owningEstablishment,
                 };
                 return new[] { participant };
             }
 
-            var participants = _entities.Query<InstitutionalAgreementParticipant>()
+            var participants = _entities.Query<AgreementParticipant>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.Agreement.Id == query.AgreementId.Value)
                 .OrderBy(query.OrderBy)

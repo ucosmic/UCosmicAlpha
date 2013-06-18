@@ -13,13 +13,13 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<CreateOrUpdateInstitutionalAgreement> _agreementHandler;
+        private readonly IHandleCommands<CreateOrUpdateAgreement> _agreementHandler;
         private readonly IHandleCommands<CreateLooseFile> _fileHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         public InstitutionalAgreementEntitySeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
-            , IHandleCommands<CreateOrUpdateInstitutionalAgreement> agreementHandler
+            , IHandleCommands<CreateOrUpdateAgreement> agreementHandler
             , IHandleCommands<CreateLooseFile> fileHandler
             , IUnitOfWork unitOfWork
         )
@@ -38,7 +38,7 @@ namespace UCosmic.SeedData
             var ucId = uc.RevisionId;
             var principal = GetPrincipal("uc.edu");
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Agreement",
                 Title = "1 Agreement Test",
@@ -58,7 +58,7 @@ namespace UCosmic.SeedData
                     },
                 },
             });
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Jinan University - Status is Active",
@@ -85,7 +85,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Swinburne University of Technology - Status is Active",
@@ -102,7 +102,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Fachhochschule Nordwestschweiz - Status is Active",
@@ -119,7 +119,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Johannes Kepler Universität Linz - Status is Dead",
@@ -136,7 +136,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Université catholique de Louvain - Status is Active",
@@ -154,7 +154,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            var umbrella1Id = Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            var umbrella1Id = Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Activity Agreement",
                 Title = "FIPSE Brazil Activity Agreement",
@@ -177,7 +177,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 UmbrellaId = umbrella1Id,
                 Type = "Memorandum of Cooperation",
@@ -197,7 +197,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Instituto de Pesquisa e Planejamento Urbano de Curitiba - Status is Active",
@@ -214,7 +214,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Universidade Positivo - Status is Active",
@@ -232,7 +232,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati College of Medicine and Universidade de São Paulo - Status is Active",
@@ -249,7 +249,7 @@ namespace UCosmic.SeedData
                 },
             });
 
-            Seed(new CreateOrUpdateInstitutionalAgreement(principal)
+            Seed(new CreateOrUpdateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
                 Title = "Institutional Collaboration Agreement between University of Cincinnati and Universidad de Desarrollo - Status is Active",
@@ -268,7 +268,7 @@ namespace UCosmic.SeedData
 
         }
 
-        protected int Seed(CreateOrUpdateInstitutionalAgreement command)
+        protected int Seed(CreateOrUpdateAgreement command)
         {
             _agreementHandler.Handle(command);
             return command.Id;
@@ -279,16 +279,16 @@ namespace UCosmic.SeedData
             var identity = new GenericIdentity(string.Format("supervisor1@{0}", domain));
             var principal = new GenericPrincipal(identity, new[]
             {
-                RoleName.InstitutionalAgreementSupervisor
+                RoleName.AgreementSupervisor
             });
             return principal;
         }
 
         private void PurgeCurrentAgreements()
         {
-            _entities.Get<InstitutionalAgreement>().ToList().ForEach(a =>
+            _entities.Get<Agreement>().ToList().ForEach(a =>
             {
-                _entities.Get<InstitutionalAgreement>().ToList().ForEach(agreement =>
+                _entities.Get<Agreement>().ToList().ForEach(agreement =>
                     agreement.Offspring.ToList().ForEach(_entities.Purge)
                 );
                 _entities.Purge(a);

@@ -71,14 +71,14 @@ namespace UCosmic.SeedData
             var identity = new GenericIdentity(string.Format("supervisor1{0}", domain));
             var principal = new GenericPrincipal(identity, new[]
             {
-                RoleName.InstitutionalAgreementSupervisor
+                RoleName.AgreementSupervisor
             });
             return principal;
         }
 
         private void PurgeCurrentSettings()
         {
-            _entities.Get<InstitutionalAgreementConfiguration>().ToList().ForEach(x =>
+            _entities.Get<AgreementSettings>().ToList().ForEach(x =>
             {
                 _entities.Purge(x);
                 _unitOfWork.SaveChanges();

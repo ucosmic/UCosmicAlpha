@@ -4,14 +4,14 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class InstitutionalAgreementConfiguration : RevisableEntity
+    public class AgreementSettings : RevisableEntity
     {
-        protected internal InstitutionalAgreementConfiguration()
+        protected internal AgreementSettings()
         {
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            AllowedTypeValues = new Collection<InstitutionalAgreementTypeValue>();
-            AllowedStatusValues = new Collection<InstitutionalAgreementStatusValue>();
-            AllowedContactTypeValues = new Collection<InstitutionalAgreementContactTypeValue>();
+            AllowedTypeValues = new Collection<AgreementSettingsTypeValue>();
+            AllowedStatusValues = new Collection<AgreementSettingsStatusValue>();
+            AllowedContactTypeValues = new Collection<AgreementSettingsContactTypeValue>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -22,9 +22,9 @@ namespace UCosmic.Domain.Agreements
         public bool IsCustomStatusAllowed { get; protected internal set; }
         public bool IsCustomContactTypeAllowed { get; protected internal set; }
 
-        public virtual ICollection<InstitutionalAgreementTypeValue> AllowedTypeValues { get; protected set; }
-        public virtual ICollection<InstitutionalAgreementStatusValue> AllowedStatusValues { get; protected set; }
-        public virtual ICollection<InstitutionalAgreementContactTypeValue> AllowedContactTypeValues { get; protected set; }
+        public virtual ICollection<AgreementSettingsTypeValue> AllowedTypeValues { get; protected set; }
+        public virtual ICollection<AgreementSettingsStatusValue> AllowedStatusValues { get; protected set; }
+        public virtual ICollection<AgreementSettingsContactTypeValue> AllowedContactTypeValues { get; protected set; }
 
     }
 

@@ -4,9 +4,9 @@ using System.Security.Principal;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class PurgeInstitutionalAgreement
+    public class PurgeAgreement
     {
-        public PurgeInstitutionalAgreement(IPrincipal principal, int agreementId)
+        public PurgeAgreement(IPrincipal principal, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be zero");
@@ -18,14 +18,14 @@ namespace UCosmic.Domain.Agreements
         public int AgreementId { get; private set; }
     }
 
-    public class HandlePurgeInstitutionalAgreementCommand : IHandleCommands<PurgeInstitutionalAgreement>
+    public class HandlePurgeAgreementCommand : IHandleCommands<PurgeAgreement>
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryData;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandlePurgeInstitutionalAgreementCommand(IProcessQueries queryProcessor
+        public HandlePurgeAgreementCommand(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IStoreBinaryData binaryData
             , IUnitOfWork unitOfWork
@@ -37,7 +37,7 @@ namespace UCosmic.Domain.Agreements
             _unitOfWork = unitOfWork;
         }
 
-        public void Handle(PurgeInstitutionalAgreement command)
+        public void Handle(PurgeAgreement command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -46,7 +46,7 @@ namespace UCosmic.Domain.Agreements
                 new AgreementById(command.Principal, command.AgreementId));
             if (agreement == null) return;
 
-            agreement = _entities.Get<InstitutionalAgreement>().ById(command.AgreementId);
+            agreement = _entities.Get<Agreement>().ById(command.AgreementId);
 
             if (agreement.Files != null && agreement.Files.Any())
             {

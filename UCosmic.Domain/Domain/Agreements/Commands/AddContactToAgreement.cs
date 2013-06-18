@@ -18,7 +18,7 @@ namespace UCosmic.Domain.Agreements
         public IPrincipal Principal { get; private set; }
         public int Id { get; set; }
         public int AgreementId { get; set; }
-        internal InstitutionalAgreement Agreement { get; set; }
+        internal Agreement Agreement { get; set; }
         public string ContactType { get; set; }
         public Guid PersonEntityId { get; set; }
         public string PersonDefaultEmail { get; set; }
@@ -45,8 +45,8 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             var agreement = command.Agreement ??
-                _entities.Get<InstitutionalAgreement>()
-                .EagerLoad(_entities, new Expression<Func<InstitutionalAgreement, object>>[]
+                _entities.Get<Agreement>()
+                .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
                 {
                     r => r.Contacts.Select(c => c.Person),
                 })
@@ -59,7 +59,7 @@ namespace UCosmic.Domain.Agreements
                 if (entity != null) return;
             }
 
-            var contact = new InstitutionalAgreementContact
+            var contact = new AgreementContact
             {
                 Agreement = agreement,
                 Type = command.ContactType,

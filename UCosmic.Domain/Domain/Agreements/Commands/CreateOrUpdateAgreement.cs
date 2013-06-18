@@ -6,9 +6,9 @@ using System.Security.Principal;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class CreateOrUpdateInstitutionalAgreement
+    public class CreateOrUpdateAgreement
     {
-        public CreateOrUpdateInstitutionalAgreement(IPrincipal principal)
+        public CreateOrUpdateAgreement(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -25,7 +25,7 @@ namespace UCosmic.Domain.Agreements
         public DateTime StartsOn { get; set; }
         public DateTime ExpiresOn { get; set; }
         public bool IsExpirationEstimated { get; set; }
-        public InstitutionalAgreementVisibility Visibility { get; set; }
+        public AgreementVisibility Visibility { get; set; }
         public int? UmbrellaId { get; set; }
         public IEnumerable<int> RemoveParticipantEstablishmentIds { get; set; }
         public IEnumerable<int> AddParticipantEstablishmentIds { get; set; }
@@ -37,7 +37,7 @@ namespace UCosmic.Domain.Agreements
         //public Guid EntityId { get; internal set; }
     }
 
-    public class HandleCreateOrUpdateInstitutionalAgreementCommand : IHandleCommands<CreateOrUpdateInstitutionalAgreement>
+    public class HandleCreateOrUpdateAgreementCommand : IHandleCommands<CreateOrUpdateAgreement>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
@@ -48,9 +48,9 @@ namespace UCosmic.Domain.Agreements
         private readonly IHandleCommands<AddContactToAgreement> _contactAdder;
         private readonly IHandleCommands<DetachFileFromAgreement> _fileDetacher;
         private readonly IHandleCommands<AttachFileToAgreement> _fileAttacher;
-        private readonly IHandleCommands<UpdateInstitutionalAgreementHierarchy> _hierarchyHandler;
+        private readonly IHandleCommands<UpdateAgreementHierarchy> _hierarchyHandler;
 
-        public HandleCreateOrUpdateInstitutionalAgreementCommand(ICommandEntities entities
+        public HandleCreateOrUpdateAgreementCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
             , IStoreBinaryData binaryData
             , IHandleCommands<RemoveParticipantFromAgreement> participantRemover
@@ -59,7 +59,7 @@ namespace UCosmic.Domain.Agreements
             , IHandleCommands<AddContactToAgreement> contactAdder
             , IHandleCommands<DetachFileFromAgreement> fileDetacher
             , IHandleCommands<AttachFileToAgreement> fileAttacher
-            , IHandleCommands<UpdateInstitutionalAgreementHierarchy> hierarchyHandler
+            , IHandleCommands<UpdateAgreementHierarchy> hierarchyHandler
         )
         {
             _entities = entities;
@@ -74,19 +74,19 @@ namespace UCosmic.Domain.Agreements
             _hierarchyHandler = hierarchyHandler;
         }
 
-        public void Handle(CreateOrUpdateInstitutionalAgreement command)
+        public void Handle(CreateOrUpdateAgreement command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
             // start with an agreement entity
-            var entity = _entities.Get<InstitutionalAgreement>()
-                .EagerLoad(_entities, new Expression<Func<InstitutionalAgreement, object>>[]
+            var entity = _entities.Get<Agreement>()
+                .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
                 {
                     a => a.Umbrella,
                 })
                 .SingleOrDefault(x => x.Id == command.Id);
             if (entity == null && command.Id == 0)
-                entity = new InstitutionalAgreement();
+                entity = new Agreement();
             if (entity == null)
                 throw new InvalidOperationException(string.Format(
                     "Agreement with id '{0}' does not exist.", command.Id));
@@ -103,7 +103,7 @@ namespace UCosmic.Domain.Agreements
             if (command.UmbrellaId.HasValue &&
                 (previousUmbrella == null || previousUmbrella.Id != command.UmbrellaId.Value))
             {
-                entity.Umbrella = _entities.Get<InstitutionalAgreement>().ById(command.UmbrellaId.Value);
+                entity.Umbrella = _entities.Get<Agreement>().ById(command.UmbrellaId.Value);
                 ++command.ChangeCount;
             }
             else if (previousUmbrella != null && !command.UmbrellaId.HasValue)
@@ -188,11 +188,11 @@ namespace UCosmic.Domain.Agreements
             foreach (var file in entity.Files)
             {
                 var oldPath = file.Path;
-                var zeroPath = string.Format(InstitutionalAgreementFile.PathFormat, 0, "");
+                var zeroPath = string.Format(AgreementFile.PathFormat, 0, "");
                 if (oldPath.StartsWith(zeroPath))
                 {
                     var guid = oldPath.Substring(zeroPath.Length);
-                    var newPath = string.Format(InstitutionalAgreementFile.PathFormat, entity.Id, guid);
+                    var newPath = string.Format(AgreementFile.PathFormat, entity.Id, guid);
                     file.Path = newPath;
                     _unitOfWork.SaveChanges();
                     _binaryData.Move(oldPath, newPath);
@@ -200,15 +200,15 @@ namespace UCosmic.Domain.Agreements
             }
         }
 
-        private void DeriveNodes(InstitutionalAgreement agreement, InstitutionalAgreement previousUmbrella)
+        private void DeriveNodes(Agreement agreement, Agreement previousUmbrella)
         {
-            _hierarchyHandler.Handle(new UpdateInstitutionalAgreementHierarchy(agreement));
+            _hierarchyHandler.Handle(new UpdateAgreementHierarchy(agreement));
             if (previousUmbrella != null &&
                 (agreement.Umbrella == null || agreement.Umbrella.Id != previousUmbrella.Id))
-                _hierarchyHandler.Handle(new UpdateInstitutionalAgreementHierarchy(previousUmbrella));
+                _hierarchyHandler.Handle(new UpdateAgreementHierarchy(previousUmbrella));
         }
 
-        private static void CopyScalars(CreateOrUpdateInstitutionalAgreement command, InstitutionalAgreement entity)
+        private static void CopyScalars(CreateOrUpdateAgreement command, Agreement entity)
         {
             if (command.Title != entity.Title) ++command.ChangeCount;
             if (command.IsTitleDerived != entity.IsTitleDerived) ++command.ChangeCount;

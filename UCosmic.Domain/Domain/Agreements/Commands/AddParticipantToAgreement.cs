@@ -21,7 +21,7 @@ namespace UCosmic.Domain.Agreements
             AgreementId = agreementId;
         }
 
-        internal AddParticipantToAgreement(IPrincipal principal, int establishmentId, InstitutionalAgreement agreement)
+        internal AddParticipantToAgreement(IPrincipal principal, int establishmentId, Agreement agreement)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -36,7 +36,7 @@ namespace UCosmic.Domain.Agreements
         public IPrincipal Principal { get; private set; }
         public int EstablishmentId { get; private set; }
         public int AgreementId { get; private set; }
-        internal InstitutionalAgreement Agreement { get; set; }
+        internal Agreement Agreement { get; set; }
         public bool IsNewlyAdded { get; internal set; }
     }
 
@@ -54,14 +54,14 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             var agreement = command.Agreement ??
-                _entities.Get<InstitutionalAgreement>()
-                .EagerLoad(_entities, new Expression<Func<InstitutionalAgreement, object>>[]
+                _entities.Get<Agreement>()
+                .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
                 {
                     r => r.Participants,
                 })
                 .ById(command.AgreementId);
             if (agreement == null)
-                throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementId));
+                throw new InvalidOperationException(string.Format("Agreement with id '{0}' could not be found.", command.AgreementId));
 
             var participant = agreement.Participants.SingleOrDefault(
                 x => x.Establishment.RevisionId == command.EstablishmentId);
@@ -80,7 +80,7 @@ namespace UCosmic.Domain.Agreements
                 throw new InvalidOperationException(string.Format("Establishment with id '{0}' could not be found.", command.EstablishmentId));
 
 
-            participant = new InstitutionalAgreementParticipant
+            participant = new AgreementParticipant
             {
                 Establishment = establishment,
                 Agreement = agreement,

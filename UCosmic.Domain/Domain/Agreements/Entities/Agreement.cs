@@ -4,35 +4,35 @@ using System.Threading;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class InstitutionalAgreement : Entity
+    public class Agreement : Entity
     {
-        protected internal InstitutionalAgreement()
+        protected internal Agreement()
         {
             Guid = Guid.NewGuid();
             CreatedOnUtc = DateTime.UtcNow;
             CreatedByPrincipal = Thread.CurrentPrincipal.Identity.Name;
 
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            Participants = new List<InstitutionalAgreementParticipant>();
-            Contacts = new List<InstitutionalAgreementContact>();
-            Files = new List<InstitutionalAgreementFile>();
-            Children = new List<InstitutionalAgreement>();
-            Ancestors = new List<InstitutionalAgreementNode>();
-            Offspring = new List<InstitutionalAgreementNode>();
+            Participants = new List<AgreementParticipant>();
+            Contacts = new List<AgreementContact>();
+            Files = new List<AgreementFile>();
+            Children = new List<Agreement>();
+            Ancestors = new List<AgreementNode>();
+            Offspring = new List<AgreementNode>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
 
-            Visibility = InstitutionalAgreementVisibility.Public;
+            Visibility = AgreementVisibility.Public;
         }
 
         public int Id { get; protected set; }
         public Guid Guid { get; protected set; } // TODO: deprecate this
 
         public int? UmbrellaId { get; protected internal set; }
-        public virtual InstitutionalAgreement Umbrella { get; protected internal set; }
+        public virtual Agreement Umbrella { get; protected internal set; }
 
-        public virtual ICollection<InstitutionalAgreementNode> Ancestors { get; protected internal set; }
-        public virtual ICollection<InstitutionalAgreement> Children { get; protected internal set; }
-        public virtual ICollection<InstitutionalAgreementNode> Offspring { get; protected internal set; }
+        public virtual ICollection<AgreementNode> Ancestors { get; protected internal set; }
+        public virtual ICollection<Agreement> Children { get; protected internal set; }
+        public virtual ICollection<AgreementNode> Offspring { get; protected internal set; }
 
         public string Title { get; protected internal set; }
         public bool IsTitleDerived { get; protected internal set; } // TODO, deprecate this
@@ -47,15 +47,15 @@ namespace UCosmic.Domain.Agreements
         public bool IsExpirationEstimated { get; protected internal set; }
 
         public string VisibilityText { get; protected set; }
-        public InstitutionalAgreementVisibility Visibility
+        public AgreementVisibility Visibility
         {
-            get { return VisibilityText.AsEnum<InstitutionalAgreementVisibility>(); }
+            get { return VisibilityText.AsEnum<AgreementVisibility>(); }
             protected internal set { VisibilityText = value.AsSentenceFragment(); }
         }
 
-        public virtual ICollection<InstitutionalAgreementParticipant> Participants { get; protected internal set; }
-        public virtual ICollection<InstitutionalAgreementContact> Contacts { get; protected internal set; }
-        public virtual ICollection<InstitutionalAgreementFile> Files { get; protected internal set; }
+        public virtual ICollection<AgreementParticipant> Participants { get; protected internal set; }
+        public virtual ICollection<AgreementContact> Contacts { get; protected internal set; }
+        public virtual ICollection<AgreementFile> Files { get; protected internal set; }
 
         public DateTime CreatedOnUtc { get; protected internal set; }
         public string CreatedByPrincipal { get; protected internal set; }

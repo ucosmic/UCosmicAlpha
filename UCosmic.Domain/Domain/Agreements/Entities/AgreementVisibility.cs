@@ -1,6 +1,6 @@
 ﻿namespace UCosmic.Domain.Agreements
 {
-    public enum InstitutionalAgreementVisibility
+    public enum AgreementVisibility
     {
         Public,
         Protected,

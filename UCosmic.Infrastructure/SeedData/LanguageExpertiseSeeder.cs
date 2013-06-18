@@ -41,8 +41,8 @@ namespace UCosmic.SeedData
                         RoleName.EstablishmentLocationAgent,
                         RoleName.EstablishmentAdministrator,
                         RoleName.ElmahViewer,
-                        RoleName.InstitutionalAgreementManager,
-                        RoleName.InstitutionalAgreementSupervisor,
+                        RoleName.AgreementManager,
+                        RoleName.AgreementSupervisor,
                         RoleName.EmployeeProfileManager,
                     };
                 GenericIdentity identity = new GenericIdentity(user.Name);

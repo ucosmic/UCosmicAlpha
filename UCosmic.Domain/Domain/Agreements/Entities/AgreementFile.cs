@@ -3,12 +3,12 @@ using System.Threading;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class InstitutionalAgreementFile : Entity
+    public class AgreementFile : Entity
     {
         private string _fileName;
         internal const string PathFormat = "/institutional-agreements/{0}/{1}";
 
-        protected internal InstitutionalAgreementFile()
+        protected internal AgreementFile()
         {
             Guid = Guid.NewGuid();
             CreatedOnUtc = DateTime.UtcNow;
@@ -19,7 +19,7 @@ namespace UCosmic.Domain.Agreements
         public Guid Guid { get; protected set; }
 
         public int AgreementId { get; protected internal set; }
-        public virtual InstitutionalAgreement Agreement { get; protected internal set; }
+        public virtual Agreement Agreement { get; protected internal set; }
 
         //public byte[] Content { get; protected internal set; }
         public int Length { get; protected internal set; }
@@ -34,9 +34,9 @@ namespace UCosmic.Domain.Agreements
         }
 
         public string VisibilityText { get; protected set; }
-        public InstitutionalAgreementVisibility Visibility
+        public AgreementVisibility Visibility
         {
-            get { return VisibilityText.AsEnum<InstitutionalAgreementVisibility>(); }
+            get { return VisibilityText.AsEnum<AgreementVisibility>(); }
             protected internal set { VisibilityText = value.AsSentenceFragment(); }
         }
 

@@ -20,7 +20,7 @@ namespace UCosmic.Domain.Agreements
             AgreementId = agreementId;
         }
 
-        internal AttachFileToAgreement(IPrincipal principal, int fileId, InstitutionalAgreement agreement)
+        internal AttachFileToAgreement(IPrincipal principal, int fileId, Agreement agreement)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -35,7 +35,7 @@ namespace UCosmic.Domain.Agreements
         public IPrincipal Principal { get; private set; }
         public int FileId { get; private set; }
         public int AgreementId { get; private set; }
-        internal InstitutionalAgreement Agreement { get; set; }
+        internal Agreement Agreement { get; set; }
         public bool IsNewlyAttached { get; internal set; }
     }
 
@@ -55,14 +55,14 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             var agreement = command.Agreement ??
-                _entities.Get<InstitutionalAgreement>()
-                .EagerLoad(_entities, new Expression<Func<InstitutionalAgreement, object>>[]
+                _entities.Get<Agreement>()
+                .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
                 {
                     r => r.Files,
                 })
                 .ById(command.AgreementId);
             if (agreement == null)
-                throw new InvalidOperationException(string.Format("Institutional Agreement with id '{0}' could not be found.", command.AgreementId));
+                throw new InvalidOperationException(string.Format("Agreement with id '{0}' could not be found.", command.AgreementId));
 
             var file = agreement.Files.SingleOrDefault(g => g.Id == command.FileId);
             if (file != null) return;
@@ -71,10 +71,10 @@ namespace UCosmic.Domain.Agreements
             if (looseFile == null) return;
 
             // also store in binary data
-            var path = string.Format(InstitutionalAgreementFile.PathFormat, agreement.Id, Guid.NewGuid());
+            var path = string.Format(AgreementFile.PathFormat, agreement.Id, Guid.NewGuid());
             _binaryData.Put(path, looseFile.Content);
 
-            file = new InstitutionalAgreementFile
+            file = new AgreementFile
             {
                 Agreement = agreement,
                 //Content = looseFile.Content,

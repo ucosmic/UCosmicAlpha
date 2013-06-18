@@ -5,7 +5,7 @@ namespace UCosmic.Web.Mvc.Controllers
 {
     [RestfulRouteConvention]
     [UserVoiceForum(UserVoiceForum.InstitutionalAgreements)]
-    [TryAuthorize(Roles = RoleName.InstitutionalAgreementManagers)]
+    [TryAuthorize(Roles = RoleName.AgreementManagers)]
     public partial class AgreementsController : Controller
     {
         private readonly IProcessQueries _queryProcessor;

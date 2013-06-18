@@ -8,11 +8,11 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class MyInstitutionalAgreementSettings :
-        BaseEntityQuery<InstitutionalAgreementConfiguration>,
-        IDefineQuery<InstitutionalAgreementConfiguration>
+    public class MyAgreementSettings :
+        BaseEntityQuery<AgreementSettings>,
+        IDefineQuery<AgreementSettings>
     {
-        public MyInstitutionalAgreementSettings(IPrincipal principal)
+        public MyAgreementSettings(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -22,27 +22,27 @@ namespace UCosmic.Domain.Agreements
         internal bool IsWritable { get; set; }
     }
 
-    public class HandleMyInstitutionalAgreementSettingsQuery :
-        IHandleQueries<MyInstitutionalAgreementSettings,
-        InstitutionalAgreementConfiguration>
+    public class HandleMyAgreementSettingsQuery :
+        IHandleQueries<MyAgreementSettings,
+        AgreementSettings>
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IQueryEntities _detachedEntities;
 
-        public HandleMyInstitutionalAgreementSettingsQuery(IProcessQueries queryProcessor, ICommandEntities entities, IQueryEntities detachedEntities)
+        public HandleMyAgreementSettingsQuery(IProcessQueries queryProcessor, ICommandEntities entities, IQueryEntities detachedEntities)
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
             _detachedEntities = detachedEntities;
         }
 
-        public InstitutionalAgreementConfiguration Handle(MyInstitutionalAgreementSettings query)
+        public AgreementSettings Handle(MyAgreementSettings query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
             // make sure user is authorized to view settings
-            if (!query.Principal.IsInAnyRole(RoleName.InstitutionalAgreementManagers))
+            if (!query.Principal.IsInAnyRole(RoleName.AgreementManagers))
                 throw new SecurityAccessDeniedException(string.Format(
                     "User '{0}' does not have privileges to invoke this function.",
                         query.Principal.Identity.Name));
@@ -58,8 +58,8 @@ namespace UCosmic.Domain.Agreements
 
             // from person's default affiliation, determine establishment
             var configurations = (query.IsWritable)
-                ? _entities.Get<InstitutionalAgreementConfiguration>()
-                : _detachedEntities.Query<InstitutionalAgreementConfiguration>();
+                ? _entities.Get<AgreementSettings>()
+                : _detachedEntities.Query<AgreementSettings>();
             configurations = configurations.EagerLoad(_entities, query.EagerLoad)
                 .Where(c =>
                     c.ForEstablishment != null &&
@@ -70,7 +70,7 @@ namespace UCosmic.Domain.Agreements
                             .Contains(person.DefaultAffiliation.EstablishmentId)
                     )
                 )
-                .OrderBy(new Dictionary<Expression<Func<InstitutionalAgreementConfiguration, object>>, OrderByDirection>
+                .OrderBy(new Dictionary<Expression<Func<AgreementSettings, object>>, OrderByDirection>
                 {
                     { c => c.ForEstablishment.Ancestors.Count, OrderByDirection.Descending}
                 })

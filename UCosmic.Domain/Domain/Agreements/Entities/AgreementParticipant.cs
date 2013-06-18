@@ -2,9 +2,9 @@
 
 namespace UCosmic.Domain.Agreements
 {
-    public class InstitutionalAgreementParticipant : Entity
+    public class AgreementParticipant : Entity
     {
-        protected internal InstitutionalAgreementParticipant()
+        protected internal AgreementParticipant()
         {
         }
 
@@ -12,7 +12,7 @@ namespace UCosmic.Domain.Agreements
         public bool IsOwner { get; protected internal set; }
 
         public int AgreementId { get; protected internal set; }
-        public virtual InstitutionalAgreement Agreement { get; protected internal set; }
+        public virtual Agreement Agreement { get; protected internal set; }
 
         public int EstablishmentId { get; protected internal set; }
         public virtual Establishment Establishment { get; protected internal set; }

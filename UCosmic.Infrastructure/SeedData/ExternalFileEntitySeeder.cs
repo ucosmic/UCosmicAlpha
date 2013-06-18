@@ -25,7 +25,7 @@ namespace UCosmic.SeedData
             foreach (var externalFile in externalFiles.Where(x => !_binaryData.Exists(x.Path)))
                 CopyFile(externalFile.Name, externalFile.Path);
 
-            var agreementFiles = _entities.Query<InstitutionalAgreementFile>().ToArray();
+            var agreementFiles = _entities.Query<AgreementFile>().ToArray();
             foreach (var agreementFile in agreementFiles.Where(x => !_binaryData.Exists(x.Path)))
                 CopyFile(agreementFile.Name, agreementFile.Path);
         }

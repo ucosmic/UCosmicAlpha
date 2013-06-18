@@ -9,7 +9,7 @@ using UCosmic.Web.Mvc.Models.Agreements;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [RoutePrefix("api/agreements/settings")]
-    [TryAuthorize(Roles = RoleName.InstitutionalAgreementManagers)]
+    [TryAuthorize(Roles = RoleName.AgreementManagers)]
     public class AgreementSettingsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -22,7 +22,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("")]
         public AgreementSettingsApiModel Get()
         {
-            var entity = _queryProcessor.Execute(new MyInstitutionalAgreementSettings(User));
+            var entity = _queryProcessor.Execute(new MyAgreementSettings(User));
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var model = Mapper.Map<AgreementSettingsApiModel>(entity);
             return model;

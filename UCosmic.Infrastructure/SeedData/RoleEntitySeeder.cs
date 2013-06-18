@@ -25,11 +25,11 @@ namespace UCosmic.SeedData
             Seed(RoleName.AuthorizationAgent,
                 "Authorization Agents can grant and revoke access privileges to any user, regardless of organization."
             );
-            Seed(RoleName.InstitutionalAgreementManager,
+            Seed(RoleName.AgreementManager,
                 "Institutional Agreement Managers can add, edit, and otherwise manage institutional agreements for their institutions. " +
                 "Additionally, they are allowed to view fields marked with 'private' access."
             );
-            Seed(RoleName.InstitutionalAgreementSupervisor,
+            Seed(RoleName.AgreementSupervisor,
                 "Institutional Agreement Supervisors have all of the same privileges ass Institutional Agreement Managers, " +
                 "and can also edit the settings for the Institutional Agreement Module."
             );

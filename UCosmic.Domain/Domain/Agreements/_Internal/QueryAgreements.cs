@@ -8,24 +8,24 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
 {
-    internal static class QueryInstitutionalAgreements
+    internal static class QueryAgreements
     {
-        internal static InstitutionalAgreement ById(this IQueryable<InstitutionalAgreement> queryable, int id)
+        internal static Agreement ById(this IQueryable<Agreement> queryable, int id)
         {
             return queryable.SingleOrDefault(x => x.Id == id);
         }
 
-        internal static IQueryable<InstitutionalAgreement> IsRoot(this IQueryable<InstitutionalAgreement> queryable)
+        internal static IQueryable<Agreement> IsRoot(this IQueryable<Agreement> queryable)
         {
             return queryable.Where(a => a.Umbrella == null);
         }
 
-        internal static IQueryable<InstitutionalAgreement> WithAnyChildren(this IQueryable<InstitutionalAgreement> queryable)
+        internal static IQueryable<Agreement> WithAnyChildren(this IQueryable<Agreement> queryable)
         {
             return queryable.Where(a => a.Children.Any());
         }
 
-        internal static IQueryable<InstitutionalAgreement> ForTenantUser(this IQueryable<InstitutionalAgreement> queryable, IPrincipal principal)
+        internal static IQueryable<Agreement> ForTenantUser(this IQueryable<Agreement> queryable, IPrincipal principal)
         {
             // select all agreements where this user's default affiliation is the owner
             Expression<Func<Affiliation, bool>> principalDefaultAffiliation =
@@ -58,29 +58,29 @@ namespace UCosmic.Domain.Agreements
             );
         }
 
-        internal static IQueryable<InstitutionalAgreement> UmbrellaCandidatesFor(this IQueryable<InstitutionalAgreement> queryable, int institutionalAgreementId)
-        {
-            // candidates cannot be self or offspring of requesting agreement
-            return queryable.Where
-            (
-                a =>
-                a.Id != institutionalAgreementId &&
-                a.Ancestors.All(h => h.Ancestor.Id != institutionalAgreementId)
-            );
-        }
+        //internal static IQueryable<Agreement> UmbrellaCandidatesFor(this IQueryable<Agreement> queryable, int agreementId)
+        //{
+        //    // candidates cannot be self or offspring of requesting agreement
+        //    return queryable.Where
+        //    (
+        //        a =>
+        //        a.Id != agreementId &&
+        //        a.Ancestors.All(h => h.Ancestor.Id != agreementId)
+        //    );
+        //}
 
-        //internal static InstitutionalAgreement ByFileGuid(this IQueryable<InstitutionalAgreement> queryable, Guid guid)
+        //internal static Agreement ByFileGuid(this IQueryable<Agreement> queryable, Guid guid)
         //{
         //    return queryable.SingleOrDefault(a => a.Files.Any(f => f.Guid == guid));
         //}
 
-        internal static IQueryable<InstitutionalAgreement> OwnedByEstablishment(this IQueryable<InstitutionalAgreement> queryable, object establishmentKey)
+        internal static IQueryable<Agreement> OwnedByEstablishment(this IQueryable<Agreement> queryable, object establishmentKey)
         {
             queryable = queryable.Where(IsOwnedBy(establishmentKey));
             return queryable;
         }
 
-        private static Expression<Func<InstitutionalAgreement, bool>> IsOwnedBy(object establishmentKey)
+        private static Expression<Func<Agreement, bool>> IsOwnedBy(object establishmentKey)
         {
             #region where participant owns the agreement, and id matches participant or one of its ancestors
 
@@ -151,7 +151,7 @@ namespace UCosmic.Domain.Agreements
             #endregion
         }
 
-        internal static IQueryable<InstitutionalAgreement> MatchingPlaceParticipantOrContact(this IQueryable<InstitutionalAgreement> queryable, string keyword)
+        internal static IQueryable<Agreement> MatchingPlaceParticipantOrContact(this IQueryable<Agreement> queryable, string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword)) return queryable;
 
@@ -162,7 +162,7 @@ namespace UCosmic.Domain.Agreements
             return queryable.AsExpandable().Where(matchesPlaceParticipantOrContact);
         }
 
-        private static Expression<Func<InstitutionalAgreement, bool>> NonOwnerPlaceNameMatches(string keyword)
+        private static Expression<Func<Agreement, bool>> NonOwnerPlaceNameMatches(string keyword)
         {
             var twoLetterIsoLanguageCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
@@ -220,7 +220,7 @@ namespace UCosmic.Domain.Agreements
             #endregion
         }
 
-        private static Expression<Func<InstitutionalAgreement, bool>> ParticipantNameMatches(string keyword)
+        private static Expression<Func<Agreement, bool>> ParticipantNameMatches(string keyword)
         {
             var twoLetterIsoLanguageCode = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
@@ -264,7 +264,7 @@ namespace UCosmic.Domain.Agreements
             #endregion
         }
 
-        private static Expression<Func<InstitutionalAgreement, bool>> ContactMatches(string keyword)
+        private static Expression<Func<Agreement, bool>> ContactMatches(string keyword)
         {
             #region where contact matches keyword
 

@@ -28,7 +28,7 @@ namespace UCosmic.Web.Mvc.Models.Agreements
         {
             protected override void Configure()
             {
-                CreateMap<InstitutionalAgreement, AgreementApiModel>()
+                CreateMap<Agreement, AgreementApiModel>()
                     .ForMember(d => d.Content, o => o.MapFrom(s => s.Description))
                     .AfterMap((s, d) => d.Participants = d.Participants
                         .OrderByDescending(x => x.IsOwner)

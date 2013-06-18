@@ -35,8 +35,8 @@ namespace UCosmic.SeedData
                 RoleName.EstablishmentLocationAgent,
                 RoleName.EstablishmentAdministrator,
                 RoleName.ElmahViewer,
-                RoleName.InstitutionalAgreementManager,
-                RoleName.InstitutionalAgreementSupervisor,
+                RoleName.AgreementManager,
+                RoleName.AgreementSupervisor,
                 RoleName.EmployeeProfileManager,
             };
 
@@ -71,8 +71,8 @@ namespace UCosmic.SeedData
                 { "www.usf.edu",          "@usf.edu"            },
                 { "www.uwo.ca",           "@uwo.ca"             },
             };
-            var managerRoles = new[] { RoleName.InstitutionalAgreementManager, RoleName.EmployeeProfileManager };
-            var supervisorRoles = new[] { RoleName.InstitutionalAgreementSupervisor };
+            var managerRoles = new[] { RoleName.AgreementManager, RoleName.EmployeeProfileManager };
+            var supervisorRoles = new[] { RoleName.AgreementSupervisor };
             var adminRoles = new[] { RoleName.SecurityAdministrator };
 
             foreach (var testEstablishment in testEstablishments)

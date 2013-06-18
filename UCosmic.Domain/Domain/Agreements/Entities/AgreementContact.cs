@@ -6,9 +6,9 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class InstitutionalAgreementContact : Entity
+    public class AgreementContact : Entity
     {
-        protected internal InstitutionalAgreementContact()
+        protected internal AgreementContact()
         {
             Guid = Guid.NewGuid();
             CreatedOnUtc = DateTime.UtcNow;
@@ -19,7 +19,7 @@ namespace UCosmic.Domain.Agreements
         public Guid Guid { get; protected set; }
 
         public int AgreementId { get; protected internal set; }
-        public virtual InstitutionalAgreement Agreement { get; protected internal set; }
+        public virtual Agreement Agreement { get; protected internal set; }
 
         public int PersonId { get; protected internal set; }
         public virtual Person Person { get; protected internal set; }
@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Agreements
         public string Type { get; protected internal set; }
         public string Title { get; protected internal set; }
 
-        public virtual ICollection<InstitutionalAgreementContactPhone> PhoneNumbers { get; protected internal set; }
+        public virtual ICollection<AgreementContactPhone> PhoneNumbers { get; protected internal set; }
 
         public DateTime CreatedOnUtc { get; protected internal set; }
         public string CreatedByPrincipal { get; protected internal set; }
