@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using UCosmic.Domain.Files;
-using UCosmic.Domain.InstitutionalAgreements;
+using UCosmic.Domain.Agreements;
 
 namespace UCosmic.SeedData
 {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Principal;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class RemoveContactFromAgreement
     {

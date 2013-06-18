@@ -6,7 +6,7 @@ using System.Security.Principal;
 using System.ServiceModel.Security;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class MyInstitutionalAgreementSettings :
         BaseEntityQuery<InstitutionalAgreementConfiguration>,

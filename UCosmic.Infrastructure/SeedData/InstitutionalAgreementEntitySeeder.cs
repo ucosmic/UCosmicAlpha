@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Files;
-using UCosmic.Domain.InstitutionalAgreements;
+using UCosmic.Domain.Agreements;
 using System.Security.Principal;
 using UCosmic.Domain.People;
 

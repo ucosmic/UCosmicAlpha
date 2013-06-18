@@ -4,7 +4,7 @@ using System.Threading;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class InstitutionalAgreementContact : Entity
     {

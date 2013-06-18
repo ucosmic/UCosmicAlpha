@@ -5,7 +5,7 @@ using System.Security.Principal;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class AddParticipantToAgreement
     {

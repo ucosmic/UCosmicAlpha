@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using UCosmic.Domain.InstitutionalAgreements;
+using UCosmic.Domain.Agreements;
 
 namespace UCosmic.Web.Mvc.Models.Agreements
 {

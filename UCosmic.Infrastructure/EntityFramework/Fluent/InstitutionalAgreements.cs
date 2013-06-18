@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity.ModelConfiguration;
-using UCosmic.Domain.InstitutionalAgreements;
+using UCosmic.Domain.Agreements;
 
 namespace UCosmic.EntityFramework
 {

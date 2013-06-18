@@ -1,6 +1,6 @@
 ﻿using UCosmic.Domain.Establishments;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class InstitutionalAgreementParticipant : Entity
     {

@@ -6,7 +6,7 @@ using System.Security.Principal;
 using LinqKit;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     internal static class QueryInstitutionalAgreements
     {

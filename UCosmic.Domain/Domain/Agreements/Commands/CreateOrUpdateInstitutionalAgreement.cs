@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class CreateOrUpdateInstitutionalAgreement
     {

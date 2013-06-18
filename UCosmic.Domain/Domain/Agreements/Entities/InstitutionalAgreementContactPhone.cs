@@ -1,4 +1,4 @@
-﻿namespace UCosmic.Domain.InstitutionalAgreements
+﻿namespace UCosmic.Domain.Agreements
 {
     public class InstitutionalAgreementContactPhone : Entity
     {

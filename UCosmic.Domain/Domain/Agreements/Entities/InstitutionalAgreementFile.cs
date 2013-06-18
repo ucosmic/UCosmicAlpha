@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace UCosmic.Domain.InstitutionalAgreements
+namespace UCosmic.Domain.Agreements
 {
     public class InstitutionalAgreementFile : Entity
     {
