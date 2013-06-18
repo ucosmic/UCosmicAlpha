@@ -74,7 +74,7 @@ namespace UCosmic.Domain.InstitutionalAgreements
                     if (agreement.Visibility != InstitutionalAgreementVisibility.Public) return null;
 
                     // when user is public and agreement is public, obfuscate protected & private data
-                    agreement.Description = privateData;
+                    agreement.Notes = privateData;
                     agreement.IsAutoRenew = null;
                     agreement.ExpiresOn = DateTime.MinValue;
                     agreement.IsExpirationEstimated = false;

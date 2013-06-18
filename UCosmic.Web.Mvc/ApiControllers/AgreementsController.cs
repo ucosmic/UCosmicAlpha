@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
 using AutoMapper;
@@ -28,6 +29,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var model = Mapper.Map<AgreementApiModel>(entity);
             return model;
+        }
+
+        [POST("")]
+        public HttpResponseMessage Post(AgreementApiModel model)
+        {
+            //var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
+            //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            //var model = Mapper.Map<AgreementApiModel>(entity);
+            //return model;
+            return null;
         }
 
         [GET("{agreementId}/participants")]
