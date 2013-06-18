@@ -45,8 +45,14 @@ namespace UCosmic.Domain.People
                     .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
 
                 // cannot create a duplicate affiliation
-                .MustNotBePersonAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
-                    .WithMessage(MustNotBePersonAffiliatedWithEstablishment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
+                //.MustNotBePersonAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
+                //    .WithMessage(MustNotBePersonAffiliatedWithEstablishment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
+                .MustNotBePersonAffiliatedWithDepartment( entities,
+                                                          establishmentId => establishmentId.EstablishmentId,
+                                                          campusId => campusId.CampusId,
+                                                          collegeId => collegeId.CollegeId,
+                                                          departmentId => departmentId.DepartmentId )
+                    .WithMessage(MustNotBePersonAffiliatedWithDepartment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
             ;
         }
     }
@@ -82,6 +88,7 @@ namespace UCosmic.Domain.People
                 IsClaimingEmployee = command.IsClaimingEmployee,
                 IsDefault = !person.Affiliations.Any(a => a.IsDefault),
                 IsPrimary = command.IsPrimary,
+                CampusId = command.CampusId,
                 CollegeId = command.CollegeId,
                 DepartmentId = command.DepartmentId,
                 FacultyRankId = command.FacultyRankId

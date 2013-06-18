@@ -11,6 +11,7 @@ namespace UCosmic.Web.Mvc.Models
         public string UCosmicCode { get; set; }
         public string ExternalId { get; set; }
         public string CeebCode { get; set; }
+        public string OfficialName { get; set; }
     }
 
     public static class EstablishmentApiScalarProfiler

@@ -32,14 +32,15 @@ module ViewModels.My {
         isClaimingAdministrator: KnockoutObservableBool = ko.observable(false);
         isClaimingFaculty: KnockoutObservableBool = ko.observable(false);
         isClaimingStaff: KnockoutObservableBool = ko.observable(false);
-        campusId: KnockoutObservableAny = ko.observable();     // nullable
-        campus: KnockoutObservableString = ko.observable();
+        campusId: KnockoutObservableAny = ko.observable();      // nullable
         collegeId: KnockoutObservableAny = ko.observable();     // nullable
-        college: KnockoutObservableString = ko.observable();
         departmentId: KnockoutObservableAny = ko.observable();  // nullable
-        department: KnockoutObservableString = ko.observable();
         facultyRankId: KnockoutObservableAny = ko.observable(); // nullable
-        facultyRank: KnockoutObservableString = ko.observable();
+
+        campus: string;
+        college: string;
+        department: string;
+        facultyRank: string;
     }
 
     export class Profile implements KnockoutValidationGroup {
@@ -68,6 +69,10 @@ module ViewModels.My {
         displayName: KnockoutObservableString = ko.observable();
         private _userDisplayName: string = '';
 
+        campuses: any[];
+        colleges: any[];
+        departments: any[];
+
         personId: number = 0;
 
         salutation: KnockoutObservableString = ko.observable();
@@ -81,8 +86,9 @@ module ViewModels.My {
         facultyRankText: () => string;
         facultyRanks: KnockoutObservableFacultyRankModelArray = ko.observableArray();
         facultyRankId: KnockoutObservableNumber = ko.observable();
+
         preferredTitle: KnockoutObservableString = ko.observable();
-        affiliations: any[];
+        affiliations: KnockoutObservableArray = ko.observableArray();
 
         gender: KnockoutObservableString = ko.observable();
         isActive: KnockoutObservableBool = ko.observable();
@@ -624,6 +630,83 @@ module ViewModels.My {
                     this.facultyRankText().toLowerCase() !== 'other';
             });
 
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         *  Affiliations
+        */
+        // --------------------------------------------------------------------------------
+        public editAffiliation(id: number) {
+            if (id != null) {
+            }
+
+            var me = this;
+
+            /* Get default affiliation */
+            var defaultAffiliation = null;
+            var i = 0;
+            while ((i < this.affiliations().length) && !this.affiliations()[i].isDefault)
+                { i += 1; }
+            if (i < this.affiliations().length) {
+                defaultAffiliation = this.affiliations()[i];
+            }
+            else {
+                return;
+            }
+
+            $( "#editAffiliationCampusDropList" ).kendoDropDownList({
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId())
+                            }
+                        }
+                    }),
+                    change: function (e) {
+                        //var item = this.languageList[e.sender.selectedIndex];
+                        //if(item.name == "Other") {
+                        //    _this.languageId(null);
+                        //} else {
+                        //    _this.languageId(item.id);
+                        //}
+                    }
+            });
+
+            $( "#editAffiliationDialog" ).dialog( {
+                dialogClass: "no-close",
+                width: 600,
+                height: 270,
+                resizable: false,
+                draggable: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: "Save",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+               ],
+               open: function(event, ui) {
+                   if (id != null) {
+                    var buttons = $(this).dialog('option', 'buttons'); 
+                    buttons["Delete"] = function() {
+                            /* TBD */
+                            $( this ).dialog( "close" );
+                        }
+                    $(this).dialog('option', 'buttons', buttons); 
+                   }
+                }
+            } );
         }
     }
 

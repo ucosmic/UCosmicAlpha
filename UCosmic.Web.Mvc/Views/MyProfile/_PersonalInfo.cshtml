@@ -67,7 +67,7 @@
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[None]"
-                    data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
+                       data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
             </div>
         </div>
         <div class="field-row">
@@ -76,7 +76,7 @@
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[Please enter your first name here]"
-                    data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
+                       data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">
@@ -85,7 +85,7 @@
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[None]"
-                    data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
+                       data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">
@@ -94,7 +94,7 @@
             </div>
             <div class="field-input">
                 <input type="text" placeholder="[Please enter your last name here]"
-                    data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
+                       data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="field-row">
@@ -114,19 +114,19 @@
                 <textarea rows="2" data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'"></textarea>
             </div>
         </div>
-        <div class="field-row">
+        <div class="field-row" data-bind="visiable: affiliations.count > 0">
             <div class="field-label">
-                <label>USF Affiliations</label>
+                <label>Affiliations</label>
             </div>
             <div class="field-input">
-                <ul data-bind="template: { name: 'affiliations-template', foreach: affiliations }"></ul>
+                <ul class="selectableListItems" data-bind="template: { name: 'affiliations-template', foreach: affiliations }"></ul>
             </div>
         </div>
         <div class="field-row">
             <div class="field-label">
             </div>
             <div class="field-input">
-                <input type="button" value="Add"/>
+                <input type="button" value="Add" data-bind="click: editAffiliation" />
             </div>
         </div>
         @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
@@ -160,24 +160,24 @@
         
         
         <!--
-        <div class="field-row" data-bind="visible: isFacultyRankEditable" style="display: none;">
-            <div class="field-label">
-                <label>Faculty Rank</label>
+            <div class="field-row" data-bind="visible: isFacultyRankEditable" style="display: none;">
+                <div class="field-label">
+                    <label>Faculty Rank</label>
+                </div>
+                <div class="field-input">
+                    <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
+                    </select>
+                </div>
             </div>
-            <div class="field-input">
-                <select data-bind="options: facultyRanks, optionsText: 'rank', optionsValue: 'id', value: facultyRankId, optionsCaption: '[Unknown]', jqObservableElement: '$facultyRanks'">
-                </select>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Administrative Appointments</label>
+                </div>
+                <div class="field-input">
+                    <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
+                </div>
             </div>
-        </div>
-        <div class="field-row">
-            <div class="field-label">
-                <label>Administrative Appointments</label>
-            </div>
-            <div class="field-input">
-                <textarea rows="2" data-bind="value: administrativeAppointments, valueUpdate: 'afterkeydown'"></textarea>
-            </div>
-        </div>
-        -->
+            -->
 
         @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
         {
@@ -213,18 +213,54 @@
     </div>
 </form>
 
+<!-- JQUERY DIALOGS -->
+<div id="editAffiliationDialog" class="dialog">
+    <div style="display: block">
+        <div style="width: 200px; display: inline-block; font-weight: bold">
+            <label for="editAffiliationCampusDropList">Institutional Affiliation:</label>
+        </div>
+        <div style="display: inline-block">
+            <select id="editAffiliationCampusDropList" style="width: 300px"></select>
+        </div>
+    </div>
+    <div style="display: block">
+        <div style="width: 200px; display: inline-block; font-weight: bold">
+            <label for="editAffiliationCollege">College:</label>
+        </div>
+        <div style="display: inline-block">
+            <select id="editAffiliationCollege" style="width: 300px"></select>
+        </div>
+    </div>
+    <div style="display: block">
+        <div style="width: 200px; display: inline-block; font-weight: bold">
+            <label for="editAffiliationDepartment">Department:</label>
+        </div>
+        <div style="display: inline-block">
+            <select id="editAffiliationDepartment" style="width: 300px"></select>
+        </div>
+    </div>
+    <div style="display: block">
+        <div style="width: 200px; display: inline-block; font-weight: bold">
+            <label for="editAffiliationFacultyRank">Position Title:</label>
+        </div>
+        <div style="display: inline-block">
+            <select id="editAffiliationFacultyRank" style="width: 300px"></select>
+        </div>
+    </div>
+</div>
+
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="affiliations-template">
-    <li>
-        <div style="display: inherit">
-            <div style="width: 200px; display: inline-block; font-weight: bold">
+    <li data-bind="visible: !isDefault()">
+        <div style="display: inline-block" data-bind="visible: campusId() != null">
+            <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>Institutional Affiliation:</span>
             </div>
             <div style="display: inherit">
                 <span data-bind="text: campus"></span>
             </div>
         </div>
-        <div style="display: inline-block">
+        <div style="display: inline-block" data-bind="visible: collegeId() != null">
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>College:</span>
             </div>
@@ -232,7 +268,7 @@
                 <span data-bind="text: college"></span>
             </div>
         </div>
-        <div style="display: inline-block">
+        <div style="display: inline-block" data-bind="visible: departmentId() != null">
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>Department:</span>
             </div>
@@ -240,13 +276,14 @@
                 <span data-bind="text: department"></span>
             </div>
         </div>
-        <div style="display: inline-block">
+        <div style="display: inline-block" data-bind="visible: facultyRankId() != null">
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>Position Title:</span>
             </div>
             <div style="display: inherit">
-                <span data-bind="text: jobTitles"></span>
+                <span data-bind="text: facultyRank"></span>
             </div>
         </div>
+        <hr/>
     </li>
 </script>

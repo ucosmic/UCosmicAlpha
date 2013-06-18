@@ -132,6 +132,11 @@ module App.Routes {
                 return makeUrl(url);
             }
 
+            export function getChildren (establishmentId: number): string {
+                var url = 'establishments/children/' + establishmentId;
+                return makeUrl(url);
+            }
+
             export function post(): string {
                 return makeUrl('establishments');
             }

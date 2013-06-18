@@ -273,6 +273,8 @@
     <Compile Include="Domain\LanguageExpertise\Queries\LanguageExpertiseByPersonId.cs" />
     <Compile Include="Domain\LanguageExpertise\Validation\MustFindLanguageExpertiseById.cs" />
     <Compile Include="Domain\LanguageExpertise\Validation\MustOwnLanguageExpertise.cs" />
+    <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
+    <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />

@@ -16,13 +16,9 @@ var ViewModels;
                 this.isClaimingFaculty = ko.observable(false);
                 this.isClaimingStaff = ko.observable(false);
                 this.campusId = ko.observable();
-                this.campus = ko.observable();
                 this.collegeId = ko.observable();
-                this.college = ko.observable();
                 this.departmentId = ko.observable();
-                this.department = ko.observable();
                 this.facultyRankId = ko.observable();
-                this.facultyRank = ko.observable();
             }
             return Affiliation;
         })();        
@@ -57,6 +53,7 @@ var ViewModels;
                 this.facultyRanks = ko.observableArray();
                 this.facultyRankId = ko.observable();
                 this.preferredTitle = ko.observable();
+                this.affiliations = ko.observableArray();
                 this.gender = ko.observable();
                 this.isActive = ko.observable();
                 this.$photo = ko.observable();
@@ -520,6 +517,65 @@ var ViewModels;
                 });
                 this.isFacultyRankVisible = ko.computed(function () {
                     return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
+                });
+            };
+            Profile.prototype.editAffiliation = function (id) {
+                if(id != null) {
+                }
+                var me = this;
+                var defaultAffiliation = null;
+                var i = 0;
+                while((i < this.affiliations().length) && !this.affiliations()[i].isDefault) {
+                    i += 1;
+                }
+                if(i < this.affiliations().length) {
+                    defaultAffiliation = this.affiliations()[i];
+                } else {
+                    return;
+                }
+                $("#editAffiliationCampusDropList").kendoDropDownList({
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId())
+                            }
+                        }
+                    }),
+                    change: function (e) {
+                    }
+                });
+                $("#editAffiliationDialog").dialog({
+                    dialogClass: "no-close",
+                    width: 600,
+                    height: 270,
+                    resizable: false,
+                    draggable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: "Save",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }, 
+                        {
+                            text: "Cancel",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ],
+                    open: function (event, ui) {
+                        if(id != null) {
+                            var buttons = $(this).dialog('option', 'buttons');
+                            buttons["Delete"] = function () {
+                                $(this).dialog("close");
+                            };
+                            $(this).dialog('option', 'buttons', buttons);
+                        }
+                    }
                 });
             };
             return Profile;

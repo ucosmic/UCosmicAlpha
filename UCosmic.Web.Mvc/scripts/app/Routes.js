@@ -140,6 +140,11 @@ var App;
                     return makeUrl(url);
                 }
                 Establishments.get = get;
+                function getChildren(establishmentId) {
+                    var url = 'establishments/children/' + establishmentId;
+                    return makeUrl(url);
+                }
+                Establishments.getChildren = getChildren;
                 function post() {
                     return makeUrl('establishments');
                 }

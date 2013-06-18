@@ -2,7 +2,7 @@
 
 namespace UCosmic.Domain.People
 {
-    public class Affiliation : Entity
+    public class Affiliation : RevisableEntity
     {
         protected internal Affiliation()
         {

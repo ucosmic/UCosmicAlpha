@@ -112,13 +112,18 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class AffiliationOrm : EntityTypeConfiguration<Affiliation>
+    public class AffiliationOrm : RevisableEntityTypeConfiguration<Affiliation>
     {
         public AffiliationOrm()
         {
             ToTable(typeof(Affiliation).Name, DbSchemaName.People);
 
-            HasKey(p => new { p.PersonId, p.EstablishmentId });
+            Property(p => p.PersonId).IsRequired();
+            Property(p => p.EstablishmentId).IsRequired();
+
+            //HasKey(p => new { p.PersonId,
+            //                  p.EstablishmentId
+            //                });
 
             HasRequired(p => p.Establishment);
 

@@ -567,27 +567,16 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             Affiliation affiliation = _queryProcessor.Execute(
-                new AffiliationByPrimaryKey(command.PersonId, command.EstablishmentId));
+                new AffiliationByDepartment( command.PersonId,
+                                             command.EstablishmentId,
+                                             command.CampusId,
+                                             command.CollegeId,
+                                             command.DepartmentId ));
 
             /* This needs to be changed to prevent duplicate affiliations. */
-
             if (affiliation != null)
             {
-                if (affiliation.CampusId.HasValue ||
-                    affiliation.CollegeId.HasValue ||
-                    affiliation.DepartmentId.HasValue)
-                {
-                    if ((affiliation.CampusId == command.CampusId) &&
-                        (affiliation.CollegeId == command.CollegeId) &&
-                        (affiliation.DepartmentId == command.DepartmentId))
-                    {
-                        return affiliation;
-                    }
-                }
-                else
-                {
-                    return affiliation;
-                }
+                return affiliation;
             }
 
             _createAffiliation.Handle(command);

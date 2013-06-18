@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -63,6 +64,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var model = Mapper.Map<EstablishmentApiScalarModel>(entity);
+            return model;
+        }
+
+        [GET("children/{establishmentId}")]
+        public ICollection<EstablishmentApiScalarModel> GetChildren(int establishmentId)
+        {
+            var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId)
+            {
+                EagerLoad = new Expression<Func<Establishment, object>>[]
+                {
+                    x => x.Type,
+                }
+            });
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<ICollection<EstablishmentApiScalarModel>>(entity.Children);
             return model;
         }
 
