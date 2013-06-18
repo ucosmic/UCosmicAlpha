@@ -160,6 +160,7 @@
     <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="Cryptography\AesExtensions.cs" />
+    <Compile Include="EntityFramework\Fluent\Agreements.cs" />
     <Compile Include="EntityFramework\Fluent\Externals.cs" />
     <Compile Include="EntityFramework\Fluent\LanguageExpertises.cs" />
     <Compile Include="EntityFramework\Fluent\GeographicExpertises.cs" />
@@ -172,7 +173,6 @@
     <Compile Include="EntityFramework\Fluent\Employees.cs" />
     <Compile Include="EntityFramework\Fluent\Files.cs" />
     <Compile Include="EntityFramework\Fluent\Identity.cs" />
-    <Compile Include="EntityFramework\Fluent\InstitutionalAgreements.cs" />
     <Compile Include="EntityFramework\Fluent\People.cs" />
     <Compile Include="EntityFramework\IOptimizeDatabase.cs" />
     <Compile Include="EntityFramework\SqlDatabaseOptimizer.cs" />
@@ -202,6 +202,8 @@
     <Compile Include="Saml\SimpleInjectorSamlRegistration.cs" />
     <Compile Include="Saml\TestSamlCertificateStorage.cs" />
     <Compile Include="SeedData\ActivityEntitySeeder.cs" />
+    <Compile Include="SeedData\AgreementEntitySeeder.cs" />
+    <Compile Include="SeedData\AgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
     <Compile Include="SeedData\LanguageExpertiseSeeder.cs" />
     <Compile Include="SeedData\GeographicExpertiseSeeder.cs" />
@@ -210,8 +212,6 @@
     <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
     <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
     <Compile Include="SeedData\ImageEntitySeeder.cs" />
-    <Compile Include="SeedData\InstitutionalAgreementEntitySeeder.cs" />
-    <Compile Include="SeedData\InstitutionalAgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\LoadableFileEntitySeeder.cs" />
     <Compile Include="SeedData\RegionsByGeoServicesEntitySeeder.cs" />
     <Compile Include="SeedData\SensativeSqlSeeder.cs" />
