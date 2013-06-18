@@ -96,7 +96,7 @@ namespace UCosmic.EntityFramework
             // has many participants
             HasMany(p => p.Participants)
                 .WithRequired(d => d.Agreement)
-                .Map(m => m.MapKey("AgreementId"))
+                .HasForeignKey(d => d.AgreementId)
                 .WillCascadeOnDelete(true);
 
             // has many contacts
@@ -154,7 +154,7 @@ namespace UCosmic.EntityFramework
             // has one establishment
             HasRequired(d => d.Establishment)
                 .WithMany()
-                .Map(m => m.MapKey("EstablishmentId"))
+                .HasForeignKey(d => d.EstablishmentId)
                 .WillCascadeOnDelete(false); // do not delete agreements when deleting establishment
         }
     }

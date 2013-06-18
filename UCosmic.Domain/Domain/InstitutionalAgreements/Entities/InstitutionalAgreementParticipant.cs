@@ -11,7 +11,10 @@ namespace UCosmic.Domain.InstitutionalAgreements
         public int Id { get; protected internal set; }
         public bool IsOwner { get; protected internal set; }
 
+        public int AgreementId { get; protected internal set; }
         public virtual InstitutionalAgreement Agreement { get; protected internal set; }
+
+        public int EstablishmentId { get; protected internal set; }
         public virtual Establishment Establishment { get; protected internal set; }
 
         public override string ToString()
