@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -18,16 +19,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class MyProfileController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
         private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
+        private readonly IHandleCommands<UCosmic.Domain.People.CreateAffiliation> _createAffiliationHandler;
 
         public MyProfileController(IProcessQueries queryProcessor
+            , ICommandEntities entities
             , IStoreBinaryData binaryData
             , IHandleCommands<UpdateMyProfile> profileUpdateHandler
             , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
+            , IHandleCommands<UCosmic.Domain.People.CreateAffiliation> createAffiliationHandler
         )
         {
             _queryProcessor = queryProcessor;
@@ -35,6 +40,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _profileUpdateHandler = profileUpdateHandler;
             _photoUpdateHandler = photoUpdateHandler;
             _photoDeleteHandler = photoDeleteHandler;
+            _entities = entities;
+            _createAffiliationHandler = createAffiliationHandler;
         }
 
         [GET("")]
@@ -167,6 +174,35 @@ namespace UCosmic.Web.Mvc.ApiControllers
              */
 
             return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Create an affiliation
+        */
+        // --------------------------------------------------------------------------------
+        [POST("affiliation")]
+        public HttpResponseMessage Post(MyProfileAffiliationApiModel model)
+        {
+            if (model == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            var createAffiliationCommand = new UCosmic.Domain.People.CreateAffiliation
+            {
+                PersonId = model.PersonId,
+                EstablishmentId = model.EstablishmentId,
+                CampusId = model.CampusId,
+                CollegeId = model.CollegeId,
+                DepartmentId = model.EstablishmentId,
+                FacultyRankId = model.FacultyRankId
+            };
+
+            _createAffiliationHandler.Handle(createAffiliationCommand);
+            var id = createAffiliationCommand.CreatedAffiliation.RevisionId;
+
+            return Request.CreateResponse(HttpStatusCode.OK, id);
         }
     }
 }

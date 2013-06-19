@@ -10,14 +10,16 @@ using System.Web.Mvc;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class MyProfileEstablishmentApiModel
-    {
-        public int Id { get; set; }
-        public string OfficialName { get; set; }
-    }
+    //public class MyProfileEstablishmentApiModel
+    //{
+    //    public int Id { get; set; }
+    //    public string OfficialName { get; set; }
+    //}
 
     public class MyProfileAffiliationApiModel
     {
+        public int Id { get; set; }
+        public int PersonId { get; set; }
         public int EstablishmentId { get; set; }
         public string Establishment { get; set; }
         public string JobTitles { get; set; }
@@ -203,6 +205,8 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<Affiliation, MyProfileAffiliationApiModel>()
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.Campus, o => o.ResolveUsing<MyProfileApiModelProfiler.EntityToModelProfile.EstablishmentCampusNameResolver>()
                         .ConstructedBy(() => new EstablishmentCampusNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
                     .ForMember(d => d.College, o => o.ResolveUsing<MyProfileApiModelProfiler.EntityToModelProfile.EstablishmentCollegeNameResolver>()

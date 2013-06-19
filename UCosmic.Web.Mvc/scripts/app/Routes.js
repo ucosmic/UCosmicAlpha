@@ -283,6 +283,13 @@ var App;
                         return get();
                     }
                     Profile.put = put;
+                    (function (Affiliation) {
+                        function post() {
+                            return makeUrl('my/profile/affiliation');
+                        }
+                        Affiliation.post = post;
+                    })(Profile.Affiliation || (Profile.Affiliation = {}));
+                    var Affiliation = Profile.Affiliation;
                     (function (Photo) {
                         function get(params) {
                             var url = post();

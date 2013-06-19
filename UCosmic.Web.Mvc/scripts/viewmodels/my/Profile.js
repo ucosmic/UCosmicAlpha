@@ -533,6 +533,61 @@ var ViewModels;
                 } else {
                     return;
                 }
+                $("#editAffiliationDepartmentDropList").kendoDropDownList({
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    change: function (e) {
+                    },
+                    dataBound: function (e) {
+                        if((this.selectedIndex != null) && (this.selectedIndex != -1)) {
+                            var item = this.dataItem(this.selectedIndex);
+                            if(item == null) {
+                                this.text("");
+                            }
+                        }
+                    }
+                });
+                $("#editAffiliationCollegeDropList").kendoDropDownList({
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    change: function (e) {
+                        var selectedIndex = e.sender.selectedIndex;
+                        if(selectedIndex != -1) {
+                            var item = this.dataItem(selectedIndex);
+                            if(item != null) {
+                                var dataSource = new kendo.data.DataSource({
+                                    transport: {
+                                        read: {
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id)
+                                        }
+                                    }
+                                });
+                                $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource(dataSource);
+                            }
+                        }
+                    },
+                    dataBound: function (e) {
+                        if((this.selectedIndex != null) && (this.selectedIndex != -1)) {
+                            var item = this.dataItem(this.selectedIndex);
+                            if(item != null) {
+                                var collegeId = item.id;
+                                if(collegeId != null) {
+                                    var dataSource = new kendo.data.DataSource({
+                                        transport: {
+                                            read: {
+                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId)
+                                            }
+                                        }
+                                    });
+                                    $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource(dataSource);
+                                }
+                            } else {
+                                this.text("");
+                                $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource([]);
+                            }
+                        }
+                    }
+                });
                 $("#editAffiliationCampusDropList").kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
@@ -544,12 +599,57 @@ var ViewModels;
                         }
                     }),
                     change: function (e) {
+                        var selectedIndex = e.sender.selectedIndex;
+                        if((selectedIndex != null) && (selectedIndex != -1)) {
+                            var item = this.dataItem(selectedIndex);
+                            if(item != null) {
+                                var dataSource = new kendo.data.DataSource({
+                                    transport: {
+                                        read: {
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id)
+                                        }
+                                    }
+                                });
+                                $("#editAffiliationCollegeDropList").data("kendoDropDownList").setDataSource(dataSource);
+                            }
+                        }
+                    },
+                    dataBound: function (e) {
+                        if((this.selectedIndex != null) && (this.selectedIndex != -1)) {
+                            var item = this.dataItem(this.selectedIndex);
+                            if(item != null) {
+                                var campusId = item.id;
+                                if(campusId != null) {
+                                    var dataSource = new kendo.data.DataSource({
+                                        transport: {
+                                            read: {
+                                                url: App.Routes.WebApi.Establishments.getChildren(campusId)
+                                            }
+                                        }
+                                    });
+                                    $("#editAffiliationCollegeDropList").data("kendoDropDownList").setDataSource(dataSource);
+                                }
+                            } else {
+                                $("#editAffiliationCollegeDropList").data("kendoDropDownList").setDataSource(null);
+                            }
+                        }
                     }
+                });
+                $("#editAffiliationFacultyRankDropList").kendoDropDownList({
+                    dataTextField: "rank",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get()
+                            }
+                        }
+                    })
                 });
                 $("#editAffiliationDialog").dialog({
                     dialogClass: "no-close",
-                    width: 600,
-                    height: 270,
+                    width: 750,
+                    height: 300,
                     resizable: false,
                     draggable: false,
                     modal: true,
@@ -557,7 +657,49 @@ var ViewModels;
                         {
                             text: "Save",
                             click: function () {
-                                $(this).dialog("close");
+                                debugger;
+
+                                var campusId1 = null;
+                                var collegeId1 = null;
+                                var departmentId1 = null;
+                                var facultyRankId1 = null;
+                                var item1 = me.GetDropListSelectedItem("#editAffiliationCampusDropList");
+                                if(item1 != null) {
+                                    campusId1 = item1.id;
+                                } else {
+                                    $(this).dialog("close");
+                                }
+                                item1 = me.GetDropListSelectedItem("#editAffiliationCollegeDropList");
+                                if(item1 != null) {
+                                    collegeId1 = item1.id;
+                                }
+                                item1 = me.GetDropListSelectedItem("#editAffiliationDepartmentDropList");
+                                if(item1 != null) {
+                                    departmentId1 = item1.id;
+                                }
+                                item1 = me.GetDropListSelectedItem("#editAffiliationFacultyRankDropList");
+                                if(item1 != null) {
+                                    facultyRankId1 = item1.id;
+                                }
+                                var affiliation = {
+                                    id: id,
+                                    personId: me.personId,
+                                    establishmentId: defaultAffiliation.establishmentId(),
+                                    campusId: campusId1,
+                                    collegeId: collegeId1,
+                                    departmentId: departmentId1,
+                                    facultyRankId: facultyRankId1
+                                };
+                                var model = ko.mapping.toJS(affiliation);
+                                $.ajax({
+                                    url: App.Routes.WebApi.My.Profile.Affiliation.post(),
+                                    type: (id == null) ? 'POST' : 'PUT',
+                                    data: model
+                                }).done(function (responseText, statusText, xhr) {
+                                    $(this).dialog("close");
+                                }).fail(function () {
+                                    $(this).dialog("close");
+                                });
                             }
                         }, 
                         {
@@ -577,6 +719,17 @@ var ViewModels;
                         }
                     }
                 });
+            };
+            Profile.prototype.GetDropListSelectedItem = function (dropListId) {
+                var item = null;
+                var dropList = $("#" + dropListId).data("kendoDropDownList");
+                if(dropList != null) {
+                    var selectedIndex = dropList.selectedIndex;
+                    if((selectedIndex != null) && (selectedIndex != -1)) {
+                        item = dropList.dataItem(selectedIndex);
+                    }
+                }
+                return item;
             };
             return Profile;
         })();

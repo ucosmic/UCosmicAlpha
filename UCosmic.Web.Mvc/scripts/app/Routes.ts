@@ -269,6 +269,11 @@ module App.Routes {
                 export function put(): string {
                     return get();
                 }
+                export module Affiliation {
+                    export function post(): string {
+                        return makeUrl( 'my/profile/affiliation' );
+                    }
+                }
                 export module Photo {
                     export function get(params?: any): string {
                         var url = post();
