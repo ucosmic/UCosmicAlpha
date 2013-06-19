@@ -1,3 +1,4 @@
+/// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../typings/knockout.postbox/knockout-postbox.d.ts" />
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
@@ -48,7 +49,31 @@ export class InstitutionalAgreementEditModel {
 
         this.hideOtherGroups();
         this.bindSearch();
+
+        this.uAgreements = ko.mapping.fromJS([
+                new this.selectConstructor("test", 1),
+                new this.selectConstructor("test2", 2),
+                new this.selectConstructor("test3", 3)
+        ]);
+        this.agreementTypes = ko.mapping.fromJS([
+                new this.selectConstructor("test", 1),
+                new this.selectConstructor("test2", 2),
+                new this.selectConstructor("test3", 3)
+        ]);
     }
+    selectConstructor = function (name: string, id: number) {
+        this.name = name;
+        this.id = id;
+    };
+    uAgreements = ko.mapping.fromJS([]);
+    agreementTypes = ko.mapping.fromJS([]);
+    uAgreementSelected = ko.observable(0);
+    agreementTypeSelected = ko.observable(0);
+    nickname = ko.observable();
+    privateNotes = ko.observable();
+    agreementContent = ko.observable();
+
+
 
     participants = ko.mapping.fromJS([]);
 
@@ -175,16 +200,66 @@ export class InstitutionalAgreementEditModel {
     };
 
     fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
-        $obj.fadeOut(time, function () {
+        if ($obj.css("display") !== "none") {
+            $obj.fadeOut(time, function () {
+                dfd.resolve();
+            });
+        }
+        else {
             dfd.resolve();
-        });
-        $obj2.fadeOut(time, function () {
+        }
+        if ($obj2.css("display") !== "none") {
+            $obj2.fadeOut(time, function () {
+                dfd2.resolve();
+            });
+        }
+        else {
             dfd2.resolve();
-        });
+        }
     };
     
     bindSearch = function () {
         if (!this.hasBoundSearch) {
+            $(document).ready(function () {
+                // create Editor from textarea HTML element with default set of tools
+                $("#agreementContent").kendoEditor({
+                    tools: [
+                    "bold",
+                    "italic",
+                    "underline",
+                    "strikethrough",
+                    "fontName",
+                    "foreColor",
+                    "justifyLeft",
+                    "justifyCenter",
+                    "justifyRight",
+                    "justifyFull",
+                    "insertUnorderedList",
+                    "insertOrderedList",
+                    "indent",
+                    "outdent",
+                    {
+                        name: "formatBlock",
+                        items: [
+                    { text: "Paragraph", value: "p" },
+                    { text: "Quotation", value: "blockquote" },
+                    { text: "Heading 2", value: "h2" },
+                    { text: "Heading 3", value: "h3" },
+                    { text: "Heading 4", value: "h4" },
+                    { text: "Heading 5", value: "h5" },
+                    { text: "Heading 6", value: "h6" }
+                        ]
+                    },
+                    "createLink",
+                    "unlink",
+                    "insertImage",
+                    "subscript",
+                    "superscript",
+                    "viewHtml"
+                    ]
+                });
+            });
+            
             this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/page\/(.*)\//;
             this.establishmentSearchViewModel.sammyGetPageRoute = '#/page/:pageNumber/';
             this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';

@@ -28,6 +28,17 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
             this.initDefaultPageRoute = initDefaultPageRoute;
+            this.selectConstructor = function (name, id) {
+                this.name = name;
+                this.id = id;
+            };
+            this.uAgreements = ko.mapping.fromJS([]);
+            this.agreementTypes = ko.mapping.fromJS([]);
+            this.uAgreementSelected = ko.observable(0);
+            this.agreementTypeSelected = ko.observable(0);
+            this.nickname = ko.observable();
+            this.privateNotes = ko.observable();
+            this.agreementContent = ko.observable();
             this.participants = ko.mapping.fromJS([]);
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -86,16 +97,83 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 });
             };
             this.fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
-                $obj.fadeOut(time, function () {
+                if($obj.css("display") !== "none") {
+                    $obj.fadeOut(time, function () {
+                        dfd.resolve();
+                    });
+                } else {
                     dfd.resolve();
-                });
-                $obj2.fadeOut(time, function () {
+                }
+                if($obj2.css("display") !== "none") {
+                    $obj2.fadeOut(time, function () {
+                        dfd2.resolve();
+                    });
+                } else {
                     dfd2.resolve();
-                });
+                }
             };
             this.bindSearch = function () {
                 var _this = this;
                 if(!this.hasBoundSearch) {
+                    $(document).ready(function () {
+                        $("#agreementContent").kendoEditor({
+                            tools: [
+                                "bold", 
+                                "italic", 
+                                "underline", 
+                                "strikethrough", 
+                                "fontName", 
+                                "foreColor", 
+                                "justifyLeft", 
+                                "justifyCenter", 
+                                "justifyRight", 
+                                "justifyFull", 
+                                "insertUnorderedList", 
+                                "insertOrderedList", 
+                                "indent", 
+                                "outdent", 
+                                {
+                                    name: "formatBlock",
+                                    items: [
+                                        {
+                                            text: "Paragraph",
+                                            value: "p"
+                                        }, 
+                                        {
+                                            text: "Quotation",
+                                            value: "blockquote"
+                                        }, 
+                                        {
+                                            text: "Heading 2",
+                                            value: "h2"
+                                        }, 
+                                        {
+                                            text: "Heading 3",
+                                            value: "h3"
+                                        }, 
+                                        {
+                                            text: "Heading 4",
+                                            value: "h4"
+                                        }, 
+                                        {
+                                            text: "Heading 5",
+                                            value: "h5"
+                                        }, 
+                                        {
+                                            text: "Heading 6",
+                                            value: "h6"
+                                        }
+                                    ]
+                                }, 
+                                "createLink", 
+                                "unlink", 
+                                "insertImage", 
+                                "subscript", 
+                                "superscript", 
+                                "viewHtml"
+                            ]
+                        });
+                    });
                     this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/page\/(.*)\//;
                     this.establishmentSearchViewModel.sammyGetPageRoute = '#/page/:pageNumber/';
                     this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
@@ -277,6 +355,16 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.removeParticipant = this.removeParticipant.bind(this);
             this.hideOtherGroups();
             this.bindSearch();
+            this.uAgreements = ko.mapping.fromJS([
+                new this.selectConstructor("test", 1), 
+                new this.selectConstructor("test2", 2), 
+                new this.selectConstructor("test3", 3)
+            ]);
+            this.agreementTypes = ko.mapping.fromJS([
+                new this.selectConstructor("test", 1), 
+                new this.selectConstructor("test2", 2), 
+                new this.selectConstructor("test3", 3)
+            ]);
         }
         InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {
             if(!js) {
