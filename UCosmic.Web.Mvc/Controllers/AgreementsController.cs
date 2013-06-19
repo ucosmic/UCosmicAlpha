@@ -20,15 +20,16 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-        public virtual ViewResult EstSearch()
-        {
-            ViewBag.Id = 0;
-            return View(MVC.Agreements.Views.EstablishmentSearch);
-        }
 
         public virtual ViewResult New()
         {
             ViewBag.Id = 0;
+            return View(MVC.Agreements.Views.Form);
+        }
+
+        public virtual ViewResult Edit(int agreementId)
+        {
+            ViewBag.Id = agreementId;
             return View(MVC.Agreements.Views.Form);
         }
 

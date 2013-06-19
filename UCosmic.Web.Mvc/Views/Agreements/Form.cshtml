@@ -1,25 +1,113 @@
-﻿@{
-    ViewBag.Title = (ViewBag.Id == 0) ? "Create Establishment" : "Establishment Details";
+﻿@using UCosmic.Web.Mvc
+@{
+    ViewBag.Title = "Institutional Agreement";
 }
 @section bib
 {
-    <nav class="bib hide" data-current-bib="establishments">
+    <nav class="bib hide" data-current-bib="agreements">
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
-@section scripts {
-
-    @Scripts.Render("~/bundles/establishments/item")
-
-    <script type="text/javascript">
-        var establishmentItemViewModel = new ViewModels.Establishments.Item(@ViewBag.Id);
-        ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
-        establishmentItemViewModel.sammy.run();
-    </script>
-
+@*<script data-main="../scripts/main.js" src="~/scripts/require.js"></script>*@
+@section scripts
+{
+    <script data-main="../../scripts/viewmodels/agreements/RequireAgreement.js"  src="~/scripts/require/require.js"></script>
+  @*     @Scripts.Render("~/bundles/agreements")
+  @Scripts.Render("~/bundles/establishmentSearch")*@
 }
+<div class="content fixed to-top" data-current-module="agreements"  id="LoadingPage">
+    <div class="on-left from-top">
+        <header>
+            <h1>
+                <p data-bind="visible: spinner.isVisible">
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <strong>Loading page...</strong>
+                </p>
+            </h1>
+        </header>
+    </div>
+</div>
 
-<div class="content fixed to-top" data-current-module="admin">
+<div class="content fixed to-top" data-current-module="agreements"  id="allParticipants"  style="visibility: hidden">
+    <form class="group"  >
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            <section id="participants">
+                <header>
+                    <h2>
+                        Participants
+                    </h2>
+                </header>
+                <div data-bind="visible: isBound" style="display: none;">
+                    <ul data-bind="foreach: participants">
+                        <li data-bind="element: 'participantEl'">
+                            <div class="typed-item" >
+                                <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
+                                <div class="type">
+                                    <span data-bind="visible: isOwner">Home</span>
+                                    <span data-bind="visible: !isOwner()">Partner</span>
+                                </div>
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: establishmentTranslatedName"></strong>
+                                        <span data-bind="visible: $root.officialNameDoesNotMatchTranslation">(<span data-bind="    text: establishmentOfficialName"></span>)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <footer>
+                    <a href="" data-bind="click: $root.addParticipant" class="button">
+                        <i class="green plus"></i>
+                        <span class="text">Add a participant</span>
+                    </a>
+                </footer>
+            </section>
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+            </div>
+        </aside>
+    </form>
+</div>
+            
+<div id="estSearch" class="content fixed to-top" style="visibility: hidden">
+    <form class="group" data-bind="submit: requestResults">
+        <div class="on-left from-top">
+            <header>
+                <h1 data-bind="text: header">
+                    Choose a participant
+                </h1>
+                <div style="float: right">
+                    <a href="#/" id="cancelAddParticipant" class="button">Cancel</a>
+                </div>
+            </header>
+            @Html.Partial(MVC.Establishments.Views._SearchAndResults)
+        </div>
+        <aside id="asideRootSearch" class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Establishments.Views._SearchSideBar)
+            </div>
+        </aside>
+        <aside id="asideParentSearch" class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Establishments.Views._ParentSearchSideBar)
+            </div>
+        </aside>
+    </form>
+</div>
+
+
+<div id="addEstablishment" class="content fixed to-top" style="visibility: hidden">
     <div data-side-swiper="root" id="establishment_page">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
@@ -27,8 +115,11 @@
                     <div class="on-left from-top">
                         <header>
                             <h1>
-                                @ViewBag.Title
+                                Add an establishment
                             </h1>
+                            <div style="float: right">
+                                <a href="#/" id="cancelAddEstablishment" class="button">Cancel</a>
+                            </div>
                         </header>
                         @Html.Partial(MVC.Establishments.Views._FormAndCards)
                     </div>
@@ -40,27 +131,7 @@
                     </aside>
                 </div>
             </div>
-            <div data-side-swiper="off" class="left" style="width: 960px;" data-bind="with: parentSearch">
-                <form class="group">
-                    <div class="on-left from-top">
-                        <header>
-                            <div style="float: right">
-                                <a href="#/" class="button">Cancel</a>
-                            </div>
-                            <h1>
-                                Choose parent establishment
-                            </h1>
-                        </header>
-                        @Html.Partial(MVC.Establishments.Views._SearchAndResults)
-                    </div>
-                    <aside class="on-right from-top" data-fixed-scroll="root">
-                        <div data-fixed-scroll="anchor"></div>
-                        <div data-fixed-scroll="content">
-                            @Html.Partial(MVC.Establishments.Views._SearchSideBar)
-                        </div>
-                    </aside>
-                </form>
-            </div>
         </div>
     </div>
 </div>
+

@@ -8,6 +8,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
     
     var Spinner = __Spinner__;
 
+    
+    
     var Search = SearchModule.Search;
     var Item = ItemModule.Item;
     var SearchResult = SearchResultModule.SearchResult;
@@ -121,6 +123,73 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                             _this.establishmentItemViewModel.goToSearch = function () {
                                                 sessionStorage.setItem("addest", "yes");
                                                 _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                            };
+                                            _this.establishmentItemViewModel.submitToCreate = function (formElement) {
+                                                if(!_this.establishmentItemViewModel.id || _this.establishmentItemViewModel.id === 0) {
+                                                    var me = _this.establishmentItemViewModel;
+                                                    _this.establishmentItemViewModel.validatingSpinner.start();
+                                                    var officialName = _this.establishmentItemViewModel.names()[0];
+                                                    var officialUrl = _this.establishmentItemViewModel.urls()[0];
+                                                    var location = _this.establishmentItemViewModel.location;
+                                                    if(officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
+                                                        setTimeout(function () {
+                                                            var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
+                                                            return false;
+                                                        }, 50);
+                                                        return false;
+                                                    }
+                                                    _this.establishmentItemViewModel.isValidationSummaryVisible(true);
+                                                    if(!_this.establishmentItemViewModel.isValid()) {
+                                                        _this.establishmentItemViewModel.errors.showAllMessages();
+                                                    }
+                                                    if(!officialName.isValid()) {
+                                                        officialName.errors.showAllMessages();
+                                                    }
+                                                    if(!officialUrl.isValid()) {
+                                                        officialUrl.errors.showAllMessages();
+                                                    }
+                                                    _this.establishmentItemViewModel.validatingSpinner.stop();
+                                                    if(officialName.isValid() && officialUrl.isValid() && _this.establishmentItemViewModel.isValid()) {
+                                                        var $LoadingPage = $("#LoadingPage").find("strong");
+                                                        var url = App.Routes.WebApi.Establishments.post();
+                                                        var data = _this.establishmentItemViewModel.serializeData();
+                                                        $LoadingPage.text("Creating Establishment...");
+                                                        data.officialName = officialName.serializeData();
+                                                        data.officialUrl = officialUrl.serializeData();
+                                                        data.location = location.serializeData();
+                                                        _this.establishmentItemViewModel.createSpinner.start();
+                                                        $.post(url, data).done(function (response, statusText, xhr) {
+                                                            _this.establishmentItemViewModel.createSpinner.stop();
+                                                            $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                                                            $("#addEstablishment").fadeOut(500, function () {
+                                                                $("#LoadingPage").fadeIn(500);
+                                                                setTimeout(function () {
+                                                                    $("#LoadingPage").fadeOut(500, function () {
+                                                                        $LoadingPage.text("Loading Page...");
+                                                                    });
+                                                                    _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                                                }, 5000);
+                                                            });
+                                                        }).fail(function (xhr, statusText, errorThrown) {
+                                                            if(xhr.status === 400) {
+                                                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                    title: 'Alert Message',
+                                                                    dialogClass: 'jquery-ui',
+                                                                    width: 'auto',
+                                                                    resizable: false,
+                                                                    modal: true,
+                                                                    buttons: {
+                                                                        'Ok': function () {
+                                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                                return false;
                                             };
                                             ko.applyBindings(_this.establishmentItemViewModel, $addEstablishment[0]);
                                             var $cancelAddEstablishment = $("#cancelAddEstablishment");

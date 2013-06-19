@@ -2641,19 +2641,9 @@
     <Content Include="Views\MyProfile\DegreeEdit.cshtml" />
     <Content Include="Views\MyProfile\GeographicExpertiseEdit.cshtml" />
     <Content Include="Views\MyProfile\LanguageExpertiseEdit.cshtml" />
-    <Content Include="Views\Agreements\_FormAndCards.cshtml" />
-    <Content Include="Views\Agreements\_FormCodesAndCategorySection.cshtml" />
-    <Content Include="Views\Agreements\_FormLocationSection.cshtml" />
-    <Content Include="Views\Agreements\_FormNamesSection.cshtml" />
-    <Content Include="Views\Agreements\_FormParentSection.cshtml" />
-    <Content Include="Views\Agreements\_FormSideBar.cshtml" />
-    <Content Include="Views\Agreements\_FormUrlsSection.cshtml" />
-    <Content Include="Views\Agreements\_SearchAndResults.cshtml" />
-    <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
     <Content Include="Views\Agreements\Form.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
-    <Content Include="Views\Agreements\EstablishmentSearch.cshtml" />
     <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -41,6 +41,12 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Edit()
+        {
+            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Edit);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public AgreementsController Actions { get { return MVC.Agreements; } }
@@ -58,19 +64,27 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
-            public readonly string EstSearch = "EstSearch";
             public readonly string New = "New";
+            public readonly string Edit = "Edit";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
-            public const string EstSearch = "EstSearch";
             public const string New = "New";
+            public const string Edit = "Edit";
         }
 
 
+        static readonly ActionParamsClass_Edit s_params_Edit = new ActionParamsClass_Edit();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Edit EditParams { get { return s_params_Edit; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Edit
+        {
+            public readonly string agreementId = "agreementId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -82,30 +96,10 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
-                public readonly string _FormAndCards = "_FormAndCards";
-                public readonly string _FormCodesAndCategorySection = "_FormCodesAndCategorySection";
-                public readonly string _FormLocationSection = "_FormLocationSection";
-                public readonly string _FormNamesSection = "_FormNamesSection";
-                public readonly string _FormParentSection = "_FormParentSection";
-                public readonly string _FormSideBar = "_FormSideBar";
-                public readonly string _FormUrlsSection = "_FormUrlsSection";
-                public readonly string _SearchAndResults = "_SearchAndResults";
-                public readonly string _SearchSideBar = "_SearchSideBar";
-                public readonly string EstablishmentSearch = "EstablishmentSearch";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
-            public readonly string _FormAndCards = "~/Views/Agreements/_FormAndCards.cshtml";
-            public readonly string _FormCodesAndCategorySection = "~/Views/Agreements/_FormCodesAndCategorySection.cshtml";
-            public readonly string _FormLocationSection = "~/Views/Agreements/_FormLocationSection.cshtml";
-            public readonly string _FormNamesSection = "~/Views/Agreements/_FormNamesSection.cshtml";
-            public readonly string _FormParentSection = "~/Views/Agreements/_FormParentSection.cshtml";
-            public readonly string _FormSideBar = "~/Views/Agreements/_FormSideBar.cshtml";
-            public readonly string _FormUrlsSection = "~/Views/Agreements/_FormUrlsSection.cshtml";
-            public readonly string _SearchAndResults = "~/Views/Agreements/_SearchAndResults.cshtml";
-            public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
-            public readonly string EstablishmentSearch = "~/Views/Agreements/EstablishmentSearch.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
         }
@@ -122,15 +116,16 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult EstSearch()
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.EstSearch);
-            return callInfo;
-        }
-
         public override System.Web.Mvc.ViewResult New()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Edit(int agreementId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Edit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "agreementId", agreementId);
             return callInfo;
         }
 

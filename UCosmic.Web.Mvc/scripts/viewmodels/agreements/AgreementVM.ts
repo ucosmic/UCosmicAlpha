@@ -13,6 +13,8 @@ import SearchModule = module('../amd-modules/Establishments/Search');
 import ItemModule = module('../amd-modules/Establishments/Item');
 import SearchApiModel = module('../amd-modules/Establishments/ServerApiModel');
 import Spinner = module('../amd-modules/Widgets/Spinner');
+import Name = module('../amd-modules/Establishments/Name')
+import Url = module('../amd-modules/Establishments/Url')
 var Search = SearchModule.Search;
 var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
@@ -103,8 +105,6 @@ export class InstitutionalAgreementEditModel {
         $("#addEstablishment").css("visibility", "").hide();
     }
 
-
-     
     removeParticipant(establishmentResultViewModel, e): bool {
         if (confirm('Are you sure you want to remove "' +
             establishmentResultViewModel.establishmentTranslatedName() +
@@ -213,6 +213,85 @@ export class InstitutionalAgreementEditModel {
                                         this.establishmentItemViewModel.goToSearch = function () => {
                                             sessionStorage.setItem("addest", "yes");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                        }
+                                        this.establishmentItemViewModel.submitToCreate = function(formElement: HTMLFormElement): bool => {
+                                            if (!this.establishmentItemViewModel.id || this.establishmentItemViewModel.id === 0) {
+                                                var me = this.establishmentItemViewModel;
+                                                this.establishmentItemViewModel.validatingSpinner.start();
+
+                                                // reference the single name and url
+                                                var officialName: Name.Name = this.establishmentItemViewModel.names()[0];
+                                                var officialUrl: Url.Url = this.establishmentItemViewModel.urls()[0];
+                                                var location = this.establishmentItemViewModel.location;
+
+                                                // wait for async validation to stop
+                                                if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
+                                                    this.establishmentItemViewModel.ceebCode.isValidating() || this.establishmentItemViewModel.uCosmicCode.isValidating()) {
+                                                    setTimeout((): bool => {
+                                                        var waitResult = this.establishmentItemViewModel.submitToCreate(formElement);
+                                                        return false;
+                                                    }, 50);
+                                                    return false;
+                                                }
+
+                                                // check validity
+                                                this.establishmentItemViewModel.isValidationSummaryVisible(true);
+                                                if (!this.establishmentItemViewModel.isValid()) {
+                                                    this.establishmentItemViewModel.errors.showAllMessages();
+                                                }
+                                                if (!officialName.isValid()) {
+                                                    officialName.errors.showAllMessages();
+                                                }
+                                                if (!officialUrl.isValid()) {
+                                                    officialUrl.errors.showAllMessages();
+                                                }
+                                                this.establishmentItemViewModel.validatingSpinner.stop();
+
+                                                if (officialName.isValid() && officialUrl.isValid() && this.establishmentItemViewModel.isValid()) {
+                                                    var $LoadingPage = $("#LoadingPage").find("strong")
+                                                    var url = App.Routes.WebApi.Establishments.post();
+                                                    var data = this.establishmentItemViewModel.serializeData();
+                                                    $LoadingPage.text("Creating Establishment...");
+                                                    data.officialName = officialName.serializeData();
+                                                    data.officialUrl = officialUrl.serializeData();
+                                                    data.location = location.serializeData();
+                                                    this.establishmentItemViewModel.createSpinner.start();
+                                                    $.post(url, data)
+                                                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                        this.establishmentItemViewModel.createSpinner.stop();
+                                                        $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                                                        $("#addEstablishment").fadeOut(500, function () => {
+                                                            $("#LoadingPage").fadeIn(500);
+                                                            setTimeout(function () => {
+                                                                $("#LoadingPage").fadeOut(500, function () {
+                                                                    $LoadingPage.text("Loading Page...");
+                                                                });
+                                                                this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                                            }, 5000);
+                                                        });
+
+                                                    })
+                                                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                        
+                                                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                                                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                title: 'Alert Message',
+                                                                dialogClass: 'jquery-ui',
+                                                                width: 'auto',
+                                                                resizable: false,
+                                                                modal: true,
+                                                                buttons: {
+                                                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                            return false;
                                         }
                                         ko.applyBindings(this.establishmentItemViewModel, $addEstablishment[0]);
                                         var $cancelAddEstablishment = $("#cancelAddEstablishment");
