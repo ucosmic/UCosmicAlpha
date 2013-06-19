@@ -57,10 +57,10 @@ namespace UCosmic.Domain.Agreements
             });
 
             // from person's default affiliation, determine establishment
-            var configurations = (query.IsWritable)
+            var settings = (query.IsWritable)
                 ? _entities.Get<AgreementSettings>()
                 : _detachedEntities.Query<AgreementSettings>();
-            configurations = configurations.EagerLoad(_entities, query.EagerLoad)
+            settings = settings.EagerLoad(_entities, query.EagerLoad)
                 .Where(c =>
                     c.ForEstablishment != null &&
                     c.ForEstablishment.IsMember &&
@@ -76,7 +76,7 @@ namespace UCosmic.Domain.Agreements
                 })
             ;
 
-            return configurations.FirstOrDefault();
+            return settings.FirstOrDefault() ?? AgreementSettings.Default;
         }
     }
 }

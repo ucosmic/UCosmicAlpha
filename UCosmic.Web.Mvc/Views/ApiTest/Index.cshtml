@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Api Test";
+}
+
+@section scripts
+{
+
+    <script type="text/javascript">
+        var url = 'App.Routes.WebApi.Agreements.Settings.get()';
+        var agreementSettingsGet;
+        $.ajax({
+            url: eval(url),
+            type: 'GET'
+        })
+        .done(function (result) {
+            if (result) alert('done: result = ' + result);
+            else alert('done: NO RESULT (' + result + ')');
+            $('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
+        })
+        .fail(function (xhr) {
+            alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+        });
+
+        ko.applyBindings(Object(), $('[data-current-module=admin]')[0]);
+    </script>
+
+}
+
+<div class="content fixed" data-current-module="admin">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <section>
+        <header>
+            <h2>Agreement Settings</h2>
+        </header>
+        <div>
+            <code data-bind="text: url"></code> =&gt; <span class="url-string">&quot;<span data-bind="text: eval(url)"></span>&quot;</span>
+        </div>
+        <div>
+            <pre id="agreementSettingsGet"></pre>
+        </div>
+    </section>
+</div>
+
+@section styles
+{
+    <style type="text/css">
+        code, pre {
+            font-family: 'Courier New', monospace;
+        }
+        .url-string {
+            font-weight: bold;
+            color: #c00;
+        }
+    </style>
+}

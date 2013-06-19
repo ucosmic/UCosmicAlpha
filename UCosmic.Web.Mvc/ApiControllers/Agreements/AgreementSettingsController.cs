@@ -19,7 +19,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("")]
+        [GET("", SitePrecedence = 1)]
         public AgreementSettingsApiModel Get()
         {
             var entity = _queryProcessor.Execute(new MyAgreementSettings(User));

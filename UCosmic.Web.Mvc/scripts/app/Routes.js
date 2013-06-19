@@ -278,6 +278,13 @@ var App;
                     Participant.get = get;
                 })(Agreements.Participant || (Agreements.Participant = {}));
                 var Participant = Agreements.Participant;
+                (function (Settings) {
+                    function get() {
+                        return makeUrl('agreements/settings');
+                    }
+                    Settings.get = get;
+                })(Agreements.Settings || (Agreements.Settings = {}));
+                var Settings = Agreements.Settings;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
             (function (My) {

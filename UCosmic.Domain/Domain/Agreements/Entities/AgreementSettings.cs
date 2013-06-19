@@ -26,6 +26,45 @@ namespace UCosmic.Domain.Agreements
         public virtual ICollection<AgreementSettingsStatusValue> AllowedStatusValues { get; protected set; }
         public virtual ICollection<AgreementSettingsContactTypeValue> AllowedContactTypeValues { get; protected set; }
 
+        public static AgreementSettings Default
+        {
+            get
+            {
+                if (_default == null)
+                {
+                    _default = new AgreementSettings
+                    {
+                        IsCustomTypeAllowed = true,
+                        AllowedTypeValues = new Collection<AgreementSettingsTypeValue>
+                        {
+                            new AgreementSettingsTypeValue { Text = "Activity Agreement" },
+                            new AgreementSettingsTypeValue { Text = "Institutional Collaboration Agreement" },
+                            new AgreementSettingsTypeValue { Text = "Memorandum of Understanding" },
+                        },
+                        IsCustomStatusAllowed = true,
+                        AllowedStatusValues = new Collection<AgreementSettingsStatusValue>
+                        {
+                            new AgreementSettingsStatusValue { Text = "Active" },
+                            new AgreementSettingsStatusValue { Text = "Dead" },
+                            new AgreementSettingsStatusValue { Text = "Inactive" },
+                            new AgreementSettingsStatusValue { Text = "Unknown" },
+                        },
+                        IsCustomContactTypeAllowed = true,
+                        AllowedContactTypeValues = new Collection<AgreementSettingsContactTypeValue>
+                        {
+                            new AgreementSettingsContactTypeValue { Text = "Home Principal" },
+                            new AgreementSettingsContactTypeValue { Text = "Home Secondary" },
+                            new AgreementSettingsContactTypeValue { Text = "Partner Principal" },
+                            new AgreementSettingsContactTypeValue { Text = "Partner Secondary" },
+                        },
+                    };
+                }
+                return _default;
+            }
+        }
+
+        private static AgreementSettings _default;
+
     }
 
 }

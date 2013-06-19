@@ -268,6 +268,13 @@ module App.Routes {
                     return makeUrl(url);
                 }
             }
+
+            export module Settings {
+
+                export function get (): string {
+                    return makeUrl('agreements/settings');
+                }
+            }
         }
         
         export module My {

@@ -305,8 +305,13 @@
     <Compile Include="ApiControllers\Places\CountriesController.cs" />
     <Compile Include="ApiControllers\Places\PlacesController.cs" />
     <Compile Include="ApiControllers\ProfileElementsController.cs" />
+    <Compile Include="ApiTestController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\SamlMetadataController.cs" />
+    <Compile Include="Controllers\ApiTestController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Helpers\DevelopmentOnlyAttribute.cs" />
     <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
     <Compile Include="Helpers\FileSizeFormatter.cs" />
@@ -2647,6 +2652,7 @@
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
     <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
+    <Content Include="Views\ApiTest\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
