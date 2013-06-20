@@ -96,3 +96,6 @@ img {
 .ui-button * {
     cursor: pointer;
 }
+.k-editor-selectbox {
+    width: 120px;
+}

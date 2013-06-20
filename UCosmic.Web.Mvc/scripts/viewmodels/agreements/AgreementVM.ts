@@ -238,6 +238,12 @@ export class InstitutionalAgreementEditModel {
                     "insertOrderedList",
                     "indent",
                     "outdent",
+                    "createLink",
+                    "unlink",
+                    "insertImage",
+                    "subscript",
+                    "superscript",
+                    "viewHtml",
                     {
                         name: "formatBlock",
                         items: [
@@ -248,23 +254,21 @@ export class InstitutionalAgreementEditModel {
                     { text: "Heading 4", value: "h4" },
                     { text: "Heading 5", value: "h5" },
                     { text: "Heading 6", value: "h6" }
-                        ]
-                    },
-                    "createLink",
-                    "unlink",
-                    "insertImage",
-                    "subscript",
-                    "superscript",
-                    "viewHtml"
+                        ],
+                        width: "200px"
+                    }
                     ]
                 });
             });
             
-            this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/page\/(.*)\//;
-            this.establishmentSearchViewModel.sammyGetPageRoute = '#/page/:pageNumber/';
+            this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
+            this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
             this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
             var lastURL = "asdf";
+            if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
+                this.establishmentSearchViewModel.sammy.setLocation('#/index');
+            }
             if (sessionStorage.getItem("addest") == undefined) {
                 sessionStorage.setItem("addest", "no");
             }

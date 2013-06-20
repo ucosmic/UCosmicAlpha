@@ -108,6 +108,19 @@
                     <div class="field-label">
                         <label>Content:</label>
                     </div>
+                    <script type="text/x-kendo-template" id="format">
+                        <select style='width:120px'>
+                            <option value=''>Format</option><option value='p'>Paragraph</option>
+                            <option value='\#blockquote'>Quotation</option><option value='h2'>Heading 2</option>
+                            <option value='h3'>Heading 3</option><option value='h4'>Heading 4</option>
+                            <option value='h5'>Heading 5</option><option value='h6'>Heading 6</option>
+                        </select>
+                    
+                    </script>
+    <script type="text/x-kendo-template" id="backgroundColor-template">
+        <label for='templateTool' style='vertical-align:middle;'>Background:</label>
+        <select id='templateTool' style='width:90px'><option value=''>none</option><option value='\#ff9'>yellow</option><option value='\#dfd'>green</option></select>
+    </script>
                     <div class="field-input">
                         <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]" id="agreementContent"  />
                     </div>
