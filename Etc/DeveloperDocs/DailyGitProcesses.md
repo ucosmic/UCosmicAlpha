@@ -34,7 +34,16 @@
 
 7. Delete any .orig files that git created because of merge conflicts. If you would like to keep these for me to review, save them to a different folder outside of the project and mail them to me.
 
-8. `git stash apply`
+8. `git push origin work`
+
+   or
+
+   `git push -f origin work`
+
+   Do this so that your GH work branch matches the rebase you just performed. I'd like you to do this in case I want to merge in your changes sometime during the day, before you do the next push at the end of the day.
+
+
+9. `git stash apply`
 
    Finally, run this if you ran git stash as step 1. It is the equivalent of a TFS Unshelve. It will restore your staged and unstaged changes so that you can continue to work after this morning ritual.
 
