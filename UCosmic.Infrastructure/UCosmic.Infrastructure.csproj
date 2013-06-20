@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ComponentSpace.SAML2">
-      <HintPath>..\Etc\ComponentSpace.SAML2.dll</HintPath>
+      <HintPath>..\Etc\Dependencies\ComponentSpace.SAML2.dll</HintPath>
     </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
