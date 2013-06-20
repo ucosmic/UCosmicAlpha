@@ -2,17 +2,23 @@
 
 ## At the beginning of the workday
 
-1. `git stash`
+1. `git stash -u` (optional)
 
-   Run this if you have staged or unstaged changes (unclean workspace) from the previous day. It is the equivalent of a TFS Shelve. It allows you to switch branches without losing any current work. If you do not have any staged or unstaged changes that you would prefer to revert instead, you can skip this step. But git will not allow you to switch branches until your workspace is clean.
+  **Don't forget to *Save All* in Visual Studio and rescan to inspect changes to sln and csproj files before stashing.** Remember, Visual Studio normally keeps changes to these files in memory and only writes them to the filesystem when you close the solution, build the solution, or Save All.
+
+   Run this if you have an unclean workspace (any files with staged or unstaged changes) that you want to come back to when you're finished with this process. If you are familiar with a TFS shelve, `git stash` is its correlary. It allows you to switch branches without having to lose a current work in progress. Git will not always allow you to switch branches if your workspace is unclean, so this step is to prepare for step 2 below.
+
+   The `-u` flag can be important because without it, only staged files will be saved or restored. Using this flag tells git to also stash files that have unstaged changes.
+
+  Another option if you have an unclean workspace is to just revert changes, which can be done in Git GUI. You can only revert changes to deleted and edited files. To revert newly added files, manually remove them from the filesystem.
 
 2. `git checkout master`
 
-   Switch to the master branch.
+   Switch to the master branch. This assumes you are committing to a separate work or topic branch, which you should be. Do not make commits on top of your master!
 
-3. `git pull mainline master` (or `git pull upstream master`)
+3. `git pull mainline master`
 
-   This will download the latest master code onto your machine. Doug your tracking remote is named mainline, Saibal yours is named upstream. Saibal, I would prefer you rename yours to mainline to keep it consistent with Doug's.
+   This will download the latest master code from github onto your machine and update your local master branch to match it.
 
 4. `git push origin master`
 
@@ -43,9 +49,11 @@
    Do this so that your GH work branch matches the rebase you just performed. I'd like you to do this in case I want to merge in your changes sometime during the day, before you do the next push at the end of the day.
 
 
-9. `git stash apply`
+9. `git stash pop` (optional, don't do this if you skipped step 1)
 
-   Finally, run this if you ran git stash as step 1. It is the equivalent of a TFS Unshelve. It will restore your staged and unstaged changes so that you can continue to work after this morning ritual.
+   Finally, run this if you ran `git stash -u` as step 1. It is the TFS Unshelve's correlary. It will restore your staged and unstaged changes so that you can continue to work after this morning ritual. It will also delete the stash entry from git, so that you don't have any funny looking loops in the dragon visualizer.
+
+   If you don't want to delete the stash from git, you can just run `git stash apply`. This will restore your stash to your filesystem only, but leave the stash data in git so that you can apply it to a different branch or otherwise reuse it later.
 
 ## At the end of the workday
 
