@@ -12,23 +12,23 @@
 
   Another option if you have an unclean workspace is to just revert changes, which can be done in Git GUI. You can only revert changes to deleted and edited files. To revert newly added files, manually remove them from the filesystem.
 
-2. `git checkout master`
+2. `git checkout team`
 
-   Switch to the master branch. This assumes you are committing to a separate work or topic branch, which you should be. Do not make commits on top of your master!
+   Switch to the team branch. This assumes you are committing to a separate work or topic branch, which you should be. Do not make commits on top of your master or team branches!
 
-3. `git pull mainline master`
+3. `git pull mainline team`
 
-   This will download the latest master code from github onto your machine and update your local master branch to match it.
+   This will download the latest team code from github onto your machine and update your local team branch to match it.
 
-4. `git push origin master`
+4. `git push origin team`
 
-   This will update your github fork with the latest master code. This is helpful for me because it helps me see what commit your master is pointing at.
+   This will update your github fork with the latest team code. This is helpful for me because it helps me see what commit your team branch is pointing at.
 
 5. `git checkout work`
 
-   Switch back to the work branch.
+   Switch back to your work / topic branch.
 
-6. `git rebase master`
+6. `git rebase team`
 
    `git mergetool` (if you run into a conflict)
 
@@ -36,7 +36,7 @@
 
    `git rebase --abort` (to undo the rebase and start over, do this if you accidentally leave the dragon open and it poops on your rebase)
 
-   You need to run git rebase master if your work branch is not directly downstream from the master after pulling it from the mainline. In other words, if the master branch is pointing at a commit that is a parent of your work branch, you can skip this step. Otherwise, if your master and work branches appear in different parallel development lines, you will need to rebase in order to make the relationship between master and work entirely linear (no parallel development lines separating work from master is the goal of the rebase).
+   You need to run `git rebase team` if your work branch is not directly downstream from the team branch after pulling it from the mainline. In other words, if the team branch is pointing at a commit that is a parent of your work branch, you can skip this step. Otherwise, if your team and work branches appear in different parallel development lines, you will need to rebase in order to make the relationship between team and work entirely linear (no parallel development lines separating work from team is the goal of the rebase).
 
 7. Delete any .orig files that git created because of merge conflicts. If you would like to keep these for me to review, save them to a different folder outside of the project and mail them to me.
 
@@ -57,7 +57,7 @@
 
 ## At the end of the workday
 
-1. Commit your code, if you have not already made at least 1 commit for the day. If you have already made a commit, you can keep your staged & unstaged changes for the following day (just remember to `git stash` before rebasing onto the latest master). Before doing a commit, get in the habit of doing the following:
+1. Commit your code, if you have not already made at least 1 commit for the day. If you have already made a commit, you can keep your staged & unstaged changes for the following day (just remember to `git stash` before rebasing onto the latest team branch). Before doing a commit, get in the habit of doing the following:
 
    A. Click the **Transform all Templates** button in visual studio. This will cause T4MVC classes to be regenerated. Ignore this step only if your code does not compile and you are doing a forced daily commit.
 
@@ -73,4 +73,4 @@
 
    This is so that I can review your commit(s) in my tracking remotes. After a rebase, your local work branch's history may differ from the remote's history, causing git to reject the push. In the past I have had you run  git push origin :work to delete, and then git push origin work to re-add. While that works, I recently discovered that the -f flag can force a history rewrite as well, without having to explicitly delete and re-add the branch to the github remote.
 
-3. After pushing your work branch at the end of the day, check to see if you have an open pull request to merge your work back into the master. You can do this by going to https://github.com/danludwig/Layout3/pulls. If you already have an OPEN pull request, stop here, you don't need to do anything. If you do not have an open pull request, create one. You can do this by clicking the **Pull Request** button at the top of the page. Select your work branch from the **head branch** dropdown, and make sure you are pulling it into the master base branch.
+3. After pushing your work branch at the end of the day, check to see if you have an open pull request to merge your work back into the team branch. You can do this by going to https://github.com/danludwig/Layout3/pulls. If you already have an OPEN pull request, stop here, you don't need to do anything. If you do not have an open pull request, create one. You can do this by clicking the **Pull Request** button at the top of the page. Select your work branch from the **head branch** dropdown, and make sure you are pulling it into the team base branch.
