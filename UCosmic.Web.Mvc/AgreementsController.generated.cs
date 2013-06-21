@@ -64,16 +64,20 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string DansIndex = "DansIndex";
             public readonly string New = "New";
             public readonly string Edit = "Edit";
+            public readonly string Settings = "Settings";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string DansIndex = "DansIndex";
             public const string New = "New";
             public const string Edit = "Edit";
+            public const string Settings = "Settings";
         }
 
 
@@ -96,12 +100,16 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
+                public readonly string DansIndex = "DansIndex";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
+                public readonly string Settings = "Settings";
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
+            public readonly string DansIndex = "~/Views/Agreements/DansIndex.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
+            public readonly string Settings = "~/Views/Agreements/Settings.cshtml";
         }
     }
 
@@ -116,6 +124,12 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
+        public override System.Web.Mvc.ViewResult DansIndex()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.DansIndex);
+            return callInfo;
+        }
+
         public override System.Web.Mvc.ViewResult New()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
@@ -126,6 +140,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Edit);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "agreementId", agreementId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ViewResult Settings()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Settings);
             return callInfo;
         }
 

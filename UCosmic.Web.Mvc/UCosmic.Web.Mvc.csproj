@@ -2652,6 +2652,8 @@
     <Content Include="Views\Agreements\_Bib.cshtml" />
     <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
     <Content Include="Views\ApiTest\Index.cshtml" />
+    <Content Include="Views\Agreements\DansIndex.cshtml" />
+    <Content Include="Views\Agreements\Settings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

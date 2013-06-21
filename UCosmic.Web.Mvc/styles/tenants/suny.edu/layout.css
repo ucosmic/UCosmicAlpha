@@ -518,22 +518,18 @@ body #main {
         body #main > .content header a:hover h1, body #main > .content header a:hover h2, body #main > .content header a:hover h3, body #main > .content header a:hover h4, body #main > .content header a:hover h5, body #main > .content header a:hover h6 {
           text-decoration: none; }
       body #main > .content header h1, body #main > .content header h2, body #main > .content header h3, body #main > .content header h4, body #main > .content header h5, body #main > .content header h6 {
+        text-transform: uppercase;
         display: inline-block;
         font-family: Arial;
         vertical-align: text-top;
-        line-height: 30px; }
-      body #main > .content header h1 {
-        font-size: 24px;
-        text-transform: uppercase;
+        line-height: 30px;
         color: #004c93; }
-        body #main > .content header h1 a {
+        body #main > .content header h1 a, body #main > .content header h2 a, body #main > .content header h3 a, body #main > .content header h4 a, body #main > .content header h5 a, body #main > .content header h6 a {
           color: #004c93; }
+      body #main > .content header h1 {
+        font-size: 24px; }
       body #main > .content header h2 {
-        font-size: 22px;
-        color: #333;
-        font-weight: bold; }
-        body #main > .content header h2 a {
-          color: #333; }
+        font-size: 20px; }
 body .ui-dialog {
   border: 0;
   padding: 0;

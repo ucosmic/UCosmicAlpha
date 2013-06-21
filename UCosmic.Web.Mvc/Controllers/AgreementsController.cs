@@ -3,7 +3,7 @@ using AttributeRouting.Web.Mvc;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
-    [RestfulRouteConvention]
+    //[RestfulRouteConvention]
     [UserVoiceForum(UserVoiceForum.Agreements)]
     [TryAuthorize(Roles = RoleName.AgreementManagers)]
     public partial class AgreementsController : Controller
@@ -15,22 +15,36 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
+        [GET("agreements/tim-is-moving-this-to-form")]
         public virtual ActionResult Index()
         {
             return View();
         }
 
+        [GET("agreements")]
+        public virtual ViewResult DansIndex()
+        {
+            return View();
+        }
 
+        [GET("agreements/new")]
         public virtual ViewResult New()
         {
             ViewBag.Id = 0;
             return View(MVC.Agreements.Views.Form);
         }
 
+        [GET("agreements/{agreementId}/edit")]
         public virtual ViewResult Edit(int agreementId)
         {
             ViewBag.Id = agreementId;
             return View(MVC.Agreements.Views.Form);
+        }
+
+        [GET("agreements/settings")]
+        public virtual ViewResult Settings()
+        {
+            return View();
         }
 
     }

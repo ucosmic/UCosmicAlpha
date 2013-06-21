@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Agreement Module Settings";
+}
+@section bib
+{
+    <nav class="bib hide" data-current-bib="settings">
+        @Html.Partial(MVC.Agreements.Views._Bib)
+    </nav>
+}
+
+<div class="content fixed" data-current-module="agreements">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <section>
+        <header>
+            <h2>Second heading</h2>
+        </header>
+    </section>
+</div>

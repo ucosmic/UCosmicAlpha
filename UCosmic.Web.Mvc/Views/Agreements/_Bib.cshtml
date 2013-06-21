@@ -1,5 +1,11 @@
 ﻿<ul class="group">
-    <li class="agreements">
-        <a href="@Url.Action(MVC.Agreements.Index())">Agreements</a>
+    <li class="search">
+        <a href="@Url.Action(MVC.Agreements.DansIndex())">Search Agreements</a>
     </li>
+    @if (User.IsInAnyRole(RoleName.AgreementSupervisor))
+    {
+        <li class="settings">
+            <a href="@Url.Action(MVC.Agreements.Settings())">Module Settings</a>
+        </li>
+    }
 </ul>
