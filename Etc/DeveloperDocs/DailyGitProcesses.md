@@ -1,6 +1,30 @@
 # Developer Daily Pull / Rebase Process
 
-## At the beginning of the workday
+## At the beginning of the workday(summary)
+
+1.   `git stash -u` (optional)  
+2.    `git checkout team`  
+3.    `git pull mainline team`  
+4.    `git push origin team`  
+5.    `git checkout work`  
+6.    `git rebase team`  
+   1.   `git mergetool` (if you run into a conflict)  
+   2.    `git rebase --continue` (after resolving conflicts)  
+   3.    `git rebase --abort` (to undo the rebase and start over)  
+7.    Delete any .orig files that git created because of merge conflicts.  
+8.    `git push origin work`    or    'git push -f origin work`  
+9.    `git stash pop` (optional)  
+
+## At the end of the workday(summary)
+
+1.        Commit your code  
+   1.   transform all templates  
+   2.   save all  
+   3.   rescan in git gui  
+2.    `git push origin work`    or    `git push -f origin work`  
+3.    https://github.com/danludwig/Layout3/pulls.
+
+## At the beginning of the workday(detailed)
 
 1. `git stash -u` (optional)
 
@@ -55,7 +79,7 @@
 
    If you don't want to delete the stash from git, you can just run `git stash apply`. This will restore your stash to your filesystem only, but leave the stash data in git so that you can apply it to a different branch or otherwise reuse it later.
 
-## At the end of the workday
+## At the end of the workday(detailed)
 
 1. Commit your code, if you have not already made at least 1 commit for the day. If you have already made a commit, you can keep your staged & unstaged changes for the following day (just remember to `git stash` before rebasing onto the latest team branch). Before doing a commit, get in the habit of doing the following:
 

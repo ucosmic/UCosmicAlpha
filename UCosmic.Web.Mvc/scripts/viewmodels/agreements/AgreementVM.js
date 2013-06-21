@@ -360,6 +360,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.hideOtherGroups();
             this.bindSearch();
             this.uAgreements = ko.mapping.fromJS([
+                new this.selectConstructor("[None - this is a top-level or standalone agreement]", 0), 
                 new this.selectConstructor("test", 1), 
                 new this.selectConstructor("test2", 2), 
                 new this.selectConstructor("test3", 3)

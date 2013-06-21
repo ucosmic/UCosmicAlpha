@@ -336,6 +336,12 @@ fieldset legend {
   font-weight: bold;
   font-size: 20px; }
 
+.k-editor-selectbox {
+  width: 120px; }
+
+.required:after {
+  content: ' *'; }
+
 .field-table {
   margin: 16px 0; }
   .field-table .field-row {
@@ -368,10 +374,31 @@ fieldset legend {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+        width: 690px;
         margin-left: 0; }
       .field-table .field-row .field-input.for-checkables {
         display: inline-block;
         padding: 9px 0; }
+    .field-table .field-row .field-input-label-top {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      float: left; }
+      .field-table .field-row .field-input-label-top select {
+        width: 690px;
+        margin-left: 0; }
+      .field-table .field-row .field-input-label-top.for-checkables {
+        display: inline-block;
+        padding: 9px 0; }
+    .field-table .field-row .field-label-top {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 9px 10px 0 0; }
+      .field-table .field-row .field-label-top label {
+        font-weight: bold; }
+        .field-table .field-row .field-label-top label:after {
+          content: ':'; }
     .field-table .field-row .field-value {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;

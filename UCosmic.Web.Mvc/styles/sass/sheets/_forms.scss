@@ -319,6 +319,16 @@ fieldset {
     }
 }
 
+.k-editor-selectbox {
+    width: 120px;
+}
+
+.required {
+    &:after {
+        content: ' *';
+    }
+}
+
 .field-table {
     margin: 16px 0;
     .field-row {
@@ -345,11 +355,34 @@ fieldset {
             float: left;
             select {
                 @include border-box;
+                width: 690px;
                 margin-left: 0;
             }
             &.for-checkables {
                 display: inline-block;
                 padding: 9px 0;
+            }
+        }
+        .field-input-label-top {
+            @include border-box;
+            float: left;
+            select {
+                width: 690px;
+                margin-left: 0;
+            }
+            &.for-checkables {
+                display: inline-block;
+                padding: 9px 0;
+            }
+        }
+        .field-label-top {
+            @include border-box;
+            padding: 9px 10px 0 0;
+            label {
+                font-weight: bold;
+                &:after {
+                    content: ':';
+                }
             }
         }
         .field-value {

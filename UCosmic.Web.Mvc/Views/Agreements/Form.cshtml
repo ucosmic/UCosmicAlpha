@@ -73,6 +73,61 @@
                     </a>
                 </footer>
             </section>
+            <section id="participants">
+                <header>
+                    <h2>
+                        Basic Info
+                    </h2>
+                </header>
+                <div class="field-table w690-l190-v500">
+                    <div class="field-row">
+                        <div class="field-label-top">
+                            <label>Umbrella agreement</label>
+                        </div>
+                        <div class="field-input-label-top">
+                            <select  data-bind="options: uAgreements(), 
+							    optionsValue: 'id',
+							    optionsText: 'name', value: uAgreementSelected">
+						    </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label-top required">
+                            <label>Agreement type</label>
+                        </div>
+                        <div class="field-input-label-top">
+                            <select  data-bind="options: agreementTypes(), 
+							    optionsValue: 'id',
+							    optionsText: 'name', value: agreementTypeSelected">
+						    </select>
+                        </div>
+                    </div> 
+                    <div class="field-row">
+                        <div class="field-label">
+                            <label>Nickname</label>
+                        </div>
+                        <div>
+                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]"  />
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">
+                            <label>Content</label>
+                        </div>
+                        <div>
+                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]" id="agreementContent"  />
+                        </div>
+                    </div>
+                <div class="field-row">
+                    <div class="field-label">
+                        <label>Private Notes</label>
+                    </div>
+                    <div>
+                        <textarea rows="3" class="no-resize" data-bind="value: privateNotes" data-autosize="true" placeholder="[Private notes for this agreement]" ></textarea>
+                    </div>
+                </div>
+            </div>
+            </section>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
