@@ -145,9 +145,11 @@ namespace UCosmic.Domain.External
                 }
 #endif
 
+#if DEBUG
                 Debug.WriteLine(DateTime.Now + " USF: ----- BEGIN RECORD -----");
                 Debug.WriteLine(rawRecord);
                 Debug.WriteLine(DateTime.Now + " USF: ----- END RECORD -----");
+#endif
 
                 /* No record, done. */
                 if (record == null)

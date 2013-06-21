@@ -10,6 +10,7 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using UCosmic.Domain.Identity;
+using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -20,15 +21,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateUser> _createUser;
+        private readonly IHandleCommands<DeleteUser> _deleteUser;
+        private readonly IHandleCommands<DeletePerson> _deletePerson;
         private readonly IValidator<CreateUser> _createValidator;
 
         public UsersController(IProcessQueries queryProcessor
             , IHandleCommands<CreateUser> createUser
+            , IHandleCommands<DeleteUser> deleteUser
+            , IHandleCommands<DeletePerson> deletePerson
             , IValidator<CreateUser> createValidator
         )
         {
             _queryProcessor = queryProcessor;
             _createUser = createUser;
+            _deleteUser = deleteUser;
+            _deletePerson = deletePerson;
             _createValidator = createValidator;
         }
 
@@ -112,6 +119,49 @@ namespace UCosmic.Web.Mvc.ApiControllers
             response.Headers.Location = new Uri(url);
 
             return response;
+        }
+
+        [DELETE("{id}")]
+        public HttpResponseMessage Delete(int id)
+        {
+            if (id == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            try
+            {
+                var user = _queryProcessor.Execute(new UserById(id)
+                {
+                    EagerLoad = new Expression<Func<User, object>>[]
+                    {
+                        x => x.Person
+                    }
+                });
+
+                if (user != null)
+                {
+                    int personId = user.Person.RevisionId;
+
+                    var deleteUserCommand = new DeleteUser(User, user.RevisionId);
+                    _deleteUser.Handle(deleteUserCommand);
+
+                    var deletePersonCommand = new DeletePerson(User, personId);
+                    _deletePerson.Handle(deletePersonCommand);
+                }
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "User Delete Error"
+                };
+                throw new HttpResponseException(responseMessage);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [POST("{userId}/validate-name")]

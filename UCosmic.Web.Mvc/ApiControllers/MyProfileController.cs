@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Mvc;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
@@ -13,7 +14,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
+    [System.Web.Http.Authorize]
     [RoutePrefix("api/my/profile")]
     public class MyProfileController : ApiController
     {
@@ -133,10 +134,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var person = _queryProcessor.Execute(new MyPerson(User));
                 personId = person.RevisionId;
             }
-            var peopleController = new PeopleController(_queryProcessor, _binaryData)
-            {
-                Request = Request,
-            };
+
+            //var peopleController = new PeopleController(_queryProcessor, __binaryData)
+            //{
+            //    Request = Request,
+            //}
+
+            var peopleController = DependencyResolver.Current.GetService<PeopleController>();
+            peopleController.Request = Request;
+
             var response = peopleController.GetPhoto(personId.Value, model);
             return response;
         }

@@ -18,13 +18,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class PeopleController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<DeletePerson> _deletePerson;
         private readonly IStoreBinaryData _binaryData;
 
         public PeopleController(IProcessQueries queryProcessor
+            , IHandleCommands<DeletePerson> deletePerson
             , IStoreBinaryData binaryData
         )
         {
             _queryProcessor = queryProcessor;
+            _deletePerson = deletePerson;
             _binaryData = binaryData;
         }
 
@@ -63,6 +66,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
             };
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             return response;
+        }
+
+        [DELETE("{id}")]
+        public HttpResponseMessage Delete(int id)
+        {
+            if (id == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            try
+            {
+                var deleteCommand = new DeletePerson(User, id);
+                _deletePerson.Handle(deleteCommand);
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Person Delete Error"
+                };
+                throw new HttpResponseException(responseMessage);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

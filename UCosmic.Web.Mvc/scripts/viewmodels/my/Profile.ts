@@ -1007,24 +1007,23 @@ module ViewModels.My {
                 draggable: false,
                 buttons: {
                     "Delete": function () {
-//                        debugger;
+                        debugger;
                         $( this ).dialog( "close" );
-                        //var model = ko.mapping.toJS( me.personId );
-                        //$.ajax( {
-                        //    async: false,
-                        //    type: "DELETE",
-                        //    url: App.Routes.WebApi.My.Profile.del(),
-                        //    data: model,
-                        //    success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
-                        //        alert( jqXHR.statusText );
-                        //        $( this ).dialog( "close" );
-                        //        location.href = App.Routes.WebApi.Home;
-                        //    },
-                        //    error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
-                        //        alert( statusText );
-                        //        $( this ).dialog( "close" );
-                        //    }
-                        //} );
+
+                        $.ajax( {
+                            async: false,
+                            type: "DELETE",
+                            url: App.Routes.WebApi.People.del(me.personId),
+                            success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
+                                alert( jqXHR.statusText );
+                                $( this ).dialog( "close" );
+                                //location.href = App.Routes.WebApi.Home;
+                            },
+                            error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
+                                alert( statusText );
+                                $( this ).dialog( "close" );
+                            }
+                        } );
                     },
 
                     "Cancel": function () {

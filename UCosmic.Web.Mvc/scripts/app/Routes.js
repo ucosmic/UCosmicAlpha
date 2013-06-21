@@ -49,6 +49,11 @@ var App;
                         return makeUrl(url);
                     }
                     Users.validateName = validateName;
+                    function del(id) {
+                        var url = 'users/' + id;
+                        return makeUrl(url);
+                    }
+                    Users.del = del;
                     (function (Roles) {
                         function get(userId) {
                             var url = 'users/' + userId + '/roles';
@@ -340,6 +345,12 @@ var App;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
             (function (People) {
+                function del(personId) {
+                    var url = 'people/' + personId;
+                    url = makeUrl(url);
+                    return url;
+                }
+                People.del = del;
                 (function (Photo) {
                     function get(personId, params) {
                         var url = 'people/' + personId + '/photo';

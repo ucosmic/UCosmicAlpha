@@ -841,7 +841,22 @@ var ViewModels;
                     draggable: false,
                     buttons: {
                         "Delete": function () {
+                            debugger;
+
                             $(this).dialog("close");
+                            $.ajax({
+                                async: false,
+                                type: "DELETE",
+                                url: App.Routes.WebApi.People.del(me.personId),
+                                success: function (data, statusText, jqXHR) {
+                                    alert(jqXHR.statusText);
+                                    $(this).dialog("close");
+                                },
+                                error: function (jqXHR, statusText, errorThrown) {
+                                    alert(statusText);
+                                    $(this).dialog("close");
+                                }
+                            });
                         },
                         "Cancel": function () {
                             $(this).dialog("close");

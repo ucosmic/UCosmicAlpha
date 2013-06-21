@@ -51,6 +51,11 @@ module App.Routes {
                     return makeUrl(url);
                 }
 
+                export function del(id: number) {
+                    var url = 'users/' + id;
+                    return makeUrl(url);
+                }
+
                 export module Roles {
                     export function get (userId: number): string {
                         var url = 'users/' + userId + '/roles';
@@ -316,8 +321,13 @@ module App.Routes {
         }
 
         export module People {
-            export module Photo {
+            export function del( personId: number ): string {
+                var url = 'people/' + personId;
+                url = makeUrl( url );
+                return url;
+            }
 
+            export module Photo {
                 export function get(personId: number, params?: any): string {
                     var url = 'people/' + personId + '/photo';
                     url = makeUrl(url);
@@ -325,6 +335,7 @@ module App.Routes {
                     return url;
                 }
             }
+
             export module Names {
                 export class Salutations {
                     static get (): string {

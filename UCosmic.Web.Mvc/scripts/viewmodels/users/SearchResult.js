@@ -333,6 +333,41 @@ var ViewModels;
                 this.isGrantError(false);
                 this.grantErrorText(undefined);
             };
+            SearchResult.prototype.deleteUser = function () {
+                var me = this;
+                $("#confirmUserDeleteDialog").dialog({
+                    width: 300,
+                    height: 200,
+                    modal: true,
+                    resizable: false,
+                    draggable: false,
+                    buttons: {
+                        "Delete": function () {
+                            debugger;
+
+                            $(this).dialog("close");
+                            $.ajax({
+                                async: false,
+                                type: "DELETE",
+                                url: App.Routes.WebApi.Identity.Users.del(me.id()),
+                                success: function (data, statusText, jqXHR) {
+                                    if(statusText !== "success") {
+                                        alert(jqXHR.statusText);
+                                    }
+                                    $(this).dialog("close");
+                                },
+                                error: function (jqXHR, statusText, errorThrown) {
+                                    alert(statusText);
+                                    $(this).dialog("close");
+                                }
+                            });
+                        },
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            };
             return SearchResult;
         })();
         Users.SearchResult = SearchResult;        

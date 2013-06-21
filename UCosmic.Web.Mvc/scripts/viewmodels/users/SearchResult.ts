@@ -395,6 +395,43 @@ module ViewModels.Users {
             this.isGrantError(false);
             this.grantErrorText(undefined);
         }
+
+        deleteUser(): void {
+            var me = this;
+            $( "#confirmUserDeleteDialog" ).dialog( {
+                width: 300,
+                height: 200,
+                modal: true,
+                resizable: false,
+                draggable: false,
+                buttons: {
+                    "Delete": function () {
+                        debugger;
+                        $( this ).dialog( "close" );
+
+                        $.ajax( {
+                            async: false,
+                            type: "DELETE",
+                            url: App.Routes.WebApi.Identity.Users.del( me.id() ),
+                            success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
+                                if ( statusText !== "success" ) {
+                                    alert( jqXHR.statusText );
+                                }
+                                $( this ).dialog( "close" );
+                            },
+                            error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
+                                alert( statusText );
+                                $( this ).dialog( "close" );
+                            }
+                        } );
+                    },
+
+                    "Cancel": function () {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            } );
+        }
     }
 
     export class RoleGrant {

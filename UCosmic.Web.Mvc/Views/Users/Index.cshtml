@@ -83,6 +83,10 @@
                                                     {
                                                         <li data-bind="click: showRoleEditor, visible: !isEditingRoles()">Manage Access Grants</li>
                                                     }
+                                                    @if (User.IsInAnyRole(RoleName.EstablishmentAdministrator))
+                                                    {
+                                                        <li data-bind="click: deleteUser, visible: !isEditingRoles()">Delete</li>
+                                                    }
                                                 </ul>
                                             </li>
                                         </ul>
@@ -151,4 +155,9 @@
     <form action="@Url.Action(MVC.Identity.SignOver())" method="POST" data-bind="element: 'impersonateForm'">
         <input type="hidden" name="userName" data-bind="value: impersonateUserName" />
     </form>
+</div>
+
+<!-- JQUERY DIALOGS -->
+<div id="confirmUserDeleteDialog" class="dialog" title="Confirm Delete">
+    <span style="font-weight: bold">Are you sure you want to delete this user?</span>
 </div>
