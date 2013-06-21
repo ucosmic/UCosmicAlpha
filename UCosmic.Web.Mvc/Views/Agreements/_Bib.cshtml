@@ -1,11 +1,23 @@
 ﻿<ul class="group">
     <li class="search">
-        <a href="@Url.Action(MVC.Agreements.DansIndex())">Search Agreements</a>
+        <a href="@Url.Action(MVC.Agreements.DansIndex())">Search</a>
     </li>
+    @if (User.IsInAnyRole(RoleName.AgreementManagers))
+    {
+        <li class="new">
+            <a href="@Url.Action(MVC.Agreements.New())">New</a>
+        </li>
+    }
+    @if (ViewBag.Edit != null)
+    {
+        <li class="edit">
+            <span>Edit</span>
+        </li>
+    }
     @if (User.IsInAnyRole(RoleName.AgreementSupervisor))
     {
         <li class="settings">
-            <a href="@Url.Action(MVC.Agreements.Settings())">Module Settings</a>
+            <a href="@Url.Action(MVC.Agreements.Settings())">Settings</a>
         </li>
     }
 </ul>

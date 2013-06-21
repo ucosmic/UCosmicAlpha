@@ -208,7 +208,7 @@ body {
             margin: 0 0 0 4px;
             > li {
                 float: left;
-                > a {
+                > a, span {
                     display: inline-block;
                     @include border-box;
                     margin: 0 2px 0 0;
@@ -224,7 +224,8 @@ body {
                     background-color: $nav-bib-link-hover-bg-color;
                     @include ie-box-shadow;
                 }
-                &.current a {
+                &.current a, &.current span {
+                    display: inline-block;
                     padding: 9px 16px 9px;
                     background-color: $nav-bib-current-bg-color;
                     background-image: none;
