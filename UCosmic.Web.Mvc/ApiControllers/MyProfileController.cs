@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -24,7 +23,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
         private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
-        private readonly IHandleCommands<UCosmic.Domain.People.CreateAffiliation> _createAffiliationHandler;
+        private readonly IHandleCommands<CreateMyAffiliation> _createAffiliationHandler;
+        private readonly IHandleCommands<UpdateMyAffiliation> _updateAffiliationHandler;
+        private readonly IHandleCommands<DeleteMyAffiliation> _deleteAffiliationHandler;
 
         public MyProfileController(IProcessQueries queryProcessor
             , ICommandEntities entities
@@ -32,7 +33,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             , IHandleCommands<UpdateMyProfile> profileUpdateHandler
             , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
-            , IHandleCommands<UCosmic.Domain.People.CreateAffiliation> createAffiliationHandler
+            , IHandleCommands<CreateMyAffiliation> createAffiliationHandler
+            , IHandleCommands<UpdateMyAffiliation> updateAffiliationHandler
+            , IHandleCommands<DeleteMyAffiliation> deleteAffiliationHandler
         )
         {
             _queryProcessor = queryProcessor;
@@ -42,6 +45,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _photoDeleteHandler = photoDeleteHandler;
             _entities = entities;
             _createAffiliationHandler = createAffiliationHandler;
+            _updateAffiliationHandler = updateAffiliationHandler;
+            _deleteAffiliationHandler = deleteAffiliationHandler;
         }
 
         [GET("")]
@@ -182,27 +187,108 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [POST("affiliation")]
-        public HttpResponseMessage Post(MyProfileAffiliationApiModel model)
+        public HttpResponseMessage PostAffiliation(MyProfileAffiliationApiModel model)
         {
             if (model == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
 
-            var createAffiliationCommand = new UCosmic.Domain.People.CreateAffiliation
+            var createAffiliationCommand = new CreateMyAffiliation
             {
                 PersonId = model.PersonId,
                 EstablishmentId = model.EstablishmentId,
                 CampusId = model.CampusId,
                 CollegeId = model.CollegeId,
-                DepartmentId = model.EstablishmentId,
+                DepartmentId = model.DepartmentId,
                 FacultyRankId = model.FacultyRankId
             };
 
-            _createAffiliationHandler.Handle(createAffiliationCommand);
+            try
+            {
+                _createAffiliationHandler.Handle(createAffiliationCommand);
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Affiliation Create Error"
+                };
+                throw new HttpResponseException(responseMessage);                
+            }
+
             var id = createAffiliationCommand.CreatedAffiliation.RevisionId;
 
-            return Request.CreateResponse(HttpStatusCode.OK, id);
+            return Request.CreateResponse(HttpStatusCode.Created, id);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Update an affiliation
+        */
+        // --------------------------------------------------------------------------------
+        [PUT("affiliation")]
+        public HttpResponseMessage PutAffiliation(MyProfileAffiliationApiModel model)
+        {
+            if (model == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            var updateAffiliationCommand = new UpdateMyAffiliation(User, model.Id)
+            {
+                PersonId = model.PersonId,
+                EstablishmentId = model.EstablishmentId,
+                CampusId = model.CampusId,
+                CollegeId = model.CollegeId,
+                DepartmentId = model.DepartmentId,
+                FacultyRankId = model.FacultyRankId
+            };
+
+            try {
+                _updateAffiliationHandler.Handle(updateAffiliationCommand);
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Affiliation Update Error"
+                };
+                throw new HttpResponseException(responseMessage);                
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [DELETE("affiliation")]
+        public HttpResponseMessage DeleteAffiliation(MyProfileAffiliationApiModel model)
+        {
+            if (model == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            } 
+            
+            try
+            {
+                var deleteAffiiationCommand = new DeleteMyAffiliation(User, model.Id);
+                _deleteAffiliationHandler.Handle(deleteAffiiationCommand);
+            }
+            catch (Exception ex)
+            {
+                var responseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotModified,
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = "Affiliation Delete Error"
+                };
+                throw new HttpResponseException(responseMessage);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

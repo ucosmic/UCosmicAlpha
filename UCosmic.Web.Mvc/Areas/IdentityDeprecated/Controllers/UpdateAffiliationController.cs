@@ -51,21 +51,23 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
         //[ActionName("update-affiliation")]
         public virtual ActionResult Put(UpdateAffiliationForm model)
         {
-            // make sure model is not null
-            if (model == null) return HttpNotFound();
+            //// make sure model is not null
+            //if (model == null) return HttpNotFound();
 
-            // make sure model state is valid
-            if (!ModelState.IsValid) return View(MVC.IdentityDeprecated.Shared.Views.update_affiliation, model);
+            //// make sure model state is valid
+            //if (!ModelState.IsValid) return View(MVC.IdentityDeprecated.Shared.Views.update_affiliation, model);
 
-            // execute command, set feedback message, and redirect
-            var command = Mapper.Map<UpdateMyAffiliation>(model);
-            command.Principal = User;
-            _services.CommandHandler.Handle(command);
-            //SetFeedbackMessage(command.ChangedState
-            //    ? SuccessMessage
-            //    : NoChangesMessage
-            //);
-            return Redirect(model.ReturnUrl);
+            //// execute command, set feedback message, and redirect
+            //var command = Mapper.Map<UpdateMyAffiliation>(model);
+            //command.Principal = User;
+            //_services.CommandHandler.Handle(command);
+            ////SetFeedbackMessage(command.ChangedState
+            ////    ? SuccessMessage
+            ////    : NoChangesMessage
+            ////);
+            //return Redirect(model.ReturnUrl);
+
+            return null;
         }
 
         public const string SuccessMessage = "Your affiliation info was successfully updated.";

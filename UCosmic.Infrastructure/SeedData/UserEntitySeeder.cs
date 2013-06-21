@@ -16,7 +16,7 @@ namespace UCosmic.SeedData
 
         public UserEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateAffiliation> createAffiliation
+            , IHandleCommands<CreateMyAffiliation> createAffiliation
             , IHandleCommands<GrantRoleToUser> grantRole
             , IUnitOfWork unitOfWork
         )

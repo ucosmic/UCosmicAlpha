@@ -273,6 +273,8 @@
     <Compile Include="Domain\LanguageExpertise\Queries\LanguageExpertiseByPersonId.cs" />
     <Compile Include="Domain\LanguageExpertise\Validation\MustFindLanguageExpertiseById.cs" />
     <Compile Include="Domain\LanguageExpertise\Validation\MustOwnLanguageExpertise.cs" />
+    <Compile Include="Domain\People\Commands\DeleteMyAffiliation.cs" />
+    <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
@@ -386,7 +388,6 @@
     <Compile Include="Domain\InstitutionalAgreements\Commands\UpdateInstitutionalAgreementHierarchy.cs" />
     <Compile Include="Domain\InstitutionalAgreements\Queries\MyInstitutionalAgreementSettings.cs" />
     <Compile Include="Domain\InstitutionalAgreements\_Internal\QueryInstitutionalAgreements.cs" />
-    <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyEmailValue.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyName.cs" />
     <Compile Include="Domain\People\Commands\UpdatePerson.cs" />
@@ -411,7 +412,7 @@
     <Compile Include="Domain\Languages\Commands\CreateLanguageName.cs" />
     <Compile Include="Domain\Languages\Queries\LanguageByIsoCode.cs" />
     <Compile Include="Domain\Languages\_Internal\QueryLanguages.cs" />
-    <Compile Include="Domain\People\Commands\CreateAffiliation.cs" />
+    <Compile Include="Domain\People\Commands\CreateMyAffiliation.cs" />
     <Compile Include="Domain\People\Commands\CreatePerson.cs" />
     <Compile Include="Domain\People\Queries\PersonByEmail.cs" />
     <Compile Include="Domain\People\Queries\PersonById.cs" />

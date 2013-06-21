@@ -15,7 +15,7 @@ namespace UCosmic.SeedData
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateAffiliation> createAffiliation
+            , IHandleCommands<CreateMyAffiliation> createAffiliation
             , IHandleCommands<UpdateMyPhoto> updatePhoto
             , IUnitOfWork unitOfWork
         )
@@ -338,12 +338,12 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreatePerson> _createPerson;
-        private readonly IHandleCommands<CreateAffiliation> _createAffiliation;
+        private readonly IHandleCommands<CreateMyAffiliation> _createAffiliation;
         private readonly IUnitOfWork _unitOfWork;
 
         protected BasePersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateAffiliation> createAffiliation
+            , IHandleCommands<CreateMyAffiliation> createAffiliation
             , IUnitOfWork unitOfWork
         )
         {
@@ -372,7 +372,7 @@ namespace UCosmic.SeedData
 
             if (establishmentId.HasValue)
             {
-                _createAffiliation.Handle(new CreateAffiliation
+                _createAffiliation.Handle(new CreateMyAffiliation
                 {
                     EstablishmentId = establishmentId.Value,
                     PersonId = person.RevisionId,
@@ -398,7 +398,7 @@ namespace UCosmic.SeedData
 
         public AffiliationEntitySeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
-            , IHandleCommands<CreateAffiliation> createAffiliation
+            , IHandleCommands<CreateMyAffiliation> createAffiliation
             //, IHandleCommands<UpdateMyProfile> updateProfile
             , IUnitOfWork unitOfWork
         )
@@ -431,7 +431,7 @@ namespace UCosmic.SeedData
                 var college = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "College of Medicine" && e.Parent.RevisionId == campus.RevisionId);
                 if (college == null) throw new Exception("College is null");
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -446,7 +446,7 @@ namespace UCosmic.SeedData
                         .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -461,7 +461,7 @@ namespace UCosmic.SeedData
                         .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -476,7 +476,7 @@ namespace UCosmic.SeedData
                         .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -491,7 +491,7 @@ namespace UCosmic.SeedData
                         .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -515,7 +515,7 @@ namespace UCosmic.SeedData
                                          .FirstOrDefault(x => x.OfficialName == "Department of Criminology");
                 if (establishment == null) throw new Exception("Establishment is null");
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -534,7 +534,7 @@ namespace UCosmic.SeedData
 
                 if (establishment == null) throw new Exception("Establishment is null");
 
-                Seed(new CreateAffiliation
+                Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
@@ -549,11 +549,11 @@ namespace UCosmic.SeedData
     public abstract class BaseAffiliationEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<CreateAffiliation> _createAffiliation;
+        private readonly IHandleCommands<CreateMyAffiliation> _createAffiliation;
         private readonly IUnitOfWork _unitOfWork;
 
         protected BaseAffiliationEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateAffiliation> createAffiliation
+            , IHandleCommands<CreateMyAffiliation> createAffiliation
             , IUnitOfWork unitOfWork)
         {
             _queryProcessor = queryProcessor;
@@ -563,7 +563,7 @@ namespace UCosmic.SeedData
 
         public abstract void Seed();
 
-        protected Affiliation Seed(CreateAffiliation command)
+        protected Affiliation Seed(CreateMyAffiliation command)
         {
             // make sure entity does not already exist
             Affiliation affiliation = _queryProcessor.Execute(

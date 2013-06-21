@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Establishments;
@@ -8,24 +9,37 @@ namespace UCosmic.Domain.People
 {
     public class UpdateMyAffiliation
     {
-        public IPrincipal Principal { get; set; }
+        public IPrincipal Principal { get; protected internal set; }
+        public int Id { get; protected internal set; }
+        public int PersonId { get; set; }
         public int EstablishmentId { get; set; }
-        public string JobTitles { get; set; }
+        public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
-        public bool IsClaimingInternationalOffice { get; set; }
-        public bool IsClaimingAdministrator { get; set; }
-        public bool IsClaimingFaculty { get; set; }
-        public bool IsClaimingStaff { get; set; }
-        public int ChangeCount { get; internal set; }
-        public bool ChangedState { get { return ChangeCount > 0; } }
+        public int? CampusId { get; set; }
+        public int? CollegeId { get; set; }
+        public int? DepartmentId { get; set; }
+        public int? FacultyRankId { get; set; }
+
+        public UpdateMyAffiliation(IPrincipal principal, int id)
+        {
+            Principal = principal;
+            Id = id;
+        }
     }
 
-    public class ValidateUpdateMyAffiliationCommand : AbstractValidator<UpdateMyAffiliation>
+    public class ValidateUpdateAffliliationCommand : AbstractValidator<UpdateMyAffiliation>
     {
-        public ValidateUpdateMyAffiliationCommand(IQueryEntities entities)
+        public ValidateUpdateAffliliationCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.Principal.Identity.Name)
+                .NotEmpty()
+                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
+                .MustFindUserByName(entities)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
+            ;
 
             RuleFor(x => x.EstablishmentId)
                 // establishment id must exist in database
@@ -33,78 +47,103 @@ namespace UCosmic.Domain.People
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId)
             ;
 
-            RuleFor(x => x.Principal)
-                // principal cannot be null
-                .NotNull()
-                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+            RuleFor(x => x.IsClaimingStudent)
+                // cannot claim student unless affiliation establishment is an academic institution
+                .MustNotBeClaimingStudentAffiliationForNonInstitutions(entities, x => x.EstablishmentId)
+                    .WithMessage(MustNotBeClaimingStudentAffiliationForNonInstitutions<object>.FailMessageFormat, x => x.EstablishmentId)
             ;
 
-            RuleFor(x => x.Principal.Identity.Name)
-                // principal.identity.name cannot be null or empty
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
+            RuleFor(x => x.PersonId)
+                // person id must exist in database
+                .MustFindPersonById(entities)
+                .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId);
 
-                // principal.identity.name must match User.Name entity property
-                .MustFindUserByName(entities)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
-
-                // must find affiliation for principal and establishment id
-                .MustBeUserAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
-                    .WithMessage(MustBeUserAffiliatedWithEstablishment<object>.FailMessageFormat,
-                        x => x.Principal.Identity.Name, x => x.EstablishmentId)
-            ;
+            // cannot create a duplicate affiliation
+            //.MustNotBePersonAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
+            //    .WithMessage(MustNotBePersonAffiliatedWithEstablishment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
+            //    .MustNotBePersonAffiliatedWithDepartment(entities,
+            //                                              establishmentId => establishmentId.EstablishmentId,
+            //                                              campusId => campusId.CampusId,
+            //                                              collegeId => collegeId.CollegeId,
+            //                                              departmentId => departmentId.DepartmentId)
+            //        .WithMessage(MustNotBePersonAffiliatedWithDepartment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
+            //;
         }
     }
 
-    public class HandleUpdateMyAffiliationCommand : IHandleCommands<UpdateMyAffiliation>
+    public class HandleUpdateAffliliationCommand : IHandleCommands<UpdateMyAffiliation>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleUpdateMyAffiliationCommand(ICommandEntities entities)
+        public HandleUpdateAffliliationCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(UpdateMyAffiliation command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // get the affiliation
-            var affiliation = _entities.Get<Affiliation>().ByUserNameAndEstablishmentId(
-                command.Principal.Identity.Name, command.EstablishmentId);
+            var affiliation = _entities.Get<Affiliation>().SingleOrDefault(a => a.RevisionId == command.Id);
+            if (affiliation == null) { throw new Exception("Affiliation Not Found."); }
 
-            if (affiliation == null)
-                throw new InvalidOperationException(string.Format(
-                    "Affiliation could not be found between user '{0}' and establishment '{1}'.", 
-                        command.Principal.Identity.Name, command.EstablishmentId));
 
-            // update fields
-            if (!affiliation.IsAcknowledged) command.ChangeCount++;
-            affiliation.IsAcknowledged = true;
 
-            //if (affiliation.JobTitles != command.JobTitles) command.ChangeCount++;
-            //affiliation.JobTitles = command.JobTitles;
+            var existingAffiliation = _entities.Get<Affiliation>().SingleOrDefault(x =>
+                x.PersonId == command.PersonId &&
+                x.EstablishmentId == command.EstablishmentId &&
+                x.CampusId == command.CampusId &&
+                x.CollegeId == command.CollegeId &&
+                x.DepartmentId == command.DepartmentId);
 
-            if (affiliation.IsClaimingStudent != command.IsClaimingStudent) command.ChangeCount++;
-            affiliation.IsClaimingStudent = command.IsClaimingStudent;
+            if ((existingAffiliation != null) && (existingAffiliation.RevisionId != command.Id))
+            {
+                var establishment = _entities.Get<Establishment>()
+                             .SingleOrDefault(e => e.RevisionId == existingAffiliation.CampusId);
+                string campusName = (establishment == null) ? null : establishment.OfficialName;
 
-            if (affiliation.IsClaimingEmployee != command.IsClaimingEmployee) command.ChangeCount++;
-            affiliation.IsClaimingEmployee = command.IsClaimingEmployee;
+                establishment = _entities.Get<Establishment>()
+                             .SingleOrDefault(e => e.RevisionId == existingAffiliation.CollegeId);
+                string collegeName = (establishment == null) ? null : establishment.OfficialName;
 
-            if (affiliation.IsClaimingInternationalOffice != command.IsClaimingInternationalOffice) command.ChangeCount++;
-            affiliation.IsClaimingInternationalOffice = command.IsClaimingInternationalOffice;
+                establishment = _entities.Get<Establishment>()
+                             .SingleOrDefault(e => e.RevisionId == existingAffiliation.DepartmentId);
+                string departmentName = (establishment == null) ? null : establishment.OfficialName;
 
-            if (affiliation.IsClaimingAdministrator != command.IsClaimingAdministrator) command.ChangeCount++;
-            affiliation.IsClaimingAdministrator = command.IsClaimingAdministrator;
+                string message = String.Format(
+                        "Affiliation already exists for {0} in {1},{2},{3}",
+                        existingAffiliation.Person.DisplayName, campusName, collegeName, departmentName );
+                throw new Exception(message);
+            }
 
-            if (affiliation.IsClaimingFaculty != command.IsClaimingFaculty) command.ChangeCount++;
-            affiliation.IsClaimingFaculty = command.IsClaimingFaculty;
+            var updatedAffiliation = new Affiliation
+            {
+                EstablishmentId = command.EstablishmentId,
+                IsClaimingStudent = command.IsClaimingStudent,
+                IsClaimingEmployee = command.IsClaimingEmployee,
+                IsPrimary = command.IsPrimary,
+                CampusId = command.CampusId,
+                CollegeId = command.CollegeId,
+                DepartmentId = command.DepartmentId,
+                FacultyRankId = command.FacultyRankId
+            };
 
-            if (affiliation.IsClaimingStaff != command.IsClaimingStaff) command.ChangeCount++;
-            affiliation.IsClaimingStaff = command.IsClaimingStaff;
+            if (!updatedAffiliation.Equals(affiliation))
+            {
+                affiliation.EstablishmentId = updatedAffiliation.EstablishmentId;
+                affiliation.IsClaimingStudent = updatedAffiliation.IsClaimingStudent;
+                affiliation.IsClaimingEmployee = updatedAffiliation.IsClaimingEmployee;
+                affiliation.IsPrimary = updatedAffiliation.IsPrimary;
+                affiliation.CampusId = updatedAffiliation.CampusId;
+                affiliation.CollegeId = updatedAffiliation.CollegeId;
+                affiliation.DepartmentId = updatedAffiliation.DepartmentId;
+                affiliation.FacultyRankId = command.FacultyRankId;
 
-            // store
-            if (command.ChangeCount > 0) _entities.Update(affiliation);
+                _entities.Update(affiliation);
+                _unitOfWork.SaveChanges();
+            }
         }
     }
 }

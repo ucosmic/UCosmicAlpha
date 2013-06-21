@@ -3,6 +3,7 @@ var ViewModels;
     (function (My) {
         var Affiliation = (function () {
             function Affiliation() {
+                this.id = ko.observable();
                 this.establishmentId = ko.observable();
                 this.establishment = ko.observable();
                 this.jobTitles = ko.observable();
@@ -21,7 +22,8 @@ var ViewModels;
                 this.facultyRankId = ko.observable();
             }
             return Affiliation;
-        })();        
+        })();
+        My.Affiliation = Affiliation;        
         var Profile = (function () {
             function Profile() {
                 this._sammy = Sammy();
@@ -519,9 +521,7 @@ var ViewModels;
                     return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
                 });
             };
-            Profile.prototype.editAffiliation = function (id) {
-                if(id != null) {
-                }
+            Profile.prototype.editAffiliation = function (data, event) {
                 var me = this;
                 var defaultAffiliation = null;
                 var i = 0;
@@ -580,10 +580,10 @@ var ViewModels;
                                         }
                                     });
                                     $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource(dataSource);
+                                    $("#editAffiliationDepartmenDiv").show();
                                 }
                             } else {
-                                this.text("");
-                                $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource([]);
+                                $("#editAffiliationDepartmenDiv").hide();
                             }
                         }
                     }
@@ -657,32 +657,30 @@ var ViewModels;
                         {
                             text: "Save",
                             click: function () {
-                                debugger;
-
                                 var campusId1 = null;
                                 var collegeId1 = null;
                                 var departmentId1 = null;
                                 var facultyRankId1 = null;
-                                var item1 = me.GetDropListSelectedItem("#editAffiliationCampusDropList");
+                                var item1 = me.GetDropListSelectedItem("editAffiliationCampusDropList");
                                 if(item1 != null) {
                                     campusId1 = item1.id;
                                 } else {
                                     $(this).dialog("close");
                                 }
-                                item1 = me.GetDropListSelectedItem("#editAffiliationCollegeDropList");
+                                item1 = me.GetDropListSelectedItem("editAffiliationCollegeDropList");
                                 if(item1 != null) {
                                     collegeId1 = item1.id;
                                 }
-                                item1 = me.GetDropListSelectedItem("#editAffiliationDepartmentDropList");
+                                item1 = me.GetDropListSelectedItem("editAffiliationDepartmentDropList");
                                 if(item1 != null) {
                                     departmentId1 = item1.id;
                                 }
-                                item1 = me.GetDropListSelectedItem("#editAffiliationFacultyRankDropList");
+                                item1 = me.GetDropListSelectedItem("editAffiliationFacultyRankDropList");
                                 if(item1 != null) {
                                     facultyRankId1 = item1.id;
                                 }
                                 var affiliation = {
-                                    id: id,
+                                    id: (data == null) ? null : data.id(),
                                     personId: me.personId,
                                     establishmentId: defaultAffiliation.establishmentId(),
                                     campusId: campusId1,
@@ -692,30 +690,108 @@ var ViewModels;
                                 };
                                 var model = ko.mapping.toJS(affiliation);
                                 $.ajax({
-                                    url: App.Routes.WebApi.My.Profile.Affiliation.post(),
-                                    type: (id == null) ? 'POST' : 'PUT',
+                                    async: false,
+                                    url: (data == null) ? App.Routes.WebApi.My.Profile.Affiliation.post() : App.Routes.WebApi.My.Profile.Affiliation.put(),
+                                    type: (data == null) ? 'POST' : 'PUT',
                                     data: model
                                 }).done(function (responseText, statusText, xhr) {
-                                    $(this).dialog("close");
-                                }).fail(function () {
-                                    $(this).dialog("close");
+                                    if(statusText === "success") {
+                                        $("#editAffiliationDialog").dialog("close");
+                                        location.href = App.Routes.Mvc.My.Profile.get();
+                                    } else {
+                                        $("#affiliationErrorDialog").dialog({
+                                            title: xhr.statusText,
+                                            width: 400,
+                                            height: 250,
+                                            modal: true,
+                                            resizable: false,
+                                            draggable: false,
+                                            buttons: {
+                                                Ok: function () {
+                                                    $("#affiliationErrorDialog").dialog("close");
+                                                }
+                                            },
+                                            open: function (event, ui) {
+                                                $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                                            }
+                                        });
+                                    }
+                                }).fail(function (xhr, textStatus, errorThrown) {
+                                    alert("Saving affiliation failed: " + textStatus + "|" + errorThrown);
+                                    $("#editAffiliationDialog").dialog("close");
                                 });
                             }
                         }, 
                         {
                             text: "Cancel",
                             click: function () {
-                                $(this).dialog("close");
+                                $("#editAffiliationDialog").dialog("close");
                             }
                         }
                     ],
                     open: function (event, ui) {
-                        if(id != null) {
-                            var buttons = $(this).dialog('option', 'buttons');
-                            buttons["Delete"] = function () {
-                                $(this).dialog("close");
+                        if(data != null) {
+                            var deleteButton = {
+                                text: "Delete",
+                                click: function () {
+                                    var affiliation = {
+                                        id: data.id(),
+                                        personId: me.personId,
+                                        establishmentId: null,
+                                        campusId: null,
+                                        collegeId: null,
+                                        departmentId: null,
+                                        facultyRankId: null
+                                    };
+                                    var model = ko.mapping.toJS(affiliation);
+                                    $.ajax({
+                                        async: false,
+                                        type: "DELETE",
+                                        url: App.Routes.WebApi.My.Profile.Affiliation.del(),
+                                        data: model,
+                                        success: function (data, textStatus, jqXHR) {
+                                            if(statusText !== "success") {
+                                                $("#affiliationErrorDialog").dialog({
+                                                    title: xhr.statusText,
+                                                    width: 400,
+                                                    height: 250,
+                                                    modal: true,
+                                                    resizable: false,
+                                                    draggable: false,
+                                                    buttons: {
+                                                        Ok: function () {
+                                                            $("#affiliationErrorDialog").dialog("close");
+                                                        }
+                                                    },
+                                                    open: function (event, ui) {
+                                                        $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            alert(textStatus);
+                                        }
+                                    });
+                                    $("#editAffiliationDialog").dialog("close");
+                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                }
                             };
+                            var buttons = $(this).dialog('option', 'buttons');
+                            buttons.push(deleteButton);
                             $(this).dialog('option', 'buttons', buttons);
+                            if(data.campusId() != null) {
+                                $("#editAffiliationCampusDropList").data("kendoDropDownList").value(data.campusId());
+                            }
+                            if(data.collegeId() != null) {
+                                $("#editAffiliationCollegeDropList").data("kendoDropDownList").value(data.collegeId());
+                            }
+                            if(data.departmentId() != null) {
+                                $("#editAffiliationDepartmentDropList").data("kendoDropDownList").value(data.departmentId());
+                            }
+                            if(data.facultyRankId() != null) {
+                                $("#editAffiliationFacultyRankDropList").data("kendoDropDownList").value(data.facultyRankId());
+                            }
                         }
                     }
                 });

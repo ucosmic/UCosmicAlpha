@@ -240,7 +240,9 @@ body small {
 body .example {
   font-size: smaller;
   color: #777; }
-
-.dialog {
+body .dialog {
   display: none; }
+
+ul.selectableListItems li:hover {
+  background-color: #dddddd; }
 

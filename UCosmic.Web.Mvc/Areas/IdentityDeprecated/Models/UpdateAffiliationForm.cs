@@ -134,11 +134,11 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Models
         {
             protected override void Configure()
             {
-                CreateMap<UpdateAffiliationForm, UpdateMyAffiliation>()
-                    .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.ChangeCount, o => o.Ignore())
-                    .ForMember(d => d.JobTitles, o => o.Ignore())
-                ;
+                //CreateMap<UpdateAffiliationForm, UpdateMyAffiliation>()
+                //    .ForMember(d => d.Principal, o => o.Ignore())
+                //    .ForMember(d => d.ChangeCount, o => o.Ignore())
+                //    .ForMember(d => d.JobTitles, o => o.Ignore())
+                //;
             }
         }
     }

@@ -6,7 +6,7 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.People
 {
-    public class CreateAffiliation
+    public class CreateMyAffiliation
     {
         public int PersonId { get; set; }
         public int EstablishmentId { get; set; }
@@ -21,7 +21,7 @@ namespace UCosmic.Domain.People
         public Affiliation CreatedAffiliation { get; set; }
     }
 
-    public class ValidateCreateAffiliationCommand : AbstractValidator<CreateAffiliation>
+    public class ValidateCreateAffiliationCommand : AbstractValidator<CreateMyAffiliation>
     {
         public ValidateCreateAffiliationCommand(IQueryEntities entities)
         {
@@ -57,16 +57,18 @@ namespace UCosmic.Domain.People
         }
     }
 
-    public class HandleCreateAffiliationCommand : IHandleCommands<CreateAffiliation>
+    public class HandleCreateAffiliationCommand : IHandleCommands<CreateMyAffiliation>
     {
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateAffiliationCommand(ICommandEntities entities)
+        public HandleCreateAffiliationCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
-        public void Handle(CreateAffiliation command)
+        public void Handle(CreateMyAffiliation command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -97,6 +99,8 @@ namespace UCosmic.Domain.People
 
             // store
             _entities.Create(affiliation);
+
+            _unitOfWork.SaveChanges();
 
             // return
             command.CreatedAffiliation = affiliation;

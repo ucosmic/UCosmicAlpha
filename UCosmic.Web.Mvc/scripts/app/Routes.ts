@@ -273,6 +273,12 @@ module App.Routes {
                     export function post(): string {
                         return makeUrl( 'my/profile/affiliation' );
                     }
+                    export function put(): string {
+                        return makeUrl( 'my/profile/affiliation' );
+                    }
+                    export function del(): string {
+                        return makeUrl( 'my/profile/affiliation' );
+                    }
                 }
                 export module Photo {
                     export function get(params?: any): string {

@@ -259,19 +259,24 @@ body {
         .text-data {
             margin-left: 8px;
             width: 580px;
+
             .user-name {
                 font-size: 18px;
                 font-weight: bold;
             }
+
             .display-name {
                 font-size: 18px;
                 font-weight: normal;
             }
+
             .roles {
                 margin-top: 2px;
+
                 .badge {
                     margin: 2px 2px 2px 0;
                     text-transform: none;
+
                     img.revoke-button {
                         vertical-align: top;
                         cursor: pointer;
@@ -284,6 +289,7 @@ body {
         .editor {
             margin-left: 8px;
             width: 580px;
+
             .row {
                 margin-top: 12px;
             }
@@ -297,9 +303,11 @@ body {
                 background: none;
                 background-image: none;
                 width: 16px;
+
                 > li {
                     border: 0;
                     width: 16px;
+
                     &.k-state-hover, &.k-state-hover:hover {
                         border: 0;
                         background: none;
@@ -308,8 +316,10 @@ body {
                     }
                 }
             }
+
             .k-link {
                 padding: 0;
+
                 .k-icon.k-i-arrow-s {
                     margin: 0;
                     cursor: pointer;
@@ -355,8 +365,12 @@ body {
         font-size: smaller;
         color: #777;
     }
+
+    .dialog {
+        display: none;
+    }
 }
 
-.dialog {
-    display: none;
+ul.selectableListItems li:hover {
+    background-color: $person-profile-card-bg-color;
 }

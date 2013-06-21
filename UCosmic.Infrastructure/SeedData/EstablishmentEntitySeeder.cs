@@ -1776,7 +1776,7 @@ namespace UCosmic.SeedData
                 });
 
 
-                Seed(new SeedEstablishment
+                campus = Seed(new SeedEstablishment
                 {
                     OfficialName = "USF St. Petersburg Campus",
                     OfficialWebsiteUrl = "www.usfsp.edu",
@@ -1788,7 +1788,17 @@ namespace UCosmic.SeedData
                                             .RevisionId,
                 });
 
-                Seed(new SeedEstablishment
+                    college = Seed(new SeedEstablishment
+                    {
+                        OfficialName = "College of Business",
+                        IsMember = true,
+                        ParentId = campus.RevisionId,
+                        TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                             KnownEstablishmentType.College.AsSentenceFragment()))
+                                                .RevisionId
+                    });
+
+                campus = Seed(new SeedEstablishment
                 {
                     OfficialName = "USF Sarasota-Manatee Campus",
                     OfficialWebsiteUrl = "www.usfsm.edu",
@@ -1799,6 +1809,16 @@ namespace UCosmic.SeedData
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
                                             .RevisionId,
                 });
+
+                    college = Seed(new SeedEstablishment
+                    {
+                        OfficialName = "College of Arts and Sciences",
+                        IsMember = true,
+                        ParentId = campus.RevisionId,
+                        TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                             KnownEstablishmentType.College.AsSentenceFragment()))
+                                                .RevisionId
+                    });
             }
         }
     }

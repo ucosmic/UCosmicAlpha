@@ -7,8 +7,14 @@ namespace UCosmic.Domain.External.Services
     public class UsfDepartmentIdLookup
     {
         /* Department ID Lookup Sevice */
+#if false // true for dev urls
         public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
         private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/deptIdLookup";
+#else
+        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
+        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/deptIdLookup";
+#endif
+
         private Stream _stream;
 
         public Stream Open(string casTicket)

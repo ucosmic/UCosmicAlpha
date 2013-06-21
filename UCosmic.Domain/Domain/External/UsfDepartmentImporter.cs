@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.External.Services;
 
 
 #pragma warning disable 649
@@ -176,10 +177,7 @@ namespace UCosmic.Domain.External
                     _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DeptId);
 
                 /* If not found, add. */
-                if ((existingDepartment == null) &&
-                    (!String.IsNullOrWhiteSpace(department.Department)) &&
-                    (!String.IsNullOrWhiteSpace(department.College))
-                   )
+                if ( existingDepartment == null )
                 {
                     /* Make sure we have USF and Campuses. */
                     if (_usf == null) { UsfEstablishmentsSetup(); }
@@ -201,33 +199,41 @@ namespace UCosmic.Domain.External
                     }
 
                     /* Does the college exist? If not, create it. */
-                    var college = _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
-                    if (college == null)
+                    if (!String.IsNullOrWhiteSpace(department.College))
                     {
-                        var createCollege = new UsfCreateEstablishment()
+                        var college =
+                            _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
+                        if (college == null)
                         {
-                            OfficialName = department.College,
-                            IsMember = true,
-                            ParentId = campus.RevisionId,
-                            TypeId = _collegeEstablishmentType.RevisionId
-                        };
-                        _createUsfEstablishment.Handle(createCollege);
-                        _unitOfWork.SaveChanges();
+                            var createCollege = new UsfCreateEstablishment()
+                            {
+                                OfficialName = department.College,
+                                IsMember = true,
+                                ParentId = campus.RevisionId,
+                                TypeId = _collegeEstablishmentType.RevisionId
+                            };
+                            _createUsfEstablishment.Handle(createCollege);
+                            _unitOfWork.SaveChanges();
 
-                        college = createCollege.CreatedEstablishment;
+                            college = createCollege.CreatedEstablishment;
+                        }
+
+                        /* Create department/program (if provided a name). */
+                        if (!String.IsNullOrWhiteSpace(department.Department))
+                        {
+                            var createDepartment = new UsfCreateEstablishment()
+                            {
+                                OfficialName = department.Department,
+                                ExternalId = department.DeptId,
+                                IsMember = true,
+                                ParentId = college.RevisionId,
+                                TypeId = _departmentEstablishmentType.RevisionId
+                            };
+
+                            _createUsfEstablishment.Handle(createDepartment);
+                            _unitOfWork.SaveChanges();
+                        }
                     }
-
-                    /* Create department/program. */
-                    var createDepartment = new UsfCreateEstablishment()
-                    {
-                        OfficialName = department.Department,
-                        ExternalId = department.DeptId,
-                        IsMember = true,
-                        ParentId = college.RevisionId,
-                        TypeId = _departmentEstablishmentType.RevisionId
-                    };
-                    _createUsfEstablishment.Handle(createDepartment);
-                    _unitOfWork.SaveChanges();
 
                 }
             }
@@ -267,7 +273,7 @@ namespace UCosmic.Domain.External
 
             try
             {
-#if true
+#if false
                 {
                     string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
                                                     @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\USFDepartmentList.json");

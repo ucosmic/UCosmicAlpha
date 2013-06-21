@@ -288,6 +288,14 @@ var App;
                             return makeUrl('my/profile/affiliation');
                         }
                         Affiliation.post = post;
+                        function put() {
+                            return makeUrl('my/profile/affiliation');
+                        }
+                        Affiliation.put = put;
+                        function del() {
+                            return makeUrl('my/profile/affiliation');
+                        }
+                        Affiliation.del = del;
                     })(Profile.Affiliation || (Profile.Affiliation = {}));
                     var Affiliation = Profile.Affiliation;
                     (function (Photo) {

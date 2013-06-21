@@ -7,8 +7,14 @@ namespace UCosmic.Domain.External
     public class UsfFacultyInfo
     {
         /* Faculty Information Sevice */
+#if false // true for dev urls
         public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
         private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/facultyInfo";
+#else
+        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
+        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/facultyInfo";
+#endif
+
         private Stream _responseStream;
 
         public Stream Open(string casTicket, string usfNetId)
