@@ -637,6 +637,11 @@ var App;
                         return url;
                     }
                     Profile.get = get;
+                    function post(startEditing, startTabName) {
+                        var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
+                        return url;
+                    }
+                    Profile.post = post;
                     function activityEdit(activityId) {
                         var url = makeUrl('my/activity/');
                         return url + activityId;

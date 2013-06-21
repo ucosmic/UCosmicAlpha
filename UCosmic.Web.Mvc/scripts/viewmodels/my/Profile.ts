@@ -108,6 +108,9 @@ module ViewModels.My {
         editMode: KnockoutObservableBool = ko.observable(false);
         saveSpinner = new Spinner(new SpinnerOptions(200));
 
+        startInEdit: KnockoutObservableBool = ko.observable(false);
+        startTabName: KnockoutObservableString = ko.observable("Activities");
+
         private _initialize() {
         }
 
@@ -169,6 +172,11 @@ module ViewModels.My {
                     this._setupKendoWidgets();
                     this._setupDisplayNameDerivation();
                     this._setupCardComputeds();
+
+                    //debugger;
+                    //if (this.startInEdit()) {
+                    //    this.startEditing();
+                    //}
 
                     if ( startTab === "" ) {
                         this._setupRouting();
@@ -280,14 +288,20 @@ module ViewModels.My {
         tabClickHandler(event: any): void {
             var tabName = event.item.innerText; // IE
             if (tabName == null) tabName = event.item.textContent; // FF
-            if (tabName === "Activities" ) tabName = "activities";
-            if (tabName === "Geographic Expertise" ) tabName = "geographic-expertise";
-            if (tabName === "Language Expertise" ) tabName = "language-expertise";
-            if (tabName === "Formal Education" ) tabName = "formal-education";
-            if (tabName === "Affiliations" ) tabName = "affiliations";
+            tabName = this.tabTitleToName(tabName);
             //this._startTab( tabName );
             location.href = "#/" + tabName;
         }
+
+        tabTitleToName(title: string): string {
+            var tabName = null;
+            if (title === "Activities" ) tabName = "activities";
+            if (title === "Geographic Expertise" ) tabName = "geographic-expertise";
+            if (title === "Language Expertise" ) tabName = "language-expertise";
+            if (title === "Formal Education" ) tabName = "formal-education";
+            if (title === "Affiliations" ) tabName = "affiliations";
+            return tabName;
+       }
 
         startEditing(): void { // show the editor
             this.editMode(true);
@@ -710,8 +724,6 @@ module ViewModels.My {
                             }
                             else {
                                 $( "#editAffiliationDepartmenDiv" ).hide();
-                                //this.text("");
-                                //$( "#editAffiliationDepartmentDropList" ).data( "kendoDropDownList" ).setDataSource([]);
                             }
                         }
                     }
@@ -783,10 +795,11 @@ module ViewModels.My {
 
             $( "#editAffiliationDialog" ).dialog( {
                 dialogClass: "no-close",
+                title: (data == null) ? "Create Affiliation" : "Edit Affiliation",
                 width: 750,
                 height: 300,
                 resizable: false,
-                draggable: false,
+                draggable: true,
                 modal: true,
                 buttons: [
                     {
@@ -836,6 +849,14 @@ module ViewModels.My {
                             .done( function ( responseText, statusText, xhr ) {
                                 if ( statusText === "success" ) {
                                     $( "#editAffiliationDialog" ).dialog( "close" );
+
+                                    //debugger;
+                                    //var tab = $("#tabstrip").data("kendoTabStrip").select()[0];
+                                    //var tabName = tab.innerText; // IE
+                                    //if (tabName == null) tabName = tab.textContent; // FF
+                                    //tabName = me.tabTitleToName(tabName);                                   
+                                    //location.href = App.Routes.Mvc.My.Profile.post(true,tabName);
+
                                     location.href = App.Routes.Mvc.My.Profile.get();
                                 }
                                 else {
@@ -857,8 +878,8 @@ module ViewModels.My {
                                     } );
                                 }
                             } )
-                            .fail( function ( xhr, textStatus, errorThrown ) {
-                                alert("Saving affiliation failed: " + textStatus + "|" + errorThrown );
+                            .fail( function ( xhr, statusText, errorThrown ) {
+                                alert("Saving affiliation failed: " + statusText + "|" + errorThrown );
                                 $( "#editAffiliationDialog" ).dialog( "close" );
                             } );
                         }
@@ -875,49 +896,69 @@ module ViewModels.My {
                         var deleteButton = {
                             text: "Delete",
                             click: function () {
-                                var affiliation = {
-                                    id: data.id(),
-                                    personId: me.personId,
-                                    establishmentId: null,
-                                    campusId: null,
-                                    collegeId: null,
-                                    departmentId: null,
-                                    facultyRankId: null
-                                };
-                                var model = ko.mapping.toJS(affiliation);
-                                $.ajax({
-                                    async: false,
-                                    type: "DELETE",
-                                    url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                                    data: model,
-                                    success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                                    {
-                                        if ( statusText !== "success" ) {
-                                            $( "#affiliationErrorDialog" ).dialog( {
-                                                title: xhr.statusText,
-                                                width: 400,
-                                                height: 250,
-                                                modal: true,
-                                                resizable: false,
-                                                draggable: false,
-                                                buttons: {
-                                                    Ok: function () {
-                                                        $( "#affiliationErrorDialog" ).dialog( "close" );
+                                $( "#confirmAffiliationDeleteDialog" ).dialog( {
+                                    width: 300,
+                                    height: 200,
+                                    modal: true,
+                                    resizable: false,
+                                    draggable: false,
+                                    buttons: {
+                                        "Delete": function () {
+                                            $( this ).dialog( "close" );
+
+                                            var affiliation = {
+                                                id: data.id(),
+                                                personId: me.personId,
+                                                establishmentId: null,
+                                                campusId: null,
+                                                collegeId: null,
+                                                departmentId: null,
+                                                facultyRankId: null
+                                            };
+
+                                            var model = ko.mapping.toJS( affiliation );
+                                            $.ajax( {
+                                                async: false,
+                                                type: "DELETE",
+                                                url: App.Routes.WebApi.My.Profile.Affiliation.del(),
+                                                data: model,
+                                                success: ( data: any, statusText: string, jqXHR: JQueryXHR ): void =>
+                                                {
+                                                    if ( statusText !== "success" ) {
+                                                        $( "#affiliationErrorDialog" ).dialog( {
+                                                            title: xhr.statusText,
+                                                            width: 400,
+                                                            height: 250,
+                                                            modal: true,
+                                                            resizable: false,
+                                                            draggable: false,
+                                                            buttons: {
+                                                                Ok: function () {
+                                                                    $( "#affiliationErrorDialog" ).dialog( "close" );
+                                                                }
+                                                            },
+                                                            open: function ( event, ui ) {
+                                                                $( "#affiliationErrorDialogMessage" ).text( xhr.responseText );
+                                                            }
+                                                        } );
                                                     }
+
+                                                    $( "#editAffiliationDialog" ).dialog( "close" );
+                                                    location.href = App.Routes.Mvc.My.Profile.get();
                                                 },
-                                                open: function ( event, ui ) {
-                                                    $( "#affiliationErrorDialogMessage" ).text( xhr.responseText );
+                                                error: ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ): void =>
+                                                {
+                                                    alert( statusText );
+                                                    $( "#editAffiliationDialog" ).dialog( "close" );
                                                 }
                                             } );
+                                        },
+
+                                        "Cancel": function () {
+                                            $( this ).dialog( "close" );
                                         }
-                                    },
-                                    error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                                    {
-                                        alert(textStatus);
                                     }
-                                });
-                                $( "#editAffiliationDialog" ).dialog( "close" );
-                                location.href = App.Routes.Mvc.My.Profile.get();
+                                } );
                             }
                         }
 
@@ -954,6 +995,43 @@ module ViewModels.My {
             }
 
             return item;
+        }
+
+        deleteProfile( data: any, event: any ) {
+            var me = this;
+            $( "#confirmProfileDeleteDialog" ).dialog( {
+                width: 300,
+                height: 200,
+                modal: true,
+                resizable: false,
+                draggable: false,
+                buttons: {
+                    "Delete": function () {
+//                        debugger;
+                        $( this ).dialog( "close" );
+                        //var model = ko.mapping.toJS( me.personId );
+                        //$.ajax( {
+                        //    async: false,
+                        //    type: "DELETE",
+                        //    url: App.Routes.WebApi.My.Profile.del(),
+                        //    data: model,
+                        //    success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
+                        //        alert( jqXHR.statusText );
+                        //        $( this ).dialog( "close" );
+                        //        location.href = App.Routes.WebApi.Home;
+                        //    },
+                        //    error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
+                        //        alert( statusText );
+                        //        $( this ).dialog( "close" );
+                        //    }
+                        //} );
+                    },
+
+                    "Cancel": function () {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            } );
         }
     }
 

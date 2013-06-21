@@ -64,6 +64,8 @@ var ViewModels;
                 this.$nameSuffix = ko.observable();
                 this.editMode = ko.observable(false);
                 this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.startInEdit = ko.observable(false);
+                this.startTabName = ko.observable("Activities");
                 this._initialize();
             }
             Profile.prototype._initialize = function () {
@@ -177,22 +179,27 @@ var ViewModels;
                 if(tabName == null) {
                     tabName = event.item.textContent;
                 }
-                if(tabName === "Activities") {
+                tabName = this.tabTitleToName(tabName);
+                location.href = "#/" + tabName;
+            };
+            Profile.prototype.tabTitleToName = function (title) {
+                var tabName = null;
+                if(title === "Activities") {
                     tabName = "activities";
                 }
-                if(tabName === "Geographic Expertise") {
+                if(title === "Geographic Expertise") {
                     tabName = "geographic-expertise";
                 }
-                if(tabName === "Language Expertise") {
+                if(title === "Language Expertise") {
                     tabName = "language-expertise";
                 }
-                if(tabName === "Formal Education") {
+                if(title === "Formal Education") {
                     tabName = "formal-education";
                 }
-                if(tabName === "Affiliations") {
+                if(title === "Affiliations") {
                     tabName = "affiliations";
                 }
-                location.href = "#/" + tabName;
+                return tabName;
             };
             Profile.prototype.startEditing = function () {
                 this.editMode(true);
@@ -648,10 +655,11 @@ var ViewModels;
                 });
                 $("#editAffiliationDialog").dialog({
                     dialogClass: "no-close",
+                    title: (data == null) ? "Create Affiliation" : "Edit Affiliation",
                     width: 750,
                     height: 300,
                     resizable: false,
-                    draggable: false,
+                    draggable: true,
                     modal: true,
                     buttons: [
                         {
@@ -716,8 +724,8 @@ var ViewModels;
                                             }
                                         });
                                     }
-                                }).fail(function (xhr, textStatus, errorThrown) {
-                                    alert("Saving affiliation failed: " + textStatus + "|" + errorThrown);
+                                }).fail(function (xhr, statusText, errorThrown) {
+                                    alert("Saving affiliation failed: " + statusText + "|" + errorThrown);
                                     $("#editAffiliationDialog").dialog("close");
                                 });
                             }
@@ -734,47 +742,63 @@ var ViewModels;
                             var deleteButton = {
                                 text: "Delete",
                                 click: function () {
-                                    var affiliation = {
-                                        id: data.id(),
-                                        personId: me.personId,
-                                        establishmentId: null,
-                                        campusId: null,
-                                        collegeId: null,
-                                        departmentId: null,
-                                        facultyRankId: null
-                                    };
-                                    var model = ko.mapping.toJS(affiliation);
-                                    $.ajax({
-                                        async: false,
-                                        type: "DELETE",
-                                        url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                                        data: model,
-                                        success: function (data, textStatus, jqXHR) {
-                                            if(statusText !== "success") {
-                                                $("#affiliationErrorDialog").dialog({
-                                                    title: xhr.statusText,
-                                                    width: 400,
-                                                    height: 250,
-                                                    modal: true,
-                                                    resizable: false,
-                                                    draggable: false,
-                                                    buttons: {
-                                                        Ok: function () {
-                                                            $("#affiliationErrorDialog").dialog("close");
+                                    $("#confirmAffiliationDeleteDialog").dialog({
+                                        width: 300,
+                                        height: 200,
+                                        modal: true,
+                                        resizable: false,
+                                        draggable: false,
+                                        buttons: {
+                                            "Delete": function () {
+                                                $(this).dialog("close");
+                                                var affiliation = {
+                                                    id: data.id(),
+                                                    personId: me.personId,
+                                                    establishmentId: null,
+                                                    campusId: null,
+                                                    collegeId: null,
+                                                    departmentId: null,
+                                                    facultyRankId: null
+                                                };
+                                                var model = ko.mapping.toJS(affiliation);
+                                                $.ajax({
+                                                    async: false,
+                                                    type: "DELETE",
+                                                    url: App.Routes.WebApi.My.Profile.Affiliation.del(),
+                                                    data: model,
+                                                    success: function (data, statusText, jqXHR) {
+                                                        if(statusText !== "success") {
+                                                            $("#affiliationErrorDialog").dialog({
+                                                                title: xhr.statusText,
+                                                                width: 400,
+                                                                height: 250,
+                                                                modal: true,
+                                                                resizable: false,
+                                                                draggable: false,
+                                                                buttons: {
+                                                                    Ok: function () {
+                                                                        $("#affiliationErrorDialog").dialog("close");
+                                                                    }
+                                                                },
+                                                                open: function (event, ui) {
+                                                                    $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                                                                }
+                                                            });
                                                         }
+                                                        $("#editAffiliationDialog").dialog("close");
+                                                        location.href = App.Routes.Mvc.My.Profile.get();
                                                     },
-                                                    open: function (event, ui) {
-                                                        $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                                                    error: function (jqXHR, statusText, errorThrown) {
+                                                        alert(statusText);
+                                                        $("#editAffiliationDialog").dialog("close");
                                                     }
                                                 });
+                                            },
+                                            "Cancel": function () {
+                                                $(this).dialog("close");
                                             }
-                                        },
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            alert(textStatus);
                                         }
                                     });
-                                    $("#editAffiliationDialog").dialog("close");
-                                    location.href = App.Routes.Mvc.My.Profile.get();
                                 }
                             };
                             var buttons = $(this).dialog('option', 'buttons');
@@ -806,6 +830,24 @@ var ViewModels;
                     }
                 }
                 return item;
+            };
+            Profile.prototype.deleteProfile = function (data, event) {
+                var me = this;
+                $("#confirmProfileDeleteDialog").dialog({
+                    width: 300,
+                    height: 200,
+                    modal: true,
+                    resizable: false,
+                    draggable: false,
+                    buttons: {
+                        "Delete": function () {
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             };
             return Profile;
         })();

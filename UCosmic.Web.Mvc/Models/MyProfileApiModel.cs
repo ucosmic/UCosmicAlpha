@@ -10,11 +10,11 @@ using System.Web.Mvc;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    //public class MyProfileEstablishmentApiModel
-    //{
-    //    public int Id { get; set; }
-    //    public string OfficialName { get; set; }
-    //}
+    public class MyProfileNavigationApiModel
+    {
+        public bool StartInEdit { get; set; }
+        public string StartTabName { get; set; }
+    }
 
     public class MyProfileAffiliationApiModel
     {
@@ -59,6 +59,9 @@ namespace UCosmic.Web.Mvc.Models
         public bool HasPhoto { get; set; }
         public string PreferredTitle { get; set; }
         public ICollection<MyProfileAffiliationApiModel> Affiliations { get; set; }
+
+        public bool StartInEdit { get; set; }
+        public string StartTabName { get; set; }
     }
 
     public static class MyProfileApiModelProfiler
@@ -221,6 +224,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.RevisionId) )
                     .ForMember(d => d.HasPhoto, o => o.MapFrom(s => s.Photo != null))
                     .ForMember(d => d.PreferredTitle, o => o.MapFrom(s => (s.Employee != null) ? s.Employee.JobTitles : null))
+                    .ForMember(d => d.StartInEdit, o => o.Ignore())
+                    .ForMember(d => d.StartTabName, o => o.Ignore())
                     ;
             }
         }

@@ -73,6 +73,31 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
+        //[POST("")]
+        //public MyProfileApiModel Post(MyProfileNavigationApiModel nav)
+        //{
+        //    var person = _queryProcessor.Execute(new MyPerson(User)
+        //    {
+        //        EagerLoad = new Expression<Func<Person, object>>[]
+        //        {
+        //            x => x.Employee,
+        //            x => x.Photo,
+        //        }
+        //    });
+
+        //    // throw 404 if route does not match existing record
+        //    if (person == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+        //    // only need the destination type int he Map generic argument.
+        //    // the source type is implicit based on the method argument.
+        //    var model = Mapper.Map<MyProfileApiModel>(person);
+
+        //    model.StartInEdit = nav.StartInEdit;
+        //    model.StartTabName = nav.StartTabName;
+
+        //    return model;
+        //}
+
         [PUT("")]
         public HttpResponseMessage Put(MyProfileApiModel model)
         {

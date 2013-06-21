@@ -2829,7 +2829,6 @@ namespace Links
                 public static readonly string Profile_ts = Url("Profile.ts");
                 public static readonly string Profile_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile.min.js") ? Url("Profile.min.js") : Url("Profile.js");
                               
-                public static readonly string Profile_min_js_map = Url("Profile.min.js.map");
                 public static readonly string Profile_min_js = Url("Profile.min.js");
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }

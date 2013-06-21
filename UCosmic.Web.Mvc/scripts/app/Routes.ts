@@ -574,6 +574,10 @@ module App.Routes {
                     //}
                     return url;
                 }
+                export function post (startEditing: bool, startTabName: string) {
+                    var url = makeUrlWithParams( 'my/profile' ) + "startEditing=" + startEditing + "&startTabName=" + startTabName;
+                    return url;
+                }
                 export function activityEdit( activityId: string ) {
                     var url = makeUrl( 'my/activity/' );
                     return url + activityId;
