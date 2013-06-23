@@ -1,5 +1,7 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Establishments;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -20,9 +22,38 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-        [GET("agreements")]
-        public virtual ViewResult DansIndex()
+        [GET("agreements/{agreementId:int}")]
+        public virtual ViewResult Show(int agreementId)
         {
+            return View();
+        }
+
+        [GET("agreements/{domain?}")]
+        public virtual ActionResult DansIndex(string domain)
+        {
+                // when no domain is passed, try to detect it
+            if (string.IsNullOrWhiteSpace(domain))
+            {
+                var tenancy = Request.Tenancy() ?? new Tenancy();
+
+                // first check style domain
+                if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                    return RedirectToAction(MVC.Agreements.DansIndex(tenancy.StyleDomain));
+
+                if (tenancy.TenantId.HasValue)
+                {
+                    var establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                    if (establishment != null && !string.IsNullOrWhiteSpace(establishment.WebsiteUrl))
+                    {
+                        domain = (establishment.WebsiteUrl.StartsWith("www.")) ? establishment.WebsiteUrl.Substring(4) : establishment.WebsiteUrl;
+                        return RedirectToAction(MVC.Agreements.DansIndex(domain));
+                    }
+                }
+
+                return View(MVC.Agreements.Views.Owners);
+            }
+
+            ViewBag.Domain = domain;
             return View();
         }
 
@@ -34,7 +65,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.Form);
         }
 
-        [GET("agreements/{agreementId}/edit")]
+        [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult Edit(int agreementId)
         {

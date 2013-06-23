@@ -2655,6 +2655,8 @@
     <Content Include="Views\Agreements\DansIndex.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
+    <Content Include="Views\Agreements\Show.cshtml" />
+    <Content Include="Views\Agreements\Owners.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -2,9 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Principal;
 using LinqKit;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
 {

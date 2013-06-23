@@ -43,6 +43,18 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ViewResult Show()
+        {
+            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Show);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult DansIndex()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DansIndex);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ViewResult Edit()
         {
             return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Edit);
@@ -64,6 +76,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string Show = "Show";
             public readonly string DansIndex = "DansIndex";
             public readonly string New = "New";
             public readonly string Edit = "Edit";
@@ -74,6 +87,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string Show = "Show";
             public const string DansIndex = "DansIndex";
             public const string New = "New";
             public const string Edit = "Edit";
@@ -81,6 +95,22 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
 
+        static readonly ActionParamsClass_Show s_params_Show = new ActionParamsClass_Show();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Show ShowParams { get { return s_params_Show; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Show
+        {
+            public readonly string agreementId = "agreementId";
+        }
+        static readonly ActionParamsClass_DansIndex s_params_DansIndex = new ActionParamsClass_DansIndex();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_DansIndex DansIndexParams { get { return s_params_DansIndex; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_DansIndex
+        {
+            public readonly string domain = "domain";
+        }
         static readonly ActionParamsClass_Edit s_params_Edit = new ActionParamsClass_Edit();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Edit EditParams { get { return s_params_Edit; } }
@@ -104,14 +134,18 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string DansIndex = "DansIndex";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
+                public readonly string Owners = "Owners";
                 public readonly string Settings = "Settings";
+                public readonly string Show = "Show";
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
             public readonly string DansIndex = "~/Views/Agreements/DansIndex.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
+            public readonly string Owners = "~/Views/Agreements/Owners.cshtml";
             public readonly string Settings = "~/Views/Agreements/Settings.cshtml";
+            public readonly string Show = "~/Views/Agreements/Show.cshtml";
         }
     }
 
@@ -126,9 +160,17 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult DansIndex()
+        public override System.Web.Mvc.ViewResult Show(int agreementId)
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.DansIndex);
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Show);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "agreementId", agreementId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult DansIndex(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DansIndex);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 

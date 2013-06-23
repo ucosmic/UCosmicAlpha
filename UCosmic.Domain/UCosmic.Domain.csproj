@@ -187,11 +187,12 @@
     <Compile Include="Domain\Agreements\Entities\AgreementSettingsFieldValue.cs" />
     <Compile Include="Domain\Agreements\Entities\AgreementVisibility.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementById.cs" />
-    <Compile Include="Domain\Agreements\Queries\AgreementsByOwner.cs" />
+    <Compile Include="Domain\Agreements\Queries\AgreementsByOwnerDomain.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementSettings.cs" />
     <Compile Include="Domain\Agreements\Queries\ParticipantByEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\ParticipantsByAgreementId.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreements.cs" />
+    <Compile Include="Domain\Agreements\_Internal\SecureAgreements.cs" />
     <Compile Include="Domain\Degrees\Commands\CreateDegree.cs" />
     <Compile Include="Domain\Degrees\Commands\DeleteDegree.cs" />
     <Compile Include="Domain\Degrees\Commands\UpdateDegree.cs" />

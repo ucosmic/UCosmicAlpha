@@ -36,17 +36,19 @@ namespace UCosmic.Domain.Agreements
     public class HandleAgreementsByOwnerDomainQuery : IHandleQueries<AgreementsByOwnerDomain, Agreement[]>
     {
         private readonly IQueryEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
 
-        public HandleAgreementsByOwnerDomainQuery(IQueryEntities entities)
+        public HandleAgreementsByOwnerDomainQuery(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
         }
 
         public Agreement[] Handle(AgreementsByOwnerDomain query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var agreements = _entities.Query<Agreement>()
+            var agreementsQueryable = _entities.Query<Agreement>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.Participants.Any(y => y.IsOwner
                     && (
@@ -55,10 +57,10 @@ namespace UCosmic.Domain.Agreements
                         (y.Establishment.Ancestors.Any(z => z.Ancestor.WebsiteUrl != null && z.Ancestor.WebsiteUrl.Equals(query.WwwOwnerDomain)))
                     )
                 ))
-                //.Where(x => x.Participants.Any(y => y.IsOwner && y.EstablishmentId == 66))
                 .OrderBy(query.OrderBy)
             ;
 
+            var agreements = agreementsQueryable.ApplySecurity(query.Principal, _queryProcessor);
             return agreements.ToArray();
         }
     }
