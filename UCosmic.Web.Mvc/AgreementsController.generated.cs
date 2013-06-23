@@ -100,12 +100,14 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
+                public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string DansIndex = "DansIndex";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
                 public readonly string Settings = "Settings";
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
+            public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
             public readonly string DansIndex = "~/Views/Agreements/DansIndex.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";

@@ -8,13 +8,63 @@
     </nav>
 }
 
-<div class="content fixed" data-current-module="agreements">
-    <header>
-        <h1>@ViewBag.Title</h1>
-    </header>
-    <section>
-        <header>
-            <h2>Second heading</h2>
-        </header>
-    </section>
+@section scripts
+{
+    <script>
+        function ViewModel() {
+            this.self = this;
+            this.isWorking = ko.observable('Hello, knockout.');
+            this.googleMap = new google.maps.Map($('#google_map_canvas')[0], {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                zoom: 1, // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
+            });
+
+            $.get('/api/agreements/uc.edu/')
+                .done(function(result) {
+
+                })
+                .fail(function(xhr) {
+                    alert('fail: ' + xhr.status + '; ' + xhr.responseText);
+                });
+
+            $.get('/api/agreements/13/')
+                .done(function (result) {
+
+                })
+                .fail(function (xhr) {
+                    alert('fail: ' + xhr.status + '; ' + xhr.responseText);
+                });
+        }
+
+        ;
+        ko.applyBindings(new ViewModel(), $('[data-current-module=agreements]')[0]);
+    </script>
+}
+
+<div class="content fixed to-top" data-current-module="agreements">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            <section>
+                <header>
+                    <h2 data-bind="text: isWorking">Second heading</h2>
+                </header>
+            </section>
+            <div id="google_map_canvas" style="height: 500px;">
+            </div>
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Agreements.Views._SearchSideBar)
+            </div>
+        </aside>
+    </form>
 </div>

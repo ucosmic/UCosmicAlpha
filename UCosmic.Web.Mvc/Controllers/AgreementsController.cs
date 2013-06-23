@@ -5,7 +5,6 @@ namespace UCosmic.Web.Mvc.Controllers
 {
     //[RestfulRouteConvention]
     [UserVoiceForum(UserVoiceForum.Agreements)]
-    [TryAuthorize(Roles = RoleName.AgreementManagers)]
     public partial class AgreementsController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
@@ -28,6 +27,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("agreements/new")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult New()
         {
             ViewBag.Id = 0;
@@ -35,6 +35,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("agreements/{agreementId}/edit")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult Edit(int agreementId)
         {
             ViewBag.Id = agreementId;
@@ -42,6 +43,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("agreements/settings")]
+        [TryAuthorize(Roles = RoleName.AgreementSupervisor)]
         public virtual ViewResult Settings()
         {
             return View();
