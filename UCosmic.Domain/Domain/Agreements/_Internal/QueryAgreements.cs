@@ -25,55 +25,6 @@ namespace UCosmic.Domain.Agreements
             return queryable.Where(a => a.Children.Any());
         }
 
-        internal static IQueryable<Agreement> ForTenantUser(this IQueryable<Agreement> queryable, IPrincipal principal)
-        {
-            // select all agreements where this user's default affiliation is the owner
-            Expression<Func<Affiliation, bool>> principalDefaultAffiliation =
-                affiliation =>
-                affiliation.IsDefault &&
-                affiliation.Person.User != null &&
-                affiliation.Person.User.Name.Equals(principal.Identity.Name, StringComparison.OrdinalIgnoreCase);
-
-            return queryable.Where
-            (
-                agreement =>
-                agreement.Participants.Any
-                (
-                    participant =>
-
-                    // only get owning participants
-                    participant.IsOwner &&
-                    (
-                        // where the owning participant is user's default establishment
-                        participant.Establishment.Affiliates.AsQueryable().Any(principalDefaultAffiliation) ||
-
-                        // or the owning participant's ancestor is user's default establishment
-                        participant.Establishment.Ancestors.Any
-                        (
-                            ancestor =>
-                            ancestor.Ancestor.Affiliates.AsQueryable().Any(principalDefaultAffiliation)
-                        )
-                    )
-                )
-            );
-        }
-
-        //internal static IQueryable<Agreement> UmbrellaCandidatesFor(this IQueryable<Agreement> queryable, int agreementId)
-        //{
-        //    // candidates cannot be self or offspring of requesting agreement
-        //    return queryable.Where
-        //    (
-        //        a =>
-        //        a.Id != agreementId &&
-        //        a.Ancestors.All(h => h.Ancestor.Id != agreementId)
-        //    );
-        //}
-
-        //internal static Agreement ByFileGuid(this IQueryable<Agreement> queryable, Guid guid)
-        //{
-        //    return queryable.SingleOrDefault(a => a.Files.Any(f => f.Guid == guid));
-        //}
-
         internal static IQueryable<Agreement> OwnedByEstablishment(this IQueryable<Agreement> queryable, object establishmentKey)
         {
             queryable = queryable.Where(IsOwnedBy(establishmentKey));

@@ -39,12 +39,14 @@ namespace UCosmic.Domain.People
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            return _entities.Query<Affiliation>()
+            var affiliation = _entities.Query<Affiliation>()
                 .SingleOrDefault( a => (a.PersonId == query.PersonId) &&
                                        (a.EstablishmentId == query.EstablishmentId) &&
-                                       (a.CampusId == query.CampusId) &&
-                                       (a.CollegeId == query.CollegeId) &&
-                                       (a.DepartmentId == query.DepartmentId) );
+                                       ((query.CampusId.HasValue) ?  a.CampusId == query.CampusId : a.CampusId == null) &&
+                                       ((query.CollegeId.HasValue) ? a.CollegeId == query.CollegeId : a.CollegeId == null) &&
+                                       ((query.DepartmentId.HasValue) ? a.DepartmentId == query.DepartmentId : a.DepartmentId == null));
+
+            return affiliation;
         }
     }
 }

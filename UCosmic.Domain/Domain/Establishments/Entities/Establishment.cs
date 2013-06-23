@@ -64,7 +64,7 @@ namespace UCosmic.Domain.Establishments
         public bool IsMember { get; protected internal set; }
 
         public virtual ICollection<EstablishmentEmailDomain> EmailDomains { get; protected internal set; }
-        public virtual ICollection<Affiliation> Affiliates { get; protected internal set; }
+        //public virtual ICollection<Affiliation> Affiliates { get; protected internal set; }
 
         public virtual EstablishmentType Type { get; protected internal set; }
         public bool IsInstitution

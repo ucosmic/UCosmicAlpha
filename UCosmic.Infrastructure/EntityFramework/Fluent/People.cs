@@ -118,14 +118,20 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(Affiliation).Name, DbSchemaName.People);
 
-            Property(p => p.PersonId).IsRequired();
-            Property(p => p.EstablishmentId).IsRequired();
+            //Property(p => p.PersonId).IsRequired();
+            //Property(p => p.EstablishmentId).IsRequired();
 
             //HasKey(p => new { p.PersonId,
             //                  p.EstablishmentId
             //                });
 
-            HasRequired(p => p.Establishment);
+            HasRequired(d => d.Establishment)
+                .WithMany()
+                .HasForeignKey(d => d.EstablishmentId);
+
+            HasRequired(d => d.Person)
+                .WithMany(p => p.Affiliations)
+                .HasForeignKey(d => d.PersonId);
 
             Property(p => p.JobTitles).HasMaxLength(500);
 

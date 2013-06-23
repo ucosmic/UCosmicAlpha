@@ -40,10 +40,10 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(true);
 
             // has many affiliates
-            HasMany(p => p.Affiliates)
-                .WithRequired(d => d.Establishment)
-                .HasForeignKey(d => d.EstablishmentId)
-                .WillCascadeOnDelete(true);
+            //HasMany(p => p.Affiliates)
+            //    .WithRequired(d => d.Establishment)
+            //    .HasForeignKey(d => d.EstablishmentId)
+            //    .WillCascadeOnDelete(true);
 
             // has many ancestors
             HasMany(p => p.Ancestors)

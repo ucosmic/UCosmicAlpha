@@ -70,10 +70,7 @@ namespace UCosmic.Domain.Agreements
             var establishment = _entities.Get<Establishment>()
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                 {
-                    e => e.Affiliates.Select(a => a.Person.User),
-                    e => e.Names.Select(n => n.TranslationToLanguage),
-                    e => e.Ancestors.Select(h => h.Ancestor.Affiliates.Select(a => a.Person.User)),
-                    e => e.Ancestors.Select(h => h.Ancestor.Names.Select(n => n.TranslationToLanguage))
+                    x => x.Ancestors.Select(y => y.Ancestor)
                 })
                 .SingleOrDefault(x => x.RevisionId == command.EstablishmentId);
             if (establishment == null)
@@ -87,12 +84,22 @@ namespace UCosmic.Domain.Agreements
             };
 
             // derive ownership (todo, this should be a separate query)
-            Expression<Func<Affiliation, bool>> principalDefaultAffiliation = affiliation =>
-                affiliation.IsDefault &&
-                affiliation.Person.User != null &&
-                affiliation.Person.User.Name.Equals(command.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase);
-            participant.IsOwner = establishment.Affiliates.AsQueryable().Any(principalDefaultAffiliation) ||
-                establishment.Ancestors.Any(n => n.Ancestor.Affiliates.AsQueryable().Any(principalDefaultAffiliation));
+            var person = _entities.Get<Person>()
+                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+                {
+                    x => x.Affiliations,
+                })
+                .SingleOrDefault(x => x.User != null && command.Principal.Identity.Name.Equals(x.User.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (person != null)
+            {
+                var establishmentIds = establishment.Ancestors.Select(y => y.AncestorId).ToList();
+                establishmentIds.Insert(0, establishment.RevisionId);
+
+                if (person.DefaultAffiliation != null &&
+                    establishmentIds.Contains(person.DefaultAffiliation.EstablishmentId))
+                    participant.IsOwner = true;
+            }
 
             _entities.Create(participant);
             command.IsNewlyAdded = true;
