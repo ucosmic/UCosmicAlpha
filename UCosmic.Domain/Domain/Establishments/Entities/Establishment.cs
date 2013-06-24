@@ -8,7 +8,7 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class Establishment : RevisableEntity
+    public class Establishment : RevisableEntity, IEquatable<Establishment>
     {
         protected internal Establishment()
         {
@@ -81,6 +81,20 @@ namespace UCosmic.Domain.Establishments
 
         // TODO: // remove this property to make EmployeeModuleSettings uni-directional
         //public virtual EmployeeModuleSettings EmployeeModuleSettings { get; set; }
+
+        public bool Equals(Establishment other)
+        {
+            if (other == null) return false;
+            return other.RevisionId.Equals(RevisionId) && other.EntityId.Equals(EntityId);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return RevisionId.GetHashCode() ^ EntityId.GetHashCode();
+            }
+        }
 
         public override string ToString()
         {

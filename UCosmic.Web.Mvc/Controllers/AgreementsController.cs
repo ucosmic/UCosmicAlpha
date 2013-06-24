@@ -31,7 +31,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("agreements/{domain?}")]
         public virtual ActionResult DansIndex(string domain)
         {
-                // when no domain is passed, try to detect it
+            // when no domain is passed, try to detect it
             if (string.IsNullOrWhiteSpace(domain))
             {
                 var tenancy = Request.Tenancy() ?? new Tenancy();

@@ -324,6 +324,7 @@
     <Compile Include="Helpers\WebApiExtensions.cs" />
     <Compile Include="Models\Agreements\AgreementApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementSettingsApiModel.cs" />
+    <Compile Include="Models\Agreements\AgreementPlaceApiModel.cs" />
     <Compile Include="Models\LanguageExpertiseApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />

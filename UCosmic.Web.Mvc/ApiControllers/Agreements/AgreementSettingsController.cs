@@ -4,7 +4,7 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
-using UCosmic.Web.Mvc.Models.Agreements;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {

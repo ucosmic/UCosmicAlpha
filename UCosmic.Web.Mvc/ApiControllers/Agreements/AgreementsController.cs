@@ -10,8 +10,8 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
 using UCosmic.Domain.Identity;
+using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
-using UCosmic.Web.Mvc.Models.Agreements;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -67,7 +67,68 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return null;
         }
 
-        [GET("agreements/{agreementId}/participants")]
+        [GET("agreements/{domain}/places")]
+        public IEnumerable<AgreementPlaceApiModel> GetPlaces(string domain)
+        {
+            return GetPlaceGroups(domain, null);
+        }
+
+        [GET("agreements/{domain}/places/{placeType}")]
+        public IEnumerable<AgreementPlaceApiModel> GetPlaceGroups(string domain, string placeType)
+        {
+            var agreements = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain)
+            {
+                EagerLoad = new Expression<Func<Agreement, object>>[]
+                {
+                    x => x.Participants.Select(y => y.Establishment.Location.Places.Select(z => z.GeoPlanetPlace))
+                }
+            });
+            if (agreements == null || !agreements.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var places = agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner)
+                .Select(x => x.Establishment).Distinct()
+                .SelectMany(x => x.Location.Places).Distinct()
+                .OrderBy(x => x.OfficialName).ToArray();
+
+            if ("continents".Equals(placeType))
+                places = places.Where(x => x.IsContinent).ToArray();
+            if ("countries".Equals(placeType))
+                places = places.Where(x => x.IsCountry).ToArray();
+            if ("points".Equals(placeType) || string.IsNullOrWhiteSpace(placeType))
+            {
+                var pointPlaces = new List<Place>();
+                foreach (var nonOwnerParticipant in agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner))
+                {
+                    var location = nonOwnerParticipant.Establishment.Location;
+                    var ancestorIds = location.Places.SelectMany(x => x.Ancestors).Select(x => x.AncestorId);
+                    var pointPlace = location.Places.FirstOrDefault(x => !ancestorIds.Contains(x.RevisionId));
+                    if (pointPlace != null && !pointPlaces.Select(x => x.RevisionId).Contains(pointPlace.RevisionId))
+                        pointPlaces.Add(pointPlace);
+                }
+                places = pointPlaces.Distinct().ToArray();
+            }
+
+            var models = Mapper.Map<AgreementPlaceApiModel[]>(places);
+
+            foreach (var model in models)
+            {
+                foreach (var agreement in agreements)
+                {
+                    var placeId = model.Id;
+                    var ancestorIds = agreement.Participants.SelectMany(x => x.Establishment.Location.Places)
+                        .SelectMany(x => x.Ancestors).Select(x => x.AncestorId).Distinct();
+                    if (agreement.Participants.Where(x => !x.IsOwner)
+                                 .SelectMany(x => x.Establishment.Location.Places)
+                                 .Where(x => !ancestorIds.Contains(x.RevisionId))
+                                 .Distinct().Any(x => x.RevisionId == placeId))
+                        model.AgreementIds = new List<int>(model.AgreementIds) { agreement.Id }.ToArray();
+                }
+            }
+
+            return models;
+        }
+
+        [GET("agreements/{agreementId:int}/participants")]
         public IEnumerable<AgreementParticipantApiModel> GetParticipants(int agreementId)
         {
             var entities = _queryProcessor.Execute(new ParticipantsByAgreementId(User, agreementId)
@@ -86,7 +147,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("agreements/{agreementId}/participant/{establishmentId}")]
+        [GET("agreements/{agreementId:int}/participant/{establishmentId}")]
         public AgreementParticipantApiModel GetParticipant(int agreementId, int establishmentId)
         {
             var entity = _queryProcessor.Execute(new ParticipantByEstablishmentId(User, establishmentId, agreementId)

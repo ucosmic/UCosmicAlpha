@@ -1,6 +1,8 @@
-﻿namespace UCosmic.Domain.Places
+﻿using System;
+
+namespace UCosmic.Domain.Places
 {
-    public class PlaceNode : Entity
+    public class PlaceNode : Entity, IEquatable<PlaceNode>
     {
         protected internal PlaceNode()
         {
@@ -13,6 +15,20 @@
         public virtual Place Offspring { get; protected internal set; }
 
         public int Separation { get; protected internal set; }
+
+        public bool Equals(PlaceNode other)
+        {
+            if (other == null) return false;
+            return other.AncestorId.Equals(AncestorId) && other.OffspringId.Equals(OffspringId);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return AncestorId ^ OffspringId;
+            }
+        }
 
         public override string ToString()
         {

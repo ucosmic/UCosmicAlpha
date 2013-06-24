@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using UCosmic.Domain.Agreements;
 
-namespace UCosmic.Web.Mvc.Models.Agreements
+namespace UCosmic.Web.Mvc.Models
 {
     public class AgreementParticipantApiModel
     {

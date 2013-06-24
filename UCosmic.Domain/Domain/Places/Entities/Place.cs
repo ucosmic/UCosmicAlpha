@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 
 namespace UCosmic.Domain.Places
 {
-    public class Place : RevisableEntity
+    public class Place : RevisableEntity, IEquatable<Place>
     {
         protected internal Place()
         {
@@ -42,9 +43,24 @@ namespace UCosmic.Domain.Places
         public bool IsAdmin2 { get; protected internal set; }
         public bool IsAdmin3 { get; protected internal set; }
 
+        public bool Equals(Place other)
+        {
+            if (other == null) return false;
+            return other.RevisionId.Equals(RevisionId) && other.EntityId.Equals(EntityId);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return RevisionId.GetHashCode() ^ EntityId.GetHashCode();
+            }
+        }
+
         public override string ToString()
         {
-            return OfficialName;
+            var placeType = (GeoPlanetPlace != null) ? GeoPlanetPlace.Type.EnglishName : null;
+            return (string.IsNullOrWhiteSpace(placeType)) ? OfficialName : string.Format("{0} ({1})", OfficialName, placeType);
         }
     }
 
