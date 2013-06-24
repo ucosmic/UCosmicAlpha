@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
@@ -9,8 +10,9 @@ namespace UCosmic.Domain.People
 {
     public class UpdatePerson
     {
-        public UpdatePerson(int id)
+        public UpdatePerson(IPrincipal principal, int id)
         {
+            Principal = principal;
             Id = id;
         }
 
@@ -27,11 +29,13 @@ namespace UCosmic.Domain.People
             public bool IsClaimingAdministrator { get; set; }
             public bool IsClaimingFaculty { get; set; }
             public bool IsClaimingStaff { get; set; }
+            public int? CampusId { get; set; }
             public int? CollegeId { get; set; }
             public int? DepartmentId { get; set; }
             public int? FacultyRankId { get; set; }
         }
 
+        public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
         public bool IsActive { get; set; }
         public bool IsDisplayNameDerived { get; set; }
@@ -43,7 +47,6 @@ namespace UCosmic.Domain.People
         public string Suffix { get; set; }
         public string Gender { get; set; }
         public ICollection<Affiliation> Affiliations { get; set; }
-
 
         internal bool NoCommit { get; set; }
     }
@@ -64,22 +67,64 @@ namespace UCosmic.Domain.People
     public class HandleUpdatePersonCommand : IHandleCommands<UpdatePerson>
     {
         private readonly ICommandEntities _entities;
-        //private readonly IHandleCommands<CreateEmployee> _createEmployee;
+        private readonly IHandleCommands<CreateMyAffiliation> _createMyAffiliation;
+        private readonly IHandleCommands<UpdateMyAffiliation> _updateMyAffiliation;
+        private readonly IHandleCommands<DeleteMyAffiliation> _deleteMyAffiliation;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdatePersonCommand(ICommandEntities entities
-            //, IHandleCommands<CreateEmployee> createEmployee
-            , IUnitOfWork unitOfWork
+                , IHandleCommands<CreateMyAffiliation> createMyAffiliation
+                , IHandleCommands<UpdateMyAffiliation> updateMyAffiliation
+                , IHandleCommands<DeleteMyAffiliation> deleteMyAffiliation
+                , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
-            //_createEmployee = createEmployee;
+            _createMyAffiliation = createMyAffiliation;
+            _updateMyAffiliation = updateMyAffiliation;
+            _deleteMyAffiliation = deleteMyAffiliation;
             _unitOfWork = unitOfWork;
         }
 
         public void Handle(UpdatePerson command)
         {
             Handle2(command);
+        }
+
+        private bool CompareAffiliation(UpdatePerson.Affiliation a, UCosmic.Domain.People.Affiliation b)
+        {
+            return (a.EstablishmentId == b.EstablishmentId) &&
+                (a.JobTitles == b.JobTitles) &&
+                (a.IsDefault == b.IsDefault) &&
+                (a.IsPrimary == b.IsPrimary) &&
+                (a.IsAcknowledged == b.IsAcknowledged) &&
+                (a.IsClaimingStudent == b.IsClaimingStudent) &&
+                (a.IsClaimingEmployee == b.IsClaimingEmployee) &&
+                (a.IsClaimingInternationalOffice == b.IsClaimingInternationalOffice) &&
+                (a.IsClaimingAdministrator == b.IsClaimingAdministrator) &&
+                (a.IsClaimingFaculty == b.IsClaimingFaculty) &&
+                (a.IsClaimingStaff == b.IsClaimingStaff) &&
+                (a.CampusId == b.CampusId) &&
+                (a.CollegeId == b.CollegeId) &&
+                (a.DepartmentId == b.DepartmentId) &&
+                (a.FacultyRankId == b.FacultyRankId);
+        }
+
+        private bool CompareAffiliations(ICollection<UpdatePerson.Affiliation> aList, ICollection<UCosmic.Domain.People.Affiliation> bList)
+        {
+            if ((aList == null) && (bList == null)) return true;
+            if ((aList== null) && (bList != null)) return false;
+            if ((aList != null) && (bList == null)) return false;
+            if (aList.Count != bList.Count) return false;
+
+            for (var i = 0; i < aList.Count; i += 1)
+            {
+                var a = aList.ElementAt(i);
+                var b = bList.ElementAt(i);
+                if (!CompareAffiliation(a,b)) return false;
+            }
+
+            return true;
         }
 
         private void Handle2(UpdatePerson command)
@@ -93,7 +138,8 @@ namespace UCosmic.Domain.People
                     "Person '{0}' does not exist", command.Id));
 
             // only mutate when state is modified
-            if (command.IsActive == person.IsActive &&
+            if (
+                command.IsActive == person.IsActive &&
                 command.IsDisplayNameDerived == person.IsDisplayNameDerived &&
                 command.DisplayName == person.DisplayName &&
                 command.Salutation == person.Salutation &&
@@ -101,7 +147,9 @@ namespace UCosmic.Domain.People
                 command.MiddleName == person.MiddleName &&
                 command.LastName == person.LastName &&
                 command.Suffix == person.Suffix &&
-                command.Gender == person.Gender)
+                command.Gender == person.Gender &&
+                CompareAffiliations(command.Affiliations, person.Affiliations)
+               )
                 return;
 
             // log audit
@@ -121,6 +169,7 @@ namespace UCosmic.Domain.People
                     command.LastName,
                     command.Suffix,
                     command.Gender,
+                    command.Affiliations
                 }),
                 PreviousState = person.ToJsonAudit(),
             };
@@ -135,6 +184,74 @@ namespace UCosmic.Domain.People
             person.LastName = command.LastName;
             person.Suffix = command.Suffix;
             person.Gender = command.Gender;
+
+            // update affiliations
+            {
+                foreach (var update in command.Affiliations)
+                {
+                    /* Update and add */
+                    Affiliation existing = person.Affiliations.FirstOrDefault(a => 
+                        (a.EstablishmentId == update.EstablishmentId) &&
+                        (a.CampusId == update.CampusId) &&
+                        (a.CollegeId == update.CollegeId) &&
+                        (a.DepartmentId == update.DepartmentId));
+                        
+                    if (existing == null)
+                    {
+                        /* Create */
+                        var createCommand = new CreateMyAffiliation
+                        {
+                            PersonId = command.Id,
+                            EstablishmentId = update.EstablishmentId,
+                            IsPrimary = update.IsPrimary,
+                            IsClaimingStudent = update.IsClaimingStudent,
+                            IsClaimingEmployee = update.IsClaimingEmployee,
+                            CampusId = update.CampusId,
+                            CollegeId = update.CollegeId,
+                            DepartmentId = update.DepartmentId,
+                            FacultyRankId = update.FacultyRankId,
+                        };
+
+                        _createMyAffiliation.Handle(createCommand);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        /* Update */
+                        var updateCommand = new UpdateMyAffiliation(command.Principal, existing.RevisionId)
+                        {
+                            EstablishmentId = update.EstablishmentId,
+                            IsPrimary = update.IsPrimary,
+                            IsClaimingStudent = update.IsClaimingStudent,
+                            IsClaimingEmployee = update.IsClaimingEmployee,
+                            CampusId = update.CampusId,
+                            CollegeId = update.CollegeId,
+                            DepartmentId = update.DepartmentId,
+                            FacultyRankId = update.FacultyRankId,
+                        };
+
+                        _updateMyAffiliation.Handle(updateCommand);
+                        _unitOfWork.SaveChanges();
+                    }
+                }
+
+                /* Delete */
+                foreach (var existing in person.Affiliations.ToList())
+                {
+                    UpdatePerson.Affiliation update = command.Affiliations.FirstOrDefault(a => 
+                       (a.EstablishmentId == existing.EstablishmentId) &&
+                       (a.CampusId == existing.CampusId) &&
+                       (a.CollegeId == existing.CollegeId) &&
+                       (a.DepartmentId == existing.DepartmentId));
+             
+                    if (update == null)
+                    {
+                        var deleteCommand = new DeleteMyAffiliation(command.Principal, existing.RevisionId);
+                        _deleteMyAffiliation.Handle(deleteCommand);
+                        _unitOfWork.SaveChanges();
+                    }
+                }
+            }
 
             // push to database
             personAudit.NewState = person.ToJsonAudit();

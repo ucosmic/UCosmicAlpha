@@ -26,23 +26,17 @@ namespace UCosmic.Domain.External
         [DataContract]
         private class DepartmentRecord
         {
-            [DataMember(Name = "DEPTID")]
-            public string DeptId;
-            [DataMember(Name = "INSTITUTION")]
-            public string Institution;
-            [DataMember(Name = "COLLEGE")]
-            public string College;
-            [DataMember(Name = "DEPARTMENT")]
-            public string Department;
+            [DataMember(Name = "DEPTID")] public string DeptId;
+            [DataMember(Name = "INSTITUTION")] public string Institution;
+            [DataMember(Name = "COLLEGE")] public string College;
+            [DataMember(Name = "DEPARTMENT")] public string Department;
         }
 
         [DataContract]
         private class Record
         {
-            [DataMember(Name = "LAST_ACTIVITY_DATE")]
-            public string LastActivityDate;
-            [DataMember(Name = "DEPARTMENTS")]
-            public DepartmentRecord[] Departments;
+            [DataMember(Name = "lastUpdate")] public string LastActivityDate; // MM-DD-YYYY
+            [DataMember(Name = "lookup")]  public DepartmentRecord[] Departments;
         }
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
@@ -172,7 +166,7 @@ namespace UCosmic.Domain.External
             {
                 DepartmentRecord department = record.Departments[i];
 
-                /* Attempt to find existing department by id */
+                /* Attempt to find existing department by id. */
                 var existingDepartment =
                     _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DeptId);
 
@@ -198,29 +192,58 @@ namespace UCosmic.Domain.External
                         throw new Exception(message);
                     }
 
-                    /* Does the college exist? If not, create it. */
-                    if (!String.IsNullOrWhiteSpace(department.College))
+                    /* Create department/program (if provided a name). */
+                    if (String.IsNullOrWhiteSpace(department.Department))
                     {
-                        var college =
-                            _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
-                        if (college == null)
+                        if (!String.IsNullOrWhiteSpace(department.College))
                         {
-                            var createCollege = new UsfCreateEstablishment()
+                            var college = _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
+                            if (college == null)
                             {
-                                OfficialName = department.College,
-                                IsMember = true,
-                                ParentId = campus.RevisionId,
-                                TypeId = _collegeEstablishmentType.RevisionId
-                            };
-                            _createUsfEstablishment.Handle(createCollege);
-                            _unitOfWork.SaveChanges();
+                                var createCollege = new UsfCreateEstablishment()
+                                {
+                                    OfficialName = department.College,
+                                    ExternalId = department.DeptId,  // No department so assign ID to college.
+                                    IsMember = true,
+                                    ParentId = campus.RevisionId,
+                                    TypeId = _collegeEstablishmentType.RevisionId
+                                };
+                                _createUsfEstablishment.Handle(createCollege);
+                                _unitOfWork.SaveChanges();
 
-                            college = createCollege.CreatedEstablishment;
+                                college = createCollege.CreatedEstablishment;
+                            }
                         }
-
-                        /* Create department/program (if provided a name). */
-                        if (!String.IsNullOrWhiteSpace(department.Department))
+                        else
                         {
+                            string message = String.Format("USF no college or department found for DeptID {0}", department.DeptId);
+                            throw new Exception(message);
+                        }
+                    }
+                    else
+                    {
+                        /* Does the college exist? If not, create it. */
+                        if (!String.IsNullOrWhiteSpace(department.College))
+                        {
+                            var college =
+                                _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
+
+                            if (college == null)
+                            {
+                                var createCollege = new UsfCreateEstablishment()
+                                {
+                                    OfficialName = department.College,
+                                    IsMember = true,
+                                    ParentId = campus.RevisionId,
+                                    TypeId = _collegeEstablishmentType.RevisionId
+                                };
+                                _createUsfEstablishment.Handle(createCollege);
+                                _unitOfWork.SaveChanges();
+
+                                college = createCollege.CreatedEstablishment;
+                            }
+
+                            /* Create the department */
                             var createDepartment = new UsfCreateEstablishment()
                             {
                                 OfficialName = department.Department,
@@ -233,8 +256,16 @@ namespace UCosmic.Domain.External
                             _createUsfEstablishment.Handle(createDepartment);
                             _unitOfWork.SaveChanges();
                         }
+                        else
+                        {
+                            string message = String.Format("USF no college for {0} found for DeptID {1}", department.Department, department.DeptId);
+                            throw new Exception(message);
+                        }
                     }
-
+                }
+                else // Update establishment
+                {
+                    /* TBD - Handle name changes */
                 }
             }
 

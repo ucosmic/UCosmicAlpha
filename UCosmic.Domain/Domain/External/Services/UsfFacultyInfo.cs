@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 
@@ -6,16 +7,12 @@ namespace UCosmic.Domain.External
 {
     public class UsfFacultyInfo
     {
-        /* Faculty Information Sevice */
-#if false // true for dev urls
-        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
-        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/facultyInfo";
-#else
-        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
-        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/facultyInfo";
-#endif
-
         private Stream _responseStream;
+
+        public static string CasUri
+        {
+            get { return ConfigurationManager.AppSettings["UsfCasLoginService"]; }
+        }
 
         public Stream Open(string casTicket, string usfNetId)
         {
@@ -24,12 +21,24 @@ namespace UCosmic.Domain.External
                 return _responseStream;
             }
 
-            string url = String.Format("{0}/{1}?ticket={2}", Uri, usfNetId, casTicket);
+            int atIndex = usfNetId.IndexOf('@');
+            if (atIndex != -1)
+            {
+                usfNetId = usfNetId.Substring(0, atIndex).Trim();
+            }
+
+            if (usfNetId.Length == 0)
+            {
+                return null;
+            }
+
+            string uri = ConfigurationManager.AppSettings["UsfFacultyInfoService"];
+            string url = String.Format("{0}/{1}?ticket={2}", uri, usfNetId, casTicket);
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             request.Method = "GET";
 
-            request.Timeout = 15000;
+            request.Timeout = 2 /* min */ * 60 /* sec */ * 1000 /* ms */;
             var response = request.GetResponse();
             _responseStream = response.GetResponseStream();
 

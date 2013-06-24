@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 
@@ -6,16 +7,12 @@ namespace UCosmic.Domain.External.Services
 {
     public class UsfDepartmentIdLookup
     {
-        /* Department ID Lookup Sevice */
-#if false // true for dev urls
-        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
-        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/deptIdLookup";
-#else
-        public const string CasUri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
-        private const string Uri = @"https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/deptIdLookup";
-#endif
-
         private Stream _stream;
+
+        public static string CasUri
+        {
+            get { return ConfigurationManager.AppSettings["UsfCasLoginService"]; }
+        }
 
         public Stream Open(string casTicket)
         {
@@ -24,7 +21,8 @@ namespace UCosmic.Domain.External.Services
                 return _stream;
             }
 
-            string url = String.Format("{0}?ticket={1}", Uri, casTicket);
+            string uri = ConfigurationManager.AppSettings["UsfDepartmentLookupService"];
+            string url = String.Format("{0}?ticket={1}", uri, casTicket);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
 

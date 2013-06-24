@@ -139,21 +139,26 @@ namespace UCosmic.Domain.Identity
                              x =>
                              x.EmailDomains.Any(y => y.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)));
 
+            var person = new Person
+            {
+                DisplayName = command.PersonDisplayName ?? command.Name
+            };
+            _entities.Create(person);
+            _unitOfWork.SaveChanges();
+
+            var affiliation = new Affiliation
+            {
+                IsDefault = true,
+                PersonId = person.RevisionId,
+                EstablishmentId = establishmentToAffiliate.RevisionId
+            };
+            _entities.Create(affiliation);
+            _unitOfWork.SaveChanges();
+
             var user = new User
             {
                 Name = command.Name,
-                Person = new Person
-                {
-                    DisplayName = command.PersonDisplayName ?? command.Name,
-                    Affiliations = new Collection<Affiliation>
-                    {
-                        new Affiliation
-                        {
-                            IsDefault = true,
-                            Establishment = establishmentToAffiliate,
-                        },
-                    },
-                },
+                Person = person
             };
 
             // log audit

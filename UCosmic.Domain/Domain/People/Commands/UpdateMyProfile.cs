@@ -111,7 +111,7 @@ namespace UCosmic.Domain.People
                         "User '{0}' does not exist", command.Principal.Identity.Name));
 
                 // delegate to other commands
-                _updatePerson.Handle(new UpdatePerson(person.RevisionId)
+                _updatePerson.Handle(new UpdatePerson(command.Principal, person.RevisionId)
                 {
                     NoCommit = true,
                     IsActive = command.IsActive,

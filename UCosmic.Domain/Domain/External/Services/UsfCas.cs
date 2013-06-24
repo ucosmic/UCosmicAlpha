@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 
@@ -6,13 +7,11 @@ namespace UCosmic.Domain.External
 {
     public static class UsfCas
     {
-        /* Ticket Granting Ticket (TGT) Service */
-        private const string Uri = @"https://authtest.it.usf.edu:444/v1/tickets";
-
         private static string GetTgtResource(string username, string password)
         {
+            string uri = ConfigurationManager.AppSettings["UsfCasTicketService"];
             string tgtResource = null;
-            var request = (HttpWebRequest)WebRequest.Create(Uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
 
             request.Method = "POST";
             var requestStream = new StreamWriter(request.GetRequestStream());
