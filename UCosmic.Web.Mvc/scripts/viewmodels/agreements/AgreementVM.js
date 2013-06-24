@@ -33,12 +33,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.id = id;
             };
             this.uAgreements = ko.mapping.fromJS([]);
+            this.$agreementTypes = ko.observable();
             this.agreementTypes = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
-            this.agreementTypeSelected = ko.observable(0);
+            this.agreementTypeSelected = ko.observable();
             this.nickname = ko.observable();
             this.privateNotes = ko.observable();
             this.agreementContent = ko.observable();
+            this.isCustomTypeAllowed = ko.observable();
             this.participants = ko.mapping.fromJS([]);
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -181,7 +183,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
                     var lastURL = "asdf";
                     if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
-                        this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                        if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/") === -1) {
+                            this.establishmentSearchViewModel.sammy.setLocation('/agreements/new/#/index');
+                        } else {
+                            this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                        }
                     }
                     if(sessionStorage.getItem("addest") == undefined) {
                         sessionStorage.setItem("addest", "no");
@@ -190,7 +196,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                             var $asideRootSearch = $("#asideRootSearch");
                             var $asideParentSearch = $("#asideParentSearch");
-                            if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/new/") > 0) {
+                            if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/new/") > 0) {
                                 var $addEstablishment = $("#addEstablishment");
                                 var dfd = $.Deferred();
                                 var dfd2 = $.Deferred();
@@ -286,7 +292,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                     });
                                 });
                                 lastURL = "#/new/";
-                            } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/page/") > 0) {
+                            } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/page/") > 0) {
                                 if(sessionStorage.getItem("addest") === "yes") {
                                     _this.establishmentSearchViewModel.clickAction = function (context) {
                                         _this.establishmentItemViewModel.parentEstablishment(context);
@@ -320,10 +326,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                             }).done(function (response) {
                                                 myParticipant.isOwner(response.isOwner);
                                                 _this.participants.push(myParticipant);
-                                                _this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                                                _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
                                             }).fail(function () {
                                                 _this.participants.push(myParticipant);
-                                                _this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                                                _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
                                             });
                                         } else {
                                             alert("This Participant has already been added.");
@@ -331,7 +337,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                     };
                                 }
                                 lastURL = "#/page/";
-                            } else {
+                            } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/new") > 0) {
                                 sessionStorage.setItem("addest", "no");
                                 lastURL = "#/index";
                                 _this.establishmentSearchViewModel.sammy.setLocation('#/index');
@@ -344,6 +350,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                 $.when(dfd, dfd2).done(function () {
                                     $("#allParticipants").fadeIn(500);
                                 });
+                            } else {
+                                window.location = _this.establishmentSearchViewModel.sammy.getLocation();
                             }
                         }
                     });
@@ -359,13 +367,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.removeParticipant = this.removeParticipant.bind(this);
             this.hideOtherGroups();
             this.bindSearch();
+            this.getSettings();
             this.uAgreements = ko.mapping.fromJS([
                 new this.selectConstructor("[None - this is a top-level or standalone agreement]", 0), 
-                new this.selectConstructor("test", 1), 
-                new this.selectConstructor("test2", 2), 
-                new this.selectConstructor("test3", 3)
-            ]);
-            this.agreementTypes = ko.mapping.fromJS([
                 new this.selectConstructor("test", 1), 
                 new this.selectConstructor("test2", 2), 
                 new this.selectConstructor("test3", 3)
@@ -387,6 +391,32 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $.get(App.Routes.WebApi.Agreements.Participants.get()).done(function (response) {
                 _this.receiveResults(response);
                 $("#LoadingPage").hide();
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.getSettings = function () {
+            var _this = this;
+            var url = 'App.Routes.WebApi.Agreements.Settings.get()';
+            var agreementSettingsGet;
+            $.ajax({
+                url: eval(url),
+                type: 'GET'
+            }).done(function (result) {
+                _this.isCustomTypeAllowed(result.isCustomTypeAllowed);
+                for(var i = 0; i < result.typeOptions.length; i++) {
+                    _this.agreementTypes.push(new _this.selectConstructor(result.typeOptions[i], i));
+                }
+                ;
+                if(_this.isCustomTypeAllowed) {
+                    $("#agreementTypes").kendoComboBox({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: _this.agreementTypes()
+                        })
+                    });
+                }
+            }).fail(function (xhr) {
+                alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });
         };
         InstitutionalAgreementEditModel.prototype.hideOtherGroups = function () {

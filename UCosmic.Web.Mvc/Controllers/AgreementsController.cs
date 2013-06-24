@@ -28,6 +28,14 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
+        [GET("agreements/new/")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        public virtual ViewResult New()
+        {
+            ViewBag.Id = 0;
+            return View(MVC.Agreements.Views.Form);
+        }
+
         [GET("agreements/{domain?}")]
         public virtual ActionResult DansIndex(string domain)
         {
@@ -57,13 +65,6 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-        [GET("agreements/new")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
-        public virtual ViewResult New()
-        {
-            ViewBag.Id = 0;
-            return View(MVC.Agreements.Views.Form);
-        }
 
         [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]

@@ -96,10 +96,13 @@
                             <label>Agreement type</label>
                         </div>
                         <div class="field-input-label-top">
+                            
                             <select  data-bind="options: agreementTypes(), 
 							    optionsValue: 'id',
-							    optionsText: 'name', value: agreementTypeSelected">
-						    </select>
+							    optionsText: 'name', value: agreementTypeSelected, visible: !isCustomTypeAllowed()">
+                            </select>
+                            <input id="agreementTypes" type="text" placeholder="[None]"
+                                   data-bind="value: agreementTypeSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$agreementTypes', visible: isCustomTypeAllowed" />
                         </div>
                     </div> 
                     <div class="field-row">

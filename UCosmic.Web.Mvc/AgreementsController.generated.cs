@@ -77,8 +77,8 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string Show = "Show";
-            public readonly string DansIndex = "DansIndex";
             public readonly string New = "New";
+            public readonly string DansIndex = "DansIndex";
             public readonly string Edit = "Edit";
             public readonly string Settings = "Settings";
         }
@@ -88,8 +88,8 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string Show = "Show";
-            public const string DansIndex = "DansIndex";
             public const string New = "New";
+            public const string DansIndex = "DansIndex";
             public const string Edit = "Edit";
             public const string Settings = "Settings";
         }
@@ -167,16 +167,16 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
+        public override System.Web.Mvc.ViewResult New()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
+            return callInfo;
+        }
+
         public override System.Web.Mvc.ActionResult DansIndex(string domain)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DansIndex);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ViewResult New()
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
             return callInfo;
         }
 

@@ -1,9 +1,9 @@
+/// <reference path="../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../typings/knockout.postbox/knockout-postbox.d.ts" />
 /// <reference path="../../jquery/jquery-1.8.d.ts" />
-/// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -19,6 +19,7 @@ import Url = module('../amd-modules/Establishments/Url')
 var Search = SearchModule.Search;
 var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
+
 
 
 export class InstitutionalAgreementParticipantModel {
@@ -50,30 +51,33 @@ export class InstitutionalAgreementEditModel {
         this.hideOtherGroups();
         this.bindSearch();
 
+        this.getSettings();
+
         this.uAgreements = ko.mapping.fromJS([
                 new this.selectConstructor("[None - this is a top-level or standalone agreement]", 0),
                 new this.selectConstructor("test", 1),
                 new this.selectConstructor("test2", 2),
                 new this.selectConstructor("test3", 3)
         ]);
-        this.agreementTypes = ko.mapping.fromJS([
-                new this.selectConstructor("test", 1),
-                new this.selectConstructor("test2", 2),
-                new this.selectConstructor("test3", 3)
-        ]);
+        //this.agreementTypes = ko.mapping.fromJS([
+        //        new this.selectConstructor("test", 1),
+        //        new this.selectConstructor("test2", 2),
+        //        new this.selectConstructor("test3", 3)
+        //]);
     }
     selectConstructor = function (name: string, id: number) {
         this.name = name;
         this.id = id;
     };
     uAgreements = ko.mapping.fromJS([]);
+    $agreementTypes: KnockoutObservableJQuery = ko.observable();
     agreementTypes = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
-    agreementTypeSelected = ko.observable(0);
+    agreementTypeSelected: KnockoutObservableString = ko.observable();
     nickname = ko.observable();
     privateNotes = ko.observable();
     agreementContent = ko.observable();
-
+    isCustomTypeAllowed = ko.observable();
 
 
     participants = ko.mapping.fromJS([]);
@@ -125,6 +129,35 @@ export class InstitutionalAgreementEditModel {
 
     }
     
+    getSettings(): void {
+
+        var url = 'App.Routes.WebApi.Agreements.Settings.get()';
+        var agreementSettingsGet;
+        $.ajax({
+            url: eval(url),
+            type: 'GET'
+        })
+        .done(function (result) => {
+            this.isCustomTypeAllowed(result.isCustomTypeAllowed);
+            for (var i = 0; i < result.typeOptions.length; i++) {
+                this.agreementTypes.push(new this.selectConstructor(result.typeOptions[i], i));
+            };
+            if (this.isCustomTypeAllowed) {
+                $("#agreementTypes").kendoComboBox( {
+                            dataTextField: "name",
+                            dataValueField: "id",
+                            dataSource: new kendo.data.DataSource({
+                                data: this.agreementTypes()
+                            })
+                        });
+            } 
+        })
+        .fail(function (xhr) {
+            alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+        });
+
+    }
+
     hideOtherGroups(): void {
         $("#allParticipants").css("visibility", "").hide();
         $("#estSearch").css("visibility", "").hide();
@@ -268,7 +301,11 @@ export class InstitutionalAgreementEditModel {
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
             var lastURL = "asdf";
             if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
-                this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/") === -1) {
+                    this.establishmentSearchViewModel.sammy.setLocation('/agreements/new/#/index');
+                } else {
+                    this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                }
             }
             if (sessionStorage.getItem("addest") == undefined) {
                 sessionStorage.setItem("addest", "no");
@@ -277,7 +314,7 @@ export class InstitutionalAgreementEditModel {
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                     var $asideRootSearch = $("#asideRootSearch");
                     var $asideParentSearch = $("#asideParentSearch");
-                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/new/") > 0) {
+                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/new/") > 0) {
                         var $addEstablishment = $("#addEstablishment");
                         var dfd = $.Deferred();
                         var dfd2 = $.Deferred();
@@ -386,7 +423,7 @@ export class InstitutionalAgreementEditModel {
                                 });
                             })
                         lastURL = "#/new/";
-                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#/page/") > 0) {
+                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/page/") > 0) {
                         if (sessionStorage.getItem("addest") === "yes") {
                             this.establishmentSearchViewModel.clickAction = function (context): bool => {
                                 this.establishmentItemViewModel.parentEstablishment(context);
@@ -427,12 +464,12 @@ export class InstitutionalAgreementEditModel {
                                     .done(function (response) => {
                                         myParticipant.isOwner(response.isOwner);
                                         this.participants.push(myParticipant);
-                                        this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
                                     })
                                     .fail(function () => {
                                         //alert('fail');
                                         this.participants.push(myParticipant);
-                                        this.establishmentSearchViewModel.sammy.setLocation('Agreements/');
+                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
                                     });
                                 } else {
                                     alert("This Participant has already been added.")
@@ -440,7 +477,7 @@ export class InstitutionalAgreementEditModel {
                             }
                         }
                         lastURL = "#/page/";
-                    } else {
+                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/new") > 0) {
                         sessionStorage.setItem("addest", "no");
                         lastURL = "#/index";
                         this.establishmentSearchViewModel.sammy.setLocation('#/index');
@@ -454,6 +491,8 @@ export class InstitutionalAgreementEditModel {
                             .done(function () => {
                                 $("#allParticipants").fadeIn(500);
                             });
+                    } else {
+                        window.location = this.establishmentSearchViewModel.sammy.getLocation();
                     }
                 }
             });
