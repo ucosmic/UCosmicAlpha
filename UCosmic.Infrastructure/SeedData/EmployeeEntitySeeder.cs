@@ -52,11 +52,11 @@ namespace UCosmic.SeedData
                 EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
                 {
                     /* TODO: Need actual UC ranks here. */
-                    new EmployeeFacultyRank {Rank = "Assistant Professor"},
-                    new EmployeeFacultyRank {Rank = "Associate Professor"},
-                    new EmployeeFacultyRank {Rank = "Professor"},
-                    new EmployeeFacultyRank {Rank = "Distinguished University Professor"},
-                    new EmployeeFacultyRank {Rank = "Other"},
+                    new EmployeeFacultyRank {Rank = "Distinguished University Professor", Number = 1},
+                    new EmployeeFacultyRank {Rank = "Professor", Number = 2},
+                    new EmployeeFacultyRank {Rank = "Associate Professor", Number = 3},
+                    new EmployeeFacultyRank {Rank = "Assistant Professor", Number = 4},
+                    new EmployeeFacultyRank {Rank = "Other", Number = 5}
                 },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = null, //"My International",
@@ -97,11 +97,11 @@ namespace UCosmic.SeedData
             {
                 EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
                 {
-                    new EmployeeFacultyRank {Rank = "Assistant Professor"},
-                    new EmployeeFacultyRank {Rank = "Associate Professor"},
-                    new EmployeeFacultyRank {Rank = "Professor"},
-                    new EmployeeFacultyRank {Rank = "Distinguished University Professor"},
-                    new EmployeeFacultyRank {Rank = "Other"},
+                    new EmployeeFacultyRank {Rank = "Distinguished University Professor", Number = 1},
+                    new EmployeeFacultyRank {Rank = "Professor", Number = 2},
+                    new EmployeeFacultyRank {Rank = "Associate Professor", Number = 3},
+                    new EmployeeFacultyRank {Rank = "Assistant Professor", Number = 4},
+                    new EmployeeFacultyRank {Rank = "Other", Number = 5}
                 },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = "My USF Profile",

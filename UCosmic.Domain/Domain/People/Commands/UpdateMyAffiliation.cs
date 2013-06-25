@@ -9,10 +9,10 @@ namespace UCosmic.Domain.People
 {
     public class UpdateMyAffiliation
     {
-        public IPrincipal Principal { get; protected internal set; }
-        public int Id { get; protected internal set; }
-        public int PersonId { get; set; }
-        public int EstablishmentId { get; set; }
+        public IPrincipal Principal { get; private set; }
+        public int Id { get; private set; }
+        public int PersonId { get; private set; }
+        public int EstablishmentId { get; private set; }
         public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
@@ -21,10 +21,12 @@ namespace UCosmic.Domain.People
         public int? DepartmentId { get; set; }
         public int? FacultyRankId { get; set; }
 
-        public UpdateMyAffiliation(IPrincipal principal, int id)
+        public UpdateMyAffiliation(IPrincipal principal, int id, int personId, int establishmentId)
         {
             Principal = principal;
             Id = id;
+            PersonId = personId;
+            EstablishmentId = establishmentId;
         }
     }
 

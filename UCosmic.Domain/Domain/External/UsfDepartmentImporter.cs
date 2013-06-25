@@ -185,7 +185,8 @@ namespace UCosmic.Domain.External
                     }
 
                     /* Get the campus. */
-                    var campus = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == campusOfficialName);
+                    var campus = _entities.Get<Establishment>().SingleOrDefault(e => (e.Parent.RevisionId == _usf.RevisionId) &&     
+                                                                                     (e.OfficialName == campusOfficialName));
                     if (campus == null)
                     {
                         string message = String.Format("USF campus {0} not found", campusOfficialName);
@@ -197,7 +198,10 @@ namespace UCosmic.Domain.External
                     {
                         if (!String.IsNullOrWhiteSpace(department.College))
                         {
-                            var college = _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
+                            var college = _entities.Get<Establishment>()
+                                .SingleOrDefault(e => (e.Parent.RevisionId == campus.RevisionId) &&
+                                                      (e.OfficialName == department.College));
+
                             if (college == null)
                             {
                                 var createCollege = new UsfCreateEstablishment()
@@ -210,8 +214,6 @@ namespace UCosmic.Domain.External
                                 };
                                 _createUsfEstablishment.Handle(createCollege);
                                 _unitOfWork.SaveChanges();
-
-                                college = createCollege.CreatedEstablishment;
                             }
                         }
                         else
@@ -225,8 +227,9 @@ namespace UCosmic.Domain.External
                         /* Does the college exist? If not, create it. */
                         if (!String.IsNullOrWhiteSpace(department.College))
                         {
-                            var college =
-                                _entities.Get<Establishment>().FirstOrDefault(e => e.OfficialName == department.College);
+                            var college = _entities.Get<Establishment>()
+                                .SingleOrDefault(e => (e.Parent.RevisionId == campus.RevisionId) &&
+                                                      (e.OfficialName == department.College));
 
                             if (college == null)
                             {

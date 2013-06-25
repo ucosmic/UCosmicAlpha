@@ -218,9 +218,11 @@ namespace UCosmic.Domain.People
                     else
                     {
                         /* Update */
-                        var updateCommand = new UpdateMyAffiliation(command.Principal, existing.RevisionId)
+                        var updateCommand = new UpdateMyAffiliation(command.Principal,
+                                                                    existing.RevisionId,
+                                                                    command.Id,
+                                                                    existing.EstablishmentId)
                         {
-                            EstablishmentId = update.EstablishmentId,
                             IsPrimary = update.IsPrimary,
                             IsClaimingStudent = update.IsClaimingStudent,
                             IsClaimingEmployee = update.IsClaimingEmployee,
@@ -236,6 +238,10 @@ namespace UCosmic.Domain.People
                 }
 
                 /* Delete */
+#if false
+                /* TBD - Although this seems like the right action to take, it does
+                    in fact delete the default establishment.  Going to take this out for now. */
+
                 foreach (var existing in person.Affiliations.ToList())
                 {
                     UpdatePerson.Affiliation update = command.Affiliations.FirstOrDefault(a => 
@@ -251,6 +257,7 @@ namespace UCosmic.Domain.People
                         _unitOfWork.SaveChanges();
                     }
                 }
+#endif
             }
 
             // push to database

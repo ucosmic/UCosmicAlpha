@@ -268,10 +268,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
 
-            var updateAffiliationCommand = new UpdateMyAffiliation(User, model.Id)
+            var updateAffiliationCommand = new UpdateMyAffiliation(User,
+                                                                   model.Id,
+                                                                   model.PersonId,
+                                                                   model.EstablishmentId)
             {
-                PersonId = model.PersonId,
-                EstablishmentId = model.EstablishmentId,
                 CampusId = model.CampusId,
                 CollegeId = model.CollegeId,
                 DepartmentId = model.DepartmentId,

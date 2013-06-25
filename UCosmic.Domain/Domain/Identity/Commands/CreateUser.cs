@@ -139,7 +139,7 @@ namespace UCosmic.Domain.Identity
                              x =>
                              x.EmailDomains.Any(y => y.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)));
 
-            /* TBD - This needs to be fixed */
+            
             var person = new Person
             {
                 DisplayName = command.PersonDisplayName ?? command.Name
@@ -153,7 +153,9 @@ namespace UCosmic.Domain.Identity
                 PersonId = person.RevisionId,
                 EstablishmentId = establishmentToAffiliate.RevisionId
             };
-            _entities.Create(affiliation);
+            person.Affiliations.Add(affiliation);
+
+            _entities.Update(person);
             _unitOfWork.SaveChanges();
 
             var user = new User

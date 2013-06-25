@@ -410,6 +410,9 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
+#if false
+            /* TBD - When USF departments are imported somehow this seed data is getting duplicated. */
+
             /* USF Affiliations */
             {
                 /* ------------------------------------------------------------------------ */
@@ -543,6 +546,7 @@ namespace UCosmic.SeedData
                     IsClaimingStudent = false,
                 });
             }
+#endif
         }
     }
 
