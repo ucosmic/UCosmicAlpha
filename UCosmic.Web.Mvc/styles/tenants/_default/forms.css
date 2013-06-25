@@ -385,6 +385,9 @@ fieldset legend {
       .field-table .field-row .field-input-label-top select {
         width: 690px;
         margin-left: 0; }
+      .field-table .field-row .field-input-label-top input {
+        width: 665px !important;
+        margin-left: 0; }
       .field-table .field-row .field-input-label-top.for-checkables {
         display: inline-block;
         padding: 9px 0; }

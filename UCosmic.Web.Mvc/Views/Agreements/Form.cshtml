@@ -95,14 +95,16 @@
                         <div class="field-label-top required">
                             <label>Agreement type</label>
                         </div>
-                        <div class="field-input-label-top">
+                        <div class="field-input-label-top" data-bind="visible: !isCustomTypeAllowed()">
                             
                             <select  data-bind="options: agreementTypes(), 
 							    optionsValue: 'id',
-							    optionsText: 'name', value: agreementTypeSelected, visible: !isCustomTypeAllowed()">
+							    optionsText: 'name', value: agreementTypeSelected">
                             </select>
-                            <input id="agreementTypes" type="text" placeholder="[None]"
-                                   data-bind="value: agreementTypeSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$agreementTypes', visible: isCustomTypeAllowed" />
+                        </div>
+                        <div class="field-input-label-top" data-bind=" visible: isCustomTypeAllowed">
+                            <input id="agreementTypes" type="text" placeholder="[None]" 
+                                   data-bind="value: agreementTypeSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$agreementTypes'" />
                         </div>
                     </div> 
                     <div class="field-row">
