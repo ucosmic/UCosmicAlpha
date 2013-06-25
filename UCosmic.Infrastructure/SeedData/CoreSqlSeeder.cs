@@ -50,12 +50,12 @@ namespace UCosmic.SeedData
 	[CreatedOn] [datetime] NOT NULL,
 	[UpdatedOn] [datetime] NOT NULL,
 	[UpdatedByPersonId] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[PersonId] ASC,
-	[Number] ASC
+    CONSTRAINT [PK_Activities.Activity] PRIMARY KEY CLUSTERED ([PersonId] ASC, [Number] ASC)
 )
-)
+CREATE NONCLUSTERED INDEX [IX_PersonId]
+    ON [Activities].[Activity]([PersonId] ASC);
+CREATE NONCLUSTERED INDEX [IX_UpdatedByPersonId]
+    ON [Activities].[Activity]([UpdatedByPersonId] ASC);
 CREATE TABLE [Activities].[DraftedTag](
 	[ActivityPersonId] [int] NOT NULL,
 	[ActivityNumber] [int] NOT NULL,
@@ -84,10 +84,12 @@ PRIMARY KEY CLUSTERED
 	[Number] ASC
 )
 )
-ALTER TABLE [Activities].[Activity]  WITH CHECK ADD  CONSTRAINT [Activity_Person] FOREIGN KEY([PersonId])
-REFERENCES [People].[Person] ([RevisionId])
-ON DELETE CASCADE
-ALTER TABLE [Activities].[Activity] CHECK CONSTRAINT [Activity_Person]
+ALTER TABLE [Activities].[Activity] WITH NOCHECK
+    ADD CONSTRAINT [FK_Activities.Activity_People.Person_PersonId] FOREIGN KEY ([PersonId]) REFERENCES [People].[Person] ([RevisionId]) ON DELETE CASCADE;
+ALTER TABLE [Activities].[Activity] WITH CHECK CHECK CONSTRAINT [FK_Activities.Activity_People.Person_PersonId];
+ALTER TABLE [Activities].[Activity] WITH NOCHECK
+    ADD CONSTRAINT [FK_Activities.Activity_People.Person_UpdatedByPersonId] FOREIGN KEY ([UpdatedByPersonId]) REFERENCES [People].[Person] ([RevisionId]);
+ALTER TABLE [Activities].[Activity] WITH CHECK CHECK CONSTRAINT [FK_Activities.Activity_People.Person_UpdatedByPersonId];
 ALTER TABLE [Activities].[ActivityTag]  WITH CHECK ADD  CONSTRAINT [ActivityTag_Activity] FOREIGN KEY([ActivityPersonId], [ActivityNumber])
 REFERENCES [Activities].[Activity] ([PersonId], [Number])
 ON DELETE CASCADE
