@@ -32,15 +32,23 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.name = name;
                 this.id = id;
             };
+            this.$typeOptions = ko.observable();
+            this.typeOptions = ko.mapping.fromJS([]);
+            this.typeOptionSelected = ko.observable();
+            this.$statusOptions = ko.observable();
+            this.statusOptions = ko.mapping.fromJS([]);
+            this.statusOptionsSelected = ko.observable();
+            this.$contactTypeOptions = ko.observable();
+            this.contactTypeOptions = ko.mapping.fromJS([]);
+            this.contactTypeOptionsSelected = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
-            this.$agreementTypes = ko.observable();
-            this.agreementTypes = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
-            this.agreementTypeSelected = ko.observable();
             this.nickname = ko.observable();
             this.privateNotes = ko.observable();
             this.agreementContent = ko.observable();
             this.isCustomTypeAllowed = ko.observable();
+            this.isCustomStatusAllowed = ko.observable();
+            this.isCustomContactTypeAllowed = ko.observable();
             this.participants = ko.mapping.fromJS([]);
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -402,16 +410,47 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 type: 'GET'
             }).done(function (result) {
                 _this.isCustomTypeAllowed(result.isCustomTypeAllowed);
+                _this.isCustomStatusAllowed(result.isCustomStatusAllowed);
+                _this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
+                _this.statusOptions.push(new _this.selectConstructor("", 0));
+                _this.contactTypeOptions.push(new _this.selectConstructor("", 0));
+                _this.typeOptions.push(new _this.selectConstructor("", 0));
+                for(var i = 0; i < result.statusOptions.length; i++) {
+                    _this.statusOptions.push(new _this.selectConstructor(result.statusOptions[i], i + 1));
+                }
+                ;
+                for(var i = 0; i < result.contactTypeOptions.length; i++) {
+                    _this.contactTypeOptions.push(new _this.selectConstructor(result.contactTypeOptions[i], i));
+                }
+                ;
                 for(var i = 0; i < result.typeOptions.length; i++) {
-                    _this.agreementTypes.push(new _this.selectConstructor(result.typeOptions[i], i));
+                    _this.typeOptions.push(new _this.selectConstructor(result.typeOptions[i], i));
                 }
                 ;
                 if(_this.isCustomTypeAllowed) {
+                    $("#typeOptions").kendoComboBox({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: _this.typeOptions()
+                        })
+                    });
+                }
+                if(_this.isCustomStatusAllowed) {
                     $("#agreementTypes").kendoComboBox({
                         dataTextField: "name",
                         dataValueField: "id",
                         dataSource: new kendo.data.DataSource({
-                            data: _this.agreementTypes()
+                            data: _this.typeOptions()
+                        })
+                    });
+                }
+                if(_this.isCustomContactTypeAllowed) {
+                    $("#agreementTypes").kendoComboBox({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: _this.typeOptions()
                         })
                     });
                 }

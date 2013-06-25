@@ -329,6 +329,10 @@ fieldset {
     }
 }
 
+section {
+    margin-bottom: 40px;
+}
+
 .field-table {
     margin: 16px 0;
     .field-row {
@@ -388,6 +392,16 @@ fieldset {
                     content: ':';
                 }
             }
+            i {
+                float: right;
+                color: grey;
+            }
+        }
+        .field-label-description {
+            @include border-box;
+            padding: 0px 10px 0 0;
+            float: left;
+            color: grey;
         }
         .field-value {
             @include border-box;

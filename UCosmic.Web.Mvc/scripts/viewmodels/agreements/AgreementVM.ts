@@ -69,15 +69,23 @@ export class InstitutionalAgreementEditModel {
         this.name = name;
         this.id = id;
     };
+    $typeOptions: KnockoutObservableJQuery = ko.observable();
+    typeOptions = ko.mapping.fromJS([]);
+    typeOptionSelected: KnockoutObservableString = ko.observable();
+    $statusOptions: KnockoutObservableJQuery = ko.observable();
+    statusOptions = ko.mapping.fromJS([]);
+    statusOptionsSelected: KnockoutObservableString = ko.observable();
+    $contactTypeOptions: KnockoutObservableJQuery = ko.observable();
+    contactTypeOptions = ko.mapping.fromJS([]);
+    contactTypeOptionsSelected: KnockoutObservableString = ko.observable();
     uAgreements = ko.mapping.fromJS([]);
-    $agreementTypes: KnockoutObservableJQuery = ko.observable();
-    agreementTypes = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
-    agreementTypeSelected: KnockoutObservableString = ko.observable();
     nickname = ko.observable();
     privateNotes = ko.observable();
     agreementContent = ko.observable();
     isCustomTypeAllowed = ko.observable();
+    isCustomStatusAllowed = ko.observable();
+    isCustomContactTypeAllowed = ko.observable();
 
 
     participants = ko.mapping.fromJS([]);
@@ -139,18 +147,47 @@ export class InstitutionalAgreementEditModel {
         })
         .done(function (result) => {
             this.isCustomTypeAllowed(result.isCustomTypeAllowed);
+            this.isCustomStatusAllowed(result.isCustomStatusAllowed);
+            this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
+            this.statusOptions.push(new this.selectConstructor("", 0));
+            this.contactTypeOptions.push(new this.selectConstructor("", 0));
+            this.typeOptions.push(new this.selectConstructor("", 0));
+            for (var i = 0; i < result.statusOptions.length; i++) {
+                this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], i+1));
+            };
+            for (var i = 0; i < result.contactTypeOptions.length; i++) {
+                this.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], i));
+            };
             for (var i = 0; i < result.typeOptions.length; i++) {
-                this.agreementTypes.push(new this.selectConstructor(result.typeOptions[i], i));
+                this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], i));
             };
             if (this.isCustomTypeAllowed) {
-                $("#agreementTypes").kendoComboBox( {
+                $("#typeOptions").kendoComboBox( {
                             dataTextField: "name",
                             dataValueField: "id",
                             dataSource: new kendo.data.DataSource({
-                                data: this.agreementTypes()
+                                data: this.typeOptions()
                             })
                         });
-            } 
+            }
+            if (this.isCustomStatusAllowed) {
+                $("#agreementTypes").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.typeOptions()
+                    })
+                });
+            }
+            if (this.isCustomContactTypeAllowed) {
+                $("#agreementTypes").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.typeOptions()
+                    })
+                });
+            }
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');

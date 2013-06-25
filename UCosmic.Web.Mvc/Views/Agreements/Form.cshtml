@@ -73,10 +73,78 @@
                     </a>
                 </footer>
             </section>
-            <section id="participants">
+
+            <section id="basicInfo">
                 <header>
                     <h2>
                         Basic Info
+                    </h2>
+                </header>
+                <div class="field-table w690-l190-v500">
+                    <div class="field-row">
+                        <div class="field-label-top">
+                            <label>Umbrella agreement</label><i>(optional, public visibility)</i>
+                        </div>
+                        <div class="field-input-label-top">
+                            <select  data-bind="options: uAgreements(), 
+							    optionsValue: 'id',
+							    optionsText: 'name', value: uAgreementSelected">
+                            </select>
+                        </div>
+                        <div class="field-label-description">Indicate whether this agreement falls under an umbrella or parent agreement..</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label-top required">
+                            <label>Agreement type</label><i>(required, public visibility)</i>
+                        </div>
+                        <div class="field-input-label-top" data-bind="visible: !isCustomTypeAllowed()">
+                            
+                            <select  data-bind="options: typeOptions(), 
+							    optionsValue: 'id',
+							    optionsText: 'name', value: typeOptionSelected">
+                            </select>
+                        </div>
+                        <div class="field-input-label-top" data-bind=" visible: isCustomTypeAllowed">
+                            <input id="typeOptions" type="text" placeholder="[None]" 
+                                   data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
+                        </div>
+                        <div data-bind="visible: isCustomTypeAllowed" class="field-label-description">Select from the drop-down list of pre-existing agreement types or enter a custom one in the text box above.</div>
+                        <div data-bind=" visible: !isCustomTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement types.</div>
+                    </div> 
+                    <div class="field-row">
+                        <div class="field-label-top">
+                            <label>Nickname</label><i>(optional, public visibility)</i>
+                        </div>
+                        <div>
+                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]"  />
+                        </div>
+                        <div class="field-label-description">The nickname will help you locate and identify this agreement in other drop-down menus.</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label-top">
+                            <label>Content</label><i>(optional, public visibility)</i>
+                        </div>
+                        <div>
+                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]" id="agreementContent"  />
+                        </div>
+                        <div class="field-label-description">Optionally enter a description of the content of this agreement.</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label-top">
+                            <label>Private Notes</label><i>(optional, private visibility)</i>
+                        </div>
+                        <div>
+                            <textarea rows="3" class="no-resize" data-bind="value: privateNotes" data-autosize="true" placeholder="[Private notes for this agreement]" ></textarea>
+                        </div>
+                        <div class="field-label-description">Optionally enter private notes about this agreement.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="effectiveDatesCurrentStatus">
+                <header>
+                    <h2>
+                        Effective Dates & Current Status
                     </h2>
                 </header>
                 <div class="field-table w690-l190-v500">
@@ -97,14 +165,14 @@
                         </div>
                         <div class="field-input-label-top" data-bind="visible: !isCustomTypeAllowed()">
                             
-                            <select  data-bind="options: agreementTypes(), 
+                            <select  data-bind="options: typeOptions(), 
 							    optionsValue: 'id',
-							    optionsText: 'name', value: agreementTypeSelected">
+							    optionsText: 'name', value: typeOptionSelected">
                             </select>
                         </div>
                         <div class="field-input-label-top" data-bind=" visible: isCustomTypeAllowed">
-                            <input id="agreementTypes" type="text" placeholder="[None]" 
-                                   data-bind="value: agreementTypeSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$agreementTypes'" />
+                            <input id="typeOptions" type="text" placeholder="[None]" 
+                                   data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
                         </div>
                     </div> 
                     <div class="field-row">
@@ -115,22 +183,6 @@
                             <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]"  />
                         </div>
                     </div>
-                    <div class="field-row">
-                        <div class="field-label">
-                            <label>Content</label>
-                        </div>
-                        <div>
-                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]" id="agreementContent"  />
-                        </div>
-                    </div>
-                <div class="field-row">
-                    <div class="field-label">
-                        <label>Private Notes</label>
-                    </div>
-                    <div>
-                        <textarea rows="3" class="no-resize" data-bind="value: privateNotes" data-autosize="true" placeholder="[Private notes for this agreement]" ></textarea>
-                    </div>
-                </div>
             </div>
             </section>
         </div>
