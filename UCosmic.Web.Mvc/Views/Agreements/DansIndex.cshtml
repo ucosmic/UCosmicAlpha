@@ -29,17 +29,21 @@
                 .fail(function(xhr) {
                     alert('fail: ' + xhr.status + '; ' + xhr.responseText);
                 });
-
-            $.get('/api/agreements/13/')
+            $.get('/api/agreements/@ViewBag.Domain/places/continents/')
                 .done(function (result) {
 
                 })
                 .fail(function (xhr) {
                     alert('fail: ' + xhr.status + '; ' + xhr.responseText);
                 });
-        }
+            $.get('/api/agreements/@ViewBag.Domain/places/countries/')
+                .done(function (result) {
 
-        ;
+                })
+                .fail(function (xhr) {
+                    alert('fail: ' + xhr.status + '; ' + xhr.responseText);
+                });
+        };
         ko.applyBindings(new ViewModel(), $('[data-current-module=agreements]')[0]);
     </script>
 }

@@ -76,6 +76,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("agreements/{domain}/places/{placeType}")]
         public IEnumerable<AgreementPlaceApiModel> GetPlaceGroups(string domain, string placeType)
         {
+            // query database for agreements owned by domain
             var agreements = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain)
             {
                 EagerLoad = new Expression<Func<Agreement, object>>[]
@@ -85,16 +86,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             if (agreements == null || !agreements.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            // get distinct places from non-owning participant establishments
             var places = agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner)
                 .Select(x => x.Establishment).Distinct()
                 .SelectMany(x => x.Location.Places).Distinct()
                 .OrderBy(x => x.OfficialName).ToArray();
 
-            if ("continents".Equals(placeType))
+            if ("continents".Equals(placeType)) // filter out all non-continent places
                 places = places.Where(x => x.IsContinent).ToArray();
-            if ("countries".Equals(placeType))
+            if ("countries".Equals(placeType)) // filter out all non-country places
                 places = places.Where(x => x.IsCountry).ToArray();
-            if ("points".Equals(placeType) || string.IsNullOrWhiteSpace(placeType))
+            if (string.IsNullOrWhiteSpace(placeType)) // filter out all ancestor places
             {
                 var pointPlaces = new List<Place>();
                 foreach (var nonOwnerParticipant in agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner))
@@ -108,19 +110,22 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 places = pointPlaces.Distinct().ToArray();
             }
 
+            // convert to model
             var models = Mapper.Map<AgreementPlaceApiModel[]>(places);
 
+            // count agreements for each place
             foreach (var model in models)
             {
                 foreach (var agreement in agreements)
                 {
-                    var placeId = model.Id;
-                    var ancestorIds = agreement.Participants.SelectMany(x => x.Establishment.Location.Places)
-                        .SelectMany(x => x.Ancestors).Select(x => x.AncestorId).Distinct();
-                    if (agreement.Participants.Where(x => !x.IsOwner)
-                                 .SelectMany(x => x.Establishment.Location.Places)
-                                 .Where(x => !ancestorIds.Contains(x.RevisionId))
-                                 .Distinct().Any(x => x.RevisionId == placeId))
+                    var basePlaces = agreement.Participants.Where(x => !x.IsOwner).SelectMany(x => x.Establishment.Location.Places);
+                    if (string.IsNullOrWhiteSpace(placeType))
+                    {
+                        var ancestorIds = agreement.Participants.SelectMany(x => x.Establishment.Location.Places)
+                            .SelectMany(x => x.Ancestors).Select(x => x.AncestorId).Distinct();
+                        basePlaces = basePlaces.Where(x => !ancestorIds.Contains(x.RevisionId));
+                    }
+                    if (basePlaces.Distinct().Any(x => x.RevisionId == model.Id))
                         model.AgreementIds = new List<int>(model.AgreementIds) { agreement.Id }.ToArray();
                 }
             }
