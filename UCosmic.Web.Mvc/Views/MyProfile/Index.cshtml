@@ -98,7 +98,10 @@
                                             @* ReSharper restore Html.PathError *@
                                         </div>
                                         <div class="on-left name-and-title">
-                                            <div class="display-name" data-bind="text: displayName"></div>
+                                            <div>
+                                                <span class="display-name" data-bind="text: displayName"></span>
+                                                <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: !isActive()">Inactive</span>
+                                            </div>
                                             <div class="titles" data-bind="multilineText: preferredTitle"></div>
                                             @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
                                             {
@@ -110,9 +113,15 @@
                                         <div class="on-left faculty">
                                             <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
                                             <!--<div class="appointments" data-bind="multilineText: administrativeAppointments">
-                                                <br />
-                                                <br />
-                                            </div>-->
+                                                    <br />
+                                                    <br />
+                                                </div>-->
+                                        </div>
+                                        <div data-bind="visible: !isActive()">
+                                            <span>Your profile is currently inactive and is excluded from public view. </span>
+                                            <br/>
+                                            <br/>
+                                            <a href="#">Contact an administrator to re-activate your profile.</a>
                                         </div>
                                     </div>
                                 </div>

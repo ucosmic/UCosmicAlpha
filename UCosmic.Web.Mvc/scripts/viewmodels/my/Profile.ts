@@ -652,6 +652,31 @@ module ViewModels.My {
          *  Affiliations
         */
         // --------------------------------------------------------------------------------
+        private reloadAffiliations(): void {
+            var me = this;
+
+            $.ajax( {
+                async: true,
+                url: App.Routes.WebApi.My.Profile.Affiliation.get(),
+                type: 'GET'
+            } )
+            .done( function ( data, statusText, xhr ) {
+                if ( statusText === "success" ) {
+                    var affiliations = ko.mapping.fromJS(data);
+                    me.affiliations.removeAll();
+                    for(var i = 0; i < affiliations().length; i += 1) {
+                        me.affiliations.push(affiliations()[i]);
+                    }
+                }
+                else {
+                    alert( "Error reloading affiliations: " + xhr.responseText );
+                }
+            } )
+            .fail( function ( xhr, statusText, errorThrown ) {
+                alert( "Saving affiliation failed: " + statusText + "|" + errorThrown );
+            } );
+        }
+
         public editAffiliation(data: Affiliation, event: any) {
             var me = this;
 
@@ -857,7 +882,9 @@ module ViewModels.My {
                                     //tabName = me.tabTitleToName(tabName);                                   
                                     //location.href = App.Routes.Mvc.My.Profile.post(true,tabName);
 
-                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                    //location.href = App.Routes.Mvc.My.Profile.get();
+
+                                    me.reloadAffiliations();
                                 }
                                 else {
                                     $( "#affiliationErrorDialog" ).dialog( {
@@ -944,7 +971,8 @@ module ViewModels.My {
                                                     }
 
                                                     $( "#editAffiliationDialog" ).dialog( "close" );
-                                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                                    //location.href = App.Routes.Mvc.My.Profile.get();
+                                                    me.reloadAffiliations();
                                                 },
                                                 error: ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ): void =>
                                                 {
@@ -1007,7 +1035,7 @@ module ViewModels.My {
                 draggable: false,
                 buttons: {
                     "Delete": function () {
-                        debugger;
+                        //debugger;
                         $( this ).dialog( "close" );
 
                         $.ajax( {
@@ -1017,7 +1045,6 @@ module ViewModels.My {
                             success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
                                 alert( jqXHR.statusText );
                                 $( this ).dialog( "close" );
-                                //location.href = App.Routes.WebApi.Home;
                             },
                             error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
                                 alert( statusText );

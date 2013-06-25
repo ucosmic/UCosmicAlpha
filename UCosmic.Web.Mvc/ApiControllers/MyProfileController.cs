@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -210,6 +211,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
              */
 
             return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Get affiliations
+        */
+        // --------------------------------------------------------------------------------
+        [GET("affiliation")]
+        public ICollection<MyProfileAffiliationApiModel> GetAffiliation()
+        {
+            var person = _queryProcessor.Execute(new MyPerson(User)
+            {
+                EagerLoad = new Expression<Func<Person, object>>[]
+                {
+                    x => x.Employee
+                }
+            });
+
+            // throw 404 if route does not match existing record
+            if (person == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var model = Mapper.Map<ICollection<MyProfileAffiliationApiModel>>(person.Affiliations);
+
+            return model;
         }
 
         // --------------------------------------------------------------------------------

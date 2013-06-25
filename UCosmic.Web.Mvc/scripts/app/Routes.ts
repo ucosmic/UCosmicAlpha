@@ -308,14 +308,20 @@ module App.Routes {
                     return get();
                 }
                 export module Affiliation {
-                    export function post(): string {
+                    export function base(): string {
                         return makeUrl( 'my/profile/affiliation' );
+                    }
+                    export function get(): string {
+                        return base();
+                    }
+                    export function post(): string {
+                        return base();
                     }
                     export function put(): string {
-                        return makeUrl( 'my/profile/affiliation' );
+                        return base();
                     }
                     export function del(): string {
-                        return makeUrl( 'my/profile/affiliation' );
+                        return base();
                     }
                 }
                 export module Photo {

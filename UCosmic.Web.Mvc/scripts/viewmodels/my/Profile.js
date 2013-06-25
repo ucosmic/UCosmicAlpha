@@ -528,6 +528,26 @@ var ViewModels;
                     return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
                 });
             };
+            Profile.prototype.reloadAffiliations = function () {
+                var me = this;
+                $.ajax({
+                    async: true,
+                    url: App.Routes.WebApi.My.Profile.Affiliation.get(),
+                    type: 'GET'
+                }).done(function (data, statusText, xhr) {
+                    if(statusText === "success") {
+                        var affiliations = ko.mapping.fromJS(data);
+                        me.affiliations.removeAll();
+                        for(var i = 0; i < affiliations().length; i += 1) {
+                            me.affiliations.push(affiliations()[i]);
+                        }
+                    } else {
+                        alert("Error reloading affiliations: " + xhr.responseText);
+                    }
+                }).fail(function (xhr, statusText, errorThrown) {
+                    alert("Saving affiliation failed: " + statusText + "|" + errorThrown);
+                });
+            };
             Profile.prototype.editAffiliation = function (data, event) {
                 var me = this;
                 var defaultAffiliation = null;
@@ -705,7 +725,7 @@ var ViewModels;
                                 }).done(function (responseText, statusText, xhr) {
                                     if(statusText === "success") {
                                         $("#editAffiliationDialog").dialog("close");
-                                        location.href = App.Routes.Mvc.My.Profile.get();
+                                        me.reloadAffiliations();
                                     } else {
                                         $("#affiliationErrorDialog").dialog({
                                             title: xhr.statusText,
@@ -786,7 +806,7 @@ var ViewModels;
                                                             });
                                                         }
                                                         $("#editAffiliationDialog").dialog("close");
-                                                        location.href = App.Routes.Mvc.My.Profile.get();
+                                                        me.reloadAffiliations();
                                                     },
                                                     error: function (jqXHR, statusText, errorThrown) {
                                                         alert(statusText);
@@ -841,8 +861,6 @@ var ViewModels;
                     draggable: false,
                     buttons: {
                         "Delete": function () {
-                            debugger;
-
                             $(this).dialog("close");
                             $.ajax({
                                 async: false,

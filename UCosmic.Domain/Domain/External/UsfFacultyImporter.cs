@@ -76,24 +76,14 @@ namespace UCosmic.Domain.External
 
         public void Import(IPrincipal principal, int userId)
         {
-            var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == userId);
-            if (user == null)
-            {
-                string message = String.Format("User id {0} not found.", userId);
-                throw new Exception(message);
-            }
-
+            var user = _entities.Get<User>().Single(u => u.RevisionId == userId);
             if (user.Person == null) { throw new Exception("Person not found."); }
 
             string establishmentType = KnownEstablishmentType.College.AsSentenceFragment();
-            _collegeEstablishmentType =
-                _entities.Get<EstablishmentType>().SingleOrDefault(t => t.EnglishName == establishmentType);
-            if (_collegeEstablishmentType == null) { throw new Exception("College EstablishmentType not found."); }
+            _collegeEstablishmentType = _entities.Get<EstablishmentType>().Single(t => t.EnglishName == establishmentType);
 
             establishmentType = KnownEstablishmentType.Department.AsSentenceFragment();
-            _departmentEstablishmentType =
-                _entities.Get<EstablishmentType>().SingleOrDefault(t => t.EnglishName == establishmentType);
-            if (_departmentEstablishmentType == null) { throw new Exception("Department EstablishmentType not found."); }
+            _departmentEstablishmentType = _entities.Get<EstablishmentType>().Single(t => t.EnglishName == establishmentType);
 
 #if false
             {

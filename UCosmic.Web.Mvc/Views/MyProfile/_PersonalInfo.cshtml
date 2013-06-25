@@ -114,19 +114,36 @@
                 <textarea rows="2" data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'"></textarea>
             </div>
         </div>
-        <div class="field-row" data-bind="visiable: affiliations.count > 0">
-            <div class="field-label">
-                <label>Affiliations</label>
-            </div>
-            <div class="field-input">
-                <ul class="selectableListItems" data-bind="template: { name: 'affiliations-template', foreach: affiliations }"></ul>
+        <!-- Only show if we have affiliations (other than default) -->
+        <div data-bind="visible: affiliations().length > 1">
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Affiliations</label>
+                </div>
+                <div class="field-input">
+                    <ul class="selectableListItems" data-bind="template: { name: 'affiliations-template', foreach: affiliations }"></ul>
+                </div>
             </div>
         </div>
-        <div class="field-row">
-            <div class="field-label">
+        <!-- Only show if we have affiliations (other than default) -->
+        <div data-bind="visible: affiliations().length > 1">
+            <div class="field-row">
+                <div class="field-label">
+                </div>
+                <div class="field-input">
+                    <input type="button" value="Add" data-bind="click: function ( data, event ) { editAffiliation( null, event ); }" />
+                </div>
             </div>
-            <div class="field-input">
-                <input type="button" value="Add" data-bind="click: function ( data, event ) { editAffiliation( null, event ); }" />
+        </div>
+        <!-- Only show if there are no affiliations (other than default) -->
+        <div data-bind="visible: affiliations().length == 1">
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Affiliations</label>
+                </div>
+                <div class="field-input">
+                    <input type="button" value="Add" data-bind="click: function ( data, event ) { editAffiliation( null, event ); }" />
+                </div>
             </div>
         </div>
         @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))

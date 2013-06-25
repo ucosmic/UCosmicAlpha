@@ -326,16 +326,24 @@ var App;
                     }
                     Profile.put = put;
                     (function (Affiliation) {
-                        function post() {
+                        function base() {
                             return makeUrl('my/profile/affiliation');
+                        }
+                        Affiliation.base = base;
+                        function get() {
+                            return base();
+                        }
+                        Affiliation.get = get;
+                        function post() {
+                            return base();
                         }
                         Affiliation.post = post;
                         function put() {
-                            return makeUrl('my/profile/affiliation');
+                            return base();
                         }
                         Affiliation.put = put;
                         function del() {
-                            return makeUrl('my/profile/affiliation');
+                            return base();
                         }
                         Affiliation.del = del;
                     })(Profile.Affiliation || (Profile.Affiliation = {}));
