@@ -72,6 +72,18 @@ namespace UCosmic.Domain.External
             _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
             _exceptionLogger = exceptionLogger;
+        }
+
+        public void Import(IPrincipal principal, int userId)
+        {
+            var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == userId);
+            if (user == null)
+            {
+                string message = String.Format("User id {0} not found.", userId);
+                throw new Exception(message);
+            }
+
+            if (user.Person == null) { throw new Exception("Person not found."); }
 
             string establishmentType = KnownEstablishmentType.College.AsSentenceFragment();
             _collegeEstablishmentType =
@@ -82,23 +94,6 @@ namespace UCosmic.Domain.External
             _departmentEstablishmentType =
                 _entities.Get<EstablishmentType>().SingleOrDefault(t => t.EnglishName == establishmentType);
             if (_departmentEstablishmentType == null) { throw new Exception("Department EstablishmentType not found."); }
-        }
-
-        public void Import(IPrincipal principal, int userId)
-        {
-            Record record = null;
-
-            var user = _entities.Get<User>().SingleOrDefault(u => u.RevisionId == userId);
-            if (user == null)
-            {
-                string message = String.Format("User id {0} not found.", userId);
-                throw new Exception(message);
-            }
-            if (user.Person == null)
-            {
-                throw new Exception("Person not found.");
-            }
-
 
 #if false
             {
@@ -120,6 +115,8 @@ namespace UCosmic.Domain.External
             }
 #else
             {
+                Record record = null;
+
                 var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
                 if (serviceSync == null)
                 {
@@ -323,6 +320,24 @@ namespace UCosmic.Domain.External
                         int? campusId = (campus != null) ? (int?)campus.RevisionId : null;
                         int? collegeId = (college != null) ? (int?)college.RevisionId : null;
                         int? departmentId = (department != null) ? (int?)department.RevisionId : null;
+                        int? facultyRankId = null;
+
+                        {
+                            int number;
+                            if (Int32.TryParse(profile.FacultyRank, out number))
+                            {
+                                if ((number >= 1) && (number <= employeeModuleSettings.FacultyRanks.Count))
+                                {
+                                    var facultyRank =
+                                        employeeModuleSettings.FacultyRanks.SingleOrDefault(r => r.Number == number);
+
+                                    if (facultyRank != null)
+                                    {
+                                        facultyRankId = facultyRank.Id;
+                                    }
+                                }
+                            }
+                        }
 
                         var affiliation = new UpdatePerson.Affiliation
                         {
@@ -340,7 +355,7 @@ namespace UCosmic.Domain.External
                             CampusId = campusId,
                             CollegeId = collegeId,
                             DepartmentId = departmentId,
-                            FacultyRankId = (Int32.Parse(profile.FacultyRank))
+                            FacultyRankId = facultyRankId
                         };
 
                         affiliations.Add(affiliation);
