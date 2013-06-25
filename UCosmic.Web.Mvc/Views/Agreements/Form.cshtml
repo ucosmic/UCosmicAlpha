@@ -149,41 +149,78 @@
                 </header>
                 <div class="field-table w690-l190-v500">
                     <div class="field-row">
-                        <div class="field-label-top">
-                            <label>Umbrella agreement</label>
+                        <div class="field-column-left">
+                             <div class="field-label-top required">
+                                <label>Start date</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input class="hasDate" type="text" data-bind="value: startDate" placeholder="[Select a start date]"  />
+                            </div>
+                            <div class="field-label-description">If there is no exact start or effective date for this agreement, enter an approximate date.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
                         </div>
-                        <div class="field-input-label-top">
-                            <select  data-bind="options: uAgreements(), 
-							    optionsValue: 'id',
-							    optionsText: 'name', value: uAgreementSelected">
-						    </select>
+                        <div class="field-column-right">
+                             <div class="field-label-top required">
+                                <label>Expiration date</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input class="hasDate" type="text" data-bind="value: expDate" placeholder="[Select an expiration date]"  />
+                            </div>
+                            <div class="field-label-description">The expiration date may determine when you are notified to review this agreement.
+                                <br/><i>(required, protected visibility)</i>
+                            </div>
                         </div>
                     </div>
                     <div class="field-row">
-                        <div class="field-label-top required">
-                            <label>Agreement type</label>
-                        </div>
-                        <div class="field-input-label-top" data-bind="visible: !isCustomTypeAllowed()">
-                            
-                            <select  data-bind="options: typeOptions(), 
-							    optionsValue: 'id',
-							    optionsText: 'name', value: typeOptionSelected">
-                            </select>
-                        </div>
-                        <div class="field-input-label-top" data-bind=" visible: isCustomTypeAllowed">
-                            <input id="typeOptions" type="text" placeholder="[None]" 
-                                   data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
-                        </div>
-                    </div> 
-                    <div class="field-row">
-                        <div class="field-label">
-                            <label>Nickname</label>
-                        </div>
-                        <div>
-                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]"  />
+                        <div class="field-column-right">
+                             <div class="field-label-top required">
+                                <label>Expiration date</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input  type="checkbox" data-bind="value: isEstimated" placeholder="[Select an expiration date]"  />
+                            </div>
+                            <div class="field-label-description">The expiration date may determine when you are notified to review this agreement.
+                                <br/><i>(required, protected visibility)</i>
+                            </div>
                         </div>
                     </div>
-            </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                             <div class="field-label-top required">
+                                <label>Auto renew</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input  type="radio" data-bind="value: startDate" placeholder="[Select a start date]"  />
+                            </div>
+                            <div class="field-label-description">If there is no exact start or effective date for this agreement, enter an approximate date.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top required">
+                                <label>Current Status</label>
+                            </div>
+                            <div class="field-input-label-top" data-bind="visible: !isCustomTypeAllowed()">
+                                <select  data-bind="options: typeOptions(), 
+							        optionsValue: 'id',
+							        optionsText: 'name', value: typeOptionSelected">
+                                </select>
+                            </div>
+                            <div class="field-input-label-top" data-bind=" visible: isCustomTypeAllowed">
+                                <input id="typeOptions" type="text" placeholder="[None]" 
+                                       data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
+                            </div>
+                            <div data-bind="visible: isCustomTypeAllowed" class="field-label-description">
+                                Select from the drop-down list of pre-existing agreement types or enter a custom one in the text box above.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                            <div data-bind=" visible: !isCustomTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement types.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

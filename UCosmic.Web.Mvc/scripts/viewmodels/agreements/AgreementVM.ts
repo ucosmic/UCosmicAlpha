@@ -81,6 +81,9 @@ export class InstitutionalAgreementEditModel {
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
     nickname = ko.observable();
+    startDate = ko.observable();
+    expDate = ko.observable();
+    isEstimated = ko.observable();
     privateNotes = ko.observable();
     agreementContent = ko.observable();
     isCustomTypeAllowed = ko.observable();
@@ -188,6 +191,11 @@ export class InstitutionalAgreementEditModel {
                     })
                 });
             }
+
+            $(".hasDate").kendoDatePicker({
+                /* If user clicks date picker button, reset format */
+                open: function (e) { this.options.format = "MM/dd/yyyy"; }
+            });
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');

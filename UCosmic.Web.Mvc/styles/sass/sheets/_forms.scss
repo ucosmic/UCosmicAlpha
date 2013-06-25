@@ -413,6 +413,36 @@ section {
                 padding: 5px 0;
             }
         }
+        
+        .field-column-left{
+            width: 47%;
+            float: left;
+            .field-input-label-top {
+                @include border-box;
+                float: left;
+                width: 100%;
+                select {
+                    @include border-box;
+                    width: 300px;
+                    margin-left: 0;
+                }
+            }
+        }
+        
+        .field-column-right{
+            width: 47%;
+            float: right;
+            .field-input-label-top {
+                @include border-box;
+                float: left;
+                width: 100%;
+                select {
+                    @include border-box;
+                    width: 300px;
+                    margin-left: 0;
+                }
+            }
+        }
     }
     @mixin field-column-split($lWidth, $vWidth) {
         .field-label {

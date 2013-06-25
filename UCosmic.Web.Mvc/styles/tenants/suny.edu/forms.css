@@ -422,6 +422,36 @@ section {
       padding: 9px 0; }
     .field-table .field-row .field-input .field-addendum, .field-table .field-row .field-value .field-addendum {
       padding: 5px 0; }
+    .field-table .field-row .field-column-left {
+      width: 47%;
+      float: left; }
+      .field-table .field-row .field-column-left .field-input-label-top {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        float: left;
+        width: 100%; }
+        .field-table .field-row .field-column-left .field-input-label-top select {
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          width: 300px;
+          margin-left: 0; }
+    .field-table .field-row .field-column-right {
+      width: 47%;
+      float: right; }
+      .field-table .field-row .field-column-right .field-input-label-top {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        float: left;
+        width: 100%; }
+        .field-table .field-row .field-column-right .field-input-label-top select {
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          width: 300px;
+          margin-left: 0; }
   .field-table.w690-l290-v400 .field-label {
     width: 290px; }
   .field-table.w690-l290-v400 .field-input {

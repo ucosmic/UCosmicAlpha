@@ -44,6 +44,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
             this.nickname = ko.observable();
+            this.startDate = ko.observable();
+            this.expDate = ko.observable();
+            this.isEstimated = ko.observable();
             this.privateNotes = ko.observable();
             this.agreementContent = ko.observable();
             this.isCustomTypeAllowed = ko.observable();
@@ -454,6 +457,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         })
                     });
                 }
+                $(".hasDate").kendoDatePicker({
+                    open: function (e) {
+                        this.options.format = "MM/dd/yyyy";
+                    }
+                });
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });
