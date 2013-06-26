@@ -161,6 +161,7 @@
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="Cryptography\AesExtensions.cs" />
     <Compile Include="EntityFramework\Fluent\Agreements.cs" />
+    <Compile Include="EntityFramework\Fluent\InternationalAffiliations.cs" />
     <Compile Include="EntityFramework\Fluent\Externals.cs" />
     <Compile Include="EntityFramework\Fluent\LanguageExpertises.cs" />
     <Compile Include="EntityFramework\Fluent\GeographicExpertises.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="SeedData\AgreementEntitySeeder.cs" />
     <Compile Include="SeedData\AgreementSettingsEntitySeeder.cs" />
     <Compile Include="SeedData\BrownfieldSeeder.cs" />
+    <Compile Include="SeedData\InternationalAffiliationSeeder.cs" />
     <Compile Include="SeedData\LanguageExpertiseSeeder.cs" />
     <Compile Include="SeedData\GeographicExpertiseSeeder.cs" />
     <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />

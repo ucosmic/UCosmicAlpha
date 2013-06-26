@@ -20,13 +20,14 @@
         private readonly AgreementSettingsEntitySeeder _agreementSettingsEntitySeeder;
         private readonly EmployeeModuleSettingsEntitySeeder _employeeModuleSettingsEntitySeeder;
         private readonly EmployeeEntitySeeder _employeeEntitySeeder;
-        private readonly AffiliationEntitySeeder _affiliationEntitySeeder;
+        private readonly AffiliationEntitySeeder _myAffiliationEntitySeeder;
         private readonly ActivityEntitySeeder _activityEntitySeeder;
         private readonly LoadableFileEntitySeeder _loadableFileEntitySeeder;
         private readonly ImageEntitySeeder _imageEntitySeeder;
         private readonly DegreeEntitySeeder _degreeEntitySeeder;
         private readonly GeographicExpertiseEntitySeeder _geographicExpertiseEntitySeeder;
         private readonly LanguageExpertiseEntitySeeder _languageExpertiseEntitySeeder;
+        private readonly InternationalAffiliationEntitySeeder _internationAffiliationEntitySeeder;
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
@@ -45,7 +46,7 @@
             , AgreementEntitySeeder agreementEntitySeeder
             , AgreementSettingsEntitySeeder agreementSettingsEntitySeeder
             , EmployeeModuleSettingsEntitySeeder employeeModuleSettingsEntitySeeder
-            , AffiliationEntitySeeder affiliationEntitySeeder
+            , AffiliationEntitySeeder myAffiliationEntitySeeder
             , EmployeeEntitySeeder employeeEntitySeeder
             , ActivityEntitySeeder activityEntitySeeder
             , LoadableFileEntitySeeder loadableFileEntitySeeder
@@ -53,6 +54,7 @@
             , DegreeEntitySeeder degreeEntitySeeder
             , GeographicExpertiseEntitySeeder geographicExpertiseEntitySeeder
             , LanguageExpertiseEntitySeeder languageExpertiseEntitySeeder
+            , InternationalAffiliationEntitySeeder internationAffiliationEntitySeeder
         )
         {
             _unitOfWork = unitOfWork;
@@ -73,13 +75,14 @@
             _memberEntitySeeder = memberEntitySeeder;
             _agreementEntitySeeder = agreementEntitySeeder;
             _agreementSettingsEntitySeeder = agreementSettingsEntitySeeder;
-            _affiliationEntitySeeder = affiliationEntitySeeder;
+            _myAffiliationEntitySeeder = myAffiliationEntitySeeder;
             _activityEntitySeeder = activityEntitySeeder;
             _loadableFileEntitySeeder = loadableFileEntitySeeder;
             _imageEntitySeeder = imageEntitySeeder;
             _degreeEntitySeeder = degreeEntitySeeder;
             _geographicExpertiseEntitySeeder = geographicExpertiseEntitySeeder;
             _languageExpertiseEntitySeeder = languageExpertiseEntitySeeder;
+            _internationAffiliationEntitySeeder = internationAffiliationEntitySeeder;
         }
 
         public void Seed()
@@ -104,12 +107,13 @@
             _memberEntitySeeder.Seed();
             _agreementEntitySeeder.Seed();
             _agreementSettingsEntitySeeder.Seed();
-            _affiliationEntitySeeder.Seed();
+            _myAffiliationEntitySeeder.Seed();
             _employeeEntitySeeder.Seed();
             _activityEntitySeeder.Seed();
             _degreeEntitySeeder.Seed();
             _geographicExpertiseEntitySeeder.Seed();
             _languageExpertiseEntitySeeder.Seed();
+            _internationAffiliationEntitySeeder.Seed();
 
             _sensativeSqlSeeder.Seed();
 

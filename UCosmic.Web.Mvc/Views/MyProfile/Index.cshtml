@@ -100,7 +100,7 @@
                                         <div class="on-left name-and-title">
                                             <div>
                                                 <span class="display-name" data-bind="text: displayName"></span>
-                                                <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: !isActive()">Inactive</span>
+                                                <span class="red badge" style="display: none; vertical-align: middle" data-bind="visible: !isActive()">Inactive</span>
                                             </div>
                                             <div class="titles" data-bind="multilineText: preferredTitle"></div>
                                             @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
@@ -117,7 +117,7 @@
                                                     <br />
                                                 </div>-->
                                         </div>
-                                        <div data-bind="visible: !isActive()">
+                                        <div class="on-right"  style="display: none" data-bind="visible: !isActive()">
                                             <span style="color: #cc0000">Your profile is currently inactive and is excluded from public view. </span>
                                             <br/>
                                             <br/>

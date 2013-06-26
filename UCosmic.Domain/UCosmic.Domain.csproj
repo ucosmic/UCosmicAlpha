@@ -165,7 +165,18 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
-    <Compile Include="Domain\Affiliation\Entities\Affiliation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliationLocation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\DeleteInternationalAffiliationLocation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\DeleteInternationalAffiliation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\UpdateInternationalAffiliation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\UpdateInternationalAffiliationLocation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Entities\InternationalAffiliation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Entities\InternationalAffiliationLocation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Validation\MustFindInternationalAffiliationById.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Validation\MustFindInternationalAffiliationLocationById.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Validation\MustOwnInternationalAffiliation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Validation\MustOwnAffiliationLocation.cs" />
     <Compile Include="Domain\Agreements\Commands\AddContactToAgreement.cs" />
     <Compile Include="Domain\Agreements\Commands\AddParticipantToAgreement.cs" />
     <Compile Include="Domain\Agreements\Commands\AttachFileToAgreement.cs" />
@@ -570,9 +581,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\Affiliation\Commands\" />
-    <Folder Include="Domain\Affiliation\Queries\" />
-    <Folder Include="Domain\Affiliation\Validation\" />
+    <Folder Include="Domain\InternationalAffiliation\Queries\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
