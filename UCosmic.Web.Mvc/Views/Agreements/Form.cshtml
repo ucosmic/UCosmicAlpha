@@ -333,20 +333,20 @@
                 </header>
                 <div data-bind="visible: isBound" style="display: none;">
                     @*<ul data-bind="foreach: Contacts">
-                        <li data-bind="element: 'contactE1'">
-                            <div class="typed-item">
-                                <a title="Remove this contact" data-bind="click: $root.removeContact"><i class="red minus on-right"></i></a>
+                            <li data-bind="element: 'contactE1'">
+                                <div class="typed-item">
+                                    <a title="Remove this contact" data-bind="click: $root.removeContact"><i class="red minus on-right"></i></a>
                                 
-                                <div class="item">
-                                    <div>
-                                        <strong data-bind="text: firstName + ' ' + lastName + ': ' + contactType"></strong><br/>
-                                        <span data-bind="text: phone + ' ' + phoneType"></span><br/>
-                                        <span data-bind="text: email"></span><br/>
+                                    <div class="item">
+                                        <div>
+                                            <strong data-bind="text: firstName + ' ' + lastName + ': ' + contactType"></strong><br/>
+                                            <span data-bind="text: phone + ' ' + phoneType"></span><br/>
+                                            <span data-bind="text: email"></span><br/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>*@
+                            </li>
+                        </ul>*@
                 </div>
                 <footer id="addAContact">
                     <input id="fileUpload" type="file" name="photo" data-bind="jqObservableElement: '$file'" />
@@ -381,6 +381,24 @@
                         </div>
                     </div>
                 </footer>
+            </section>
+
+            <section id="overallVisibility">
+                <header>
+                    <h2>
+                        Overall Visibility
+                    </h2>
+                </header>
+                <div class="field-table w690-l190-v500">
+                    <div class="field-row">
+                        <div class="field-input-label-top">
+                            <input name="autoRenew" type="radio" class="radio" data-bind="value: autoRenew" /><strong>Public:</strong> anyone on the Internet to find this agreement.<br/>
+                            <input name="autoRenew" type="radio" class="radio" data-bind="value: autoRenew"/><strong>Protected:</strong> Hide this agreement from the public, but allow my employees and students to find it.<br/>
+                            <input name="autoRenew" type="radio" class="radio" data-bind="value: autoRenew"/><strong>Private:</strong> Allow only UCosmic administrators to find this agreement.
+                        </div>
+                        <div class="field-label-description">Select one of the options above to control the overall visibility of this entire agreement. For example, you can use these options to show / hide the agreement to / from the public in search results.</div>
+                    </div>
+                </div>
             </section>
 
         </div>

@@ -377,7 +377,11 @@ section {
             input {
                 width: 665px!important;
                 margin-left: 0;
+                
             }
+            .radio{
+                    width: 20px!important;
+                }
             &.for-checkables {
                 display: inline-block;
                 padding: 9px 0;
