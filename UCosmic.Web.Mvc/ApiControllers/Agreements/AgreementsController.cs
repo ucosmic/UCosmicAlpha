@@ -67,70 +67,104 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return null;
         }
 
-        [GET("agreements/{domain}/places")]
+        [GET("agreements/{domain}/partners/places")]
         public IEnumerable<AgreementPlaceApiModel> GetPlaces(string domain)
         {
             return GetPlaceGroups(domain, null);
         }
 
-        [GET("agreements/{domain}/places/{placeType}")]
+        [GET("agreements/{domain}/partners/places/{placeType}")]
         public IEnumerable<AgreementPlaceApiModel> GetPlaceGroups(string domain, string placeType)
         {
-            // query database for agreements owned by domain
-            var agreements = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain)
+            var places = _queryProcessor.Execute(new PartnerPlacesByOwnerDomain(User, domain)
             {
-                EagerLoad = new Expression<Func<Agreement, object>>[]
+                EagerLoad = new Expression<Func<Place, object>>[]
                 {
-                    x => x.Participants.Select(y => y.Establishment.Location.Places.Select(z => z.GeoPlanetPlace))
-                }
+                    x => x.GeoPlanetPlace.Type,
+                    //x => x.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace.Type),
+                },
+                OrderBy = new Dictionary<Expression<Func<Place, object>>, OrderByDirection>
+                {
+                    { x => x.OfficialName, OrderByDirection.Ascending },
+                },
             });
-            if (agreements == null || !agreements.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            // get distinct places from non-owning participant establishments
-            var places = agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner)
-                .Select(x => x.Establishment).Distinct()
-                .SelectMany(x => x.Location.Places).Distinct()
-                .OrderBy(x => x.OfficialName).ToArray();
-
-            if ("continents".Equals(placeType)) // filter out all non-continent places
-                places = places.Where(x => x.IsContinent).ToArray();
-            if ("countries".Equals(placeType)) // filter out all non-country places
-                places = places.Where(x => x.IsCountry).ToArray();
-            if (string.IsNullOrWhiteSpace(placeType)) // filter out all ancestor places
-            {
-                var pointPlaces = new List<Place>();
-                foreach (var nonOwnerParticipant in agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner))
-                {
-                    var location = nonOwnerParticipant.Establishment.Location;
-                    var ancestorIds = location.Places.SelectMany(x => x.Ancestors).Select(x => x.AncestorId);
-                    var pointPlace = location.Places.FirstOrDefault(x => !ancestorIds.Contains(x.RevisionId));
-                    if (pointPlace != null && !pointPlaces.Select(x => x.RevisionId).Contains(pointPlace.RevisionId))
-                        pointPlaces.Add(pointPlace);
-                }
-                places = pointPlaces.Distinct().ToArray();
-            }
 
             // convert to model
             var models = Mapper.Map<AgreementPlaceApiModel[]>(places);
 
-            // count agreements for each place
-            foreach (var model in models)
-            {
-                foreach (var agreement in agreements)
-                {
-                    var basePlaces = agreement.Participants.Where(x => !x.IsOwner).SelectMany(x => x.Establishment.Location.Places);
-                    if (string.IsNullOrWhiteSpace(placeType))
-                    {
-                        var ancestorIds = agreement.Participants.SelectMany(x => x.Establishment.Location.Places)
-                            .SelectMany(x => x.Ancestors).Select(x => x.AncestorId).Distinct();
-                        basePlaces = basePlaces.Where(x => !ancestorIds.Contains(x.RevisionId));
-                    }
-                    if (basePlaces.Distinct().Any(x => x.RevisionId == model.Id))
-                        model.AgreementIds = new List<int>(model.AgreementIds) { agreement.Id }.ToArray();
-                }
-            }
-
             return models;
+
+            #region Slow Code
+
+            // use this code only to test the correctness of the improved-performance query
+
+            //placeType = "continents";
+            //var test = _queryProcessor.Execute(new PartnerPlacesByOwnerDomain(User, domain) { GroupBy = PlaceGroup.Continents });
+            ////placeType = "countries";
+            ////var test = _queryProcessor.Execute(new PartnerPlacesByOwnerDomain(User, domain) { GroupBy = PlaceGroup.Countries });
+            ////placeType = null;
+            ////var test = _queryProcessor.Execute(new PartnerPlacesByOwnerDomain(User, domain));
+
+            //// query database for agreements owned by domain
+            //var agreements = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain)
+            //{
+            //    EagerLoad = new Expression<Func<Agreement, object>>[]
+            //    {
+            //        x => x.Participants.Select(y => y.Establishment.Location.Places.Select(z => z.GeoPlanetPlace.Type)),
+            //        x => x.Participants.Select(y => y.Establishment.Location.Places.Select(z => z.Ancestors.Select(a => a.Ancestor.GeoPlanetPlace.Type))),
+            //        //x => x.Participants.Select(y => y.Establishment.Location.Places.Select(z => z.Ancestors.Select(a => a.Ancestor.Parent))),
+            //    }
+            //});
+            //if (agreements == null || !agreements.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            //// get distinct places from non-owning participant establishments
+            //var places = agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner)
+            //    .Select(x => x.Establishment).Distinct()
+            //    .SelectMany(x => x.Location.Places).Distinct()
+            //    .OrderBy(x => x.OfficialName).ToArray();
+
+            //if ("continents".Equals(placeType)) // filter out all non-continent places
+            //    places = places.Where(x => x.IsContinent).ToArray();
+            //if ("countries".Equals(placeType)) // filter out all non-country places
+            //    places = places.Where(x => x.IsCountry).ToArray();
+            //if (string.IsNullOrWhiteSpace(placeType)) // filter out all ancestor places
+            //{
+            //    var pointPlaces = new List<Place>();
+            //    foreach (var nonOwnerParticipant in agreements.SelectMany(x => x.Participants).Where(x => !x.IsOwner))
+            //    {
+            //        var location = nonOwnerParticipant.Establishment.Location;
+            //        var ancestorIds = location.Places.SelectMany(x => x.Ancestors).Select(x => x.AncestorId);
+            //        var pointPlace = location.Places.FirstOrDefault(x => !ancestorIds.Contains(x.RevisionId));
+            //        if (pointPlace != null && !pointPlaces.Select(x => x.RevisionId).Contains(pointPlace.RevisionId))
+            //            pointPlaces.Add(pointPlace);
+            //    }
+            //    places = pointPlaces.Distinct().ToArray();
+            //}
+
+            //var models = Mapper.Map<AgreementPlaceApiModel[]>(places);
+
+            //// count agreements for each place
+            //foreach (var model in models)
+            //{
+            //    foreach (var agreement in agreements)
+            //    {
+            //        var basePlaces = agreement.Participants.Where(x => !x.IsOwner).SelectMany(x => x.Establishment.Location.Places);
+            //        if (string.IsNullOrWhiteSpace(placeType))
+            //        {
+            //            var ancestorIds = agreement.Participants.SelectMany(x => x.Establishment.Location.Places)
+            //                .SelectMany(x => x.Ancestors).Select(x => x.AncestorId).Distinct();
+            //            basePlaces = basePlaces.Where(x => !ancestorIds.Contains(x.RevisionId));
+            //        }
+            //        if (basePlaces.Distinct().Any(x => x.RevisionId == model.Id))
+            //            model.AgreementIds = new List<int>(model.AgreementIds) { agreement.Id }.ToArray();
+            //    }
+            //}
+
+            //var totalAgreementCount = models.Sum(x => x.AgreementCount);
+
+            //return models;
+
+            #endregion
         }
 
         [GET("agreements/{agreementId:int}/participants")]

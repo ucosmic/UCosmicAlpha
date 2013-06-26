@@ -48,7 +48,7 @@ namespace UCosmic.Domain.Agreements
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var agreementsQueryable = _entities.Query<Agreement>()
+            var agreements = _entities.Query<Agreement>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.Participants.Any(y => y.IsOwner
                     && (
@@ -60,7 +60,7 @@ namespace UCosmic.Domain.Agreements
                 .OrderBy(query.OrderBy)
             ;
 
-            var agreements = agreementsQueryable.ApplySecurity(query.Principal, _queryProcessor);
+            agreements = agreements.ApplySecurity(query.Principal, _queryProcessor).AsQueryable();
             return agreements.ToArray();
         }
     }

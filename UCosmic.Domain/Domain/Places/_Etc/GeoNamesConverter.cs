@@ -140,6 +140,7 @@ namespace UCosmic.Domain.Places
                             && source.Feature.ClassCode == GeoNamesFeatureClassEnum.AdministrativeBoundary.GetCode()))
                     .ForMember(target => target.IsWater, opt => opt.MapFrom(s => s.Feature.ClassCode == "H"))
                     .ForMember(target => target.IsRegion, opt => opt.MapFrom(s => s.FeatureCode == "AREA" || s.FeatureCode == "RGN"))
+                    .ForMember(target => target.ParentId, opt => opt.Ignore())
                     .ForMember(target => target.Parent, opt => opt.Ignore())
                     .ForMember(target => target.Children, opt => opt.Ignore())
                     .ForMember(target => target.Ancestors, opt => opt.Ignore())

@@ -20,7 +20,7 @@ namespace UCosmic.EntityFramework
             // ParentPlace 0..1 <---> * ChildPlace
             HasOptional(d => d.Parent)
                 .WithMany(p => p.Children)
-                .Map(x => x.MapKey("ParentId"))
+                .HasForeignKey(d => d.ParentId)
                 .WillCascadeOnDelete(false);
 
             // name properties

@@ -199,6 +199,7 @@
     <Compile Include="Domain\Agreements\Entities\AgreementVisibility.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementById.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementsByOwnerDomain.cs" />
+    <Compile Include="Domain\Agreements\Queries\PartnerPlacesByOwnerDomain.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementSettings.cs" />
     <Compile Include="Domain\Agreements\Queries\ParticipantByEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\ParticipantsByAgreementId.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Domain\GeographicExpertise\Validation\MustOwnGeographicExpertiseLocation.cs" />
     <Compile Include="Domain\GeographicExpertise\Validation\MustFindGeographicExpertiseById.cs" />
     <Compile Include="Domain\GeographicExpertise\Validation\MustOwnGeographicExpertise.cs" />
+    <Compile Include="Domain\Identity\Commands\EnsureUserTenancy.cs" />
     <Compile Include="Domain\Identity\Commands\CreateUser.cs" />
     <Compile Include="Domain\Identity\Commands\DeleteUser.cs" />
     <Compile Include="Domain\Identity\Events\UserCreated.cs" />
@@ -315,6 +317,7 @@
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeSamePerson.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
+    <Compile Include="Domain\Places\_Etc\PlaceGroup.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlaceGeoNamesReference.cs" />

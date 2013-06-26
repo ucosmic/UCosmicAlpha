@@ -50,8 +50,8 @@ namespace UCosmic.Domain.Agreements
                     agreement.ExpiresOn = DateTime.MinValue;
                     agreement.IsExpirationEstimated = false;
                     agreement.Status = privateData;
-                    agreement.Contacts = agreement.Contacts != null ? null : agreement.Contacts;
-                    agreement.Files = agreement.Files != null ? null : agreement.Files;
+                    agreement.Contacts = null;
+                    agreement.Files = null;
                     break;
 
                 case AgreementVisibility.Protected:

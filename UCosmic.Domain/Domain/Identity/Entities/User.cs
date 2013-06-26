@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Identity
@@ -16,6 +17,9 @@ namespace UCosmic.Domain.Identity
             EduPersonScopedAffiliations = new Collection<EduPersonScopedAffiliation>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
+
+        public int? TenantId { get; protected internal set; }
+        public virtual Establishment Tenant { get; set; }
 
         public virtual Person Person { get; protected internal set; }
         public string Name { get; protected internal set; }

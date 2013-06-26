@@ -9,6 +9,10 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(User).Name, DbSchemaName.Identity);
 
+            HasOptional(d => d.Tenant)
+                .WithMany()
+                .HasForeignKey(d => d.TenantId);
+
             Property(u => u.Name).IsRequired().HasMaxLength(256);
             Property(u => u.EduPersonTargetedId).IsMaxLength();
         }

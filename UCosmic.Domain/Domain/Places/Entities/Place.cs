@@ -26,6 +26,7 @@ namespace UCosmic.Domain.Places
         public string OfficialName { get; protected internal set; }
         public virtual ICollection<PlaceName> Names { get; protected internal set; }
 
+        public int? ParentId { get; protected internal set; }
         public virtual Place Parent { get; protected internal set; }
         public virtual ICollection<Place> Children { get; protected internal set; }
         public virtual ICollection<PlaceNode> Ancestors { get; protected set; }

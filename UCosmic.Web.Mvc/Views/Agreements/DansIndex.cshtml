@@ -22,21 +22,21 @@
                 scrollwheel: false // prevent mouse wheel zooming
             });
 
-            $.get('/api/agreements/@ViewBag.Domain/places/')
+@*            $.get('/api/agreements/@ViewBag.Domain/partners/places/')
                 .done(function(result) {
 
                 })
                 .fail(function(xhr) {
                     alert('fail: ' + xhr.status + '; ' + xhr.responseText);
                 });
-            $.get('/api/agreements/@ViewBag.Domain/places/continents/')
+            $.get('/api/agreements/@ViewBag.Domain/partners/places/continents/')
                 .done(function (result) {
 
                 })
                 .fail(function (xhr) {
                     alert('fail: ' + xhr.status + '; ' + xhr.responseText);
-                });
-            $.get('/api/agreements/@ViewBag.Domain/places/countries/')
+                });*@
+            $.get('/api/agreements/@ViewBag.Domain/partners/places/countries/')
                 .done(function (result) {
 
                 })
