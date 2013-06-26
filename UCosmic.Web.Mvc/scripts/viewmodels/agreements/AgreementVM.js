@@ -55,6 +55,18 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.isCustomContactTypeAllowed = ko.observable();
             this.phoneTypes = ko.mapping.fromJS([]);
             this.phoneTypeSelected = ko.observable();
+            this.$file = ko.observable();
+            this.hasFile = ko.observable();
+            this.isFileExtensionInvalid = ko.observable(false);
+            this.isFileTooManyBytes = ko.observable(false);
+            this.isFileFailureUnexpected = ko.observable(false);
+            this.fileFileExtension = ko.observable();
+            this.fileFileName = ko.observable();
+            this.fileSrc = ko.observable(App.Routes.WebApi.Agreements.File.get({
+                maxSide: 128
+            }));
+            this.fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+            this.fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.participants = ko.mapping.fromJS([]);
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -413,6 +425,143 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 $("#LoadingPage").hide();
             });
         };
+        InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
+            var _this = this;
+            $("#fileUpload").kendoUpload({
+                multiple: false,
+                showFileList: false,
+                localization: {
+                    select: 'Choose a file to upload...'
+                },
+                async: {
+                    saveUrl: App.Routes.WebApi.Agreements.File.post(),
+                    removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove()
+                },
+                upload: function (e) {
+                    var allowedExtensions = [
+                        '.png', 
+                        '.jpg', 
+                        '.jpeg', 
+                        '.gif'
+                    ];
+                    _this.isFileExtensionInvalid(false);
+                    _this.isFileTooManyBytes(false);
+                    _this.isFileFailureUnexpected(false);
+                    $(e.files).each(function (index) {
+                        var isExtensionAllowed = false;
+                        var isByteNumberAllowed = false;
+                        var extension = e.files[index].extension;
+                        _this.fileFileExtension(extension || '[NONE]');
+                        _this.fileFileName(e.files[index].name);
+                        for(var i = 0; i < allowedExtensions.length; i++) {
+                            if(allowedExtensions[i] === extension.toLowerCase()) {
+                                isExtensionAllowed = true;
+                                break;
+                            }
+                        }
+                        if(!isExtensionAllowed) {
+                            e.preventDefault();
+                            _this.isFileExtensionInvalid(true);
+                        } else if(e.files[index].rawFile.size > (1024 * 1024)) {
+                            e.preventDefault();
+                            _this.isFileTooManyBytes(true);
+                        }
+                    });
+                    if(!e.isDefaultPrevented()) {
+                        _this.fileUploadSpinner.start();
+                    }
+                },
+                complete: function () {
+                    _this.fileUploadSpinner.stop();
+                },
+                success: function (e) {
+                    if(e.operation == 'upload') {
+                        if(e.response && e.response.message) {
+                            App.flasher.flash(e.response.message);
+                        }
+                        _this.hasFile(true);
+                        _this.fileSrc(App.Routes.WebApi.Agreements.File.get({
+                            maxSide: 128,
+                            refresh: new Date().toUTCString()
+                        }));
+                    }
+                },
+                error: function (e) {
+                    var fileName, fileExtension;
+                    if(e.files && e.files.length > 0) {
+                        fileName = e.files[0].name;
+                        fileExtension = e.files[0].extension;
+                    }
+                    if(fileName) {
+                        _this.fileFileName(fileName);
+                    }
+                    if(fileExtension) {
+                        _this.fileFileExtension(fileExtension);
+                    }
+                    if(e.XMLHttpRequest.status === 415) {
+                        _this.isFileExtensionInvalid(true);
+                    } else if(e.XMLHttpRequest.status === 413) {
+                        _this.isFileTooManyBytes(true);
+                    } else {
+                        _this.isFileFailureUnexpected(true);
+                    }
+                }
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.startDeletingFile = function () {
+            var _this = this;
+            if(this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
+                this.$confirmPurgeDialog.dialog({
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'Yes, confirm delete',
+                            click: function () {
+                                _this.$confirmPurgeDialog.dialog('close');
+                                _this._deleteFile();
+                            }
+                        }, 
+                        {
+                            text: 'No, cancel delete',
+                            click: function () {
+                                _this.$confirmPurgeDialog.dialog('close');
+                                _this.fileDeleteSpinner.stop();
+                            },
+                            'data-css-link': true
+                        }
+                    ]
+                });
+            } else if(confirm('Are you sure you want to delete your profile file?')) {
+                this._deleteFile();
+            }
+        };
+        InstitutionalAgreementEditModel.prototype._deleteFile = function () {
+            var _this = this;
+            this.fileDeleteSpinner.start();
+            this.isFileExtensionInvalid(false);
+            this.isFileTooManyBytes(false);
+            this.isFileFailureUnexpected(false);
+            $.ajax({
+                url: App.Routes.WebApi.Agreements.File.del(),
+                type: 'DELETE'
+            }).always(function () {
+                _this.fileDeleteSpinner.stop();
+            }).done(function (response, statusText, xhr) {
+                if(typeof response === 'string') {
+                    App.flasher.flash(response);
+                }
+                _this.hasFile(false);
+                _this.fileSrc(App.Routes.WebApi.Agreements.File.get({
+                    maxSide: 128,
+                    refresh: new Date().toUTCString()
+                }));
+            }).fail(function () {
+                _this.isFileFailureUnexpected(true);
+            });
+        };
         InstitutionalAgreementEditModel.prototype.getSettings = function () {
             var _this = this;
             var url = 'App.Routes.WebApi.Agreements.Settings.get()';
@@ -471,6 +620,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         this.options.format = "MM/dd/yyyy";
                     }
                 });
+                _this.$bindKendoFile();
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });
@@ -511,6 +661,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $("#addContact").fadeOut(500, function () {
                 $("#addAContact").fadeIn(500);
             });
+        };
+        InstitutionalAgreementEditModel.prototype.addAFile = function () {
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

@@ -280,6 +280,23 @@ module App.Routes {
                     return makeUrl('agreements/settings');
                 }
             }
+
+            export module File {
+                export function get (params?: any): string {
+                    var url = post();
+                    if (params) url += '?' + $.param(params);
+                    return url;
+                }
+                export function post() {
+                    return makeUrl('agreements/file');
+                }
+                export function del() {
+                    return post();
+                }
+                export function kendoRemove() {
+                    return makeUrl('agreements/file/kendo-remove');
+                }
+            }
         }
         
         export module My {

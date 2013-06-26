@@ -290,6 +290,29 @@ var App;
                     Settings.get = get;
                 })(Agreements.Settings || (Agreements.Settings = {}));
                 var Settings = Agreements.Settings;
+                (function (File) {
+                    function get(params) {
+                        var url = post();
+                        if(params) {
+                            url += '?' + $.param(params);
+                        }
+                        return url;
+                    }
+                    File.get = get;
+                    function post() {
+                        return makeUrl('agreements/file');
+                    }
+                    File.post = post;
+                    function del() {
+                        return post();
+                    }
+                    File.del = del;
+                    function kendoRemove() {
+                        return makeUrl('agreements/file/kendo-remove');
+                    }
+                    File.kendoRemove = kendoRemove;
+                })(Agreements.File || (Agreements.File = {}));
+                var File = Agreements.File;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
             (function (My) {

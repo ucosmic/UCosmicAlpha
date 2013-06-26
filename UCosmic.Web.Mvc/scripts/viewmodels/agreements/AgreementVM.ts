@@ -98,6 +98,18 @@ export class InstitutionalAgreementEditModel {
     isCustomContactTypeAllowed = ko.observable();
     phoneTypes = ko.mapping.fromJS([]);
     phoneTypeSelected = ko.observable();
+    $file: KnockoutObservableJQuery = ko.observable();
+    hasFile: KnockoutObservableBool = ko.observable();
+    isFileExtensionInvalid: KnockoutObservableBool = ko.observable(false);
+    isFileTooManyBytes: KnockoutObservableBool = ko.observable(false);
+    isFileFailureUnexpected: KnockoutObservableBool = ko.observable(false);
+    fileFileExtension: KnockoutObservableString = ko.observable();
+    fileFileName: KnockoutObservableString = ko.observable();
+    fileSrc: KnockoutObservableString = ko.observable(
+        App.Routes.WebApi.Agreements.File.get({ maxSide: 128 }));
+    fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+    fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+    $confirmPurgeDialog: JQuery;
 
     participants = ko.mapping.fromJS([]);
 
@@ -146,6 +158,139 @@ export class InstitutionalAgreementEditModel {
             });
 
 
+    }
+
+    $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
+        
+        $("#fileUpload").kendoUpload({
+            multiple: false,
+            showFileList: false,
+            localization: {
+                select: 'Choose a file to upload...'
+            },
+            async: {
+                saveUrl: App.Routes.WebApi.Agreements.File.post(),
+                removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove()
+            },
+            upload: (e: any): void => {
+                // client-side check for file extension
+                var allowedExtensions: string[] = ['.png', '.jpg', '.jpeg', '.gif'];
+                this.isFileExtensionInvalid(false);
+                this.isFileTooManyBytes(false);
+                this.isFileFailureUnexpected(false);
+                $(e.files).each((index: number): void => {
+                    var isExtensionAllowed: bool = false;
+                    var isByteNumberAllowed: bool = false;
+                    var extension: string = e.files[index].extension;
+                    this.fileFileExtension(extension || '[NONE]');
+                    this.fileFileName(e.files[index].name);
+                    for (var i = 0; i < allowedExtensions.length; i++) {
+                        if (allowedExtensions[i] === extension.toLowerCase()) {
+                            isExtensionAllowed = true;
+                            break;
+                        }
+                    }
+                    if (!isExtensionAllowed) {
+                        e.preventDefault(); // prevent upload
+                        this.isFileExtensionInvalid(true); // update UI with feedback
+                    }
+                    else if (e.files[index].rawFile.size > (1024 * 1024)) {
+                        e.preventDefault(); // prevent upload
+                        this.isFileTooManyBytes(true); // update UI with feedback
+                    }
+                });
+                if (!e.isDefaultPrevented()) {
+                    this.fileUploadSpinner.start(); // display async wait message
+                }
+            },
+            complete: (): void => {
+                this.fileUploadSpinner.stop(); // hide async wait message
+            },
+            success: (e: any): void => {
+                // this event is triggered by both upload and remove requests
+                // ignore remove operations becuase they don't actually do anything
+                if (e.operation == 'upload') {
+                    if (e.response && e.response.message) {
+                        App.flasher.flash(e.response.message);
+                    }
+                    this.hasFile(true);
+                    this.fileSrc(App.Routes.WebApi.Agreements.File
+                        .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                }
+            },
+            error: (e: any): void => {
+                // kendo response is as json string, not js object
+                var fileName: string, fileExtension: string;
+
+                if (e.files && e.files.length > 0) {
+                    fileName = e.files[0].name;
+                    fileExtension = e.files[0].extension;
+                }
+                if (fileName) this.fileFileName(fileName);
+                if (fileExtension) this.fileFileExtension(fileExtension);
+
+                if (e.XMLHttpRequest.status === 415)
+                    this.isFileExtensionInvalid(true);
+                else if (e.XMLHttpRequest.status === 413)
+                    this.isFileTooManyBytes(true);
+                else this.isFileFailureUnexpected(true);
+            }
+        });
+            
+    }
+
+    startDeletingFile(): void {
+        if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
+            this.$confirmPurgeDialog.dialog({
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Yes, confirm delete',
+                        click: (): void => {
+                            this.$confirmPurgeDialog.dialog('close');
+                            this._deleteFile();
+                        }
+                    },
+                    {
+                        text: 'No, cancel delete',
+                        click: (): void => {
+                            this.$confirmPurgeDialog.dialog('close');
+                            this.fileDeleteSpinner.stop();
+                        },
+                        'data-css-link': true
+                    }
+                ]
+            });
+        }
+        else if (confirm('Are you sure you want to delete your profile file?')) {
+            this._deleteFile();
+        }
+    }
+
+    private _deleteFile(): void {
+        this.fileDeleteSpinner.start();
+        this.isFileExtensionInvalid(false);
+        this.isFileTooManyBytes(false);
+        this.isFileFailureUnexpected(false);
+        $.ajax({ // submit ajax DELETE request
+            url: App.Routes.WebApi.Agreements.File.del(),
+            type: 'DELETE'
+        })
+        .always((): void => {
+            this.fileDeleteSpinner.stop();
+        })
+        .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+            if (typeof response === 'string') App.flasher.flash(response);
+            this.hasFile(false);
+            this.fileSrc(App.Routes.WebApi.Agreements.File
+                .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+        })
+        .fail((): void => {
+            this.isFileFailureUnexpected(true);
+        });
     }
     
     getSettings(): void {
@@ -204,6 +349,7 @@ export class InstitutionalAgreementEditModel {
                 /* If user clicks date picker button, reset format */
                 open: function (e) { this.options.format = "MM/dd/yyyy"; }
             });
+            this.$bindKendoFile();
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
@@ -571,6 +717,10 @@ export class InstitutionalAgreementEditModel {
         $("#addContact").fadeOut(500, function () {
             $("#addAContact").fadeIn(500);
         });
+    }
+
+    addAFile(): void {
+        // push to contact array
     }
 
     addParticipant(establishmentResultViewModel): void {
