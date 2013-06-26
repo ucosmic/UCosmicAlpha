@@ -47,6 +47,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.startDate = ko.observable();
             this.expDate = ko.observable();
             this.isEstimated = ko.observable();
+            this.autoRenew = ko.observable();
             this.privateNotes = ko.observable();
             this.agreementContent = ko.observable();
             this.isCustomTypeAllowed = ko.observable();
@@ -440,7 +441,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     });
                 }
                 if(_this.isCustomStatusAllowed) {
-                    $("#agreementTypes").kendoComboBox({
+                    $("#statusOptions").kendoComboBox({
                         dataTextField: "name",
                         dataValueField: "id",
                         dataSource: new kendo.data.DataSource({

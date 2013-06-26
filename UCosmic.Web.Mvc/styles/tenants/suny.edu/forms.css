@@ -437,6 +437,8 @@ section {
           box-sizing: border-box;
           width: 300px;
           margin-left: 0; }
+        .field-table .field-row .field-column-left .field-input-label-top .k-datepicker {
+          width: 300px; }
     .field-table .field-row .field-column-right {
       width: 47%;
       float: right; }
@@ -452,6 +454,8 @@ section {
           box-sizing: border-box;
           width: 300px;
           margin-left: 0; }
+        .field-table .field-row .field-column-right .field-input-label-top .k-datepicker {
+          width: 300px; }
   .field-table.w690-l290-v400 .field-label {
     width: 290px; }
   .field-table.w690-l290-v400 .field-input {

@@ -426,6 +426,9 @@ section {
                     width: 300px;
                     margin-left: 0;
                 }
+                .k-datepicker {
+                    width: 300px;
+                }
             }
         }
         
@@ -440,6 +443,9 @@ section {
                     @include border-box;
                     width: 300px;
                     margin-left: 0;
+                }
+                .k-datepicker {
+                    width: 300px;
                 }
             }
         }

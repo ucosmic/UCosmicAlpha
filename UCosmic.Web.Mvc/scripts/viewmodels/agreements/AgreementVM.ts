@@ -84,6 +84,7 @@ export class InstitutionalAgreementEditModel {
     startDate = ko.observable();
     expDate = ko.observable();
     isEstimated = ko.observable();
+    autoRenew = ko.observable();
     privateNotes = ko.observable();
     agreementContent = ko.observable();
     isCustomTypeAllowed = ko.observable();
@@ -174,7 +175,7 @@ export class InstitutionalAgreementEditModel {
                         });
             }
             if (this.isCustomStatusAllowed) {
-                $("#agreementTypes").kendoComboBox({
+                $("#statusOptions").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
