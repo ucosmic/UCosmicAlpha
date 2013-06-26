@@ -150,7 +150,7 @@
                 <div class="field-table w690-l190-v500">
                     <div class="field-row">
                         <div class="field-column-left">
-                             <div class="field-label-top required">
+                            <div class="field-label-top required">
                                 <label>Start date</label>
                             </div>
                             <div class="field-input-label-top">
@@ -161,7 +161,7 @@
                             </div>
                         </div>
                         <div class="field-column-right">
-                             <div class="field-label-top required">
+                            <div class="field-label-top required">
                                 <label>Expiration date</label>
                             </div>
                             <div class="field-input-label-top">
@@ -175,10 +175,9 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="field-row">
                         <div class="field-column-left">
-                             <div class="field-label-top required">
+                            <div class="field-label-top required">
                                 <label>Auto renew</label>
                             </div>
                             <div>
@@ -210,6 +209,119 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section id="Contacts">
+                <header>
+                    <h2>
+                        Contacts
+                    </h2>
+                </header>
+                <div data-bind="visible: isBound" style="display: none;">
+                    @*<ul data-bind="foreach: Contacts">
+                        <li data-bind="element: 'contactE1'">
+                            <div class="typed-item">
+                                <a title="Remove this contact" data-bind="click: $root.removeContact"><i class="red minus on-right"></i></a>
+                                
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: firstName + ' ' + lastName + ': ' + contactType"></strong><br/>
+                                        <span data-bind="text: phone + ' ' + phoneType"></span><br/>
+                                        <span data-bind="text: email"></span><br/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>*@
+                </div>
+                <footer id="addAContact">
+                    <a href="" data-bind="click: $root.addAContact" class="button">
+                        <i class="green plus"></i>
+                        <span class="text">Add a contact</span>
+                    </a>
+                </footer>
+                <div class="field-table w690-l190-v500" id="addContact" style="visibility: hidden;">
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>Contact type</label>
+                            </div>
+                            <div class="field-input-label-top" data-bind="visible: !isCustomContactTypeAllowed()">
+                                <select  data-bind="options: contactTypeOptions(), 
+							        optionsValue: 'id',
+							        optionsText: 'name', value: contactTypeOptionSelected">
+                                </select>
+                            </div>
+                            <div class="field-input-label-top" data-bind=" visible: isCustomContactTypeAllowed">
+                                <input id="contactTypeOptions" type="text" placeholder="[None]" 
+                                       data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
+                            </div>
+                            <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
+                                Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                            <div data-bind=" visible: !isCustomContactTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement contactType.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top required">
+                                <label>Email address</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: startDate" placeholder="[Select a start date]"  />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>First name</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: startDate" />
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top required">
+                                <label>Last name</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: startDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top">
+                                <label>Phone</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: startDate" />
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top">
+                                <label>Phone Type</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <select  data-bind="options: phoneTypes(), 
+							    optionsValue: 'id',
+							    optionsText: 'name', value: phoneTypeSelected">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <footer>
+                        <a href="" data-bind="click: $root.addContact" class="button" style="float: left">
+                            <i class="green plus"></i>
+                            <span class="text">Add contact</span>
+                        </a>
+                        <a href="" data-bind="click: $root.cancelContact" class="button" style="float: left">
+                            <span class="text">Cancel</span>
+                        </a>
+                    </footer>
                 </div>
             </section>
         </div>

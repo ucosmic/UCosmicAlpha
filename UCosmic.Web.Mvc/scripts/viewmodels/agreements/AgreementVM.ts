@@ -59,6 +59,12 @@ export class InstitutionalAgreementEditModel {
                 new this.selectConstructor("test2", 2),
                 new this.selectConstructor("test3", 3)
         ]);
+        this.phoneTypes = ko.mapping.fromJS([
+                new this.selectConstructor("[None]", 0),
+                new this.selectConstructor("home", 1),
+                new this.selectConstructor("work", 2),
+                new this.selectConstructor("mobile", 3)
+        ]);
         //this.agreementTypes = ko.mapping.fromJS([
         //        new this.selectConstructor("test", 1),
         //        new this.selectConstructor("test2", 2),
@@ -74,10 +80,10 @@ export class InstitutionalAgreementEditModel {
     typeOptionSelected: KnockoutObservableString = ko.observable();
     $statusOptions: KnockoutObservableJQuery = ko.observable();
     statusOptions = ko.mapping.fromJS([]);
-    statusOptionsSelected: KnockoutObservableString = ko.observable();
+    statusOptionSelected: KnockoutObservableString = ko.observable();
     $contactTypeOptions: KnockoutObservableJQuery = ko.observable();
     contactTypeOptions = ko.mapping.fromJS([]);
-    contactTypeOptionsSelected: KnockoutObservableString = ko.observable();
+    contactTypeOptionSelected: KnockoutObservableString = ko.observable();
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
     nickname = ko.observable();
@@ -90,7 +96,8 @@ export class InstitutionalAgreementEditModel {
     isCustomTypeAllowed = ko.observable();
     isCustomStatusAllowed = ko.observable();
     isCustomContactTypeAllowed = ko.observable();
-
+    phoneTypes = ko.mapping.fromJS([]);
+    phoneTypeSelected = ko.observable();
 
     participants = ko.mapping.fromJS([]);
 
@@ -179,16 +186,16 @@ export class InstitutionalAgreementEditModel {
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
-                        data: this.typeOptions()
+                        data: this.statusOptions()
                     })
                 });
             }
             if (this.isCustomContactTypeAllowed) {
-                $("#agreementTypes").kendoComboBox({
+                $("#contactTypeOptions").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
-                        data: this.typeOptions()
+                        data: this.contactTypeOptions()
                     })
                 });
             }
@@ -208,6 +215,7 @@ export class InstitutionalAgreementEditModel {
         $("#allParticipants").css("visibility", "").hide();
         $("#estSearch").css("visibility", "").hide();
         $("#addEstablishment").css("visibility", "").hide();
+        $("#addContact").css("visibility", "").hide();
     }
 
     removeParticipant(establishmentResultViewModel, e): bool {
@@ -545,6 +553,25 @@ export class InstitutionalAgreementEditModel {
             this.establishmentSearchViewModel.sammy.run();
         }
     };
+
+    addAContact(): void {
+        $("#addAContact").fadeOut(500, function () {
+            $("#addContact").fadeIn(500);
+        });
+    }
+
+    addContact(): void {
+        // push to contact array
+        $("#addContact").fadeOut(500, function () {
+            $("#addAContact").fadeIn(500);
+        });
+    }
+
+    cancelContact(): void {
+        $("#addContact").fadeOut(500, function () {
+            $("#addAContact").fadeIn(500);
+        });
+    }
 
     addParticipant(establishmentResultViewModel): void {
         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
