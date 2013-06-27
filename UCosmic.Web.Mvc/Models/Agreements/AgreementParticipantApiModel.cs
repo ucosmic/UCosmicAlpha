@@ -21,7 +21,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<AgreementParticipant, AgreementParticipantApiModel>()
                     .ForMember(d => d.AgreementId, o => o.MapFrom(s =>
-                        s.Agreement.Id == 0 ? (int?)null : s.Agreement.Id))
+                        s.AgreementId == 0 ? (int?)null : s.AgreementId))
                     .ForMember(d => d.EstablishmentId, o => o.MapFrom(s => s.Establishment.RevisionId))
                     .ForMember(d => d.EstablishmentOfficialName, o => o.MapFrom(s =>
                         s.Establishment.OfficialName == s.Establishment.TranslatedName.Text ? null : s.Establishment.OfficialName))

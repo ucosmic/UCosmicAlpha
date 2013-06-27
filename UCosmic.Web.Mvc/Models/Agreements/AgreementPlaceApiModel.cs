@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using System.Linq;
 using UCosmic.Domain.Agreements;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
 {

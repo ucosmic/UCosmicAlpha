@@ -67,14 +67,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return null;
         }
 
-        [GET("agreements/{domain}/partners/places")]
-        public IEnumerable<AgreementPlaceApiModel> GetPlaces(string domain)
+        [GET("agreements/{domain}/partners")]
+        public IEnumerable<AgreementParticipantApiModel> GetPartnerPoints(string domain)
         {
-            return GetPlaceGroups(domain, null);
+            var query = new PartnerParticipantsByOwnerDomain(User, domain)
+            {
+                EagerLoad = new Expression<Func<AgreementParticipant, object>>[]
+                {
+                    x => x.Establishment.Location,
+                    x => x.Establishment.Names.Select(y => y.TranslationToLanguage),
+                }
+            };
+            var partners = _queryProcessor.Execute(query);
+
+            // convert to model
+            var models = Mapper.Map<AgreementParticipantApiModel[]>(partners);
+
+            return models;
+        }
+
+        [GET("agreements/{domain}/partners/places")]
+        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaces(string domain)
+        {
+            return GetPartnerPlaceGroups(domain, null);
         }
 
         [GET("agreements/{domain}/partners/places/{placeType}")]
-        public IEnumerable<AgreementPlaceApiModel> GetPlaceGroups(string domain, string placeType)
+        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaceGroups(string domain, string placeType)
         {
             var query = new PartnerPlacesByOwnerDomain(User, domain)
             {

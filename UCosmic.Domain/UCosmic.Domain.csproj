@@ -199,6 +199,7 @@
     <Compile Include="Domain\Agreements\Entities\AgreementVisibility.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementById.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementsByOwnerDomain.cs" />
+    <Compile Include="Domain\Agreements\Queries\PartnerParticipantsByOwnerDomain.cs" />
     <Compile Include="Domain\Agreements\Queries\PartnerPlacesByOwnerDomain.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementSettings.cs" />
     <Compile Include="Domain\Agreements\Queries\ParticipantByEstablishmentId.cs" />
