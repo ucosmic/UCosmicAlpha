@@ -585,7 +585,7 @@ var ViewModels;
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id)
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
                                         }
                                     }
                                 });
@@ -602,7 +602,7 @@ var ViewModels;
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId)
+                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId, true)
                                             }
                                         }
                                     });
@@ -621,7 +621,7 @@ var ViewModels;
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId())
+                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), false)
                             }
                         }
                     }),
@@ -633,7 +633,7 @@ var ViewModels;
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id)
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
                                         }
                                     }
                                 });
@@ -650,7 +650,7 @@ var ViewModels;
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(campusId)
+                                                url: App.Routes.WebApi.Establishments.getChildren(campusId, true)
                                             }
                                         }
                                     });
@@ -861,18 +861,18 @@ var ViewModels;
                     draggable: false,
                     buttons: {
                         "Delete": function () {
-                            $(this).dialog("close");
                             $.ajax({
                                 async: false,
                                 type: "DELETE",
                                 url: App.Routes.WebApi.People.del(me.personId),
                                 success: function (data, statusText, jqXHR) {
                                     alert(jqXHR.statusText);
-                                    $(this).dialog("close");
                                 },
                                 error: function (jqXHR, statusText, errorThrown) {
                                     alert(statusText);
-                                    $(this).dialog("close");
+                                },
+                                complete: function (jqXHR, statusText) {
+                                    $("#confirmProfileDeleteDialog").dialog("close");
                                 }
                             });
                         },

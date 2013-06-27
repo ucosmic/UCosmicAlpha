@@ -21,6 +21,17 @@ var App;
                 }
                 return url;
             }
+            function makeUrlWithParams(relativeUrl) {
+                var apiPrefix = WebApi.urlPrefix;
+                if(!hasTrailingSlash(apiPrefix)) {
+                    apiPrefix = apiPrefix + '/';
+                }
+                var url = Routes.applicationPath + apiPrefix + relativeUrl;
+                if(!hasTrailingSlash(url)) {
+                    url = url + '?';
+                }
+                return url;
+            }
             (function (Identity) {
                 function signIn() {
                     return makeUrl('sign-in');
@@ -160,9 +171,9 @@ var App;
                     return makeUrl(url);
                 }
                 Establishments.get = get;
-                function getChildren(establishmentId) {
+                function getChildren(establishmentId, sort) {
                     var url = 'establishments/children/' + establishmentId;
-                    return makeUrl(url);
+                    return makeUrlWithParams(url) + "sort=" + sort;
                 }
                 Establishments.getChildren = getChildren;
                 function post() {

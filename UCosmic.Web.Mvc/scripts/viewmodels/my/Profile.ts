@@ -720,7 +720,7 @@ module ViewModels.My {
                                 var dataSource = new kendo.data.DataSource( {
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren( item.id )
+                                            url: App.Routes.WebApi.Establishments.getChildren( item.id, true )
                                         }
                                     }
                                 } );
@@ -738,7 +738,7 @@ module ViewModels.My {
                                     var dataSource = new kendo.data.DataSource( {
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren( collegeId )
+                                                url: App.Routes.WebApi.Establishments.getChildren( collegeId, true )
                                             }
                                         }
                                     } );
@@ -760,7 +760,7 @@ module ViewModels.My {
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId())
+                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), false)
                             }
                         }
                     }),
@@ -772,7 +772,7 @@ module ViewModels.My {
                                 var dataSource = new kendo.data.DataSource( {
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren( item.id )
+                                            url: App.Routes.WebApi.Establishments.getChildren( item.id, true )
                                         }
                                     }
                                 } );
@@ -790,7 +790,7 @@ module ViewModels.My {
                                     var dataSource = new kendo.data.DataSource( {
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren( campusId )
+                                                url: App.Routes.WebApi.Establishments.getChildren( campusId, true )
                                             }
                                         }
                                     } );
@@ -971,7 +971,6 @@ module ViewModels.My {
                                                     }
 
                                                     $( "#editAffiliationDialog" ).dialog( "close" );
-                                                    //location.href = App.Routes.Mvc.My.Profile.get();
                                                     me.reloadAffiliations();
                                                 },
                                                 error: ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ): void =>
@@ -1035,20 +1034,18 @@ module ViewModels.My {
                 draggable: false,
                 buttons: {
                     "Delete": function () {
-                        //debugger;
-                        $( this ).dialog( "close" );
-
                         $.ajax( {
                             async: false,
                             type: "DELETE",
                             url: App.Routes.WebApi.People.del(me.personId),
-                            success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
+                            success: function ( data, statusText, jqXHR ) {
                                 alert( jqXHR.statusText );
-                                $( this ).dialog( "close" );
                             },
-                            error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
+                            error: function ( jqXHR, statusText, errorThrown ) {
                                 alert( statusText );
-                                $( this ).dialog( "close" );
+                            },
+                            complete:  function( jqXHR, statusText ) {
+                                $( "#confirmProfileDeleteDialog" ).dialog( "close" );
                             }
                         } );
                     },

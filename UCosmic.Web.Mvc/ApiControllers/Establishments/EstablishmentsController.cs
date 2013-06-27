@@ -68,7 +68,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("children/{establishmentId}")]
-        public ICollection<EstablishmentApiScalarModel> GetChildren(int establishmentId)
+        public ICollection<EstablishmentApiScalarModel> GetChildren(int establishmentId, bool sort)
         {
             var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId)
             {
@@ -78,7 +78,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             });
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            var model = Mapper.Map<ICollection<EstablishmentApiScalarModel>>(entity.Children);
+            var children = sort ? entity.Children.OrderBy(x => x.OfficialName).ToList() : entity.Children.ToList();
+            var model = Mapper.Map<ICollection<EstablishmentApiScalarModel>>(children);
             return model;
         }
 

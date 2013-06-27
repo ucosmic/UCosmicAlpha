@@ -406,9 +406,6 @@ module ViewModels.Users {
                 draggable: false,
                 buttons: {
                     "Delete": function () {
-                        debugger;
-                        $( this ).dialog( "close" );
-
                         $.ajax( {
                             async: false,
                             type: "DELETE",
@@ -417,17 +414,19 @@ module ViewModels.Users {
                                 if ( statusText !== "success" ) {
                                     alert( jqXHR.statusText );
                                 }
-                                $( this ).dialog( "close" );
                             },
-                            error: function ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ) {
+                            error: function ( jqXHR, statusText, errorThrown ) {                               
                                 alert( statusText );
-                                $( this ).dialog( "close" );
+                            },
+                            complete:  function( jqXHR, statusText ) {
+                                $( "#confirmUserDeleteDialog" ).dialog( "close" );
+                                window.location.reload();
                             }
                         } );
                     },
 
                     "Cancel": function () {
-                        $( this ).dialog( "close" );
+                        $( "#confirmUserDeleteDialog" ).dialog( "close" );
                     }
                 }
             } );

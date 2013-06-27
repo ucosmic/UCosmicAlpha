@@ -193,7 +193,7 @@ namespace UCosmic.Domain.External
                         throw new Exception(message);
                     }
 
-                    /* Create department/program (if provided a name). */
+                    /* Create department/program. */
                     if (String.IsNullOrWhiteSpace(department.Department))
                     {
                         if (!String.IsNullOrWhiteSpace(department.College))
@@ -207,13 +207,30 @@ namespace UCosmic.Domain.External
                                 var createCollege = new UsfCreateEstablishment()
                                 {
                                     OfficialName = department.College,
-                                    ExternalId = department.DeptId,  // No department so assign ID to college.
                                     IsMember = true,
                                     ParentId = campus.RevisionId,
                                     TypeId = _collegeEstablishmentType.RevisionId
                                 };
                                 _createUsfEstablishment.Handle(createCollege);
                                 _unitOfWork.SaveChanges();
+
+                                college = createCollege.CreatedEstablishment;
+                            }
+
+                            var noneDept = _entities.Get<Establishment>().SingleOrDefault(e => (e.Parent.RevisionId == college.RevisionId) &&
+                                                                                               (e.OfficialName == "None"));
+                            if (noneDept == null)
+                            {
+                                var createDept = new UsfCreateEstablishment()
+                                {
+                                    OfficialName = "None",
+                                    ExternalId = department.DeptId,
+                                    IsMember = true,
+                                    ParentId = college.RevisionId,
+                                    TypeId = _departmentEstablishmentType.RevisionId
+                                };
+                                _createUsfEstablishment.Handle(createDept);
+                                _unitOfWork.SaveChanges();                                
                             }
                         }
                         else

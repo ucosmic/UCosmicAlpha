@@ -24,6 +24,14 @@ module App.Routes {
             return url;
         }
 
+        function makeUrlWithParams(relativeUrl: string): string {
+            var apiPrefix: string = WebApi.urlPrefix;
+            if (!hasTrailingSlash(apiPrefix)) apiPrefix = apiPrefix + '/';
+            var url = Routes.applicationPath + apiPrefix + relativeUrl;
+            if (!hasTrailingSlash(url)) url = url + '?';
+            return url;
+        }
+
         export module Identity {
 
             export function signIn(): string {
@@ -146,9 +154,9 @@ module App.Routes {
                 return makeUrl(url);
             }
 
-            export function getChildren (establishmentId: number): string {
+            export function getChildren (establishmentId: number, sort: bool): string {
                 var url = 'establishments/children/' + establishmentId;
-                return makeUrl(url);
+                return makeUrlWithParams(url) + "sort=" + sort;
             }
 
             export function post(): string {
