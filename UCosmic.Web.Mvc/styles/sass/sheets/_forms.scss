@@ -333,6 +333,12 @@ section {
     margin-bottom: 40px;
 }
 
+.k-tooltip{
+    opacity: 1!important;
+    background-color: white!important;
+    color: black!important;
+}
+
 .field-table {
     margin: 16px 0;
     .field-row {
@@ -417,10 +423,9 @@ section {
                 padding: 5px 0;
             }
         }
-        
-        .field-column-left{
+
+        .field-column-base{
             width: 47%;
-            float: left;
             .field-input-label-top {
                 @include border-box;
                 float: left;
@@ -433,25 +438,27 @@ section {
                 .k-datepicker {
                     width: 300px;
                 }
+            }
+            img{ 
+                cursor: pointer;
+            }
+            .helpIcon{
+                position: relative;
+                top: -10px;
+                left: -25px;
+                width: 0px;
+                height: 0px;
             }
         }
         
+        .field-column-left{
+            @extend .field-column-base;
+            float: left;
+        }
+        
         .field-column-right{
-            width: 47%;
+            @extend .field-column-base;
             float: right;
-            .field-input-label-top {
-                @include border-box;
-                float: left;
-                width: 100%;
-                select {
-                    @include border-box;
-                    width: 300px;
-                    margin-left: 0;
-                }
-                .k-datepicker {
-                    width: 300px;
-                }
-            }
         }
     }
     @mixin field-column-split($lWidth, $vWidth) {

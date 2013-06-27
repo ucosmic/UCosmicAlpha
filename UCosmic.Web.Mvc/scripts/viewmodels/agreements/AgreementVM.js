@@ -439,10 +439,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 },
                 upload: function (e) {
                     var allowedExtensions = [
-                        '.png', 
-                        '.jpg', 
-                        '.jpeg', 
-                        '.gif'
+                        'pdf', 
+                        'doc', 
+                        'docx', 
+                        'odt', 
+                        'xls', 
+                        'xlsx', 
+                        'ods', 
+                        'ppt', 
+                        'pptx'
                     ];
                     _this.isFileExtensionInvalid(false);
                     _this.isFileTooManyBytes(false);
@@ -621,6 +626,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     }
                 });
                 _this.$bindKendoFile();
+                $("#helpExpDate").kendoTooltip({
+                    width: 120,
+                    position: "top",
+                    content: "testing",
+                    showOn: "click",
+                    autoHide: false
+                });
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });

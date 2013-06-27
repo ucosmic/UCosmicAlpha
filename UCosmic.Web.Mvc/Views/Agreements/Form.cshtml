@@ -162,7 +162,12 @@
                         </div>
                         <div class="field-column-right">
                             <div class="field-label-top required">
-                                <label>Expiration date</label>
+                                <label>
+                                    <div class="helpIcon" id="helpExpDate">
+                                        <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help with expiration date" />
+                                    </div>
+                                    Expiration date
+                                </label>
                             </div>
                             <div class="field-input-label-top">
                                 <input class="hasDate" type="text" data-bind="value: expDate" placeholder="[Select an expiration date]"  />
@@ -212,7 +217,7 @@
                 </div>
             </section>
 
-            <section id="Contacts">
+            <section id="contacts">
                 <header>
                     <h2>
                         Contacts
@@ -321,11 +326,11 @@
                         <a href="" data-bind="click: $root.cancelContact" class="button" style="float: left">
                             <span class="text">Cancel</span>
                         </a>
-                    </footer>
+                    </footer><br/>
                 </div>
             </section>
             
-            <section id="Contacts">
+            <section id="fileAttachments">
                 <header>
                     <h2>
                         File Attachments

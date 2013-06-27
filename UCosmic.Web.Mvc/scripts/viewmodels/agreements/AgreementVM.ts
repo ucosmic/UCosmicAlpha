@@ -174,7 +174,7 @@ export class InstitutionalAgreementEditModel {
             },
             upload: (e: any): void => {
                 // client-side check for file extension
-                var allowedExtensions: string[] = ['.png', '.jpg', '.jpeg', '.gif'];
+                var allowedExtensions: string[] = ['pdf', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods', 'ppt', 'pptx'];
                 this.isFileExtensionInvalid(false);
                 this.isFileTooManyBytes(false);
                 this.isFileFailureUnexpected(false);
@@ -350,6 +350,14 @@ export class InstitutionalAgreementEditModel {
                 open: function (e) { this.options.format = "MM/dd/yyyy"; }
             });
             this.$bindKendoFile();
+
+            $("#helpExpDate").kendoTooltip({
+                width: 120,
+                position: "top",
+                content: "testing",
+                showOn: "click",
+                autoHide: false
+            })
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');

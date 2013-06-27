@@ -343,6 +343,11 @@ fieldset legend {
 section {
   margin-bottom: 40px; }
 
+.k-tooltip {
+  opacity: 1 !important;
+  background-color: white !important;
+  color: black !important; }
+
 .field-table {
   margin: 16px 0; }
   .field-table .field-row {
@@ -423,40 +428,34 @@ section {
       padding: 9px 0; }
     .field-table .field-row .field-input .field-addendum, .field-table .field-row .field-value .field-addendum {
       padding: 5px 0; }
+    .field-table .field-row .field-column-base, .field-table .field-row .field-column-left, .field-table .field-row .field-column-right {
+      width: 47%; }
+      .field-table .field-row .field-column-base .field-input-label-top, .field-table .field-row .field-column-left .field-input-label-top, .field-table .field-row .field-column-right .field-input-label-top {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        float: left;
+        width: 100%; }
+        .field-table .field-row .field-column-base .field-input-label-top select, .field-table .field-row .field-column-left .field-input-label-top select, .field-table .field-row .field-column-right .field-input-label-top select {
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          width: 300px;
+          margin-left: 0; }
+        .field-table .field-row .field-column-base .field-input-label-top .k-datepicker, .field-table .field-row .field-column-left .field-input-label-top .k-datepicker, .field-table .field-row .field-column-right .field-input-label-top .k-datepicker {
+          width: 300px; }
+      .field-table .field-row .field-column-base img, .field-table .field-row .field-column-left img, .field-table .field-row .field-column-right img {
+        cursor: pointer; }
+      .field-table .field-row .field-column-base .helpIcon, .field-table .field-row .field-column-left .helpIcon, .field-table .field-row .field-column-right .helpIcon {
+        position: relative;
+        top: -10px;
+        left: -25px;
+        width: 0px;
+        height: 0px; }
     .field-table .field-row .field-column-left {
-      width: 47%;
       float: left; }
-      .field-table .field-row .field-column-left .field-input-label-top {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        float: left;
-        width: 100%; }
-        .field-table .field-row .field-column-left .field-input-label-top select {
-          -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          box-sizing: border-box;
-          width: 300px;
-          margin-left: 0; }
-        .field-table .field-row .field-column-left .field-input-label-top .k-datepicker {
-          width: 300px; }
     .field-table .field-row .field-column-right {
-      width: 47%;
       float: right; }
-      .field-table .field-row .field-column-right .field-input-label-top {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        float: left;
-        width: 100%; }
-        .field-table .field-row .field-column-right .field-input-label-top select {
-          -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          box-sizing: border-box;
-          width: 300px;
-          margin-left: 0; }
-        .field-table .field-row .field-column-right .field-input-label-top .k-datepicker {
-          width: 300px; }
   .field-table.w690-l290-v400 .field-label {
     width: 290px; }
   .field-table.w690-l290-v400 .field-input {
