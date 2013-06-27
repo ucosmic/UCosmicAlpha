@@ -24,6 +24,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
     })();
     exports.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;    
     ;
+    var phoneNumber = (function () {
+        function phoneNumber(textValue, type, id) {
+            this.textValue = textValue;
+            this.type = type;
+            this.id = id;
+        }
+        return phoneNumber;
+    })();
+    exports.phoneNumber = phoneNumber;    
     var InstitutionalAgreementEditModel = (function () {
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
@@ -31,6 +40,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.selectConstructor = function (name, id) {
                 this.name = name;
                 this.id = id;
+            };
+            this.fileConstructor = function (name, path, visibility, id) {
+                this.name = name;
+                this.path = path;
+                this.visibility = visibility;
+                this.id = id;
+            };
+            this.phoneNumberConstructor = function (textValue, type, id) {
+                this.textValue = textValue;
+                this.type = type;
+                this.id = id;
+            };
+            this.contactConstructor = function (jobTitle, firstName, lastName, id, personId, phone) {
+                this.jobTitle = jobTitle;
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.id = id;
+                this.personId = personId;
+                this.phone = phone;
             };
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);

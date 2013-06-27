@@ -39,6 +39,16 @@ export class InstitutionalAgreementParticipantModel {
     establishmentTranslatedName;
 
 };
+export class phoneNumber{
+    constructor(textValue: string, type: string, id: number) {
+        this.textValue = textValue;
+        this.type = type;
+        this.id = id;
+    };
+    textValue;
+    type;
+    id;
+}
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
@@ -74,6 +84,25 @@ export class InstitutionalAgreementEditModel {
     selectConstructor = function (name: string, id: number) {
         this.name = name;
         this.id = id;
+    };
+    fileConstructor = function (name: string, path: string, visibility: string, id: number) {
+        this.name = name;
+        this.path = path;
+        this.visibility = visibility;
+        this.id = id;
+    };
+    phoneNumberConstructor = function (textValue: string, type: string, id: number) {
+        this.textValue = textValue;
+        this.type = type;
+        this.id = id;
+    };
+    contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: number, phone: phoneNumber) {
+        this.jobTitle = jobTitle;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.id = id;
+        this.personId = personId;
+        this.phone = phone;
     };
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
