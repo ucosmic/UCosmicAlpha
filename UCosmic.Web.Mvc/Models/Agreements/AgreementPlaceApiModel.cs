@@ -18,30 +18,12 @@ namespace UCosmic.Web.Mvc.Models
         public bool IsAdmin2 { get; set; }
         public bool IsAdmin3 { get; set; }
         public int AgreementCount { get { return (AgreementIds == null) ? 0 : AgreementIds.Length; } }
-        //public PlaceApiModel[] Ancestors { get; set; }
+        //public PlaceApiModel[] Ancestors { get; set; } // eager loading this slows down query
         public MapPointModel Center { get; set; }
     }
 
     public static class AgreementPlaceProfiler
     {
-        //public class EntityToModelProfile : Profile
-        //{
-        //    protected override void Configure()
-        //    {
-        //        CreateMap<Place, AgreementPlaceApiModel>()
-        //            .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
-        //            .ForMember(d => d.Name, o => o.MapFrom(s => s.OfficialName))
-        //            .ForMember(d => d.Type, o => o.MapFrom(s => s.GeoPlanetPlace != null ? s.GeoPlanetPlace.Type.EnglishName : null))
-        //            .ForMember(d => d.Ancestors, o => o.MapFrom(s => s.Ancestors
-        //                //.OrderByDescending(x => x.Separation)
-        //                .Select(x => x.Ancestor)
-        //                //.Where(x => !x.IsEarth)
-        //            ))
-        //            .ForMember(d => d.AgreementIds, o => o.UseValue(new int[0]))
-        //        ;
-        //    }
-        //}
-
         public class QueryResultToModelProfile : Profile
         {
             protected override void Configure()
@@ -51,9 +33,9 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.Place.OfficialName))
                     .ForMember(d => d.Type, o => o.MapFrom(s => s.Place.GeoPlanetPlace != null ? s.Place.GeoPlanetPlace.Type.EnglishName : null))
                     //.ForMember(d => d.Ancestors, o => o.MapFrom(s => s.Place.Ancestors
-                    //    //.OrderByDescending(x => x.Separation)
+                    //    .OrderByDescending(x => x.Separation)
                     //    .Select(x => x.Ancestor)
-                    //    //.Where(x => !x.IsEarth)
+                    //    .Where(x => !x.IsEarth)
                     //))
                     .ForMember(d => d.Center, o => o.MapFrom(s => s.Place.Center))
                     .ForMember(d => d.IsEarth, o => o.MapFrom(s => s.Place.IsEarth))
