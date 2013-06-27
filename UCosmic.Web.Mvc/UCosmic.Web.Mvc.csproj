@@ -828,15 +828,10 @@
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
-    <Content Include="scripts\ko\knockout-postbox.min.js.map">
-      <DependentUpon>knockout-postbox.js</DependentUpon>
-    </Content>
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
-    <Content Include="scripts\ko\knockout-postbox.js" />
-    <Content Include="scripts\ko\knockout-postbox.min.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
     <Content Include="images\icons\closer\closer-16-dark.png" />
