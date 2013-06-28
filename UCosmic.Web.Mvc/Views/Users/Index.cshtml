@@ -83,7 +83,7 @@
                                                     {
                                                         <li data-bind="click: showRoleEditor, visible: !isEditingRoles()">Manage Access Grants</li>
                                                     }
-                                                    @if (User.IsInAnyRole(RoleName.EstablishmentAdministrator))
+                                                    @if (User.IsInAnyRole(RoleName.EmployeeProfileManager))
                                                     {
                                                         <li data-bind="click: deleteUser, visible: !isEditingRoles()">Delete</li>
                                                     }

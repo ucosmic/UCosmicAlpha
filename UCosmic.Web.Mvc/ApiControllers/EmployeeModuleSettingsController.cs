@@ -39,8 +39,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             // do not throw exception, some tenants may not use settings or faculty ranks
             if (employeeModuleSettings == null || !employeeModuleSettings.FacultyRanks.Any())
                 return Enumerable.Empty<FacultyRankApiModel>();
-
-            var models = Mapper.Map<FacultyRankApiModel[]>(employeeModuleSettings.FacultyRanks);
+            var facultyRanks = employeeModuleSettings.FacultyRanks.OrderBy(r => r.Number).ToList();
+            var models = Mapper.Map<FacultyRankApiModel[]>(facultyRanks);
             return models;
         }
 
