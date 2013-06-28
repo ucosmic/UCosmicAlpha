@@ -79,10 +79,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var children = (sort == "true") ? entity.Children.OrderBy(x => x.OfficialName).ToArray() : entity.Children.ToArray();
+            var children = (!String.IsNullOrEmpty(sort) && (String.Compare(sort,"true",true) == 0)) ?
+                            entity.Children.OrderBy(x => x.OfficialName).ToArray() :
+                            entity.Children.ToArray();
             var model = Mapper.Map<ICollection<EstablishmentApiScalarModel>>(children);
 
             return model;
+        }
+
+        [GET("{establishmentId}/children/")]
+        public IEnumerable<EstablishmentApiScalarModel> GetChildren(int establishmentId)
+        {
+            return GetChildren(establishmentId, null);
         }
 
         [POST("")]
