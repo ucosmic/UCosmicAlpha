@@ -172,7 +172,7 @@ var App;
                 }
                 Establishments.get = get;
                 function getChildren(establishmentId, sort) {
-                    var url = 'establishments/children/' + establishmentId;
+                    var url = 'establishments/' + establishmentId + '/children';
                     return makeUrlWithParams(url) + "sort=" + sort;
                 }
                 Establishments.getChildren = getChildren;

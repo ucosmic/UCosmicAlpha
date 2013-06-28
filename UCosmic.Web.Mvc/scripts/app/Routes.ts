@@ -155,7 +155,7 @@ module App.Routes {
             }
 
             export function getChildren (establishmentId: number, sort: bool): string {
-                var url = 'establishments/children/' + establishmentId;
+                var url = 'establishments/' + establishmentId + '/children';
                 return makeUrlWithParams(url) + "sort=" + sort;
             }
 
