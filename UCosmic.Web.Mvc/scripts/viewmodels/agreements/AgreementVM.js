@@ -56,6 +56,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.phone = phone;
                 this.email = email;
             };
+            this.visibility = ko.observableArray();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
             this.typeOptionSelected = ko.observable();
@@ -434,6 +435,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 new this.selectConstructor("home", 1), 
                 new this.selectConstructor("work", 2), 
                 new this.selectConstructor("mobile", 3)
+            ]);
+            this.visibility = ko.observableArray([
+                new this.selectConstructor("[None]", 0), 
+                new this.selectConstructor("public", 1), 
+                new this.selectConstructor("private", 2), 
+                new this.selectConstructor("protected", 3)
             ]);
         }
         InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {

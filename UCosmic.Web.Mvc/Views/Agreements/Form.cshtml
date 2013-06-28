@@ -342,21 +342,23 @@
                     </h2>
                 </header>
                 <div data-bind="visible: isBound" style="display: none;">
-                    @*<ul data-bind="foreach: Contacts">
-                            <li data-bind="element: 'contactE1'">
-                                <div class="typed-item">
-                                    <a title="Remove this contact" data-bind="click: $root.removeContact"><i class="red minus on-right"></i></a>
+                    <ul data-bind="foreach: files">
+                        <li data-bind="element: 'fileE1'">
+                            <div class="typed-item">
+                                <a title="Remove this file" data-bind="click: $root.removeFile"><i class="red minus on-right"></i></a>
                                 
-                                    <div class="item">
-                                        <div>
-                                            <strong data-bind="text: firstName + ' ' + lastName + ': ' + contactType"></strong><br/>
-                                            <span data-bind="text: phone + ' ' + phoneType"></span><br/>
-                                            <span data-bind="text: email"></span><br/>
-                                        </div>
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: name + ' ' + path"></strong>
+                                        <select  data-bind="options: $root.visibility(), 
+							                optionsValue: 'id',
+							                optionsText: 'name', value: visibility">
+                                        </select>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>*@
+                            </div>
+                        </li>
+                    </ul>
                 </div>
                 <footer id="addAFile">
                     <input id="fileUpload" type="file" name="photo" data-bind="jqObservableElement: '$file'" />

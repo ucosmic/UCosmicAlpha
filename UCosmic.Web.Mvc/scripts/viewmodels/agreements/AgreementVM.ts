@@ -78,6 +78,12 @@ export class InstitutionalAgreementEditModel {
                 new this.selectConstructor("work", 2),
                 new this.selectConstructor("mobile", 3)
         ]);
+        this.visibility = ko.observableArray([
+                new this.selectConstructor("[None]", 0),
+                new this.selectConstructor("public", 1),
+                new this.selectConstructor("private", 2),
+                new this.selectConstructor("protected", 3)
+        ]);
     }
     selectConstructor = function (name: string, id: number) {
         this.name = name;
@@ -101,6 +107,7 @@ export class InstitutionalAgreementEditModel {
         this.email = email;
     };
 
+    visibility = ko.observableArray();
 
 
     $typeOptions: KnockoutObservableJQuery = ko.observable();
