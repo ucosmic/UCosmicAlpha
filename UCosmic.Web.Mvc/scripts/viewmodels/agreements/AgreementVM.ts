@@ -54,9 +54,12 @@ export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
 
         this.populateParticipants();
+        this.populateFiles();
+        this.populateContacts();
 
         this.isBound(true);
         this.removeParticipant = <() => bool> this.removeParticipant.bind(this);
+        this.removeContact = <() => bool> this.removeContact.bind(this);
 
         this.hideOtherGroups();
         this.bindSearch();
@@ -75,35 +78,31 @@ export class InstitutionalAgreementEditModel {
                 new this.selectConstructor("work", 2),
                 new this.selectConstructor("mobile", 3)
         ]);
-        //this.agreementTypes = ko.mapping.fromJS([
-        //        new this.selectConstructor("test", 1),
-        //        new this.selectConstructor("test2", 2),
-        //        new this.selectConstructor("test3", 3)
-        //]);
     }
     selectConstructor = function (name: string, id: number) {
         this.name = name;
         this.id = id;
     };
+
+    // I won't need file or contact or phone consturctor,  phone observable, and phonenumber class when I get the api endpoint
     fileConstructor = function (name: string, path: string, visibility: string, id: number) {
         this.name = name;
         this.path = path;
         this.visibility = visibility;
         this.id = id;
     };
-    phoneNumberConstructor = function (textValue: string, type: string, id: number) {
-        this.textValue = textValue;
-        this.type = type;
-        this.id = id;
-    };
-    contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: number, phone: phoneNumber) {
+    contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: string, phone: phoneNumber, email: string) {
         this.jobTitle = jobTitle;
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = id;
         this.personId = personId;
         this.phone = phone;
+        this.email = email;
     };
+
+
+
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
     typeOptionSelected: KnockoutObservableString = ko.observable();
@@ -141,6 +140,8 @@ export class InstitutionalAgreementEditModel {
     $confirmPurgeDialog: JQuery;
 
     participants = ko.mapping.fromJS([]);
+    contacts = ko.mapping.fromJS([]);
+    files = ko.mapping.fromJS([]);
 
 
     officialNameDoesNotMatchTranslation = ko.computed( function() {
@@ -175,18 +176,33 @@ export class InstitutionalAgreementEditModel {
         else {
             ko.mapping.fromJS(js, this.participants);
         }
-        this.spinner.stop();
     }
 
     populateParticipants(): void {
-
         $.get(App.Routes.WebApi.Agreements.Participants.get())
             .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
                 $("#LoadingPage").hide();
             });
+    }
+
+    populateFiles(): void {
+        this.files.push(new this.fileConstructor("asdf", "asdf2", "asdf3", 5))
+        this.files.push(new this.fileConstructor("asdf4", "asdf5", "asdf6", 6))
+        this.files.push(new this.fileConstructor("asdf9", "asdf8", "asdf7", 7))
+    }
 
 
+
+    populateContacts(): void {
+        var newPhone = ko.mapping.fromJS([]);
+        newPhone.push(new phoneNumber("32145", "home", 1));
+        newPhone.push(new phoneNumber("321345645", "work", 2));
+        this.contacts.push(new this.contactConstructor("asdf", "asdf2", "asdf3", 5, "asdf", newPhone, "asdf@as.as"))
+        var newPhone2 = ko.mapping.fromJS([])
+        newPhone2.push(new phoneNumber("32145222", "home2", 2));
+        newPhone2.push(new phoneNumber("3213456452", "work2", 3));
+        this.contacts.push(new this.contactConstructor("asdf22", "asdf222", "asdf322", 2, "asdf22", newPhone2, "asdf@as.as22"))
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
@@ -419,6 +435,18 @@ export class InstitutionalAgreementEditModel {
         e.stopPropagation();
         return false;
     };
+
+    removeContact(me, e): bool {
+        if (confirm('Are you sure you want to remove "' +
+            me.firstName + " " + me.lastName +
+            '" as a participant from this agreement?')) {
+            this.contacts.remove(me);
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    };
+
     establishmentSearchViewModel = new Search();
 
 

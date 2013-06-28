@@ -47,18 +47,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.visibility = visibility;
                 this.id = id;
             };
-            this.phoneNumberConstructor = function (textValue, type, id) {
-                this.textValue = textValue;
-                this.type = type;
-                this.id = id;
-            };
-            this.contactConstructor = function (jobTitle, firstName, lastName, id, personId, phone) {
+            this.contactConstructor = function (jobTitle, firstName, lastName, id, personId, phone, email) {
                 this.jobTitle = jobTitle;
                 this.firstName = firstName;
                 this.lastName = lastName;
                 this.id = id;
                 this.personId = personId;
                 this.phone = phone;
+                this.email = email;
             };
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
@@ -96,6 +92,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.participants = ko.mapping.fromJS([]);
+            this.contacts = ko.mapping.fromJS([]);
+            this.files = ko.mapping.fromJS([]);
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
             });
@@ -417,8 +415,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
             this.populateParticipants();
+            this.populateFiles();
+            this.populateContacts();
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
+            this.removeContact = this.removeContact.bind(this);
             this.hideOtherGroups();
             this.bindSearch();
             this.getSettings();
@@ -444,7 +445,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             } else {
                 ko.mapping.fromJS(js, this.participants);
             }
-            this.spinner.stop();
         };
         InstitutionalAgreementEditModel.prototype.populateParticipants = function () {
             var _this = this;
@@ -452,6 +452,21 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 _this.receiveResults(response);
                 $("#LoadingPage").hide();
             });
+        };
+        InstitutionalAgreementEditModel.prototype.populateFiles = function () {
+            this.files.push(new this.fileConstructor("asdf", "asdf2", "asdf3", 5));
+            this.files.push(new this.fileConstructor("asdf4", "asdf5", "asdf6", 6));
+            this.files.push(new this.fileConstructor("asdf9", "asdf8", "asdf7", 7));
+        };
+        InstitutionalAgreementEditModel.prototype.populateContacts = function () {
+            var newPhone = ko.mapping.fromJS([]);
+            newPhone.push(new phoneNumber("32145", "home", 1));
+            newPhone.push(new phoneNumber("321345645", "work", 2));
+            this.contacts.push(new this.contactConstructor("asdf", "asdf2", "asdf3", 5, "asdf", newPhone, "asdf@as.as"));
+            var newPhone2 = ko.mapping.fromJS([]);
+            newPhone2.push(new phoneNumber("32145222", "home2", 2));
+            newPhone2.push(new phoneNumber("3213456452", "work2", 3));
+            this.contacts.push(new this.contactConstructor("asdf22", "asdf222", "asdf322", 2, "asdf22", newPhone2, "asdf@as.as22"));
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
             var _this = this;
@@ -682,6 +697,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     }
                     return false;
                 });
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
+        InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
+            if(confirm('Are you sure you want to remove "' + me.firstName + " " + me.lastName + '" as a participant from this agreement?')) {
+                this.contacts.remove(me);
             }
             e.preventDefault();
             e.stopPropagation();
