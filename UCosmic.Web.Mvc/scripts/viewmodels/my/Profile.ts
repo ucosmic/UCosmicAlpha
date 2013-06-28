@@ -16,6 +16,7 @@
 /// <reference path="../languageExpertises/LanguageExpertises.ts" />
 /// <reference path="../degrees/Degrees.ts" />
 /// <reference path="../affiliations/Affiliations.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 
 module ViewModels.My {
 
@@ -33,10 +34,10 @@ module ViewModels.My {
         isClaimingAdministrator: KnockoutObservableBool = ko.observable(false);
         isClaimingFaculty: KnockoutObservableBool = ko.observable(false);
         isClaimingStaff: KnockoutObservableBool = ko.observable(false);
-        campusId: KnockoutObservableAny = ko.observable();      // nullable
-        collegeId: KnockoutObservableAny = ko.observable();     // nullable
-        departmentId: KnockoutObservableAny = ko.observable();  // nullable
-        facultyRankId: KnockoutObservableAny = ko.observable(); // nullable
+        campusId: KnockoutObservableAny = ko.observable(null);      // nullable
+        collegeId: KnockoutObservableAny = ko.observable(null);     // nullable
+        departmentId: KnockoutObservableAny = ko.observable(null);  // nullable
+        facultyRankId: KnockoutObservableAny = ko.observable(null); // nullable
 
         campus: string;
         college: string;
@@ -86,7 +87,9 @@ module ViewModels.My {
         isFacultyRankVisible: () => bool;
         facultyRankText: () => string;
         facultyRanks: KnockoutObservableFacultyRankModelArray = ko.observableArray();
-        facultyRankId: KnockoutObservableNumber = ko.observable();
+        facultyRankId: KnockoutObservableAny = ko.observable(null);
+
+        isCampusVisible: KnockoutObservableBool = ko.observable(false);
 
         preferredTitle: KnockoutObservableString = ko.observable();
         affiliations: KnockoutObservableArray = ko.observableArray();
@@ -154,7 +157,10 @@ module ViewModels.My {
                 .done(
                 (facultyRanks: Employees.IServerFacultyRankApiModel[], viewModel: IServerProfileApiModel): void => {
 
-                    this.facultyRanks(facultyRanks); // populate the faculty ranks menu
+                    this.facultyRanks( facultyRanks ); // populate the faculty ranks menu
+                    if ( facultyRanks.length == 0 ) {
+                        this.facultyRankId(null);
+                    }
 
                     ko.mapping.fromJS(viewModel, { ignore: "personId" }, this); // populate the scalars
                     this.personId = viewModel.personId;
@@ -166,12 +172,17 @@ module ViewModels.My {
                     //    this._isInitialized = true; // bindings have been applied
                     //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     //}
-
-                    
+                  
                     this._setupValidation();
                     this._setupKendoWidgets();
                     this._setupDisplayNameDerivation();
                     this._setupCardComputeds();
+
+                    for( var i = 0; i < this.affiliations().length; i += 1) {
+                        if (this.affiliations()[i].campusId() != null) {
+                            this.isCampusVisible(true);
+                        }
+                    }    
 
                     //debugger;
                     //if (this.startInEdit()) {
@@ -625,16 +636,21 @@ module ViewModels.My {
             });
 
             // compute the selected faculty rank text
-            this.facultyRankText = ko.computed((): string => {
-                var id = this.facultyRankId();
-                for (var i = 0; i < this.facultyRanks().length; i++) {
-                    var facultyRank: Employees.IServerFacultyRankApiModel = this.facultyRanks()[i];
-                    if (id === facultyRank.id) {
-                        return facultyRank.rank;
+            if ( this.facultyRankId() != null ) {
+                this.facultyRankText = ko.computed( (): string => {
+                    var id = this.facultyRankId();
+                    for ( var i = 0; i < this.facultyRanks().length; i++ ) {
+                        var facultyRank: Employees.IServerFacultyRankApiModel = this.facultyRanks()[i];
+                        if ( id === facultyRank.id ) {
+                            return facultyRank.rank;
+                        }
                     }
-                }
-                return undefined;
-            });
+                    return undefined;
+                } );
+            }
+            else {
+                this.facultyRankText = undefined;
+            }
 
             // do not display faculty rank on the form card when it is not set
             // or when it is set to other
@@ -829,86 +845,8 @@ module ViewModels.My {
                 buttons: [
                     {
                         text: "Save",
-                        click: function () {
-
-                            var campusId1 = null;
-                            var collegeId1 = null;
-                            var departmentId1 = null;
-                            var facultyRankId1 = null;
-
-                            var item1 = me.GetDropListSelectedItem( "editAffiliationCampusDropList" )
-                            if ( item1 != null ) 
-                                { campusId1 = item1.id; }
-                            else
-                                { $( this ).dialog( "close" ); }
-                            
-                            item1 = me.GetDropListSelectedItem( "editAffiliationCollegeDropList" )
-                            if ( item1 != null ) { collegeId1 = item1.id; }
-
-                            item1 = me.GetDropListSelectedItem( "editAffiliationDepartmentDropList" )
-                            if ( item1 != null ) { departmentId1 = item1.id; }
-
-                            item1 = me.GetDropListSelectedItem( "editAffiliationFacultyRankDropList" )
-                            if ( item1 != null ) { facultyRankId1 = item1.id; }
-
-                            var affiliation = {
-                                id: (data == null) ? null : data.id(),
-                                personId: me.personId,
-                                establishmentId: defaultAffiliation.establishmentId(),
-                                campusId: campusId1,
-                                collegeId: collegeId1,
-                                departmentId: departmentId1,
-                                facultyRankId: facultyRankId1
-                            };
-
-                            var model = ko.mapping.toJS( affiliation );
-
-                            $.ajax( {
-                                async: false,
-                                url: (data == null) ?
-                                        App.Routes.WebApi.My.Profile.Affiliation.post() :
-                                        App.Routes.WebApi.My.Profile.Affiliation.put(),
-                                type: (data == null) ? 'POST' : 'PUT',
-                                data: model
-                            } )
-                            .done( function ( responseText, statusText, xhr ) {
-                                if ( statusText === "success" ) {
-                                    $( "#editAffiliationDialog" ).dialog( "close" );
-
-                                    //debugger;
-                                    //var tab = $("#tabstrip").data("kendoTabStrip").select()[0];
-                                    //var tabName = tab.innerText; // IE
-                                    //if (tabName == null) tabName = tab.textContent; // FF
-                                    //tabName = me.tabTitleToName(tabName);                                   
-                                    //location.href = App.Routes.Mvc.My.Profile.post(true,tabName);
-
-                                    //location.href = App.Routes.Mvc.My.Profile.get();
-
-                                    me.reloadAffiliations();
-                                }
-                                else {
-                                    $( "#affiliationErrorDialog" ).dialog( {
-                                        title: xhr.statusText,
-                                        width: 400,
-                                        height: 250,
-                                        modal: true,
-                                        resizable: false,
-                                        draggable: false,
-                                        buttons: {
-                                            Ok: function() { 
-                                                $( "#affiliationErrorDialog" ).dialog( "close" );
-                                            }
-                                        },
-                                        open: function (event, ui) {
-                                            $("#affiliationErrorDialogMessage").text(xhr.responseText);
-                                        }
-                                    } );
-                                }
-                            } )
-                            .fail( function ( xhr, statusText, errorThrown ) {
-                                alert("Saving affiliation failed: " + statusText + "|" + errorThrown );
-                                $( "#editAffiliationDialog" ).dialog( "close" );
-                            } );
+                        click: function ( item, event ) {
+                            me.saveAffiliation( ( data == null ) ? null : data.id(), defaultAffiliation.establishmentId() );
                         }
                     },
                     {
@@ -920,75 +858,7 @@ module ViewModels.My {
                ],
                 open: function ( event, ui ) {
                     if ( data != null ) {
-                        var deleteButton = {
-                            text: "Delete",
-                            click: function () {
-                                $( "#confirmAffiliationDeleteDialog" ).dialog( {
-                                    width: 300,
-                                    height: 200,
-                                    modal: true,
-                                    resizable: false,
-                                    draggable: false,
-                                    buttons: {
-                                        "Delete": function () {
-                                            $( this ).dialog( "close" );
-
-                                            var affiliation = {
-                                                id: data.id(),
-                                                personId: me.personId,
-                                                establishmentId: null,
-                                                campusId: null,
-                                                collegeId: null,
-                                                departmentId: null,
-                                                facultyRankId: null
-                                            };
-
-                                            var model = ko.mapping.toJS( affiliation );
-                                            $.ajax( {
-                                                async: false,
-                                                type: "DELETE",
-                                                url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                                                data: model,
-                                                success: ( data: any, statusText: string, jqXHR: JQueryXHR ): void =>
-                                                {
-                                                    if ( statusText !== "success" ) {
-                                                        $( "#affiliationErrorDialog" ).dialog( {
-                                                            title: xhr.statusText,
-                                                            width: 400,
-                                                            height: 250,
-                                                            modal: true,
-                                                            resizable: false,
-                                                            draggable: false,
-                                                            buttons: {
-                                                                Ok: function () {
-                                                                    $( "#affiliationErrorDialog" ).dialog( "close" );
-                                                                }
-                                                            },
-                                                            open: function ( event, ui ) {
-                                                                $( "#affiliationErrorDialogMessage" ).text( xhr.responseText );
-                                                            }
-                                                        } );
-                                                    }
-
-                                                    $( "#editAffiliationDialog" ).dialog( "close" );
-                                                    me.reloadAffiliations();
-                                                },
-                                                error: ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ): void =>
-                                                {
-                                                    alert( statusText );
-                                                    $( "#editAffiliationDialog" ).dialog( "close" );
-                                                }
-                                            } );
-                                        },
-
-                                        "Cancel": function () {
-                                            $( this ).dialog( "close" );
-                                        }
-                                    }
-                                } );
-                            }
-                        }
-
+                        var deleteButton = { text: "Delete", click: function ( item, event ) { me.deleteAffiliation( data.id() ); } }
                         var buttons = $( this ).dialog( 'option', 'buttons' );
                         buttons.push(deleteButton);
                         $( this ).dialog( 'option', 'buttons', buttons );
@@ -1023,6 +893,156 @@ module ViewModels.My {
 
             return item;
         }
+
+        private saveAffiliation(affiliationId: number, establishmentId: number): void {
+            var me = this;
+            var campusId1 = null;
+            var collegeId1 = null;
+            var departmentId1 = null;
+            var facultyRankId1 = null;
+
+            var item1 = me.GetDropListSelectedItem( "editAffiliationCampusDropList" )
+            if ( item1 != null )
+            { campusId1 = item1.id; }
+            else
+            { $( this ).dialog( "close" ); }
+
+            item1 = me.GetDropListSelectedItem( "editAffiliationCollegeDropList" )
+            if ( item1 != null ) { collegeId1 = item1.id; }
+
+            item1 = me.GetDropListSelectedItem( "editAffiliationDepartmentDropList" )
+            if ( item1 != null ) { departmentId1 = item1.id; }
+
+            item1 = me.GetDropListSelectedItem( "editAffiliationFacultyRankDropList" )
+            if ( item1 != null ) { facultyRankId1 = item1.id; }
+
+            var affiliation = {
+                id: affiliationId,
+                personId: me.personId,
+                establishmentId: establishmentId,
+                campusId: campusId1,
+                collegeId: collegeId1,
+                departmentId: departmentId1,
+                facultyRankId: facultyRankId1
+            };
+
+            var model = ko.mapping.toJS( affiliation );
+
+            $.ajax( {
+                async: false,
+                url: ( affiliationId == null ) ?
+                        App.Routes.WebApi.My.Profile.Affiliation.post() :
+                        App.Routes.WebApi.My.Profile.Affiliation.put(),
+                type: ( affiliationId == null ) ? 'POST' : 'PUT',
+                data: model
+            } )
+            .done( function ( responseText, statusText, xhr ) {
+                if ( statusText === "success" ) {
+                    $( "#editAffiliationDialog" ).dialog( "close" );
+
+                    //debugger;
+                    //var tab = $("#tabstrip").data("kendoTabStrip").select()[0];
+                    //var tabName = tab.innerText; // IE
+                    //if (tabName == null) tabName = tab.textContent; // FF
+                    //tabName = me.tabTitleToName(tabName);                                   
+                    //location.href = App.Routes.Mvc.My.Profile.post(true,tabName);
+
+                    //location.href = App.Routes.Mvc.My.Profile.get();
+
+                    me.reloadAffiliations();
+                }
+                else {
+                    $( "#affiliationErrorDialog" ).dialog( {
+                        title: xhr.statusText,
+                        width: 400,
+                        height: 250,
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        buttons: {
+                            Ok: function () {
+                                $( "#affiliationErrorDialog" ).dialog( "close" );
+                            }
+                        },
+                        open: function ( event, ui ) {
+                            $( "#affiliationErrorDialogMessage" ).text( xhr.responseText );
+                        }
+                    } );
+                }
+            } )
+            .fail( function ( xhr, statusText, errorThrown ) {
+                alert( "Saving affiliation failed: " + statusText + "|" + errorThrown );
+                $( "#editAffiliationDialog" ).dialog( "close" );
+            } );
+        }
+
+        private deleteAffiliation(affiliationId: number): void {
+            var me = this;
+            $( "#confirmAffiliationDeleteDialog" ).dialog( {
+                width: 300,
+                height: 200,
+                modal: true,
+                resizable: false,
+                draggable: false,
+                buttons: {
+                    "Delete": function () {
+                        $( this ).dialog( "close" );
+
+                        var affiliation = {
+                            id: affiliationId,
+                            personId: me.personId,
+                            establishmentId: null,
+                            campusId: null,
+                            collegeId: null,
+                            departmentId: null,
+                            facultyRankId: null
+                        };
+
+                        var model = ko.mapping.toJS( affiliation );
+                        $.ajax( {
+                            async: false,
+                            type: "DELETE",
+                            url: App.Routes.WebApi.My.Profile.Affiliation.del(),
+                            data: model,
+                            success: ( data: any, statusText: string, jqXHR: JQueryXHR ): void =>
+                            {
+                                if ( statusText !== "success" ) {
+                                    $( "#affiliationErrorDialog" ).dialog( {
+                                        title: jqXHR.statusText,
+                                        width: 400,
+                                        height: 250,
+                                        modal: true,
+                                        resizable: false,
+                                        draggable: false,
+                                        buttons: {
+                                            Ok: function () {
+                                                $( "#affiliationErrorDialog" ).dialog( "close" );
+                                            }
+                                        },
+                                        open: function ( event, ui ) {
+                                            $( "#affiliationErrorDialogMessage" ).text( jqXHR.responseText );
+                                        }
+                                    } );
+                                }
+
+                                $( "#editAffiliationDialog" ).dialog( "close" );
+                                me.reloadAffiliations();
+                            },
+                            error: ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ): void =>
+                            {
+                                alert( statusText );
+                                $( "#editAffiliationDialog" ).dialog( "close" );
+                            }
+                        } );
+                    },
+
+                    "Cancel": function () {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            } );
+        }
+        
 
         deleteProfile( data: any, event: any ) {
             var me = this;

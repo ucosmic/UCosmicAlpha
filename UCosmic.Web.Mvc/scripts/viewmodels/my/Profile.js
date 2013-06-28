@@ -16,10 +16,10 @@ var ViewModels;
                 this.isClaimingAdministrator = ko.observable(false);
                 this.isClaimingFaculty = ko.observable(false);
                 this.isClaimingStaff = ko.observable(false);
-                this.campusId = ko.observable();
-                this.collegeId = ko.observable();
-                this.departmentId = ko.observable();
-                this.facultyRankId = ko.observable();
+                this.campusId = ko.observable(null);
+                this.collegeId = ko.observable(null);
+                this.departmentId = ko.observable(null);
+                this.facultyRankId = ko.observable(null);
             }
             return Affiliation;
         })();
@@ -53,7 +53,8 @@ var ViewModels;
                 this.lastName = ko.observable();
                 this.suffix = ko.observable();
                 this.facultyRanks = ko.observableArray();
-                this.facultyRankId = ko.observable();
+                this.facultyRankId = ko.observable(null);
+                this.isCampusVisible = ko.observable(false);
                 this.preferredTitle = ko.observable();
                 this.affiliations = ko.observableArray();
                 this.gender = ko.observable();
@@ -87,6 +88,9 @@ var ViewModels;
                 });
                 $.when(facultyRanksPact, viewModelPact).done(function (facultyRanks, viewModel) {
                     _this.facultyRanks(facultyRanks);
+                    if(facultyRanks.length == 0) {
+                        _this.facultyRankId(null);
+                    }
                     ko.mapping.fromJS(viewModel, {
                         ignore: "personId"
                     }, _this);
@@ -96,6 +100,11 @@ var ViewModels;
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
+                    for(var i = 0; i < _this.affiliations().length; i += 1) {
+                        if(_this.affiliations()[i].campusId() != null) {
+                            _this.isCampusVisible(true);
+                        }
+                    }
                     if(startTab === "") {
                         _this._setupRouting();
                         _this._sammy.run("#/activities");
@@ -514,16 +523,20 @@ var ViewModels;
                 this.isFacultyRankEditable = ko.computed(function () {
                     return _this.facultyRanks() && _this.facultyRanks().length > 0;
                 });
-                this.facultyRankText = ko.computed(function () {
-                    var id = _this.facultyRankId();
-                    for(var i = 0; i < _this.facultyRanks().length; i++) {
-                        var facultyRank = _this.facultyRanks()[i];
-                        if(id === facultyRank.id) {
-                            return facultyRank.rank;
+                if(this.facultyRankId() != null) {
+                    this.facultyRankText = ko.computed(function () {
+                        var id = _this.facultyRankId();
+                        for(var i = 0; i < _this.facultyRanks().length; i++) {
+                            var facultyRank = _this.facultyRanks()[i];
+                            if(id === facultyRank.id) {
+                                return facultyRank.rank;
+                            }
                         }
-                    }
-                    return undefined;
-                });
+                        return undefined;
+                    });
+                } else {
+                    this.facultyRankText = undefined;
+                }
                 this.isFacultyRankVisible = ko.computed(function () {
                     return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
                 });
@@ -684,70 +697,8 @@ var ViewModels;
                     buttons: [
                         {
                             text: "Save",
-                            click: function () {
-                                var campusId1 = null;
-                                var collegeId1 = null;
-                                var departmentId1 = null;
-                                var facultyRankId1 = null;
-                                var item1 = me.GetDropListSelectedItem("editAffiliationCampusDropList");
-                                if(item1 != null) {
-                                    campusId1 = item1.id;
-                                } else {
-                                    $(this).dialog("close");
-                                }
-                                item1 = me.GetDropListSelectedItem("editAffiliationCollegeDropList");
-                                if(item1 != null) {
-                                    collegeId1 = item1.id;
-                                }
-                                item1 = me.GetDropListSelectedItem("editAffiliationDepartmentDropList");
-                                if(item1 != null) {
-                                    departmentId1 = item1.id;
-                                }
-                                item1 = me.GetDropListSelectedItem("editAffiliationFacultyRankDropList");
-                                if(item1 != null) {
-                                    facultyRankId1 = item1.id;
-                                }
-                                var affiliation = {
-                                    id: (data == null) ? null : data.id(),
-                                    personId: me.personId,
-                                    establishmentId: defaultAffiliation.establishmentId(),
-                                    campusId: campusId1,
-                                    collegeId: collegeId1,
-                                    departmentId: departmentId1,
-                                    facultyRankId: facultyRankId1
-                                };
-                                var model = ko.mapping.toJS(affiliation);
-                                $.ajax({
-                                    async: false,
-                                    url: (data == null) ? App.Routes.WebApi.My.Profile.Affiliation.post() : App.Routes.WebApi.My.Profile.Affiliation.put(),
-                                    type: (data == null) ? 'POST' : 'PUT',
-                                    data: model
-                                }).done(function (responseText, statusText, xhr) {
-                                    if(statusText === "success") {
-                                        $("#editAffiliationDialog").dialog("close");
-                                        me.reloadAffiliations();
-                                    } else {
-                                        $("#affiliationErrorDialog").dialog({
-                                            title: xhr.statusText,
-                                            width: 400,
-                                            height: 250,
-                                            modal: true,
-                                            resizable: false,
-                                            draggable: false,
-                                            buttons: {
-                                                Ok: function () {
-                                                    $("#affiliationErrorDialog").dialog("close");
-                                                }
-                                            },
-                                            open: function (event, ui) {
-                                                $("#affiliationErrorDialogMessage").text(xhr.responseText);
-                                            }
-                                        });
-                                    }
-                                }).fail(function (xhr, statusText, errorThrown) {
-                                    alert("Saving affiliation failed: " + statusText + "|" + errorThrown);
-                                    $("#editAffiliationDialog").dialog("close");
-                                });
+                            click: function (item, event) {
+                                me.saveAffiliation((data == null) ? null : data.id(), defaultAffiliation.establishmentId());
                             }
                         }, 
                         {
@@ -761,64 +712,8 @@ var ViewModels;
                         if(data != null) {
                             var deleteButton = {
                                 text: "Delete",
-                                click: function () {
-                                    $("#confirmAffiliationDeleteDialog").dialog({
-                                        width: 300,
-                                        height: 200,
-                                        modal: true,
-                                        resizable: false,
-                                        draggable: false,
-                                        buttons: {
-                                            "Delete": function () {
-                                                $(this).dialog("close");
-                                                var affiliation = {
-                                                    id: data.id(),
-                                                    personId: me.personId,
-                                                    establishmentId: null,
-                                                    campusId: null,
-                                                    collegeId: null,
-                                                    departmentId: null,
-                                                    facultyRankId: null
-                                                };
-                                                var model = ko.mapping.toJS(affiliation);
-                                                $.ajax({
-                                                    async: false,
-                                                    type: "DELETE",
-                                                    url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                                                    data: model,
-                                                    success: function (data, statusText, jqXHR) {
-                                                        if(statusText !== "success") {
-                                                            $("#affiliationErrorDialog").dialog({
-                                                                title: xhr.statusText,
-                                                                width: 400,
-                                                                height: 250,
-                                                                modal: true,
-                                                                resizable: false,
-                                                                draggable: false,
-                                                                buttons: {
-                                                                    Ok: function () {
-                                                                        $("#affiliationErrorDialog").dialog("close");
-                                                                    }
-                                                                },
-                                                                open: function (event, ui) {
-                                                                    $("#affiliationErrorDialogMessage").text(xhr.responseText);
-                                                                }
-                                                            });
-                                                        }
-                                                        $("#editAffiliationDialog").dialog("close");
-                                                        me.reloadAffiliations();
-                                                    },
-                                                    error: function (jqXHR, statusText, errorThrown) {
-                                                        alert(statusText);
-                                                        $("#editAffiliationDialog").dialog("close");
-                                                    }
-                                                });
-                                            },
-                                            "Cancel": function () {
-                                                $(this).dialog("close");
-                                            }
-                                        }
-                                    });
+                                click: function (item, event) {
+                                    me.deleteAffiliation(data.id());
                                 }
                             };
                             var buttons = $(this).dialog('option', 'buttons');
@@ -850,6 +745,132 @@ var ViewModels;
                     }
                 }
                 return item;
+            };
+            Profile.prototype.saveAffiliation = function (affiliationId, establishmentId) {
+                var me = this;
+                var campusId1 = null;
+                var collegeId1 = null;
+                var departmentId1 = null;
+                var facultyRankId1 = null;
+                var item1 = me.GetDropListSelectedItem("editAffiliationCampusDropList");
+                if(item1 != null) {
+                    campusId1 = item1.id;
+                } else {
+                    $(this).dialog("close");
+                }
+                item1 = me.GetDropListSelectedItem("editAffiliationCollegeDropList");
+                if(item1 != null) {
+                    collegeId1 = item1.id;
+                }
+                item1 = me.GetDropListSelectedItem("editAffiliationDepartmentDropList");
+                if(item1 != null) {
+                    departmentId1 = item1.id;
+                }
+                item1 = me.GetDropListSelectedItem("editAffiliationFacultyRankDropList");
+                if(item1 != null) {
+                    facultyRankId1 = item1.id;
+                }
+                var affiliation = {
+                    id: affiliationId,
+                    personId: me.personId,
+                    establishmentId: establishmentId,
+                    campusId: campusId1,
+                    collegeId: collegeId1,
+                    departmentId: departmentId1,
+                    facultyRankId: facultyRankId1
+                };
+                var model = ko.mapping.toJS(affiliation);
+                $.ajax({
+                    async: false,
+                    url: (affiliationId == null) ? App.Routes.WebApi.My.Profile.Affiliation.post() : App.Routes.WebApi.My.Profile.Affiliation.put(),
+                    type: (affiliationId == null) ? 'POST' : 'PUT',
+                    data: model
+                }).done(function (responseText, statusText, xhr) {
+                    if(statusText === "success") {
+                        $("#editAffiliationDialog").dialog("close");
+                        me.reloadAffiliations();
+                    } else {
+                        $("#affiliationErrorDialog").dialog({
+                            title: xhr.statusText,
+                            width: 400,
+                            height: 250,
+                            modal: true,
+                            resizable: false,
+                            draggable: false,
+                            buttons: {
+                                Ok: function () {
+                                    $("#affiliationErrorDialog").dialog("close");
+                                }
+                            },
+                            open: function (event, ui) {
+                                $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                            }
+                        });
+                    }
+                }).fail(function (xhr, statusText, errorThrown) {
+                    alert("Saving affiliation failed: " + statusText + "|" + errorThrown);
+                    $("#editAffiliationDialog").dialog("close");
+                });
+            };
+            Profile.prototype.deleteAffiliation = function (affiliationId) {
+                var me = this;
+                $("#confirmAffiliationDeleteDialog").dialog({
+                    width: 300,
+                    height: 200,
+                    modal: true,
+                    resizable: false,
+                    draggable: false,
+                    buttons: {
+                        "Delete": function () {
+                            $(this).dialog("close");
+                            var affiliation = {
+                                id: affiliationId,
+                                personId: me.personId,
+                                establishmentId: null,
+                                campusId: null,
+                                collegeId: null,
+                                departmentId: null,
+                                facultyRankId: null
+                            };
+                            var model = ko.mapping.toJS(affiliation);
+                            $.ajax({
+                                async: false,
+                                type: "DELETE",
+                                url: App.Routes.WebApi.My.Profile.Affiliation.del(),
+                                data: model,
+                                success: function (data, statusText, jqXHR) {
+                                    if(statusText !== "success") {
+                                        $("#affiliationErrorDialog").dialog({
+                                            title: jqXHR.statusText,
+                                            width: 400,
+                                            height: 250,
+                                            modal: true,
+                                            resizable: false,
+                                            draggable: false,
+                                            buttons: {
+                                                Ok: function () {
+                                                    $("#affiliationErrorDialog").dialog("close");
+                                                }
+                                            },
+                                            open: function (event, ui) {
+                                                $("#affiliationErrorDialogMessage").text(jqXHR.responseText);
+                                            }
+                                        });
+                                    }
+                                    $("#editAffiliationDialog").dialog("close");
+                                    me.reloadAffiliations();
+                                },
+                                error: function (jqXHR, statusText, errorThrown) {
+                                    alert(statusText);
+                                    $("#editAffiliationDialog").dialog("close");
+                                }
+                            });
+                        },
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             };
             Profile.prototype.deleteProfile = function (data, event) {
                 var me = this;
