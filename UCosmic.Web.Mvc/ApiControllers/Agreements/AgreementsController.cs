@@ -86,14 +86,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("agreements/{domain}/partners/places")]
-        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaces(string domain)
-        {
-            return GetPartnerPlaceGroups(domain, null);
-        }
-
-        [GET("agreements/{domain}/partners/places/{placeType}")]
-        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaceGroups(string domain, string placeType)
+        [GET("agreements/{domain}/partners/places/{placeType?}")]
+        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaces(string domain, string placeType = null)
         {
             var query = new PartnerPlacesByOwnerDomain(User, domain)
             {

@@ -37,7 +37,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("agreements/{domain?}")]
-        public virtual ActionResult DansIndex(string domain)
+        public virtual ActionResult DansIndex(string domain = null)
         {
             // when no domain is passed, try to detect it
             if (string.IsNullOrWhiteSpace(domain))
@@ -64,7 +64,6 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.Domain = domain;
             return View();
         }
-
 
         [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
