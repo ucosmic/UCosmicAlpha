@@ -59,6 +59,8 @@ export class InstitutionalAgreementEditModel {
 
         this.isBound(true);
         this.removeParticipant = <() => bool> this.removeParticipant.bind(this);
+        //this.editContact = <() => bool> this.editContact.bind(this);
+        this.editAContact = <() => bool> this.editAContact.bind(this);
         this.removeContact = <() => bool> this.removeContact.bind(this);
 
         this.hideOtherGroups();
@@ -119,6 +121,14 @@ export class InstitutionalAgreementEditModel {
     $contactTypeOptions: KnockoutObservableJQuery = ko.observable();
     contactTypeOptions = ko.mapping.fromJS([]);
     contactTypeOptionSelected: KnockoutObservableString = ko.observable();
+    contactsIsEdit = ko.observable(false);
+    contactFirstName = ko.observable();
+    contactLastName = ko.observable();
+
+    contactEmail = ko.observable();
+
+    //contact = ko.observable();
+
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
     nickname = ko.observable();
@@ -443,16 +453,6 @@ export class InstitutionalAgreementEditModel {
         return false;
     };
 
-    removeContact(me, e): bool {
-        if (confirm('Are you sure you want to remove "' +
-            me.firstName + " " + me.lastName +
-            '" as a participant from this agreement?')) {
-            this.contacts.remove(me);
-        }
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    };
 
     establishmentSearchViewModel = new Search();
 
@@ -772,13 +772,25 @@ export class InstitutionalAgreementEditModel {
         }
     };
 
-    addAContact(): void {
+    editAContact(me): void {
+        this.contactsIsEdit(true);
+        this.contactEmail(me.email);
+        this.contactFirstName(me.email);
+        this.contactLastName(me.email);
+        //this.(me.email);
         $("#addAContact").fadeOut(500, function () {
             $("#addContact").fadeIn(500);
         });
     }
 
     addContact(): void {
+        // push to contact array
+        $("#addContact").fadeOut(500, function () {
+            $("#addAContact").fadeIn(500);
+        });
+    }
+
+    editContact(): void {
         // push to contact array
         $("#addContact").fadeOut(500, function () {
             $("#addAContact").fadeIn(500);
@@ -794,6 +806,17 @@ export class InstitutionalAgreementEditModel {
     addAFile(): void {
         // push to contact array
     }
+
+    removeContact(me, e): bool {
+        if (confirm('Are you sure you want to remove "' +
+            me.firstName + " " + me.lastName +
+            '" as a contact from this agreement?')) {
+            this.contacts.remove(me);
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    };
 
     addParticipant(establishmentResultViewModel): void {
         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

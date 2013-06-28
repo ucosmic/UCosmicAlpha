@@ -66,6 +66,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.$contactTypeOptions = ko.observable();
             this.contactTypeOptions = ko.mapping.fromJS([]);
             this.contactTypeOptionSelected = ko.observable();
+            this.contactsIsEdit = ko.observable(false);
+            this.contactFirstName = ko.observable();
+            this.contactLastName = ko.observable();
+            this.contactEmail = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
             this.nickname = ko.observable();
@@ -420,6 +424,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.populateContacts();
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
+            this.editAContact = this.editAContact.bind(this);
             this.removeContact = this.removeContact.bind(this);
             this.hideOtherGroups();
             this.bindSearch();
@@ -709,20 +714,21 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             e.stopPropagation();
             return false;
         };
-        InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
-            if(confirm('Are you sure you want to remove "' + me.firstName + " " + me.lastName + '" as a participant from this agreement?')) {
-                this.contacts.remove(me);
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        };
-        InstitutionalAgreementEditModel.prototype.addAContact = function () {
+        InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
+            this.contactsIsEdit(true);
+            this.contactEmail(me.email);
+            this.contactFirstName(me.email);
+            this.contactLastName(me.email);
             $("#addAContact").fadeOut(500, function () {
                 $("#addContact").fadeIn(500);
             });
         };
         InstitutionalAgreementEditModel.prototype.addContact = function () {
+            $("#addContact").fadeOut(500, function () {
+                $("#addAContact").fadeIn(500);
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.editContact = function () {
             $("#addContact").fadeOut(500, function () {
                 $("#addAContact").fadeIn(500);
             });
@@ -733,6 +739,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
         };
         InstitutionalAgreementEditModel.prototype.addAFile = function () {
+        };
+        InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
+            if(confirm('Are you sure you want to remove "' + me.firstName + " " + me.lastName + '" as a contact from this agreement?')) {
+                this.contacts.remove(me);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

@@ -302,6 +302,15 @@ i.red.minus {
   i.red.minus.on-right {
     margin: 8px; }
 
+i.edit {
+  width: 24px;
+  height: 24px;
+  background-image: url(../../../images/icons/edit/pencil-a-24.png);
+  background-position: top left;
+  background-repeat: no-repeat; }
+  i.edit.on-right {
+    margin: 8px; }
+
 form {
   line-height: 1.25; }
   form .field {
