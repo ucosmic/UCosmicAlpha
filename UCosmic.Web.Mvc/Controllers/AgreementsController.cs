@@ -58,7 +58,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-        [GET("agreements/new/")]
+        [GET("agreements/new/", SitePrecedence = 1)]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult New()
         {
