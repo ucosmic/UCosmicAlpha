@@ -14,39 +14,41 @@
 </head>
 <body>
     <nav class="my">
-        <div class="content group">
-            <div class="left">
-                <div class="group">
-                    @if (Request.IsAuthenticated)
-                    {
-                        <a href="#/me" class="email">@User.Identity.Name</a>
-
-                        var tenancy = Request.Tenancy();
-                        var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
-                            ? tenancy.CustomProfileTitle : "My UCosmic Profile";
-                        <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
-
-                        var userImpersonating = Session.UserImpersonating();
-                        if (userImpersonating != null)
+        <div class="container">
+            <div class="content group">
+                <div class="left">
+                    <div class="group">
+                        <a href="http://www.ucosmic.org" target="_blank">Powered by UCosmic</a>
+                        <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
+                        @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="group">
+                        @if (Request.IsAuthenticated)
                         {
-                        <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
+                            <a href="#/me" class="email">@User.Identity.Name</a>
+
+                            var tenancy = Request.Tenancy();
+                            var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
+                                ? tenancy.CustomProfileTitle : "My UCosmic Profile";
+                            <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
+
+                            var userImpersonating = Session.UserImpersonating();
+                            if (userImpersonating != null)
+                            {
+                            <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
+                            }
+                            else
+                            {
+                            <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                            }
                         }
                         else
                         {
-                        <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                            <a href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))">Sign in</a>
                         }
-                    }
-                    else
-                    {
-                        <a href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))">Sign in</a>
-                    }
-                </div>
-            </div>
-            <div class="right">
-                <div class="group">
-                    @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
-                    <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
-                    <a href="http://www.ucosmic.org" target="_blank">Consortium</a>
+                    </div>
                 </div>
             </div>
         </div>

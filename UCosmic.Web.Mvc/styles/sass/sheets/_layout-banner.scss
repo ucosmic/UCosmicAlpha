@@ -4,69 +4,73 @@ body {
     > nav.my {
         @include border-box;
         width: 100%;
-        min-width: $tube-outer-width - 12px;
-        padding: 6px 0 1px 12px;
+        min-width: $tube-outer-width;
         background-color: $nav-my-bg-color;
-        > .content {
+        > .container {
             @include border-box;
-            width: $tube-inner-width;
+            width: $tube-outer-width;
             margin: 0 auto;
-            > .left {
-                float: left;
-            }
-            > .right {
-                float: right;
-                a:first-child {
-                    border-left: solid 1px $nav-my-link-border-color;
-                }
-                a:last-child {
-                    @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-                        border-right: 0 none !important;
-                    }
-                    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-                        border-right: 0 none !important;
-                    }
-                }
-            }
-            input {
-                width: 200px;
-                padding: 4px 8px;
-                @include font-height(12px, 1.25);
-            }
-            a {
-                display: inline-block;
+            padding: 5px 0 1px 5px;
+            > .content {
                 @include border-box;
-                border-right: solid 1px $nav-my-link-border-color;
-                padding: 4px 12px;
-                float: left;
-                @include font-height(14px, 1);
-                font-weight: bold;
-                color: $nav-my-link-color;
-                &:hover {
-                    background-color: $nav-my-link-hover-bg-color;
-                    color: $nav-my-link-hover-text-color;
-                    text-decoration: none;
+                width: $tube-inner-width;
+                > .left {
+                    float: left;
                 }
-                &.email {
-                    padding-left: 0;
-                    color: $nav-my-email-link-color;
-                    text-decoration: none;
-                    cursor: default;
-                    &:hover {
-                        background-color: transparent;
+                > .right {
+                    float: right;
+                    a:first-child {
+                        /*border-left: solid 1px $nav-my-link-border-color;*/
+                    }
+                    a:last-child {
+                        @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+                            border-right: 0 none !important;
+                        }
+                        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+                            border-right: 0 none !important;
+                        }
                     }
                 }
-                &.in {
-                    border-right: 0 none;
-                    margin-left: -6px;
+                input {
+                    width: 200px;
+                    padding: 4px 8px;
+                    @include font-height(12px, 1.25);
                 }
-                &.user-voice {
-                    background-image: $user-voice-24-filled;
-                    background-position: 8px -1px;
-                    background-repeat: no-repeat;
-                    padding-left: 40px;
-                }
+                a {
+                    display: inline-block;
+                    @include border-box;
+                    border-right: solid 1px $nav-my-link-border-color;
+                    padding: 4px 12px;
+                    float: left;
+                    @include font-height(14px, 1);
+                    font-weight: bold;
+                    color: $nav-my-link-color;
+                    &:hover {
+                        background-color: $nav-my-link-hover-bg-color;
+                        color: $nav-my-link-hover-text-color;
+                        text-decoration: none;
+                    }
+                    &.email {
+                        padding-left: 0;
+                        color: $nav-my-email-link-color;
+                        text-decoration: none;
+                        cursor: default;
+                        &:hover {
+                            background-color: transparent;
+                        }
+                    }
+                    &.in {
+                        border-right: 0 none;
+                        margin-left: -6px;
+                    }
+                    &.user-voice {
+                        background-image: $user-voice-24-filled;
+                        background-position: 8px -1px;
+                        background-repeat: no-repeat;
+                        padding-left: 40px;
+                    }
 
+                }
             }
         }
     }
@@ -80,7 +84,7 @@ body {
             visibility: hidden;
         }
         > ul {
-            width: $tube-inner-width;
+            width: $tube-outer-width;
             margin: 0 auto;
             > li {
                 float: left;
@@ -104,7 +108,7 @@ body {
                     @include transition(all, 500ms);
                 }
                 &:first-child a {
-                    margin-left: 4px;
+                    margin-left: 5px;
                 }
                 &:hover a {
                     background-color: $nav-module-bg-color;
@@ -212,7 +216,7 @@ body {
         }
         > ul {
             @include border-box;
-            width: $tube-outer-width - 4px;
+            width: $tube-outer-width;
             margin: 0 auto;
             > li {
                 float: left;
@@ -226,6 +230,9 @@ body {
                     padding: 10px 16px 8px;
                     color: $nav-bib-link-text-color;
                     text-decoration: none;
+                }
+                &:first-child a {
+                    margin-left: 5px;
                 }
                 &:hover a {
                     color: $nav-bib-link-hover-text-color;
