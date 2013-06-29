@@ -12,6 +12,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Type { get; set; }
         public string Title { get; set; }
 
+        public string DisplayName { get; set; }
         public string Salutation { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
@@ -29,6 +30,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<AgreementContact, AgreementContactApiModel>()
+                    .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Person.DisplayName))
                     .ForMember(d => d.Salutation, o => o.MapFrom(s => s.Person.Salutation))
                     .ForMember(d => d.FirstName, o => o.MapFrom(s => s.Person.FirstName))
                     .ForMember(d => d.MiddleName, o => o.MapFrom(s => s.Person.MiddleName))
