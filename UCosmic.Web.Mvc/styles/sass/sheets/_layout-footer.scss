@@ -16,6 +16,7 @@ body {
         }
         nav.modules {
             width: $tube-inner-width;
+            margin: 0 auto;
             > ul {
                 > li {
                     float: left;
@@ -42,7 +43,7 @@ body {
         small.powered-by {
             display: block;
             width: $tube-inner-width;
-            margin-top: 6px;
+            margin: 6px auto 0;
             font-size: 10px;
             text-align: center;
             a {

@@ -29,11 +29,11 @@
                         var userImpersonating = Session.UserImpersonating();
                         if (userImpersonating != null)
                         {
-                            <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
+                        <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
                         }
                         else
                         {
-                            <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                        <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                         }
                     }
                     else
@@ -86,17 +86,19 @@
         </ul>
     </nav>
     <header>
-        <div class="content">
-            <div class="flasher hide" data-bind="jqElement: '$element'">
-                <a data-bind="click: dismiss">
-                    <div class="group">
-                        <p>
-                            <span class="content" data-bind="text: text"></span>
-                            <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
-                        </p>
-                        <i class="on-right closer"></i>
-                    </div>
-                </a>
+        <div class="container">
+            <div class="content">
+                <div class="flasher hide" data-bind="jqElement: '$element'">
+                    <a data-bind="click: dismiss">
+                        <div class="group">
+                            <p>
+                                <span class="content" data-bind="text: text"></span>
+                                <span class="dismissal">Click to dismiss (<span data-bind="text: tickCount"></span>)</span>
+                            </p>
+                            <i class="on-right closer"></i>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -176,7 +178,7 @@
     else
     {
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>*@
+@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>*@
     }
 
     @Html.Partial(MVC.Shared.Views._GoogleMapsScript)
@@ -200,7 +202,7 @@
 
     @Html.Partial(MVC.Shared.Views._UserVoiceScript)
     @RenderSection("scripts", required: false)
-    
-    
+
+
 </body>
 </html>

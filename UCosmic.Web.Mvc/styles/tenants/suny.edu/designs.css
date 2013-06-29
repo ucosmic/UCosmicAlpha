@@ -11,7 +11,7 @@ body table.data {
     padding: 4px 8px;
     vertical-align: text-top;
     text-align: left;
-    background-color: #004c93;
+    background-color: #01529a;
     color: #eeeeee;
     font-weight: bold; }
   body table.data td {
@@ -99,7 +99,7 @@ body .badge {
     background-color: #fff;
     border: solid 1px #0000cc; }
   body .badge.branded-dark1 {
-    background-color: #004c93;
+    background-color: #01529a;
     color: white !important; }
 body .person-profile {
   margin-bottom: 16px; }

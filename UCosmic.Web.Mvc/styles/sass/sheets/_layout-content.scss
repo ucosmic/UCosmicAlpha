@@ -18,6 +18,7 @@ body {
                 width: $tube-outer-width;
                 padding-left: $tube-outer-width - $tube-inner-width;
                 padding-top: $tube-outer-width - $tube-inner-width;
+                margin: 0 auto;
                 .group {
                     .on-left.from-top {
                         padding-top: $tube-outer-width - $tube-inner-width;

@@ -10,6 +10,7 @@ body {
         > .content {
             @include border-box;
             width: $tube-inner-width;
+            margin: 0 auto;
             > .left {
                 float: left;
             }
@@ -71,12 +72,16 @@ body {
     }
     > nav.modules {
         padding: 2px 0 0 0;
+        width: 100%;
+        min-width: $tube-outer-width - 12px;
         background: $nav-modules-bg-color;
         @include inset-box-shadow(0, $nav-modules-inset-shadow-y, 0, 0, $nav-modules-inset-shadow-color);
         &.hide {
             visibility: hidden;
         }
         > ul {
+            width: $tube-inner-width;
+            margin: 0 auto;
             > li {
                 float: left;
                 > a {
@@ -125,68 +130,71 @@ body {
         @include border-box;
         width: 100%;
         background: $banner-outer-bg;
-        > .content {
-            @include border-box;
-            min-width: $tube-outer-width;
-            height: $banner-height;
-            background-image: url($banner-logo);
-            background-color: $banner-bg-color;
-            background-repeat: no-repeat;
-            background-position: bottom left;
-            > .flasher {
+        background-color: $banner-bg-color;
+        > .container {
+            width: $tube-outer-width;
+            margin: 0 auto;
+            > .content {
                 @include border-box;
-                display: inline-block;
-                border: $flasher-border;
-                position: relative;
-                @include border-radius(12px);
-                top: 15px;
-                margin-left: 15px;
-                max-width: 700px;
-                @media only screen and (max-width : 320px) {
-                    max-width: 310px;
-                }
-                @media only screen and (min-width : 321px) {
-                    max-width: 480px;
-                }
-                @media only screen and (min-device-width : 768px) {
-                    max-width: 700px;
-                }
-                @include font-height(15px, 23px);
-                @include font-ms;
-                font-weight: bold;
-                background: $flasher-bg-color;
-                &.hide {
-                    visibility: hidden;
-                }
-                > a {
+                height: $banner-height;
+                background-image: url($banner-logo);
+                background-repeat: no-repeat;
+                background-position: bottom left;
+                > .flasher {
                     @include border-box;
-                    display: block;
-                    padding: 12px 16px;
-                    color: $flasher-text-color;
-                    p {
-                        @include border-box;
-                        /* paragraph width is flasher width minus 70 px to allow for closer image and padding */
-                        max-width: 630px;
-                        float: left;
-                        @media only screen and (max-width : 320px) {
-                            max-width: 240px;
-                        }
-                        @media only screen and (min-width : 321px) {
-                            max-width: 410px;
-                        }
-                        @media only screen and (min-device-width : 768px) {
-                            max-width: 630px;
-                        }
-                        @include text-shadow(1px, 1px, 1px, rgba(33, 33, 33, .2));
-                        .dismissal {
-                            font-weight: normal;
-                        }
+                    display: inline-block;
+                    border: $flasher-border;
+                    position: relative;
+                    @include border-radius(12px);
+                    top: 15px;
+                    margin-left: 15px;
+                    max-width: 700px;
+                    @media only screen and (max-width : 320px) {
+                        max-width: 310px;
                     }
-                    i.closer {
-                        background: $flasher-close-icon;
-                        margin-left: 8px;
-                        width: 24px;
-                        height: 24px;
+                    @media only screen and (min-width : 321px) {
+                        max-width: 480px;
+                    }
+                    @media only screen and (min-device-width : 768px) {
+                        max-width: 700px;
+                    }
+                    @include font-height(15px, 23px);
+                    @include font-ms;
+                    font-weight: bold;
+                    background: $flasher-bg-color;
+                    &.hide {
+                        visibility: hidden;
+                    }
+                    > a {
+                        @include border-box;
+                        display: block;
+                        padding: 12px 16px;
+                        color: $flasher-text-color;
+                        p {
+                            @include border-box;
+                            /* paragraph width is flasher width minus 70 px to allow for closer image and padding */
+                            max-width: 630px;
+                            float: left;
+                            @media only screen and (max-width : 320px) {
+                                max-width: 240px;
+                            }
+                            @media only screen and (min-width : 321px) {
+                                max-width: 410px;
+                            }
+                            @media only screen and (min-device-width : 768px) {
+                                max-width: 630px;
+                            }
+                            @include text-shadow(1px, 1px, 1px, rgba(33, 33, 33, .2));
+                            .dismissal {
+                                font-weight: normal;
+                            }
+                        }
+                        i.closer {
+                            background: $flasher-close-icon;
+                            margin-left: 8px;
+                            width: 24px;
+                            height: 24px;
+                        }
                     }
                 }
             }
@@ -205,7 +213,7 @@ body {
         > ul {
             @include border-box;
             width: $tube-outer-width - 4px;
-            margin: 0 0 0 4px;
+            margin: 0 auto;
             > li {
                 float: left;
                 > a, span {
