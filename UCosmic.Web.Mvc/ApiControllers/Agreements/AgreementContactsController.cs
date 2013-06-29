@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -23,14 +20,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("agreements/{agreementId:int}/contacts")]
-        public AgreementApiModel Get(int agreementId)
+        [GET("{agreementId:int}/contacts")]
+        public IEnumerable<AgreementContactApiModel> Get(int agreementId)
         {
-            var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
-            //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            //var model = Mapper.Map<AgreementApiModel>(entity);
-            //return model;
-            return null;
+            var entities = _queryProcessor.Execute(new ContactsByAgreementId(User, agreementId)
+            {
+                EagerLoad = new Expression<Func<AgreementContact, object>>[]
+                {
+                    x => x.Person.Emails,
+                    x => x.PhoneNumbers,
+                }
+            });
+            var models = Mapper.Map<AgreementContactApiModel[]>(entities);
+            return models;
         }
     }
 }

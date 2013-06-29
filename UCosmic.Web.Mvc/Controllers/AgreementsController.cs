@@ -85,7 +85,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.Form);
         }
 
-        [GET("agreements/settings")]
+        [GET("agreements/settings", SitePrecedence = 1)]
         [TryAuthorize(Roles = RoleName.AgreementSupervisor)]
         public virtual ViewResult Settings()
         {
