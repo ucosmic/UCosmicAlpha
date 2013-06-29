@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using LinqKit;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -11,6 +14,64 @@ namespace UCosmic.Domain.Agreements
         internal static Agreement ById(this IQueryable<Agreement> queryable, int id)
         {
             return queryable.SingleOrDefault(x => x.Id == id);
+        }
+
+        internal static IQueryable<Agreement> ByOwnerDomain(this IQueryable<Agreement> agreements, string domain)
+        {
+            if (agreements == null) return null;
+            if (string.IsNullOrWhiteSpace(domain)) return agreements;
+
+            var domains = new List<string> { domain.ToLower() };
+            if (!domain.Equals("default", StringComparison.OrdinalIgnoreCase)
+                && !domain.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+                domains.Add(string.Format("www.{0}", domain));
+
+            return agreements.Where(x => x.Participants.Any(y => y.IsOwner
+                    && (
+                        (y.Establishment.WebsiteUrl != null && domains.Contains(y.Establishment.WebsiteUrl))
+                        ||
+                        (y.Establishment.Ancestors.Any(z => domains.Contains(z.Ancestor.WebsiteUrl)))
+                    )
+                ));
+        }
+
+        internal static IQueryable<Agreement> VisibleTo(this IQueryable<Agreement> agreements, IPrincipal principal, IProcessQueries queryProcessor)
+        {
+            if (agreements == null) return null;
+            if (principal == null) throw new ArgumentNullException("principal");
+            if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
+
+            var ownedTenantIds = queryProcessor.Execute(new MyOwnedTenantIds(principal));
+            return agreements.VisibleTo(principal, ownedTenantIds);
+        }
+
+        internal static IQueryable<Agreement> VisibleTo(this IQueryable<Agreement> agreements, IPrincipal principal, IEnumerable<int> ownedTenantIds)
+        {
+            if (agreements == null) return null;
+            if (principal == null) throw new ArgumentNullException("principal");
+
+            var publicText = AgreementVisibility.Public.AsSentenceFragment();
+            var protectedText = AgreementVisibility.Protected.AsSentenceFragment();
+
+            // when user is not an agreement admin, filter out private agreements
+            // and protected agreements that the user does not own
+            if (!principal.IsInAnyRole(RoleName.AgreementManagers))
+            {
+                return agreements.Where(x => publicText.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
+                    || (
+                        protectedText.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
+                        &&
+                        x.Participants.Any(y => y.IsOwner && ownedTenantIds.Contains(y.EstablishmentId))
+                    )
+                );
+            }
+
+            // when user is an agreement admin, include all agreements they own
+            return agreements.Where(x => publicText.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
+                || (
+                    x.Participants.Any(y => y.IsOwner && ownedTenantIds.Contains(y.EstablishmentId))
+                )
+            );
         }
 
         internal static IQueryable<Agreement> IsRoot(this IQueryable<Agreement> queryable)

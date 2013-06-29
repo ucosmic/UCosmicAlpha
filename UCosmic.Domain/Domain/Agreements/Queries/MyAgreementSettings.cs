@@ -8,9 +8,7 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class MyAgreementSettings :
-        BaseEntityQuery<AgreementSettings>,
-        IDefineQuery<AgreementSettings>
+    public class MyAgreementSettings : BaseEntityQuery<AgreementSettings>, IDefineQuery<AgreementSettings>
     {
         public MyAgreementSettings(IPrincipal principal)
         {
@@ -22,15 +20,16 @@ namespace UCosmic.Domain.Agreements
         internal bool IsWritable { get; set; }
     }
 
-    public class HandleMyAgreementSettingsQuery :
-        IHandleQueries<MyAgreementSettings,
-        AgreementSettings>
+    public class HandleMyAgreementSettingsQuery : IHandleQueries<MyAgreementSettings, AgreementSettings>
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IQueryEntities _detachedEntities;
 
-        public HandleMyAgreementSettingsQuery(IProcessQueries queryProcessor, ICommandEntities entities, IQueryEntities detachedEntities)
+        public HandleMyAgreementSettingsQuery(IProcessQueries queryProcessor
+            , ICommandEntities entities
+            , IQueryEntities detachedEntities
+        )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;

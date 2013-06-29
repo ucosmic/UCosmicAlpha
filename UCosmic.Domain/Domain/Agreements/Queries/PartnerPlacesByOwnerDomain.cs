@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Identity;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Agreements
@@ -21,22 +20,6 @@ namespace UCosmic.Domain.Agreements
         public IPrincipal Principal { get; private set; }
         public string OwnerDomain { get; private set; }
         public PlaceGroup? GroupBy { get; set; }
-
-        internal string WwwOwnerDomain
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_wwwOwnerDomain))
-                {
-                    _wwwOwnerDomain = OwnerDomain;
-                    if (_wwwOwnerDomain != null && !_wwwOwnerDomain.Equals("default", StringComparison.OrdinalIgnoreCase)
-                        && !_wwwOwnerDomain.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
-                        _wwwOwnerDomain = string.Format("www.{0}", _wwwOwnerDomain);
-                }
-                return _wwwOwnerDomain;
-            }
-        }
-        private string _wwwOwnerDomain;
     }
 
     public class AgreementPartnerPlaceResult
@@ -57,59 +40,25 @@ namespace UCosmic.Domain.Agreements
     public class HandlePartnerPlacesByOwnerDomainQuery : IHandleQueries<PartnerPlacesByOwnerDomain, AgreementPartnerPlaceResult[]>
     {
         private readonly IQueryEntities _entities;
-        private readonly IHandleCommands<EnsureUserTenancy> _ensureTenancy;
+        private readonly IProcessQueries _queryProcessor;
 
         public HandlePartnerPlacesByOwnerDomainQuery(IQueryEntities entities
-            , IHandleCommands<EnsureUserTenancy> ensureTenancy
+            , IProcessQueries queryProcessor
         )
         {
             _entities = entities;
-            _ensureTenancy = ensureTenancy;
+            _queryProcessor = queryProcessor;
         }
 
         public AgreementPartnerPlaceResult[] Handle(PartnerPlacesByOwnerDomain query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            // make sure user has a tenant id
-            var ensuredTenancy = new EnsureUserTenancy(query.Principal.Identity.Name);
-            _ensureTenancy.Handle(ensuredTenancy);
-
-            // get security context of the user (some agreements may be private or protected)
-            var ownedIds = new List<int>();
-            var user = ensuredTenancy.EnsuredUser;
-            if (user != null && user.TenantId.HasValue)
-                ownedIds.Add(user.TenantId.Value);
-            if (ownedIds.Any()) // include all establishments downstream from the tenant (its offspring)
-                ownedIds.AddRange(_entities.Query<Establishment>()
-                    .Where(x => x.Ancestors.Any(y => y.AncestorId == ownedIds.FirstOrDefault()))
-                    .Select(x => x.RevisionId));
-
-            // query all agreements for the domain
             var agreements = _entities.Query<Agreement>()
                 .EagerLoad(_entities, new Expression<Func<Agreement, object>>[] { x => x.Participants })
-                .Where(x => x.Participants.Any(y => y.IsOwner
-                    && (
-                        (y.Establishment.WebsiteUrl != null && y.Establishment.WebsiteUrl.Equals(query.WwwOwnerDomain, StringComparison.OrdinalIgnoreCase))
-                        ||
-                        (y.Establishment.Ancestors.Any(z => z.Ancestor.WebsiteUrl != null && z.Ancestor.WebsiteUrl.Equals(query.WwwOwnerDomain)))
-                    )
-                )).ToList()
+                .ByOwnerDomain(query.OwnerDomain)
+                .VisibleTo(query.Principal, _queryProcessor)
             ;
-
-            // if user is not authorized to view the agreement, remove it
-            foreach (var agreement in agreements.ToArray())
-            {
-                if (agreement.Visibility == AgreementVisibility.Public) continue;
-
-                var hasProtectedAccess = agreement.Participants.Any(x => x.IsOwner && ownedIds.Contains(x.EstablishmentId));
-                if (agreement.Visibility == AgreementVisibility.Protected && !hasProtectedAccess)
-                    agreements.Remove(agreements.Single(x => x.Id == agreement.Id));
-
-                var hasPrivateAccess = hasProtectedAccess && query.Principal.IsInAnyRole(RoleName.AgreementManagers);
-                if (agreement.Visibility == AgreementVisibility.Private && !hasPrivateAccess)
-                    agreements.Remove(agreements.Single(x => x.Id == agreement.Id));
-            }
 
             // set up data for grouping and counting
             var agreementIdPartnerIds = agreements.ToDictionary(x => x.Id,

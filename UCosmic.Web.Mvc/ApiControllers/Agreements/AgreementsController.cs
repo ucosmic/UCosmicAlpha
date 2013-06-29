@@ -68,7 +68,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("agreements/{domain}/partners")]
-        public IEnumerable<AgreementParticipantApiModel> GetPartnerPoints(string domain)
+        public IEnumerable<AgreementParticipantApiModel> GetPartners(string domain)
         {
             var query = new PartnerParticipantsByOwnerDomain(User, domain)
             {

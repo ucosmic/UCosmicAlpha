@@ -33,10 +33,11 @@ namespace UCosmic.Domain.Agreements
 
             var agreement = _entities.Query<Agreement>()
                 .EagerLoad(_entities, query.EagerLoad)
+                .VisibleTo(query.Principal, _queryProcessor)
                 .ById(query.Id);
             if (agreement == null) return null;
 
-            agreement = agreement.ApplySecurity(query.Principal, _queryProcessor);
+            agreement.ApplySecurity(query.Principal, _queryProcessor);
 
             return agreement;
         }

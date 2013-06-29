@@ -15,22 +15,6 @@ namespace UCosmic.Domain.Agreements
 
         public IPrincipal Principal { get; private set; }
         public string OwnerDomain { get; private set; }
-
-        internal string WwwOwnerDomain
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_wwwOwnerDomain))
-                {
-                    _wwwOwnerDomain = OwnerDomain;
-                    if (_wwwOwnerDomain != null && !_wwwOwnerDomain.Equals("default", StringComparison.OrdinalIgnoreCase)
-                        && !_wwwOwnerDomain.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
-                        _wwwOwnerDomain = string.Format("www.{0}", _wwwOwnerDomain);
-                }
-                return _wwwOwnerDomain;
-            }
-        }
-        private string _wwwOwnerDomain;
     }
 
     public class HandleAgreementsByOwnerDomainQuery : IHandleQueries<AgreementsByOwnerDomain, Agreement[]>
@@ -50,17 +34,12 @@ namespace UCosmic.Domain.Agreements
 
             var agreements = _entities.Query<Agreement>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .Where(x => x.Participants.Any(y => y.IsOwner
-                    && (
-                        (y.Establishment.WebsiteUrl != null && y.Establishment.WebsiteUrl.Equals(query.WwwOwnerDomain, StringComparison.OrdinalIgnoreCase))
-                        ||
-                        (y.Establishment.Ancestors.Any(z => z.Ancestor.WebsiteUrl != null && z.Ancestor.WebsiteUrl.Equals(query.WwwOwnerDomain)))
-                    )
-                ))
+                .ByOwnerDomain(query.OwnerDomain)
+                .VisibleTo(query.Principal, _queryProcessor)
                 .OrderBy(query.OrderBy)
             ;
 
-            agreements = agreements.ApplySecurity(query.Principal, _queryProcessor).AsQueryable();
+            agreements.ApplySecurity(query.Principal, _queryProcessor);
             return agreements.ToArray();
         }
     }

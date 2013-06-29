@@ -1,39 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Principal;
+using System.ServiceModel.Security;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
     internal static class SecureAgreements
     {
-        internal static Agreement ApplySecurity(this Agreement agreement, IPrincipal principal, IProcessQueries queryProcessor, User user = null)
+        internal static void ApplySecurity(this Agreement agreement, IPrincipal principal, IEnumerable<int> ownedTenantIds)
         {
-            if (agreement == null) return null;
+            if (agreement == null) return;
             if (principal == null) throw new ArgumentNullException("principal");
-            if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
 
-            // make sure user is authorized to view this data
-            if (user == null || !principal.Identity.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))
-                user = principal.GetSecurityUser(queryProcessor);
-
+            // determine whether user has public, protected, or private visibility for this agreement
             var userVisibility = AgreementVisibility.Public;
-            if (user != null)
+            if (ownedTenantIds != null)
             {
-                var defaultAffiliation = user.Person.DefaultAffiliation;
-                var owningParticipantIds = agreement.Participants.Where(x => x.IsOwner).Select(x => x.Establishment.RevisionId);
-                var ownedEstablishmentIds = defaultAffiliation.Establishment.Offspring.Select(x => x.OffspringId).ToList();
-                ownedEstablishmentIds.Insert(0, defaultAffiliation.Establishment.RevisionId);
-
-                // user has protected visibility when default affiliation is with
-                // an owning participant or one of its ancestors
-                if (ownedEstablishmentIds.Any(owningParticipantIds.Contains))
+                // user has protected visibility when they own an agreement owner
+                var owningParticipantIds = agreement.Participants.Where(x => x.IsOwner).Select(x => x.EstablishmentId);
+                if (ownedTenantIds.Any(owningParticipantIds.Contains))
                     userVisibility = AgreementVisibility.Protected;
 
-                if (userVisibility == AgreementVisibility.Protected &&
-                    principal.IsInAnyRole(RoleName.AgreementManagers))
+                // user has private visiblity when they have protected visibility and are in an agreement manager role
+                if (userVisibility == AgreementVisibility.Protected && principal.IsInAnyRole(RoleName.AgreementManagers))
                     userVisibility = AgreementVisibility.Private;
             }
 
@@ -41,8 +33,10 @@ namespace UCosmic.Domain.Agreements
             switch (userVisibility)
             {
                 case AgreementVisibility.Public:
-                    // when user is public and agreement is not public, hide it
-                    if (agreement.Visibility != AgreementVisibility.Public) return null;
+                    // when user is public and agreement is not public, something went wrong
+                    if (agreement.Visibility != AgreementVisibility.Public)
+                        throw new SecurityAccessDeniedException(string.Format(
+                            "User '{0}' is not authorized to view this agreement.", principal.Identity.Name));
 
                     // when user is public and agreement is public, obfuscate protected & private data
                     agreement.Notes = privateData;
@@ -50,46 +44,50 @@ namespace UCosmic.Domain.Agreements
                     agreement.ExpiresOn = DateTime.MinValue;
                     agreement.IsExpirationEstimated = false;
                     agreement.Status = privateData;
-                    agreement.Contacts = null;
-                    agreement.Files = null;
+                    agreement.Contacts = new Collection<AgreementContact>();
+                    agreement.Files = new Collection<AgreementFile>();
                     break;
 
                 case AgreementVisibility.Protected:
-                    // when user is protected and agreement is private, hide it
-                    if (agreement.Visibility == AgreementVisibility.Private) return null;
+                    // when user is protected and agreement is private, something went wrong
+                    if (agreement.Visibility == AgreementVisibility.Private)
+                        throw new SecurityAccessDeniedException(string.Format(
+                            "User '{0}' is not authorized to view this agreement.", principal.Identity.Name));
 
                     // when user is protected and agreement is not private, hide private data
                     agreement.Status = privateData;
                     agreement.Notes = privateData;
                     break;
             }
-
-            return agreement;
         }
 
-        internal static IEnumerable<Agreement> ApplySecurity(this IEnumerable<Agreement> agreements, IPrincipal principal, IProcessQueries queryProcessor)
+        internal static void ApplySecurity(this Agreement agreement, IPrincipal principal, IProcessQueries queryProcessor)
         {
-            if (agreements == null) return null;
-            var user = principal.GetSecurityUser(queryProcessor);
-            var securedAgreements = new List<Agreement>();
+            if (agreement == null) return;
+            if (principal == null) throw new ArgumentNullException("principal");
+            if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
+
+            var ownedTenantIds = queryProcessor.Execute(new MyOwnedTenantIds(principal));
+            agreement.ApplySecurity(principal, ownedTenantIds);
+        }
+
+        internal static void ApplySecurity(this IEnumerable<Agreement> agreements, IPrincipal principal, IQueryable<int> ownedTenantIds)
+        {
+            if (agreements == null) return;
+            if (principal == null) throw new ArgumentNullException("principal");
+
             foreach (var agreement in agreements)
-            {
-                var securedAgreement = agreement.ApplySecurity(principal, queryProcessor, user);
-                if (securedAgreement != null) securedAgreements.Add(securedAgreement);
-            }
-            return securedAgreements.ToArray();
+                agreement.ApplySecurity(principal, ownedTenantIds);
         }
 
-        private static User GetSecurityUser(this IPrincipal principal, IProcessQueries queryProcessor)
+        internal static void ApplySecurity(this IEnumerable<Agreement> agreements, IPrincipal principal, IProcessQueries queryProcessor)
         {
-            var user = queryProcessor.Execute(new UserByName(principal.Identity.Name)
-            {
-                EagerLoad = new Expression<Func<User, object>>[]
-                {
-                    x => x.Person.Affiliations.Select(y => y.Establishment.Offspring),
-                }
-            });
-            return user;
+            if (agreements == null) return;
+            if (principal == null) throw new ArgumentNullException("principal");
+
+            var ownedTenantIds = queryProcessor.Execute(new MyOwnedTenantIds(principal));
+            foreach (var agreement in agreements)
+                agreement.ApplySecurity(principal, ownedTenantIds);
         }
     }
 }
