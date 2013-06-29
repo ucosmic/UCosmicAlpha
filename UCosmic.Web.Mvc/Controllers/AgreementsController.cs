@@ -68,7 +68,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
-        public virtual ViewResult Edit(int agreementId)
+        public virtual ActionResult Edit(int agreementId)
         {
             var agreement = _queryProcessor.Execute(new AgreementById(User, agreementId)
             {
@@ -76,10 +76,7 @@ namespace UCosmic.Web.Mvc.Controllers
             });
 
             if (agreement == null)
-            {
-                HttpContext.Response.StatusCode = 403;
-                return null;
-            }
+                return HttpNotFound();
 
             ViewBag.Id = agreement.Id;
             return View(MVC.Agreements.Views.Form);
