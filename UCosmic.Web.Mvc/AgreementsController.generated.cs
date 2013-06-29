@@ -69,10 +69,10 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
+            public readonly string TimsOldIndex = "TimsOldIndex";
             public readonly string Index = "Index";
             public readonly string Show = "Show";
             public readonly string New = "New";
-            public readonly string DansIndex = "DansIndex";
             public readonly string Edit = "Edit";
             public readonly string Settings = "Settings";
         }
@@ -80,15 +80,23 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
+            public const string TimsOldIndex = "TimsOldIndex";
             public const string Index = "Index";
             public const string Show = "Show";
             public const string New = "New";
-            public const string DansIndex = "DansIndex";
             public const string Edit = "Edit";
             public const string Settings = "Settings";
         }
 
 
+        static readonly ActionParamsClass_Index s_params_Index = new ActionParamsClass_Index();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Index
+        {
+            public readonly string domain = "domain";
+        }
         static readonly ActionParamsClass_Show s_params_Show = new ActionParamsClass_Show();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Show ShowParams { get { return s_params_Show; } }
@@ -96,14 +104,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_Show
         {
             public readonly string agreementId = "agreementId";
-        }
-        static readonly ActionParamsClass_DansIndex s_params_DansIndex = new ActionParamsClass_DansIndex();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_DansIndex DansIndexParams { get { return s_params_DansIndex; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_DansIndex
-        {
-            public readonly string domain = "domain";
         }
         static readonly ActionParamsClass_Edit s_params_Edit = new ActionParamsClass_Edit();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -148,9 +148,16 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         public T4MVC_AgreementsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Index()
+        public override System.Web.Mvc.ActionResult TimsOldIndex()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.TimsOldIndex);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Index(string domain)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 
@@ -164,13 +171,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ViewResult New()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.New);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult DansIndex(string domain)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DansIndex);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 

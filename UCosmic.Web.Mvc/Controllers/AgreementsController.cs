@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Agreements;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -16,10 +17,39 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("agreements/tim-is-moving-this-to-form")]
-        public virtual ActionResult Index()
+        [GET("agreements/tim-has-moved-this-to-form")]
+        public virtual ActionResult TimsOldIndex()
         {
-            return View();
+            return View(MVC.Agreements.Views.Index);
+        }
+
+        [GET("agreements/{domain?}")]
+        public virtual ActionResult Index(string domain = null)
+        {
+            // when no domain is passed, try to detect it
+            if (string.IsNullOrWhiteSpace(domain))
+            {
+                var tenancy = Request.Tenancy() ?? new Tenancy();
+
+                // first check style domain
+                if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                    return RedirectToAction(MVC.Agreements.Index(tenancy.StyleDomain));
+
+                if (tenancy.TenantId.HasValue)
+                {
+                    var establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                    if (establishment != null && !string.IsNullOrWhiteSpace(establishment.WebsiteUrl))
+                    {
+                        domain = (establishment.WebsiteUrl.StartsWith("www.")) ? establishment.WebsiteUrl.Substring(4) : establishment.WebsiteUrl;
+                        return RedirectToAction(MVC.Agreements.Index(domain));
+                    }
+                }
+
+                return View(MVC.Agreements.Views.Owners);
+            }
+
+            ViewBag.Domain = domain;
+            return View(MVC.Agreements.Views.DansIndex);
         }
 
         [GET("agreements/{agreementId:int}")]
@@ -36,40 +66,22 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.Form);
         }
 
-        [GET("agreements/{domain?}")]
-        public virtual ActionResult DansIndex(string domain = null)
-        {
-            // when no domain is passed, try to detect it
-            if (string.IsNullOrWhiteSpace(domain))
-            {
-                var tenancy = Request.Tenancy() ?? new Tenancy();
-
-                // first check style domain
-                if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                    return RedirectToAction(MVC.Agreements.DansIndex(tenancy.StyleDomain));
-
-                if (tenancy.TenantId.HasValue)
-                {
-                    var establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-                    if (establishment != null && !string.IsNullOrWhiteSpace(establishment.WebsiteUrl))
-                    {
-                        domain = (establishment.WebsiteUrl.StartsWith("www.")) ? establishment.WebsiteUrl.Substring(4) : establishment.WebsiteUrl;
-                        return RedirectToAction(MVC.Agreements.DansIndex(domain));
-                    }
-                }
-
-                return View(MVC.Agreements.Views.Owners);
-            }
-
-            ViewBag.Domain = domain;
-            return View();
-        }
-
         [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult Edit(int agreementId)
         {
-            ViewBag.Id = agreementId;
+            var agreement = _queryProcessor.Execute(new AgreementById(User, agreementId)
+            {
+                MustBeOwnedByPrincipal = true
+            });
+
+            if (agreement == null)
+            {
+                HttpContext.Response.StatusCode = 403;
+                return null;
+            }
+
+            ViewBag.Id = agreement.Id;
             return View(MVC.Agreements.Views.Form);
         }
 

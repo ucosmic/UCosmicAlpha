@@ -49,6 +49,7 @@ namespace UCosmic.Domain.Agreements
         {
             if (agreements == null) return null;
             if (principal == null) throw new ArgumentNullException("principal");
+            if (ownedTenantIds == null) throw new ArgumentNullException("ownedTenantIds");
 
             var publicText = AgreementVisibility.Public.AsSentenceFragment();
             var protectedText = AgreementVisibility.Protected.AsSentenceFragment();
@@ -72,6 +73,25 @@ namespace UCosmic.Domain.Agreements
                     x.Participants.Any(y => y.IsOwner && ownedTenantIds.Contains(y.EstablishmentId))
                 )
             );
+        }
+
+        internal static IQueryable<Agreement> OwnedBy(this IQueryable<Agreement> agreements, IPrincipal principal, IProcessQueries queryProcessor)
+        {
+            if (agreements == null) return null;
+            if (principal == null) throw new ArgumentNullException("principal");
+            if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
+
+            var ownedTenantIds = queryProcessor.Execute(new MyOwnedTenantIds(principal));
+            return agreements.OwnedBy(principal, ownedTenantIds);
+        }
+
+        internal static IQueryable<Agreement> OwnedBy(this IQueryable<Agreement> agreements, IPrincipal principal, IEnumerable<int> ownedTenantIds)
+        {
+            if (agreements == null) return null;
+            if (principal == null) throw new ArgumentNullException("principal");
+            if (ownedTenantIds == null) throw new ArgumentNullException("ownedTenantIds");
+
+            return agreements.Where(x => x.Participants.Any(y => y.IsOwner && ownedTenantIds.Contains(y.EstablishmentId)));
         }
 
         internal static IQueryable<Agreement> IsRoot(this IQueryable<Agreement> queryable)

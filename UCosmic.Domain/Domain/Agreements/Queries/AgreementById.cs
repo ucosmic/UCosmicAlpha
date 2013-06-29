@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Principal;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -14,6 +15,7 @@ namespace UCosmic.Domain.Agreements
 
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
+        public bool? MustBeOwnedByPrincipal { get; set; }
     }
 
     public class HandleAgreementByIdQuery : IHandleQueries<AgreementById, Agreement>
@@ -31,10 +33,17 @@ namespace UCosmic.Domain.Agreements
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var agreement = _entities.Query<Agreement>()
-                .EagerLoad(_entities, query.EagerLoad)
-                .VisibleTo(query.Principal, _queryProcessor)
-                .ById(query.Id);
+            var ownedTenantIds = _queryProcessor.Execute(new MyOwnedTenantIds(query.Principal));
+
+            var queryable = _entities.Query<Agreement>().EagerLoad(_entities, query.EagerLoad);
+
+            if (query.MustBeOwnedByPrincipal.HasValue && query.MustBeOwnedByPrincipal.Value)
+                queryable = queryable.OwnedBy(query.Principal, ownedTenantIds);
+            else
+                queryable = queryable.VisibleTo(query.Principal, ownedTenantIds);
+
+            var agreement = queryable.ById(query.Id);
+
             if (agreement == null) return null;
 
             agreement.ApplySecurity(query.Principal, _queryProcessor);
