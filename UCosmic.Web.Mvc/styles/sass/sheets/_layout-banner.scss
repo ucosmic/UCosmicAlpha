@@ -50,13 +50,19 @@ body {
                         color: $nav-my-link-hover-text-color;
                         text-decoration: none;
                     }
-                    &.email {
-                        padding-left: 0;
+                    &.principal {
+                        /*padding-left: 0;
                         color: $nav-my-email-link-color;
                         text-decoration: none;
                         cursor: default;
+                        > * {
+                            cursor: default;
+                        }
                         &:hover {
                             background-color: transparent;
+                        }*/
+                        .tenant-domain {
+                            display: $nav-my-tenant-domain-display;
                         }
                     }
                     &.in {

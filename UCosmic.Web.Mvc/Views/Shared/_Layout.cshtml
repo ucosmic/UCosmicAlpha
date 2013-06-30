@@ -27,12 +27,20 @@
                     <div class="group">
                         @if (Request.IsAuthenticated)
                         {
-                            <a href="#/me" class="email">@User.Identity.Name</a>
+                            var principal = User.Identity.Name;
+                            var tenantDomain = "";
+                            var indexOfAt = principal.IndexOf('@');
+                            if (indexOfAt > 0)
+                            {
+                                tenantDomain = principal.Substring(indexOfAt);
+                                principal = principal.Substring(0, indexOfAt);
+                            }
 
                             var tenancy = Request.Tenancy();
                             var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
                                 ? tenancy.CustomProfileTitle : "My UCosmic Profile";
-                            <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
+
+                            <a class="principal" href="@Url.Action(MVC.MyProfile.Index())"><span>@principal</span><span class="tenant-domain">@tenantDomain</span> - @customProfileTitle</a>
 
                             var userImpersonating = Session.UserImpersonating();
                             if (userImpersonating != null)

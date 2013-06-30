@@ -74,13 +74,19 @@ body > nav.my {
           background-color: #eeeeee;
           color: #01529a;
           text-decoration: none; }
-        body > nav.my > .container > .content a.email {
-          padding-left: 0;
-          color: #eeeeee;
+        body > nav.my > .container > .content a.principal {
+          /*padding-left: 0;
+          color: $nav-my-email-link-color;
           text-decoration: none;
-          cursor: default; }
-          body > nav.my > .container > .content a.email:hover {
-            background-color: transparent; }
+          cursor: default;
+          > * {
+              cursor: default;
+          }
+          &:hover {
+              background-color: transparent;
+          }*/ }
+          body > nav.my > .container > .content a.principal .tenant-domain {
+            display: inline; }
         body > nav.my > .container > .content a.in {
           border-right: 0 none;
           margin-left: -6px; }
