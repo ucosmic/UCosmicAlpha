@@ -28,7 +28,8 @@
                         self.uploads.push({
                             extension: file.extension,
                             name: file.name,
-                            size: file.size
+                            size: file.size,
+                            percentComplete: ko.observable(1)
                         });
                         var info = 'selected file ' + file.name;
                         console.log(info);
@@ -36,24 +37,43 @@
                     }
                 },
                 upload: function (e) {
+                    // validate here and prevent if extensions are not allowed
                     //e.preventDefault();
                     var info = 'uploading of one file is about to begin asynchronously';
                     console.log(info);
                     //alert(info);
                 },
+                progress: function (e) {
+                    var info = 'progress for ' + e.files[0].name + ' ' + e.percentComplete + '% complete';
+                    console.log(info);
+                    //alert(info);
+                    var upload = self.getUpload(e.files[0]);
+                    upload.percentComplete(e.percentComplete);
+                },
                 success: function (e) {
                     var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response.guid;
                     //alert(info);
                     console.log(info);
+                    var upload = self.getUpload(e.files[0]);
+                    upload.percentComplete(100);
                 },
                 error: function (e) {
-                    alert('there was an error uploading');
+                    alert('there was an error uploading ' + e.files[0].name);
                 },
                 complete: function (e) {
                     //alert('uploading of all files is complete');
                     console.log('upload of all files is complete');
                 }
             });
+
+            this.getUpload = function (criteria) {
+                var uploads = self.uploads();
+                for (var i = 0; i < uploads.length; i++) {
+                    var upload = uploads[i];
+                    if (upload.name === criteria.name && upload.size === criteria.size) return upload;
+                }
+                return null;
+            };
         };
 
         function ViewModel() {
@@ -104,9 +124,29 @@
                 </div>
                 <ul data-bind="foreach: tempUpload.uploads">
                     <li>
-                        <div style="width: 500px; border: solid 1px #666; position: relative; margin-top: 4px;">
-                            <span style="position: absolute; display: inline-block; padding: 4px;" data-bind="text: name"></span>
-                            <div style="height: 28px; background-color: #bdebbd; width: 30%;">
+                        <div class="group">
+                            <div class="on-left" style="width: 500px;box-sizing: border-box;">
+                                <div style="border: solid 1px #666; position: relative; margin-top: 4px;box-sizing: border-box;">
+                                    <div style="height: 28px; overflow: hidden; position: absolute; display: block;width: 100%;box-sizing: border-box; line-height: 28px; padding: 0 4px;">
+                                        <div class="group">
+                                            <div class="on-left">
+                                                <span data-bind="text: name"></span>
+                                            </div>
+                                            <div class="on-right" style="box-sizing: border-box;padding:4px 0 4px 4px;">
+                                                <img style="vertical-align: top;" alt="" src="~/images/icons/spinner/spinner-20-blue.gif" data-bind="visible: percentComplete() < 100" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 28px; background-color: #bdebbd; width: 1%; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
+                                         data-bind="style: { 'width': percentComplete() + '%' }">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="on-left">
+                                @*<div style="padding: 7px;">
+                                    <a href="#/cancel/" data-bind="visible: percentComplete() < 100"><img alt="Cancel upload" src="~/images/icons/closer/closer-20-red-disc.png" /></a>
+                                    <a href="#/delete/" data-bind="visible: percentComplete() >= 100"><img alt="Delete file" src="~/images/icons/minus/minus-20-red.png" /></a>
+                                </div>*@
                             </div>
                         </div>
                     </li>
