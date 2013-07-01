@@ -62,6 +62,7 @@ export class InstitutionalAgreementEditModel {
         //this.editContact = <() => bool> this.editContact.bind(this);
         this.editAContact = <() => bool> this.editAContact.bind(this);
         this.removeContact = <() => bool> this.removeContact.bind(this);
+        this.removePhone = <() => bool> this.removePhone.bind(this);
 
         this.hideOtherGroups();
         this.bindSearch();
@@ -99,7 +100,7 @@ export class InstitutionalAgreementEditModel {
         this.visibility = visibility;
         this.id = id;
     };
-    contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: string, phone: phoneNumber, email: string) {
+    contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: string, phone: phoneNumber, email: string, type: string) {
         this.jobTitle = jobTitle;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -107,6 +108,7 @@ export class InstitutionalAgreementEditModel {
         this.personId = personId;
         this.phone = phone;
         this.email = email;
+        this.type = type;
     };
 
     visibility = ko.observableArray();
@@ -126,7 +128,8 @@ export class InstitutionalAgreementEditModel {
     contactLastName = ko.observable();
 
     contactEmail = ko.observable();
-
+    contactPhoneTextValue = ko.observable();
+    contactPhoneType = ko.observable();
     //contact = ko.observable();
 
     uAgreements = ko.mapping.fromJS([]);
@@ -158,6 +161,7 @@ export class InstitutionalAgreementEditModel {
 
     participants = ko.mapping.fromJS([]);
     contacts = ko.mapping.fromJS([]);
+    contactPhones = ko.mapping.fromJS([]);
     files = ko.mapping.fromJS([]);
 
 
@@ -215,11 +219,11 @@ export class InstitutionalAgreementEditModel {
         var newPhone = ko.mapping.fromJS([]);
         newPhone.push(new phoneNumber("32145", "home", 1));
         newPhone.push(new phoneNumber("321345645", "work", 2));
-        this.contacts.push(new this.contactConstructor("asdf", "asdf2", "asdf3", 5, "asdf", newPhone, "asdf@as.as"))
+        this.contacts.push(new this.contactConstructor("asdf", "asdf2", "asdf3", 5, "asdf", newPhone, "asdf@as.as", "Home Principle"))
         var newPhone2 = ko.mapping.fromJS([])
         newPhone2.push(new phoneNumber("32145222", "home2", 2));
         newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-        this.contacts.push(new this.contactConstructor("asdf22", "asdf222", "asdf322", 2, "asdf22", newPhone2, "asdf@as.as22"))
+        this.contacts.push(new this.contactConstructor("asdf22", "asdf222", "asdf322", 2, "asdf22", newPhone2, "asdf@as.as22", "Home Principal"))
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
@@ -775,18 +779,31 @@ export class InstitutionalAgreementEditModel {
     editAContact(me): void {
         this.contactsIsEdit(true);
         this.contactEmail(me.email);
-        this.contactFirstName(me.email);
-        this.contactLastName(me.email);
-        //this.(me.email);
+        this.contactFirstName(me.firstName);
+        this.contactLastName(me.lastName);
+        this.contactPhones(me.phone());
+        //this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
+        var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        dropdownlist.select(function (dataItem) {
+            return dataItem.name === me.type;
+        });
+
         $("#addAContact").fadeOut(500, function () {
             $("#addContact").fadeIn(500);
         });
     }
 
-    addContact(): void {
+    addContact(me, e): void {
         // push to contact array
         $("#addContact").fadeOut(500, function () {
             $("#addAContact").fadeIn(500);
+        });
+    }
+
+    addAContact(me, e): void {
+        // push to contact array
+        $("#addAContact").fadeOut(500, function () {
+            $("#addContact").fadeIn(500);
         });
     }
 
@@ -803,6 +820,12 @@ export class InstitutionalAgreementEditModel {
         });
     }
 
+    removePhone(me, e): void {
+        this.contactPhones.remove(me);
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     addAFile(): void {
         // push to contact array
     }
@@ -813,6 +836,9 @@ export class InstitutionalAgreementEditModel {
             '" as a contact from this agreement?')) {
             this.contacts.remove(me);
         }
+        $("#addContact").fadeOut(500, function () {
+            $("#addAContact").fadeIn(500);
+        });
         e.preventDefault();
         e.stopPropagation();
         return false;

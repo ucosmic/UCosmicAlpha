@@ -203,6 +203,17 @@ select.inline {
   background-image: linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dbdbdb', EndColorStr='#f2f2f2'); }
 
+a.addLink {
+  padding: 5px 0px 0px 5px;
+  text-decoration: none !important; }
+  a.addLink > i.green.plus {
+    display: inline-block;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    margin: -2px 0 0 -2px;
+    background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
+
 a.button > .text {
   display: inline-block;
   line-height: 20px;

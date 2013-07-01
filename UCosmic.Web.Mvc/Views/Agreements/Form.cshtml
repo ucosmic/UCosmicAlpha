@@ -302,9 +302,9 @@
                             </div>
                         </div>
                     </div>
-                    <ul data-bind="foreach: contactPhone">
-                        <a title="Remove this contact" data-bind="click: $root.removePhone"><i class="red minus on-right"></i></a>
-                        <li data-bind="element: 'contactE1'">
+                    <ul data-bind="foreach: contactPhones">
+                        <li style="margin-bottom: 10px" data-bind="element: 'contactE1'">
+                        <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-left"></i></a>
                             <span data-bind="text: textValue + ' ' + type"></span>
                         </li>
                     </ul>
@@ -321,22 +321,23 @@
                             <div class="field-label-top">
                                 <label>Phone Type</label>
                             </div>
-                            <div class="field-input-label-top">
-                                <select  data-bind="options: phoneTypes(), 
+                            <div class="field-input-label-top" style="width: 280px">
+                                <select  style="width: 280px" data-bind="options: phoneTypes(), 
 							    optionsValue: 'id',
 							    optionsText: 'name', value: contactPhoneType">
                                 </select>
                             </div>
+                            <a title="Remove this contact" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
                         </div>
                     </div>
                     <footer>
-                        <a href="" data-bind="click: $root.addContact, visibility: !contactsIsEdit()" class="button" style="float: left">
+                        <a href="" data-bind="click: $root.addContact, visible: !contactsIsEdit()" class="button" style="float: left">
                             <i class="green plus"></i>
                             <span class="text">Add contact</span>
                         </a>
-                        <a href="" data-bind="click: $root.editContact, visibility: contactsIsEdit" class="button" style="float: left">
+                        <a href="" data-bind="click: $root.editContact, visible: contactsIsEdit" class="button" style="float: left">
                             <i class="green plus"></i>
-                            <span class="text">Add contact</span>
+                            <span class="text">Edit contact</span>
                         </a>
                         <a href="" data-bind="click: $root.cancelContact" class="button" style="float: left">
                             <span class="text">Cancel</span>
