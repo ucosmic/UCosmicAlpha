@@ -5,6 +5,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using Newtonsoft.Json;
 using UCosmic.Domain.Files;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -37,7 +38,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _createFile.Handle(command);
 
             // only return the guid
-            return Request.CreateResponse(HttpStatusCode.Created, command.Created.EntityId.ToString());
+            var fileGuid = command.Created.EntityId;
+            var successPayload = new { guid = fileGuid };
+            var successJson = JsonConvert.SerializeObject(successPayload);
+            return Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
         }
 
         [DELETE("{fileGuid:guid}")]

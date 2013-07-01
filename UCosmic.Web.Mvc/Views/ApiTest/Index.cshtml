@@ -19,8 +19,8 @@
                     select: 'Choose temporary files to upload...'
                 },
                 async: {
-                    saveUrl: App.Routes.WebApi.Uploads.post(),
-                    removeUrl: '/somepaththatdoesnotexistatleastyet'
+                    saveUrl: App.Routes.WebApi.Uploads.post()//,
+                    //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
                 select: function (e) {
                     for (var i = 0; i < e.files.length; i++) {
@@ -32,25 +32,25 @@
                         });
                         var info = 'selected file ' + file.name;
                         console.log(info);
-                        alert(info);
+                        //alert(info);
                     }
                 },
                 upload: function (e) {
                     //e.preventDefault();
                     var info = 'uploading of one file is about to begin asynchronously';
                     console.log(info);
-                    alert(info);
+                    //alert(info);
                 },
                 success: function (e) {
-                    var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response;
-                    alert(info);
+                    var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response.guid;
+                    //alert(info);
                     console.log(info);
                 },
                 error: function (e) {
                     alert('there was an error uploading');
                 },
                 complete: function (e) {
-                    alert('uploading of all files is complete');
+                    //alert('uploading of all files is complete');
                     console.log('upload of all files is complete');
                 }
             });
@@ -93,7 +93,7 @@
     <header>
         <h1>@ViewBag.Title</h1>
     </header>
-    <section data-bind="with: tempUpload, visible: tempUpload" style="display: none;">
+    <section data-bind="visible: tempUpload" style="display: none;">
         <header>
             <h2>Temporary File Upload</h2>
         </header>
@@ -102,7 +102,7 @@
                 <div>
                     <input id="agreement_files" type="file" name="files[]" />
                 </div>
-                <ul data-bind="foreach: uploads">
+                <ul data-bind="foreach: tempUpload.uploads">
                     <li>
                         <div style="width: 500px; border: solid 1px #666; position: relative; margin-top: 4px;">
                             <span style="position: absolute; display: inline-block; padding: 4px;" data-bind="text: name"></span>
