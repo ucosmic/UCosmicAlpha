@@ -7,43 +7,84 @@
 
     <script type="text/javascript">
 
-        $('#agreement_files').kendoUpload({
-            multiple: true,
-            showFileList: false,
-            localization: {
-                select: 'Choose temporary files to upload...'
-            },
-            async: {
-                saveUrl: App.Routes.WebApi.Uploads.post()//,
-                //removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
-            },
-            error: function (e) {
-                alert('there was an error uploading');
-            },
-            success: function (e) {
-                alert('there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response);
-            },
-            complete: function (e) {
-                alert('uploading of all files is complete');
-            }
-        });
+        function TempUpload() {
+            var self = this;
 
-        var url = 'App.Routes.WebApi.Agreements.Settings.get()';
-        var agreementSettingsGet;
-        $.ajax({
-            url: eval(url),
-            type: 'GET'
-        })
-            .done(function (result) {
-                //if (result) alert('done: result = ' + result);
-                //else alert('done: NO RESULT (' + result + ')');
-                $('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
-            })
-            .fail(function (xhr) {
-                alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+            this.uploads = ko.observableArray();
+
+            $('#agreement_files').kendoUpload({
+                multiple: true,
+                showFileList: false,
+                localization: {
+                    select: 'Choose temporary files to upload...'
+                },
+                async: {
+                    saveUrl: App.Routes.WebApi.Uploads.post(),
+                    removeUrl: '/somepaththatdoesnotexistatleastyet'
+                },
+                select: function (e) {
+                    for (var i = 0; i < e.files.length; i++) {
+                        var file = e.files[i];
+                        self.uploads.push({
+                            extension: file.extension,
+                            name: file.name,
+                            size: file.size
+                        });
+                        var info = 'selected file ' + file.name;
+                        console.log(info);
+                        alert(info);
+                    }
+                },
+                upload: function (e) {
+                    //e.preventDefault();
+                    var info = 'uploading of one file is about to begin asynchronously';
+                    console.log(info);
+                    alert(info);
+                },
+                success: function (e) {
+                    var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response;
+                    alert(info);
+                    console.log(info);
+                },
+                error: function (e) {
+                    alert('there was an error uploading');
+                },
+                complete: function (e) {
+                    alert('uploading of all files is complete');
+                    console.log('upload of all files is complete');
+                }
             });
+        };
 
-        ko.applyBindings(Object(), $('[data-current-module=admin]')[0]);
+        function ViewModel() {
+            var self = this;
+
+            this.tempUpload = new TempUpload();
+            this.agreementSettings = {
+                urlString: 'App.Routes.WebApi.Agreements.Settings.get()',
+                result: ko.observable(),
+                invoke: function () {
+                    $.ajax({
+                        url: eval(this.urlString),
+                        type: 'GET'
+                    })
+                        .done(function (result) {
+                            //if (result) alert('done: result = ' + result);
+                            //else alert('done: NO RESULT (' + result + ')');
+                            self.agreementSettings.result(JSON.stringify(result, undefined, 4));
+                            //$('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
+                        })
+                        .fail(function (xhr) {
+                            alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+                        });
+                },
+                clear: function () {
+                    self.agreementSettings.result(undefined);
+                }
+            };
+        };
+
+        ko.applyBindings(new ViewModel(), $('[data-current-module=admin]')[0]);
     </script>
 
 }
@@ -52,27 +93,43 @@
     <header>
         <h1>@ViewBag.Title</h1>
     </header>
-    <section>
+    <section data-bind="with: tempUpload, visible: tempUpload" style="display: none;">
         <header>
             <h2>Temporary File Upload</h2>
         </header>
         <div>
             <form enctype="multipart/form-data">
-                <input id="agreement_files" type="file" name="files[]" />
+                <div>
+                    <input id="agreement_files" type="file" name="files[]" />
+                </div>
+                <ul data-bind="foreach: uploads">
+                    <li>
+                        <div style="width: 500px; border: solid 1px #666; position: relative; margin-top: 4px;">
+                            <span style="position: absolute; display: inline-block; padding: 4px;" data-bind="text: name"></span>
+                            <div style="height: 28px; background-color: #bdebbd; width: 30%;">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </form>
         </div>
         <div>
         </div>
     </section>
-    <section>
+    <section data-bind="with: agreementSettings, visible: agreementSettings" style="display: none;">
         <header>
             <h2>Agreement Settings</h2>
         </header>
         <div>
-            <code data-bind="text: url"></code>=&gt; <span class="url-string">&quot;<span data-bind="    text: eval(url)"></span>&quot;</span>
+            <code data-bind="text: urlString"></code>=&gt; <span class="url-string">&quot;<span data-bind="    text: eval(urlString)"></span>&quot;</span>
+        </div>
+        <div style="margin: 16px 0;">
+            <input type="button" value="Invoke" data-bind="click: invoke" />
+            <input type="button" value="Clear" data-bind="click: clear, visible: result" />
         </div>
         <div>
-            <pre id="agreementSettingsGet"></pre>
+            <strong data-bind="visible: result">Result:</strong>
+            <pre data-bind="text: result"></pre>
         </div>
     </section>
 </div>
@@ -88,6 +145,7 @@
             font-weight: bold;
             color: #c00;
         }
+
         .k-upload-button {
             max-width: 500px;
         }

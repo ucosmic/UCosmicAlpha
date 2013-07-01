@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
@@ -13,10 +14,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class UploadsController : ApiController
     {
         private readonly IHandleCommands<CreateLooseFile> _createFile;
+        private readonly IHandleCommands<PurgeLooseFile> _purgeFile;
 
-        public UploadsController(IHandleCommands<CreateLooseFile> createFile)
+        public UploadsController(IHandleCommands<CreateLooseFile> createFile
+            , IHandleCommands<PurgeLooseFile> purgeFile
+        )
         {
             _createFile = createFile;
+            _purgeFile = purgeFile;
         }
 
         [POST("")]
@@ -32,7 +37,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _createFile.Handle(command);
 
             // only return the guid
-            return Request.CreateResponse(HttpStatusCode.Created, command.Created.EntityId);
+            return Request.CreateResponse(HttpStatusCode.Created, command.Created.EntityId.ToString());
+        }
+
+        [DELETE("{fileGuid:guid}")]
+        public HttpResponseMessage Delete(Guid fileGuid)
+        {
+            _purgeFile.Handle(new PurgeLooseFile(fileGuid));
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

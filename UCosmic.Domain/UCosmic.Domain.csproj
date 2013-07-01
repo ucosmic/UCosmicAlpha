@@ -166,6 +166,7 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactsByAgreementId.cs" />
+    <Compile Include="Domain\Files\Commands\PurgeLooseFile.cs" />
     <Compile Include="Domain\Identity\Queries\MyOwnedTenantIds.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliationLocation.cs" />
