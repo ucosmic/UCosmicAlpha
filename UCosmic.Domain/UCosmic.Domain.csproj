@@ -166,6 +166,7 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactsByAgreementId.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Commands\CreateDeepInternationalAffiliation.cs" />
     <Compile Include="Domain\Files\Commands\PurgeLooseFile.cs" />
     <Compile Include="Domain\Identity\Queries\MyOwnedTenantIds.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliation.cs" />
@@ -174,6 +175,8 @@
     <Compile Include="Domain\InternationalAffiliation\Commands\DeleteInternationalAffiliation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\UpdateInternationalAffiliation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\UpdateInternationalAffiliationLocation.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Queries\InternationalAffiliationById.cs" />
+    <Compile Include="Domain\InternationalAffiliation\Queries\InternationalAffiliationByPersonId.cs" />
     <Compile Include="Domain\InternationalAffiliation\Entities\InternationalAffiliation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Entities\InternationalAffiliationLocation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Validation\MustFindInternationalAffiliationById.cs" />
@@ -587,9 +590,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\InternationalAffiliation\Queries\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

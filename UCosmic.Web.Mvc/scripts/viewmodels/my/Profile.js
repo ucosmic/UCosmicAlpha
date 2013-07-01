@@ -31,7 +31,7 @@ var ViewModels;
                 this._geographicExpertisesViewModel = null;
                 this._languageExpertisesViewModel = null;
                 this._degreesViewModel = null;
-                this._affiliationsViewModel = null;
+                this._internationalAffiliationsViewModel = null;
                 this.hasPhoto = ko.observable();
                 this.isPhotoExtensionInvalid = ko.observable(false);
                 this.isPhotoTooManyBytes = ko.observable(false);
@@ -178,6 +178,14 @@ var ViewModels;
                         tabStrip.select(3);
                     }
                 } else if(tabName === "affiliations") {
+                    if(this._internationalAffiliationsViewModel == null) {
+                        this._internationalAffiliationsViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
+                        this._internationalAffiliationsViewModel.load().done(function () {
+                            ko.applyBindings(_this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
+                        }).fail(function (jqXhr, textStatus, errorThrown) {
+                            alert(textStatus + " |" + errorThrown);
+                        });
+                    }
                     if(tabStrip.select() != 4) {
                         tabStrip.select(4);
                     }

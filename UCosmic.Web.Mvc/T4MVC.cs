@@ -2577,24 +2577,6 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class affiliations {
-                private const string URLPATH = "~/scripts/viewmodels/affiliations";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string Affiliation_ts = Url("Affiliation.ts");
-                public static readonly string Affiliation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliation.min.js") ? Url("Affiliation.min.js") : Url("Affiliation.js");
-                              
-                public static readonly string Affiliation_min_js = Url("Affiliation.min.js");
-                public static readonly string Affiliations_ts = Url("Affiliations.ts");
-                public static readonly string Affiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Affiliations.min.js") ? Url("Affiliations.min.js") : Url("Affiliations.js");
-                              
-                public static readonly string Affiliations_min_js = Url("Affiliations.min.js");
-                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
-                public static readonly string ServiceApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModel.d.min.js") ? Url("ServiceApiModel.d.min.js") : Url("ServiceApiModel.d.js");
-                              
-            }
-        
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class agreements {
                 private const string URLPATH = "~/scripts/viewmodels/agreements";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2798,6 +2780,21 @@ namespace Links
                 public static readonly string GeographicExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeographicExpertises.min.js") ? Url("GeographicExpertises.min.js") : Url("GeographicExpertises.js");
                               
                 public static readonly string GeographicExpertises_min_js = Url("GeographicExpertises.min.js");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class internationalAffiliations {
+                private const string URLPATH = "~/scripts/viewmodels/internationalAffiliations";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string InternationalAffiliation_ts = Url("InternationalAffiliation.ts");
+                public static readonly string InternationalAffiliation_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InternationalAffiliation.min.js") ? Url("InternationalAffiliation.min.js") : Url("InternationalAffiliation.js");
+                              
+                public static readonly string InternationalAffiliation_min_js = Url("InternationalAffiliation.min.js");
+                public static readonly string InternationalAffiliations_ts = Url("InternationalAffiliations.ts");
+                public static readonly string InternationalAffiliations_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/InternationalAffiliations.min.js") ? Url("InternationalAffiliations.min.js") : Url("InternationalAffiliations.js");
+                              
+                public static readonly string InternationalAffiliations_min_js = Url("InternationalAffiliations.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

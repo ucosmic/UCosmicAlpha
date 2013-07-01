@@ -123,6 +123,12 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/languageExpertise").Include(
                 "~/scripts/viewmodels/languageExpertises/LanguageExpertise.js"));
 
+            // international affiliation
+            bundles.Add(new ScriptBundle("~/bundles/internationalAffiliations").Include(
+                "~/scripts/viewmodels/internationalAffiliations/InternationalAffiliations.js"));
+            bundles.Add(new ScriptBundle("~/bundles/internationalAffiliation").Include(
+                "~/scripts/viewmodels/internationalAffiliations/InternationalAffiliation.js"));
+
             // degrees
             bundles.Add(new ScriptBundle("~/bundles/degrees").Include(
                 "~/scripts/viewmodels/degrees/Degrees.js"));

@@ -156,29 +156,31 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Activities = "_Activities";
-                public readonly string _Affiliations = "_Affiliations";
                 public readonly string _Degrees = "_Degrees";
                 public readonly string _EmailAddresses = "_EmailAddresses";
                 public readonly string _GeographicExpertises = "_GeographicExpertises";
+                public readonly string _InternationalAffiliations = "_InternationalAffiliations";
                 public readonly string _LanguageExpertises = "_LanguageExpertises";
                 public readonly string _PersonalInfo = "_PersonalInfo";
                 public readonly string ActivityEdit = "ActivityEdit";
                 public readonly string DegreeEdit = "DegreeEdit";
                 public readonly string GeographicExpertiseEdit = "GeographicExpertiseEdit";
                 public readonly string Index = "Index";
+                public readonly string InternationalAffiliationEdit = "InternationalAffiliationEdit";
                 public readonly string LanguageExpertiseEdit = "LanguageExpertiseEdit";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
-            public readonly string _Affiliations = "~/Views/MyProfile/_Affiliations.cshtml";
             public readonly string _Degrees = "~/Views/MyProfile/_Degrees.cshtml";
             public readonly string _EmailAddresses = "~/Views/MyProfile/_EmailAddresses.cshtml";
             public readonly string _GeographicExpertises = "~/Views/MyProfile/_GeographicExpertises.cshtml";
+            public readonly string _InternationalAffiliations = "~/Views/MyProfile/_InternationalAffiliations.cshtml";
             public readonly string _LanguageExpertises = "~/Views/MyProfile/_LanguageExpertises.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
             public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
             public readonly string DegreeEdit = "~/Views/MyProfile/DegreeEdit.cshtml";
             public readonly string GeographicExpertiseEdit = "~/Views/MyProfile/GeographicExpertiseEdit.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
+            public readonly string InternationalAffiliationEdit = "~/Views/MyProfile/InternationalAffiliationEdit.cshtml";
             public readonly string LanguageExpertiseEdit = "~/Views/MyProfile/LanguageExpertiseEdit.cshtml";
         }
     }

@@ -583,6 +583,29 @@ var App;
                 LanguageExpertises.del = del;
             })(WebApi.LanguageExpertises || (WebApi.LanguageExpertises = {}));
             var LanguageExpertises = WebApi.LanguageExpertises;
+            (function (InternationalAffiliations) {
+                function get(affiliationId) {
+                    var url = makeUrl('international-affiliations');
+                    if(affiliationId) {
+                        url += affiliationId;
+                    }
+                    return url;
+                }
+                InternationalAffiliations.get = get;
+                function post() {
+                    return makeUrl('international-affiliations');
+                }
+                InternationalAffiliations.post = post;
+                function put(affiliationId) {
+                    return makeUrl('international-affiliations/' + affiliationId);
+                }
+                InternationalAffiliations.put = put;
+                function del(affiliationId) {
+                    return makeUrl('international-affiliations/' + affiliationId);
+                }
+                InternationalAffiliations.del = del;
+            })(WebApi.InternationalAffiliations || (WebApi.InternationalAffiliations = {}));
+            var InternationalAffiliations = WebApi.InternationalAffiliations;
             (function (Degrees) {
                 function get(degreeId) {
                     var url = makeUrl('degrees');
@@ -724,6 +747,11 @@ var App;
                         return url + expertiseId;
                     }
                     Profile.languageExpertiseEdit = languageExpertiseEdit;
+                    function internationalAffiliationEdit(affiliationId) {
+                        var url = makeUrl('my/international-affiliation/');
+                        return url + affiliationId;
+                    }
+                    Profile.internationalAffiliationEdit = internationalAffiliationEdit;
                     function degreeEdit(degreeId) {
                         var url = makeUrl('my/degree/');
                         return url + degreeId;

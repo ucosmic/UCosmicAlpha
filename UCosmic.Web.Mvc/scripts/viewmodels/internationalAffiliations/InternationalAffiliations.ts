@@ -7,20 +7,10 @@
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
-module ViewModels.Affiliations
+
+module ViewModels.InternationalAffiliations
 {
-    export interface IAffiliation {
-    }
-
-    export interface IAffiliationPage {
-        personId: KnockoutObservableNumber;
-        orderBy: KnockoutObservableString;
-        pageSize: KnockoutObservableNumber;
-        pageNumber: KnockoutObservableNumber;
-        items: KnockoutObservableArray;
-    }
-
-    export class AffiliationSearchInput
+    export class InternationalAffiliationSearchInput
     {
         personId: number;
         orderBy: string;
@@ -32,7 +22,7 @@ module ViewModels.Affiliations
     /* 
     */
     // ================================================================================
-    export class AffiliationList
+    export class InternationalAffiliationList
     {
         personId: number;
         orderBy: string;
@@ -56,29 +46,24 @@ module ViewModels.Affiliations
         load(): JQueryPromise
         {
             var deferred: JQueryDeferred = $.Deferred();
+            var affiliationSearchInput: InternationalAffiliationSearchInput = new InternationalAffiliationSearchInput();
 
-            var dataPact = $.Deferred();
-            var expertiseSearchInput: AffiliationSearchInput = new AffiliationSearchInput();
+            affiliationSearchInput.personId = this.personId;
+            affiliationSearchInput.orderBy = "";
+            affiliationSearchInput.pageNumber = 1;
+            affiliationSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
-            expertiseSearchInput.personId = this.personId;
-            expertiseSearchInput.orderBy = "";
-            expertiseSearchInput.pageNumber = 1;
-            expertiseSearchInput.pageSize = 10;
-
-            $.get(App.Routes.WebApi.Affiliations.get(), expertiseSearchInput)
-                .done((data: IAffiliation[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    { dataPact.resolve(data); }
+            $.get(App.Routes.WebApi.InternationalAffiliations.get(), affiliationSearchInput)
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    {
+                        ko.mapping.fromJS(data, {}, this);
+                        deferred.resolve();
+                    }
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
-                });
-
-            $.when(dataPact)
-                .done((data: IAffiliationPage) => {
-                    deferred.resolve();
-                })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                    {
+                        deferred.reject(jqXhr, textStatus, errorThrown);
+                    }
                 });
 
             return deferred;
@@ -88,11 +73,11 @@ module ViewModels.Affiliations
         /* 
         */
         // --------------------------------------------------------------------------------
-        deleteAffiliationById(expertiseId: number): void {
+        deleteAffiliationById(affiliationId: number): void {
             $.ajax({
                 async: false,
                 type: "DELETE",
-                url: App.Routes.WebApi.Affiliations.del(expertiseId),
+                url: App.Routes.WebApi.InternationalAffiliations.del(affiliationId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 { },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
@@ -107,7 +92,7 @@ module ViewModels.Affiliations
         */
         // --------------------------------------------------------------------------------
         deleteAffiliation(data: any, event: any, viewModel: any): void {
-            $("#confirmAffiliationDeleteDialog").dialog({
+            $("#confirmInternationalAffiliationDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
                 resizable: false,
@@ -119,7 +104,7 @@ module ViewModels.Affiliations
                                     $(this).dialog("close");
 
                                     /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                    location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
                                 }
                             },
                             {
@@ -135,48 +120,21 @@ module ViewModels.Affiliations
         /*  
         */
         // --------------------------------------------------------------------------------
-        editAffiliation(data: any, event: any, expertiseId: number): void {
-            $.ajax({
-                type: "GET",
-                url: App.Routes.WebApi.Affiliations.get(expertiseId),
-                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    if ( editState.isInEdit ) {
-                        $( "#AffiliationBeingEditedDialog" ).dialog( {
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                Ok: function () {
-                                    $( this ).dialog( "close" );
-                                    return;
-                                }
-                            }
-                        } );
-                    }
-                    else {
-                        var element = event.target;
-                        var url = null;
+        editAffiliation(data: any, event: any, affiliationId: number): void {
+            var element = event.target;
+            var url = null;
 
-                        while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                            element = element.parentElement;
-                        }
+            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
+                element = element.parentElement;
+            }
 
-                        if ( element != null ) {
-                            url = element.attributes["href"].value;
-                        }
+            if ( element != null ) {
+                url = element.attributes["href"].value;
+            }
 
-                        if ( url != null ) {
-                            location.href = url;
-                        }
-                    }
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            if ( url != null ) {
+                location.href = url;
+            }
         }
 
         // --------------------------------------------------------------------------------
@@ -184,18 +142,51 @@ module ViewModels.Affiliations
         */
         // --------------------------------------------------------------------------------
         newAffiliation(data: any, event: any): void {
-            $.ajax({
-                type: "POST",
-                url: App.Routes.WebApi.Affiliations.post(),
-                success: (newAffiliationId: string, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    location.href = App.Routes.Mvc.My.Profile.affiliationEdit(newAffiliationId);
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
+            location.href = App.Routes.Mvc.My.Profile.internationalAffiliationEdit("new");
+        }
+
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        formatLocations(locations: any): string
+        {
+            var formattedLocations: string = "";
+
+            for (var i = 0; i < locations.length; i += 1)
+            {
+                if (i > 0) { formattedLocations += ", "; }
+                formattedLocations += locations[i].placeOfficialName();
+            }
+
+            return formattedLocations;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*  
+        */
+        // --------------------------------------------------------------------------------
+        formatDates(from: Date, to: Date, onGoing: bool): string
+        {
+            var formattedDateRange: string = "";
+
+            /* May need a separate function to convert from CLR custom date formats to moment formats */
+            var dateFormat: string = "YYYY";
+
+            formattedDateRange = moment(from).format(dateFormat);
+            if (onGoing) {
+                formattedDateRange += " (Ongoing)";
+            } else if (to != null)
+            {
+                formattedDateRange += " - " + moment(to).format(dateFormat);
+            }
+
+            if (formattedDateRange.length > 0)
+            {
+                formattedDateRange += "\xa0\xa0";
+            }
+
+            return formattedDateRange;
         }
     }
 }

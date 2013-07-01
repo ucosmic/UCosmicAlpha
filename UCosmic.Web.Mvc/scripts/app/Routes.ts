@@ -523,6 +523,28 @@ module App.Routes {
             }
         } // LanguageExpertises
 
+        export module InternationalAffiliations {
+            export function get (affiliationId?: number): string {
+                var url = makeUrl('international-affiliations');
+                if (affiliationId) {
+                    url += affiliationId;
+                }
+                return url;
+            }
+
+            export function post(): string {
+                return makeUrl('international-affiliations');
+            }
+
+            export function put(affiliationId: number): string {
+                return makeUrl('international-affiliations/' + affiliationId);
+            }
+
+            export function del(affiliationId: number): string {
+                return makeUrl('international-affiliations/' + affiliationId);
+            }
+        } // InternationalAffiliations
+
         export module Degrees {
             export function get (degreeId?: number): string {
                 var url = makeUrl('degrees');
@@ -646,6 +668,10 @@ module App.Routes {
                 export function languageExpertiseEdit( expertiseId: string ) {
                     var url = makeUrl( 'my/language-expertise/' );
                     return url + expertiseId;
+                }
+                export function internationalAffiliationEdit( affiliationId: string ) {
+                    var url = makeUrl( 'my/international-affiliation/' );
+                    return url + affiliationId;
                 }
                 export function degreeEdit( degreeId: string ) {
                     var url = makeUrl( 'my/degree/' );

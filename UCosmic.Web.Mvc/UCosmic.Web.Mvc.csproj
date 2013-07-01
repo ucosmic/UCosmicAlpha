@@ -298,6 +298,7 @@
     <Compile Include="ApiControllers\Identity\IdentityController.cs" />
     <Compile Include="ApiControllers\Identity\RolesController.cs" />
     <Compile Include="ApiControllers\Identity\UsersController.cs" />
+    <Compile Include="ApiControllers\InternationalAffiliationController.cs" />
     <Compile Include="ApiControllers\LanguageProficiencyController.cs" />
     <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
@@ -328,6 +329,7 @@
     <Compile Include="Models\Agreements\AgreementSettingsApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementPlaceApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactApiModel.cs" />
+    <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
     <Compile Include="Models\LanguageExpertiseApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
@@ -2053,9 +2055,6 @@
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
     <Content Include="scripts\typings\knockout.postbox\knockout-postbox.d.ts" />
-    <Content Include="scripts\viewmodels\affiliations\Affiliation.min.js">
-      <DependentUpon>Affiliation.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireAgreement.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\AgreementVM.ts" />
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
@@ -2108,21 +2107,6 @@
     <Content Include="scripts\viewmodels\activities\Activity.min.js">
       <DependentUpon>Activity.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\affiliations\Affiliations.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\affiliations\Affiliation.ts" />
-    <Content Include="scripts\viewmodels\affiliations\Affiliation.js">
-      <DependentUpon>Affiliation.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\affiliations\Affiliations.js">
-      <DependentUpon>Affiliations.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\affiliations\Affiliations.min.js">
-      <DependentUpon>Affiliations.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\affiliations\ServiceApiModel.d.ts" />
-    <Content Include="scripts\viewmodels\affiliations\ServiceApiModel.d.js">
-      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degree.ts" />
     <Content Include="scripts\viewmodels\degrees\Degree.js">
       <DependentUpon>Degree.ts</DependentUpon>
@@ -2163,6 +2147,20 @@
       <DependentUpon>GeographicExpertises.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertises.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliation.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliations.ts" />
+    <Content Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliation.js">
+      <DependentUpon>InternationalAffiliation.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliation.min.js">
+      <DependentUpon>InternationalAffiliation.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliations.js">
+      <DependentUpon>InternationalAffiliations.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliations.min.js">
+      <DependentUpon>InternationalAffiliations.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\languageExpertises\LanguageExpertise.js">
       <DependentUpon>LanguageExpertise.ts</DependentUpon>
     </Content>
@@ -2620,7 +2618,6 @@
     <Content Include="Views\MyProfile\Index.cshtml" />
     <Content Include="Views\MyProfile\_EmailAddresses.cshtml" />
     <Content Include="Views\MyProfile\_PersonalInfo.cshtml" />
-    <Content Include="Views\MyProfile\_Affiliations.cshtml" />
     <Content Include="Views\Establishments\_FormLocationSection.cshtml" />
     <Content Include="Views\MyProfile\_Activities.cshtml" />
     <Content Include="Views\Home\_Bib.cshtml" />
@@ -2656,6 +2653,8 @@
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
     <Content Include="Views\Agreements\Show.cshtml" />
     <Content Include="Views\Agreements\Owners.cshtml" />
+    <Content Include="Views\MyProfile\_InternationalAffiliations.cshtml" />
+    <Content Include="Views\MyProfile\InternationalAffiliationEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

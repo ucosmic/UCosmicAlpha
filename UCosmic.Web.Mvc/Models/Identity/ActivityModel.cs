@@ -24,4 +24,9 @@
     {
         public string ExpertiseId { get; set; }
     }
+
+    public class InternationalAffiliationModel
+    {
+        public string AffiliationId { get; set; }
+    }
 }

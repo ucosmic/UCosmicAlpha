@@ -15,7 +15,7 @@
 /// <reference path="../geographicExpertises/GeographicExpertises.ts" />
 /// <reference path="../languageExpertises/LanguageExpertises.ts" />
 /// <reference path="../degrees/Degrees.ts" />
-/// <reference path="../affiliations/Affiliations.ts" />
+/// <reference path="../internationalAffiliations/InternationalAffiliations.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
 
 module ViewModels.My {
@@ -54,7 +54,7 @@ module ViewModels.My {
         private _geographicExpertisesViewModel: ViewModels.GeographicExpertises.GeographicExpertiseList = null;
         private _languageExpertisesViewModel: ViewModels.LanguageExpertises.LanguageExpertiseList = null;
         private _degreesViewModel: ViewModels.Degrees.DegreeList = null;
-        private _affiliationsViewModel: ViewModels.Affiliations.AffiliationList = null;
+        private _internationalAffiliationsViewModel: ViewModels.InternationalAffiliations.InternationalAffiliationList = null;
 
         hasPhoto: KnockoutObservableBool = ko.observable();
         isPhotoExtensionInvalid: KnockoutObservableBool = ko.observable(false);
@@ -280,16 +280,16 @@ module ViewModels.My {
                     tabStrip.select(3);
                 }
             } else if ( tabName === "affiliations" ) {
-                //if ( this._affiliationsViewModel == null ) {
-                //    this._affiliationsViewModel = new ViewModels.Affiliations.AffiliationList( this.personId );
-                //    this._affiliationsViewModel.load()
-                //        .done( (): void => {
-                //            ko.applyBindings( this._affiliationsViewModel, $( "#affiliations" )[0] );
-                //        } )
-                //        .fail( function ( jqXhr, textStatus, errorThrown ) {
-                //            alert( textStatus + " |" + errorThrown );
-                //        } );
-                //}
+                if ( this._internationalAffiliationsViewModel == null ) {
+                    this._internationalAffiliationsViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliationList( this.personId );
+                    this._internationalAffiliationsViewModel.load()
+                        .done( (): void => {
+                            ko.applyBindings( this._internationalAffiliationsViewModel, $( "#international-affiliations" )[0] );
+                        } )
+                        .fail( function ( jqXhr, textStatus, errorThrown ) {
+                            alert( textStatus + " |" + errorThrown );
+                        } );
+                }
                 if (tabStrip.select() != 4) {
                     tabStrip.select(4);
                 }
