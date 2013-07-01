@@ -69,7 +69,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string TimsOldIndex = "TimsOldIndex";
             public readonly string Index = "Index";
             public readonly string Show = "Show";
             public readonly string New = "New";
@@ -80,7 +79,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string TimsOldIndex = "TimsOldIndex";
             public const string Index = "Index";
             public const string Show = "Show";
             public const string New = "New";
@@ -125,7 +123,6 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _Bib = "_Bib";
                 public readonly string _SearchSideBar = "_SearchSideBar";
-                public readonly string DansIndex = "DansIndex";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
                 public readonly string Owners = "Owners";
@@ -134,7 +131,6 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
-            public readonly string DansIndex = "~/Views/Agreements/DansIndex.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
             public readonly string Owners = "~/Views/Agreements/Owners.cshtml";
@@ -147,12 +143,6 @@ namespace UCosmic.Web.Mvc.Controllers
     public class T4MVC_AgreementsController : UCosmic.Web.Mvc.Controllers.AgreementsController
     {
         public T4MVC_AgreementsController() : base(Dummy.Instance) { }
-
-        public override System.Web.Mvc.ActionResult TimsOldIndex()
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.TimsOldIndex);
-            return callInfo;
-        }
 
         public override System.Web.Mvc.ActionResult Index(string domain)
         {

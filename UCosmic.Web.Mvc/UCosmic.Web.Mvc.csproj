@@ -2651,7 +2651,6 @@
     <Content Include="Views\Agreements\_Bib.cshtml" />
     <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
     <Content Include="Views\ApiTest\Index.cshtml" />
-    <Content Include="Views\Agreements\DansIndex.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
     <Content Include="Views\Agreements\Show.cshtml" />

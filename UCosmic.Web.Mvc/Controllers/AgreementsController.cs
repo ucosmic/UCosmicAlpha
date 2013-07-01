@@ -17,12 +17,6 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("agreements/tim-has-moved-this-to-form")]
-        public virtual ActionResult TimsOldIndex()
-        {
-            return View(MVC.Agreements.Views.Index);
-        }
-
         [GET("agreements/{domain?}")]
         public virtual ActionResult Index(string domain = null)
         {
@@ -49,7 +43,7 @@ namespace UCosmic.Web.Mvc.Controllers
             }
 
             ViewBag.Domain = domain;
-            return View(MVC.Agreements.Views.DansIndex);
+            return View();
         }
 
         [GET("agreements/{agreementId:int}")]

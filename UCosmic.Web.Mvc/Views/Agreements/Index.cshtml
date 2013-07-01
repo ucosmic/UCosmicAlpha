@@ -1,192 +1,113 @@
-﻿@using UCosmic.Web.Mvc
-@{
-    ViewBag.Title = "Institutional Agreement";
+﻿@{
+    ViewBag.Title = "Search Agreements";
 }
 @section bib
 {
-    <nav class="bib hide" data-current-bib="agreements">
+    <nav class="bib hide" data-current-bib="search">
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
-@*<script data-main="../scripts/main.js" src="~/scripts/require.js"></script>*@
+
 @section scripts
 {
-    <script data-main="../../scripts/viewmodels/agreements/RequireAgreement.js"  src="~/scripts/require/require.js"></script>
-  @*     @Scripts.Render("~/bundles/agreements")
-  @Scripts.Render("~/bundles/establishmentSearch")*@
-}
-<div class="content fixed to-top" data-current-module="agreements"  id="LoadingPage">
-    <div class="on-left from-top">
-        <header>
-            <h1>
-                <p data-bind="visible: spinner.isVisible">
-                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                    <strong>Loading page...</strong>
-                </p>
-            </h1>
-        </header>
-    </div>
-</div>
 
-<div class="content fixed to-top" data-current-module="agreements"  id="allParticipants"  style="visibility: hidden">
-    <form class="group"  >
+    <script>
+        function ViewModel() {
+            var self = this;
+            this.isWorking = ko.observable('Hello, knockout.');
+            google.maps.visualRefresh = true;
+
+            this.googleMap = new google.maps.Map($('#google_map_canvas')[0], {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                zoom: 1, // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
+            });
+            this.isGoogleMapIdle = false;
+
+            google.maps.event.addListenerOnce(self.googleMap, 'idle', function () {
+                self.isGoogleMapIdle = true;
+                if (self.heatMap)
+                    self.heatMap.setMap(self.googleMap);
+
+                google.maps.event.addListener(self.googleMap, 'zoom_changed', function () {
+                    //alert('zoom changed');
+                    self.heatMap.setMap(null);
+                    setTimeout(function () {
+                        self.heatMap.setMap(self.googleMap);
+                    }, 10);
+                });
+            });
+
+            this.pointData = [];
+            this.heatMap = undefined;
+
+            $.get('/api/agreements/@ViewBag.Domain/partners/')
+                .done(function (results) {
+                    for (var i = 0; i < results.length; i++) {
+                        var result = results[i];
+                        if (result.center && result.center.latitude && result.center.longitude) {
+                            self.pointData.push(new google.maps.LatLng(result.center.latitude, result.center.longitude));
+                        } else {
+                            alert('no point data for establishment ' + result.establishmentId);
+                        }
+                    }
+                    var pointArray = new google.maps.MVCArray(self.pointData);
+                    var gradient = [
+                        'rgba(0, 255, 0, 0)',
+                        'rgba(0, 255, 0, 1)',
+                        'rgba(255, 255, 0, 1)'
+                    ]
+                    self.heatMap = new google.maps.visualization.HeatmapLayer({
+                        data: pointArray,
+                        gradient: gradient,
+                        //dissipating: false,
+                        radius: 15,
+                        opactiy: 0.8
+                    });
+                    if (self.isGoogleMapIdle)
+                        self.heatMap.setMap(self.googleMap);
+                })
+                .fail(function (xhr) {
+                    alert('fail: ' + xhr.status + '; ' + xhr.responseText);
+                });
+
+
+            //$.get('/api/agreements/@ViewBag.Domain/partners/')
+            //    .done(function (results) {
+            //        //alert('got result');
+            //    })
+            //    .fail(function (xhr) {
+            //        alert('fail: ' + xhr.status + '; ' + xhr.responseText);
+            //    });
+        };
+        ko.applyBindings(new ViewModel(), $('[data-current-module=agreements]')[0]);
+    </script>
+
+}
+
+<div class="content fixed to-top" data-current-module="agreements">
+    <form class="group">
         <div class="on-left from-top">
             <header>
                 <h1>
                     @ViewBag.Title
                 </h1>
             </header>
-            <section id="participants">
+            <section>
                 <header>
-                    <h2>
-                        Participants
-                    </h2>
+                    <h2 data-bind="text: isWorking">Second heading</h2>
                 </header>
-                <div data-bind="visible: isBound" style="display: none;">
-                    <ul data-bind="foreach: participants">
-                        <li data-bind="element: 'participantEl'">
-                            <div class="typed-item" >
-                                <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
-                                <div class="type">
-                                    <span data-bind="visible: isOwner">Home</span>
-                                    <span data-bind="visible: !isOwner()">Partner</span>
-                                </div>
-                                <div class="item">
-                                    <div>
-                                        <strong data-bind="text: establishmentTranslatedName"></strong>
-                                        <span data-bind="visible: $root.officialNameDoesNotMatchTranslation">(<span data-bind="    text: establishmentOfficialName"></span>)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <footer>
-                    <a href="" data-bind="click: $root.addParticipant" class="button">
-                        <i class="green plus"></i>
-                        <span class="text">Add a participant</span>
-                    </a>
-                </footer>
             </section>
-            <section id="participants">
-                <header>
-                    <h2>
-                        Basic Info
-                    </h2>
-                </header>
-                <div class="field-table w690-l190-v500">
-                    <div class="field-row">
-                        <div class="field-label-top">
-                            <label>Umbrella agreement</label>
-                        </div>
-                        <div class="field-input-label-top">
-                            <select  data-bind="options: uAgreements(), 
-							    optionsValue: 'id',
-							    optionsText: 'name', value: uAgreementSelected">
-						    </select>
-                        </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label-top required">
-                            <label>Agreement type</label>
-                        </div>
-                        <div class="field-input-label-top">
-                            <select  data-bind="options: agreementTypes(), 
-							    optionsValue: 'id',
-							    optionsText: 'name', value: agreementTypeSelected">
-						    </select>
-                        </div>
-                    </div> 
-                    <div class="field-row">
-                        <div class="field-label">
-                            <label>Nickname</label>
-                        </div>
-                        <div>
-                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]"  />
-                        </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">
-                            <label>Content</label>
-                        </div>
-                        <div>
-                            <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]" id="agreementContent"  />
-                        </div>
-                    </div>
-                <div class="field-row">
-                    <div class="field-label">
-                        <label>Private Notes</label>
-                    </div>
-                    <div>
-                        <textarea rows="3" class="no-resize" data-bind="value: privateNotes" data-autosize="true" placeholder="[Private notes for this agreement]" ></textarea>
-                    </div>
-                </div>
+            <div id="google_map_canvas" style="height: 500px;">
             </div>
-            </section>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Shared.Views._SampleSidebarNav)
+                @Html.Partial(MVC.Agreements.Views._SearchSideBar)
             </div>
         </aside>
     </form>
 </div>
-            
-<div id="estSearch" class="content fixed to-top" style="visibility: hidden">
-    <form class="group" data-bind="submit: requestResults">
-        <div class="on-left from-top">
-            <header>
-                <h1 data-bind="text: header">
-                    Choose a participant
-                </h1>
-                <div style="float: right">
-                    <a href="#/" id="cancelAddParticipant" class="button">Cancel</a>
-                </div>
-            </header>
-            @Html.Partial(MVC.Establishments.Views._SearchAndResults)
-        </div>
-        <aside id="asideRootSearch" class="on-right from-top" data-fixed-scroll="root">
-            <div data-fixed-scroll="anchor"></div>
-            <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Establishments.Views._SearchSideBar)
-            </div>
-        </aside>
-        <aside id="asideParentSearch" class="on-right from-top" data-fixed-scroll="root">
-            <div data-fixed-scroll="anchor"></div>
-            <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Establishments.Views._ParentSearchSideBar)
-            </div>
-        </aside>
-    </form>
-</div>
-
-
-<div id="addEstablishment" class="content fixed to-top" style="visibility: hidden">
-    <div data-side-swiper="root" id="establishment_page">
-        <div data-side-swiper="deck">
-            <div data-side-swiper="on">
-                <div class="group">
-                    <div class="on-left from-top">
-                        <header>
-                            <h1>
-                                Add an establishment
-                            </h1>
-                            <div style="float: right">
-                                <a href="#/" id="cancelAddEstablishment" class="button">Cancel</a>
-                            </div>
-                        </header>
-                        @Html.Partial(MVC.Establishments.Views._FormAndCards)
-                    </div>
-                    <aside class="on-right from-top" data-fixed-scroll="root">
-                        <div data-fixed-scroll="anchor"></div>
-                        <div data-fixed-scroll="content">
-                            @Html.Partial(MVC.Establishments.Views._FormSideBar)
-                        </div>
-                    </aside>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
