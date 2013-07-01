@@ -147,21 +147,6 @@ var App;
                 var ByCoordinates = Places.ByCoordinates;
             })(WebApi.Places || (WebApi.Places = {}));
             var Places = WebApi.Places;
-            (function (Agreements) {
-                function get(agreementId) {
-                    var url = 'agreements';
-                    if(agreementId) {
-                        url += '/' + agreementId;
-                    }
-                    return makeUrl(url);
-                }
-                Agreements.get = get;
-                function put(agreementId) {
-                    return get(agreementId);
-                }
-                Agreements.put = put;
-            })(WebApi.Agreements || (WebApi.Agreements = {}));
-            var Agreements = WebApi.Agreements;
             (function (Establishments) {
                 function get(establishmentId) {
                     var url = 'establishments';
@@ -271,6 +256,14 @@ var App;
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
             (function (Agreements) {
+                function get(agreementId) {
+                    return makeUrl('agreements/' + agreementId);
+                }
+                Agreements.get = get;
+                function put(agreementId) {
+                    return get(agreementId);
+                }
+                Agreements.put = put;
                 (function (Participants) {
                     function get(agreementId) {
                         var url = 'agreements/0/participants';
@@ -636,6 +629,13 @@ var App;
                 Affiliations.del = del;
             })(WebApi.Affiliations || (WebApi.Affiliations = {}));
             var Affiliations = WebApi.Affiliations;
+            (function (Uploads) {
+                function post() {
+                    return makeUrl('uploads');
+                }
+                Uploads.post = post;
+            })(WebApi.Uploads || (WebApi.Uploads = {}));
+            var Uploads = WebApi.Uploads;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
         (function (Mvc) {

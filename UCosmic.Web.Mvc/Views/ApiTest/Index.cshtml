@@ -6,20 +6,42 @@
 {
 
     <script type="text/javascript">
+
+        $('#agreement_files').kendoUpload({
+            multiple: true,
+            showFileList: false,
+            localization: {
+                select: 'Choose temporary files to upload...'
+            },
+            async: {
+                saveUrl: App.Routes.WebApi.Uploads.post()//,
+                //removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
+            },
+            error: function (e) {
+                alert('there was an error uploading');
+            },
+            success: function (e) {
+                alert('there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response);
+            },
+            complete: function (e) {
+                alert('uploading of all files is complete');
+            }
+        });
+
         var url = 'App.Routes.WebApi.Agreements.Settings.get()';
         var agreementSettingsGet;
         $.ajax({
             url: eval(url),
             type: 'GET'
         })
-        .done(function (result) {
-            if (result) alert('done: result = ' + result);
-            else alert('done: NO RESULT (' + result + ')');
-            $('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
-        })
-        .fail(function (xhr) {
-            alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
-        });
+            .done(function (result) {
+                //if (result) alert('done: result = ' + result);
+                //else alert('done: NO RESULT (' + result + ')');
+                $('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
+            })
+            .fail(function (xhr) {
+                alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+            });
 
         ko.applyBindings(Object(), $('[data-current-module=admin]')[0]);
     </script>
@@ -32,10 +54,22 @@
     </header>
     <section>
         <header>
+            <h2>Temporary File Upload</h2>
+        </header>
+        <div>
+            <form enctype="multipart/form-data">
+                <input id="agreement_files" type="file" name="files[]" />
+            </form>
+        </div>
+        <div>
+        </div>
+    </section>
+    <section>
+        <header>
             <h2>Agreement Settings</h2>
         </header>
         <div>
-            <code data-bind="text: url"></code> =&gt; <span class="url-string">&quot;<span data-bind="text: eval(url)"></span>&quot;</span>
+            <code data-bind="text: url"></code>=&gt; <span class="url-string">&quot;<span data-bind="    text: eval(url)"></span>&quot;</span>
         </div>
         <div>
             <pre id="agreementSettingsGet"></pre>
@@ -49,9 +83,13 @@
         code, pre {
             font-family: 'Courier New', monospace;
         }
+
         .url-string {
             font-weight: bold;
             color: #c00;
+        }
+        .k-upload-button {
+            max-width: 500px;
         }
     </style>
 }

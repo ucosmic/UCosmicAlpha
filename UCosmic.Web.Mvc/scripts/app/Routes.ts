@@ -136,16 +136,7 @@ module App.Routes {
                 }
             }
         }
-        export module Agreements {
-            export function get (agreementId?: number): string {
-                var url = 'agreements';
-                if (agreementId) url += '/' + agreementId;
-                return makeUrl(url);
-            }
-            export function put(agreementId: number): string {
-                return get(agreementId);
-            }
-        }
+
         export module Establishments {
 
             export function get (establishmentId?: number): string {
@@ -257,11 +248,13 @@ module App.Routes {
 
         export module Agreements {
 
-            //export function get (agreementId?: number): string {
-            //    var url = 'agreements';
-            //    if (agreementId) url += '/' + agreementId;
-            //    return makeUrl(url);
-            //}
+            export function get (agreementId: number): string {
+                return makeUrl('agreements/' + agreementId);
+            }
+
+            export function put(agreementId: number): string {
+                return get(agreementId);
+            }
 
             export module Participants {
 
@@ -573,6 +566,12 @@ module App.Routes {
                 return makeUrl('affiliations/' + affiliationId);
             }
         } // Affiliations
+
+        export module Uploads{
+            export function post(): string {
+                return makeUrl('uploads');
+            }
+        }
     }
 
     export module Mvc {

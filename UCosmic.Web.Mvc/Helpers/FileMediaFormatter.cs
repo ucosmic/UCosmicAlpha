@@ -8,6 +8,8 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
+using UCosmic.Domain.Files;
 
 namespace UCosmic.Web.Mvc
 {
@@ -68,6 +70,7 @@ namespace UCosmic.Web.Mvc
             }
 
             var taskCompletionSource = new TaskCompletionSource<object>();
+
             content.ReadAsMultipartAsync().ContinueWith(t =>
             {
                 if (t.IsFaulted || t.IsCanceled)
@@ -122,5 +125,21 @@ namespace UCosmic.Web.Mvc
         public string FileName { get; private set; }
         public string ContentType { get; private set; }
         public byte[] Content { get; private set; }
+    }
+
+    public static class FileMediaProfiler
+    {
+        public class ModelToCreateLooseFile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<FileMedia, CreateLooseFile>()
+                    .ForMember(d => d.Content, o => o.MapFrom(s => s.Content))
+                    .ForMember(d => d.MimeType, o => o.MapFrom(s => s.ContentType))
+                    .ForMember(d => d.Name, o => o.MapFrom(s => s.FileName))
+                    .ForMember(d => d.Created, o => o.Ignore())
+                ;
+            }
+        }
     }
 }

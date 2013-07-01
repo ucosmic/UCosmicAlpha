@@ -293,6 +293,7 @@
     <Compile Include="ApiControllers\Establishments\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentsController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentUrlsController.cs" />
+    <Compile Include="ApiControllers\UploadsController.cs" />
     <Compile Include="ApiControllers\Identity\GrantsController.cs" />
     <Compile Include="ApiControllers\Identity\IdentityController.cs" />
     <Compile Include="ApiControllers\Identity\RolesController.cs" />
@@ -2650,7 +2651,7 @@
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
     <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
-    <Content Include="Views\ApiTest\Index.cshtml" />
+    <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
     <Content Include="Views\Agreements\Show.cshtml" />

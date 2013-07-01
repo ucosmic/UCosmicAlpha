@@ -310,7 +310,7 @@ namespace UCosmic.SeedData
                     Content = content,
                 };
                 _fileHandler.Handle(fileCommand);
-                return fileCommand.CreatedLooseFileId;
+                return fileCommand.Created.RevisionId;
             }
         }
     }
