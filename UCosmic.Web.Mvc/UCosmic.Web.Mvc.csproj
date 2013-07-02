@@ -2650,6 +2650,12 @@
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
     <Content Include="Views\Establishments\_ParentSearchSideBar.cshtml" />
+    <Content Include="Views\Agreements\_FormParticipants.cshtml" />
+    <Content Include="Views\Agreements\_FormBasicInfo.cshtml" />
+    <Content Include="Views\Agreements\_FormEffectiveDatesCurrentStatus.cshtml" />
+    <Content Include="Views\Agreements\_FormContacts.cshtml" />
+    <Content Include="Views\Agreements\_FormFileAttachments.cshtml" />
+    <Content Include="Views\Agreements\_FormOverallVisibility.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

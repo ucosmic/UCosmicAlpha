@@ -1,0 +1,32 @@
+﻿<section id="participants">
+                <header>
+                    <h2>
+                        Participants
+                    </h2>
+                </header>
+                <div data-bind="visible: isBound" style="display: none;">
+                    <ul data-bind="foreach: participants">
+                        <li data-bind="element: 'participantEl'">
+                            <div class="typed-item">
+                                <a title="Remove this participant" data-bind="click: $root.removeParticipant"><i class="red minus on-right"></i></a>
+                                <div class="type">
+                                    <span data-bind="visible: isOwner">Home</span>
+                                    <span data-bind="visible: !isOwner()">Partner</span>
+                                </div>
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: establishmentTranslatedName"></strong>
+                                        <span data-bind="visible: $root.officialNameDoesNotMatchTranslation">(<span data-bind="    text: establishmentOfficialName"></span>)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <footer>
+                    <a href="" data-bind="click: $root.addParticipant" class="button">
+                        <i class="green plus"></i>
+                        <span class="text">Add a participant</span>
+                    </a>
+                </footer>
+            </section>

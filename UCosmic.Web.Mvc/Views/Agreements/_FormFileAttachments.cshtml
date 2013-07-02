@@ -1,0 +1,59 @@
+﻿ <section id="fileAttachments">
+                <header>
+                    <h2>
+                        File Attachments
+                    </h2>
+                </header>
+                <div data-bind="visible: isBound" style="display: none;">
+                    <ul data-bind="foreach: files">
+                        <li data-bind="element: 'fileE1'">
+                            <div class="typed-item">
+                                <a title="Remove this file" data-bind="click: $root.removeFile"><i class="red minus on-right"></i></a>
+                                
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: name + ' ' + path"></strong>
+                                        <select  data-bind="options: $root.visibility(), 
+							                optionsValue: 'id',
+							                optionsText: 'name', value: visibility">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <footer id="addAFile">
+                    <input id="fileUpload" type="file" name="photo" data-bind="jqObservableElement: '$file'" />
+                    <div style="padding-left: 4px;">
+                        <div data-bind="visible: hasFile" style="display: none; padding-top: 4px;">
+                            <input type="button" value="Delete my file" data-bind="click: startDeletingFile, attr: { disabled: fileDeleteSpinner.isVisible } " />
+                            <img data-bind="visible: fileDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" style="display: none;" />
+                        </div>
+                        <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                            <div>
+                                <p>
+                                    Are you sure you want to delete your profile file?
+                                </p>
+                            </div>
+                        </div>
+                        <div data-bind="visible: isFileExtensionInvalid" style="display: none;">
+                            <span class="validationMessage">The file extension &quot;<span data-bind="text: fileFileExtension"></span>&quot; 
+                                is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
+                        </div>
+                        <div data-bind="visible: isFileTooManyBytes" style="display: none;">
+                            <span class="validationMessage">The file &quot;<span data-bind="text: fileFileName"></span>&quot; 
+                                is too large. Please choose a file that is less than 1 megabyte in size.</span>
+                        </div>
+                        <div data-bind="visible: isFileFailureUnexpected" style="display: none;">
+                            <span class="validationMessage">UCosmic experienced an unexpected error managing your file, please try again. 
+                                If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
+                            </span>
+                        </div>
+                        <div data-bind="visible: fileUploadSpinner.isVisible" style="padding-top: 4px; display: none;">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <strong>Uploading...</strong>
+                        </div>
+                    </div>
+                </footer>
+            </section>

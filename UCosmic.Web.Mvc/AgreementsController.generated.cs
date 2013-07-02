@@ -122,6 +122,12 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
+                public readonly string _FormBasicInfo = "_FormBasicInfo";
+                public readonly string _FormContacts = "_FormContacts";
+                public readonly string _FormEffectiveDatesCurrentStatus = "_FormEffectiveDatesCurrentStatus";
+                public readonly string _FormFileAttachments = "_FormFileAttachments";
+                public readonly string _FormOverallVisibility = "_FormOverallVisibility";
+                public readonly string _FormParticipants = "_FormParticipants";
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
@@ -130,6 +136,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Show = "Show";
             }
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
+            public readonly string _FormBasicInfo = "~/Views/Agreements/_FormBasicInfo.cshtml";
+            public readonly string _FormContacts = "~/Views/Agreements/_FormContacts.cshtml";
+            public readonly string _FormEffectiveDatesCurrentStatus = "~/Views/Agreements/_FormEffectiveDatesCurrentStatus.cshtml";
+            public readonly string _FormFileAttachments = "~/Views/Agreements/_FormFileAttachments.cshtml";
+            public readonly string _FormOverallVisibility = "~/Views/Agreements/_FormOverallVisibility.cshtml";
+            public readonly string _FormParticipants = "~/Views/Agreements/_FormParticipants.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";

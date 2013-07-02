@@ -64,7 +64,8 @@ export class InstitutionalAgreementEditModel {
         this.removeContact = <() => bool> this.removeContact.bind(this);
         this.removePhone = <() => void > this.removePhone.bind(this);
         this.addPhone = <() => void > this.addPhone.bind(this);
-
+        this._setupValidation = <() => void > this._setupValidation.bind(this);
+        
         this.hideOtherGroups();
         this.bindSearch();
 
@@ -103,6 +104,7 @@ export class InstitutionalAgreementEditModel {
                 new this.selectConstructor("private", "private"),
                 new this.selectConstructor("protected", "protected")
         ]);
+        this._setupValidation();
     }
     selectConstructor = function (name: string, id: string) {
         this.name = name;
@@ -152,7 +154,6 @@ export class InstitutionalAgreementEditModel {
     contactPersonId = ko.observable();
     contactDisplayName = ko.observable();
     contactIndex = 0;
-
     contactEmail = ko.observable();
     contactPhoneTextValue = ko.observable();
     contactPhoneType = ko.observable();
@@ -252,11 +253,11 @@ export class InstitutionalAgreementEditModel {
         var newPhone = ko.mapping.fromJS([]);
         newPhone.push(new phoneNumber("32145", "home", 1));
         newPhone.push(new phoneNumber("321345645", "work", 2));
-        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf", firstName: "asdf", lastName: "asdf", id: 1, personId: "asdf", phone: newPhone, email: "asdf@as.as11", type: "Home Principal", suffix: "yo", salutation: "ha" }));
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf", firstName: "asdf", lastName: "asdf", id: 1, personId: "asdf", phone: newPhone, email: "asdf@as.as11", type: "Home Principal", suffix: "yo", salutation: "ha", displayName: "test1" }));
         var newPhone2 = ko.mapping.fromJS([])
         newPhone2.push(new phoneNumber("32145222", "home2", 2));
         newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf22", firstName: "asdf222", lastName: "asdf322", id: 2, personId: "asdf22", phone: newPhone2, email: "asdf@as.as22", type: "Home Principal", suffix: "yo2", salutation: "ha2" }));
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf22", firstName: "asdf222", lastName: "asdf322", id: 2, personId: "asdf22", phone: newPhone2, email: "asdf@as.as22", type: "Home Principal", suffix: "yo2", salutation: "ha2", displayName: "test12" }));
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
@@ -405,7 +406,7 @@ export class InstitutionalAgreementEditModel {
             this.isCustomStatusAllowed(result.isCustomStatusAllowed);
             this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
             this.statusOptions.push(new this.selectConstructor("", ""));
-            this.contactTypeOptions.push(new this.selectConstructor("", ""));
+            this.contactTypeOptions.push(new this.selectConstructor("", undefined));
             this.typeOptions.push(new this.selectConstructor("", ""));
             for (var i = 0; i < result.statusOptions.length; i++) {
                 this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
@@ -843,12 +844,12 @@ export class InstitutionalAgreementEditModel {
 
         var dropdownlist = $("#contactSuffix").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
-            return dataItem.name === me.Suffix();
+            return dataItem.name === me.suffix();
         });
 
         var dropdownlist = $("#contactSalutation").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
-            return dataItem.name === me.Salutation();
+            return dataItem.name === me.salutation();
         });
 
         $("#addAContact").fadeOut(500, function () {
@@ -892,11 +893,14 @@ export class InstitutionalAgreementEditModel {
     }
 
     addContact(me, e): void {
-        this.contacts.push(ko.mapping.fromJS({ jobTitle: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phone: ko.mapping.toJS(this.contactPhones()), email: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName() }));
-        this.clearContactInfo();
-        $("#addContact").fadeOut(500, function () {
-            $("#addAContact").fadeIn(500);
-        });
+        if (this.validateContact.isValid()) {
+            this.contacts.push(ko.mapping.fromJS({ jobTitle: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phone: ko.mapping.toJS(this.contactPhones()), email: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName() }));
+            this.clearContactInfo();
+            $("#addContact").fadeOut(500, function () {
+                $("#addAContact").fadeIn(500);
+            });
+
+        }
     }
 
     addAContact(me, e): void {
@@ -961,7 +965,68 @@ export class InstitutionalAgreementEditModel {
         this.prevForceDisabled(false);
     }
 
+    validateContact; 
 
+    private _setupValidation(): void {
+        this.validateContact = ko.validatedObservable({
+            contactDisplayName: this.contactDisplayName.extend({
+                required: {
+                    message: 'Display name is required.'
+                },
+                maxLength: 50
+            }),
 
+            contactSalutation: this.contactSalutation.extend({
+                maxLength: 50
+            }),
+
+            contactFirstName: this.contactFirstName.extend({
+                required: {
+                    message: 'First name is required.'
+                },
+                maxLength: 50
+            }),
+
+            contactTypeOptionSelected: this.contactTypeOptionSelected.extend({
+                required: {
+                    message: 'Contact type is required.'
+                },
+                maxLength: 50
+            }),
+
+            contactLastName: this.contactLastName.extend({
+                required: {
+                    message: 'Last name is required.'
+                },
+                maxLength: 50
+            }),
+
+            contactEmail: this.contactEmail.extend({
+                required: {
+                    message: 'Email is required.',
+                    maxLength: 100
+                }
+            }).extend({
+                pattern: {
+                    message: 'Email is in wrong format.',
+                    params: '^(?:(?!Email).)*$'
+                }
+            }),
+
+            contactSuffix: this.contactSuffix.extend({
+                maxLength: 50
+            }),
+
+            contactJobTitle: this.contactJobTitle.extend({
+                maxLength: 50
+            }),
+
+            contactPersonId: this.contactPersonId.extend({
+                maxLength: 50
+            })
+        });
+
+        //ko.validation.group(this);
+    }
 }
 

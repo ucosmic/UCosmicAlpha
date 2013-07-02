@@ -1,0 +1,75 @@
+﻿<section id="effectiveDatesCurrentStatus">
+                <header>
+                    <h2>
+                        Effective Dates & Current Status
+                    </h2>
+                </header>
+                <div class="field-table w690-l190-v500">
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>Start date</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input class="hasDate" type="text" data-bind="value: startDate" placeholder="[Select a start date]"  />
+                            </div>
+                            <div class="field-label-description">If there is no exact start or effective date for this agreement, enter an approximate date.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top required">
+                                <label>
+                                    <div class="helpIcon" id="helpExpDate">
+                                        <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help with expiration date" />
+                                    </div>
+                                    Expiration date
+                                </label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input class="hasDate" type="text" data-bind="value: expDate" placeholder="[Select an expiration date]"  />
+                            </div>
+                            <div class="field-label-description">The expiration date may determine when you are notified to review this agreement.
+                                <br/><i>(required, protected visibility)</i>
+                            </div>
+                            <div>
+                                <input style="margin-top: 10px;"  type="checkbox" data-bind="value: isEstimated" />This expiration date is estimated (agreement should be reviewed by this date)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>Auto renew</label>
+                            </div>
+                            <div>
+                                <input name="autoRenew" type="radio" data-bind="value: autoRenew"/>This agreement is auto-renewable.<br/>
+                                <input name="autoRenew" type="radio" data-bind="value: autoRenew"/>This agreement is not auto-renewable.<br/>
+                                <input name="autoRenew" type="radio" data-bind="value: autoRenew"/>Auto renew is unknown or open ended. (protected visibility)
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top required">
+                                <label>Current Status</label>
+                            </div>
+                            <div class="field-input-label-top" data-bind="visible: !isCustomStatusAllowed()">
+                                <select  data-bind="options: statusOptions(), 
+							        optionsValue: 'id',
+							        optionsText: 'name', value: statusOptionSelected">
+                                </select>
+                            </div>
+                            <div class="field-input-label-top" data-bind=" visible: isCustomStatusAllowed">
+                                <input id="statusOptions" type="text" placeholder="[None]" 
+                                       data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
+                            </div>
+                            <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
+                                Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                            <div data-bind=" visible: !isCustomStatusAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement status.
+                                <br/><i>(required, public visibility)</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
