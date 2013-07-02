@@ -264,15 +264,20 @@ body {
         @include ie-box-shadow;
         background-color: $nav-bib-bg-color;
         color: $nav-bib-link-text-color;
-        a {
-            color: $nav-bib-link-text-color;
-            text-decoration: underline;
-            &:hover {
-                text-decoration: none;
+        > .content {
+            @include border-box;
+            width: $tube-outer-width;
+            margin: 0 auto;
+            a {
+                color: $nav-bib-link-text-color;
+                text-decoration: underline;
+                &:hover {
+                    text-decoration: none;
+                }
             }
-        }
-        &.hide {
-            display: none;
+            &.hide {
+                display: none;
+            }
         }
     }
 }

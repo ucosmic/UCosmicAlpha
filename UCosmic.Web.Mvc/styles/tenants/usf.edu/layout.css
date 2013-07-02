@@ -307,13 +307,19 @@ body > div.bib {
   background-repeat: repeat-x;
   background-color: #e0d1a5;
   color: #006747; }
-  body > div.bib a {
-    color: #006747;
-    text-decoration: underline; }
-    body > div.bib a:hover {
-      text-decoration: none; }
-  body > div.bib.hide {
-    display: none; }
+  body > div.bib > .content {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 980px;
+    margin: 0 auto; }
+    body > div.bib > .content a {
+      color: #006747;
+      text-decoration: underline; }
+      body > div.bib > .content a:hover {
+        text-decoration: none; }
+    body > div.bib > .content.hide {
+      display: none; }
 
 /* layout content stylesheet */
 body #main {
