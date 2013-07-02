@@ -7,6 +7,19 @@
 
     <script type="text/javascript">
 
+        window.countGraphicValue = ko.observable(0);
+        window.countGraphicOpacity = ko.observable(1);
+        setInterval(function () {
+            window.countGraphicValue(window.countGraphicValue() + 1);
+            if (window.countGraphicValue() > 99) {
+                window.countGraphicValue(1);
+                window.countGraphicOpacity(window.countGraphicOpacity() - 0.1);
+                if (window.countGraphicOpacity() < 0.1)
+                    window.countGraphicOpacity(1);
+            }
+            $('#placemark_graphic').attr('src', '/api/graphics/count?opacity=' + window.countGraphicOpacity() + '&text=' + window.countGraphicValue());
+        }, 50);
+
         function TempUpload() {
             var self = this;
 
@@ -22,7 +35,7 @@
                     saveUrl: App.Routes.WebApi.Uploads.post()//,
                     //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
-                select: function (e) {
+                select: function(e) {
                     for (var i = 0; i < e.files.length; i++) {
                         var file = e.files[i];
                         self.uploads.push({
@@ -36,37 +49,37 @@
                         //alert(info);
                     }
                 },
-                upload: function (e) {
+                upload: function(e) {
                     // validate here and prevent if extensions are not allowed
                     //e.preventDefault();
                     var info = 'uploading of one file is about to begin asynchronously';
                     console.log(info);
                     //alert(info);
                 },
-                progress: function (e) {
+                progress: function(e) {
                     var info = 'progress for ' + e.files[0].name + ' ' + e.percentComplete + '% complete';
                     console.log(info);
                     //alert(info);
                     var upload = self.getUpload(e.files[0]);
                     upload.percentComplete(e.percentComplete);
                 },
-                success: function (e) {
+                success: function(e) {
                     var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response.guid;
                     //alert(info);
                     console.log(info);
                     var upload = self.getUpload(e.files[0]);
                     upload.percentComplete(100);
                 },
-                error: function (e) {
+                error: function(e) {
                     alert('there was an error uploading ' + e.files[0].name);
                 },
-                complete: function (e) {
+                complete: function(e) {
                     //alert('uploading of all files is complete');
                     console.log('upload of all files is complete');
                 }
             });
 
-            this.getUpload = function (criteria) {
+            this.getUpload = function(criteria) {
                 var uploads = self.uploads();
                 for (var i = 0; i < uploads.length; i++) {
                     var upload = uploads[i];
@@ -74,7 +87,9 @@
                 }
                 return null;
             };
-        };
+        }
+
+        ;
 
         function ViewModel() {
             var self = this;
@@ -83,26 +98,28 @@
             this.agreementSettings = {
                 urlString: 'App.Routes.WebApi.Agreements.Settings.get()',
                 result: ko.observable(),
-                invoke: function () {
+                invoke: function() {
                     $.ajax({
                         url: eval(this.urlString),
                         type: 'GET'
                     })
-                        .done(function (result) {
+                        .done(function(result) {
                             //if (result) alert('done: result = ' + result);
                             //else alert('done: NO RESULT (' + result + ')');
                             self.agreementSettings.result(JSON.stringify(result, undefined, 4));
                             //$('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
                         })
-                        .fail(function (xhr) {
+                        .fail(function(xhr) {
                             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
                         });
                 },
-                clear: function () {
+                clear: function() {
                     self.agreementSettings.result(undefined);
                 }
             };
-        };
+        }
+
+        ;
 
         ko.applyBindings(new ViewModel(), $('[data-current-module=admin]')[0]);
     </script>
@@ -161,8 +178,9 @@
             <h2>Placemark Drawing</h2>
         </header>
         <div>
-            <div style="background-color: #666; padding: 10px;">
-                <img alt="" src="/api/graphics/circle?text=99" style="border: solid 1px #ccc;" />
+            <div style="background-color: #999; padding: 10px;">
+                <img id="placemark_graphic" alt="" src="/api/graphics/count?text=99" style="border: solid 1px transparent;" />
+                <span>Opacity: </span> <span data-bind="text: window.countGraphicOpacity"></span>
             </div>
         </div>
     </section>

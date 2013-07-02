@@ -1,8 +1,8 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -22,12 +23,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        [GET("circle")]
-        public HttpResponseMessage GetCircle([FromUri] int text)
+        [GET("count")]
+        public HttpResponseMessage GetCount([FromUri] CountGraphicRequestModel model)
         {
-            var strokeColor = Color.FromArgb(255, 255, 255);
-            var fillColor = Color.FromArgb(204, 0, 0);
-            var textColor = Color.FromArgb(255, 255, 255);
+            if (model == null || model.Text < 1)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            // set up colors
+            var alpha = (int)Math.Ceiling(model.Opacity * 255);
+            var strokeColor = Color.FromArgb(alpha, 255, 255, 255);
+            var fillColor = Color.FromArgb(alpha, 204, 0, 0);
+            var textColor = Color.FromArgb(alpha, 255, 255, 255);
 
             using (var strokeBrush = new SolidBrush(strokeColor))
             using (var fillBrush = new SolidBrush(fillColor))
@@ -43,11 +49,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 canvasGraphics.FillEllipse(fillBrush, 4, 4, 39, 39);
 
                 // text the circle
-                canvasGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-                var textBox = new Rectangle(0, 1, 48, 48);
-                textFormat.Alignment = StringAlignment.Center;
-                textFormat.LineAlignment = StringAlignment.Center;
-                canvasGraphics.DrawString(text.ToString(CultureInfo.InvariantCulture), textFont, textBrush, textBox, textFormat);
+                if (model.Text.HasValue && model.Text > 0)
+                {
+                    canvasGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+                    var textBox = new Rectangle(0, 1, 48, 48);
+                    textFormat.Alignment = StringAlignment.Center;
+                    textFormat.LineAlignment = StringAlignment.Center;
+                    canvasGraphics.DrawString(model.Text.ToString(), textFont, textBrush, textBox, textFormat);
+                }
 
                 // resize the graphic
                 using (var resizedImage = new Bitmap(24, 24))
