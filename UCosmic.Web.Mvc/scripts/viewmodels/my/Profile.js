@@ -434,7 +434,7 @@ var ViewModels;
                                     if(!isExtensionAllowed) {
                                         e.preventDefault();
                                         _this.isPhotoExtensionInvalid(true);
-                                    } else if(e.files[index].rawFile.size > (1024 * 1024)) {
+                                    } else if(e.files[index].size && e.files[index].size > (1024 * 1024)) {
                                         e.preventDefault();
                                         _this.isPhotoTooManyBytes(true);
                                     }

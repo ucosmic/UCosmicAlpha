@@ -4,7 +4,7 @@
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendouiweb.d.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
@@ -535,7 +535,7 @@ module ViewModels.My {
                                     e.preventDefault(); // prevent upload
                                     this.isPhotoExtensionInvalid(true); // update UI with feedback
                                 }
-                                else if (e.files[index].rawFile.size > (1024 * 1024)) {
+                                else if (e.files[index].size && e.files[index].size > (1024 * 1024)) {
                                     e.preventDefault(); // prevent upload
                                     this.isPhotoTooManyBytes(true); // update UI with feedback
                                 }
