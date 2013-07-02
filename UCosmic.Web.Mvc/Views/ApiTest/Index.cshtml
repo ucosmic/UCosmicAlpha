@@ -125,20 +125,20 @@
                 <ul data-bind="foreach: tempUpload.uploads">
                     <li>
                         <div class="group">
-                            <div class="on-left" style="width: 500px;box-sizing: border-box;">
-                                <div style="border: solid 1px #666; position: relative; margin-top: 4px;box-sizing: border-box;">
-                                    <div style="height: 28px; overflow: hidden; position: absolute; display: block;width: 100%;box-sizing: border-box; line-height: 28px; padding: 0 4px;">
+                            <div class="on-left" style="width: 500px; box-sizing: border-box;">
+                                <div style="border: solid 1px #666; position: relative; margin-top: 4px; box-sizing: border-box;">
+                                    <div style="height: 28px; overflow: hidden; position: absolute; display: block; width: 100%; box-sizing: border-box; line-height: 28px; padding: 0 4px;">
                                         <div class="group">
                                             <div class="on-left">
                                                 <span data-bind="text: name"></span>
                                             </div>
-                                            <div class="on-right" style="box-sizing: border-box;padding:4px 0 4px 4px;">
+                                            <div class="on-right" style="box-sizing: border-box; padding: 4px 0 4px 4px;">
                                                 <img style="vertical-align: top;" alt="" src="~/images/icons/spinner/spinner-20-blue.gif" data-bind="visible: percentComplete() < 100" />
                                             </div>
                                         </div>
                                     </div>
                                     <div style="height: 28px; background-color: #bdebbd; width: 1%; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
-                                         data-bind="style: { 'width': percentComplete() + '%' }">
+                                        data-bind="style: { 'width': percentComplete() + '%' }">
                                     </div>
                                 </div>
                             </div>
@@ -154,6 +154,16 @@
             </form>
         </div>
         <div>
+        </div>
+    </section>
+    <section>
+        <header>
+            <h2>Placemark Drawing</h2>
+        </header>
+        <div>
+            <div style="background-color: #666; padding: 10px;">
+                <img alt="" src="/api/graphics/circle?text=99" style="border: solid 1px #ccc;" />
+            </div>
         </div>
     </section>
     <section data-bind="with: agreementSettings, visible: agreementSettings" style="display: none;">

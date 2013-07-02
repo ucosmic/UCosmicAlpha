@@ -293,6 +293,7 @@
     <Compile Include="ApiControllers\Establishments\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentsController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentUrlsController.cs" />
+    <Compile Include="ApiControllers\GraphicsController.cs" />
     <Compile Include="ApiControllers\UploadsController.cs" />
     <Compile Include="ApiControllers\Identity\GrantsController.cs" />
     <Compile Include="ApiControllers\Identity\IdentityController.cs" />
