@@ -62,7 +62,8 @@ export class InstitutionalAgreementEditModel {
         //this.editContact = <() => bool> this.editContact.bind(this);
         this.editAContact = <() => bool> this.editAContact.bind(this);
         this.removeContact = <() => bool> this.removeContact.bind(this);
-        this.removePhone = <() => bool> this.removePhone.bind(this);
+        this.removePhone = <() => void > this.removePhone.bind(this);
+        this.addPhone = <() => void > this.addPhone.bind(this);
 
         this.hideOtherGroups();
         this.bindSearch();
@@ -70,25 +71,25 @@ export class InstitutionalAgreementEditModel {
         this.getSettings();
 
         this.uAgreements = ko.mapping.fromJS([
-                new this.selectConstructor("[None - this is a top-level or standalone agreement]", 0),
-                new this.selectConstructor("test", 1),
-                new this.selectConstructor("test2", 2),
-                new this.selectConstructor("test3", 3)
+                new this.selectConstructor("[None - this is a top-level or standalone agreement]", ""),
+                new this.selectConstructor("test", "test"),
+                new this.selectConstructor("test2", "test2"),
+                new this.selectConstructor("test3", "test3")
         ]);
         this.phoneTypes = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", 0),
-                new this.selectConstructor("home", 1),
-                new this.selectConstructor("work", 2),
-                new this.selectConstructor("mobile", 3)
+                new this.selectConstructor("[None]", ""),
+                new this.selectConstructor("home", "home"),
+                new this.selectConstructor("work", "work"),
+                new this.selectConstructor("mobile", "mobile")
         ]);
         this.visibility = ko.observableArray([
-                new this.selectConstructor("[None]", 0),
-                new this.selectConstructor("public", 1),
-                new this.selectConstructor("private", 2),
-                new this.selectConstructor("protected", 3)
+                new this.selectConstructor("[None]", ""),
+                new this.selectConstructor("public", "public"),
+                new this.selectConstructor("private", "private"),
+                new this.selectConstructor("protected", "protected")
         ]);
     }
-    selectConstructor = function (name: string, id: number) {
+    selectConstructor = function (name: string, id: string) {
         this.name = name;
         this.id = id;
     };
@@ -100,16 +101,16 @@ export class InstitutionalAgreementEditModel {
         this.visibility = visibility;
         this.id = id;
     };
-    contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: string, phone: phoneNumber, email: string, type: string) {
-        this.jobTitle = jobTitle;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.id = id;
-        this.personId = personId;
-        this.phone = phone;
-        this.email = email;
-        this.type = type;
-    };
+    //contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: string, phone: phoneNumber, email: string, type: string) {
+    //    this.jobTitle = jobTitle;
+    //    this.firstName = firstName;
+    //    this.lastName = lastName;
+    //    this.id = id;
+    //    this.personId = personId;
+    //    this.phone = phone;
+    //    this.email = email;
+    //    this.type = type;
+    //};
 
     visibility = ko.observableArray();
 
@@ -126,6 +127,7 @@ export class InstitutionalAgreementEditModel {
     contactsIsEdit = ko.observable(false);
     contactFirstName = ko.observable();
     contactLastName = ko.observable();
+    contactIndex = 0;
 
     contactEmail = ko.observable();
     contactPhoneTextValue = ko.observable();
@@ -214,16 +216,23 @@ export class InstitutionalAgreementEditModel {
     }
 
 
-
+   // this.jobTitle = jobTitle;
+    //    this.firstName = firstName;
+    //    this.lastName = lastName;
+    //    this.id = id;
+    //    this.personId = personId;
+    //    this.phone = phone;
+    //    this.email = email;
+    //    this.type = type;
     populateContacts(): void {
         var newPhone = ko.mapping.fromJS([]);
         newPhone.push(new phoneNumber("32145", "home", 1));
         newPhone.push(new phoneNumber("321345645", "work", 2));
-        this.contacts.push(new this.contactConstructor("asdf", "asdf2", "asdf3", 5, "asdf", newPhone, "asdf@as.as", "Home Principle"))
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf", firstName: "asdf", lastName: "asdf", id: 1, personId: "asdf", phone: newPhone, email: "asdf@as.as11", type: "Home Principal" }));
         var newPhone2 = ko.mapping.fromJS([])
         newPhone2.push(new phoneNumber("32145222", "home2", 2));
         newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-        this.contacts.push(new this.contactConstructor("asdf22", "asdf222", "asdf322", 2, "asdf22", newPhone2, "asdf@as.as22", "Home Principal"))
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf22", firstName: "asdf222", lastName: "asdf322", id: 2, personId: "asdf22", phone: newPhone2, email: "asdf@as.as22", type: "Home Principal"}));
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
@@ -371,17 +380,17 @@ export class InstitutionalAgreementEditModel {
             this.isCustomTypeAllowed(result.isCustomTypeAllowed);
             this.isCustomStatusAllowed(result.isCustomStatusAllowed);
             this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-            this.statusOptions.push(new this.selectConstructor("", 0));
-            this.contactTypeOptions.push(new this.selectConstructor("", 0));
-            this.typeOptions.push(new this.selectConstructor("", 0));
+            this.statusOptions.push(new this.selectConstructor("", ""));
+            this.contactTypeOptions.push(new this.selectConstructor("", ""));
+            this.typeOptions.push(new this.selectConstructor("", ""));
             for (var i = 0; i < result.statusOptions.length; i++) {
-                this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], i+1));
+                this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
             };
             for (var i = 0; i < result.contactTypeOptions.length; i++) {
-                this.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], i));
+                this.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
             };
             for (var i = 0; i < result.typeOptions.length; i++) {
-                this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], i));
+                this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
             };
             if (this.isCustomTypeAllowed) {
                 $("#typeOptions").kendoComboBox( {
@@ -778,10 +787,11 @@ export class InstitutionalAgreementEditModel {
 
     editAContact(me): void {
         this.contactsIsEdit(true);
-        this.contactEmail(me.email);
-        this.contactFirstName(me.firstName);
-        this.contactLastName(me.lastName);
+        this.contactEmail(me.email());
+        this.contactFirstName(me.firstName());
+        this.contactLastName(me.lastName());
         this.contactPhones(me.phone());
+        this.contactIndex = this.contacts.indexOf(me)
         //this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
         var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
@@ -790,6 +800,27 @@ export class InstitutionalAgreementEditModel {
 
         $("#addAContact").fadeOut(500, function () {
             $("#addContact").fadeIn(500);
+        });
+    }
+    editContact(me): void {
+        this.contactsIsEdit(false);
+        this.contacts()[this.contactIndex].email(this.contactEmail())
+        this.contacts()[this.contactIndex].firstName(this.contactFirstName())
+        this.contacts()[this.contactIndex].lastName(this.contactLastName())
+        this.contacts()[this.contactIndex].phone(this.contactPhones())
+        //this.contacts()[this.contactIndex].email(this.contactEmail())
+        //me.email(this.contactEmail());
+        //this.contactFirstName(me.firstName);
+        //this.contactLastName(me.lastName);
+        //this.contactPhones(me.phone());
+        ////this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
+        //var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        //dropdownlist.select(function (dataItem) {
+        //    return dataItem.name === me.type;
+        //});
+
+        $("#addContact").fadeOut(500, function () {
+            $("#addAContact").fadeIn(500);
         });
     }
 
@@ -807,13 +838,6 @@ export class InstitutionalAgreementEditModel {
         });
     }
 
-    editContact(): void {
-        // push to contact array
-        $("#addContact").fadeOut(500, function () {
-            $("#addAContact").fadeIn(500);
-        });
-    }
-
     cancelContact(): void {
         $("#addContact").fadeOut(500, function () {
             $("#addAContact").fadeIn(500);
@@ -824,6 +848,10 @@ export class InstitutionalAgreementEditModel {
         this.contactPhones.remove(me);
         e.preventDefault();
         e.stopPropagation();
+    }
+
+    addPhone(me, e): void {
+        this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), textValue: this.contactPhoneTextValue() }))
     }
 
     addAFile(): void {

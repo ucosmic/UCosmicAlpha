@@ -232,11 +232,11 @@
                                 
                                 <div class="item">
                                     <div>
-                                        <strong data-bind="text: firstName + ' ' + lastName + ': ' + jobTitle"></strong><br/>
+                                        <strong data-bind="text: firstName() + ' ' + lastName() + ': ' + jobTitle()"></strong><br/>
                                         <span data-bind="text: email"></span><br/>
                                         <ul data-bind="foreach: phone">
                                             <li data-bind="element: 'contactE1'">
-                                                <span data-bind="text: textValue + ' ' + type"></span>
+                                                <span data-bind="text: textValue() + ' ' + type()"></span>
                                             </li>
                                         </ul>
                                     </div>
@@ -305,7 +305,7 @@
                     <ul data-bind="foreach: contactPhones">
                         <li style="margin-bottom: 10px" data-bind="element: 'contactE1'">
                         <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-left"></i></a>
-                            <span data-bind="text: textValue + ' ' + type"></span>
+                            <span data-bind="text: textValue() + ' - ' + type()"></span>
                         </li>
                     </ul>
                     <div class="field-row">

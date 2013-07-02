@@ -47,16 +47,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.visibility = visibility;
                 this.id = id;
             };
-            this.contactConstructor = function (jobTitle, firstName, lastName, id, personId, phone, email, type) {
-                this.jobTitle = jobTitle;
-                this.firstName = firstName;
-                this.lastName = lastName;
-                this.id = id;
-                this.personId = personId;
-                this.phone = phone;
-                this.email = email;
-                this.type = type;
-            };
             this.visibility = ko.observableArray();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
@@ -70,6 +60,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactsIsEdit = ko.observable(false);
             this.contactFirstName = ko.observable();
             this.contactLastName = ko.observable();
+            this.contactIndex = 0;
             this.contactEmail = ko.observable();
             this.contactPhoneTextValue = ko.observable();
             this.contactPhoneType = ko.observable();
@@ -431,26 +422,27 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.editAContact = this.editAContact.bind(this);
             this.removeContact = this.removeContact.bind(this);
             this.removePhone = this.removePhone.bind(this);
+            this.addPhone = this.addPhone.bind(this);
             this.hideOtherGroups();
             this.bindSearch();
             this.getSettings();
             this.uAgreements = ko.mapping.fromJS([
-                new this.selectConstructor("[None - this is a top-level or standalone agreement]", 0), 
-                new this.selectConstructor("test", 1), 
-                new this.selectConstructor("test2", 2), 
-                new this.selectConstructor("test3", 3)
+                new this.selectConstructor("[None - this is a top-level or standalone agreement]", ""), 
+                new this.selectConstructor("test", "test"), 
+                new this.selectConstructor("test2", "test2"), 
+                new this.selectConstructor("test3", "test3")
             ]);
             this.phoneTypes = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", 0), 
-                new this.selectConstructor("home", 1), 
-                new this.selectConstructor("work", 2), 
-                new this.selectConstructor("mobile", 3)
+                new this.selectConstructor("[None]", ""), 
+                new this.selectConstructor("home", "home"), 
+                new this.selectConstructor("work", "work"), 
+                new this.selectConstructor("mobile", "mobile")
             ]);
             this.visibility = ko.observableArray([
-                new this.selectConstructor("[None]", 0), 
-                new this.selectConstructor("public", 1), 
-                new this.selectConstructor("private", 2), 
-                new this.selectConstructor("protected", 3)
+                new this.selectConstructor("[None]", ""), 
+                new this.selectConstructor("public", "public"), 
+                new this.selectConstructor("private", "private"), 
+                new this.selectConstructor("protected", "protected")
             ]);
         }
         InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {
@@ -479,11 +471,29 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var newPhone = ko.mapping.fromJS([]);
             newPhone.push(new phoneNumber("32145", "home", 1));
             newPhone.push(new phoneNumber("321345645", "work", 2));
-            this.contacts.push(new this.contactConstructor("asdf", "asdf2", "asdf3", 5, "asdf", newPhone, "asdf@as.as", "Home Principle"));
+            this.contacts.push(ko.mapping.fromJS({
+                jobTitle: "asdf",
+                firstName: "asdf",
+                lastName: "asdf",
+                id: 1,
+                personId: "asdf",
+                phone: newPhone,
+                email: "asdf@as.as11",
+                type: "Home Principal"
+            }));
             var newPhone2 = ko.mapping.fromJS([]);
             newPhone2.push(new phoneNumber("32145222", "home2", 2));
             newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-            this.contacts.push(new this.contactConstructor("asdf22", "asdf222", "asdf322", 2, "asdf22", newPhone2, "asdf@as.as22", "Home Principal"));
+            this.contacts.push(ko.mapping.fromJS({
+                jobTitle: "asdf22",
+                firstName: "asdf222",
+                lastName: "asdf322",
+                id: 2,
+                personId: "asdf22",
+                phone: newPhone2,
+                email: "asdf@as.as22",
+                type: "Home Principal"
+            }));
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
             var _this = this;
@@ -638,19 +648,19 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 _this.isCustomTypeAllowed(result.isCustomTypeAllowed);
                 _this.isCustomStatusAllowed(result.isCustomStatusAllowed);
                 _this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-                _this.statusOptions.push(new _this.selectConstructor("", 0));
-                _this.contactTypeOptions.push(new _this.selectConstructor("", 0));
-                _this.typeOptions.push(new _this.selectConstructor("", 0));
+                _this.statusOptions.push(new _this.selectConstructor("", ""));
+                _this.contactTypeOptions.push(new _this.selectConstructor("", ""));
+                _this.typeOptions.push(new _this.selectConstructor("", ""));
                 for(var i = 0; i < result.statusOptions.length; i++) {
-                    _this.statusOptions.push(new _this.selectConstructor(result.statusOptions[i], i + 1));
+                    _this.statusOptions.push(new _this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
                 }
                 ;
                 for(var i = 0; i < result.contactTypeOptions.length; i++) {
-                    _this.contactTypeOptions.push(new _this.selectConstructor(result.contactTypeOptions[i], i));
+                    _this.contactTypeOptions.push(new _this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
                 }
                 ;
                 for(var i = 0; i < result.typeOptions.length; i++) {
-                    _this.typeOptions.push(new _this.selectConstructor(result.typeOptions[i], i));
+                    _this.typeOptions.push(new _this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
                 }
                 ;
                 if(_this.isCustomTypeAllowed) {
@@ -721,16 +731,27 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
             this.contactsIsEdit(true);
-            this.contactEmail(me.email);
-            this.contactFirstName(me.firstName);
-            this.contactLastName(me.lastName);
+            this.contactEmail(me.email());
+            this.contactFirstName(me.firstName());
+            this.contactLastName(me.lastName());
             this.contactPhones(me.phone());
+            this.contactIndex = this.contacts.indexOf(me);
             var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.type;
             });
             $("#addAContact").fadeOut(500, function () {
                 $("#addContact").fadeIn(500);
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.editContact = function (me) {
+            this.contactsIsEdit(false);
+            this.contacts()[this.contactIndex].email(this.contactEmail());
+            this.contacts()[this.contactIndex].firstName(this.contactFirstName());
+            this.contacts()[this.contactIndex].lastName(this.contactLastName());
+            this.contacts()[this.contactIndex].phone(this.contactPhones());
+            $("#addContact").fadeOut(500, function () {
+                $("#addAContact").fadeIn(500);
             });
         };
         InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
@@ -743,11 +764,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 $("#addContact").fadeIn(500);
             });
         };
-        InstitutionalAgreementEditModel.prototype.editContact = function () {
-            $("#addContact").fadeOut(500, function () {
-                $("#addAContact").fadeIn(500);
-            });
-        };
         InstitutionalAgreementEditModel.prototype.cancelContact = function () {
             $("#addContact").fadeOut(500, function () {
                 $("#addAContact").fadeIn(500);
@@ -757,6 +773,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactPhones.remove(me);
             e.preventDefault();
             e.stopPropagation();
+        };
+        InstitutionalAgreementEditModel.prototype.addPhone = function (me, e) {
+            this.contactPhones.push(ko.mapping.fromJS({
+                type: this.contactPhoneType(),
+                textValue: this.contactPhoneTextValue()
+            }));
         };
         InstitutionalAgreementEditModel.prototype.addAFile = function () {
         };
