@@ -233,6 +233,7 @@
                                 <div class="item">
                                     <div>
                                         <strong data-bind="text: firstName() + ' ' + lastName() + ': ' + jobTitle()"></strong><br/>
+                                        <span data-bind="text: type"></span><br/>
                                         <span data-bind="text: email"></span><br/>
                                         <ul data-bind="foreach: phone">
                                             <li data-bind="element: 'contactE1'">
@@ -276,11 +277,11 @@
                             </div>
                         </div>
                         <div class="field-column-right">
-                            <div class="field-label-top required">
-                                <label>Email address</label>
+                            <div class="field-label-top">
+                                <label>Display name</label>
                             </div>
                             <div class="field-input-label-top">
-                                <input type="text" data-bind="value: contactEmail" />
+                                <input type="text" data-bind="value: contactDisplayName" />
                             </div>
                         </div>
                     </div>
@@ -299,6 +300,44 @@
                             </div>
                             <div class="field-input-label-top">
                                 <input type="text" data-bind="value: contactLastName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top">
+                                <label>Salutation</label>
+                            </div>
+                            <div class="field-input-label-top" >
+                                <input id="contactSalutation" type="text" placeholder="[None]" 
+                                       data-bind="value: contactSalutationSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactSalutation'" />
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top">
+                                <label>Suffix</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input id="contactSuffix" type="text" placeholder="[None]" 
+                                       data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactSuffix'" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top">
+                                <label>Job title</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: contactJobTitle" />
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top">
+                                <label>Person id</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: contactPersonId" />
                             </div>
                         </div>
                     </div>
@@ -328,6 +367,16 @@
                                 </select>
                             </div>
                             <a title="Remove this contact" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>Email address</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: contactEmail" />
+                            </div>
                         </div>
                     </div>
                     <footer>

@@ -60,6 +60,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactsIsEdit = ko.observable(false);
             this.contactFirstName = ko.observable();
             this.contactLastName = ko.observable();
+            this.contactSuffix = ko.mapping.fromJS([]);
+            this.contactSuffixSelected = ko.observable();
+            this.$contactSuffix = ko.observable();
+            this.contactSalutation = ko.mapping.fromJS([]);
+            this.contactSalutationSelected = ko.observable();
+            this.$contactSalutation = ko.observable();
+            this.contactJobTitle = ko.observable();
+            this.contactPersonId = ko.observable();
+            this.contactDisplayName = ko.observable();
             this.contactIndex = 0;
             this.contactEmail = ko.observable();
             this.contactPhoneTextValue = ko.observable();
@@ -432,6 +441,21 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 new this.selectConstructor("test2", "test2"), 
                 new this.selectConstructor("test3", "test3")
             ]);
+            this.contactSalutation = ko.mapping.fromJS([
+                new this.selectConstructor("[None]", ""), 
+                new this.selectConstructor("Dr.", "Dr."), 
+                new this.selectConstructor("Mr.", "Mr."), 
+                new this.selectConstructor("Ms.", "Ms."), 
+                new this.selectConstructor("Mrs.", "Mrs."), 
+                new this.selectConstructor("Prof.", "Prof.")
+            ]);
+            this.contactSuffix = ko.mapping.fromJS([
+                new this.selectConstructor("[None]", ""), 
+                new this.selectConstructor("Esq.", "Esq."), 
+                new this.selectConstructor("Jr.", "Jr."), 
+                new this.selectConstructor("PhD", "PhD"), 
+                new this.selectConstructor("Sr.", "Sr.")
+            ]);
             this.phoneTypes = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""), 
                 new this.selectConstructor("home", "home"), 
@@ -479,7 +503,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 personId: "asdf",
                 phone: newPhone,
                 email: "asdf@as.as11",
-                type: "Home Principal"
+                type: "Home Principal",
+                suffix: "yo",
+                salutation: "ha"
             }));
             var newPhone2 = ko.mapping.fromJS([]);
             newPhone2.push(new phoneNumber("32145222", "home2", 2));
@@ -492,7 +518,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 personId: "asdf22",
                 phone: newPhone2,
                 email: "asdf@as.as22",
-                type: "Home Principal"
+                type: "Home Principal",
+                suffix: "yo2",
+                salutation: "ha2"
             }));
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
@@ -690,6 +718,20 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         })
                     });
                 }
+                $("#contactSalutation").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: ko.mapping.toJS(_this.contactSalutation())
+                    })
+                });
+                $("#contactSuffix").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: ko.mapping.toJS(_this.contactSuffix())
+                    })
+                });
                 $(".hasDate").kendoDatePicker({
                     open: function (e) {
                         this.options.format = "MM/dd/yyyy";
@@ -732,29 +774,77 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
             this.contactsIsEdit(true);
             this.contactEmail(me.email());
+            this.contactDisplayName(me.displayName());
+            this.contactPersonId(me.personId());
+            this.contactJobTitle(me.jobTitle());
             this.contactFirstName(me.firstName());
             this.contactLastName(me.lastName());
             this.contactPhones(me.phone());
             this.contactIndex = this.contacts.indexOf(me);
             var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
             dropdownlist.select(function (dataItem) {
-                return dataItem.name === me.type;
+                return dataItem.name === me.type();
+            });
+            var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+            dropdownlist.select(function (dataItem) {
+                return dataItem.name === me.Suffix();
+            });
+            var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+            dropdownlist.select(function (dataItem) {
+                return dataItem.name === me.Salutation();
             });
             $("#addAContact").fadeOut(500, function () {
                 $("#addContact").fadeIn(500);
             });
         };
+        InstitutionalAgreementEditModel.prototype.clearContactInfo = function () {
+            this.contactEmail('');
+            this.contactDisplayName('');
+            this.contactPersonId('');
+            this.contactJobTitle('');
+            this.contactFirstName('');
+            this.contactLastName('');
+            this.contactPhones('');
+            this.contactTypeOptionSelected('');
+            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            dropdownlist.select(0);
+            var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+            dropdownlist.select(0);
+            var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+            dropdownlist.select(0);
+        };
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
             this.contactsIsEdit(false);
             this.contacts()[this.contactIndex].email(this.contactEmail());
+            this.contacts()[this.contactIndex].jobTitle(this.contactJobTitle());
+            this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
+            this.contacts()[this.contactIndex].personId(this.contactPersonId());
             this.contacts()[this.contactIndex].firstName(this.contactFirstName());
             this.contacts()[this.contactIndex].lastName(this.contactLastName());
             this.contacts()[this.contactIndex].phone(this.contactPhones());
+            this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
+            this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
+            this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
+            this.clearContactInfo();
             $("#addContact").fadeOut(500, function () {
                 $("#addAContact").fadeIn(500);
             });
         };
         InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
+            this.contacts.push(ko.mapping.fromJS({
+                jobTitle: this.contactJobTitle(),
+                firstName: this.contactFirstName(),
+                lastName: this.contactLastName(),
+                id: 1,
+                personId: this.contactPersonId(),
+                phone: ko.mapping.toJS(this.contactPhones()),
+                email: this.contactEmail(),
+                type: this.contactTypeOptionSelected(),
+                suffix: this.contactSuffix(),
+                salutation: this.contactSalutation(),
+                displayName: this.contactDisplayName()
+            }));
+            this.clearContactInfo();
             $("#addContact").fadeOut(500, function () {
                 $("#addAContact").fadeIn(500);
             });

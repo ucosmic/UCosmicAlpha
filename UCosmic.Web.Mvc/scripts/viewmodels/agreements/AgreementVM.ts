@@ -76,6 +76,21 @@ export class InstitutionalAgreementEditModel {
                 new this.selectConstructor("test2", "test2"),
                 new this.selectConstructor("test3", "test3")
         ]);
+        this.contactSalutation = ko.mapping.fromJS([
+                new this.selectConstructor("[None]", ""),
+                new this.selectConstructor("Dr.", "Dr."),
+                new this.selectConstructor("Mr.", "Mr."),
+                new this.selectConstructor("Ms.", "Ms."),
+                new this.selectConstructor("Mrs.", "Mrs."),
+                new this.selectConstructor("Prof.", "Prof.")
+        ]);
+        this.contactSuffix = ko.mapping.fromJS([
+                new this.selectConstructor("[None]", ""),
+                new this.selectConstructor("Esq.", "Esq."),
+                new this.selectConstructor("Jr.", "Jr."),
+                new this.selectConstructor("PhD", "PhD"),
+                new this.selectConstructor("Sr.", "Sr.")
+        ]);
         this.phoneTypes = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""),
                 new this.selectConstructor("home", "home"),
@@ -127,6 +142,15 @@ export class InstitutionalAgreementEditModel {
     contactsIsEdit = ko.observable(false);
     contactFirstName = ko.observable();
     contactLastName = ko.observable();
+    contactSuffix = ko.mapping.fromJS([]);
+    contactSuffixSelected = ko.observable();
+    $contactSuffix: KnockoutObservableJQuery = ko.observable();
+    contactSalutation = ko.mapping.fromJS([]);
+    contactSalutationSelected = ko.observable();
+    $contactSalutation: KnockoutObservableJQuery = ko.observable();
+    contactJobTitle = ko.observable();
+    contactPersonId = ko.observable();
+    contactDisplayName = ko.observable();
     contactIndex = 0;
 
     contactEmail = ko.observable();
@@ -228,11 +252,11 @@ export class InstitutionalAgreementEditModel {
         var newPhone = ko.mapping.fromJS([]);
         newPhone.push(new phoneNumber("32145", "home", 1));
         newPhone.push(new phoneNumber("321345645", "work", 2));
-        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf", firstName: "asdf", lastName: "asdf", id: 1, personId: "asdf", phone: newPhone, email: "asdf@as.as11", type: "Home Principal" }));
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf", firstName: "asdf", lastName: "asdf", id: 1, personId: "asdf", phone: newPhone, email: "asdf@as.as11", type: "Home Principal", suffix: "yo", salutation: "ha" }));
         var newPhone2 = ko.mapping.fromJS([])
         newPhone2.push(new phoneNumber("32145222", "home2", 2));
         newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf22", firstName: "asdf222", lastName: "asdf322", id: 2, personId: "asdf22", phone: newPhone2, email: "asdf@as.as22", type: "Home Principal"}));
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: "asdf22", firstName: "asdf222", lastName: "asdf322", id: 2, personId: "asdf22", phone: newPhone2, email: "asdf@as.as22", type: "Home Principal", suffix: "yo2", salutation: "ha2" }));
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
@@ -419,6 +443,22 @@ export class InstitutionalAgreementEditModel {
                     })
                 });
             }
+
+            $("#contactSalutation").kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.contactSalutation())
+                })
+            });
+
+            $("#contactSuffix").kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.contactSuffix())
+                })
+            });
 
             $(".hasDate").kendoDatePicker({
                 /* If user clicks date picker button, reset format */
@@ -788,6 +828,9 @@ export class InstitutionalAgreementEditModel {
     editAContact(me): void {
         this.contactsIsEdit(true);
         this.contactEmail(me.email());
+        this.contactDisplayName(me.displayName());
+        this.contactPersonId(me.personId());
+        this.contactJobTitle(me.jobTitle());
         this.contactFirstName(me.firstName());
         this.contactLastName(me.lastName());
         this.contactPhones(me.phone());
@@ -795,37 +838,62 @@ export class InstitutionalAgreementEditModel {
         //this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
         var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
-            return dataItem.name === me.type;
+            return dataItem.name === me.type();
+        });
+
+        var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+        dropdownlist.select(function (dataItem) {
+            return dataItem.name === me.Suffix();
+        });
+
+        var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+        dropdownlist.select(function (dataItem) {
+            return dataItem.name === me.Salutation();
         });
 
         $("#addAContact").fadeOut(500, function () {
             $("#addContact").fadeIn(500);
         });
     }
+
+    clearContactInfo(): void {
+        this.contactEmail('')
+        this.contactDisplayName('')
+        this.contactPersonId('')
+        this.contactJobTitle('')
+        this.contactFirstName('')
+        this.contactLastName('')
+        this.contactPhones('')
+        this.contactTypeOptionSelected('')
+        var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        dropdownlist.select(0);
+        var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+        dropdownlist.select(0);
+        var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+        dropdownlist.select(0);
+    }
+
     editContact(me): void {
         this.contactsIsEdit(false);
-        this.contacts()[this.contactIndex].email(this.contactEmail())
-        this.contacts()[this.contactIndex].firstName(this.contactFirstName())
-        this.contacts()[this.contactIndex].lastName(this.contactLastName())
-        this.contacts()[this.contactIndex].phone(this.contactPhones())
-        //this.contacts()[this.contactIndex].email(this.contactEmail())
-        //me.email(this.contactEmail());
-        //this.contactFirstName(me.firstName);
-        //this.contactLastName(me.lastName);
-        //this.contactPhones(me.phone());
-        ////this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
-        //var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-        //dropdownlist.select(function (dataItem) {
-        //    return dataItem.name === me.type;
-        //});
-
+        this.contacts()[this.contactIndex].email(this.contactEmail());
+        this.contacts()[this.contactIndex].jobTitle(this.contactJobTitle());
+        this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
+        this.contacts()[this.contactIndex].personId(this.contactPersonId());
+        this.contacts()[this.contactIndex].firstName(this.contactFirstName());
+        this.contacts()[this.contactIndex].lastName(this.contactLastName());
+        this.contacts()[this.contactIndex].phone(this.contactPhones());
+        this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
+        this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
+        this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
+        this.clearContactInfo();
         $("#addContact").fadeOut(500, function () {
             $("#addAContact").fadeIn(500);
         });
     }
 
     addContact(me, e): void {
-        // push to contact array
+        this.contacts.push(ko.mapping.fromJS({ jobTitle: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phone: ko.mapping.toJS(this.contactPhones()), email: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName() }));
+        this.clearContactInfo();
         $("#addContact").fadeOut(500, function () {
             $("#addAContact").fadeIn(500);
         });
