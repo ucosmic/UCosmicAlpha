@@ -23,23 +23,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        [GET("count")]
-        public HttpResponseMessage GetCount([FromUri] CountGraphicRequestModel model)
+        [GET("circle")]
+        [CacheHttpGet(Duration = 3600)]
+        public HttpResponseMessage GetCircle([FromUri] CircleGraphicRequestModel model)
         {
-            if (model == null || model.Text < 1)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            if (model.Side < 16 || model.Side > 48)
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Size must be between 16 and 48.", "text/plain");
 
-            // set up colors
+            if (model.Opacity < 0.0 || model.Opacity > 1.0)
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Opacity must be between 0.0 and 1.0.", "text/plain");
+
+            // compute colors
             var alpha = (int)Math.Ceiling(model.Opacity * 255);
             var strokeColor = Color.FromArgb(alpha, 255, 255, 255);
             var fillColor = Color.FromArgb(alpha, 204, 0, 0);
             var textColor = Color.FromArgb(alpha, 255, 255, 255);
 
+            // compute text
+            var text = string.IsNullOrWhiteSpace(model.Text) ? "" : model.Text.Trim();
+            var textPixels = 26;
+            if (text.Length == 3) textPixels = 18;
+            if (text.Length == 4) textPixels = 16;
+            if (text.Length > 4) text = "!";
+
             using (var strokeBrush = new SolidBrush(strokeColor))
             using (var fillBrush = new SolidBrush(fillColor))
             using (var textBrush = new SolidBrush(textColor))
             using (var textFormat = new StringFormat())
-            using (var textFont = new Font("Arial", 26, FontStyle.Bold, GraphicsUnit.Pixel))
+            using (var textFont = new Font("Arial", textPixels, FontStyle.Bold, GraphicsUnit.Pixel))
             using (var canvasImage = new Bitmap(48, 48))
             using (var canvasGraphics = Graphics.FromImage(canvasImage))
             {
@@ -49,23 +60,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 canvasGraphics.FillEllipse(fillBrush, 4, 4, 39, 39);
 
                 // text the circle
-                if (model.Text.HasValue && model.Text > 0)
+                if (!string.IsNullOrWhiteSpace(text))
                 {
                     canvasGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
                     var textBox = new Rectangle(0, 1, 48, 48);
                     textFormat.Alignment = StringAlignment.Center;
                     textFormat.LineAlignment = StringAlignment.Center;
-                    canvasGraphics.DrawString(model.Text.ToString(), textFont, textBrush, textBox, textFormat);
+                    canvasGraphics.DrawString(text, textFont, textBrush, textBox, textFormat);
                 }
 
                 // resize the graphic
-                using (var resizedImage = new Bitmap(24, 24))
+                using (var resizedImage = new Bitmap(model.Side, model.Side))
                 using (var resizedGraphics = Graphics.FromImage(resizedImage))
                 {
                     resizedGraphics.CompositingQuality = CompositingQuality.HighQuality;
                     resizedGraphics.SmoothingMode = SmoothingMode.HighQuality;
                     resizedGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    resizedGraphics.DrawImage(canvasImage, 0, 0, 24, 24);
+                    resizedGraphics.DrawImage(canvasImage, 0, 0, model.Side, model.Side);
 
                     // stream the graphic
                     var stream = new MemoryStream();

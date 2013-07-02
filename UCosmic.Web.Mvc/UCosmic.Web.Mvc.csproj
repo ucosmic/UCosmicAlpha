@@ -332,7 +332,7 @@
     <Compile Include="Models\Agreements\AgreementContactApiModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
-    <Compile Include="Models\Graphics\CountGraphicRequestModel.cs" />
+    <Compile Include="Models\Graphics\CircleGraphicRequestModel.cs" />
     <Compile Include="Models\LanguageExpertiseApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />

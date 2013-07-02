@@ -7,17 +7,17 @@
 
     <script type="text/javascript">
 
-        window.countGraphicValue = ko.observable(0);
+        window.countGraphicValue = ko.observable(-1);
         window.countGraphicOpacity = ko.observable(1);
         setInterval(function () {
             window.countGraphicValue(window.countGraphicValue() + 1);
-            if (window.countGraphicValue() > 99) {
-                window.countGraphicValue(1);
+            if (window.countGraphicValue() > 1299) {
+                window.countGraphicValue(0);
                 window.countGraphicOpacity(window.countGraphicOpacity() - 0.1);
                 if (window.countGraphicOpacity() < 0.1)
                     window.countGraphicOpacity(1);
             }
-            $('#placemark_graphic').attr('src', '/api/graphics/count?opacity=' + window.countGraphicOpacity() + '&text=' + window.countGraphicValue());
+            $('#placemark_graphic').attr('src', '/api/graphics/circle?side=24&opacity=' + window.countGraphicOpacity() + '&text=' + window.countGraphicValue());
         }, 50);
 
         function TempUpload() {
@@ -179,7 +179,7 @@
         </header>
         <div>
             <div style="background-color: #999; padding: 10px;">
-                <img id="placemark_graphic" alt="" src="/api/graphics/count?text=99" style="border: solid 1px transparent;" />
+                <img id="placemark_graphic" alt="" src="/api/graphics/circle?side=024&text=0" style="border: solid 1px transparent;" />
                 <span>Opacity: </span> <span data-bind="text: window.countGraphicOpacity"></span>
             </div>
         </div>
