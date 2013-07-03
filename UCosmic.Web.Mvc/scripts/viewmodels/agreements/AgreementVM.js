@@ -853,6 +853,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 $("#addContact").fadeOut(500, function () {
                     $("#addAContact").fadeIn(500);
                 });
+            } else {
+                this.validateContact.errors.showAllMessages(true);
             }
         };
         InstitutionalAgreementEditModel.prototype.addAContact = function (me, e) {
@@ -879,7 +881,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.addAFile = function () {
         };
         InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
-            if(confirm('Are you sure you want to remove "' + me.firstName + " " + me.lastName + '" as a contact from this agreement?')) {
+            if(confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
                 this.contacts.remove(me);
             }
             $("#addContact").fadeOut(500, function () {

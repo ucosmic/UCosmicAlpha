@@ -900,6 +900,8 @@ export class InstitutionalAgreementEditModel {
                 $("#addAContact").fadeIn(500);
             });
 
+        } else {
+            this.validateContact.errors.showAllMessages(true);
         }
     }
 
@@ -932,7 +934,7 @@ export class InstitutionalAgreementEditModel {
 
     removeContact(me, e): bool {
         if (confirm('Are you sure you want to remove "' +
-            me.firstName + " " + me.lastName +
+            me.firstName() + " " + me.lastName() +
             '" as a contact from this agreement?')) {
             this.contacts.remove(me);
         }
