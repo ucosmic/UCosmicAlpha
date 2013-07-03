@@ -20,12 +20,15 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class MyHomeController
+    public partial class RepsController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected MyHomeController(Dummy d) { }
+        public RepsController() { }
+
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        protected RepsController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -43,13 +46,13 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
 
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public MyHomeController Actions { get { return MVC.IdentityDeprecated.MyHome; } }
+        public RepsController Actions { get { return MVC.Reps; } }
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Area = "IdentityDeprecated";
+        public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "MyHome";
+        public readonly string Name = "Reps";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "MyHome";
+        public const string NameConst = "Reps";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -57,13 +60,13 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string Get = "Get";
+            public readonly string Settings = "Settings";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string Get = "Get";
+            public const string Settings = "Settings";
         }
 
 
@@ -77,18 +80,22 @@ namespace UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _SettingsSideBar = "_SettingsSideBar";
+                public readonly string Settings = "Settings";
             }
+            public readonly string _SettingsSideBar = "~/Views/Reps/_SettingsSideBar.cshtml";
+            public readonly string Settings = "~/Views/Reps/Settings.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_MyHomeController : UCosmic.Web.Mvc.Areas.IdentityDeprecated.Controllers.MyHomeController
+    public class T4MVC_RepsController : UCosmic.Web.Mvc.Controllers.RepsController
     {
-        public T4MVC_MyHomeController() : base(Dummy.Instance) { }
+        public T4MVC_RepsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Get()
+        public override System.Web.Mvc.ActionResult Settings()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Get);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Settings);
             return callInfo;
         }
 

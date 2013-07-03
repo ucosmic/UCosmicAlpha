@@ -67,11 +67,5 @@ namespace UCosmic.Web.Mvc.Controllers
             //TempData.Flash("This is the global press page.");
             return View();
         }
-
-        [GET("configure")]
-        public virtual ActionResult Configure()
-        {
-            return View();
-        }
     }
 }

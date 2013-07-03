@@ -312,6 +312,7 @@
     <Compile Include="ApiTestController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\RepsController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\ApiTestController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -355,28 +356,12 @@
     <Compile Include="ApiControllers\LanguagesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
-    <Compile Include="App_Start\_Deprecated\_AttributeRouting.cs" />
-    <Compile Include="App_Start\_Deprecated\_AttributeRoutingHttp.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateAffiliationController.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateEmailValueController.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Controllers\UpdateNameController.cs" />
-    <Compile Include="Areas\IdentityDeprecated\IdentityDeprecatedAreaRegistration.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Controllers\MyHomeController.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Models\MyHomeInfo.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Models\UpdateAffiliationForm.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Models\UpdateEmailValueForm.cs" />
-    <Compile Include="Areas\IdentityDeprecated\Models\UpdateNameForm.cs" />
-    <Compile Include="Areas\PeopleDeprecated\Controllers\PersonInfoController.cs" />
-    <Compile Include="Areas\PeopleDeprecated\Controllers\PersonNameController.cs" />
-    <Compile Include="Areas\PeopleDeprecated\Models\GenerateDisplayNameForm.cs" />
-    <Compile Include="Areas\PeopleDeprecated\Models\PersonInfoModel.cs" />
-    <Compile Include="Areas\PeopleDeprecated\PeopleDeprecatedAreaRegistration.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AgreementsController.cs" />
     <Compile Include="Controllers\MyProfileController.cs" />
@@ -406,29 +391,10 @@
     <Compile Include="Helpers\UserVoiceForumAttribute.cs" />
     <Compile Include="Helpers\ValidateSigningReturnUrlAttribute.cs" />
     <Compile Include="Helpers\WebRole.cs" />
-    <Compile Include="Helpers\_Deprecated\ExtensionMethods.cs" />
-    <Compile Include="Helpers\_Deprecated\NullDisplayCssClassHtml.cs" />
-    <Compile Include="Helpers\_Deprecated\ReturnUrlReferrerAttribute.cs" />
-    <Compile Include="Helpers\_Deprecated\UnitOfWorkAttribute.cs" />
     <Compile Include="HomeController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="IdentityController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="IdentityDeprecated.MyHomeController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="IdentityDeprecated.SharedController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="IdentityDeprecated.UpdateAffiliationController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="IdentityDeprecated.UpdateEmailValueController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="IdentityDeprecated.UpdateNameController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MyProfileApiModel.cs" />
@@ -455,21 +421,13 @@
     <Compile Include="Models\_Etc\TextValuePair.cs" />
     <Compile Include="Models\Users\UserApiModel.cs" />
     <Compile Include="Models\_Etc\UserVoiceLinkModel.cs" />
-    <Compile Include="Models\_Deprecated\BoundingBoxModel.cs" />
-    <Compile Include="Models\_Deprecated\CoordinatesModel.cs" />
     <Compile Include="MyProfileController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="PeopleDeprecated.PersonInfoController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PeopleDeprecated.PersonNameController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PeopleDeprecated.SharedController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="SamlMetadataController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -804,21 +762,6 @@
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\my-home.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\DisplayTemplates\EmailAddressField.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\DisplayTemplates\MyAffiliation.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\DisplayTemplates\MyEmailAddress.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Web.config" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\update-email-value.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\update-affiliation.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\update-name.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateNameForm.cshtml" />
-    <Content Include="Areas\PeopleDeprecated\Views\Web.config" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateAffiliationForm.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\EmployeeOrStudentAffiliation.cshtml" />
-    <Content Include="Areas\IdentityDeprecated\Views\Shared\EditorTemplates\UpdateEmailValueForm.cshtml" />
-    <Content Include="Areas\PeopleDeprecated\Views\_ViewStart.cshtml" />
     <None Include="content\kendo\2012.3.1114\kendo.black.less" />
     <None Include="content\kendo\2012.3.1114\kendo.blueopal.less" />
     <None Include="content\kendo\2012.3.1114\kendo.bootstrap.less" />
@@ -856,19 +799,6 @@
     <Content Include="images\placeholders\red-96x96.png" />
     <Content Include="images\placeholders\yellow-96x96.png" />
     <Content Include="images\samples\sample-photo-128.jpg" />
-    <Content Include="images\_deprecated\cancels\cancel-disabled-hover-16.png" />
-    <Content Include="images\_deprecated\cancels\cancel-disabled-hover-24.png" />
-    <Content Include="images\_deprecated\cancels\cancel-disabled-opaque-16.png" />
-    <Content Include="images\_deprecated\cancels\cancel-disabled-opaque-24.png" />
-    <Content Include="images\_deprecated\cancels\cancel-hot-12.png" />
-    <Content Include="images\_deprecated\cancels\cancel-hot-16.png" />
-    <Content Include="images\_deprecated\cancels\cancel-hot-24.png" />
-    <Content Include="images\_deprecated\checkmarks\checkmark-green-16.png" />
-    <Content Include="images\_deprecated\deletes\delete-hot-12.png" />
-    <Content Include="images\_deprecated\deletes\delete-hot-16.png" />
-    <Content Include="images\_deprecated\transparent.png" />
-    <Content Include="images\_deprecated\users\user-black-16.png" />
-    <Content Include="images\_deprecated\warning\warning-16.png" />
     <Content Include="scripts\app\App.js">
       <DependentUpon>App.ts</DependentUpon>
     </Content>
@@ -2384,10 +2314,6 @@
     <Content Include="scripts\viewmodels\users\User.min.js">
       <DependentUpon>User.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentNameViewModel.js" />
-    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentUrlViewModel.js" />
-    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentItemViewModel.js" />
-    <None Include="scripts\app\_deprecated\_knockout.binding-handlers.js" />
     <None Include="startup\disableTimeout.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2414,11 +2340,6 @@
     <Content Include="scripts\viewmodels\Spinner.min.js">
       <DependentUpon>Spinner.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\_deprecated\_EstablishmentSearchViewModel.js" />
-    <Content Include="scripts\viewmodels\_deprecated\_FlasherViewModel.js" />
-    <None Include="scripts\app\_deprecated\_app.js" />
-    <None Include="scripts\app\_deprecated\_fixed-scroll.js" />
-    <None Include="scripts\app\_deprecated\_side-swiper.js" />
     <Content Include="scripts\jquery\jquery-ui-1.9.2.js" />
     <Content Include="scripts\jquery\jquery-ui-1.9.2.min.js" />
     <Content Include="scripts\oss\jquery.unobtrusive-ajax.js" />
@@ -2438,22 +2359,9 @@
     <Content Include="scripts\oss\jquery.autosize.js" />
     <Content Include="scripts\oss\jquery.placeholder.js" />
     <Content Include="scripts\oss\jquery.placeholder.min.js" />
-    <None Include="scripts\app\_deprecated\_routes.js" />
     <None Include="startup\sql\CoreData.sql" />
     <None Include="startup\sql\DevelopmentData.sql" />
     <None Include="startup\sql\LanguagesData.sql" />
-    <None Include="scripts\_deprecated\areas\common\releases.js" />
-    <None Include="scripts\_deprecated\areas\identity\person-form.js" />
-    <None Include="scripts\_deprecated\areas\institutional-agreements\configuration-form.js" />
-    <None Include="scripts\_deprecated\areas\institutional-agreements\public-search.js" />
-    <None Include="scripts\_deprecated\areas\roles\roles-form.js" />
-    <None Include="scripts\_deprecated\jquery.simplemodal-1.4.1.js" />
-    <None Include="scripts\_deprecated\jquery.simplemodal.1.4.1.min.js" />
-    <None Include="scripts\_deprecated\jquery.validate.js" />
-    <None Include="scripts\_deprecated\jquery.validate.min.js" />
-    <None Include="scripts\_deprecated\jquery.validate.unobtrusive.js" />
-    <None Include="scripts\_deprecated\jquery.validate.unobtrusive.min.js" />
-    <None Include="scripts\_deprecated\ucosmic.js" />
     <Content Include="images\icons\closer\closer-16-red-disc.png" />
     <Content Include="images\icons\closer\closer-20-red-disc.png" />
     <Content Include="images\icons\closer\closer-24-dark.png" />
@@ -2573,15 +2481,6 @@
     <Content Include="styles\tenants\uc.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
-    <None Include="styles\_deprecated\default\button-gradient-active.gif" />
-    <None Include="styles\_deprecated\default\button-gradient-hover.gif" />
-    <None Include="styles\_deprecated\default\button-gradient.gif" />
-    <None Include="styles\_deprecated\default\drop-arrow-button-sized.png" />
-    <None Include="styles\_deprecated\default\drop-arrow.png" />
-    <None Include="styles\_deprecated\default\head-logo.png" />
-    <None Include="styles\_deprecated\default\head-row-shadow.png" />
-    <None Include="styles\_deprecated\screen-ie8.css" />
-    <None Include="styles\_deprecated\screen.css" />
     <None Include="styles\_resharper-unused.css" />
     <Content Include="styles\tinymce.css" />
     <Content Include="T4MVC.tt.settings.xml" />
@@ -2601,7 +2500,6 @@
     <Content Include="Views\Establishments\_FormUrlsSection.cshtml" />
     <None Include="styles\sass\sheets\maps.scss" />
     <Content Include="Views\Shared\_GoogleMapsToolsOverlay.cshtml" />
-    <Content Include="Views\Shared\_DeprecatedLayout.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
@@ -2633,8 +2531,7 @@
     <None Include="styles\tenants\testshib.org\layout.scss" />
     <Content Include="Views\MyProfile\ActivityEdit.cshtml" />
     <Content Include="Views\Users\_SearchSideBar.cshtml" />
-    <Content Include="Views\Shared\_ConfigurationSidebarNav.cshtml" />
-    <Content Include="Views\Home\Configure.cshtml" />
+    <Content Include="Views\Reps\_SettingsSideBar.cshtml" />
     <Content Include="Views\Errors\BadRequest.cshtml" />
     <Content Include="Views\Identity\SignOverFail.cshtml" />
     <Content Include="Views\Users\New.cshtml" />
@@ -2663,20 +2560,10 @@
     <Content Include="Views\Agreements\Owners.cshtml" />
     <Content Include="Views\MyProfile\_InternationalAffiliations.cshtml" />
     <Content Include="Views\MyProfile\InternationalAffiliationEdit.cshtml" />
+    <Content Include="Views\Reps\Settings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="images\_deprecated\microsoft-defaults\bullet.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList0.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList1.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList2.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList3.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList4.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList5.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList6.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList7.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList8.png" />
-    <Content Include="images\_deprecated\microsoft-defaults\orderedList9.png" />
     <None Include="scripts\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -2818,9 +2705,7 @@
   <ItemGroup>
     <Folder Include="App_Data\binary-data\" />
     <Folder Include="App_Data\mail\" />
-    <Folder Include="Areas\PeopleDeprecated\Views\Shared\" />
     <Folder Include="content\mail\" />
-    <Folder Include="scripts\_deprecated\areas\languages\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

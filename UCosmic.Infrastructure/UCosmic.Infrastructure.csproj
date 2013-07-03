@@ -150,7 +150,6 @@
     <Compile Include="Cache\AzureCacheProvider.cs" />
     <Compile Include="Configuration\ConnectionStringKey.cs" />
     <Compile Include="Cqrs\BaseViewManager.cs" />
-    <Compile Include="Cqrs\_Deprecated\_HybridMemoryAzureCacheProvider.cs" />
     <Compile Include="Cqrs\AzureCacheViewManager.cs" />
     <Compile Include="Cache\IProvideCache.cs" />
     <Compile Include="Cqrs\MemoryViewManager.cs" />

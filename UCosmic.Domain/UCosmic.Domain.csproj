@@ -356,7 +356,6 @@
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentUrlWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\Validation\EstablishmentConstraints.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentNameWhenIsOfficial.cs" />
-    <Compile Include="Domain\Establishments\_Deprecated\ValidateEstablishment.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableFile.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
     <Compile Include="Domain\Files\Commands\CreateProxyImageMimeTypeXRef.cs" />
@@ -422,7 +421,6 @@
     <Compile Include="Domain\Identity\Validation\MustFindUserByName.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveNullPrincipal.cs" />
     <Compile Include="Domain\People\Validation\MustNotHaveEmptyConfirmationToken.cs" />
-    <Compile Include="Domain\Identity\_Deprecated\ValidateUser.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyEmailValue.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyName.cs" />
     <Compile Include="Domain\People\Commands\UpdatePerson.cs" />
@@ -463,8 +461,6 @@
     <Compile Include="Domain\People\Validation\MustFindPersonById.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeClaimingStudentAffiliationForNonInstitutions.cs" />
     <Compile Include="Domain\People\Validation\MustNotHaveEmptyDisplayName.cs" />
-    <Compile Include="Domain\People\_Deprecated\ValidateAffiliation.cs" />
-    <Compile Include="Domain\People\_Deprecated\ValidatePerson.cs" />
     <Compile Include="Domain\Places\Queries\PlacesWithName.cs" />
     <Compile Include="Domain\Places\Queries\PlaceById.cs" />
     <Compile Include="Domain\Places\Queries\FilteredPlaces.cs" />

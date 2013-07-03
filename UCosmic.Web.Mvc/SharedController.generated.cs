@@ -35,8 +35,6 @@ namespace T4MVC
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
-                public readonly string _ConfigurationSidebarNav = "_ConfigurationSidebarNav";
-                public readonly string _DeprecatedLayout = "_DeprecatedLayout";
                 public readonly string _GoogleMapsScript = "_GoogleMapsScript";
                 public readonly string _GoogleMapsToolsOverlay = "_GoogleMapsToolsOverlay";
                 public readonly string _Layout = "_Layout";
@@ -48,8 +46,6 @@ namespace T4MVC
                 public readonly string _UserVoiceScript = "_UserVoiceScript";
                 public readonly string Error = "Error";
             }
-            public readonly string _ConfigurationSidebarNav = "~/Views/Shared/_ConfigurationSidebarNav.cshtml";
-            public readonly string _DeprecatedLayout = "~/Views/Shared/_DeprecatedLayout.cshtml";
             public readonly string _GoogleMapsScript = "~/Views/Shared/_GoogleMapsScript.cshtml";
             public readonly string _GoogleMapsToolsOverlay = "~/Views/Shared/_GoogleMapsToolsOverlay.cshtml";
             public readonly string _Layout = "~/Views/Shared/_Layout.cshtml";
