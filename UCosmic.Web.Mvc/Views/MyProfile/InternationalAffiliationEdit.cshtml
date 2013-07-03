@@ -1,7 +1,7 @@
 ﻿ @model UCosmic.Web.Mvc.Models.InternationalAffiliationModel
 
 @{
-    ViewBag.Title = "My Geographic Expertise";
+    ViewBag.Title = "My International Affiliation";
 }
 
 @section styles
@@ -98,7 +98,7 @@
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
                 <div class="group">
-                    <div id="geographic-expertise-edit" class="on-left from-top" style="width: 100%;">
+                    <div id="international-affiliation-edit" class="on-left from-top" style="width: 100%;">
 				        
                         <header>
                             <h1>@ViewBag.Title</h1>
@@ -107,24 +107,43 @@
                         <div style="margin-bottom: 38px">
                             
                             <!-- INSTITUTION -->
-                            <div>
-                                <span style="display: inline-block; vertical-align: middle">
-                                    <label for="title" class="non-required-field">Description</label>
-                                    <textarea rows="4" id="title" style="vertical-align: inherit;  width: 600px; margin-right: 8px" data-bind="value: description"></textarea>
+                            <div style="margin-bottom: 14px">
+                                <span>
+                                    <label for="institution" class="required-field" style="width: 200px">Institution/Organization</label>
+                                    <input type="text" id="institution" style="width: 500px; margin-right: 8px" data-bind="value: institution"></input>
                                 </span>
                             </div>
 
-                            <!-- LOCATONS -->
+                            <!-- COUNTRY/LOCATION -->
                             <div style="margin-bottom: 14px; display: inline-block; vertical-align: middle">
-                                <label for="location" class="required-field">Locations</label>
+                                <label for="location" class="required-field" style="width: 200px">Locations</label>
                                 <div style="display: inline-block; vertical-align: middle">
-                                    <select id="location" style="width: 600px; overflow-y:auto"></select>
+                                    <select id="location" style="width: 500px; overflow-y:auto"></select>
                                 </div>
                             </div>
                             <span data-bind="validationMessage: locations" class="validationMessage"></span>
                             
+                            <!-- POSITION -->
+                            <div style="margin-bottom: 14px">
+                                <span>
+                                    <label for="position" class="required-field" style="width: 200px">Position</label>
+                                    <input type="text" id="position" style="width: 500px; margin-right: 8px" data-bind="value: position"></input>
+                                </span>
+                            </div>
 
-
+                            <!-- DATES -->
+                            <div>
+                                <span style="display: inline-block">
+                                    <label for="from" class="required-field" style="width: 200px">From</label>
+                                    <select id="from" style="width: 100px" data-bind="value: from"></select>
+ 
+                                    <label for="onGoing" class="required-field">On Going</label>
+                                    <input type="checkbox" id="onGoing" style="" data-bind="value: onGoing" />
+ 
+                                    <label for="to" class="non-required-field">To</label>
+                                    <select id="to" style="width: 100px" data-bind="value: to"></select>
+                                </span>
+                            </div>
                         </div>
                             
                         <!-- BUTTONS -->

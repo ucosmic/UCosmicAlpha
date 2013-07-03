@@ -206,7 +206,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if ((activityId == 0) || (model == null))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var activity = Mapper.Map<Activity>(model);
@@ -341,7 +341,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
             if (documents == null)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             
             var model = Mapper.Map<ICollection<ActivityDocumentApiModel>>(documents);
@@ -387,7 +387,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 //string message = string.Format("Activity Id {0} not found", activityId);
                 //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             var provider = new MultipartMemoryStreamProvider();

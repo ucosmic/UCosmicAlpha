@@ -126,7 +126,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if (id == 0)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             try

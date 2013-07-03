@@ -84,7 +84,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                  (newModel.Locations == null) ||
                  (newModel.Locations.Count == 0) )
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var newLocations = new Collection<int>();
@@ -111,7 +111,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if ((expertiseId == 0) || (model == null))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             try

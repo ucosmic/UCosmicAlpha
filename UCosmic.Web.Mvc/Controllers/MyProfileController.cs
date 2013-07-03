@@ -52,5 +52,13 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = new LanguageExpertiseModel { ExpertiseId = expertiseId };
             return View(model);
         }
+
+        [Authorize]
+        [GET("my/international-affiliation/{expertiseId}")]
+        public virtual ActionResult InternationalAffiliationEdit(string affiliationId)
+        {
+            var model = new InternationalAffiliationModel { AffiliationId = affiliationId };
+            return View(model);
+        }
     }
 }

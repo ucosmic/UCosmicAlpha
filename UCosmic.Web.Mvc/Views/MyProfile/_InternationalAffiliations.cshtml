@@ -7,10 +7,10 @@
             </a>
         </h2>
     </header>
-    <div class="data">
-        <ul data-bind="template: { name: 'international-affiliations-template', foreach: items }">
-        </ul>
-    </div>
+    <table class="data">
+        <tbody data-bind="template: { name: 'international-affiliations-template', foreach: items }">
+        </tbody>
+    </table>
 </section>
 
 <!-- DIALOGS -->
@@ -20,9 +20,9 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="international-affiliations-template">
-    <li class="hover-hilite"  
-        data-bind="click: function (item, event) { $parent.editExpertise(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.internationalAffiliationEdit(id()) }">
-        <div style="width: 80%; display: inline-block">
+    <tr class="hover-hilite"  
+        data-bind="click: function (item, event) { $parent.editAffiliation(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.internationalAffiliationEdit(id()) }">
+        <td>
             <!-- INSTITUTION AND COUNTRY -->
             <div style="height: 30px">
                 <span style="font-size: large; font-weight: bold" data-bind="text: institution()"></span>
@@ -34,13 +34,13 @@
                 <span data-bind="text: position()"></span>
                 <span data-bind="text: $parent.formatDates( from(), to(), onGoing() )"></span>
             </div>
-        </div>
+        </td>
         <!-- 'Remove' BUTTON -->
-        <div style="display: inline-block; float: right">
+        <td style="text-align: center; vertical-align: middle">
             <a href="#" title="Remove affiliation" data-bind="click: function (data, event) { $parent.deleteAffiliation(data, event, $parent); }, clickBubble: false">
                 <img src="../../images/icons/minus/minus-24-red.png" alt="Remove affiliation" />
             </a>
-        </div>
-    </li>
+        </td>
+    </tr>
 </script>
 

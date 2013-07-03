@@ -258,7 +258,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if (model == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var createAffiliationCommand = new CreateMyAffiliation
@@ -301,7 +301,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if (model == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var updateAffiliationCommand = new UpdateMyAffiliation(User,
@@ -337,7 +337,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if (model == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             } 
             
             try

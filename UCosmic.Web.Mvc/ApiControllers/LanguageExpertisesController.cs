@@ -80,7 +80,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if ( newModel == null )
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var createLanguageExpertiseCommand = new CreateLanguageExpertise(
@@ -110,7 +110,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if ((expertiseId == 0) || (model == null))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             try

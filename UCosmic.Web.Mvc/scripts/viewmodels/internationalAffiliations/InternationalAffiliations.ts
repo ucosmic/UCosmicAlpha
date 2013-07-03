@@ -5,6 +5,7 @@
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
 /// <reference path="../../kendo/kendouiweb.d.ts" />
+/// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
 

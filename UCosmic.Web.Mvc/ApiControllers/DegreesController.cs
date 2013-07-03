@@ -80,7 +80,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if ( (newModel == null) ||
                  (newModel.Title == null) )
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             var createDeepDegreeCommand = new CreateDegree(User, newModel.Title)
@@ -104,7 +104,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             if ((degreeId == 0) || (model == null))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
             try
