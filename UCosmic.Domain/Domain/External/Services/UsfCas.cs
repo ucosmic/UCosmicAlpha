@@ -19,7 +19,7 @@ namespace UCosmic.Domain.External
             requestStream.Write(requestBody);
             requestStream.Close();
 
-            request.Timeout = 15000;
+            request.Timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfCASTGTTimeoutMS"]);
             var response = request.GetResponse();
 
             var responseStream = new StreamReader(response.GetResponseStream());

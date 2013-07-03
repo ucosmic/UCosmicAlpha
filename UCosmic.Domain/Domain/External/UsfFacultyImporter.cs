@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -214,7 +215,7 @@ namespace UCosmic.Domain.External
 #if false
                     while (hiearchyUpdateInProgress)
 #else
-                    const long timeoutMs = 2 /* min */ * 60 /* sec */ * 1000 /* ms */;
+                    long timeoutMs = Int64.Parse(ConfigurationManager.AppSettings["UsfDepartmentIdLookupThreadTimeoutMS"]);
                     while (hiearchyUpdateInProgress && (duration < timeoutMs))
 #endif
                     {
@@ -417,7 +418,7 @@ namespace UCosmic.Domain.External
                 /* If this user is not affiliated with USF, ignore. */
                 if (establishment.RevisionId == usf.RevisionId)
                 {
-                    Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Person.DefaultEmail);
+                    Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Name);
                     Import(@event.Principal, @event.UserId);
                 }
             }

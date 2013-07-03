@@ -38,7 +38,7 @@ namespace UCosmic.Domain.External
 
             request.Method = "GET";
 
-            request.Timeout = 2 /* min */ * 60 /* sec */ * 1000 /* ms */;
+            request.Timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentFacultyInfoServiceTimeoutMS"]);
             var response = request.GetResponse();
             _responseStream = response.GetResponseStream();
 

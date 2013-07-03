@@ -26,7 +26,7 @@ namespace UCosmic.Domain.External.Services
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
 
-            request.Timeout = 15000;
+            request.Timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentIdLookupServiceTimeoutMS"]);
             var response = request.GetResponse();
             _stream = response.GetResponseStream();
 
