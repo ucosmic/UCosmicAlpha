@@ -8,6 +8,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class PersonApiModel
     {
+        public int Id { get; set; }
         public bool IsDisplayNameDerived { get; set; }
         public string DisplayName { get; set; }
         public string Salutation { get; set; }
@@ -33,6 +34,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<Person, PersonApiModel>()
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.DefaultEmailAddress, o => o.MapFrom(s =>
                         (s.DefaultEmail != null) ? s.DefaultEmail.Value : null))
                 ;
