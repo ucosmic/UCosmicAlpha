@@ -6,20 +6,12 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class EstablishmentSearchInputModel
+    public class EstablishmentSearchInputModel : BaseSearchInputModel
     {
-        public EstablishmentSearchInputModel()
-        {
-            PageSize = 10;
-            PageNumber = 1;
-        }
-
         public int? Id { get; set; }
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
         public string OrderBy { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
     }
 
     public static class EstablishmentSearchInputProfiler

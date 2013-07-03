@@ -27,8 +27,8 @@ namespace UCosmic.Domain.People
             if (query == null) throw new ArgumentNullException("query");
 
             return _entities.Query<Person>()
-                            .EagerLoad(_entities, query.EagerLoad)
-                            .SingleOrDefault(p => p.RevisionId == query.Id);
+                .EagerLoad(_entities, query.EagerLoad)
+                .SingleOrDefault(p => p.RevisionId == query.Id);
         }
     }
 }

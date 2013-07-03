@@ -339,6 +339,8 @@
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
     <Compile Include="Models\DegreeApiModel.cs" />
     <Compile Include="Models\Identity\ActivityModel.cs" />
+    <Compile Include="Models\People\PeopleSearchInputModel.cs" />
+    <Compile Include="Models\People\PersonApiModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
     <Compile Include="Models\Users\RoleApiModel.cs" />
     <Compile Include="Models\Users\UserSearchInputModel.cs" />
@@ -350,6 +352,7 @@
     <Compile Include="Models\Establishments\EstablishmentTypeApiModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentPostModel.cs" />
     <Compile Include="Models\EstablishmentWelcomeMessageConfigurationModel.cs" />
+    <Compile Include="Models\_Etc\BaseSearchInputModel.cs" />
     <Compile Include="Models\_Etc\ValidationFailureApiModel.cs" />
     <Compile Include="Models\_Etc\ImageResizeRequestModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />
@@ -412,7 +415,6 @@
     <Compile Include="Models\Places\MapBoxModel.cs" />
     <Compile Include="Models\Places\MapPointModel.cs" />
     <Compile Include="Models\_Etc\PageOf.cs" />
-    <Compile Include="Models\PersonNameApiModel.cs" />
     <Compile Include="Models\Places\PlaceApiModel.cs" />
     <Compile Include="Models\Places\PlaceFilterInputModel.cs" />
     <Compile Include="Models\Identity\SamlServiceProviderEntityDescriptor.cs" />

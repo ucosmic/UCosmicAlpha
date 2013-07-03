@@ -3,7 +3,7 @@
     public enum StringMatchStrategy
     {
         Equals = 0,
-        Contains = 1,
-        StartsWith = 2,
+        StartsWith = 1,
+        Contains = 2,
     }
 }

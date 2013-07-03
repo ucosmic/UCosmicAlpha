@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
@@ -29,6 +30,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
             _deletePerson = deletePerson;
             _binaryData = binaryData;
+        }
+
+        [GET("")]
+        public virtual PageOfPersonApiModel Get([FromUri] PeopleSearchInputModel model)
+        {
+            var query = Mapper.Map<PeopleByCriteria>(model);
+            query.EagerLoad = PersonApiModelProfiler.EagerLoads;
+            var entities = _queryProcessor.Execute(query);
+            var models = Mapper.Map<PageOfPersonApiModel>(entities);
+            return models;
+        }
+
+        [GET("{personId}")]
+        public virtual PersonApiModel Get(int personId)
+        {
+            var entity = _queryProcessor.Execute(new PersonById(personId)
+            {
+                EagerLoad = PersonApiModelProfiler.EagerLoads,
+            });
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<PersonApiModel>(entity);
+            return model;
         }
 
         [GET("{id}/photo")]
@@ -71,27 +94,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{id}")]
         public HttpResponseMessage Delete(int id)
         {
-            if (id == 0)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
+            if (id == 0) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            try
-            {
-                var deleteCommand = new DeletePerson(User, id);
-                _deletePerson.Handle(deleteCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "Person Delete Error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
-
+            var deleteCommand = new DeletePerson(User, id);
+            _deletePerson.Handle(deleteCommand);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
     }

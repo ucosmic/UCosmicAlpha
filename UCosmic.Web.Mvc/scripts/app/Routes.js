@@ -380,6 +380,14 @@ var App;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
             (function (People) {
+                function get(personId) {
+                    var url = 'people';
+                    if(personId) {
+                        url += '/' + personId;
+                    }
+                    return makeUrl(url);
+                }
+                People.get = get;
                 function del(personId) {
                     var url = 'people/' + personId;
                     url = makeUrl(url);

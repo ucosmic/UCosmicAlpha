@@ -6,18 +6,10 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class RoleSearchInputModel
+    public class RoleSearchInputModel : BaseSearchInputModel
     {
-        public RoleSearchInputModel()
-        {
-            PageSize = 10;
-            PageNumber = 1;
-        }
-
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
     }
 
     public static class RoleSearchInputProfiler

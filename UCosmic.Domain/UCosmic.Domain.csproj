@@ -329,6 +329,7 @@
     <Compile Include="Domain\People\Commands\DeletePerson.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
+    <Compile Include="Domain\People\Queries\PeopleByCriteria.cs" />
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeSamePerson.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
@@ -443,10 +444,6 @@
     <Compile Include="Domain\People\Queries\EmailConfirmationByToken.cs" />
     <Compile Include="Domain\People\Queries\MyAffiliationByEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\MyEmailAddressByNumber.cs" />
-    <Compile Include="Domain\People\Queries\PersonByGuid.cs" />
-    <Compile Include="Domain\People\Queries\PeopleWithEmail.cs" />
-    <Compile Include="Domain\People\Queries\PeopleWithFirstName.cs" />
-    <Compile Include="Domain\People\Queries\PeopleWithLastName.cs" />
     <Compile Include="Domain\People\Queries\GenerateDisplayName.cs" />
     <Compile Include="Domain\People\Queries\MyPerson.cs" />
     <Compile Include="Domain\Languages\Commands\CreateLanguage.cs" />

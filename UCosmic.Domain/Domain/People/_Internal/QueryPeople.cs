@@ -9,10 +9,10 @@ namespace UCosmic.Domain.People
     {
         internal static Person ByEmail(this IQueryable<Person> queryable, string email)
         {
-            return queryable.WithEmail(email, StringMatchStrategy.Equals).SingleOrDefault();
+            return queryable.ByEmail(email, StringMatchStrategy.Equals).SingleOrDefault();
         }
 
-        internal static IQueryable<Person> WithEmail(this IQueryable<Person> queryable, string term, StringMatchStrategy matchStrategy)
+        internal static IQueryable<Person> ByEmail(this IQueryable<Person> queryable, string term, StringMatchStrategy matchStrategy)
         {
             queryable = queryable.Where(EmailValueMatches(term, matchStrategy));
             if (matchStrategy == StringMatchStrategy.Equals)
@@ -78,7 +78,7 @@ namespace UCosmic.Domain.People
             return queryable.Select(p => p.Suffix);
         }
 
-        internal static IQueryable<Person> WithFirstName(this IQueryable<Person> queryable, string term, StringMatchStrategy matchStrategy)
+        internal static IQueryable<Person> ByFirstName(this IQueryable<Person> queryable, string term, StringMatchStrategy matchStrategy)
         {
             return queryable.Where(FirstNameMatches(term, matchStrategy));
         }
@@ -99,7 +99,7 @@ namespace UCosmic.Domain.People
             throw new NotSupportedException(string.Format("StringMatchStrategy '{0}' is not supported.", matchStrategy));
         }
 
-        internal static IQueryable<Person> WithLastName(this IQueryable<Person> queryable, string term, StringMatchStrategy matchStrategy)
+        internal static IQueryable<Person> ByLastName(this IQueryable<Person> queryable, string term, StringMatchStrategy matchStrategy)
         {
             return queryable.Where(LastNameMatches(term, matchStrategy));
         }

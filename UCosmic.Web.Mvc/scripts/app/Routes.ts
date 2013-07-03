@@ -123,14 +123,14 @@ module App.Routes {
 
         export module Places {
 
-            export function get(placeId?: number): string {
+            export function get (placeId?: number): string {
                 var url = 'places';
                 if (placeId) url += '/' + placeId;
                 return makeUrl(url);
             }
 
             export module ByCoordinates {
-                export function get(latitude: number, longitude: number): string {
+                export function get (latitude: number, longitude: number): string {
                     var url = 'places/by-coordinates/' + latitude + '/' + longitude;
                     return makeUrl(url);
                 }
@@ -145,7 +145,7 @@ module App.Routes {
                 return makeUrl(url);
             }
 
-            export function getChildren (establishmentId: number, sort: bool): string {
+            export function getChildren(establishmentId: number, sort: bool): string {
                 var url = 'establishments/' + establishmentId + '/children';
                 return makeUrlWithParams(url) + "sort=" + sort;
             }
@@ -299,7 +299,7 @@ module App.Routes {
                 }
             }
         }
-        
+
         export module My {
             export module Profile {
                 export function get (): string {
@@ -310,9 +310,9 @@ module App.Routes {
                 }
                 export module Affiliation {
                     export function base(): string {
-                        return makeUrl( 'my/profile/affiliation' );
+                        return makeUrl('my/profile/affiliation');
                     }
-                    export function get(): string {
+                    export function get (): string {
                         return base();
                     }
                     export function post(): string {
@@ -326,7 +326,7 @@ module App.Routes {
                     }
                 }
                 export module Photo {
-                    export function get(params?: any): string {
+                    export function get (params?: any): string {
                         var url = post();
                         if (params) url += '?' + $.param(params);
                         return url;
@@ -345,14 +345,21 @@ module App.Routes {
         }
 
         export module People {
-            export function del( personId: number ): string {
+
+            export function get(personId?: number): string {
+                var url = 'people';
+                if (personId) url += '/' + personId;
+                return makeUrl(url);
+            }
+
+            export function del(personId: number): string {
                 var url = 'people/' + personId;
-                url = makeUrl( url );
+                url = makeUrl(url);
                 return url;
             }
 
             export module Photo {
-                export function get(personId: number, params?: any): string {
+                export function get (personId: number, params?: any): string {
                     var url = 'people/' + personId + '/photo';
                     url = makeUrl(url);
                     if (params) url += '?' + $.param(params);
@@ -407,11 +414,11 @@ module App.Routes {
                 return makeUrl('activities');
             }
 
-            export function getEdit (activityId: number): string {
+            export function getEdit(activityId: number): string {
                 return makeUrl('activities/' + activityId + "/edit");
             }
 
-            export function getEditState (activityId: number): string {
+            export function getEditState(activityId: number): string {
                 return makeUrl('activities/' + activityId + "/edit-state");
             }
 
@@ -506,7 +513,7 @@ module App.Routes {
                 return url;
             }
 
-            export function getProficiencies (): string {
+            export function getProficiencies(): string {
                 return makeUrl('language-expertises/proficiencies');
             }
 
@@ -589,7 +596,7 @@ module App.Routes {
             }
         } // Affiliations
 
-        export module Uploads{
+        export module Uploads {
             export function post(): string {
                 return makeUrl('uploads');
             }
@@ -613,7 +620,7 @@ module App.Routes {
         export module Establishments {
             export function show(establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);
-            } 
+            }
             export function created(params?: any) {
                 var url = makeUrl('establishments/created');
                 if (params) url += '?' + $.param(params);
@@ -642,43 +649,42 @@ module App.Routes {
             }
         }
 
-        export module My
-        {
+        export module My {
             export module Profile {
                 export function get (tab?: string) {
-                    var url = makeUrl( 'my/profile' );
+                    var url = makeUrl('my/profile');
                     // Workaround until we figure out how to go from ?tab to #/
                     //if (tab != null) {
                     //    url = makeUrlWithParams( 'my/profile' ) + "tab=" + tab;
                     //}
                     return url;
                 }
-                export function post (startEditing: bool, startTabName: string) {
-                    var url = makeUrlWithParams( 'my/profile' ) + "startEditing=" + startEditing + "&startTabName=" + startTabName;
+                export function post(startEditing: bool, startTabName: string) {
+                    var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
                     return url;
                 }
-                export function activityEdit( activityId: string ) {
-                    var url = makeUrl( 'my/activity/' );
+                export function activityEdit(activityId: string) {
+                    var url = makeUrl('my/activity/');
                     return url + activityId;
                 }
                 export function geographicExpertiseEdit(expertiseId: string) {
-                    var url = makeUrl( 'my/geographic-expertise/' );
+                    var url = makeUrl('my/geographic-expertise/');
                     return url + expertiseId;
                 }
-                export function languageExpertiseEdit( expertiseId: string ) {
-                    var url = makeUrl( 'my/language-expertise/' );
+                export function languageExpertiseEdit(expertiseId: string) {
+                    var url = makeUrl('my/language-expertise/');
                     return url + expertiseId;
                 }
-                export function internationalAffiliationEdit( affiliationId: string ) {
-                    var url = makeUrl( 'my/international-affiliation/' );
+                export function internationalAffiliationEdit(affiliationId: string) {
+                    var url = makeUrl('my/international-affiliation/');
                     return url + affiliationId;
                 }
-                export function degreeEdit( degreeId: string ) {
-                    var url = makeUrl( 'my/degree/' );
+                export function degreeEdit(degreeId: string) {
+                    var url = makeUrl('my/degree/');
                     return url + degreeId;
                 }
-                export function affiliationEdit( affiliationId: string ) {
-                    var url = makeUrl( 'my/affiliation/' );
+                export function affiliationEdit(affiliationId: string) {
+                    var url = makeUrl('my/affiliation/');
                     return url + affiliationId;
                 }
             }
