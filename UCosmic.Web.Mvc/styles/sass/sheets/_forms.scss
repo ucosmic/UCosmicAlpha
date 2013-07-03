@@ -174,6 +174,10 @@ select.inline {
     }
 }
 
+.radioText{
+    font-size: 15px;
+}
+
 a.addLink{ 
     padding: 5px 0px 0px 5px;
     text-decoration: none !important;
@@ -565,6 +569,19 @@ section {
         background-color: #fff;
         min-height: 64px;
         margin: 0 0 0 24px;
+        padding: 8px;
+    }
+}
+
+.typed-item2{
+	@extend .typed-item;
+
+    background-color:#fff;
+    border: $typed-item-bg-color 1px solid;
+    > .item {
+        margin: 0 0 0 0;
+        background-color: #fff;
+        min-height: 64px;
         padding: 8px;
     }
 }

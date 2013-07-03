@@ -64,6 +64,7 @@ export class InstitutionalAgreementEditModel {
         this.removeContact = <() => bool> this.removeContact.bind(this);
         this.removePhone = <() => void > this.removePhone.bind(this);
         this.addPhone = <() => void > this.addPhone.bind(this);
+        this.removeFile = <() => void > this.removeFile.bind(this);
         this._setupValidation = <() => void > this._setupValidation.bind(this);
         
         this.hideOtherGroups();
@@ -98,12 +99,12 @@ export class InstitutionalAgreementEditModel {
                 new this.selectConstructor("work", "work"),
                 new this.selectConstructor("mobile", "mobile")
         ]);
-        this.visibility = ko.observableArray([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("public", "public"),
-                new this.selectConstructor("private", "private"),
-                new this.selectConstructor("protected", "protected")
-        ]);
+        //this.visibility = ko.observableArray([
+        //        new this.selectConstructor("[None]", ""),
+        //        new this.selectConstructor("public", "public"),
+        //        new this.selectConstructor("private", "private"),
+        //        new this.selectConstructor("protected", "protected")
+        //]);
         this._setupValidation();
     }
     selectConstructor = function (name: string, id: string) {
@@ -118,16 +119,6 @@ export class InstitutionalAgreementEditModel {
         this.visibility = visibility;
         this.id = id;
     };
-    //contactConstructor = function (jobTitle: string, firstName: string, lastName: string, id: number, personId: string, phone: phoneNumber, email: string, type: string) {
-    //    this.jobTitle = jobTitle;
-    //    this.firstName = firstName;
-    //    this.lastName = lastName;
-    //    this.id = id;
-    //    this.personId = personId;
-    //    this.phone = phone;
-    //    this.email = email;
-    //    this.type = type;
-    //};
 
     visibility = ko.observableArray();
 
@@ -235,9 +226,9 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateFiles(): void {
-        this.files.push(new this.fileConstructor("asdf", "asdf2", "asdf3", 5))
-        this.files.push(new this.fileConstructor("asdf4", "asdf5", "asdf6", 6))
-        this.files.push(new this.fileConstructor("asdf9", "asdf8", "asdf7", 7))
+        this.files.push(new this.fileConstructor("asdf", "asdf2", "Private", 5))
+        this.files.push(new this.fileConstructor("asdf4", "asdf5", "Protected", 6))
+        this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7))
     }
 
 
@@ -918,6 +909,20 @@ export class InstitutionalAgreementEditModel {
         });
     }
 
+    removeContact(me, e): bool {
+        if (confirm('Are you sure you want to remove "' +
+            me.firstName() + " " + me.lastName() +
+            '" as a contact from this agreement?')) {
+            this.contacts.remove(me);
+        }
+        $("#addContact").fadeOut(500, function () {
+            $("#addAContact").fadeIn(500);
+        });
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    };
+
     removePhone(me, e): void {
         this.contactPhones.remove(me);
         e.preventDefault();
@@ -932,19 +937,14 @@ export class InstitutionalAgreementEditModel {
         // push to contact array
     }
 
-    removeContact(me, e): bool {
-        if (confirm('Are you sure you want to remove "' +
-            me.firstName() + " " + me.lastName() +
-            '" as a contact from this agreement?')) {
-            this.contacts.remove(me);
+    removeFile(me, e): void {
+        if (confirm('Are you sure you want to remove this file from this agreement?')) {
+            this.files.remove(me);
         }
-        $("#addContact").fadeOut(500, function () {
-            $("#addAContact").fadeIn(500);
-        });
         e.preventDefault();
         e.stopPropagation();
-        return false;
-    };
+    }
+
 
     addParticipant(establishmentResultViewModel): void {
         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

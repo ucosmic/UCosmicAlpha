@@ -7,16 +7,15 @@
                 <div data-bind="visible: isBound" style="display: none;">
                     <ul data-bind="foreach: files">
                         <li data-bind="element: 'fileE1'">
-                            <div class="typed-item">
+                            <div class="typed-item2">
                                 <a title="Remove this file" data-bind="click: $root.removeFile"><i class="red minus on-right"></i></a>
                                 
                                 <div class="item">
                                     <div>
-                                        <strong data-bind="text: name + ' ' + path"></strong>
-                                        <select  data-bind="options: $root.visibility(), 
-							                optionsValue: 'id',
-							                optionsText: 'name', value: visibility">
-                                        </select>
+                                        <strong data-bind="text: name + ' ' + path"></strong><br/>
+                                        <input name="fileVisibility" type="radio" class="radio" value="Public" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id}" /><span class="radioText"><strong>Public:</strong> anyone on the Internet to find this agreement.</span><br/>
+                                        <input name="fileVisibility" type="radio" class="radio" value="Protected" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id}"/><span class="radioText"><strong>Protected:</strong> Hide this agreement from the public, but allow my employees and students to find it.</span><br/>
+                                        <input name="fileVisibility" type="radio" class="radio" value="Private" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id}"/><span class="radioText"><strong>Private:</strong> Allow only UCosmic administrators to find this agreement.</span>
                                     </div>
                                 </div>
                             </div>

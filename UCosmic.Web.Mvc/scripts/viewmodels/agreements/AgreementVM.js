@@ -432,6 +432,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.removeContact = this.removeContact.bind(this);
             this.removePhone = this.removePhone.bind(this);
             this.addPhone = this.addPhone.bind(this);
+            this.removeFile = this.removeFile.bind(this);
             this._setupValidation = this._setupValidation.bind(this);
             this.hideOtherGroups();
             this.bindSearch();
@@ -463,12 +464,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 new this.selectConstructor("work", "work"), 
                 new this.selectConstructor("mobile", "mobile")
             ]);
-            this.visibility = ko.observableArray([
-                new this.selectConstructor("[None]", ""), 
-                new this.selectConstructor("public", "public"), 
-                new this.selectConstructor("private", "private"), 
-                new this.selectConstructor("protected", "protected")
-            ]);
             this._setupValidation();
         }
         InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {
@@ -489,9 +484,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
-            this.files.push(new this.fileConstructor("asdf", "asdf2", "asdf3", 5));
-            this.files.push(new this.fileConstructor("asdf4", "asdf5", "asdf6", 6));
-            this.files.push(new this.fileConstructor("asdf9", "asdf8", "asdf7", 7));
+            this.files.push(new this.fileConstructor("asdf", "asdf2", "Private", 5));
+            this.files.push(new this.fileConstructor("asdf4", "asdf5", "Protected", 6));
+            this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7));
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
             var newPhone = ko.mapping.fromJS([]);
@@ -867,6 +862,17 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 $("#addAContact").fadeIn(500);
             });
         };
+        InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
+            if(confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
+                this.contacts.remove(me);
+            }
+            $("#addContact").fadeOut(500, function () {
+                $("#addAContact").fadeIn(500);
+            });
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
         InstitutionalAgreementEditModel.prototype.removePhone = function (me, e) {
             this.contactPhones.remove(me);
             e.preventDefault();
@@ -880,16 +886,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.addAFile = function () {
         };
-        InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
-            if(confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
-                this.contacts.remove(me);
+        InstitutionalAgreementEditModel.prototype.removeFile = function (me, e) {
+            if(confirm('Are you sure you want to remove this file from this agreement?')) {
+                this.files.remove(me);
             }
-            $("#addContact").fadeOut(500, function () {
-                $("#addAContact").fadeIn(500);
-            });
             e.preventDefault();
             e.stopPropagation();
-            return false;
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

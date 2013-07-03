@@ -204,6 +204,9 @@ select.inline {
   background-image: linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(StartColorStr='#dbdbdb', EndColorStr='#f2f2f2'); }
 
+.radioText {
+  font-size: 15px; }
+
 a.addLink {
   padding: 5px 0px 0px 5px;
   text-decoration: none !important; }
@@ -556,7 +559,7 @@ section {
     float: right;
     padding-left: 4px; }
 
-.typed-item {
+.typed-item, .typed-item2 {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -564,7 +567,7 @@ section {
   width: 100%;
   padding: 1px;
   background-color: #502d0e; }
-  .typed-item > .type {
+  .typed-item > .type, .typed-item2 > .type {
     position: relative;
     width: 80px;
     height: 0;
@@ -585,9 +588,18 @@ section {
     color: white;
     text-transform: uppercase;
     font-family: Arial, Helvetica, sans-serif; }
-  .typed-item > .item {
+  .typed-item > .item, .typed-item2 > .item {
     background-color: #fff;
     min-height: 64px;
     margin: 0 0 0 24px;
+    padding: 8px; }
+
+.typed-item2 {
+  background-color: #fff;
+  border: #502d0e 1px solid; }
+  .typed-item2 > .item {
+    margin: 0 0 0 0;
+    background-color: #fff;
+    min-height: 64px;
     padding: 8px; }
 
