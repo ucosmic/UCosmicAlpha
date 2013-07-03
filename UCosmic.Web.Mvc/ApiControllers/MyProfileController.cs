@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,7 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
 using Newtonsoft.Json;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 
@@ -71,6 +73,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
             // only need the destination type int he Map generic argument.
             // the source type is implicit based on the method argument.
             var model = Mapper.Map<MyProfileApiModel>(person);
+
+            /* Does the default establishment have campuses? */
+            var defaultEstablishmentId = person.DefaultAffiliation.EstablishmentId;
+            var campusEstablishmentType = _entities.Get<EstablishmentType>().Single(t => t.EnglishName == "University Campus");
+            model.DefaultEstablishmentHasCampuses = _entities.Get<Establishment>()
+                                                             .Count(
+                                                                 e =>
+                                                                 (e.Parent.RevisionId == defaultEstablishmentId) &&
+                                                                 (e.Type.RevisionId == campusEstablishmentType.RevisionId)) > 0;
 
             return model;
         }
@@ -269,7 +280,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var responseMessage = new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
+                    Content = new StringContent("An error occurred creating affiliation. It is possible this affiliation already exists."),
                     ReasonPhrase = "Affiliation Create Error"
                 };
                 throw new HttpResponseException(responseMessage);                

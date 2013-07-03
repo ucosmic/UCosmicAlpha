@@ -89,7 +89,7 @@ module ViewModels.My {
         facultyRanks: KnockoutObservableFacultyRankModelArray = ko.observableArray();
         facultyRankId: KnockoutObservableAny = ko.observable(null);
 
-        isCampusVisible: KnockoutObservableBool = ko.observable(false);
+        defaultEstablishmentHasCampuses: KnockoutObservableBool = ko.observable(false);
 
         preferredTitle: KnockoutObservableString = ko.observable();
         affiliations: KnockoutObservableArray = ko.observableArray();
@@ -176,13 +176,7 @@ module ViewModels.My {
                     this._setupValidation();
                     this._setupKendoWidgets();
                     this._setupDisplayNameDerivation();
-                    this._setupCardComputeds();
-
-                    for( var i = 0; i < this.affiliations().length; i += 1) {
-                        if (this.affiliations()[i].campusId() != null) {
-                            this.isCampusVisible(true);
-                        }
-                    }    
+                    this._setupCardComputeds();    
 
                     //debugger;
                     //if (this.startInEdit()) {
@@ -693,15 +687,15 @@ module ViewModels.My {
             } );
         }
 
-        public editAffiliation(data: Affiliation, event: any) {
+        public editAffiliation( data: Affiliation, event: any ) {
             var me = this;
 
             /* Get default affiliation */
             var defaultAffiliation = null;
             var i = 0;
-            while ((i < this.affiliations().length) && !this.affiliations()[i].isDefault)
-                { i += 1; }
-            if (i < this.affiliations().length) {
+            while ( ( i < this.affiliations().length ) && !this.affiliations()[i].isDefault )
+            { i += 1; }
+            if ( i < this.affiliations().length ) {
                 defaultAffiliation = this.affiliations()[i];
             }
             else {
@@ -719,24 +713,61 @@ module ViewModels.My {
                         var item = this.dataItem( this.selectedIndex );
                         if ( item == null ) {
                             this.text( "" );
+                            $( "#editAffiliationDepartmenDiv" ).hide();
                         }
+                        else {
+                            $( "#editAffiliationDepartmenDiv" ).show();
+                        }
+                    }
+                    else {
+                        $( "#editAffiliationDepartmenDiv" ).hide();
                     }
                 }
             } );
 
+            var collegeDropListDataSource = null;
 
-            $( "#editAffiliationCollegeDropList" ).kendoDropDownList({
-                    dataTextField: "officialName",
-                    dataValueField: "id",
-                    change: function (e) {
-                        var selectedIndex = e.sender.selectedIndex;
-                        if ( selectedIndex != -1 ) {
-                            var item = this.dataItem( selectedIndex);
-                            if ( item != null ) {
+            if ( !this.defaultEstablishmentHasCampuses() ) {
+                collegeDropListDataSource = new kendo.data.DataSource( {
+                    transport: {
+                        read: {
+                            url: App.Routes.WebApi.Establishments.getChildren( defaultAffiliation.establishmentId(), true )
+                        }
+                    }
+                } );
+            }
+
+            $( "#editAffiliationCollegeDropList" ).kendoDropDownList( {
+                dataTextField: "officialName",
+                dataValueField: "id",
+                dataSource: collegeDropListDataSource,
+                change: function ( e ) {
+                    var selectedIndex = e.sender.selectedIndex;
+                    if ( selectedIndex != -1 ) {
+                        var item = this.dataItem( selectedIndex );
+                        if ( item != null ) {
+                            var dataSource = new kendo.data.DataSource( {
+                                transport: {
+                                    read: {
+                                        url: App.Routes.WebApi.Establishments.getChildren( item.id, true )
+                                    }
+                                }
+                            } );
+
+                            $( "#editAffiliationDepartmentDropList" ).data( "kendoDropDownList" ).setDataSource( dataSource );
+                        }
+                    }
+                },
+                dataBound: function ( e ) {
+                    if ( ( this.selectedIndex != null ) && ( this.selectedIndex != -1 ) ) {
+                        var item = this.dataItem( this.selectedIndex );
+                        if ( item != null ) {
+                            var collegeId = item.id;
+                            if ( collegeId != null ) {
                                 var dataSource = new kendo.data.DataSource( {
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren( item.id, true )
+                                            url: App.Routes.WebApi.Establishments.getChildren( collegeId, true )
                                         }
                                     }
                                 } );
@@ -744,46 +775,25 @@ module ViewModels.My {
                                 $( "#editAffiliationDepartmentDropList" ).data( "kendoDropDownList" ).setDataSource( dataSource );
                             }
                         }
-                    },
-                    dataBound: function ( e ) {   
-                        if ( (this.selectedIndex != null) && (this.selectedIndex != -1) ) {                           
-                            var item = this.dataItem( this.selectedIndex );
-                            if ( item != null ) {
-                                var collegeId = item.id;
-                                if ( collegeId != null ) {
-                                    var dataSource = new kendo.data.DataSource( {
-                                        transport: {
-                                            read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren( collegeId, true )
-                                            }
-                                        }
-                                    } );
-
-                                    $( "#editAffiliationDepartmentDropList" ).data( "kendoDropDownList" ).setDataSource( dataSource );
-                                    $( "#editAffiliationDepartmenDiv" ).show();
-                                }
-                            }
-                            else {
-                                $( "#editAffiliationDepartmenDiv" ).hide();
-                            }
-                        }
                     }
-            });
+                }
+            } );
 
-            $( "#editAffiliationCampusDropList" ).kendoDropDownList({
+            if ( this.defaultEstablishmentHasCampuses() ) {
+                $( "#editAffiliationCampusDropList" ).kendoDropDownList( {
                     dataTextField: "officialName",
                     dataValueField: "id",
-                    dataSource: new kendo.data.DataSource({
+                    dataSource: new kendo.data.DataSource( {
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), false)
+                                url: App.Routes.WebApi.Establishments.getChildren( defaultAffiliation.establishmentId(), false )
                             }
                         }
-                    }),
-                    change: function (e) {
+                    } ),
+                    change: function ( e ) {
                         var selectedIndex = e.sender.selectedIndex;
-                        if ( (selectedIndex != null) && (selectedIndex != -1) ) {
-                            var item = this.dataItem( selectedIndex);
+                        if ( ( selectedIndex != null ) && ( selectedIndex != -1 ) ) {
+                            var item = this.dataItem( selectedIndex );
                             if ( item != null ) {
                                 var dataSource = new kendo.data.DataSource( {
                                     transport: {
@@ -797,8 +807,8 @@ module ViewModels.My {
                             }
                         }
                     },
-                    dataBound: function ( e ) {  
-                        if ( (this.selectedIndex != null) && (this.selectedIndex != -1) ) {                          
+                    dataBound: function ( e ) {
+                        if ( ( this.selectedIndex != null ) && ( this.selectedIndex != -1 ) ) {
                             var item = this.dataItem( this.selectedIndex );
                             if ( item != null ) {
                                 var campusId = item.id;
@@ -815,30 +825,36 @@ module ViewModels.My {
                                 }
                             }
                             else {
-                                $( "#editAffiliationCollegeDropList" ).data( "kendoDropDownList" ).setDataSource(null);
+                                $( "#editAffiliationCollegeDropList" ).data( "kendoDropDownList" ).setDataSource( null );
                             }
                         }
                     }
-            });
+                } );
+            }
 
-
-            $( "#editAffiliationFacultyRankDropList" ).kendoDropDownList({
-                dataTextField: "rank",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    transport: {
-                        read: {
-                            url: App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get()
+            if ( (this.facultyRanks() != null) && (this.facultyRanks().length > 0) ) {
+                $( "#editAffiliationFacultyRankDropList" ).kendoDropDownList( {
+                    dataTextField: "rank",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource( {
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get()
+                            }
                         }
-                    }
-                })
-            });
+                    } )
+                } );
+            }
+
+            var dialogHeight: number = 300;
+            dialogHeight -= this.defaultEstablishmentHasCampuses() ? 0 : 40;
+            dialogHeight -= (this.facultyRanks() != null) && (this.facultyRanks().length > 0) ? 0 : 40;
 
             $( "#editAffiliationDialog" ).dialog( {
                 dialogClass: "no-close",
                 title: (data == null) ? "Create Affiliation" : "Edit Affiliation",
                 width: 750,
-                height: 300,
+                height: dialogHeight,
                 resizable: false,
                 draggable: true,
                 modal: true,
@@ -863,7 +879,7 @@ module ViewModels.My {
                         buttons.push(deleteButton);
                         $( this ).dialog( 'option', 'buttons', buttons );
 
-                        if ( data.campusId() != null ) {
+                        if ( me.defaultEstablishmentHasCampuses() && data.campusId() != null ) {
                             $( "#editAffiliationCampusDropList" ).data( "kendoDropDownList" ).value( data.campusId() );
                         }
                         if ( data.collegeId() != null ) {
@@ -872,7 +888,7 @@ module ViewModels.My {
                         if ( data.departmentId() != null ) {
                             $( "#editAffiliationDepartmentDropList" ).data( "kendoDropDownList" ).value( data.departmentId() );
                         }
-                        if ( data.facultyRankId() != null ) {
+                        if ( me.isFacultyRankVisible() && data.facultyRankId() != null ) {
                             $( "#editAffiliationFacultyRankDropList" ).data( "kendoDropDownList" ).value( data.facultyRankId() );
                         }
                     }
@@ -894,18 +910,18 @@ module ViewModels.My {
             return item;
         }
 
-        private saveAffiliation(affiliationId: number, establishmentId: number): void {
+        private saveAffiliation( affiliationId: number, establishmentId: number ): void {
             var me = this;
             var campusId1 = null;
             var collegeId1 = null;
             var departmentId1 = null;
             var facultyRankId1 = null;
 
-            var item1 = me.GetDropListSelectedItem( "editAffiliationCampusDropList" )
-            if ( item1 != null )
-            { campusId1 = item1.id; }
-            else
-            { $( this ).dialog( "close" ); }
+            if ( this.defaultEstablishmentHasCampuses() ) {
+                var item1 = me.GetDropListSelectedItem( "editAffiliationCampusDropList" )
+                if ( item1 != null )
+                    { campusId1 = item1.id; }
+            }
 
             item1 = me.GetDropListSelectedItem( "editAffiliationCollegeDropList" )
             if ( item1 != null ) { collegeId1 = item1.id; }
@@ -913,8 +929,10 @@ module ViewModels.My {
             item1 = me.GetDropListSelectedItem( "editAffiliationDepartmentDropList" )
             if ( item1 != null ) { departmentId1 = item1.id; }
 
-            item1 = me.GetDropListSelectedItem( "editAffiliationFacultyRankDropList" )
-            if ( item1 != null ) { facultyRankId1 = item1.id; }
+            if ( ( this.facultyRanks() != null ) && ( this.facultyRanks().length > 0 ) ) {
+                item1 = me.GetDropListSelectedItem( "editAffiliationFacultyRankDropList" )
+                if ( item1 != null ) { facultyRankId1 = item1.id; }
+            }
 
             var affiliation = {
                 id: affiliationId,

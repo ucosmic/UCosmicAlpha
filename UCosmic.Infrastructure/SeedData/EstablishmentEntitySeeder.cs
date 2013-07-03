@@ -775,15 +775,23 @@ namespace UCosmic.SeedData
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.artsci.uc.edu",
             });
-            Seed(new SeedEstablishment
+            var college = Seed(new SeedEstablishment
             {
-                OfficialName = "College of Business, University of Cincinnati",
+                OfficialName = "Carl H. Lindner College of Business",
                 IsMember = true,
                 ParentId = uc.RevisionId,
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                     KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.business.uc.edu",
             });
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "Operations, Business Analytics and Information Systems",
+                    IsMember = true,
+                    ParentId = college.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                        KnownEstablishmentType.Department.AsSentenceFragment())).RevisionId
+                });
             Seed(new SeedEstablishment
             {
                 OfficialName = "College Conservatory of Music, University of Cincinnati",

@@ -49,15 +49,14 @@ namespace UCosmic.SeedData
             if (establishment == null) throw new Exception("Establishment is null");
             CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {
-                EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
-                {
-                    /* TODO: Need actual UC ranks here. */
-                    new EmployeeFacultyRank {Rank = "Distinguished University Professor", Number = 1},
-                    new EmployeeFacultyRank {Rank = "Professor", Number = 2},
-                    new EmployeeFacultyRank {Rank = "Associate Professor", Number = 3},
-                    new EmployeeFacultyRank {Rank = "Assistant Professor", Number = 4},
-                    new EmployeeFacultyRank {Rank = "Other", Number = 5}
-                },
+                //EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
+                //{
+                //    new EmployeeFacultyRank {Rank = "Distinguished University Professor", Number = 1},
+                //    new EmployeeFacultyRank {Rank = "Professor", Number = 2},
+                //    new EmployeeFacultyRank {Rank = "Associate Professor", Number = 3},
+                //    new EmployeeFacultyRank {Rank = "Assistant Professor", Number = 4},
+                //    new EmployeeFacultyRank {Rank = "Other", Number = 5}
+                //},
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = null, //"My International",
                 EstablishmentId = establishment.RevisionId,
@@ -195,12 +194,12 @@ namespace UCosmic.SeedData
                 EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for UC.");
 
-                EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
-                if (facultyRank == null) throw new Exception("UC Professor rank not found.");
+                //EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
+                //if (facultyRank == null) throw new Exception("UC Professor rank not found.");
 
                 Seed(new CreateEmployee
                 {
-                    FacultyRankId = facultyRank.Id,
+//                    FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "UCosmic CTO",
                     JobTitles = "Software Architect",
                     PersonId = person.RevisionId
