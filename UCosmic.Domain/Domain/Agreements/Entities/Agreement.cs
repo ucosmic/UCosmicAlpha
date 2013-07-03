@@ -38,6 +38,7 @@ namespace UCosmic.Domain.Agreements
         public bool IsTitleDerived { get; protected internal set; } // TODO, deprecate this
         public string Name { get; protected internal set; }
         public string Description { get; protected internal set; } // TODO, rename this to Content (html wysiwyg)
+        public string Content { get; protected internal set; } // TODO, rename this to Content (html wysiwyg)
         public string Notes { get; protected internal set; }
         public string Type { get; protected internal set; }
         public bool? IsAutoRenew { get; protected internal set; }

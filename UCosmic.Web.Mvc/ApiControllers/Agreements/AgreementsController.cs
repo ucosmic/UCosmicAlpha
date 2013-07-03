@@ -8,7 +8,10 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using UCosmic.Domain.Agreements;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
@@ -20,10 +23,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class AgreementsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IValidator<CreateAgreement> _createValidator;
 
-        public AgreementsController(IProcessQueries queryProcessor)
+        public AgreementsController(IProcessQueries queryProcessor
+            , IValidator<CreateAgreement> createValidator
+        )
         {
             _queryProcessor = queryProcessor;
+            _createValidator = createValidator;
         }
 
         [GET("agreements/{agreementId:int}")]
@@ -65,6 +72,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //var model = Mapper.Map<AgreementApiModel>(entity);
             //return model;
             return null;
+        }
+
+        [POST("agreements/validate")]
+        public HttpResponseMessage Validate(AgreementApiModel model)
+        {
+            var command = new CreateAgreement(User);
+            Mapper.Map(model, command);
+            var validationResult = _createValidator.Validate(command);
+
+            if (!validationResult.IsValid)
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    Mapper.Map<ValidationResultApiModel>(validationResult));
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [GET("agreements/{domain}/partners")]

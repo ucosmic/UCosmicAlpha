@@ -165,7 +165,15 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
+    <Compile Include="Domain\Agreements\Commands\CreateAgreement.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactsByAgreementId.cs" />
+    <Compile Include="Domain\Agreements\Validation\AgreementConstraints.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveAgreementStatus.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveAgreementVisibility.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveAgreementExpiresOn.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveAgreementStartsOn.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveAgreementType.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustFindAgreementById.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateDeepInternationalAffiliation.cs" />
     <Compile Include="Domain\Files\Commands\PurgeLooseFile.cs" />
     <Compile Include="Domain\Identity\Queries\MyOwnedTenantIds.cs" />

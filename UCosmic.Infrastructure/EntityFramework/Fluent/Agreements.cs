@@ -31,7 +31,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
 
-            Property(p => p.Text).IsRequired().HasMaxLength(150);
+            Property(p => p.Text).IsRequired().HasMaxLength(AgreementConstraints.TypeMaxLength);
         }
     }
 
@@ -49,7 +49,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
 
-            Property(p => p.Text).IsRequired().HasMaxLength(50);
+            Property(p => p.Text).IsRequired().HasMaxLength(AgreementConstraints.StatusMaxLength);
         }
     }
 
@@ -67,7 +67,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
 
-            Property(p => p.Text).IsRequired().HasMaxLength(150);
+            Property(p => p.Text).IsRequired().HasMaxLength(AgreementContactConstraints.ContactTypeMaxLength);
         }
     }
 
@@ -124,10 +124,10 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(false);
 
             Property(p => p.Title).IsRequired().HasMaxLength(500);
-            Property(p => p.Type).IsRequired().HasMaxLength(150);
+            Property(p => p.Type).IsRequired().HasMaxLength(AgreementConstraints.TypeMaxLength);
             Property(p => p.StartsOn);
             Property(p => p.ExpiresOn);
-            Property(p => p.Status).IsRequired().HasMaxLength(50);
+            Property(p => p.Status).IsRequired().HasMaxLength(AgreementConstraints.StatusMaxLength);
             Property(p => p.Description).IsMaxLength();
             Property(p => p.VisibilityText).HasColumnName("Visibility").IsRequired().HasMaxLength(20);
         }
@@ -189,8 +189,8 @@ namespace UCosmic.EntityFramework
                 .WithRequired(d => d.Owner)
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.Type).IsRequired().HasMaxLength(150);
-            Property(p => p.Title).IsOptional().HasMaxLength(300);
+            Property(p => p.Type).IsRequired().HasMaxLength(AgreementContactConstraints.ContactTypeMaxLength);
+            Property(p => p.Title).IsOptional().HasMaxLength(AgreementContactConstraints.TitleMaxLength);
         }
     }
 
@@ -209,8 +209,8 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.OwnerId)
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.Type).IsOptional().HasMaxLength(150);
-            Property(p => p.Value).IsRequired().HasMaxLength(150);
+            Property(p => p.Type).IsOptional().HasMaxLength(AgreementContactPhoneConstraints.TypeMaxLength);
+            Property(p => p.Value).IsRequired().HasMaxLength(AgreementContactPhoneConstraints.ValueMaxLength);
         }
     }
 

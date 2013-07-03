@@ -9,7 +9,7 @@
 
         window.countGraphicValue = ko.observable(-1);
         window.countGraphicOpacity = ko.observable(1);
-        setInterval(function () {
+        setInterval(function() {
             window.countGraphicValue(window.countGraphicValue() + 1);
             if (window.countGraphicValue() > 1299) {
                 window.countGraphicValue(0);

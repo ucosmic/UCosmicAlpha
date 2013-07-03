@@ -350,6 +350,7 @@
     <Compile Include="Models\Establishments\EstablishmentTypeApiModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentPostModel.cs" />
     <Compile Include="Models\EstablishmentWelcomeMessageConfigurationModel.cs" />
+    <Compile Include="Models\_Etc\ValidationFailureApiModel.cs" />
     <Compile Include="Models\_Etc\ImageResizeRequestModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
@@ -421,6 +422,7 @@
     <Compile Include="Models\_Etc\TextValuePair.cs" />
     <Compile Include="Models\Users\UserApiModel.cs" />
     <Compile Include="Models\_Etc\UserVoiceLinkModel.cs" />
+    <Compile Include="Models\_Etc\ValidationResultApiModel.cs" />
     <Compile Include="MyProfileController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
