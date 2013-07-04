@@ -21,14 +21,7 @@
                         <div class="field-label-top required">
                             <label>Agreement type</label><i>(required, public visibility)</i>
                         </div>
-                        <div class="field-input-label-top" data-bind="visible: !isCustomTypeAllowed()">
-                            
-                            <select  data-bind="options: typeOptions(), 
-							    optionsValue: 'id',
-							    optionsText: 'name', value: typeOptionSelected">
-                            </select>
-                        </div>
-                        <div class="field-input-label-top" data-bind=" visible: isCustomTypeAllowed">
+                        <div class="field-input-label-top">
                             <input id="typeOptions" type="text" placeholder="[None]" 
                                    data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
                         </div>

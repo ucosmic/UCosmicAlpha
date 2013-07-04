@@ -38,23 +38,17 @@
                         <div class="field-column-left">
                             <div class="field-label-top required">
                                 <label>Contact type</label>
+                                <i>(required, public visibility)</i>
                             </div>
-                            <div class="field-input-label-top" data-bind="visible: !isCustomContactTypeAllowed()">
-                                <select  data-bind="options: contactTypeOptions(), 
-							        optionsValue: 'id',
-							        optionsText: 'name', value: contactTypeOptionSelected">
-                                </select>
-                            </div>
-                            <div class="field-input-label-top" data-bind=" visible: isCustomContactTypeAllowed">
+                            <div class="field-input-label-top">
                                 <input id="contactTypeOptions" type="text" placeholder="[None]" 
                                        data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
                             </div>
                             <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
                                 Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.
-                                <br/><i>(required, public visibility)</i>
                             </div>
-                            <div data-bind=" visible: !isCustomContactTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement contactType.
-                                <br/><i>(required, public visibility)</i>
+                            <div data-bind=" visible: !isCustomContactTypeAllowed()" class="field-label-description">
+                                Select from the drop-down list of pre-existing agreement contactType.
                             </div>
                         </div>
                         <div class="field-column-right">
@@ -142,10 +136,8 @@
                                 <label>Phone Type</label>
                             </div>
                             <div class="field-input-label-top" style="width: 280px">
-                                <select  style="width: 280px" data-bind="options: phoneTypes(), 
-							    optionsValue: 'id',
-							    optionsText: 'name', value: contactPhoneType">
-                                </select>
+                                <input id="phoneTypes" type="text" placeholder="[None]" 
+                                       data-bind="value: contactPhoneType, valueUpdate: 'afterkeydown', jqObservableElement: '$phoneTypes'" />
                             </div>
                             <a title="Remove this contact" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
                         </div>

@@ -86,6 +86,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.isCustomStatusAllowed = ko.observable();
             this.isCustomContactTypeAllowed = ko.observable();
             this.phoneTypes = ko.mapping.fromJS([]);
+            this.$phoneTypes = ko.observable();
             this.phoneTypeSelected = ko.observable();
             this.$file = ko.observable();
             this.hasFile = ko.observable();
@@ -698,9 +699,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             data: _this.typeOptions()
                         })
                     });
+                } else {
+                    $("#typeOptions").kendoDropDownList({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: _this.typeOptions()
+                        })
+                    });
                 }
                 if(_this.isCustomStatusAllowed) {
                     $("#statusOptions").kendoComboBox({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: _this.statusOptions()
+                        })
+                    });
+                } else {
+                    $("#statusOptions").kendoDropDownList({
                         dataTextField: "name",
                         dataValueField: "id",
                         dataSource: new kendo.data.DataSource({
@@ -716,7 +733,22 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             data: _this.contactTypeOptions()
                         })
                     });
+                } else {
+                    $("#contactTypeOptions").kendoDropDownList({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: _this.contactTypeOptions()
+                        })
+                    });
                 }
+                $("#phoneTypes").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: ko.mapping.toJS(_this.phoneTypes())
+                    })
+                });
                 $("#contactSalutation").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",

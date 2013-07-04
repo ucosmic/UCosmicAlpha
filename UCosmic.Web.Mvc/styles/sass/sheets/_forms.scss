@@ -175,7 +175,7 @@ select.inline {
 }
 
 .radioText{
-    font-size: 15px;
+    font-size: 14px;
 }
 
 a.addLink{ 
@@ -433,6 +433,7 @@ section {
             i {
                 float: right;
                 color: grey;
+                font-size: 12px;
             }
         }
         .field-label-description {
@@ -440,6 +441,7 @@ section {
             padding: 0px 10px 0 0;
             float: left;
             color: grey;
+            font-size: 14px;
         }
         .field-value {
             @include border-box;
@@ -464,7 +466,15 @@ section {
                     margin-left: 0;
                 }
                 .k-datepicker {
-                    width: 300px;
+                    width: 320px;
+                    @include border-box;
+                    border: solid 1px #aaa;
+                    border-right-color: #ddd;
+                    border-bottom-color: #ddd;
+                    .k-picker-wrap{
+                        height: 32px;
+                        border: none;
+                    }
                 }
             }
             img{ 

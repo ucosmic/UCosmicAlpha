@@ -163,6 +163,7 @@ export class InstitutionalAgreementEditModel {
     isCustomStatusAllowed = ko.observable();
     isCustomContactTypeAllowed = ko.observable();
     phoneTypes = ko.mapping.fromJS([]);
+    $phoneTypes: KnockoutObservableJQuery = ko.observable();
     phoneTypeSelected = ko.observable();
     $file: KnockoutObservableJQuery = ko.observable();
     hasFile: KnockoutObservableBool = ko.observable();
@@ -409,16 +410,32 @@ export class InstitutionalAgreementEditModel {
                 this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
             };
             if (this.isCustomTypeAllowed) {
-                $("#typeOptions").kendoComboBox( {
-                            dataTextField: "name",
-                            dataValueField: "id",
-                            dataSource: new kendo.data.DataSource({
-                                data: this.typeOptions()
-                            })
-                        });
+                $("#typeOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.typeOptions()
+                    })
+                });
+            } else {
+                $("#typeOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.typeOptions()
+                    })
+                });
             }
             if (this.isCustomStatusAllowed) {
                 $("#statusOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            } else {
+                $("#statusOptions").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
@@ -434,7 +451,23 @@ export class InstitutionalAgreementEditModel {
                         data: this.contactTypeOptions()
                     })
                 });
+            } else {
+                $("#contactTypeOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.contactTypeOptions()
+                    })
+                });
             }
+
+            $("#phoneTypes").kendoDropDownList({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.phoneTypes())
+                })
+            });
 
             $("#contactSalutation").kendoComboBox({
                 dataTextField: "name",
