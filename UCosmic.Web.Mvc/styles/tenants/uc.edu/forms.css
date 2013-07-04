@@ -613,4 +613,10 @@ section {
     background-color: #fff;
     min-height: 64px;
     padding: 8px; }
+  .typed-item2 .phoneList {
+    display: inline; }
+    .typed-item2 .phoneList:after {
+      content: ', '; }
+    .typed-item2 .phoneList:last-child:after {
+      content: ''; }
 

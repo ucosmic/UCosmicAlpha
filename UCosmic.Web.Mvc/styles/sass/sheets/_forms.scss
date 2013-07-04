@@ -594,4 +594,14 @@ section {
         min-height: 64px;
         padding: 8px;
     }
+    .phoneList{
+        display: inline;
+        &:after {
+            content: ', ';
+        }
+        &:last-child:after
+        {
+          content: '';
+        }
+    }
 }

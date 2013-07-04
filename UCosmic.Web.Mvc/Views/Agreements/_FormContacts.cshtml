@@ -13,14 +13,23 @@
                                 
                                 <div class="item">
                                     <div>
-                                        <strong data-bind="text: firstName() + ' ' + lastName() + ': ' + jobTitle()"></strong><br/>
-                                        <span data-bind="text: type"></span><br/>
-                                        <span data-bind="text: email"></span><br/>
-                                        <ul data-bind="foreach: phone">
-                                            <li data-bind="element: 'contactE1'">
-                                                <span data-bind="text: textValue() + ' ' + type()"></span>
-                                            </li>
-                                        </ul>
+                                        <strong data-bind="text: displayName"></strong>
+                                        <a data-bind="attr: {href: 'mailto:' + email()}, text: email"></a>
+                                        <br/>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <span data-bind="text: jobTitle" ></span>, 
+                                                </td>
+                                                <td>
+                                                    <ul data-bind="foreach: phone"style="margin-left: 10px">
+                                                        <li data-bind="element: 'contactE1'" class="phoneList">
+                                                            <span data-bind="text: type() + ': ' + textValue()"></span>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -53,32 +62,14 @@
                         </div>
                         <div class="field-column-right">
                             <div class="field-label-top required">
-                                <label>Display name</label>
+                                <label>Email address</label>
                             </div>
                             <div class="field-input-label-top">
-                                <input type="text" data-bind="value: contactDisplayName" />
+                                <input type="text" data-bind="value: contactEmail" />
                             </div>
                         </div>
                     </div>
-                    <div class="field-row">
-                        <div class="field-column-left">
-                            <div class="field-label-top required">
-                                <label>First name</label>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input type="text" data-bind="value: contactFirstName" />
-                            </div>
-                        </div>
-                        <div class="field-column-right">
-                            <div class="field-label-top required">
-                                <label>Last name</label>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input type="text" data-bind="value: contactLastName" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-row">
+                    <div class="field-row" data-bind="visible: contactMoreDetails">
                         <div class="field-column-left">
                             <div class="field-label-top">
                                 <label>Salutation</label>
@@ -100,19 +91,37 @@
                     </div>
                     <div class="field-row">
                         <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>First name</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: contactFirstName" />
+                            </div>
+                        </div>
+                        <div class="field-column-right">
+                            <div class="field-label-top required">
+                                <label>Middle name</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: contactMiddleName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top required">
+                                <label>Last name</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input type="text" data-bind="value: contactLastName" />
+                            </div>
+                        </div>
+                        <div class="field-column-right">
                             <div class="field-label-top">
                                 <label>Job title</label>
                             </div>
                             <div class="field-input-label-top">
                                 <input type="text" data-bind="value: contactJobTitle" />
-                            </div>
-                        </div>
-                        <div class="field-column-right">
-                            <div class="field-label-top">
-                                <label>Person id</label>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input type="text" data-bind="value: contactPersonId" />
                             </div>
                         </div>
                     </div>
@@ -140,16 +149,6 @@
                                        data-bind="value: contactPhoneType, valueUpdate: 'afterkeydown', jqObservableElement: '$phoneTypes'" />
                             </div>
                             <a title="Remove this contact" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
-                        </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-column-left">
-                            <div class="field-label-top required">
-                                <label>Email address</label>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input type="text" data-bind="value: contactEmail" />
-                            </div>
                         </div>
                     </div>
                     <footer>
