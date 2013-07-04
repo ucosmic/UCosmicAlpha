@@ -80,7 +80,7 @@ namespace UCosmic.Domain.External
             //_smtpTraceListener = null;
             _smtpTraceListener = new SmtpTraceListener(sendEmailMessageHandler, "corarito@usf.edu", "USF Service Log");
             _smtpTraceListener.Name = "USF_Service_Trace_Listener";
-            Trace.Listeners.Add(_smtpTraceListener);
+            Debug.Listeners.Add(_smtpTraceListener);
         }
 
         public void Import(IPrincipal principal, int userId)
@@ -487,7 +487,7 @@ namespace UCosmic.Domain.External
             if (_smtpTraceListener != null)
             {
                 _smtpTraceListener.Flush();
-                Trace.Listeners.Remove("USF_Service_Trace_Listener");
+                Debug.Listeners.Remove("USF_Service_Trace_Listener");
                 _smtpTraceListener = null;
             }
 
