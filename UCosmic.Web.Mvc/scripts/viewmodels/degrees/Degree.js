@@ -4,7 +4,6 @@ var ViewModels;
         var Degree = (function () {
             function Degree(educationId) {
                 this.inititializationErrors = "";
-                this.saving = false;
                 this.dirtyFlag = ko.observable(false);
                 this._initialize(educationId);
             }
@@ -131,12 +130,8 @@ var ViewModels;
                 return deferred;
             };
             Degree.prototype.save = function (viewModel, event) {
-                var _this = this;
                 if(!this.isValid()) {
                     return;
-                }
-                while(this.saving) {
-                    alert("Please wait while degree is saved.");
                 }
                 if(this.yearAwarded() != null) {
                     var yearAwaredStr = this.yearAwarded().toString();
@@ -160,19 +155,19 @@ var ViewModels;
                 var model = ko.mapping.toJS(mapSource);
                 var url = (viewModel.id() == 0) ? App.Routes.WebApi.Degrees.post() : App.Routes.WebApi.Degrees.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
-                this.saving = true;
                 $.ajax({
                     type: type,
+                    async: false,
                     url: url,
-                    data: model,
+                    data: ko.toJSON(model),
                     dataType: 'json',
+                    contentType: 'application/json',
                     success: function (data, textStatus, jqXhr) {
-                        _this.saving = false;
-                        location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
-                        _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
+                    },
+                    complete: function (jqXhr, textStatus) {
                         location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                     }
                 });

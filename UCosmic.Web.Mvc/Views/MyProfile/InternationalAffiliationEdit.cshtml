@@ -110,7 +110,7 @@
                             <div style="margin-bottom: 14px">
                                 <span>
                                     <label for="institution" class="required-field" style="width: 200px">Institution/Organization</label>
-                                    <input type="text" id="institution" style="width: 500px; margin-right: 8px" data-bind="value: institution"></input>
+                                    <input type="text" id="institution" style="width: 500px; margin-right: 8px" data-bind="value: institution"/>
                                 </span>
                             </div>
 
@@ -127,21 +127,23 @@
                             <div style="margin-bottom: 14px">
                                 <span>
                                     <label for="position" class="required-field" style="width: 200px">Position</label>
-                                    <input type="text" id="position" style="width: 500px; margin-right: 8px" data-bind="value: position"></input>
+                                    <input type="text" id="position" style="width: 500px; margin-right: 8px" data-bind="value: position"/>
                                 </span>
                             </div>
 
                             <!-- DATES -->
                             <div>
-                                <span style="display: inline-block">
-                                    <label for="from" class="required-field" style="width: 200px">From</label>
-                                    <select id="from" style="width: 100px" data-bind="value: from"></select>
+                                <span style="display: inline">
+                                    <label for="fromDate" class="non-required-field" style="width: 200px">From</label>
+                                    <select id="fromDate" style="width: 100px" data-bind="value: from"></select>
  
-                                    <label for="onGoing" class="required-field">On Going</label>
-                                    <input type="checkbox" id="onGoing" style="" data-bind="value: onGoing" />
+                                    <label for="onGoing" class="non-required-field" style="width: 90px">On Going</label>
+                                    <input type="checkbox" id="onGoing" data-bind="checked: onGoing" />
  
-                                    <label for="to" class="non-required-field">To</label>
-                                    <select id="to" style="width: 100px" data-bind="value: to"></select>
+                                    <span style="display: none" data-bind="visible: !onGoing()">
+                                        <label for="toDate" class="non-required-field" style="width: 30px">To</label>
+                                        <select id="toDate" style="width: 100px" data-bind="value: to"></select>
+                                    </span>
                                 </span>
                             </div>
                         </div>

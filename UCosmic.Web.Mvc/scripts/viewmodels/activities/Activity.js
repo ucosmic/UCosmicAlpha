@@ -326,8 +326,9 @@ var ViewModels;
                 $.ajax({
                     type: 'PUT',
                     url: App.Routes.WebApi.Activities.put(viewModel.id()),
-                    data: model,
+                    data: ko.toJSON(model),
                     dataType: 'json',
+                    contentType: 'application/json',
                     success: function (data, textStatus, jqXhr) {
                         _this.saving = false;
                         _this.dirtyFlag(false);

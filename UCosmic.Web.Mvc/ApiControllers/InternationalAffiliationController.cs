@@ -68,14 +68,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var model = Mapper.Map<InternationalAffiliationApiModel>(affiliation);
 
-            //const int fromToYearRange
-            //int thisYear = DateTime.Now.Year;
-            //int[] years = new int[80];
-            //for (int i = 0; i < 80; )
-
-
-
-                return model;
+            return model;
         }
 
         // --------------------------------------------------------------------------------
@@ -100,8 +93,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             var createDeepInternationalAffiliationCommand = new CreateDeepInternationalAffiliation(User, newLocations)
             {
-                From = newModel.From,
-                To = newModel.To,
+                From = new DateTime(newModel.From,1,1),
+                To = newModel.To.HasValue ? new DateTime(newModel.To.Value,1,1) : (DateTime?)null,
                 OnGoing = newModel.OnGoing,
                 Institution = newModel.Institution,
                 Position = newModel.Position

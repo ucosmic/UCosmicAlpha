@@ -240,7 +240,9 @@ var ViewModels;
                     $.ajax({
                         url: App.Routes.WebApi.My.Profile.put(),
                         type: 'PUT',
-                        data: apiModel
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data: ko.toJSON(apiModel)
                     }).done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
                         _this.stopEditing();
@@ -807,9 +809,11 @@ var ViewModels;
                 var model = ko.mapping.toJS(affiliation);
                 $.ajax({
                     async: false,
+                    dataType: 'json',
+                    contentType: 'application/json',
                     url: (affiliationId == null) ? App.Routes.WebApi.My.Profile.Affiliation.post() : App.Routes.WebApi.My.Profile.Affiliation.put(),
                     type: (affiliationId == null) ? 'POST' : 'PUT',
-                    data: model
+                    data: ko.toJSON(model)
                 }).done(function (responseText, statusText, xhr) {
                     if(statusText === "success") {
                         $("#editAffiliationDialog").dialog("close");
@@ -862,7 +866,9 @@ var ViewModels;
                                 async: false,
                                 type: "DELETE",
                                 url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                                data: model,
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                data: ko.toJSON(model),
                                 success: function (data, statusText, jqXHR) {
                                     if(statusText !== "success") {
                                         $("#affiliationErrorDialog").dialog({

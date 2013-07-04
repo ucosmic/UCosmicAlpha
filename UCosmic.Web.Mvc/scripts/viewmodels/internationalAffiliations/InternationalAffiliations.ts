@@ -167,19 +167,15 @@ module ViewModels.InternationalAffiliations
         /*  
         */
         // --------------------------------------------------------------------------------
-        formatDates(from: Date, to: Date, onGoing: bool): string
+        formatDates(from: number, to: number, onGoing: bool): string
         {
-            var formattedDateRange: string = "";
+            var formattedDateRange: string = from.toString();
 
-            /* May need a separate function to convert from CLR custom date formats to moment formats */
-            var dateFormat: string = "YYYY";
-
-            formattedDateRange = moment(from).format(dateFormat);
             if (onGoing) {
                 formattedDateRange += " (Ongoing)";
             } else if (to != null)
             {
-                formattedDateRange += " - " + moment(to).format(dateFormat);
+                formattedDateRange += " - " + to.toString();
             }
 
             if (formattedDateRange.length > 0)

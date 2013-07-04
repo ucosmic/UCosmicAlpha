@@ -95,13 +95,11 @@ var ViewModels;
                 return formattedLocations;
             };
             InternationalAffiliationList.prototype.formatDates = function (from, to, onGoing) {
-                var formattedDateRange = "";
-                var dateFormat = "YYYY";
-                formattedDateRange = moment(from).format(dateFormat);
+                var formattedDateRange = from.toString();
                 if(onGoing) {
                     formattedDateRange += " (Ongoing)";
                 } else if(to != null) {
-                    formattedDateRange += " - " + moment(to).format(dateFormat);
+                    formattedDateRange += " - " + to.toString();
                 }
                 if(formattedDateRange.length > 0) {
                     formattedDateRange += "\xa0\xa0";

@@ -27,11 +27,11 @@ namespace UCosmic.Web.Mvc.Models
         public int PersonId { get; set; }
         public DateTime? WhenLastUpdated { get; set; }
         public string WhoLastUpdated { get; set; }
-        public DateTime From { get; protected internal set; }
-        public DateTime? To { get; protected internal set; }
-        public bool OnGoing { get; protected internal set; }
-        public string Institution { get; protected internal set; }
-        public string Position { get; protected internal set; }
+        public int From { get; set; }
+        public int? To { get; set; }
+        public bool OnGoing { get; set; }
+        public string Institution { get; set; }
+        public string Position { get; set; }
         public ICollection<InternationalAffiliationLocationApiModel> Locations { get; set; }
     }
 
@@ -73,6 +73,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.WhenLastUpdated, o => o.MapFrom(s => s.UpdatedOnUtc))
                     .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
+                    .ForMember(d => d.From, o => o.MapFrom(s => s.From.Year))
+                    .ForMember(d => d.To, o => o.MapFrom(s => (s.To.HasValue ? s.To.Value.Year : (int?)null)))
                     ;
 
                 CreateMap<InternationalAffiliationLocation, InternationalAffiliationLocationApiModel>()
@@ -100,8 +102,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.CreatedInternationalAffiliation, o => o.Ignore())
                     .ForMember(d => d.EntityId, o => o.Ignore())
-                    .ForMember(d => d.From, o => o.MapFrom(s => s.From))
-                    .ForMember(d => d.To, o => o.MapFrom(s => s.To))
+                    .ForMember(d => d.From, o => o.MapFrom(s => new DateTime(s.From, 1, 1)))
+                    .ForMember(d => d.To, o => o.MapFrom(s => s.To.HasValue ? new DateTime(s.To.Value, 1, 1) : (DateTime?)null))
                     .ForMember(d => d.OnGoing, o => o.MapFrom(s => s.OnGoing))
                     .ForMember(d => d.Institution, o => o.MapFrom(s => s.Institution))
                     .ForMember(d => d.Position, o => o.MapFrom(s => s.Position))
@@ -112,8 +114,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.UpdatedOn, o => o.Ignore())
                     .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
-                    .ForMember(d => d.From, o => o.MapFrom(s => s.From))
-                    .ForMember(d => d.To, o => o.MapFrom(s => s.To))
+                    .ForMember(d => d.From, o => o.MapFrom(s => new DateTime(s.From, 1, 1)))
+                    .ForMember(d => d.To, o => o.MapFrom(s => s.To.HasValue ? new DateTime(s.To.Value, 1, 1) : (DateTime?)null))
                     .ForMember(d => d.OnGoing, o => o.MapFrom(s => s.OnGoing))
                     .ForMember(d => d.Institution, o => o.MapFrom(s => s.Institution))
                     .ForMember(d => d.Position, o => o.MapFrom(s => s.Position))

@@ -4,13 +4,20 @@ var ViewModels;
         var InternationalAffiliation = (function () {
             function InternationalAffiliation(affiliationId) {
                 this.inititializationErrors = "";
-                this.saving = false;
                 this.dirtyFlag = ko.observable(false);
                 this.initialLocations = new Array();
                 this.selectedLocationValues = new Array();
                 this._initialize(affiliationId);
             }
             InternationalAffiliation.prototype._initialize = function (affiliationId) {
+                var fromToYearRange = 80;
+                var thisYear = Number(moment().format('YYYY'));
+                this.years = ko.observableArray();
+                var year;
+                for(var i = 0; i < fromToYearRange; i += 1) {
+                    year = ko.observable(thisYear - i);
+                    this.years.push(year);
+                }
                 if(affiliationId === "new") {
                     this.id = ko.observable(0);
                 } else {
@@ -46,21 +53,24 @@ var ViewModels;
                     atLeast: 1
                 });
                 this.institution.extend({
+                    required: true,
                     maxLength: 200
                 });
                 this.position.extend({
+                    required: true,
                     maxLength: 100
                 });
                 ko.validation.group(this);
             };
             InternationalAffiliation.prototype.load = function () {
                 var _this = this;
+                var me = this;
                 var deferred = $.Deferred();
                 if(this.id() == 0) {
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
-                    this.from = ko.observable(Date.now);
-                    this.to = ko.observable(null);
+                    this.from = ko.observable(Number(moment().format('YYYY')));
+                    this.to = ko.observable(Number(moment().format('YYYY')));
                     this.onGoing = ko.observable(false);
                     this.institution = ko.observable(null);
                     this.position = ko.observable(null);
@@ -90,6 +100,31 @@ var ViewModels;
                             });
                             _this.selectedLocationValues.push(_this.locations()[i].placeId());
                         }
+                        var dateDropListDataSource = new kendo.data.DataSource({
+                            data: _this.years()
+                        });
+                        $("#fromDate").kendoDropDownList({
+                            dataSource: _this.years(),
+                            value: me.from(),
+                            change: function (e) {
+                                var toDateDropList = $("#toDate").data("kendoDropDownList");
+                                if(toDateDropList.value() < this.value()) {
+                                    toDateDropList.value(this.value());
+                                }
+                                me.from(this.value());
+                            }
+                        });
+                        $("#toDate").kendoDropDownList({
+                            dataSource: _this.years(),
+                            value: me.to(),
+                            change: function (e) {
+                                var fromDateDropList = $("#fromDate").data("kendoDropDownList");
+                                if(fromDateDropList.value() > this.value()) {
+                                    fromDateDropList.value(this.value());
+                                }
+                                me.to(this.value());
+                            }
+                        });
                         _this.from.subscribe(function (newValue) {
                             _this.dirtyFlag(true);
                         });
@@ -113,12 +148,8 @@ var ViewModels;
                 return deferred;
             };
             InternationalAffiliation.prototype.save = function (viewModel, event) {
-                var _this = this;
                 if(!this.isValid()) {
                     return;
-                }
-                while(this.saving) {
-                    alert("Please wait while affiliation is saved.");
                 }
                 var mapSource = {
                     id: this.id,
@@ -147,19 +178,19 @@ var ViewModels;
                 var model = ko.mapping.toJS(mapSource);
                 var url = (viewModel.id() == 0) ? App.Routes.WebApi.InternationalAffiliations.post() : App.Routes.WebApi.InternationalAffiliations.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
-                this.saving = true;
                 $.ajax({
                     type: type,
+                    async: false,
                     url: url,
-                    data: model,
+                    data: ko.toJSON(model),
                     dataType: 'json',
+                    contentType: 'application/json',
                     success: function (data, textStatus, jqXhr) {
-                        _this.saving = false;
-                        location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
-                        _this.saving = false;
                         alert(textStatus + " | " + errorThrown);
+                    },
+                    complete: function (jqXhr, textStatus) {
                         location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
                     }
                 });

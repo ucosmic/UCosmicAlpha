@@ -339,7 +339,9 @@ module ViewModels.My {
                 $.ajax({
                     url: App.Routes.WebApi.My.Profile.put(),
                     type: 'PUT',
-                    data: apiModel
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: ko.toJSON(apiModel)
                 })
                 .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
                     App.flasher.flash(responseText);
@@ -948,11 +950,13 @@ module ViewModels.My {
 
             $.ajax( {
                 async: false,
+                dataType: 'json',
+                contentType: 'application/json',
                 url: ( affiliationId == null ) ?
                         App.Routes.WebApi.My.Profile.Affiliation.post() :
                         App.Routes.WebApi.My.Profile.Affiliation.put(),
                 type: ( affiliationId == null ) ? 'POST' : 'PUT',
-                data: model
+                data: ko.toJSON(model)
             } )
             .done( function ( responseText, statusText, xhr ) {
                 if ( statusText === "success" ) {
@@ -1017,11 +1021,14 @@ module ViewModels.My {
                         };
 
                         var model = ko.mapping.toJS( affiliation );
+
                         $.ajax( {
                             async: false,
                             type: "DELETE",
                             url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                            data: model,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: ko.toJSON(model),
                             success: ( data: any, statusText: string, jqXHR: JQueryXHR ): void =>
                             {
                                 if ( statusText !== "success" ) {

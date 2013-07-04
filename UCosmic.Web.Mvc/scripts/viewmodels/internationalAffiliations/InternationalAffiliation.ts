@@ -8,6 +8,7 @@
 /// <reference path="../../tinymce/tinymce.d.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 
 
 module ViewModels.InternationalAffiliations {
@@ -18,9 +19,6 @@ module ViewModels.InternationalAffiliations {
     export class InternationalAffiliation {
         /* Initialization errors. */
         inititializationErrors: string = "";
-
-        /* In the process of saving. */
-        saving: bool = false;
 
         /* True if any field changes. */
         dirtyFlag: KnockoutObservableBool = ko.observable( false );
@@ -34,7 +32,7 @@ module ViewModels.InternationalAffiliations {
         id: KnockoutObservableNumber;           // if 0, new expertise
         version: KnockoutObservableString;      // byte[] converted to base64
         personId: KnockoutObservableNumber;
-        from: KnockoutObservableDate;
+        from: KnockoutObservableNumber;
         to: KnockoutObservableAny;              // nullable
         onGoing: KnockoutObservableBool;
         institution: KnockoutObservableString;
@@ -47,11 +45,24 @@ module ViewModels.InternationalAffiliations {
         isValid: () => bool;
         isAnyMessageShown: () => bool;
 
+        years: KnockoutObservableArray;
+
         // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------
         _initialize( affiliationId: string ): void {
+
+            var fromToYearRange: number = 80;
+            var thisYear: number = Number(moment().format('YYYY'));
+            this.years = ko.observableArray();
+            var year;
+            for (var i: number = 0; i < fromToYearRange; i += 1)
+            {
+                year = ko.observable(thisYear - i);
+                this.years.push(year)
+            }
+
             if (affiliationId === "new") {
                 this.id = ko.observable( 0 );
             } else {
@@ -112,8 +123,8 @@ module ViewModels.InternationalAffiliations {
             ko.validation.registerExtenders();
             
             this.locations.extend( { atLeast: 1 } );
-            this.institution.extend( { maxLength: 200 } );
-            this.position.extend( { maxLength: 100 } );
+            this.institution.extend( { required: true, maxLength: 200 } );
+            this.position.extend( { required: true, maxLength: 100 } );
 
             ko.validation.group( this );
         }
@@ -131,13 +142,14 @@ module ViewModels.InternationalAffiliations {
         */
         // --------------------------------------------------------------------------------
         load(): JQueryPromise {
+            var me = this;
             var deferred: JQueryDeferred = $.Deferred();
 
             if ( this.id() == 0 ) {
                 this.version = ko.observable(null);
                 this.personId = ko.observable(0);
-                this.from = ko.observable(Date.now);
-                this.to = ko.observable(null);
+                this.from = ko.observable(Number(moment().format('YYYY')));
+                this.to = ko.observable(Number(moment().format('YYYY')));
                 this.onGoing = ko.observable(false);
                 this.institution = ko.observable(null);
                 this.position = ko.observable(null);
@@ -175,6 +187,34 @@ module ViewModels.InternationalAffiliations {
                                       this.selectedLocationValues.push( this.locations()[i].placeId() );
                                   }
 
+                                  var dateDropListDataSource = new kendo.data.DataSource( {
+                                      data: this.years()
+                                  });
+
+                                  $("#fromDate").kendoDropDownList({
+                                    dataSource: this.years(),
+                                    value: me.from(),
+                                    change: function (e) {
+                                        var toDateDropList = $("#toDate").data("kendoDropDownList");
+                                        if (toDateDropList.value() < this.value()) {
+                                            toDateDropList.value( this.value() );
+                                        }
+                                        me.from( this.value() );
+                                    }
+                                  });
+
+                                  $("#toDate").kendoDropDownList({
+                                    dataSource: this.years(),
+                                    value: me.to(),
+                                    change: function (e) {
+                                        var fromDateDropList = $("#fromDate").data("kendoDropDownList");
+                                        if (fromDateDropList.value() > this.value()) {
+                                            fromDateDropList.value( this.value() );
+                                        }
+                                        me.to( this.value() );
+                                    }
+                                  });
+
                                   this.from.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
                                   this.to.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
                                   this.onGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
@@ -200,10 +240,6 @@ module ViewModels.InternationalAffiliations {
             if (!this.isValid()) {
                 // TBD - need dialog here.
                 return;
-            }
-
-            while ( this.saving ) {
-                alert( "Please wait while affiliation is saved." ); // TBD: dialog
             }
 
             var mapSource = {
@@ -239,19 +275,19 @@ module ViewModels.InternationalAffiliations {
                         App.Routes.WebApi.InternationalAffiliations.put( viewModel.id() );
             var type = (viewModel.id() == 0) ?  "POST" : "PUT";
 
-            this.saving = true;
             $.ajax( {
                 type: type,
+                async: false,
                 url: url,
-                data: model,
+                data: ko.toJSON(model),
                 dataType: 'json',
+                contentType: 'application/json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                    this.saving = false;
-                    location.href = App.Routes.Mvc.My.Profile.get( "international-affiliation" );
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    this.saving = false;
                     alert( textStatus + " | " + errorThrown );
+                },
+                complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
                     location.href = App.Routes.Mvc.My.Profile.get( "international-affiliation" );
                 }
             } );

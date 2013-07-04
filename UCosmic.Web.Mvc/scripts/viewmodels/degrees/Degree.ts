@@ -19,9 +19,6 @@ module ViewModels.Degrees {
         /* Initialization errors. */
         inititializationErrors: string = "";
 
-        /* In the process of saving */
-        saving: bool = false;
-
         /* True if any field changes. */
         dirtyFlag: KnockoutObservableBool = ko.observable( false );
 
@@ -205,10 +202,6 @@ module ViewModels.Degrees {
                 return;
             }
 
-            while ( this.saving ) {
-                alert( "Please wait while degree is saved." ); // TBD: dialog
-            }
-
             /* If there is no year, return as null, not 0 */
             if ( this.yearAwarded() != null ) {
                 var yearAwaredStr = this.yearAwarded().toString();
@@ -234,25 +227,27 @@ module ViewModels.Degrees {
             };
 
             var model = ko.mapping.toJS( mapSource );
+
             var url = (viewModel.id() == 0) ?
                         App.Routes.WebApi.Degrees.post() :
                         App.Routes.WebApi.Degrees.put( viewModel.id() );
+
             var type = (viewModel.id() == 0) ?  "POST" : "PUT";
 
-            this.saving = true;
             $.ajax( {
                 type: type,
+                async: false,
                 url: url,
-                data: model,
+                data: ko.toJSON(model),
                 dataType: 'json',
+                contentType: 'application/json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                    this.saving = false;
-                    location.href = App.Routes.Mvc.My.Profile.get("formal-education");
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    this.saving = false;
                     alert( textStatus + " | " + errorThrown );
-                    location.href = App.Routes.Mvc.My.Profile.get("formal-education");
+                },
+                complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
+                    location.href = App.Routes.Mvc.My.Profile.get( "formal-education" );
                 }
             } );
         }
