@@ -61,7 +61,10 @@ namespace UCosmic.Mail
             catch (Exception ex)
             {
                 // log the exception
-                _exceptionLogger.Log(ex);
+                if (_exceptionLogger != null)
+                {
+                    _exceptionLogger.Log(ex);
+                }
 
                 // give up after trying 3 times
                 if (++retryCount > 2) throw;

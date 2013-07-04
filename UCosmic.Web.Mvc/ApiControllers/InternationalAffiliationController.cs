@@ -67,7 +67,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             var model = Mapper.Map<InternationalAffiliationApiModel>(affiliation);
-            return model;
+
+            //const int fromToYearRange
+            //int thisYear = DateTime.Now.Year;
+            //int[] years = new int[80];
+            //for (int i = 0; i < 80; )
+
+
+
+                return model;
         }
 
         // --------------------------------------------------------------------------------

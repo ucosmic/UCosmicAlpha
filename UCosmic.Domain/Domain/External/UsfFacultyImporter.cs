@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 649
+
+using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
@@ -12,8 +14,6 @@ using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
-
-#pragma warning disable 649
 
 
 namespace UCosmic.Domain.External
@@ -55,6 +55,7 @@ namespace UCosmic.Domain.External
         private readonly ILogExceptions _exceptionLogger;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
+        private SmtpTraceListener _smtpTraceListener;
 
         public UsfFacultyImporter(ICommandEntities entities,
                                   IQueryEntities query,
@@ -63,7 +64,9 @@ namespace UCosmic.Domain.External
                                   IHandleCommands<CreateServiceSync> createServiceSync,
                                   IUnitOfWork unitOfWork,
                                   IProcessEvents eventProcessor,
-                                  ILogExceptions exceptionLogger)
+                                  ILogExceptions exceptionLogger,
+                                  IHandleCommands<SendEmailMessageCommand> sendEmailMessageHandler
+            )
         {
             _entities = entities;
             _query = query;
@@ -73,6 +76,11 @@ namespace UCosmic.Domain.External
             _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
             _exceptionLogger = exceptionLogger;
+
+            //_smtpTraceListener = null;
+            _smtpTraceListener = new SmtpTraceListener(sendEmailMessageHandler, "corarito@usf.edu", "USF Service Log");
+            _smtpTraceListener.Name = "USF_Service_Trace_Listener";
+            Trace.Listeners.Add(_smtpTraceListener);
         }
 
         public void Import(IPrincipal principal, int userId)
@@ -116,11 +124,22 @@ namespace UCosmic.Domain.External
                     return;
                 }
 
+                Debug.WriteLine(DateTime.Now + "ServiceSync Table Row:");
+                Debug.WriteLine("Name: " + serviceSync.Name);
+                Debug.WriteLine("ExternalSyncDate: " + (serviceSync.ExternalSyncDate.HasValue ? serviceSync.ExternalSyncDate.Value.ToString() : "NULL"));
+                Debug.WriteLine("LastUpdateAttempt: " + (serviceSync.LastUpdateAttempt.HasValue ? serviceSync.LastUpdateAttempt.Value.ToString() : "NULL"));
+                Debug.WriteLine("UpdateFailCount: " + (serviceSync.UpdateFailCount.HasValue ? serviceSync.UpdateFailCount.Value.ToString() : "NULL"));
+                Debug.WriteLine("LastUpdateResult: " + serviceSync.LastUpdateResult);
+
+                Debug.Write(DateTime.Now + " Attempting to get service ticket...");
+
                 string serviceTicket = UsfCas.GetServiceTicket(serviceSync.ServiceUsername,
                                                                serviceSync.ServicePassword,
                                                                UsfFacultyInfo.CasUri);
                 if (!String.IsNullOrEmpty(serviceTicket))
                 {
+                    Debug.Write("success");
+
                     var service = new UsfFacultyInfo();
 
                     /* We might want to set User.Person.DefaultEmail when user is created. */
@@ -134,24 +153,28 @@ namespace UCosmic.Domain.External
                 }
                 else
                 {
+                    Debug.Write("failed");
                     throw new Exception("Unable to obtain service ticket to USF CAS service.");
                 }
 #endif
                 /* No record, done. */
                 if (record == null)
                 {
+                    Debug.WriteLine(DateTime.Now + " No record");
                     throw new Exception("Error getting faculty record.");
                 }
 
                 /* If no email address, we're done. */
                 if (record.UsfEmailAddress == null)
                 {
+                    Debug.WriteLine(DateTime.Now + " No email address provided");
                     return;
                 }
 
                 /* The record's email address does not match? */
                 if (record.UsfEmailAddress != user.Name)
                 {
+                    Debug.WriteLine(DateTime.Now + " Emails don't match");
                     throw new Exception("Error getting faculty record (emails don't match).");
                 }
 
@@ -174,6 +197,8 @@ namespace UCosmic.Domain.External
                 if (!serviceSync.ExternalSyncDate.HasValue ||
                     (facultyInfoLastActivityDate != serviceSync.ExternalSyncDate))
                 {
+                    Debug.WriteLine(DateTime.Now + " Update USF establishments required.");
+
                     if (serviceSync.LastUpdateResult != "inprogress")
                     {
                         var updateServiceSync = new UpdateServiceSync(serviceSync.Id)
@@ -207,6 +232,12 @@ namespace UCosmic.Domain.External
                                         serviceSync.LastUpdateAttempt);
                     }
                 }
+                else
+                {
+                    Debug.WriteLine(DateTime.Now + " No USF establishments update required."); 
+                }
+
+                Debug.WriteLine(DateTime.Now + " Waiting for department list update to complete"); 
 
                 /* Wait for department list update to complete, or timeout. */
                 {
@@ -237,6 +268,8 @@ namespace UCosmic.Domain.External
                         duration = (DateTime.Now.Ticks - start)/TimeSpan.TicksPerMillisecond;
                     }
                 }
+
+                Debug.WriteLine(DateTime.Now + "Department list update result: " + serviceSync.LastUpdateResult); 
 
                 if (serviceSync.LastUpdateResult == "succeeded")
                 {
@@ -385,6 +418,8 @@ namespace UCosmic.Domain.External
         // --------------------------------------------------------------------------------
         public void Handle(UserCreated @event)
         {
+            Debug.WriteLine("Start UsfFacultyImporter");
+
             /* Don't import faculty profile information if seeding. */
             if (@event.Seeding)
             {
@@ -406,6 +441,7 @@ namespace UCosmic.Domain.External
                 while (establishment.Parent != null)
                 {
                     establishment = establishment.Parent;
+                    Debug.WriteLine("Person root establishment = " + establishment.OfficialName);
                 }
 
                 /* Get root USF Establishment. */
@@ -420,6 +456,10 @@ namespace UCosmic.Domain.External
                 {
                     Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Name);
                     Import(@event.Principal, @event.UserId);
+                }
+                else
+                {
+                    Debug.WriteLine("User is not part of USF");
                 }
             }
             catch (Exception ex)
@@ -441,6 +481,15 @@ namespace UCosmic.Domain.External
             }
 
         Exit: ;
+
+            Debug.WriteLine("End UsfFacultyImporter");
+
+            if (_smtpTraceListener != null)
+            {
+                _smtpTraceListener.Flush();
+                Trace.Listeners.Remove("USF_Service_Trace_Listener");
+                _smtpTraceListener = null;
+            }
 
             /* For those callers that need synchronization. */
             @event.Signal.Set();

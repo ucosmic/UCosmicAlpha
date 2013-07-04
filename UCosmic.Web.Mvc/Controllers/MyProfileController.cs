@@ -54,7 +54,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        [GET("my/international-affiliation/{expertiseId}")]
+        [GET("my/international-affiliation/{affiliationId}")]
         public virtual ActionResult InternationalAffiliationEdit(string affiliationId)
         {
             var model = new InternationalAffiliationModel { AffiliationId = affiliationId };
