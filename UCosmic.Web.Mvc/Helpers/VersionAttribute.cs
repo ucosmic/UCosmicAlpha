@@ -21,8 +21,8 @@ namespace UCosmic.Web.Mvc
 #if !DEBUG
                     // when in production, display file version
                     var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-                    _version = string.Format("{0}.{1}.{2}",
-                        fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart);
+                    _version = string.Format("{0}.{1}.{2}.{3}",
+                        fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart, fvi.FilePrivatePart);
 #else
                     // when debugging, display assembly version
                     _version = assembly.GetName().Version.ToString();

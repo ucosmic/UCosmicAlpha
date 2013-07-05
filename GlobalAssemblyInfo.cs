@@ -27,4 +27,4 @@
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("2.2.*")]
-[assembly: AssemblyFileVersion("2.2.62803")]
+[assembly: AssemblyFileVersion("2.2.705.1")]

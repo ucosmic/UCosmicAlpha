@@ -24,7 +24,8 @@
       <Import moduleName="RemoteAccess" />
       <Import moduleName="RemoteForwarder" />
     </Imports>
-    <ConfigurationSettings></ConfigurationSettings>
+    <ConfigurationSettings>
+    </ConfigurationSettings>
     <Certificates>
       <Certificate name="star.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="azureconfig" storeLocation="LocalMachine" storeName="My" />
