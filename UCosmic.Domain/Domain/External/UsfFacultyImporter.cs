@@ -77,10 +77,10 @@ namespace UCosmic.Domain.External
             _eventProcessor = eventProcessor;
             _exceptionLogger = exceptionLogger;
 
-            //_smtpTraceListener = null;
-            _smtpTraceListener = new SmtpTraceListener(sendEmailMessageHandler, "corarito@usf.edu", "USF Service Log");
-            _smtpTraceListener.Name = "USF_Service_Trace_Listener";
-            Debug.Listeners.Add(_smtpTraceListener);
+            _smtpTraceListener = null;
+            //_smtpTraceListener = new SmtpTraceListener(sendEmailMessageHandler, "corarito@usf.edu", "USF Service Log");
+            //_smtpTraceListener.Name = "USF_Service_Trace_Listener";
+            //Debug.Listeners.Add(_smtpTraceListener);
         }
 
         public void Import(IPrincipal principal, int userId)
