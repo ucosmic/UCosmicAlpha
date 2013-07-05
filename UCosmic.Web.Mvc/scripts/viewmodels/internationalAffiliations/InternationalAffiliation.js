@@ -12,11 +12,9 @@ var ViewModels;
             InternationalAffiliation.prototype._initialize = function (affiliationId) {
                 var fromToYearRange = 80;
                 var thisYear = Number(moment().format('YYYY'));
-                this.years = ko.observableArray();
-                var year;
+                this.years = new Array();
                 for(var i = 0; i < fromToYearRange; i += 1) {
-                    year = ko.observable(thisYear - i);
-                    this.years.push(year);
+                    this.years[i] = thisYear - i;
                 }
                 if(affiliationId === "new") {
                     this.id = ko.observable(0);
@@ -40,6 +38,28 @@ var ViewModels;
                     },
                     placeholder: "[Select Country/Location]"
                 });
+                $("#fromDate").kendoDropDownList({
+                    dataSource: this.years,
+                    value: me.from(),
+                    change: function (e) {
+                        var toDateDropList = $("#toDate").data("kendoDropDownList");
+                        if(toDateDropList.value() < this.value()) {
+                            toDateDropList.value(this.value());
+                        }
+                        me.from(this.value());
+                    }
+                });
+                $("#toDate").kendoDropDownList({
+                    dataSource: this.years,
+                    value: me.to(),
+                    change: function (e) {
+                        var fromDateDropList = $("#fromDate").data("kendoDropDownList");
+                        if(fromDateDropList.value() > this.value()) {
+                            fromDateDropList.value(this.value());
+                        }
+                        me.to(this.value());
+                    }
+                });
             };
             InternationalAffiliation.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
@@ -62,6 +82,24 @@ var ViewModels;
                 });
                 ko.validation.group(this);
             };
+            InternationalAffiliation.prototype.setupSubscriptions = function () {
+                var _this = this;
+                this.from.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.to.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.onGoing.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.institution.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.position.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+            };
             InternationalAffiliation.prototype.load = function () {
                 var _this = this;
                 var me = this;
@@ -77,6 +115,7 @@ var ViewModels;
                     this.locations = ko.observableArray();
                     this.whenLastUpdated = ko.observable(null);
                     this.whoLastUpdated = ko.observable(null);
+                    this.setupSubscriptions();
                     deferred.resolve();
                 } else {
                     var dataPact = $.Deferred();
@@ -100,46 +139,7 @@ var ViewModels;
                             });
                             _this.selectedLocationValues.push(_this.locations()[i].placeId());
                         }
-                        var dateDropListDataSource = new kendo.data.DataSource({
-                            data: _this.years()
-                        });
-                        $("#fromDate").kendoDropDownList({
-                            dataSource: _this.years(),
-                            value: me.from(),
-                            change: function (e) {
-                                var toDateDropList = $("#toDate").data("kendoDropDownList");
-                                if(toDateDropList.value() < this.value()) {
-                                    toDateDropList.value(this.value());
-                                }
-                                me.from(this.value());
-                            }
-                        });
-                        $("#toDate").kendoDropDownList({
-                            dataSource: _this.years(),
-                            value: me.to(),
-                            change: function (e) {
-                                var fromDateDropList = $("#fromDate").data("kendoDropDownList");
-                                if(fromDateDropList.value() > this.value()) {
-                                    fromDateDropList.value(this.value());
-                                }
-                                me.to(this.value());
-                            }
-                        });
-                        _this.from.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.to.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.onGoing.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.institution.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.position.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
+                        _this.setupSubscriptions();
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);

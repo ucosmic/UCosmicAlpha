@@ -45,7 +45,7 @@ module ViewModels.InternationalAffiliations {
         isValid: () => bool;
         isAnyMessageShown: () => bool;
 
-        years: KnockoutObservableArray;
+        years: number[];
 
         // --------------------------------------------------------------------------------
         /*
@@ -55,12 +55,10 @@ module ViewModels.InternationalAffiliations {
 
             var fromToYearRange: number = 80;
             var thisYear: number = Number(moment().format('YYYY'));
-            this.years = ko.observableArray();
-            var year;
+            this.years = new Array();
             for (var i: number = 0; i < fromToYearRange; i += 1)
             {
-                year = ko.observable(thisYear - i);
-                this.years.push(year)
+                this.years[i] = thisYear - i;
             }
 
             if (affiliationId === "new") {
@@ -106,6 +104,31 @@ module ViewModels.InternationalAffiliations {
                 },
                 placeholder: "[Select Country/Location]"
             } );
+
+
+            $("#fromDate").kendoDropDownList({
+            dataSource: this.years,
+            value: me.from(),
+            change: function (e) {
+                var toDateDropList = $("#toDate").data("kendoDropDownList");
+                if (toDateDropList.value() < this.value()) {
+                    toDateDropList.value( this.value() );
+                }
+                me.from( this.value() );
+            }
+            });
+
+            $("#toDate").kendoDropDownList({
+            dataSource: this.years,
+            value: me.to(),
+            change: function (e) {
+                var fromDateDropList = $("#fromDate").data("kendoDropDownList");
+                if (fromDateDropList.value() > this.value()) {
+                    fromDateDropList.value( this.value() );
+                }
+                me.to( this.value() );
+            }
+            });
         }
 
         // --------------------------------------------------------------------------------
@@ -138,6 +161,18 @@ module ViewModels.InternationalAffiliations {
         }
 
         // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------  
+        private setupSubscriptions(): void {
+            this.from.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+            this.to.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+            this.onGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+            this.institution.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+            this.position.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+        }
+
+        // --------------------------------------------------------------------------------
         /* 
         */
         // --------------------------------------------------------------------------------
@@ -146,16 +181,19 @@ module ViewModels.InternationalAffiliations {
             var deferred: JQueryDeferred = $.Deferred();
 
             if ( this.id() == 0 ) {
-                this.version = ko.observable(null);
-                this.personId = ko.observable(0);
-                this.from = ko.observable(Number(moment().format('YYYY')));
-                this.to = ko.observable(Number(moment().format('YYYY')));
-                this.onGoing = ko.observable(false);
-                this.institution = ko.observable(null);
-                this.position = ko.observable(null);
+                this.version = ko.observable( null );
+                this.personId = ko.observable( 0 );
+                this.from = ko.observable( Number( moment().format( 'YYYY' ) ) );
+                this.to = ko.observable( Number( moment().format( 'YYYY' ) ) );
+                this.onGoing = ko.observable( false );
+                this.institution = ko.observable( null );
+                this.position = ko.observable( null );
                 this.locations = ko.observableArray();
-                this.whenLastUpdated = ko.observable(null);
-                this.whoLastUpdated = ko.observable(null);
+                this.whenLastUpdated = ko.observable( null );
+                this.whoLastUpdated = ko.observable( null );
+
+                this.setupSubscriptions();
+
                 deferred.resolve();
             }
             else {
@@ -165,9 +203,9 @@ module ViewModels.InternationalAffiliations {
                     type: "GET",
                     url: App.Routes.WebApi.InternationalAffiliations.get( this.id() ),
                     success: function ( data: any, textStatus: string, jqXhr: JQueryXHR ): void
-                        { dataPact.resolve( data ); },
+                    { dataPact.resolve( data ); },
                     error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
-                        { dataPact.reject( jqXhr, textStatus, errorThrown ); },
+                    { dataPact.reject( jqXhr, textStatus, errorThrown ); },
                 } );
 
                 // only process after all requests have been resolved
@@ -179,47 +217,15 @@ module ViewModels.InternationalAffiliations {
                                   /* Initialize the list of selected locations with current locations in values. */
                                   for ( var i = 0; i < this.locations().length; i += 1 ) {
 
-                                      this.initialLocations.push({
-                                            officialName: this.locations()[i].placeOfficialName(),
-                                            id: this.locations()[i].placeId()
-                                      });
+                                      this.initialLocations.push( {
+                                          officialName: this.locations()[i].placeOfficialName(),
+                                          id: this.locations()[i].placeId()
+                                      } );
 
                                       this.selectedLocationValues.push( this.locations()[i].placeId() );
                                   }
 
-                                  var dateDropListDataSource = new kendo.data.DataSource( {
-                                      data: this.years()
-                                  });
-
-                                  $("#fromDate").kendoDropDownList({
-                                    dataSource: this.years(),
-                                    value: me.from(),
-                                    change: function (e) {
-                                        var toDateDropList = $("#toDate").data("kendoDropDownList");
-                                        if (toDateDropList.value() < this.value()) {
-                                            toDateDropList.value( this.value() );
-                                        }
-                                        me.from( this.value() );
-                                    }
-                                  });
-
-                                  $("#toDate").kendoDropDownList({
-                                    dataSource: this.years(),
-                                    value: me.to(),
-                                    change: function (e) {
-                                        var fromDateDropList = $("#fromDate").data("kendoDropDownList");
-                                        if (fromDateDropList.value() > this.value()) {
-                                            fromDateDropList.value( this.value() );
-                                        }
-                                        me.to( this.value() );
-                                    }
-                                  });
-
-                                  this.from.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.to.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.onGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.institution.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.position.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+                                  this.setupSubscriptions();
 
                                   deferred.resolve();
                               } )

@@ -36,14 +36,14 @@
 
     <script type="text/javascript">
         $(function() {
-            var expertiseId = "@Model.AffiliationId";
-            var expertiseViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliation(expertiseId);
-            expertiseViewModel.load()
+            var affiliationId = "@Model.AffiliationId";
+            var affiliationViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliation(affiliationId);
+            affiliationViewModel.load()
                 .done(function() {
 
-                    expertiseViewModel.setupWidgets("location");
-                    expertiseViewModel.setupValidation();
-                    ko.applyBindings(expertiseViewModel, $("#international-affiliation-edit")[0]);
+                    affiliationViewModel.setupWidgets("location");
+                    affiliationViewModel.setupValidation();
+                    ko.applyBindings(affiliationViewModel, $("#international-affiliation-edit")[0]);
 
                     var locationSelector = $( "#location" ).data( "kendoMultiSelect" );
                     locationSelector.setDataSource( new kendo.data.DataSource({
