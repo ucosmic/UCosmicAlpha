@@ -146,9 +146,9 @@ export class InstitutionalAgreementEditModel {
     contactDisplayName = ko.observable();
     contactIndex = 0;
     contactEmail = ko.observable();
-    contactMoreDetails = ko.observable(false);
+    //contactMoreDetails = ko.observable(false);
     contactMiddleName = ko.observable();
-    contactPhoneTextValue = ko.observable();
+    contactPhoneTextValue = ko.observable("");
     contactPhoneType = ko.observable();
     //contact = ko.observable();
 
@@ -463,14 +463,6 @@ export class InstitutionalAgreementEditModel {
                 });
             }
 
-            $("#phoneTypes").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: ko.mapping.toJS(this.phoneTypes())
-                })
-            });
-
             $("#contactSalutation").kendoComboBox({
                 dataTextField: "name",
                 dataValueField: "id",
@@ -500,6 +492,19 @@ export class InstitutionalAgreementEditModel {
                 showOn: "click",
                 autoHide: false
             })
+            this.contactPhoneTextValue.subscribe((me: string): void => {
+                if (this.contactPhoneTextValue().length > 0) {
+                    this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), textValue: this.contactPhoneTextValue() }))
+                    this.contactPhoneTextValue("");
+                    $(".phoneTypes").kendoDropDownList({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: ko.mapping.toJS(this.phoneTypes())
+                        })
+                    });
+                }
+            });
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
@@ -882,6 +887,13 @@ export class InstitutionalAgreementEditModel {
         $("#addAContact").fadeOut(500, function () {
             $("#addContact").fadeIn(500);
         });
+        $(".phoneTypes").kendoDropDownList({
+            dataTextField: "name",
+            dataValueField: "id",
+            dataSource: new kendo.data.DataSource({
+                data: ko.mapping.toJS(this.phoneTypes())
+            })
+        });
     }
 
     clearContactInfo(): void {
@@ -966,8 +978,20 @@ export class InstitutionalAgreementEditModel {
         e.stopPropagation();
     }
 
+
     addPhone(me, e): void {
-        this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), textValue: this.contactPhoneTextValue() }))
+        if (this.contactPhoneTextValue().length > 0) {
+            this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), textValue: this.contactPhoneTextValue() }))
+            //use index instead of id or make an incrimental observable
+            this.contactPhoneTextValue("");
+            $(".phoneTypes").kendoDropDownList({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.phoneTypes())
+                })
+            });
+        }
     }
 
     addAFile(): void {

@@ -71,9 +71,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactDisplayName = ko.observable();
             this.contactIndex = 0;
             this.contactEmail = ko.observable();
-            this.contactMoreDetails = ko.observable(false);
             this.contactMiddleName = ko.observable();
-            this.contactPhoneTextValue = ko.observable();
+            this.contactPhoneTextValue = ko.observable("");
             this.contactPhoneType = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
@@ -746,13 +745,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         })
                     });
                 }
-                $("#phoneTypes").kendoDropDownList({
-                    dataTextField: "name",
-                    dataValueField: "id",
-                    dataSource: new kendo.data.DataSource({
-                        data: ko.mapping.toJS(_this.phoneTypes())
-                    })
-                });
                 $("#contactSalutation").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
@@ -779,6 +771,22 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     content: "testing",
                     showOn: "click",
                     autoHide: false
+                });
+                _this.contactPhoneTextValue.subscribe(function (me) {
+                    if(_this.contactPhoneTextValue().length > 0) {
+                        _this.contactPhones.push(ko.mapping.fromJS({
+                            type: _this.contactPhoneType(),
+                            textValue: _this.contactPhoneTextValue()
+                        }));
+                        _this.contactPhoneTextValue("");
+                        $(".phoneTypes").kendoDropDownList({
+                            dataTextField: "name",
+                            dataValueField: "id",
+                            dataSource: new kendo.data.DataSource({
+                                data: ko.mapping.toJS(_this.phoneTypes())
+                            })
+                        });
+                    }
                 });
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
@@ -831,6 +839,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
             $("#addAContact").fadeOut(500, function () {
                 $("#addContact").fadeIn(500);
+            });
+            $(".phoneTypes").kendoDropDownList({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.phoneTypes())
+                })
             });
         };
         InstitutionalAgreementEditModel.prototype.clearContactInfo = function () {
@@ -918,10 +933,20 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             e.stopPropagation();
         };
         InstitutionalAgreementEditModel.prototype.addPhone = function (me, e) {
-            this.contactPhones.push(ko.mapping.fromJS({
-                type: this.contactPhoneType(),
-                textValue: this.contactPhoneTextValue()
-            }));
+            if(this.contactPhoneTextValue().length > 0) {
+                this.contactPhones.push(ko.mapping.fromJS({
+                    type: this.contactPhoneType(),
+                    textValue: this.contactPhoneTextValue()
+                }));
+                this.contactPhoneTextValue("");
+                $(".phoneTypes").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: ko.mapping.toJS(this.phoneTypes())
+                    })
+                });
+            }
         };
         InstitutionalAgreementEditModel.prototype.addAFile = function () {
         };

@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="field-row" data-bind="visible: contactMoreDetails">
+                    <div class="field-row">
                         <div class="field-column-left">
                             <div class="field-label-top">
                                 <label>Salutation</label>
@@ -80,17 +80,6 @@
                             </div>
                         </div>
                         <div class="field-column-right">
-                            <div class="field-label-top">
-                                <label>Suffix</label>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input id="contactSuffix" type="text" placeholder="[None]" 
-                                       data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactSuffix'" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-column-left">
                             <div class="field-label-top required">
                                 <label>First name</label>
                             </div>
@@ -98,7 +87,9 @@
                                 <input type="text" data-bind="value: contactFirstName" />
                             </div>
                         </div>
-                        <div class="field-column-right">
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
                             <div class="field-label-top required">
                                 <label>Middle name</label>
                             </div>
@@ -106,14 +97,23 @@
                                 <input type="text" data-bind="value: contactMiddleName" />
                             </div>
                         </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-column-left">
+                        <div class="field-column-right">
                             <div class="field-label-top required">
                                 <label>Last name</label>
                             </div>
                             <div class="field-input-label-top">
                                 <input type="text" data-bind="value: contactLastName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-column-left">
+                            <div class="field-label-top">
+                                <label>Suffix</label>
+                            </div>
+                            <div class="field-input-label-top">
+                                <input id="contactSuffix" type="text" placeholder="[None]" 
+                                       data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactSuffix'" />
                             </div>
                         </div>
                         <div class="field-column-right">
@@ -125,30 +125,39 @@
                             </div>
                         </div>
                     </div>
-                    <ul data-bind="foreach: contactPhones">
-                        <li style="margin-bottom: 10px" data-bind="element: 'contactE1'">
-                        <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-left"></i></a>
-                            <span data-bind="text: textValue() + ' - ' + type()"></span>
+                    <ul data-bind="foreach: contactPhones" style="margin-top: 40px; margin-bottom: 16px">
+                        <li  data-bind="element: 'contactE1'">
+                            <div class="field-row" style="margin-bottom: 5px">
+                                <div class="field-column-left">
+                                    <div class="field-label-top" data-bind="visible: ($index() == 0)">
+                                        <label>Phones</label>
+                                    </div>
+                                    <div class="field-input-label-top">
+                                        <input type="text" data-bind="value: textValue" />
+                                    </div>
+                                </div>
+                                <div class="field-column-right">
+                                    <div class="field-label-top" data-bind="visible: ($index() == 0)">
+                                        <label>Phone types</label>
+                                    </div>
+                                    <div class="field-input-label-top" style="width: 280px">
+                                        <input class="phoneTypes" type="text" placeholder="[None]" 
+                                               data-bind="value: type, valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                    <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-right"></i></a>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                     <div class="field-row">
                         <div class="field-column-left">
                             <div class="field-label-top">
-                                <label>Phone</label>
+                                <label>New phone</label>
                             </div>
-                            <div class="field-input-label-top">
+                            <div class="field-input-label-top"  style="width: 280px">
                                 <input type="text" data-bind="value: contactPhoneTextValue" />
                             </div>
-                        </div>
-                        <div class="field-column-right">
-                            <div class="field-label-top">
-                                <label>Phone Type</label>
-                            </div>
-                            <div class="field-input-label-top" style="width: 280px">
-                                <input id="phoneTypes" type="text" placeholder="[None]" 
-                                       data-bind="value: contactPhoneType, valueUpdate: 'afterkeydown', jqObservableElement: '$phoneTypes'" />
-                            </div>
-                            <a title="Remove this contact" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
+                            <a title="add phone" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
                         </div>
                     </div>
                     <footer>
@@ -158,9 +167,9 @@
                         </a>
                         <a href="" data-bind="click: $root.editContact, visible: contactsIsEdit" class="button" style="float: left">
                             <i class="green plus"></i>
-                            <span class="text">Edit contact</span>
+                            <span class="text">Save Changes</span>
                         </a>
-                        <a href="" data-bind="click: $root.cancelContact" class="button" style="float: left">
+                        <a href="" data-bind="click: $root.cancelContact" class="link" style="float: left; font-size: 26px">
                             <span class="text">Cancel</span>
                         </a>
                     </footer><br/>
