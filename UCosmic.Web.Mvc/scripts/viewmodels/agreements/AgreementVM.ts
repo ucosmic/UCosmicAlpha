@@ -150,6 +150,7 @@ export class InstitutionalAgreementEditModel {
     contactMiddleName = ko.observable();
     contactPhoneTextValue = ko.observable("");
     contactPhoneType = ko.observable();
+    $addContactDialog = $("#addContactDialog");
     //contact = ko.observable();
 
     uAgreements = ko.mapping.fromJS([]);
@@ -505,6 +506,19 @@ export class InstitutionalAgreementEditModel {
                     });
                 }
             });
+            this.$addContactDialog.kendoWindow({
+                width: 950,
+                close: function () => {
+                    $("#addAContact").fadeIn(500);
+                },
+                visible: false
+            });
+            $(".k-window").css({
+                position: 'fixed',
+                margin: 'auto',
+                top: '10%'
+            });
+            this.$addContactDialog.data("kendoWindow").close()
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
@@ -516,7 +530,6 @@ export class InstitutionalAgreementEditModel {
         $("#allParticipants").css("visibility", "").hide();
         $("#estSearch").css("visibility", "").hide();
         $("#addEstablishment").css("visibility", "").hide();
-        $("#addContact").css("visibility", "").hide();
     }
 
     removeParticipant(establishmentResultViewModel, e): bool {
@@ -858,6 +871,7 @@ export class InstitutionalAgreementEditModel {
     };
 
     editAContact(me): void {
+        this.$addContactDialog.data("kendoWindow").open().title("Edit Contact")
         this.contactsIsEdit(true);
         this.contactEmail(me.email());
         this.contactDisplayName(me.displayName());
@@ -885,7 +899,6 @@ export class InstitutionalAgreementEditModel {
         });
 
         $("#addAContact").fadeOut(500, function () {
-            $("#addContact").fadeIn(500);
         });
         $(".phoneTypes").kendoDropDownList({
             dataTextField: "name",
@@ -927,18 +940,16 @@ export class InstitutionalAgreementEditModel {
         this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
         this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
         this.clearContactInfo();
-        $("#addContact").fadeOut(500, function () {
-            $("#addAContact").fadeIn(500);
-        });
+        this.$addContactDialog.data("kendoWindow").close()
+        $("#addAContact").fadeIn(500);
     }
 
     addContact(me, e): void {
         if (this.validateContact.isValid()) {
             this.contacts.push(ko.mapping.fromJS({ jobTitle: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phone: ko.mapping.toJS(this.contactPhones()), email: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
             this.clearContactInfo();
-            $("#addContact").fadeOut(500, function () {
-                $("#addAContact").fadeIn(500);
-            });
+            this.$addContactDialog.data("kendoWindow").close();
+            $("#addAContact").fadeIn(500);
 
         } else {
             this.validateContact.errors.showAllMessages(true);
@@ -946,16 +957,14 @@ export class InstitutionalAgreementEditModel {
     }
 
     addAContact(me, e): void {
-        // push to contact array
+        this.$addContactDialog.data("kendoWindow").open().title("Add Contact")
         $("#addAContact").fadeOut(500, function () {
-            $("#addContact").fadeIn(500);
         });
     }
 
     cancelContact(): void {
-        $("#addContact").fadeOut(500, function () {
-            $("#addAContact").fadeIn(500);
-        });
+        this.$addContactDialog.data("kendoWindow").close()
+        $("#addAContact").fadeIn(500);
     }
 
     removeContact(me, e): bool {
@@ -964,9 +973,6 @@ export class InstitutionalAgreementEditModel {
             '" as a contact from this agreement?')) {
             this.contacts.remove(me);
         }
-        $("#addContact").fadeOut(500, function () {
-            $("#addAContact").fadeIn(500);
-        });
         e.preventDefault();
         e.stopPropagation();
         return false;

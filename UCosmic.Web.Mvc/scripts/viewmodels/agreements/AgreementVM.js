@@ -74,6 +74,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactMiddleName = ko.observable();
             this.contactPhoneTextValue = ko.observable("");
             this.contactPhoneType = ko.observable();
+            this.$addContactDialog = $("#addContactDialog");
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
             this.nickname = ko.observable();
@@ -788,6 +789,19 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         });
                     }
                 });
+                _this.$addContactDialog.kendoWindow({
+                    width: 950,
+                    close: function () {
+                        $("#addAContact").fadeIn(500);
+                    },
+                    visible: false
+                });
+                $(".k-window").css({
+                    position: 'fixed',
+                    margin: 'auto',
+                    top: '10%'
+                });
+                _this.$addContactDialog.data("kendoWindow").close();
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });
@@ -796,7 +810,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $("#allParticipants").css("visibility", "").hide();
             $("#estSearch").css("visibility", "").hide();
             $("#addEstablishment").css("visibility", "").hide();
-            $("#addContact").css("visibility", "").hide();
         };
         InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             if(confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
@@ -815,6 +828,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             return false;
         };
         InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
+            this.$addContactDialog.data("kendoWindow").open().title("Edit Contact");
             this.contactsIsEdit(true);
             this.contactEmail(me.email());
             this.contactDisplayName(me.displayName());
@@ -838,7 +852,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 return dataItem.name === me.salutation();
             });
             $("#addAContact").fadeOut(500, function () {
-                $("#addContact").fadeIn(500);
             });
             $(".phoneTypes").kendoDropDownList({
                 dataTextField: "name",
@@ -878,9 +891,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
             this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
             this.clearContactInfo();
-            $("#addContact").fadeOut(500, function () {
-                $("#addAContact").fadeIn(500);
-            });
+            this.$addContactDialog.data("kendoWindow").close();
+            $("#addAContact").fadeIn(500);
         };
         InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
             if(this.validateContact.isValid()) {
@@ -899,30 +911,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     middleName: this.contactMiddleName
                 }));
                 this.clearContactInfo();
-                $("#addContact").fadeOut(500, function () {
-                    $("#addAContact").fadeIn(500);
-                });
+                this.$addContactDialog.data("kendoWindow").close();
+                $("#addAContact").fadeIn(500);
             } else {
                 this.validateContact.errors.showAllMessages(true);
             }
         };
         InstitutionalAgreementEditModel.prototype.addAContact = function (me, e) {
+            this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
             $("#addAContact").fadeOut(500, function () {
-                $("#addContact").fadeIn(500);
             });
         };
         InstitutionalAgreementEditModel.prototype.cancelContact = function () {
-            $("#addContact").fadeOut(500, function () {
-                $("#addAContact").fadeIn(500);
-            });
+            this.$addContactDialog.data("kendoWindow").close();
+            $("#addAContact").fadeIn(500);
         };
         InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
             if(confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
                 this.contacts.remove(me);
             }
-            $("#addContact").fadeOut(500, function () {
-                $("#addAContact").fadeIn(500);
-            });
             e.preventDefault();
             e.stopPropagation();
             return false;
