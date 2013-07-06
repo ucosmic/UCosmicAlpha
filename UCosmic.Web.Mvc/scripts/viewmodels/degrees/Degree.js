@@ -80,6 +80,21 @@ var ViewModels;
                 });
                 ko.validation.group(this);
             };
+            Degree.prototype.setupSubscriptions = function () {
+                var _this = this;
+                this.title.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.fieldOfStudy.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.yearAwarded.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.institutionId.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+            };
             Degree.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -110,18 +125,6 @@ var ViewModels;
                     $.when(dataPact).done(function (data) {
                         ko.mapping.fromJS(data, {
                         }, _this);
-                        _this.title.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.fieldOfStudy.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.yearAwarded.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.institutionId.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);

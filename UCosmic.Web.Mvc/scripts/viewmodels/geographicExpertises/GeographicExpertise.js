@@ -49,6 +49,12 @@ var ViewModels;
                 });
                 ko.validation.group(this);
             };
+            GeographicExpertise.prototype.setupSubscriptions = function () {
+                var _this = this;
+                this.description.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+            };
             GeographicExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -82,9 +88,6 @@ var ViewModels;
                             });
                             _this.selectedLocationValues.push(_this.locations()[i].placeId());
                         }
-                        _this.description.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);

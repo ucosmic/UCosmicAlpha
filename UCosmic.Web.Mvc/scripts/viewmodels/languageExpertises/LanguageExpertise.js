@@ -75,6 +75,30 @@ var ViewModels;
                 ko.validation.registerExtenders();
                 ko.validation.group(this);
             };
+            LanguageExpertise.prototype.setupSubscriptions = function () {
+                var _this = this;
+                this.languageId.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.other.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.dialect.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.speakingProficiency.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.listeningProficiency.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.readingProficiency.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.writingProficiency.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+            };
             LanguageExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -136,27 +160,6 @@ var ViewModels;
                         _this.proficiencyInfo = proficiencyInfo;
                         ko.mapping.fromJS(data, {
                         }, _this);
-                        _this.languageId.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.other.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.dialect.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.speakingProficiency.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.listeningProficiency.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.readingProficiency.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
-                        _this.writingProficiency.subscribe(function (newValue) {
-                            _this.dirtyFlag(true);
-                        });
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);

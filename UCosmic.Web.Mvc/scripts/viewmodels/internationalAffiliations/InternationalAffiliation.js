@@ -115,7 +115,6 @@ var ViewModels;
                     this.locations = ko.observableArray();
                     this.whenLastUpdated = ko.observable(null);
                     this.whoLastUpdated = ko.observable(null);
-                    this.setupSubscriptions();
                     deferred.resolve();
                 } else {
                     var dataPact = $.Deferred();
@@ -139,7 +138,6 @@ var ViewModels;
                             });
                             _this.selectedLocationValues.push(_this.locations()[i].placeId());
                         }
-                        _this.setupSubscriptions();
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);

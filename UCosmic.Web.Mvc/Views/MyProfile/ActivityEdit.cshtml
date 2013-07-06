@@ -55,6 +55,8 @@
                     window.onbeforeunload = function() {
                         activityViewModel.autoSave(activityViewModel, null);
                     };
+
+                    activityViewModel.setupSubscriptions();
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);

@@ -40,7 +40,8 @@
                 .done(function() {
                     degreeViewModel.setupWidgets("institution");
                     degreeViewModel.setupValidation();
-                    ko.applyBindings(degreeViewModel, $("#degree-edit")[0]);
+                    ko.applyBindings( degreeViewModel, $( "#degree-edit" )[0] );
+                    degreeViewModel.setupSubscriptions();
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);

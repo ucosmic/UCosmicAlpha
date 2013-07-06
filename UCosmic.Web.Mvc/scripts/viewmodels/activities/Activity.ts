@@ -9,6 +9,7 @@
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 
 //interface KnockoutBindingHandlers
 //{
@@ -342,7 +343,7 @@ module ViewModels.Activities {
 
         // --------------------------------------------------------------------------------
         /*
-            */
+        */
         // --------------------------------------------------------------------------------
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
@@ -391,6 +392,22 @@ module ViewModels.Activities {
             this.values.types.extend( { atLeast: 1 } );
             this.values.startsOn.extend( { nullSafeDate: { message: "Start date must valid." } } );
             this.values.endsOn.extend( { nullSafeDate: { message: "End date must valid." } } );
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        setupSubscriptions(): void {
+            /* Autosave when fields change. */
+            this.values.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.values.content.subscribe((newValue: any): void => { this.keyCountAutoSave(newValue); });
+            this.values.startsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.values.endsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.values.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.values.wasExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.values.wasInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
         // --------------------------------------------------------------------------------
@@ -487,16 +504,6 @@ module ViewModels.Activities {
                               for ( var i = 0; i < this.activityTypes().length; i += 1 ) {
                                   this.activityTypes()[i].checked = ko.computed( this.defHasActivityTypeCallback( i ) );
                               }
-
-                              /* Autosave when fields change. */
-                              this.values.title.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.content.subscribe( ( newValue: any ): void => { this.keyCountAutoSave(newValue); } );
-                              this.values.startsOn.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.endsOn.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.onGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.wasExternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.wasInternallyFunded.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
-                              this.values.types.subscribe( ( newValue: any ): void => { this.dirtyFlag(true); } );
 
                               deferred.resolve();
                           } )
@@ -669,7 +676,7 @@ module ViewModels.Activities {
 
         // --------------------------------------------------------------------------------
         /*  
-            */
+        */
         // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             $( "#cancelConfirmDialog" ).dialog( {

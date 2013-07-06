@@ -146,6 +146,20 @@ module ViewModels.LanguageExpertises {
         }
 
         // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------
+        setupSubscriptions(): void {
+            this.languageId.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.other.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.dialect.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.speakingProficiency.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.listeningProficiency.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.readingProficiency.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.writingProficiency.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+        }
+
+        // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------  
@@ -225,14 +239,6 @@ module ViewModels.LanguageExpertises {
                                   this.proficiencyInfo = proficiencyInfo;
 
                                   ko.mapping.fromJS( data, {}, this );
-
-                                  this.languageId.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.other.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.dialect.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.speakingProficiency.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.listeningProficiency.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.readingProficiency.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.writingProficiency.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
 
                                   deferred.resolve();
                               } )

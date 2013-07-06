@@ -52,7 +52,8 @@
                 .done(function() {
                     expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");
                     expertiseViewModel.setupValidation();
-                    ko.applyBindings(expertiseViewModel, $("#language-expertise-edit")[0]);
+                    ko.applyBindings( expertiseViewModel, $( "#language-expertise-edit" )[0] );
+                    expertiseViewModel.setupSubscriptions();
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);

@@ -134,6 +134,17 @@ module ViewModels.Degrees {
         // --------------------------------------------------------------------------------
         /*
         */
+        // --------------------------------------------------------------------------------
+        setupSubscriptions(): void {
+            this.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.fieldOfStudy.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.yearAwarded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.institutionId.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
         // --------------------------------------------------------------------------------  
         constructor( educationId: string ) {
             this._initialize( educationId );
@@ -176,11 +187,6 @@ module ViewModels.Degrees {
                               .done( ( data: Service.ApiModels.Degree.IObservableDegree ): void => {
 
                                   ko.mapping.fromJS( data, {}, this );
-
-                                  this.title.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.fieldOfStudy.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.yearAwarded.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-                                  this.institutionId.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
 
                                   deferred.resolve();
                               } )

@@ -43,7 +43,7 @@
 
                     expertiseViewModel.setupWidgets("location");
                     expertiseViewModel.setupValidation();
-                    ko.applyBindings(expertiseViewModel, $("#geographic-expertise-edit")[0]);
+                    ko.applyBindings( expertiseViewModel, $( "#geographic-expertise-edit" )[0] );
 
                     var locationSelector = $( "#location" ).data( "kendoMultiSelect" );
                     locationSelector.setDataSource( new kendo.data.DataSource({
@@ -75,8 +75,9 @@
                                 });
                             }
                         }
-                    }) );
+                    } ) );
 
+                    expertiseViewModel.setupSubscriptions();
                 })
             .fail(function(jqXhr, textStatus, errorThrown) {
             alert(textStatus + "|" + errorThrown);

@@ -1,6 +1,7 @@
 ﻿@{
     var viewingUser = Session.UserImpersonating() ?? User;
 }
+
 <form enctype="multipart/form-data" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
     <div class="field-table w870-l300-v570">
         <div class="field-row">
@@ -281,7 +282,7 @@
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>Institutional Affiliation:</span>
             </div>
-            <div style="display: inherit">
+            <div class="affiliation-item" >
                 <span data-bind="text: campus"></span>
             </div>
         </div>
@@ -289,15 +290,15 @@
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>College/Unit:</span>
             </div>
-            <div style="display: inherit">
+            <div class="affiliation-item" >
                 <span data-bind="text: college"></span>
             </div>
         </div>
         <div style="display: inline-block" data-bind="visible: departmentId() != null">
-            <div style="width: 200px; display: inherit; font-weight: bold">
+            <div style="vertical-align: top; width: 200px; display: inherit; font-weight: bold">
                 <span>Department:</span>
             </div>
-            <div style="display: inherit">
+            <div class="affiliation-item" >
                 <span data-bind="text: department"></span>
             </div>
         </div>
@@ -305,7 +306,7 @@
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>Position Title:</span>
             </div>
-            <div style="display: inherit">
+            <div class="affiliation-item" >
                 <span data-bind="text: facultyRank"></span>
             </div>
         </div>

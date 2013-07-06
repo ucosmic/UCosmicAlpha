@@ -158,6 +158,33 @@ var ViewModels;
                     }
                 });
             };
+            Activity.prototype.setupSubscriptions = function () {
+                var _this = this;
+                this.values.title.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.values.content.subscribe(function (newValue) {
+                    _this.keyCountAutoSave(newValue);
+                });
+                this.values.startsOn.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.values.endsOn.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.values.onGoing.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.values.wasExternallyFunded.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.values.wasInternallyFunded.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+                this.values.types.subscribe(function (newValue) {
+                    _this.dirtyFlag(true);
+                });
+            };
             Activity.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -218,30 +245,6 @@ var ViewModels;
                     for(var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
                     }
-                    _this.values.title.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.content.subscribe(function (newValue) {
-                        _this.keyCountAutoSave(newValue);
-                    });
-                    _this.values.startsOn.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.endsOn.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.onGoing.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.wasExternallyFunded.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.wasInternallyFunded.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
-                    _this.values.types.subscribe(function (newValue) {
-                        _this.dirtyFlag(true);
-                    });
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);

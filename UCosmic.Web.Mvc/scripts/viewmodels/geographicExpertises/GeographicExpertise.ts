@@ -111,6 +111,14 @@ module ViewModels.GeographicExpertises {
         }
 
         // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------
+        setupSubscriptions(): void {
+            this.description.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+        }
+
+        // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------  
@@ -132,6 +140,7 @@ module ViewModels.GeographicExpertises {
                 this.locations = ko.observableArray();
                 this.whenLastUpdated = ko.observable(null);
                 this.whoLastUpdated = ko.observable(null);
+
                 deferred.resolve();
             }
             else {
@@ -162,8 +171,6 @@ module ViewModels.GeographicExpertises {
 
                                       this.selectedLocationValues.push( this.locations()[i].placeId() );
                                   }
-
-                                  this.description.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
 
                                   deferred.resolve();
                               } )

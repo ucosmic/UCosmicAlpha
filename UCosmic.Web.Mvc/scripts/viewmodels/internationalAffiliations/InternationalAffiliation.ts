@@ -156,20 +156,20 @@ module ViewModels.InternationalAffiliations {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( affiliationId: string ) {
-            this._initialize( affiliationId );
+        setupSubscriptions(): void {
+            this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.institution.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
         // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------  
-        private setupSubscriptions(): void {
-            this.from.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-            this.to.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-            this.onGoing.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-            this.institution.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
-            this.position.subscribe( ( newValue: any ): void => { this.dirtyFlag( true ); } );
+        constructor( affiliationId: string ) {
+            this._initialize( affiliationId );
         }
 
         // --------------------------------------------------------------------------------
@@ -191,8 +191,6 @@ module ViewModels.InternationalAffiliations {
                 this.locations = ko.observableArray();
                 this.whenLastUpdated = ko.observable( null );
                 this.whoLastUpdated = ko.observable( null );
-
-                this.setupSubscriptions();
 
                 deferred.resolve();
             }
@@ -224,8 +222,6 @@ module ViewModels.InternationalAffiliations {
 
                                       this.selectedLocationValues.push( this.locations()[i].placeId() );
                                   }
-
-                                  this.setupSubscriptions();
 
                                   deferred.resolve();
                               } )

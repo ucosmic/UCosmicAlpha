@@ -2110,9 +2110,6 @@
       <DependentUpon>LanguageExpertises.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertise.ts" />
-    <Content Include="scripts\viewmodels\languageExpertises\LauageExpertise.js">
-      <DependentUpon>LanguageExpertise.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.ts" />
     <Content Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.js">
       <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
