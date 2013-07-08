@@ -15,17 +15,17 @@
                     <div class="item">
                         <div>
                             <strong data-bind="text: displayName"></strong>
-                            <a data-bind="attr: {href: 'mailto:' + email()}, text: email"></a>
+                            <a data-bind="attr: {href: 'mailto:' + emailAddress()}, text: emailAddress"></a>
                             <br/>
                             <table>
                                 <tr>
                                     <td>
-                                        <span data-bind="text: jobTitle" ></span>, 
+                                        <span data-bind="text: title" ></span>, 
                                     </td>
                                     <td>
-                                        <ul data-bind="foreach: phone"style="margin-left: 10px">
+                                        <ul data-bind="foreach: phones"style="margin-left: 10px">
                                             <li data-bind="element: 'contactE1'" class="phoneList">
-                                                <span data-bind="text: type() + ': ' + textValue()"></span>
+                                                <span data-bind="text: type() + ': ' + value()"></span>
                                             </li>
                                         </ul>
                                     </td>
@@ -140,7 +140,7 @@
                                 <label>Phones</label>
                             </div>
                             <div class="field-input-label-top">
-                                <input type="text" data-bind="value: textValue" />
+                                <input type="text" data-bind="value: value" />
                             </div>
                         </div>
                         <div class="field-column-right">

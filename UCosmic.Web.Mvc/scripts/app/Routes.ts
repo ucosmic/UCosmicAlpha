@@ -275,6 +275,15 @@ module App.Routes {
                 }
             }
 
+            export module Contacts {
+
+                export function get (agreementId?: number): string {
+                    var url = 'agreements/0/contacts';
+                    if (agreementId) url = url.replace('0', agreementId.toString())
+                    return makeUrl(url);
+                }
+            }
+
             export module Settings {
 
                 export function get (): string {

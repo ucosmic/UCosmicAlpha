@@ -492,40 +492,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7));
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
-            var newPhone = ko.mapping.fromJS([]);
-            newPhone.push(new phoneNumber("32145", "home", 1));
-            newPhone.push(new phoneNumber("321345645", "work", 2));
-            this.contacts.push(ko.mapping.fromJS({
-                jobTitle: "job1",
-                firstName: "joe",
-                lastName: "blow",
-                id: 1,
-                personId: "asdf",
-                phone: newPhone,
-                email: "asdf@as.as11",
-                type: "Home Principal",
-                suffix: "Jr.",
-                salutation: "Dr.",
-                displayName: "Joe Blow",
-                middleName: "middle"
-            }));
-            var newPhone2 = ko.mapping.fromJS([]);
-            newPhone2.push(new phoneNumber("32145222", "home2", 2));
-            newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-            this.contacts.push(ko.mapping.fromJS({
-                jobTitle: "job2",
-                firstName: "arya",
-                lastName: "stark",
-                id: 2,
-                personId: "asdf22",
-                phone: newPhone2,
-                email: "asdf@as.as22",
-                type: "Home Principal",
-                suffix: "Sr.",
-                salutation: "Ms.",
-                displayName: "Arya Stark",
-                middleName: "middle2"
-            }));
+            var _this = this;
+            $.get(App.Routes.WebApi.Agreements.Contacts.get()).done(function (response) {
+                ko.mapping.fromJS(response, _this.contacts);
+                $("#LoadingPage").hide();
+            });
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
             var _this = this;
@@ -939,13 +910,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
             this.$addContactDialog.data("kendoWindow").open().title("Edit Contact");
             this.contactsIsEdit(true);
-            this.contactEmail(me.email());
+            this.contactEmail(me.emailAddress());
             this.contactDisplayName(me.displayName());
             this.contactPersonId(me.personId());
-            this.contactJobTitle(me.jobTitle());
+            this.contactJobTitle(me.title());
             this.contactFirstName(me.firstName());
             this.contactLastName(me.lastName());
-            this.contactPhones(me.phone());
+            this.contactPhones(me.phones());
             this.contactMiddleName(me.middleName());
             this.contactIndex = this.contacts.indexOf(me);
             var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
@@ -988,14 +959,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
             this.contactsIsEdit(false);
-            this.contacts()[this.contactIndex].email(this.contactEmail());
-            this.contacts()[this.contactIndex].jobTitle(this.contactJobTitle());
+            this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
+            this.contacts()[this.contactIndex].title(this.contactJobTitle());
             this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
             this.contacts()[this.contactIndex].personId(this.contactPersonId());
             this.contacts()[this.contactIndex].firstName(this.contactFirstName());
             this.contacts()[this.contactIndex].lastName(this.contactLastName());
             this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
-            this.contacts()[this.contactIndex].phone(this.contactPhones());
+            this.contacts()[this.contactIndex].phones(this.contactPhones());
             this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
             this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
             this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
@@ -1006,13 +977,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
             if(this.validateContact.isValid()) {
                 this.contacts.push(ko.mapping.fromJS({
-                    jobTitle: this.contactJobTitle(),
+                    title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
                     lastName: this.contactLastName(),
                     id: 1,
                     personId: this.contactPersonId(),
-                    phone: ko.mapping.toJS(this.contactPhones()),
-                    email: this.contactEmail(),
+                    phones: ko.mapping.toJS(this.contactPhones()),
+                    emailAddress: this.contactEmail(),
                     type: this.contactTypeOptionSelected(),
                     suffix: this.contactSuffix(),
                     salutation: this.contactSalutation(),
@@ -1067,7 +1038,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             if(this.contactPhoneTextValue().length > 0) {
                 this.contactPhones.push(ko.mapping.fromJS({
                     type: this.contactPhoneType(),
-                    textValue: this.contactPhoneTextValue()
+                    value: this.contactPhoneTextValue()
                 }));
                 this.contactPhoneTextValue("");
                 $(".phoneTypes").kendoDropDownList({

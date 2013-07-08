@@ -287,6 +287,17 @@ var App;
                     Participant.get = get;
                 })(Agreements.Participant || (Agreements.Participant = {}));
                 var Participant = Agreements.Participant;
+                (function (Contacts) {
+                    function get(agreementId) {
+                        var url = 'agreements/0/contacts';
+                        if(agreementId) {
+                            url = url.replace('0', agreementId.toString());
+                        }
+                        return makeUrl(url);
+                    }
+                    Contacts.get = get;
+                })(Agreements.Contacts || (Agreements.Contacts = {}));
+                var Contacts = Agreements.Contacts;
                 (function (Settings) {
                     function get() {
                         return makeUrl('agreements/settings');
