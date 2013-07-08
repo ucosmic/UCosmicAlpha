@@ -66,9 +66,11 @@
                 <div class="field-column-right">
                     <div class="field-label-top required">
                         <label>Email address</label>
+                        <i>(required, public visibility)</i>
+                        <i><strong style="color: blue">(searchable)</strong></i>
                     </div>
                     <div class="field-input-label-top">
-                        <input type="text" data-bind="value: contactEmail" />
+                        <input id="contactEmail" type="text" data-bind="value: contactEmail" />
                     </div>
                 </div>
             </div>
@@ -85,27 +87,29 @@
                 <div class="field-column-right">
                     <div class="field-label-top required">
                         <label>First name</label>
+                        <i><strong style="color: blue">(searchable)</strong></i>
                     </div>
                     <div class="field-input-label-top">
-                        <input type="text" data-bind="value: contactFirstName" />
+                        <input id="contactFirstName" type="text" data-bind="value: contactFirstName" />
                     </div>
                 </div>
             </div>
             <div class="field-row">
                 <div class="field-column-left">
-                    <div class="field-label-top required">
+                    <div class="field-label-top">
                         <label>Middle name</label>
                     </div>
                     <div class="field-input-label-top">
-                        <input type="text" data-bind="value: contactMiddleName" />
+                        <input id="contactMiddleName" type="text" data-bind="value: contactMiddleName" />
                     </div>
                 </div>
                 <div class="field-column-right">
                     <div class="field-label-top required">
                         <label>Last name</label>
+                        <i><strong style="color: blue">(searchable)</strong></i>
                     </div>
                     <div class="field-input-label-top">
-                        <input type="text" data-bind="value: contactLastName" />
+                        <input id="contactLastName" type="text" data-bind="value: contactLastName" />
                     </div>
                 </div>
             </div>
@@ -143,7 +147,7 @@
                             <div class="field-label-top" data-bind="visible: ($index() == 0)">
                                 <label>Phone types</label>
                             </div>
-                            <div class="field-input-label-top" style="width: 280px">
+                            <div class="field-input-label-top" style="width: 395px">
                                 <input class="phoneTypes" type="text" placeholder="[None]" 
                                        data-bind="value: type, valueUpdate: 'afterkeydown'" />
                             </div>
@@ -157,7 +161,7 @@
                     <div class="field-label-top">
                         <label>New phone</label>
                     </div>
-                    <div class="field-input-label-top"  style="width: 280px">
+                    <div class="field-input-label-top"  style="width: 400px">
                         <input type="text" data-bind="value: contactPhoneTextValue" />
                     </div>
                     <a title="add phone" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
@@ -171,6 +175,9 @@
                 <a href="" data-bind="click: $root.editContact, visible: contactsIsEdit" class="button" style="float: left">
                     <i class="green plus"></i>
                     <span class="text">Save Changes</span>
+                </a>
+                <a href="" data-bind="click: $root.clearContact" class="link" style="float: left; font-size: 26px; margin-right: 10px;">
+                    <span class="text">Clear</span>
                 </a>
                 <a href="" data-bind="click: $root.cancelContact" class="link" style="float: left; font-size: 26px">
                     <span class="text">Cancel</span>

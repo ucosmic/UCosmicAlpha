@@ -397,6 +397,11 @@ export class InstitutionalAgreementEditModel {
             type: 'GET'
         })
         .done(function (result) => {
+            var $contactEmail = $("#contactEmail");
+            var $contactLastName = $("#contactLastName");
+            var $contactFirstName = $("#contactFirstName");
+            var $contactSalutation = $("#contactSalutation");
+            var $contactSuffix = $("#contactSuffix");
             this.isCustomTypeAllowed(result.isCustomTypeAllowed);
             this.isCustomStatusAllowed(result.isCustomStatusAllowed);
             this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -464,7 +469,7 @@ export class InstitutionalAgreementEditModel {
                 });
             }
 
-            $("#contactSalutation").kendoComboBox({
+            $contactSalutation.kendoComboBox({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
@@ -472,7 +477,7 @@ export class InstitutionalAgreementEditModel {
                 })
             });
 
-            $("#contactSuffix").kendoComboBox({
+            $contactSuffix.kendoComboBox({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
@@ -511,14 +516,127 @@ export class InstitutionalAgreementEditModel {
                 close: function () => {
                     $("#addAContact").fadeIn(500);
                 },
-                visible: false
+                visible: false,
+                draggable: false,
+                resizable: false
             });
             $(".k-window").css({
                 position: 'fixed',
                 margin: 'auto',
-                top: '10%'
+                top: '20px'
             });
-            this.$addContactDialog.data("kendoWindow").close()
+
+            function kacSelext(me, e) => {
+
+                var dataItem = me.dataItem(e.item.index());
+                this.contactFirstName(dataItem.firstName);
+                this.contactLastName(dataItem.lastName);
+                this.contactEmail(dataItem.defaultEmailAddress);
+                this.contactMiddleName(dataItem.middleName);
+                this.contactPersonId(dataItem.id);
+                this.contactSuffixSelected(dataItem.suffix);
+                this.contactSalutationSelected(dataItem.salutation);
+                $contactEmail.prop('disabled', true);
+                $contactLastName.prop('disabled', true);
+                $contactFirstName.prop('disabled', true);
+                $("#contactMiddleName").prop('disabled', true);
+                $contactSalutation.data("kendoComboBox").enable(false);
+                $contactSuffix.data("kendoComboBox").enable(false);
+                this.validateContact.errors.showAllMessages(true);
+            };
+
+            $contactEmail.kendoAutoComplete({
+                dataTextField: "defaultEmailAddress",
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: (options: any): void => {
+                            $.ajax({
+                                url: App.Routes.WebApi.People.get(),
+                                data: {
+                                    email: this.contactEmail(),
+                                    emailMatch: 'startsWith'
+                                },
+                                success: (results: any): void => {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
+                    }
+                }),
+                change: (e: any): void => {
+                    //this.checkInstitutionForNull();
+                },
+                select: (e: any): void => {
+                    kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+
+            $contactLastName.kendoAutoComplete({
+                dataTextField: "lastName",
+                template: "#=displayName#",
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: (options: any): void => {
+                            $.ajax({
+                                url: App.Routes.WebApi.People.get(),
+                                data: {
+                                    lastName: this.contactLastName(),
+                                    lastNameMatch: 'startsWith'
+                                },
+                                success: (results: any): void => {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
+                    }
+                }),
+                change: (e: any): void => {
+                    //this.checkInstitutionForNull();
+                },
+                select: (e: any): void => {
+                    kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+
+            $contactFirstName.kendoAutoComplete({
+                dataTextField: "firstName",
+                template: "#=displayName#",
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: (options: any): void => {
+                            $.ajax({
+                                url: App.Routes.WebApi.People.get(),
+                                data: {
+                                    firstName: this.contactFirstName(),
+                                    firstNameMatch: 'startsWith'
+                                },
+                                success: (results: any): void => {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
+                    }
+                }),
+                change: (e: any): void => {
+                    //this.checkInstitutionForNull();
+                },
+                select: (e: any): void => {
+                    kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
@@ -965,6 +1083,22 @@ export class InstitutionalAgreementEditModel {
     cancelContact(): void {
         this.$addContactDialog.data("kendoWindow").close()
         $("#addAContact").fadeIn(500);
+    }
+
+    clearContact(): void {
+        this.clearContactInfo();
+        var $contactEmail = $("#contactEmail");
+        var $contactLastName = $("#contactLastName");
+        var $contactFirstName = $("#contactFirstName");
+        var $contactSalutation = $("#contactSalutation");
+        var $contactSuffix = $("#contactSuffix");
+        $contactEmail.prop('disabled', false);
+        $contactLastName.prop('disabled', false);
+        $contactFirstName.prop('disabled', false);
+        $("#contactMiddleName").prop('disabled', false);
+        $contactSalutation.data("kendoComboBox").enable(true);
+        $contactSuffix.data("kendoComboBox").enable(true);
+        this.validateContact.errors.showAllMessages(false);
     }
 
     removeContact(me, e): bool {

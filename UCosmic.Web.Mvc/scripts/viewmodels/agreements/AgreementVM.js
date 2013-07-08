@@ -677,6 +677,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 url: eval(url),
                 type: 'GET'
             }).done(function (result) {
+                var $contactEmail = $("#contactEmail");
+                var $contactLastName = $("#contactLastName");
+                var $contactFirstName = $("#contactFirstName");
+                var $contactSalutation = $("#contactSalutation");
+                var $contactSuffix = $("#contactSuffix");
                 _this.isCustomTypeAllowed(result.isCustomTypeAllowed);
                 _this.isCustomStatusAllowed(result.isCustomStatusAllowed);
                 _this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -746,14 +751,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         })
                     });
                 }
-                $("#contactSalutation").kendoComboBox({
+                $contactSalutation.kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
                         data: ko.mapping.toJS(_this.contactSalutation())
                     })
                 });
-                $("#contactSuffix").kendoComboBox({
+                $contactSuffix.kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
@@ -794,14 +799,118 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     close: function () {
                         $("#addAContact").fadeIn(500);
                     },
-                    visible: false
+                    visible: false,
+                    draggable: false,
+                    resizable: false
                 });
                 $(".k-window").css({
                     position: 'fixed',
                     margin: 'auto',
-                    top: '10%'
+                    top: '20px'
                 });
-                _this.$addContactDialog.data("kendoWindow").close();
+                function kacSelext(me, e) {
+                    var dataItem = me.dataItem(e.item.index());
+                    _this.contactFirstName(dataItem.firstName);
+                    _this.contactLastName(dataItem.lastName);
+                    _this.contactEmail(dataItem.defaultEmailAddress);
+                    _this.contactMiddleName(dataItem.middleName);
+                    _this.contactPersonId(dataItem.id);
+                    _this.contactSuffixSelected(dataItem.suffix);
+                    _this.contactSalutationSelected(dataItem.salutation);
+                    $contactEmail.prop('disabled', true);
+                    $contactLastName.prop('disabled', true);
+                    $contactFirstName.prop('disabled', true);
+                    $("#contactMiddleName").prop('disabled', true);
+                    $contactSalutation.data("kendoComboBox").enable(false);
+                    $contactSuffix.data("kendoComboBox").enable(false);
+                    _this.validateContact.errors.showAllMessages(true);
+                }
+                $contactEmail.kendoAutoComplete({
+                    dataTextField: "defaultEmailAddress",
+                    minLength: 3,
+                    filter: "contains",
+                    ignoreCase: true,
+                    dataSource: new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: function (options) {
+                                $.ajax({
+                                    url: App.Routes.WebApi.People.get(),
+                                    data: {
+                                        email: _this.contactEmail(),
+                                        emailMatch: 'startsWith'
+                                    },
+                                    success: function (results) {
+                                        options.success(results.items);
+                                    }
+                                });
+                            }
+                        }
+                    }),
+                    change: function (e) {
+                    },
+                    select: function (e) {
+                        kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                    }
+                });
+                $contactLastName.kendoAutoComplete({
+                    dataTextField: "lastName",
+                    template: "#=displayName#",
+                    minLength: 3,
+                    filter: "contains",
+                    ignoreCase: true,
+                    dataSource: new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: function (options) {
+                                $.ajax({
+                                    url: App.Routes.WebApi.People.get(),
+                                    data: {
+                                        lastName: _this.contactLastName(),
+                                        lastNameMatch: 'startsWith'
+                                    },
+                                    success: function (results) {
+                                        options.success(results.items);
+                                    }
+                                });
+                            }
+                        }
+                    }),
+                    change: function (e) {
+                    },
+                    select: function (e) {
+                        kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                    }
+                });
+                $contactFirstName.kendoAutoComplete({
+                    dataTextField: "firstName",
+                    template: "#=displayName#",
+                    minLength: 3,
+                    filter: "contains",
+                    ignoreCase: true,
+                    dataSource: new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: function (options) {
+                                $.ajax({
+                                    url: App.Routes.WebApi.People.get(),
+                                    data: {
+                                        firstName: _this.contactFirstName(),
+                                        firstNameMatch: 'startsWith'
+                                    },
+                                    success: function (results) {
+                                        options.success(results.items);
+                                    }
+                                });
+                            }
+                        }
+                    }),
+                    change: function (e) {
+                    },
+                    select: function (e) {
+                        kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                    }
+                });
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });
@@ -925,6 +1034,21 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.cancelContact = function () {
             this.$addContactDialog.data("kendoWindow").close();
             $("#addAContact").fadeIn(500);
+        };
+        InstitutionalAgreementEditModel.prototype.clearContact = function () {
+            this.clearContactInfo();
+            var $contactEmail = $("#contactEmail");
+            var $contactLastName = $("#contactLastName");
+            var $contactFirstName = $("#contactFirstName");
+            var $contactSalutation = $("#contactSalutation");
+            var $contactSuffix = $("#contactSuffix");
+            $contactEmail.prop('disabled', false);
+            $contactLastName.prop('disabled', false);
+            $contactFirstName.prop('disabled', false);
+            $("#contactMiddleName").prop('disabled', false);
+            $contactSalutation.data("kendoComboBox").enable(true);
+            $contactSuffix.data("kendoComboBox").enable(true);
+            this.validateContact.errors.showAllMessages(false);
         };
         InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
             if(confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
