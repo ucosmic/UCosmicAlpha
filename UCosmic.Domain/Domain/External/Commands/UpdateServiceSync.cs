@@ -7,7 +7,7 @@ namespace UCosmic.Domain.External
     public class UpdateServiceSync
     {
         public int Id { get; protected set; }
-        public string Name { get; protected internal set; }
+        public string Name { get; set; }
         public DateTime? ExternalSyncDate { get; set; }
         public DateTime? LastUpdateAttempt { get; set; }
         public int? UpdateFailCount { get; set; }
@@ -34,13 +34,16 @@ namespace UCosmic.Domain.External
     public class HandleUpdateServiceSyncCommand : IHandleCommands<UpdateServiceSync>
     {
         private readonly ICommandEntities _entities;
+        private readonly IQueryEntities _query;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandleUpdateServiceSyncCommand(ICommandEntities entities
+        public HandleUpdateServiceSyncCommand( ICommandEntities entities
+            , IQueryEntities query
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
+            _query = query;
             _unitOfWork = unitOfWork;
         }
 
@@ -48,6 +51,7 @@ namespace UCosmic.Domain.External
         {
             if (command == null) { throw new ArgumentNullException("command"); }
 
+            //var settings = _query.Query<ServiceSync>().SingleOrDefault(p => p.Id == command.Id);
             var settings = _entities.Get<ServiceSync>().SingleOrDefault(p => p.Id == command.Id);
             if (settings == null)
             {

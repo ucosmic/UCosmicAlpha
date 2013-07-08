@@ -294,7 +294,7 @@
                 <span data-bind="text: college"></span>
             </div>
         </div>
-        <div style="display: inline-block" data-bind="visible: departmentId() != null">
+        <div style="display: inline-block" data-bind="visible: (departmentId() != null) && (department() !== 'None')">
             <div style="vertical-align: top; width: 200px; display: inherit; font-weight: bold">
                 <span>Department:</span>
             </div>

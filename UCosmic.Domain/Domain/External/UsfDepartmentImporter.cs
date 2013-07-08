@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 649
+
+using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
@@ -10,10 +12,6 @@ using System.Runtime.Serialization.Json;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.External.Services;
 
-
-#pragma warning disable 649
-
-
 namespace UCosmic.Domain.External
 {
     /*
@@ -21,7 +19,7 @@ namespace UCosmic.Domain.External
      * in UsfFacultyImporter.  If you wish to raise UsfStaleEstablishmentHierarchy event
      * in a class other than UsfFacultyImporter, you will need to re-think synchronization.
      */
-    public class UsfDepartmentImporter : IHandleEvents<UsfStaleEstablishmentHierarchy>
+    public class UsfDepartmentImporter // : IHandleEvents<UsfStaleEstablishmentHierarchy>
     {
         [DataContract]
         private class DepartmentRecord
@@ -41,11 +39,11 @@ namespace UCosmic.Domain.External
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
+        private readonly IQueryEntities _query;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogExceptions _exceptionLogger;
 
         private Establishment _usf;
         private StringDictionary _campuses;
@@ -59,19 +57,19 @@ namespace UCosmic.Domain.External
         */
         // ----------------------------------------------------------------------
         public UsfDepartmentImporter( ICommandEntities entities,
+                                      IQueryEntities query,
                                       IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
                                       IHandleCommands<UpdateServiceSync> updateServiceSync,
                                       IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
-                                      IUnitOfWork unitOfWork,
-                                      ILogExceptions exceptionLogger )
+                                      IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _query = query;
             _createUsfEstablishment = createUsfEstablishment;
             _updateServiceSync = updateServiceSync;
             _hierarchy = hierarchy;
             _unitOfWork = unitOfWork;
             _usf = null;
-            _exceptionLogger = exceptionLogger;
         }
 
         // ----------------------------------------------------------------------
@@ -310,16 +308,14 @@ namespace UCosmic.Domain.External
         /*
         */
         // --------------------------------------------------------------------------------
-        public void Handle(UsfStaleEstablishmentHierarchy @event)
+        public void Handle(/*UsfStaleEstablishmentHierarchy @event*/)
         {
             Debug.WriteLine(DateTime.Now + " USF: Begin establishment hierarchy update.");
 
             var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
             if (serviceSync == null)
             {
-                var ex = new Exception("Could not find ServiceSync for USF.");
-                _exceptionLogger.Log(ex);
-                return;
+                throw new Exception("Could not find ServiceSync for USF.");
             }
 
             try
@@ -367,9 +363,8 @@ namespace UCosmic.Domain.External
 
                 var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
                 {
-                    ExternalSyncDate = _lastDepartmentListActivityDate,
                     LastUpdateResult = "succeeded",
-                    UpdateFailCount = 0
+                    ExternalSyncDate = _lastDepartmentListActivityDate
                 };
 
                 _updateServiceSync.Handle(updateServiceSyncCommand);
@@ -379,35 +374,8 @@ namespace UCosmic.Domain.External
             }
             catch (Exception ex)
             {
-                _exceptionLogger.Log(ex);
-
-                var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
-                {
-                    LastUpdateResult = "failed",
-                    UpdateFailCount = serviceSync.UpdateFailCount + 1
-                };
-
-                try
-                {
-                    _updateServiceSync.Handle(updateServiceSyncCommand);
-                    _unitOfWork.SaveChanges();
-                }
-                catch
-                {
-                    /* Ignore concurrency errors. */
-                }
-
-                int maxFailCount = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentListUpdateMaxFailCountBeforeErrorMail"]);
-                if (serviceSync.UpdateFailCount >= maxFailCount)
-                {
-                    string message =
-                        String.Format("USF: DepartmentIdLookup service has failed (consecutively) {0} times.",
-                                      serviceSync.UpdateFailCount.ToString());
-                    var ex1 = new Exception(message);
-                    _exceptionLogger.Log(ex1);
-                }
-
                 Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update FAILED. " + ex.Message);
+                throw ex;
             }
         }
     }

@@ -9,24 +9,29 @@ namespace UCosmic.Domain.External
     {
         private static string GetTgtResource(string username, string password)
         {
-            string uri = ConfigurationManager.AppSettings["UsfCasTicketService"];
             string tgtResource = null;
-            var request = (HttpWebRequest)WebRequest.Create(uri);
+
+            string uri = ConfigurationManager.AppSettings["UsfCasTicketService"];
+            var request = (HttpWebRequest) WebRequest.Create(uri);
 
             request.Method = "POST";
-            var requestStream = new StreamWriter(request.GetRequestStream());
-            string requestBody = String.Format("username={0}&password={1}", username, password);
-            requestStream.Write(requestBody);
-            requestStream.Close();
+
+            using (var requestStream = new StreamWriter(request.GetRequestStream()))
+            {
+                string requestBody = String.Format("username={0}&password={1}", username, password);
+                requestStream.Write(requestBody);
+                requestStream.Close();
+            }
 
             request.Timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfCASTGTTimeoutMS"]);
             var response = request.GetResponse();
 
-            var responseStream = new StreamReader(response.GetResponseStream());
-            var responseBody = responseStream.ReadToEnd();
-            responseStream.Close();
+            using (var responseStream = new StreamReader(response.GetResponseStream()))
+            {
+                var responseBody = responseStream.ReadToEnd();
+                responseStream.Close();
 
-            /*
+                /*
                 * <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
                 * <html>
                 *  <head>
@@ -43,10 +48,11 @@ namespace UCosmic.Domain.External
                 * </html>
                 */
 
-            const string pattern = "action=";
-            int startIndex = responseBody.IndexOf(pattern) + pattern.Length + 1 /* skip first quote */;
-            int length = responseBody.IndexOf("\"", startIndex) - startIndex;
-            tgtResource = responseBody.Substring(startIndex, length);
+                const string pattern = "action=";
+                int startIndex = responseBody.IndexOf(pattern) + pattern.Length + 1 /* skip first quote */;
+                int length = responseBody.IndexOf("\"", startIndex) - startIndex;
+                tgtResource = responseBody.Substring(startIndex, length);
+            }
 
             return tgtResource;            
         }
@@ -57,18 +63,23 @@ namespace UCosmic.Domain.External
             var request = (HttpWebRequest)WebRequest.Create(tgtResource);
 
             request.Method = "POST";
-            var requestStream = new StreamWriter(request.GetRequestStream());
-            string requestBody = String.Format("service={0}", serviceUri);
-            requestStream.Write(requestBody);
-            requestStream.Close();
+            using (var requestStream = new StreamWriter(request.GetRequestStream()))
+            {
+                string requestBody = String.Format("service={0}", serviceUri);
+                requestStream.Write(requestBody);
+                requestStream.Close();
+            }
 
             request.Timeout = 15000;
             var response = request.GetResponse();
-            var responseStream = new StreamReader(response.GetResponseStream());
-            ticket = responseStream.ReadToEnd();
-            responseStream.Close();
 
-            return ticket;                
+            using (var responseStream = new StreamReader(response.GetResponseStream()))
+            {
+                ticket = responseStream.ReadToEnd();
+                responseStream.Close();
+            }
+
+            return ticket;
         }
 
         public static string GetServiceTicket(string username, string password, string serviceUri)
