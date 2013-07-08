@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Principal;
 using System.Threading;
+using Newtonsoft.Json;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
@@ -143,13 +144,16 @@ namespace UCosmic.Domain.External
                     var service = new UsfFacultyInfo();
 
                     /* We might want to set User.Person.DefaultEmail when user is created. */
-                    using (var stream = service.Open(serviceTicket, user.Name))
-                    {
-                        var serializer = new DataContractJsonSerializer(typeof (Record));
-                        record = (Record) serializer.ReadObject(stream);
-                    }
+                    //using (var stream = service.Open(serviceTicket, user.Name))
+                    //{
+                    //    var serializer = new DataContractJsonSerializer(typeof (Record));
+                    //    record = (Record) serializer.ReadObject(stream);
+                    //}
+                    //
+                    //service.Close();
 
-                    service.Close();
+                    var response = service.Get(serviceTicket, user.Name);
+                    record = JsonConvert.DeserializeObject<Record>(response);
                 }
                 else
                 {
@@ -195,7 +199,8 @@ namespace UCosmic.Domain.External
                 /* Determine if we need to update the USF Hiearchy. */
 
                 if (!serviceSync.ExternalSyncDate.HasValue ||
-                    (facultyInfoLastActivityDate != serviceSync.ExternalSyncDate))
+                    (facultyInfoLastActivityDate != serviceSync.ExternalSyncDate) ||
+                    "failed".Equals(serviceSync.LastUpdateResult, StringComparison.OrdinalIgnoreCase))
                 {
                     Debug.WriteLine(DateTime.Now + " Update USF establishments required.");
 

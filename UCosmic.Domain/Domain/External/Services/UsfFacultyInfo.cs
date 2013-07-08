@@ -5,22 +5,10 @@ using System.Net;
 
 namespace UCosmic.Domain.External
 {
-    public class UsfFacultyInfo
+    internal class UsfFacultyInfo
     {
-        private Stream _responseStream;
-
-        public static string CasUri
+        internal string Get(string casTicket, string usfNetId)
         {
-            get { return ConfigurationManager.AppSettings["UsfCasLoginService"]; }
-        }
-
-        public Stream Open(string casTicket, string usfNetId)
-        {
-            if (_responseStream != null)
-            {
-                return _responseStream;
-            }
-
             int atIndex = usfNetId.IndexOf('@');
             if (atIndex != -1)
             {
@@ -34,26 +22,61 @@ namespace UCosmic.Domain.External
 
             string uri = ConfigurationManager.AppSettings["UsfFacultyInfoService"];
             string url = String.Format("{0}/{1}?ticket={2}", uri, usfNetId, casTicket);
-            var request = (HttpWebRequest)WebRequest.Create(url);
 
-            request.Method = "GET";
-
-            request.Timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentFacultyInfoServiceTimeoutMS"]);
-            var response = request.GetResponse();
-            _responseStream = response.GetResponseStream();
-
-            return _responseStream;
-        }
-
-        public void Close()
-        {
-            if (_responseStream == null)
+            using (var webClient = new WebClient())
             {
-                return;
+                return webClient.DownloadString(url);
             }
-
-            _responseStream.Close();
-            _responseStream = null;
         }
+
+
+        //private Stream _responseStream;
+
+        internal static string CasUri
+        {
+            get { return ConfigurationManager.AppSettings["UsfCasLoginService"]; }
+        }
+
+        //public Stream Open(string casTicket, string usfNetId)
+        //{
+        //    if (_responseStream != null)
+        //    {
+        //        return _responseStream;
+        //    }
+
+        //    int atIndex = usfNetId.IndexOf('@');
+        //    if (atIndex != -1)
+        //    {
+        //        usfNetId = usfNetId.Substring(0, atIndex).Trim();
+        //    }
+
+        //    if (usfNetId.Length == 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    string uri = ConfigurationManager.AppSettings["UsfFacultyInfoService"];
+        //    string url = String.Format("{0}/{1}?ticket={2}", uri, usfNetId, casTicket);
+        //    var request = (HttpWebRequest)WebRequest.Create(url);
+
+        //    request.Method = "GET";
+
+        //    request.Timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfDepartmentFacultyInfoServiceTimeoutMS"]);
+        //    var response = request.GetResponse();
+        //    _responseStream = response.GetResponseStream();
+
+        //    return _responseStream;
+        //}
+
+        //public void Close()
+        //{
+        //    if (_responseStream == null)
+        //    {
+        //        return;
+        //    }
+
+        //    _responseStream.Close();
+        //    _responseStream = null;
+        //}
     }
 }
