@@ -3,7 +3,7 @@ namespace UCosmic
 {
     public interface IConsumeHttp
     {
-        string DownloadString(string url, int? timeout = null, int retries = 0);
-        string Upload(string url, string method, NameValueCollection data, int? timeout = null, int retries = 0);
+        TReturns Download<TReturns>(string url, int? timeout = null, int retries = 0) where TReturns : class;
+        TReturns Upload<TReturns>(string url, string method, NameValueCollection data, int? timeout = null, int retries = 0) where TReturns : class;
     }
 }

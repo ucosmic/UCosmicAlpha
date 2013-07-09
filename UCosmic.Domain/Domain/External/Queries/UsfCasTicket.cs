@@ -39,7 +39,7 @@ namespace UCosmic.Domain.External
 
             // ticket responses should be fast, but can be unreliable. use a shorter timeout with retry.
             //var timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfCASTGTTimeoutMS"]);
-            var ticket = _httpConsumer.Upload(ticketGrantingUrl, "POST", data, Timeout, Retries);
+            var ticket = _httpConsumer.Upload<string>(ticketGrantingUrl, "POST", data, Timeout, Retries);
             return ticket;
         }
 
@@ -53,7 +53,7 @@ namespace UCosmic.Domain.External
 
             // ticket responses should be fast, but can be unreliable. use a shorter timeout with retry.
             //var timeout = Int32.Parse(ConfigurationManager.AppSettings["UsfCASTGTTimeoutMS"]);
-            var ticketGrantingResource = _httpConsumer.Upload(TicketsUrl, "POST", data, Timeout, Retries);
+            var ticketGrantingResource = _httpConsumer.Upload<string>(TicketsUrl, "POST", data, Timeout, Retries);
             return ExtractTicketGrantingUrl(ticketGrantingResource);
         }
 

@@ -218,6 +218,7 @@
     <Compile Include="SeedData\SensativeSqlSeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />
     <Compile Include="SeedData\WaterBodiesByGeoServicesEntitySeeder.cs" />
+    <Compile Include="WebApi\HttpClient.cs" />
     <Compile Include="WebApi\SimpleInjectorNGeoRegistration.cs" />
     <Compile Include="SeedData\EmailTemplateEntitySeeder.cs" />
     <Compile Include="SeedData\EstablishmentEntitySeeder.cs" />
