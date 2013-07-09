@@ -175,6 +175,7 @@
     <Compile Include="Domain\Agreements\Validation\MustHaveAgreementType.cs" />
     <Compile Include="Domain\Agreements\Validation\MustFindAgreementById.cs" />
     <Compile Include="Domain\External\Commands\SendEmailMessageCommand.cs" />
+    <Compile Include="Domain\External\Queries\UsfCasTicket.cs" />
     <Compile Include="Domain\External\SmtpTraceListener.cs" />
     <Compile Include="Domain\External\UsfUpdateEstablishment.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateDeepInternationalAffiliation.cs" />

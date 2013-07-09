@@ -6,7 +6,7 @@ namespace UCosmic.WebApi
     {
         public static void RegisterHttpConsumer(this Container container)
         {
-            container.Register<IConsumeHttp, WebRequestHttpConsumer>();
+            container.Register<IConsumeHttp, WebClientHttpConsumer>();
         }
     }
 }

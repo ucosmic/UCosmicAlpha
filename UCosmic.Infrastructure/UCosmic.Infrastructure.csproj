@@ -244,7 +244,7 @@
     <Compile Include="SeedData\LanguageSqlSeeder.cs" />
     <Compile Include="SeedData\MemberEntitySeeder.cs" />
     <Compile Include="SeedData\SqlSeeder.cs" />
-    <Compile Include="WebApi\WebRequestHttpConsumer.cs" />
+    <Compile Include="WebApi\WebClientHttpConsumer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -40,7 +40,7 @@ namespace UCosmic.Domain.Establishments
             ) return;                                                       // nothing has changed
 
             // load published metadata over http
-            var entitiesDescriptorXml = _httpConsumer.Get(samlSignOn.MetadataUrl);
+            var entitiesDescriptorXml = _httpConsumer.DownloadString(samlSignOn.MetadataUrl, 5000, 2);
 
             // metadata may be entities descriptor, need specific entity descriptor
             samlSignOn.MetadataXml = _saml2MetadataParser.GetEntityDescriptor(

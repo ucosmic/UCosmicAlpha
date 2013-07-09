@@ -46,6 +46,7 @@ namespace UCosmic.Domain.External
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
         private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
@@ -59,6 +60,7 @@ namespace UCosmic.Domain.External
         private SmtpTraceListener _smtpTraceListener;
 
         public UsfFacultyImporter(ICommandEntities entities,
+                                  IProcessQueries queryProcessor,
                                   IHandleCommands<UpdateServiceSync> updateServiceSync,
                                   IHandleCommands<UpdateMyProfile> updateMyProfile,
                                   IHandleCommands<CreateServiceSync> createServiceSync,
@@ -71,6 +73,7 @@ namespace UCosmic.Domain.External
             )
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
             _updateServiceSync = updateServiceSync;
             _updateMyProfile = updateMyProfile;
             _createServiceSync = createServiceSync;
@@ -136,9 +139,12 @@ namespace UCosmic.Domain.External
 
                 Debug.Write(DateTime.Now + " Attempting to get service ticket...");
 
-                string serviceTicket = UsfCas.GetServiceTicket(serviceSync.ServiceUsername,
-                                                               serviceSync.ServicePassword,
-                                                               UsfFacultyInfo.CasUri);
+                //string serviceTicket = UsfCas.GetServiceTicket(serviceSync.ServiceUsername,
+                //                                               serviceSync.ServicePassword,
+                //                                               UsfFacultyInfo.CasUri);
+                var serviceTicket = _queryProcessor.Execute(new UsfCasTicket(
+                    serviceSync.ServiceUsername, serviceSync.ServicePassword));
+
                 if (!String.IsNullOrEmpty(serviceTicket))
                 {
                     Debug.WriteLine("success");

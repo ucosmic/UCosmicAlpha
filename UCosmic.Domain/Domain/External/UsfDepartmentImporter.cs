@@ -40,6 +40,7 @@ namespace UCosmic.Domain.External
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
         private readonly IHandleCommands<UsfUpdateEstablishment> _updateUsfEstablishment;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
@@ -58,6 +59,7 @@ namespace UCosmic.Domain.External
         */
         // ----------------------------------------------------------------------
         public UsfDepartmentImporter( ICommandEntities entities,
+                                      IProcessQueries queryProcessor,
                                       IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
                                       IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment,
                                       IHandleCommands<UpdateServiceSync> updateServiceSync,
@@ -65,6 +67,7 @@ namespace UCosmic.Domain.External
                                       IUnitOfWork unitOfWork)
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
             _createUsfEstablishment = createUsfEstablishment;
             _updateUsfEstablishment = updateUsfEstablishment;
             _updateServiceSync = updateServiceSync;
@@ -360,9 +363,12 @@ namespace UCosmic.Domain.External
                 }
 #else
                 {
-                    string serviceTicket = UsfCas.GetServiceTicket(serviceSync.ServiceUsername,
-                                                                   serviceSync.ServicePassword,
-                                                                   UsfDepartmentIdLookup.CasUri);
+                    //string serviceTicket = UsfCas.GetServiceTicket(serviceSync.ServiceUsername,
+                    //                                               serviceSync.ServicePassword,
+                    //                                               UsfDepartmentIdLookup.CasUri);
+                    var serviceTicket = _queryProcessor.Execute(new UsfCasTicket(
+                        serviceSync.ServiceUsername, serviceSync.ServicePassword));
+
                     if (!String.IsNullOrEmpty(serviceTicket))
                     {
                         var service = new UsfDepartmentIdLookup();
