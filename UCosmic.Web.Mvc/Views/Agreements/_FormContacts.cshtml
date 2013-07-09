@@ -14,7 +14,7 @@
                                 
                     <div class="item">
                         <div>
-                            <strong data-bind="text: displayName"></strong>
+                            <strong data-bind="text: type() + ': '"></strong><span data-bind="text: displayName() + ', '"></span>
                             <a data-bind="attr: {href: 'mailto:' + emailAddress()}, text: emailAddress"></a>
                             <br/>
                             <table>
@@ -25,7 +25,7 @@
                                     <td>
                                         <ul data-bind="foreach: phones"style="margin-left: 10px">
                                             <li data-bind="element: 'contactE1'" class="phoneList">
-                                                <span data-bind="text: type() + ': ' + value()"></span>
+                                                <span data-bind="text: type() ? type() + ': ' + value(): '[None]: ' + value()"></span>
                                             </li>
                                         </ul>
                                     </td>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="field-input-label-top" >
                         <input id="contactSalutation" type="text" placeholder="[None]" 
-                               data-bind="value: contactSalutationSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactSalutation'" />
+                               data-bind="value: contactSalutationSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$$contactSalutation'" />
                     </div>
                 </div>
                 <div class="field-column-right">
@@ -120,7 +120,7 @@
                     </div>
                     <div class="field-input-label-top">
                         <input id="contactSuffix" type="text" placeholder="[None]" 
-                               data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactSuffix'" />
+                               data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$$contactSuffix'" />
                     </div>
                 </div>
                 <div class="field-column-right">
@@ -164,7 +164,7 @@
                     <div class="field-input-label-top"  style="width: 400px">
                         <input type="text" data-bind="value: contactPhoneTextValue" />
                     </div>
-                    <a title="add phone" data-bind="click: $root.addPhone" class="addLink on-right"><i class="green plus"></i></a>
+                    <a title="add phone" data-bind="click: addPhone" class="addLink on-right"><i class="green plus"></i></a>
                 </div>
             </div>
             <footer>

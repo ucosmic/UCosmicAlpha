@@ -137,10 +137,10 @@ export class InstitutionalAgreementEditModel {
     contactLastName = ko.observable();
     contactSuffix = ko.mapping.fromJS([]);
     contactSuffixSelected = ko.observable();
-    $contactSuffix: KnockoutObservableJQuery = ko.observable();
+    $$contactSuffix: KnockoutObservableJQuery = ko.observable();
     contactSalutation = ko.mapping.fromJS([]);
     contactSalutationSelected = ko.observable();
-    $contactSalutation: KnockoutObservableJQuery = ko.observable();
+    $$contactSalutation: KnockoutObservableJQuery = ko.observable();
     contactJobTitle = ko.observable();
     contactPersonId = ko.observable();
     contactDisplayName = ko.observable();
@@ -395,7 +395,13 @@ export class InstitutionalAgreementEditModel {
             this.isFileFailureUnexpected(true);
         });
     }
-    
+
+    $contactEmail = $("#contactEmail");
+    $contactLastName = $("#contactLastName");
+    $contactFirstName = $("#contactFirstName");
+    $contactSalutation = $("#contactSalutation");
+    $contactSuffix = $("#contactSuffix");
+
     getSettings(): void {
 
         var url = 'App.Routes.WebApi.Agreements.Settings.get()';
@@ -405,11 +411,6 @@ export class InstitutionalAgreementEditModel {
             type: 'GET'
         })
         .done(function (result) => {
-            var $contactEmail = $("#contactEmail");
-            var $contactLastName = $("#contactLastName");
-            var $contactFirstName = $("#contactFirstName");
-            var $contactSalutation = $("#contactSalutation");
-            var $contactSuffix = $("#contactSuffix");
             this.isCustomTypeAllowed(result.isCustomTypeAllowed);
             this.isCustomStatusAllowed(result.isCustomStatusAllowed);
             this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -477,7 +478,7 @@ export class InstitutionalAgreementEditModel {
                 });
             }
 
-            $contactSalutation.kendoComboBox({
+            this.$contactSalutation.kendoComboBox({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
@@ -485,7 +486,7 @@ export class InstitutionalAgreementEditModel {
                 })
             });
 
-            $contactSuffix.kendoComboBox({
+            this.$contactSuffix.kendoComboBox({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
@@ -508,7 +509,7 @@ export class InstitutionalAgreementEditModel {
             })
             this.contactPhoneTextValue.subscribe((me: string): void => {
                 if (this.contactPhoneTextValue().length > 0) {
-                    this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), textValue: this.contactPhoneTextValue() }))
+                    this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), value: this.contactPhoneTextValue() }))
                     this.contactPhoneTextValue("");
                     $(".phoneTypes").kendoDropDownList({
                         dataTextField: "name",
@@ -544,16 +545,16 @@ export class InstitutionalAgreementEditModel {
                 this.contactPersonId(dataItem.id);
                 this.contactSuffixSelected(dataItem.suffix);
                 this.contactSalutationSelected(dataItem.salutation);
-                $contactEmail.prop('disabled', true);
-                $contactLastName.prop('disabled', true);
-                $contactFirstName.prop('disabled', true);
+                this.$contactEmail.prop('disabled', true);
+                this.$contactLastName.prop('disabled', true);
+                this.$contactFirstName.prop('disabled', true);
                 $("#contactMiddleName").prop('disabled', true);
-                $contactSalutation.data("kendoComboBox").enable(false);
-                $contactSuffix.data("kendoComboBox").enable(false);
+                this.$contactSalutation.data("kendoComboBox").enable(false);
+                this.$contactSuffix.data("kendoComboBox").enable(false);
                 this.validateContact.errors.showAllMessages(true);
             };
 
-            $contactEmail.kendoAutoComplete({
+            this.$contactEmail.kendoAutoComplete({
                 dataTextField: "defaultEmailAddress",
                 minLength: 3,
                 filter: "contains",
@@ -579,11 +580,11 @@ export class InstitutionalAgreementEditModel {
                     //this.checkInstitutionForNull();
                 },
                 select: (e: any): void => {
-                    kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                    kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
                 }
             });
 
-            $contactLastName.kendoAutoComplete({
+            this.$contactLastName.kendoAutoComplete({
                 dataTextField: "lastName",
                 template: "#=displayName#",
                 minLength: 3,
@@ -610,11 +611,11 @@ export class InstitutionalAgreementEditModel {
                     //this.checkInstitutionForNull();
                 },
                 select: (e: any): void => {
-                    kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                    kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
                 }
             });
 
-            $contactFirstName.kendoAutoComplete({
+            this.$contactFirstName.kendoAutoComplete({
                 dataTextField: "firstName",
                 template: "#=displayName#",
                 minLength: 3,
@@ -641,7 +642,7 @@ export class InstitutionalAgreementEditModel {
                     //this.checkInstitutionForNull();
                 },
                 select: (e: any): void => {
-                    kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                    kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
                 }
             });
 
@@ -688,7 +689,7 @@ export class InstitutionalAgreementEditModel {
     hasBoundItem = false;
 
 
-    SearchPageBind = function (parentOrParticipant: string) {
+    SearchPageBind(parentOrParticipant: string): void {
 
         var $cancelAddParticipant = $("#cancelAddParticipant");
         var $searchSideBarAddNew = $("#searchSideBarAddNew");
@@ -729,7 +730,7 @@ export class InstitutionalAgreementEditModel {
         
     };
 
-    fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
+    fadeModsOut(dfd, dfd2, $obj, $obj2, time): void {
         if ($obj.css("display") !== "none") {
             $obj.fadeOut(time, function () {
                 dfd.resolve();
@@ -748,7 +749,7 @@ export class InstitutionalAgreementEditModel {
         }
     };
     
-    bindSearch = function () {
+    bindSearch(): void{
         if (!this.hasBoundSearch) {
             $(document).ready(function () {
                 // create Editor from textarea HTML element with default set of tools
@@ -988,7 +989,7 @@ export class InstitutionalAgreementEditModel {
                                 $("#allParticipants").fadeIn(500);
                             });
                     } else {
-                        window.location = this.establishmentSearchViewModel.sammy.getLocation();
+                        window.location.replace(this.establishmentSearchViewModel.sammy.getLocation());
                     }
                 }
             });
@@ -1008,42 +1009,57 @@ export class InstitutionalAgreementEditModel {
         this.contactPhones(me.phones());
         this.contactMiddleName(me.middleName());
         this.contactIndex = this.contacts.indexOf(me)
+        this.$contactEmail.prop('disabled', true);
+        this.$contactLastName.prop('disabled', true);
+        this.$contactFirstName.prop('disabled', true);
+        $("#contactMiddleName").prop('disabled', true);
+        this.$contactSalutation.data("kendoComboBox").enable(false);
+        this.$contactSuffix.data("kendoComboBox").enable(false);
         //this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
         var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.type();
         });
 
-        var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+        dropdownlist = $("#contactSuffix").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.suffix();
         });
 
-        var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+        dropdownlist = $("#contactSalutation").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.salutation();
         });
 
         $("#addAContact").fadeOut(500, function () {
         });
-        $(".phoneTypes").kendoDropDownList({
+        $("input.phoneTypes").kendoDropDownList({
             dataTextField: "name",
             dataValueField: "id",
             dataSource: new kendo.data.DataSource({
                 data: ko.mapping.toJS(this.phoneTypes())
             })
         });
+
+        $("input.phoneTypes").each(function (index) {
+
+            dropdownlist = $(this).data("kendoDropDownList");
+            dropdownlist.select(function (dataItem) {
+                return dataItem.name === me.phones()[index].type();
+            });
+        });
     }
 
     clearContactInfo(): void {
-        this.contactEmail('')
-        this.contactDisplayName('')
-        this.contactPersonId('')
-        this.contactJobTitle('')
-        this.contactFirstName('')
-        this.contactLastName('')
-        this.contactPhones('')
-        this.contactTypeOptionSelected('')
+        this.contactEmail('');
+        this.contactDisplayName('');
+        this.contactPersonId('');
+        this.contactJobTitle('');
+        this.contactFirstName('');
+        this.contactMiddleName('');
+        this.contactLastName('');
+        this.contactPhones('');
+        this.contactTypeOptionSelected('');
         var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
         dropdownlist.select(0);
         var dropdownlist = $("#contactSalutation").data("kendoComboBox");
@@ -1053,21 +1069,25 @@ export class InstitutionalAgreementEditModel {
     }
 
     editContact(me): void {
-        this.contactsIsEdit(false);
-        this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
-        this.contacts()[this.contactIndex].title(this.contactJobTitle());
-        this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
-        this.contacts()[this.contactIndex].personId(this.contactPersonId());
-        this.contacts()[this.contactIndex].firstName(this.contactFirstName());
-        this.contacts()[this.contactIndex].lastName(this.contactLastName());
-        this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
-        this.contacts()[this.contactIndex].phones(this.contactPhones());
-        this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
-        this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
-        this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-        this.clearContactInfo();
-        this.$addContactDialog.data("kendoWindow").close()
-        $("#addAContact").fadeIn(500);
+        if (this.validateContact.isValid()) {
+            this.contactsIsEdit(false);
+            this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
+            this.contacts()[this.contactIndex].title(this.contactJobTitle());
+            this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
+            this.contacts()[this.contactIndex].personId(this.contactPersonId());
+            this.contacts()[this.contactIndex].firstName(this.contactFirstName());
+            this.contacts()[this.contactIndex].lastName(this.contactLastName());
+            this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
+            this.contacts()[this.contactIndex].phones(this.contactPhones());
+            this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
+            this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
+            this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
+            this.clearContactInfo();
+            this.$addContactDialog.data("kendoWindow").close()
+            $("#addAContact").fadeIn(500);
+        } else {
+            this.validateContact.errors.showAllMessages(true);
+        }
     }
 
     addContact(me, e): void {
@@ -1083,6 +1103,7 @@ export class InstitutionalAgreementEditModel {
     }
 
     addAContact(me, e): void {
+        this.validateContact.errors.showAllMessages(false);
         this.$addContactDialog.data("kendoWindow").open().title("Add Contact")
         $("#addAContact").fadeOut(500, function () {
         });
@@ -1129,7 +1150,7 @@ export class InstitutionalAgreementEditModel {
 
     addPhone(me, e): void {
         if (this.contactPhoneTextValue().length > 0) {
-            this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), value: this.contactPhoneTextValue() }))
+            this.contactPhones.push(ko.mapping.fromJS({ type: '', value: this.contactPhoneTextValue() }))
             //use index instead of id or make an incrimental observable
             this.contactPhoneTextValue("");
             $(".phoneTypes").kendoDropDownList({
@@ -1180,13 +1201,7 @@ export class InstitutionalAgreementEditModel {
 
     private _setupValidation(): void {
         this.validateContact = ko.validatedObservable({
-            contactDisplayName: this.contactDisplayName.extend({
-                required: {
-                    message: 'Display name is required.'
-                },
-                maxLength: 50
-            }),
-
+            
             contactSalutation: this.contactSalutation.extend({
                 maxLength: 50
             }),
@@ -1229,10 +1244,6 @@ export class InstitutionalAgreementEditModel {
             }),
 
             contactJobTitle: this.contactJobTitle.extend({
-                maxLength: 50
-            }),
-
-            contactPersonId: this.contactPersonId.extend({
                 maxLength: 50
             })
         });

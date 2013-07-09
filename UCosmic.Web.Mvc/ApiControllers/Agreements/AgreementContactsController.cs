@@ -36,13 +36,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             
             var newPhone2 = new[]
             {
-                new AgreementContactPhoneApiModel {Value = "3213456452", Type = "work2", ContactId = "3" },
-                new AgreementContactPhoneApiModel {Value = "321345", Type = "work2", ContactId = "3" }
+                new AgreementContactPhoneApiModel {Value = "3213456452", Type = "work", ContactId = "3" },
+                new AgreementContactPhoneApiModel {Value = "321345", Type = "home", ContactId = "3" }
             };
             var newPhone1 = new[]
             {
-                new AgreementContactPhoneApiModel {Value = "3213456452111", Type = "work2", ContactId = "3" },
-                new AgreementContactPhoneApiModel {Value = "321345111", Type = "work2", ContactId = "3" }
+                new AgreementContactPhoneApiModel {Value = "3213456452111", Type = "home", ContactId = "3" },
+                new AgreementContactPhoneApiModel {Value = "321345111", Type = "work", ContactId = "3" }
             };
             models = new[]
             {

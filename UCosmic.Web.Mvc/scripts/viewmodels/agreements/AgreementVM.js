@@ -62,10 +62,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactLastName = ko.observable();
             this.contactSuffix = ko.mapping.fromJS([]);
             this.contactSuffixSelected = ko.observable();
-            this.$contactSuffix = ko.observable();
+            this.$$contactSuffix = ko.observable();
             this.contactSalutation = ko.mapping.fromJS([]);
             this.contactSalutationSelected = ko.observable();
-            this.$contactSalutation = ko.observable();
+            this.$$contactSalutation = ko.observable();
             this.contactJobTitle = ko.observable();
             this.contactPersonId = ko.observable();
             this.contactDisplayName = ko.observable();
@@ -122,306 +122,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.owner2 = new Search(false);
             this.tenantDomain = "uc.edu";
             this.spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
+            this.$contactEmail = $("#contactEmail");
+            this.$contactLastName = $("#contactLastName");
+            this.$contactFirstName = $("#contactFirstName");
+            this.$contactSalutation = $("#contactSalutation");
+            this.$contactSuffix = $("#contactSuffix");
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
-            this.SearchPageBind = function (parentOrParticipant) {
-                var _this = this;
-                var $cancelAddParticipant = $("#cancelAddParticipant");
-                var $searchSideBarAddNew = $("#searchSideBarAddNew");
-                this.establishmentSearchViewModel.detailTooltip = function () {
-                    return 'Choose this establishment as a ' + parentOrParticipant;
-                };
-                $cancelAddParticipant.off();
-                $searchSideBarAddNew.off();
-                $searchSideBarAddNew.on("click", function (e) {
-                    _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
-                    e.preventDefault();
-                    return false;
-                });
-                if(parentOrParticipant === "parent") {
-                    $cancelAddParticipant.on("click", function (e) {
-                        _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
-                        e.preventDefault();
-                        return false;
-                    });
-                } else {
-                    $cancelAddParticipant.on("click", function (e) {
-                        _this.establishmentSearchViewModel.sammy.setLocation('#/index');
-                        e.preventDefault();
-                        return false;
-                    });
-                }
-                var dfd = $.Deferred();
-                var dfd2 = $.Deferred();
-                var $obj = $("#allParticipants");
-                var $obj2 = $("#addEstablishment");
-                var time = 500;
-                this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                $.when(dfd, dfd2).done(function () {
-                    $("#estSearch").fadeIn(500);
-                });
-            };
-            this.fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
-                if($obj.css("display") !== "none") {
-                    $obj.fadeOut(time, function () {
-                        dfd.resolve();
-                    });
-                } else {
-                    dfd.resolve();
-                }
-                if($obj2.css("display") !== "none") {
-                    $obj2.fadeOut(time, function () {
-                        dfd2.resolve();
-                    });
-                } else {
-                    dfd2.resolve();
-                }
-            };
-            this.bindSearch = function () {
-                var _this = this;
-                if(!this.hasBoundSearch) {
-                    $(document).ready(function () {
-                        $("#agreementContent").kendoEditor({
-                            tools: [
-                                "bold", 
-                                "italic", 
-                                "underline", 
-                                "strikethrough", 
-                                "fontName", 
-                                "foreColor", 
-                                "justifyLeft", 
-                                "justifyCenter", 
-                                "justifyRight", 
-                                "justifyFull", 
-                                "insertUnorderedList", 
-                                "insertOrderedList", 
-                                "indent", 
-                                "outdent", 
-                                "createLink", 
-                                "unlink", 
-                                "insertImage", 
-                                "subscript", 
-                                "superscript", 
-                                "viewHtml", 
-                                {
-                                    name: "formatBlock",
-                                    items: [
-                                        {
-                                            text: "Paragraph",
-                                            value: "p"
-                                        }, 
-                                        {
-                                            text: "Quotation",
-                                            value: "blockquote"
-                                        }, 
-                                        {
-                                            text: "Heading 2",
-                                            value: "h2"
-                                        }, 
-                                        {
-                                            text: "Heading 3",
-                                            value: "h3"
-                                        }, 
-                                        {
-                                            text: "Heading 4",
-                                            value: "h4"
-                                        }, 
-                                        {
-                                            text: "Heading 5",
-                                            value: "h5"
-                                        }, 
-                                        {
-                                            text: "Heading 6",
-                                            value: "h6"
-                                        }
-                                    ],
-                                    width: "200px"
-                                }
-                            ]
-                        });
-                    });
-                    this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
-                    this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
-                    this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
-                    ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
-                    var lastURL = "asdf";
-                    if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
-                        if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/") === -1) {
-                            this.establishmentSearchViewModel.sammy.setLocation('/agreements/new/#/index');
-                        } else {
-                            this.establishmentSearchViewModel.sammy.setLocation('#/index');
-                        }
-                    }
-                    if(sessionStorage.getItem("addest") == undefined) {
-                        sessionStorage.setItem("addest", "no");
-                    }
-                    this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
-                        if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
-                            var $asideRootSearch = $("#asideRootSearch");
-                            var $asideParentSearch = $("#asideParentSearch");
-                            if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/new/") > 0) {
-                                var $addEstablishment = $("#addEstablishment");
-                                var dfd = $.Deferred();
-                                var dfd2 = $.Deferred();
-                                var $obj = $("#estSearch");
-                                var $obj2 = $("#allParticipants");
-                                var time = 500;
-                                _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                                $.when(dfd, dfd2).done(function () {
-                                    $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
-                                        if(!_this.hasBoundItem) {
-                                            _this.establishmentItemViewModel = new Item();
-                                            _this.establishmentItemViewModel.goToSearch = function () {
-                                                sessionStorage.setItem("addest", "yes");
-                                                _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                            };
-                                            _this.establishmentItemViewModel.submitToCreate = function (formElement) {
-                                                if(!_this.establishmentItemViewModel.id || _this.establishmentItemViewModel.id === 0) {
-                                                    var me = _this.establishmentItemViewModel;
-                                                    _this.establishmentItemViewModel.validatingSpinner.start();
-                                                    var officialName = _this.establishmentItemViewModel.names()[0];
-                                                    var officialUrl = _this.establishmentItemViewModel.urls()[0];
-                                                    var location = _this.establishmentItemViewModel.location;
-                                                    if(officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
-                                                        setTimeout(function () {
-                                                            var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
-                                                            return false;
-                                                        }, 50);
-                                                        return false;
-                                                    }
-                                                    _this.establishmentItemViewModel.isValidationSummaryVisible(true);
-                                                    if(!_this.establishmentItemViewModel.isValid()) {
-                                                        _this.establishmentItemViewModel.errors.showAllMessages();
-                                                    }
-                                                    if(!officialName.isValid()) {
-                                                        officialName.errors.showAllMessages();
-                                                    }
-                                                    if(!officialUrl.isValid()) {
-                                                        officialUrl.errors.showAllMessages();
-                                                    }
-                                                    _this.establishmentItemViewModel.validatingSpinner.stop();
-                                                    if(officialName.isValid() && officialUrl.isValid() && _this.establishmentItemViewModel.isValid()) {
-                                                        var $LoadingPage = $("#LoadingPage").find("strong");
-                                                        var url = App.Routes.WebApi.Establishments.post();
-                                                        var data = _this.establishmentItemViewModel.serializeData();
-                                                        $LoadingPage.text("Creating Establishment...");
-                                                        data.officialName = officialName.serializeData();
-                                                        data.officialUrl = officialUrl.serializeData();
-                                                        data.location = location.serializeData();
-                                                        _this.establishmentItemViewModel.createSpinner.start();
-                                                        $.post(url, data).done(function (response, statusText, xhr) {
-                                                            _this.establishmentItemViewModel.createSpinner.stop();
-                                                            $LoadingPage.text("Establishment created, you are being redirected to previous page...");
-                                                            $("#addEstablishment").fadeOut(500, function () {
-                                                                $("#LoadingPage").fadeIn(500);
-                                                                setTimeout(function () {
-                                                                    $("#LoadingPage").fadeOut(500, function () {
-                                                                        $LoadingPage.text("Loading Page...");
-                                                                    });
-                                                                    _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                                }, 5000);
-                                                            });
-                                                        }).fail(function (xhr, statusText, errorThrown) {
-                                                            if(xhr.status === 400) {
-                                                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                    title: 'Alert Message',
-                                                                    dialogClass: 'jquery-ui',
-                                                                    width: 'auto',
-                                                                    resizable: false,
-                                                                    modal: true,
-                                                                    buttons: {
-                                                                        'Ok': function () {
-                                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                                return false;
-                                            };
-                                            ko.applyBindings(_this.establishmentItemViewModel, $addEstablishment[0]);
-                                            var $cancelAddEstablishment = $("#cancelAddEstablishment");
-                                            $cancelAddEstablishment.on("click", function (e) {
-                                                sessionStorage.setItem("addest", "no");
-                                                _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                e.preventDefault();
-                                                return false;
-                                            });
-                                            _this.hasBoundItem = true;
-                                        }
-                                    });
-                                });
-                                lastURL = "#/new/";
-                            } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/page/") > 0) {
-                                if(sessionStorage.getItem("addest") === "yes") {
-                                    _this.establishmentSearchViewModel.clickAction = function (context) {
-                                        _this.establishmentItemViewModel.parentEstablishment(context);
-                                        _this.establishmentItemViewModel.parentId(context.id());
-                                        _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
-                                    };
-                                    _this.establishmentSearchViewModel.header("Choose a parent establishment");
-                                    $asideRootSearch.hide();
-                                    $asideParentSearch.show();
-                                    _this.SearchPageBind("parent");
-                                    _this.establishmentSearchViewModel.header("Choose a parent establishment");
-                                } else {
-                                    $asideRootSearch.show();
-                                    $asideParentSearch.hide();
-                                    _this.SearchPageBind("participant");
-                                    _this.establishmentSearchViewModel.header("Choose a participant");
-                                    _this.establishmentSearchViewModel.clickAction = function (context) {
-                                        var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName());
-                                        var alreadyExist = false;
-                                        for(var i = 0; i < _this.participants().length; i++) {
-                                            if(_this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
-                                                alreadyExist = true;
-                                                break;
-                                            }
-                                        }
-                                        if(alreadyExist !== true) {
-                                            $.ajax({
-                                                url: App.Routes.WebApi.Agreements.Participant.get(myParticipant.establishmentId()),
-                                                type: 'GET',
-                                                async: false
-                                            }).done(function (response) {
-                                                myParticipant.isOwner(response.isOwner);
-                                                _this.participants.push(myParticipant);
-                                                _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
-                                            }).fail(function () {
-                                                _this.participants.push(myParticipant);
-                                                _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
-                                            });
-                                        } else {
-                                            alert("This Participant has already been added.");
-                                        }
-                                    };
-                                }
-                                lastURL = "#/page/";
-                            } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/new") > 0) {
-                                sessionStorage.setItem("addest", "no");
-                                lastURL = "#/index";
-                                _this.establishmentSearchViewModel.sammy.setLocation('#/index');
-                                var dfd = $.Deferred();
-                                var dfd2 = $.Deferred();
-                                var $obj = $("#estSearch");
-                                var $obj2 = $("#addEstablishment");
-                                var time = 500;
-                                _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                                $.when(dfd, dfd2).done(function () {
-                                    $("#allParticipants").fadeIn(500);
-                                });
-                            } else {
-                                window.location = _this.establishmentSearchViewModel.sammy.getLocation();
-                            }
-                        }
-                    });
-                    this.establishmentSearchViewModel.sammy.run();
-                }
-            };
             this.trail = ko.observableArray([]);
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
@@ -648,11 +356,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 url: eval(url),
                 type: 'GET'
             }).done(function (result) {
-                var $contactEmail = $("#contactEmail");
-                var $contactLastName = $("#contactLastName");
-                var $contactFirstName = $("#contactFirstName");
-                var $contactSalutation = $("#contactSalutation");
-                var $contactSuffix = $("#contactSuffix");
                 _this.isCustomTypeAllowed(result.isCustomTypeAllowed);
                 _this.isCustomStatusAllowed(result.isCustomStatusAllowed);
                 _this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -722,14 +425,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         })
                     });
                 }
-                $contactSalutation.kendoComboBox({
+                _this.$contactSalutation.kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
                         data: ko.mapping.toJS(_this.contactSalutation())
                     })
                 });
-                $contactSuffix.kendoComboBox({
+                _this.$contactSuffix.kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
@@ -753,7 +456,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(_this.contactPhoneTextValue().length > 0) {
                         _this.contactPhones.push(ko.mapping.fromJS({
                             type: _this.contactPhoneType(),
-                            textValue: _this.contactPhoneTextValue()
+                            value: _this.contactPhoneTextValue()
                         }));
                         _this.contactPhoneTextValue("");
                         $(".phoneTypes").kendoDropDownList({
@@ -788,15 +491,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     _this.contactPersonId(dataItem.id);
                     _this.contactSuffixSelected(dataItem.suffix);
                     _this.contactSalutationSelected(dataItem.salutation);
-                    $contactEmail.prop('disabled', true);
-                    $contactLastName.prop('disabled', true);
-                    $contactFirstName.prop('disabled', true);
+                    _this.$contactEmail.prop('disabled', true);
+                    _this.$contactLastName.prop('disabled', true);
+                    _this.$contactFirstName.prop('disabled', true);
                     $("#contactMiddleName").prop('disabled', true);
-                    $contactSalutation.data("kendoComboBox").enable(false);
-                    $contactSuffix.data("kendoComboBox").enable(false);
+                    _this.$contactSalutation.data("kendoComboBox").enable(false);
+                    _this.$contactSuffix.data("kendoComboBox").enable(false);
                     _this.validateContact.errors.showAllMessages(true);
                 }
-                $contactEmail.kendoAutoComplete({
+                _this.$contactEmail.kendoAutoComplete({
                     dataTextField: "defaultEmailAddress",
                     minLength: 3,
                     filter: "contains",
@@ -821,10 +524,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     change: function (e) {
                     },
                     select: function (e) {
-                        kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                        kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
                     }
                 });
-                $contactLastName.kendoAutoComplete({
+                _this.$contactLastName.kendoAutoComplete({
                     dataTextField: "lastName",
                     template: "#=displayName#",
                     minLength: 3,
@@ -850,10 +553,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     change: function (e) {
                     },
                     select: function (e) {
-                        kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                        kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
                     }
                 });
-                $contactFirstName.kendoAutoComplete({
+                _this.$contactFirstName.kendoAutoComplete({
                     dataTextField: "firstName",
                     template: "#=displayName#",
                     minLength: 3,
@@ -879,7 +582,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     change: function (e) {
                     },
                     select: function (e) {
-                        kacSelext($contactLastName.data("kendoAutoComplete"), e);
+                        kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
                     }
                 });
             }).fail(function (xhr) {
@@ -907,6 +610,303 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             e.stopPropagation();
             return false;
         };
+        InstitutionalAgreementEditModel.prototype.SearchPageBind = function (parentOrParticipant) {
+            var _this = this;
+            var $cancelAddParticipant = $("#cancelAddParticipant");
+            var $searchSideBarAddNew = $("#searchSideBarAddNew");
+            this.establishmentSearchViewModel.detailTooltip = function () {
+                return 'Choose this establishment as a ' + parentOrParticipant;
+            };
+            $cancelAddParticipant.off();
+            $searchSideBarAddNew.off();
+            $searchSideBarAddNew.on("click", function (e) {
+                _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                e.preventDefault();
+                return false;
+            });
+            if(parentOrParticipant === "parent") {
+                $cancelAddParticipant.on("click", function (e) {
+                    _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                    e.preventDefault();
+                    return false;
+                });
+            } else {
+                $cancelAddParticipant.on("click", function (e) {
+                    _this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                    e.preventDefault();
+                    return false;
+                });
+            }
+            var dfd = $.Deferred();
+            var dfd2 = $.Deferred();
+            var $obj = $("#allParticipants");
+            var $obj2 = $("#addEstablishment");
+            var time = 500;
+            this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+            $.when(dfd, dfd2).done(function () {
+                $("#estSearch").fadeIn(500);
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
+            if($obj.css("display") !== "none") {
+                $obj.fadeOut(time, function () {
+                    dfd.resolve();
+                });
+            } else {
+                dfd.resolve();
+            }
+            if($obj2.css("display") !== "none") {
+                $obj2.fadeOut(time, function () {
+                    dfd2.resolve();
+                });
+            } else {
+                dfd2.resolve();
+            }
+        };
+        InstitutionalAgreementEditModel.prototype.bindSearch = function () {
+            var _this = this;
+            if(!this.hasBoundSearch) {
+                $(document).ready(function () {
+                    $("#agreementContent").kendoEditor({
+                        tools: [
+                            "bold", 
+                            "italic", 
+                            "underline", 
+                            "strikethrough", 
+                            "fontName", 
+                            "foreColor", 
+                            "justifyLeft", 
+                            "justifyCenter", 
+                            "justifyRight", 
+                            "justifyFull", 
+                            "insertUnorderedList", 
+                            "insertOrderedList", 
+                            "indent", 
+                            "outdent", 
+                            "createLink", 
+                            "unlink", 
+                            "insertImage", 
+                            "subscript", 
+                            "superscript", 
+                            "viewHtml", 
+                            {
+                                name: "formatBlock",
+                                items: [
+                                    {
+                                        text: "Paragraph",
+                                        value: "p"
+                                    }, 
+                                    {
+                                        text: "Quotation",
+                                        value: "blockquote"
+                                    }, 
+                                    {
+                                        text: "Heading 2",
+                                        value: "h2"
+                                    }, 
+                                    {
+                                        text: "Heading 3",
+                                        value: "h3"
+                                    }, 
+                                    {
+                                        text: "Heading 4",
+                                        value: "h4"
+                                    }, 
+                                    {
+                                        text: "Heading 5",
+                                        value: "h5"
+                                    }, 
+                                    {
+                                        text: "Heading 6",
+                                        value: "h6"
+                                    }
+                                ],
+                                width: "200px"
+                            }
+                        ]
+                    });
+                });
+                this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
+                this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
+                this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
+                ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+                var lastURL = "asdf";
+                if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
+                    if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/") === -1) {
+                        this.establishmentSearchViewModel.sammy.setLocation('/agreements/new/#/index');
+                    } else {
+                        this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                    }
+                }
+                if(sessionStorage.getItem("addest") == undefined) {
+                    sessionStorage.setItem("addest", "no");
+                }
+                this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
+                    if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
+                        var $asideRootSearch = $("#asideRootSearch");
+                        var $asideParentSearch = $("#asideParentSearch");
+                        if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/new/") > 0) {
+                            var $addEstablishment = $("#addEstablishment");
+                            var dfd = $.Deferred();
+                            var dfd2 = $.Deferred();
+                            var $obj = $("#estSearch");
+                            var $obj2 = $("#allParticipants");
+                            var time = 500;
+                            _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                            $.when(dfd, dfd2).done(function () {
+                                $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
+                                    if(!_this.hasBoundItem) {
+                                        _this.establishmentItemViewModel = new Item();
+                                        _this.establishmentItemViewModel.goToSearch = function () {
+                                            sessionStorage.setItem("addest", "yes");
+                                            _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                        };
+                                        _this.establishmentItemViewModel.submitToCreate = function (formElement) {
+                                            if(!_this.establishmentItemViewModel.id || _this.establishmentItemViewModel.id === 0) {
+                                                var me = _this.establishmentItemViewModel;
+                                                _this.establishmentItemViewModel.validatingSpinner.start();
+                                                var officialName = _this.establishmentItemViewModel.names()[0];
+                                                var officialUrl = _this.establishmentItemViewModel.urls()[0];
+                                                var location = _this.establishmentItemViewModel.location;
+                                                if(officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
+                                                    setTimeout(function () {
+                                                        var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
+                                                        return false;
+                                                    }, 50);
+                                                    return false;
+                                                }
+                                                _this.establishmentItemViewModel.isValidationSummaryVisible(true);
+                                                if(!_this.establishmentItemViewModel.isValid()) {
+                                                    _this.establishmentItemViewModel.errors.showAllMessages();
+                                                }
+                                                if(!officialName.isValid()) {
+                                                    officialName.errors.showAllMessages();
+                                                }
+                                                if(!officialUrl.isValid()) {
+                                                    officialUrl.errors.showAllMessages();
+                                                }
+                                                _this.establishmentItemViewModel.validatingSpinner.stop();
+                                                if(officialName.isValid() && officialUrl.isValid() && _this.establishmentItemViewModel.isValid()) {
+                                                    var $LoadingPage = $("#LoadingPage").find("strong");
+                                                    var url = App.Routes.WebApi.Establishments.post();
+                                                    var data = _this.establishmentItemViewModel.serializeData();
+                                                    $LoadingPage.text("Creating Establishment...");
+                                                    data.officialName = officialName.serializeData();
+                                                    data.officialUrl = officialUrl.serializeData();
+                                                    data.location = location.serializeData();
+                                                    _this.establishmentItemViewModel.createSpinner.start();
+                                                    $.post(url, data).done(function (response, statusText, xhr) {
+                                                        _this.establishmentItemViewModel.createSpinner.stop();
+                                                        $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                                                        $("#addEstablishment").fadeOut(500, function () {
+                                                            $("#LoadingPage").fadeIn(500);
+                                                            setTimeout(function () {
+                                                                $("#LoadingPage").fadeOut(500, function () {
+                                                                    $LoadingPage.text("Loading Page...");
+                                                                });
+                                                                _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                                            }, 5000);
+                                                        });
+                                                    }).fail(function (xhr, statusText, errorThrown) {
+                                                        if(xhr.status === 400) {
+                                                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                title: 'Alert Message',
+                                                                dialogClass: 'jquery-ui',
+                                                                width: 'auto',
+                                                                resizable: false,
+                                                                modal: true,
+                                                                buttons: {
+                                                                    'Ok': function () {
+                                                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            return false;
+                                        };
+                                        ko.applyBindings(_this.establishmentItemViewModel, $addEstablishment[0]);
+                                        var $cancelAddEstablishment = $("#cancelAddEstablishment");
+                                        $cancelAddEstablishment.on("click", function (e) {
+                                            sessionStorage.setItem("addest", "no");
+                                            _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                            e.preventDefault();
+                                            return false;
+                                        });
+                                        _this.hasBoundItem = true;
+                                    }
+                                });
+                            });
+                            lastURL = "#/new/";
+                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/page/") > 0) {
+                            if(sessionStorage.getItem("addest") === "yes") {
+                                _this.establishmentSearchViewModel.clickAction = function (context) {
+                                    _this.establishmentItemViewModel.parentEstablishment(context);
+                                    _this.establishmentItemViewModel.parentId(context.id());
+                                    _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                                };
+                                _this.establishmentSearchViewModel.header("Choose a parent establishment");
+                                $asideRootSearch.hide();
+                                $asideParentSearch.show();
+                                _this.SearchPageBind("parent");
+                                _this.establishmentSearchViewModel.header("Choose a parent establishment");
+                            } else {
+                                $asideRootSearch.show();
+                                $asideParentSearch.hide();
+                                _this.SearchPageBind("participant");
+                                _this.establishmentSearchViewModel.header("Choose a participant");
+                                _this.establishmentSearchViewModel.clickAction = function (context) {
+                                    var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName());
+                                    var alreadyExist = false;
+                                    for(var i = 0; i < _this.participants().length; i++) {
+                                        if(_this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                                            alreadyExist = true;
+                                            break;
+                                        }
+                                    }
+                                    if(alreadyExist !== true) {
+                                        $.ajax({
+                                            url: App.Routes.WebApi.Agreements.Participant.get(myParticipant.establishmentId()),
+                                            type: 'GET',
+                                            async: false
+                                        }).done(function (response) {
+                                            myParticipant.isOwner(response.isOwner);
+                                            _this.participants.push(myParticipant);
+                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
+                                        }).fail(function () {
+                                            _this.participants.push(myParticipant);
+                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
+                                        });
+                                    } else {
+                                        alert("This Participant has already been added.");
+                                    }
+                                };
+                            }
+                            lastURL = "#/page/";
+                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/new") > 0) {
+                            sessionStorage.setItem("addest", "no");
+                            lastURL = "#/index";
+                            _this.establishmentSearchViewModel.sammy.setLocation('#/index');
+                            var dfd = $.Deferred();
+                            var dfd2 = $.Deferred();
+                            var $obj = $("#estSearch");
+                            var $obj2 = $("#addEstablishment");
+                            var time = 500;
+                            _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+                            $.when(dfd, dfd2).done(function () {
+                                $("#allParticipants").fadeIn(500);
+                            });
+                        } else {
+                            window.location.replace(_this.establishmentSearchViewModel.sammy.getLocation());
+                        }
+                    }
+                });
+                this.establishmentSearchViewModel.sammy.run();
+            }
+        };
         InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
             this.$addContactDialog.data("kendoWindow").open().title("Edit Contact");
             this.contactsIsEdit(true);
@@ -919,26 +919,38 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactPhones(me.phones());
             this.contactMiddleName(me.middleName());
             this.contactIndex = this.contacts.indexOf(me);
+            this.$contactEmail.prop('disabled', true);
+            this.$contactLastName.prop('disabled', true);
+            this.$contactFirstName.prop('disabled', true);
+            $("#contactMiddleName").prop('disabled', true);
+            this.$contactSalutation.data("kendoComboBox").enable(false);
+            this.$contactSuffix.data("kendoComboBox").enable(false);
             var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.type();
             });
-            var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+            dropdownlist = $("#contactSuffix").data("kendoComboBox");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.suffix();
             });
-            var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+            dropdownlist = $("#contactSalutation").data("kendoComboBox");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.salutation();
             });
             $("#addAContact").fadeOut(500, function () {
             });
-            $(".phoneTypes").kendoDropDownList({
+            $("input.phoneTypes").kendoDropDownList({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
                     data: ko.mapping.toJS(this.phoneTypes())
                 })
+            });
+            $("input.phoneTypes").each(function (index) {
+                dropdownlist = $(this).data("kendoDropDownList");
+                dropdownlist.select(function (dataItem) {
+                    return dataItem.name === me.phones()[index].type();
+                });
             });
         };
         InstitutionalAgreementEditModel.prototype.clearContactInfo = function () {
@@ -947,6 +959,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactPersonId('');
             this.contactJobTitle('');
             this.contactFirstName('');
+            this.contactMiddleName('');
             this.contactLastName('');
             this.contactPhones('');
             this.contactTypeOptionSelected('');
@@ -958,21 +971,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             dropdownlist.select(0);
         };
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
-            this.contactsIsEdit(false);
-            this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
-            this.contacts()[this.contactIndex].title(this.contactJobTitle());
-            this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
-            this.contacts()[this.contactIndex].personId(this.contactPersonId());
-            this.contacts()[this.contactIndex].firstName(this.contactFirstName());
-            this.contacts()[this.contactIndex].lastName(this.contactLastName());
-            this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
-            this.contacts()[this.contactIndex].phones(this.contactPhones());
-            this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
-            this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
-            this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-            this.clearContactInfo();
-            this.$addContactDialog.data("kendoWindow").close();
-            $("#addAContact").fadeIn(500);
+            if(this.validateContact.isValid()) {
+                this.contactsIsEdit(false);
+                this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
+                this.contacts()[this.contactIndex].title(this.contactJobTitle());
+                this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
+                this.contacts()[this.contactIndex].personId(this.contactPersonId());
+                this.contacts()[this.contactIndex].firstName(this.contactFirstName());
+                this.contacts()[this.contactIndex].lastName(this.contactLastName());
+                this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
+                this.contacts()[this.contactIndex].phones(this.contactPhones());
+                this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
+                this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
+                this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
+                this.clearContactInfo();
+                this.$addContactDialog.data("kendoWindow").close();
+                $("#addAContact").fadeIn(500);
+            } else {
+                this.validateContact.errors.showAllMessages(true);
+            }
         };
         InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
             if(this.validateContact.isValid()) {
@@ -998,6 +1015,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             }
         };
         InstitutionalAgreementEditModel.prototype.addAContact = function (me, e) {
+            this.validateContact.errors.showAllMessages(false);
             this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
             $("#addAContact").fadeOut(500, function () {
             });
@@ -1037,7 +1055,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.addPhone = function (me, e) {
             if(this.contactPhoneTextValue().length > 0) {
                 this.contactPhones.push(ko.mapping.fromJS({
-                    type: this.contactPhoneType(),
+                    type: '',
                     value: this.contactPhoneTextValue()
                 }));
                 this.contactPhoneTextValue("");
@@ -1075,12 +1093,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype._setupValidation = function () {
             this.validateContact = ko.validatedObservable({
-                contactDisplayName: this.contactDisplayName.extend({
-                    required: {
-                        message: 'Display name is required.'
-                    },
-                    maxLength: 50
-                }),
                 contactSalutation: this.contactSalutation.extend({
                     maxLength: 50
                 }),
@@ -1117,9 +1129,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     maxLength: 50
                 }),
                 contactJobTitle: this.contactJobTitle.extend({
-                    maxLength: 50
-                }),
-                contactPersonId: this.contactPersonId.extend({
                     maxLength: 50
                 })
             });
