@@ -73,6 +73,11 @@ namespace UCosmic.EntityFramework
                 Set<TEntity>().Remove(entity);
         }
 
+        public void Reload<TEntity>(TEntity entity) where TEntity : Entity
+        {
+            Entry(entity).Reload();
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Threading;
 using FluentValidation;
 
 namespace UCosmic.Domain.External
@@ -49,7 +51,10 @@ namespace UCosmic.Domain.External
 
         public void Handle(UpdateServiceSync command)
         {
-            if (command == null) { throw new ArgumentNullException("command"); }
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
 
             //var settings = _query.Query<ServiceSync>().SingleOrDefault(p => p.Id == command.Id);
             var settings = _entities.Get<ServiceSync>().SingleOrDefault(p => p.Id == command.Id);

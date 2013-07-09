@@ -275,7 +275,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 _createAffiliationHandler.Handle(createAffiliationCommand);
             }
-            catch (Exception ex)
+            catch
             {
                 var responseMessage = new HttpResponseMessage
                 {

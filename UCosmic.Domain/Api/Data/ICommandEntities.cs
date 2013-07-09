@@ -11,5 +11,6 @@ namespace UCosmic
         void Create<TEntity>(TEntity entity) where TEntity : Entity;
         void Update<TEntity>(TEntity entity) where TEntity : Entity;
         void Purge<TEntity>(TEntity entity) where TEntity : Entity;
+        void Reload<TEntity>(TEntity entity) where TEntity : Entity;
     }
 }

@@ -7,7 +7,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 using System.Security.Principal;
 using System.Threading;
 using Newtonsoft.Json;
@@ -47,41 +46,38 @@ namespace UCosmic.Domain.External
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
-        private readonly IQueryEntities _query;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
         private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
+        private readonly IHandleCommands<UsfUpdateEstablishment> _updateUsfEstablishment;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
         private readonly ILogExceptions _exceptionLogger;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
         private SmtpTraceListener _smtpTraceListener;
 
         public UsfFacultyImporter(ICommandEntities entities,
-                                  IQueryEntities query,
                                   IHandleCommands<UpdateServiceSync> updateServiceSync,
                                   IHandleCommands<UpdateMyProfile> updateMyProfile,
                                   IHandleCommands<CreateServiceSync> createServiceSync,
                                   IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
+                                  IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment,
                                   IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy,
                                   IUnitOfWork unitOfWork,
-                                  IProcessEvents eventProcessor,
                                   ILogExceptions exceptionLogger,
                                   IHandleCommands<SendEmailMessageCommand> sendEmailMessageHandler
             )
         {
             _entities = entities;
-            _query = query;
             _updateServiceSync = updateServiceSync;
             _updateMyProfile = updateMyProfile;
             _createServiceSync = createServiceSync;
             _createUsfEstablishment = createUsfEstablishment;
+            _updateUsfEstablishment = updateUsfEstablishment;
             _updateHierarchy = updateHierarchy;
             _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
             _exceptionLogger = exceptionLogger;
 
             _smtpTraceListener = null;
@@ -200,7 +196,7 @@ namespace UCosmic.Domain.External
                 }
 
 
-                //bool hiearchyUpdateInProgress = false;
+                bool hiearchyUpdateInProgress = false;
 
                 /* Determine if we need to update the USF Hiearchy. */
 
@@ -220,70 +216,35 @@ namespace UCosmic.Domain.External
                                 LastUpdateResult = "inprogress"
                             };
                             _updateServiceSync.Handle(updateServiceSync);
-
                             _unitOfWork.SaveChanges();
-
-                            //_eventProcessor.Raise(new UsfStaleEstablishmentHierarchy());
-                            //hiearchyUpdateInProgress = true; // inprogress because we just started it
-                            //Debug.WriteLine(DateTime.Now + " USF: UsfStaleEstablishmentHierarchy event raised.");
 
                             Debug.WriteLine(DateTime.Now + " USF: Department imported started.");
 
                             var departmentImported = new UsfDepartmentImporter( _entities,
-                                                                                _query,
                                                                                 _createUsfEstablishment,
+                                                                                _updateUsfEstablishment,
                                                                                 _updateServiceSync,
                                                                                 _updateHierarchy,
                                                                                 _unitOfWork );
                             departmentImported.Handle();
+
+                            _entities.Reload(serviceSync);
                          
                             Debug.WriteLine(DateTime.Now + " Department list update result: " + serviceSync.LastUpdateResult);
                         }
-                        catch (OptimisticConcurrencyException)
+                        catch // dbUpdateConcurrencyException (OptimisticConcurrencyException)
                         {
-                            //hiearchyUpdateInProgress = true; // inprogress because another thread beat us to it
+                            hiearchyUpdateInProgress = true; // inprogress because another thread beat us to it
                             Debug.WriteLine(DateTime.Now + " USF: Establishment update in-progress.  Started: " +
                                             serviceSync.LastUpdateAttempt);
                         }
-
                     }
                     else
                     {
-                        //hiearchyUpdateInProgress = true; // inprogress because the current state is such
+                        hiearchyUpdateInProgress = true; // inprogress because the current state is such
                         Debug.WriteLine(DateTime.Now + " USF: Establishment update in-progress.  Started: " +
                                         serviceSync.LastUpdateAttempt);
                         Debug.WriteLine(DateTime.Now + " Waiting for department list update to complete");
-
-                        /* Wait for department list update to complete, or timeout. */
-                        {
-                            long start = DateTime.Now.Ticks;
-                            long duration = 0;
-                            bool hiearchyUpdateInProgress = true;
-#if false
-                    while (hiearchyUpdateInProgress)
-#else
-                            long timeoutMs = Int64.Parse(ConfigurationManager.AppSettings["UsfDepartmentIdLookupThreadTimeoutMS"]);
-                            while (hiearchyUpdateInProgress && (duration < timeoutMs))
-#endif
-                            {
-                                var state = _query.Query<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
-                                if (state == null)
-                                {
-                                    throw new Exception("ServiceSync deleted?");
-                                }
-
-                                if (state.LastUpdateResult != "inprogress")
-                                {
-                                    hiearchyUpdateInProgress = false;
-                                }
-                                else
-                                {
-                                    Thread.Sleep(1000);
-                                }
-
-                                duration = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
-                            }
-                        }
                     }
                 }
                 else
@@ -291,39 +252,33 @@ namespace UCosmic.Domain.External
                     Debug.WriteLine(DateTime.Now + " No USF establishments update required."); 
                 }
 
-//                Debug.WriteLine(DateTime.Now + " Waiting for department list update to complete");
+                    /* Wait for department list update to complete, or timeout. */
+                if (hiearchyUpdateInProgress)
+                {
+                    long start = DateTime.Now.Ticks;
+                    long duration = 0;
+                    const long timeoutMs = 5 * 60 * 1000;
 
-//                /* Wait for department list update to complete, or timeout. */
-//                {
-//                    long start = DateTime.Now.Ticks;
-//                    long duration = 0;
-//#if false
-//                    while (hiearchyUpdateInProgress)
-//#else
-//                    long timeoutMs = Int64.Parse(ConfigurationManager.AppSettings["UsfDepartmentIdLookupThreadTimeoutMS"]);
-//                    while (hiearchyUpdateInProgress && (duration < timeoutMs))
-//#endif
-//                    {
-//                        var state = _query.Query<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
-//                        if (state == null)
-//                        {
-//                            throw new Exception("ServiceSync deleted?");
-//                        }
+                    while (hiearchyUpdateInProgress && (duration < timeoutMs))
+                    {
+                        if (serviceSync.LastUpdateResult != "inprogress")
+                        {
+                            hiearchyUpdateInProgress = false;
+                        }
+                        else
+                        {
+                            Thread.Sleep(1000);
+                            _entities.Reload(serviceSync);
+                        }
 
-//                        if (state.LastUpdateResult != "inprogress")
-//                        {
-//                            hiearchyUpdateInProgress = false;
-//                        }
-//                        else
-//                        {
-//                            Thread.Sleep(1000);
-//                        }
+                        duration = (DateTime.Now.Ticks - start)/TimeSpan.TicksPerMillisecond;
+                    }
 
-//                        duration = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
-//                    }
-//                }
-
-//                Debug.WriteLine(DateTime.Now + " Department list update result: " + serviceSync.LastUpdateResult); 
+                    if (duration >= timeoutMs)
+                    {
+                        throw new Exception("ServiceSync update timeout");
+                    }
+                }
 
                 if (serviceSync.LastUpdateResult == "succeeded")
                 {
@@ -456,12 +411,41 @@ namespace UCosmic.Domain.External
                     _updateMyProfile.Handle(updateProfile);
                     _unitOfWork.SaveChanges();
 
-                    var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
+                    /* Update fail count */
                     {
-                        UpdateFailCount = 0
-                    };
-                    _updateServiceSync.Handle(updateServiceSyncCommand);
-                    _unitOfWork.SaveChanges();
+                        long start = DateTime.Now.Ticks;
+                        long duration = 0;
+                        const long timeoutMs = 5 * 60 * 1000;
+                        bool busy = true;
+
+                        while (busy && (duration < timeoutMs))
+                        {
+                            try
+                            {
+                                var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
+                                {
+                                    UpdateFailCount = 0
+                                };
+
+                                _updateServiceSync.Handle(updateServiceSyncCommand);
+                                _unitOfWork.SaveChanges();
+
+                                busy = false;
+                            }
+                            catch // DbUpdateConcurrencyException
+                            {
+                                Thread.Sleep(1000);
+                                _entities.Reload(serviceSync);
+                            }
+
+                            duration = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
+                        }
+
+                        if (duration >= timeoutMs)
+                        {
+                            throw new Exception("ServiceSync update timeout");
+                        }
+                    }
 
                     Debug.WriteLine(DateTime.Now + " USF: " + user.Name + " updated.");
                 }
@@ -532,6 +516,8 @@ namespace UCosmic.Domain.External
                     var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
                     if (serviceSync != null)
                     {
+                        _entities.Reload(serviceSync);
+
                         updateFailCount = serviceSync.UpdateFailCount.HasValue ? serviceSync.UpdateFailCount + 1 : 1;
 
                         var updateServiceSync = new UpdateServiceSync(serviceSync.Id)
@@ -560,8 +546,9 @@ namespace UCosmic.Domain.External
                         _exceptionLogger.Log(ex);
                     }
                 }
-                catch
+                catch (Exception ex1)
                 {
+                    Debug.WriteLine(DateTime.Now + " USF: Fail " + ex1.Message);
                 }
             }
 

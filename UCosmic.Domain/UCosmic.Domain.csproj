@@ -176,6 +176,7 @@
     <Compile Include="Domain\Agreements\Validation\MustFindAgreementById.cs" />
     <Compile Include="Domain\External\Commands\SendEmailMessageCommand.cs" />
     <Compile Include="Domain\External\SmtpTraceListener.cs" />
+    <Compile Include="Domain\External\UsfUpdateEstablishment.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateDeepInternationalAffiliation.cs" />
     <Compile Include="Domain\Files\Commands\PurgeLooseFile.cs" />
     <Compile Include="Domain\Identity\Queries\MyOwnedTenantIds.cs" />

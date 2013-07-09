@@ -1639,7 +1639,7 @@ namespace UCosmic.SeedData
 
                     Seed(new SeedEstablishment
                     {
-                        OfficialName = "Department of Chemistry",
+                        OfficialName = "Department of Anthropology",
                         IsMember = true,
                         ParentId = college.RevisionId,
                         TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(

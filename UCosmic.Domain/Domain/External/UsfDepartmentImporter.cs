@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.External.Services;
 
@@ -39,8 +40,8 @@ namespace UCosmic.Domain.External
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
         private readonly ICommandEntities _entities;
-        private readonly IQueryEntities _query;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
+        private readonly IHandleCommands<UsfUpdateEstablishment> _updateUsfEstablishment;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
         private readonly IUnitOfWork _unitOfWork;
@@ -57,15 +58,15 @@ namespace UCosmic.Domain.External
         */
         // ----------------------------------------------------------------------
         public UsfDepartmentImporter( ICommandEntities entities,
-                                      IQueryEntities query,
                                       IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
+                                      IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment,
                                       IHandleCommands<UpdateServiceSync> updateServiceSync,
                                       IHandleCommands<UpdateEstablishmentHierarchy> hierarchy,
                                       IUnitOfWork unitOfWork)
         {
             _entities = entities;
-            _query = query;
             _createUsfEstablishment = createUsfEstablishment;
+            _updateUsfEstablishment = updateUsfEstablishment;
             _updateServiceSync = updateServiceSync;
             _hierarchy = hierarchy;
             _unitOfWork = unitOfWork;
@@ -164,6 +165,13 @@ namespace UCosmic.Domain.External
             {
                 DepartmentRecord department = record.Departments[i];
 
+                Debug.WriteLine(DateTime.Now + " Usf: **************************************************");
+                Debug.WriteLine(DateTime.Now + " Usf: Index:      " + i.ToString());
+                Debug.WriteLine(DateTime.Now + " Usf: DeptId:      " + department.DeptId);
+                Debug.WriteLine(DateTime.Now + " Usf: Institution: " + department.Institution);
+                Debug.WriteLine(DateTime.Now + " Usf: College:     " + department.College);
+                Debug.WriteLine(DateTime.Now + " Usf: Department:  " + department.Department);
+
                 /* Attempt to find existing department by id. */
                 var existingDepartment =
                     _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DeptId);
@@ -261,18 +269,35 @@ namespace UCosmic.Domain.External
                                 college = createCollege.CreatedEstablishment;
                             }
 
-                            /* Create the department */
-                            var createDepartment = new UsfCreateEstablishment()
-                            {
-                                OfficialName = department.Department,
-                                ExternalId = department.DeptId,
-                                IsMember = true,
-                                ParentId = college.RevisionId,
-                                TypeId = _departmentEstablishmentType.RevisionId
-                            };
+                            var dept = _entities.Get<Establishment>()
+                                .SingleOrDefault(e => (e.Parent.RevisionId == college.RevisionId) &&
+                                                      (e.OfficialName == department.Department));
 
-                            _createUsfEstablishment.Handle(createDepartment);
-                            _unitOfWork.SaveChanges();
+                            /* Create the department (if need be) */
+                            if (dept == null)
+                            {
+                                var createDepartment = new UsfCreateEstablishment()
+                                {
+                                    OfficialName = department.Department,
+                                    ExternalId = department.DeptId,
+                                    IsMember = true,
+                                    ParentId = college.RevisionId,
+                                    TypeId = _departmentEstablishmentType.RevisionId
+                                };
+
+                                _createUsfEstablishment.Handle(createDepartment);
+                                _unitOfWork.SaveChanges();
+                            }
+                            else if (dept.ExternalId == null)
+                            {
+                                var updateDepartment = new UsfUpdateEstablishment(dept.RevisionId)
+                                {
+                                    ExternalId = department.DeptId,
+                                };
+
+                                _updateUsfEstablishment.Handle(updateDepartment);
+                                _unitOfWork.SaveChanges();                                
+                            }
                         }
                         else
                         {
@@ -308,7 +333,7 @@ namespace UCosmic.Domain.External
         /*
         */
         // --------------------------------------------------------------------------------
-        public void Handle(/*UsfStaleEstablishmentHierarchy @event*/)
+        public void Handle()
         {
             Debug.WriteLine(DateTime.Now + " USF: Begin establishment hierarchy update.");
 
@@ -360,15 +385,42 @@ namespace UCosmic.Domain.External
                     }
                 }
 #endif
-
-                var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
+                    /* Update status */
                 {
-                    LastUpdateResult = "succeeded",
-                    ExternalSyncDate = _lastDepartmentListActivityDate
-                };
+                    long start = DateTime.Now.Ticks;
+                    long duration = 0;
+                    const long timeoutMs = 5 * 60 * 1000;
+                    bool busy = true;
 
-                _updateServiceSync.Handle(updateServiceSyncCommand);
-                _unitOfWork.SaveChanges();
+                    while (busy && (duration < timeoutMs))
+                    {
+                        try
+                        {
+                            var updateServiceSyncCommand = new UpdateServiceSync(serviceSync.Id)
+                            {
+                                LastUpdateResult = "succeeded",
+                                ExternalSyncDate = _lastDepartmentListActivityDate
+                            };
+
+                            _updateServiceSync.Handle(updateServiceSyncCommand);
+                            _unitOfWork.SaveChanges();
+
+                            busy = false;
+                        }
+                        catch // DbUpdateConcurrencyException
+                        {
+                            Thread.Sleep(1000);
+                            _entities.Reload(serviceSync);
+                        }
+
+                        duration = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
+                    }
+
+                    if (duration >= timeoutMs)
+                    {
+                        throw new Exception("ServiceSync update timeout");
+                    }
+                }
 
                 Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update SUCCEEDED.");
             }
