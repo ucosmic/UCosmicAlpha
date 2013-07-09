@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web.Http;
+using System.Net;
+using System.Net.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
@@ -51,6 +53,54 @@ namespace UCosmic.Web.Mvc.ApiControllers
             };
 
             return models;
+        }
+
+        [GET("{agreementId:int}/contact/{contactId:int}")]
+        public AgreementContactApiModel Get(int agreementId, int contactId)
+        {
+            var entities = _queryProcessor.Execute(new ContactsByAgreementId(User, agreementId)
+            {
+                EagerLoad = new Expression<Func<AgreementContact, object>>[]
+                {
+                    x => x.Person.Emails,
+                    x => x.PhoneNumbers,
+                }
+            });
+
+            var newPhone2 = new[]
+            {
+                new AgreementContactPhoneApiModel {Value = "3213456452", Type = "work", ContactId = "3"},
+                new AgreementContactPhoneApiModel {Value = "321345", Type = "home", ContactId = "3"}
+            };
+            var models = new AgreementContactApiModel{ Title = "job2", FirstName = "arya", LastName = "stark", Id = 2, PersonId = 44, Phones = newPhone2, EmailAddress = "asdf@as.as22", Type = "Home Principal", Suffix = "Sr.", Salutation = "Ms.", DisplayName = "Arya Stark", MiddleName = "middle2" };
+
+
+            return models;
+        }
+
+        [POST("{agreementId:int}/contact/{contactId:int}")]
+        public HttpResponseMessage Post(int agreementId, int contactId)
+        {
+            //var response = Request.CreateResponse(HttpStatusCode.Created,
+            //   string.Format("Establishment name '{0}' was successfully created.", model.Text));
+            //var url = Url.Link(null, new
+            //{
+            //    controller = "EstablishmentNames",
+            //    action = "Get",
+            //    agreementId,
+            //    establishmentNameId = command.Id,
+            //});
+            //Debug.Assert(url != null);
+            //response.Headers.Location = new Uri(url);
+            //return response;
+        }
+
+        [PUT("{agreementId:int}/contact/{contactId:int}")]
+        public HttpResponseMessage PUT(int agreementId, int contactId)
+        {
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
+            return response;
         }
     }
 }

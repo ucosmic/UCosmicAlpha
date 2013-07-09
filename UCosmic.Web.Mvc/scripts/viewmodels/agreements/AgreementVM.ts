@@ -152,6 +152,11 @@ export class InstitutionalAgreementEditModel {
     contactPhoneType = ko.observable();
     $addContactDialog = $("#addContactDialog");
     //contact = ko.observable();
+    $contactEmail = $("#contactEmail");
+    $contactLastName = $("#contactLastName");
+    $contactFirstName = $("#contactFirstName");
+    $contactSalutation = $("#contactSalutation");
+    $contactSuffix = $("#contactSuffix");
 
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
@@ -395,12 +400,6 @@ export class InstitutionalAgreementEditModel {
             this.isFileFailureUnexpected(true);
         });
     }
-
-    $contactEmail = $("#contactEmail");
-    $contactLastName = $("#contactLastName");
-    $contactFirstName = $("#contactFirstName");
-    $contactSalutation = $("#contactSalutation");
-    $contactSuffix = $("#contactSuffix");
 
     getSettings(): void {
 
@@ -1015,7 +1014,8 @@ export class InstitutionalAgreementEditModel {
         $("#contactMiddleName").prop('disabled', true);
         this.$contactSalutation.data("kendoComboBox").enable(false);
         this.$contactSuffix.data("kendoComboBox").enable(false);
-        //this.contactTypeOptionSelected(me.type);// I need to rebind kendo or update the select box
+
+        this.contactTypeOptionSelected(me.type());
         var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.type();
@@ -1103,6 +1103,12 @@ export class InstitutionalAgreementEditModel {
     }
 
     addAContact(me, e): void {
+        this.$contactEmail.prop('disabled', false);
+        this.$contactLastName.prop('disabled', false);
+        this.$contactFirstName.prop('disabled', false);
+        $("#contactMiddleName").prop('disabled', false);
+        this.$contactSalutation.data("kendoComboBox").enable(true);
+        this.$contactSuffix.data("kendoComboBox").enable(true);
         this.validateContact.errors.showAllMessages(false);
         this.$addContactDialog.data("kendoWindow").open().title("Add Contact")
         $("#addAContact").fadeOut(500, function () {

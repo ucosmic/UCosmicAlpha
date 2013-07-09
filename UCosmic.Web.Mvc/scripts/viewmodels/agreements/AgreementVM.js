@@ -75,6 +75,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactPhoneTextValue = ko.observable("");
             this.contactPhoneType = ko.observable();
             this.$addContactDialog = $("#addContactDialog");
+            this.$contactEmail = $("#contactEmail");
+            this.$contactLastName = $("#contactLastName");
+            this.$contactFirstName = $("#contactFirstName");
+            this.$contactSalutation = $("#contactSalutation");
+            this.$contactSuffix = $("#contactSuffix");
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
             this.nickname = ko.observable();
@@ -122,11 +127,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.owner2 = new Search(false);
             this.tenantDomain = "uc.edu";
             this.spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
-            this.$contactEmail = $("#contactEmail");
-            this.$contactLastName = $("#contactLastName");
-            this.$contactFirstName = $("#contactFirstName");
-            this.$contactSalutation = $("#contactSalutation");
-            this.$contactSuffix = $("#contactSuffix");
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
@@ -925,6 +925,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $("#contactMiddleName").prop('disabled', true);
             this.$contactSalutation.data("kendoComboBox").enable(false);
             this.$contactSuffix.data("kendoComboBox").enable(false);
+            this.contactTypeOptionSelected(me.type());
             var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.type();
@@ -1015,6 +1016,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             }
         };
         InstitutionalAgreementEditModel.prototype.addAContact = function (me, e) {
+            this.$contactEmail.prop('disabled', false);
+            this.$contactLastName.prop('disabled', false);
+            this.$contactFirstName.prop('disabled', false);
+            $("#contactMiddleName").prop('disabled', false);
+            this.$contactSalutation.data("kendoComboBox").enable(true);
+            this.$contactSuffix.data("kendoComboBox").enable(true);
             this.validateContact.errors.showAllMessages(false);
             this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
             $("#addAContact").fadeOut(500, function () {
