@@ -36,7 +36,11 @@ var ViewModels;
                 this.spinner.start();
                 this.nextForceDisabled(true);
                 this.prevForceDisabled(true);
-                $.get(App.Routes.WebApi.Identity.Users.get(), queryParameters).done(function (response, statusText, xhr) {
+                $.ajax({
+                    url: App.Routes.WebApi.Identity.Users.get(),
+                    data: queryParameters,
+                    cache: false
+                }).done(function (response, statusText, xhr) {
                     deferred.resolve(response, statusText, xhr);
                 }).fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);

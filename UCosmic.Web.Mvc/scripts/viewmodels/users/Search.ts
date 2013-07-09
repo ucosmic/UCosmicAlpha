@@ -46,7 +46,11 @@ module ViewModels.Users {
             this.spinner.start();
             this.nextForceDisabled(true);
             this.prevForceDisabled(true);
-            $.get(App.Routes.WebApi.Identity.Users.get(), queryParameters)
+            $.ajax({
+                url: App.Routes.WebApi.Identity.Users.get(),
+                data: queryParameters,
+                cache: false
+            })
             .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
                 deferred.resolve(response, statusText, xhr);
             })
