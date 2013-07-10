@@ -10,8 +10,8 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading;
+using Newtonsoft.Json;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.External.Services;
 
 namespace UCosmic.Domain.External
 {
@@ -132,7 +132,7 @@ namespace UCosmic.Domain.External
         /*
         */
         // ----------------------------------------------------------------------
-        public void Import(Stream stream)
+        public void Import(string json)
         {
 #if DEBUG
             var stopwatch = new Stopwatch();
@@ -140,9 +140,10 @@ namespace UCosmic.Domain.External
             Debug.WriteLine(DateTime.Now + " USF: Department import start:");
 #endif
 
-            var serializer = new DataContractJsonSerializer(typeof(Record));
-            var record = (Record)serializer.ReadObject(stream);
-            stream.Close();
+            //var serializer = new DataContractJsonSerializer(typeof(Record));
+            //var record = (Record)serializer.ReadObject(stream);
+            //stream.Close();
+            var record = JsonConvert.DeserializeObject<Record>(json);
 
             _lastDepartmentListActivityDate = null;
 
@@ -371,19 +372,21 @@ namespace UCosmic.Domain.External
 
                     if (!String.IsNullOrEmpty(serviceTicket))
                     {
-                        var service = new UsfDepartmentIdLookup();
-
-                        using (var stream = service.Open(serviceTicket))
-                        {
-                            try
-                            {
-                                Import(stream);
-                            }
-                            finally
-                            {
-                                service.Close();
-                            }
-                        }
+                        //var service = new UsfDepartmentIdLookup();
+                        //
+                        //using (var stream = service.Open(serviceTicket))
+                        //{
+                        //    try
+                        //    {
+                        //        Import(stream);
+                        //    }
+                        //    finally
+                        //    {
+                        //        service.Close();
+                        //    }
+                        //}
+                        var json = _queryProcessor.Execute(new UsfCasDepartmentJson(serviceTicket));
+                        Import(json);
                     }
                     else
                     {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -28,7 +27,7 @@ namespace UCosmic.Domain.Identity
         public string PersonDisplayName { get; set; }
 
         /* ----- Not persisted ----- */
-        public bool Seeding { get; set; }
+        internal bool IsSeeding { get; set; }
         public int CreatedUserId { get; internal set; }
     }
 
@@ -144,8 +143,6 @@ namespace UCosmic.Domain.Identity
             {
                 DisplayName = command.PersonDisplayName ?? command.Name
             };
-            _entities.Create(person);
-            _unitOfWork.SaveChanges();
 
             var affiliation = new Affiliation
             {
@@ -154,9 +151,6 @@ namespace UCosmic.Domain.Identity
                 EstablishmentId = establishmentToAffiliate.RevisionId
             };
             person.Affiliations.Add(affiliation);
-
-            _entities.Update(person);
-            _unitOfWork.SaveChanges();
 
             var user = new User
             {
@@ -185,7 +179,7 @@ namespace UCosmic.Domain.Identity
 
             var userCreatedEvent = new UserCreated(command.Principal, command.CreatedUserId)
             {
-                Seeding = command.Seeding
+                IsSeeding = command.IsSeeding,
             };
             _eventProcessor.Raise(userCreatedEvent);
 

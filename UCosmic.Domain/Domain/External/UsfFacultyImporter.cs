@@ -149,7 +149,7 @@ namespace UCosmic.Domain.External
                 {
                     Debug.WriteLine("success");
 
-                    var service = new UsfFacultyInfo();
+                    //var service = new UsfFacultyInfo();
 
                     /* We might want to set User.Person.DefaultEmail when user is created. */
                     //using (var stream = service.Open(serviceTicket, user.Name))
@@ -160,8 +160,10 @@ namespace UCosmic.Domain.External
                     //
                     //service.Close();
 
-                    var response = service.Get(serviceTicket, user.Name);
-                    record = JsonConvert.DeserializeObject<Record>(response);
+                    //var response = service.Get(serviceTicket, user.Name);
+                    //record = JsonConvert.DeserializeObject<Record>(response);
+                    var json = _queryProcessor.Execute(new UsfCasFacultyResponse(serviceTicket, user.Name));
+                    record = JsonConvert.DeserializeObject<Record>(json);
                 }
                 else
                 {
@@ -227,6 +229,7 @@ namespace UCosmic.Domain.External
                             Debug.WriteLine(DateTime.Now + " USF: Department imported started.");
 
                             var departmentImported = new UsfDepartmentImporter( _entities,
+                                                                                _queryProcessor,
                                                                                 _createUsfEstablishment,
                                                                                 _updateUsfEstablishment,
                                                                                 _updateServiceSync,
@@ -471,7 +474,7 @@ namespace UCosmic.Domain.External
             Debug.WriteLine("Start UsfFacultyImporter");
 
             /* Don't import faculty profile information if seeding. */
-            if (@event.Seeding)
+            if (@event.IsSeeding)
             {
                 goto Exit;
             }
