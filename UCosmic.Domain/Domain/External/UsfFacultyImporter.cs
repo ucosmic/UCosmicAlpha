@@ -186,10 +186,24 @@ namespace UCosmic.Domain.External
                 }
 
                 /* The record's email address does not match? */
-                if (record.UsfEmailAddress != user.Name)
                 {
-                    Debug.WriteLine(DateTime.Now + " Emails don't match: record=" + record.UsfEmailAddress + ", user=" + user.Name);
-                    throw new Exception("Error getting faculty record (emails don't match).");
+                    int atIndex = record.UsfEmailAddress.IndexOf('@');
+                    if (atIndex == -1)
+                    {
+                        string message = String.Format("Malformed record email address: {0}", record.UsfEmailAddress);
+                        throw new Exception(message);
+                    }
+                    string recordEmail = record.UsfEmailAddress.Substring(0, atIndex);
+
+                    atIndex = user.Name.IndexOf('@');
+                    string userEmail = user.Name.Substring(0, atIndex);
+
+                    if (recordEmail != userEmail)
+                    {
+                        Debug.WriteLine(DateTime.Now + " Emails don't match: record=" + record.UsfEmailAddress +
+                                        ", user=" + user.Name);
+                        throw new Exception("Error getting faculty record (emails don't match).");
+                    }
                 }
 
                 /* Get the last activity date from the record */
@@ -234,11 +248,11 @@ namespace UCosmic.Domain.External
                                                                                 _updateUsfEstablishment,
                                                                                 _updateServiceSync,
                                                                                 _updateHierarchy,
-                                                                                _unitOfWork );
+                                                                                _unitOfWork);
                             departmentImported.Handle();
 
                             _entities.Reload(serviceSync);
-                         
+
                             Debug.WriteLine(DateTime.Now + " Department list update result: " + serviceSync.LastUpdateResult);
                         }
                         catch // dbUpdateConcurrencyException (OptimisticConcurrencyException)
@@ -258,10 +272,10 @@ namespace UCosmic.Domain.External
                 }
                 else
                 {
-                    Debug.WriteLine(DateTime.Now + " No USF establishments update required."); 
+                    Debug.WriteLine(DateTime.Now + " No USF establishments update required.");
                 }
 
-                    /* Wait for department list update to complete, or timeout. */
+                /* Wait for department list update to complete, or timeout. */
                 if (hiearchyUpdateInProgress)
                 {
                     long start = DateTime.Now.Ticks;
@@ -280,7 +294,7 @@ namespace UCosmic.Domain.External
                             _entities.Reload(serviceSync);
                         }
 
-                        duration = (DateTime.Now.Ticks - start)/TimeSpan.TicksPerMillisecond;
+                        duration = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
                     }
 
                     if (duration >= timeoutMs)
@@ -420,6 +434,13 @@ namespace UCosmic.Domain.External
                     _updateMyProfile.Handle(updateProfile);
                     _unitOfWork.SaveChanges();
 
+                    /* Store email if not the same as userName */
+                    if (record.UsfEmailAddress != user.Name)
+                    {
+                        user.Person.AddEmail(record.UsfEmailAddress);
+                        _unitOfWork.SaveChanges();
+                    }
+
                     /* Update fail count */
                     {
                         long start = DateTime.Now.Ticks;
@@ -545,6 +566,8 @@ namespace UCosmic.Domain.External
                         ConfigurationManager.AppSettings["UsfImportServiceFailIgnoreCount"];
                     if (Int32.TryParse(importServiceFailIgnoreCountString, out importServiceFailIgnoreCount))
                     {
+                        Debug.WriteLine(DateTime.Now + " USF: FailCount = " + updateFailCount);
+                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex.ToString());
                         if (updateFailCount > importServiceFailIgnoreCount)
                         {
                             _exceptionLogger.Log(ex);
@@ -552,6 +575,7 @@ namespace UCosmic.Domain.External
                     }
                     else
                     {
+                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex.ToString());
                         _exceptionLogger.Log(ex);
                     }
                 }
