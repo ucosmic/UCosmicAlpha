@@ -128,6 +128,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _FormFileAttachments = "_FormFileAttachments";
                 public readonly string _FormOverallVisibility = "_FormOverallVisibility";
                 public readonly string _FormParticipants = "_FormParticipants";
+                public readonly string _FormSidebarNav = "_FormSidebarNav";
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
@@ -142,6 +143,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _FormFileAttachments = "~/Views/Agreements/_FormFileAttachments.cshtml";
             public readonly string _FormOverallVisibility = "~/Views/Agreements/_FormOverallVisibility.cshtml";
             public readonly string _FormParticipants = "~/Views/Agreements/_FormParticipants.cshtml";
+            public readonly string _FormSidebarNav = "~/Views/Agreements/_FormSidebarNav.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";

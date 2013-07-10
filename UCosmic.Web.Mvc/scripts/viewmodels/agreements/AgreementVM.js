@@ -83,6 +83,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
             this.nickname = ko.observable();
+            this.content = ko.observable();
             this.startDate = ko.observable();
             this.expDate = ko.observable();
             this.isEstimated = ko.observable();
@@ -583,6 +584,47 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     },
                     select: function (e) {
                         kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
+                    }
+                });
+                $("body").height($(window).height() + $("body").height() - 20);
+                $(window).scroll(function () {
+                    var $participants = $("#participants");
+                    var $basicInfo = $("#basicInfo");
+                    var $effectiveDatesCurrentStatus = $("#effectiveDatesCurrentStatus");
+                    var $contacts = $("#contacts");
+                    var $fileAttachments = $("#fileAttachments");
+                    var $overallVisibility = $("#overallVisibility");
+                    var $navparticipants = $("#navParticipants");
+                    var $navbasicInfo = $("#navBasicInfo");
+                    var $naveffectiveDatesCurrentStatus = $("#navEffectiveDatesCurrentStatus");
+                    var $navcontacts = $("#navContacts");
+                    var $navfileAttachments = $("#navFileAttachments");
+                    var $navoverallVisibility = $("#navOverallVisibility");
+                    var $participantsTop = $participants.offset();
+                    var $basicInfoTop = $basicInfo.offset();
+                    var $effectiveDatesCurrentStatusTop = $effectiveDatesCurrentStatus.offset();
+                    var $contactsTop = $contacts.offset();
+                    var $fileAttachmentsTop = $fileAttachments.offset();
+                    var $overallVisibilityTop = $overallVisibility.offset();
+                    var $body = $("body").scrollTop();
+                    if($body >= $participantsTop.top && $body <= $participantsTop.top + $participants.height()) {
+                        $("aside").find("li").removeClass("current");
+                        $navparticipants.addClass("current");
+                    } else if($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height()) {
+                        $("aside").find("li").removeClass("current");
+                        $navbasicInfo.addClass("current");
+                    } else if($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height()) {
+                        $("aside").find("li").removeClass("current");
+                        $naveffectiveDatesCurrentStatus.addClass("current");
+                    } else if($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height()) {
+                        $("aside").find("li").removeClass("current");
+                        $navcontacts.addClass("current");
+                    } else if($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height()) {
+                        $("aside").find("li").removeClass("current");
+                        $navfileAttachments.addClass("current");
+                    } else if($body >= $overallVisibilityTop.top && $body <= $overallVisibilityTop.top + $overallVisibility.height()) {
+                        $("aside").find("li").removeClass("current");
+                        $navoverallVisibility.closest("li").addClass("current");
                     }
                 });
             }).fail(function (xhr) {
@@ -1099,6 +1141,54 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.prevForceDisabled(false);
         };
         InstitutionalAgreementEditModel.prototype._setupValidation = function () {
+            this.validateOverallVisibility = ko.validatedObservable({
+                visibility: this.visibility.extend({
+                    required: {
+                        message: "Overall visibility is required."
+                    }
+                })
+            });
+            this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
+                startDate: this.startDate.extend({
+                    required: {
+                        message: "Start date is required."
+                    },
+                    maxLength: 50
+                }),
+                expDate: this.expDate.extend({
+                    required: {
+                        message: "Expiration date is required."
+                    },
+                    maxLength: 50
+                }),
+                autoRenew: this.autoRenew.extend({
+                    required: {
+                        message: "Auto renew is required."
+                    }
+                }),
+                statusOptionSelected: this.statusOptionSelected.extend({
+                    required: {
+                        message: "Current Status is required."
+                    }
+                })
+            });
+            this.validateBasicInfo = ko.validatedObservable({
+                agreementType: this.typeOptionSelected.extend({
+                    required: {
+                        message: "Agreement type is required."
+                    },
+                    maxLength: 50
+                }),
+                nickname: this.nickname.extend({
+                    maxLength: 50
+                }),
+                content: this.content.extend({
+                    maxLength: 5000
+                }),
+                privateNotes: this.privateNotes.extend({
+                    maxLength: 250
+                })
+            });
             this.validateContact = ko.validatedObservable({
                 contactSalutation: this.contactSalutation.extend({
                     maxLength: 50
@@ -1139,6 +1229,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     maxLength: 50
                 })
             });
+        };
+        InstitutionalAgreementEditModel.prototype.goToSection = function (location, data, event) {
+            var offset = $("#" + location).offset();
+            $("body").scrollTop(offset.top - 20);
+            $(event.target).closest("ul").find("li").removeClass("current");
+            $(event.target).closest("li").addClass("current");
         };
         return InstitutionalAgreementEditModel;
     })();

@@ -2556,6 +2556,7 @@
     <Content Include="Views\Agreements\_FormContacts.cshtml" />
     <Content Include="Views\Agreements\_FormFileAttachments.cshtml" />
     <Content Include="Views\Agreements\_FormOverallVisibility.cshtml" />
+    <Content Include="Views\Agreements\_FormSidebarNav.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

@@ -121,8 +121,6 @@ export class InstitutionalAgreementEditModel {
     };
 
     visibility = ko.observableArray();
-
-
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
     typeOptionSelected: KnockoutObservableString = ko.observable();
@@ -157,10 +155,15 @@ export class InstitutionalAgreementEditModel {
     $contactFirstName = $("#contactFirstName");
     $contactSalutation = $("#contactSalutation");
     $contactSuffix = $("#contactSuffix");
+    validateContact;
+    validateBasicInfo;
+    validateEffectiveDatesCurrentStatus;
+    validateOverallVisibility;
 
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
     nickname = ko.observable();
+    content = ko.observable();
     startDate = ko.observable();
     expDate = ko.observable();
     isEstimated = ko.observable();
@@ -235,41 +238,16 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateFiles(): void {
-        //this.files.push(new this.fileConstructor("asdf", "asdf2", "Private", 5))
-        //this.files.push(new this.fileConstructor("asdf4", "asdf5", "Protected", 6))
-        //this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7))
         $.get(App.Routes.WebApi.Agreements.Files.get())
             .done((response: any): void => {
-                //this.contacts(response);
                 ko.mapping.fromJS(response, this.files)
-                //$("#LoadingPage").hide();
             });
     }
 
-
-   // this.jobTitle = jobTitle;
-    //    this.firstName = firstName;
-    //    this.lastName = lastName;
-    //    this.id = id;
-    //    this.personId = personId;
-    //    this.phone = phone;
-    //    this.email = email;
-    //    this.type = type;
     populateContacts(): void {
-        //var newPhone = ko.mapping.fromJS([]);
-        //newPhone.push(new phoneNumber("32145", "home", 1));
-        //newPhone.push(new phoneNumber("321345645", "work", 2));
-        //this.contacts.push(ko.mapping.fromJS({ jobTitle: "job1", firstName: "joe", lastName: "blow", id: 1, personId: "asdf", phone: newPhone, email: "asdf@as.as11", type: "Home Principal", suffix: "Jr.", salutation: "Dr.", displayName: "Joe Blow", middleName: "middle" }));
-        //var newPhone2 = ko.mapping.fromJS([]);
-        //newPhone2.push(new phoneNumber("32145222", "home2", 2));
-        //newPhone2.push(new phoneNumber("3213456452", "work2", 3));
-        //this.contacts.push(ko.mapping.fromJS({ jobTitle: "job2", firstName: "arya", lastName: "stark", id: 2, personId: "asdf22", phone: newPhone2, email: "asdf@as.as22", type: "Home Principal", suffix: "Sr.", salutation: "Ms.", displayName: "Arya Stark", middleName: "middle2" }));
-
         $.get(App.Routes.WebApi.Agreements.Contacts.get())
             .done((response: any): void => {
-                //this.contacts(response);
                 ko.mapping.fromJS(response, this.contacts)
-                //$("#LoadingPage").hide();
             });
 
     }
@@ -648,6 +626,55 @@ export class InstitutionalAgreementEditModel {
                 },
                 select: (e: any): void => {
                     kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+
+            //add sections and when the scroll to the top of the section, change side nav - also change side nav
+            // when I click it(style) 
+            
+            $("body").height($(window).height() + $("body").height() - 20);
+            
+            $(window).scroll(function (){
+                var $participants = $("#participants");
+                var $basicInfo = $("#basicInfo");
+                var $effectiveDatesCurrentStatus = $("#effectiveDatesCurrentStatus");
+                var $contacts = $("#contacts");
+                var $fileAttachments = $("#fileAttachments");
+                var $overallVisibility = $("#overallVisibility");
+
+                var $navparticipants = $("#navParticipants");
+                var $navbasicInfo = $("#navBasicInfo");
+                var $naveffectiveDatesCurrentStatus = $("#navEffectiveDatesCurrentStatus");
+                var $navcontacts = $("#navContacts");
+                var $navfileAttachments = $("#navFileAttachments");
+                var $navoverallVisibility = $("#navOverallVisibility");
+
+                var $participantsTop = $participants.offset();
+                var $basicInfoTop = $basicInfo.offset();
+                var $effectiveDatesCurrentStatusTop = $effectiveDatesCurrentStatus.offset();
+                var $contactsTop = $contacts.offset();
+                var $fileAttachmentsTop = $fileAttachments.offset();
+                var $overallVisibilityTop = $overallVisibility.offset();
+
+                var $body = $("body").scrollTop()
+                if ($body >= $participantsTop.top  && $body <= $participantsTop.top + $participants.height() ) {
+                    $("aside").find("li").removeClass("current");
+                    $navparticipants.addClass("current");
+                } else if ($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height() ) {
+                    $("aside").find("li").removeClass("current");
+                    $navbasicInfo.addClass("current");
+                } else if ($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height() ) {
+                    $("aside").find("li").removeClass("current");
+                    $naveffectiveDatesCurrentStatus.addClass("current");
+                } else if ($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height() ) {
+                    $("aside").find("li").removeClass("current");
+                    $navcontacts.addClass("current");
+                } else if ($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $navfileAttachments.addClass("current");
+                } else if ($body >= $overallVisibilityTop.top && $body <= $overallVisibilityTop.top + $overallVisibility.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $navoverallVisibility.closest("li").addClass("current");
                 }
             });
 
@@ -1208,10 +1235,56 @@ export class InstitutionalAgreementEditModel {
         this.nextForceDisabled(false);
         this.prevForceDisabled(false);
     }
-
-    validateContact; 
-
+    
     private _setupValidation(): void {
+        this.validateOverallVisibility = ko.validatedObservable({
+            visibility: this.visibility.extend({
+                required: {
+                    message: "Overall visibility is required."
+                }
+            })
+        })
+        this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
+            startDate: this.startDate.extend({
+                required: {
+                    message: "Start date is required."
+                },
+                maxLength: 50
+            }),
+            expDate: this.expDate.extend({
+                required: {
+                    message: "Expiration date is required."
+                },
+                maxLength: 50
+            }),
+            autoRenew: this.autoRenew.extend({
+                required: {
+                    message: "Auto renew is required."
+                }
+            }),
+            statusOptionSelected: this.statusOptionSelected.extend({
+                required: {
+                    message: "Current Status is required."
+                }
+            })
+        })
+        this.validateBasicInfo = ko.validatedObservable({
+            agreementType: this.typeOptionSelected.extend({
+                required: {
+                    message: "Agreement type is required."
+                },
+                maxLength: 50
+            }),
+            nickname: this.nickname.extend({
+                maxLength: 50
+            }),
+            content: this.content.extend({
+                maxLength: 5000
+            }),
+            privateNotes: this.privateNotes.extend({
+                maxLength: 250
+            }),
+        });
         this.validateContact = ko.validatedObservable({
             
             contactSalutation: this.contactSalutation.extend({
@@ -1262,5 +1335,15 @@ export class InstitutionalAgreementEditModel {
 
         //ko.validation.group(this);
     }
+
+    goToSection(location, data, event): void {
+
+        var offset = $("#" + location).offset();
+       
+        $("body").scrollTop(offset.top - 20);
+        $(event.target).closest("ul").find("li").removeClass("current");
+        $(event.target).closest("li").addClass("current");
+    };
+    
 }
 
