@@ -195,15 +195,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
-            this.files.push(new this.fileConstructor("asdf", "asdf2", "Private", 5));
-            this.files.push(new this.fileConstructor("asdf4", "asdf5", "Protected", 6));
-            this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7));
+            var _this = this;
+            $.get(App.Routes.WebApi.Agreements.Files.get()).done(function (response) {
+                ko.mapping.fromJS(response, _this.files);
+            });
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Contacts.get()).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
-                $("#LoadingPage").hide();
             });
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {

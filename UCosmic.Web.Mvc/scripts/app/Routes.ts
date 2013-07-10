@@ -266,7 +266,6 @@ module App.Routes {
             }
 
             export module Participant {
-
                 export function get (establishmentId: number, agreementId?: number): string {
                     var url = 'agreements/0/participant/';
                     if (agreementId) url = url.replace('0', agreementId.toString())
@@ -276,7 +275,6 @@ module App.Routes {
             }
 
             export module Contacts {
-
                 export function get (agreementId?: number): string {
                     var url = 'agreements/0/contacts';
                     if (agreementId) url = url.replace('0', agreementId.toString())
@@ -284,8 +282,15 @@ module App.Routes {
                 }
             }
 
-            export module Settings {
+            export module Files {
+                export function get (agreementId?: number): string {
+                    var url = 'agreements/0/files';
+                    if (agreementId) url = url.replace('0', agreementId.toString())
+                    return makeUrl(url);
+                }
+            }
 
+            export module Settings {
                 export function get (): string {
                     return makeUrl('agreements/settings');
                 }

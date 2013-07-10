@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Net;
@@ -81,18 +82,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{agreementId:int}/contact/{contactId:int}")]
         public HttpResponseMessage Post(int agreementId, int contactId)
         {
-            //var response = Request.CreateResponse(HttpStatusCode.Created,
-            //   string.Format("Establishment name '{0}' was successfully created.", model.Text));
-            //var url = Url.Link(null, new
-            //{
-            //    controller = "EstablishmentNames",
-            //    action = "Get",
-            //    agreementId,
-            //    establishmentNameId = command.Id,
-            //});
-            //Debug.Assert(url != null);
-            //response.Headers.Location = new Uri(url);
-            //return response;
+            var response = Request.CreateResponse(HttpStatusCode.Created,
+               string.Format("Contact '{0}' was successfully created.", "name"));
+            var url = Url.Link(null, new
+            {
+                controller = "AgreementContacts",
+                action = "Get",
+                agreementId,
+                establishmentNameId = 1//command.Id
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
         [PUT("{agreementId:int}/contact/{contactId:int}")]

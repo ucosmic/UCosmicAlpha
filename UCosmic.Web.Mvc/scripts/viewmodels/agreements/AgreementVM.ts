@@ -235,9 +235,15 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateFiles(): void {
-        this.files.push(new this.fileConstructor("asdf", "asdf2", "Private", 5))
-        this.files.push(new this.fileConstructor("asdf4", "asdf5", "Protected", 6))
-        this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7))
+        //this.files.push(new this.fileConstructor("asdf", "asdf2", "Private", 5))
+        //this.files.push(new this.fileConstructor("asdf4", "asdf5", "Protected", 6))
+        //this.files.push(new this.fileConstructor("asdf9", "asdf8", "Public", 7))
+        $.get(App.Routes.WebApi.Agreements.Files.get())
+            .done((response: any): void => {
+                //this.contacts(response);
+                ko.mapping.fromJS(response, this.files)
+                //$("#LoadingPage").hide();
+            });
     }
 
 
@@ -263,7 +269,7 @@ export class InstitutionalAgreementEditModel {
             .done((response: any): void => {
                 //this.contacts(response);
                 ko.mapping.fromJS(response, this.contacts)
-                $("#LoadingPage").hide();
+                //$("#LoadingPage").hide();
             });
 
     }

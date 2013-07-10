@@ -298,6 +298,17 @@ var App;
                     Contacts.get = get;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
+                (function (Files) {
+                    function get(agreementId) {
+                        var url = 'agreements/0/files';
+                        if(agreementId) {
+                            url = url.replace('0', agreementId.toString());
+                        }
+                        return makeUrl(url);
+                    }
+                    Files.get = get;
+                })(Agreements.Files || (Agreements.Files = {}));
+                var Files = Agreements.Files;
                 (function (Settings) {
                     function get() {
                         return makeUrl('agreements/settings');
