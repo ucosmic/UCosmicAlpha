@@ -2668,8 +2668,6 @@ namespace Links
                 public static readonly string LanguageExpertise_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LanguageExpertise.min.js") ? Url("LanguageExpertise.min.js") : Url("LanguageExpertise.js");
                               
                 public static readonly string LanguageExpertise_min_js = Url("LanguageExpertise.min.js");
-                public static readonly string LauageExpertise_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LauageExpertise.min.js") ? Url("LauageExpertise.min.js") : Url("LauageExpertise.js");
-                              
                 public static readonly string LanguageExpertises_ts = Url("LanguageExpertises.ts");
                 public static readonly string LanguageExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LanguageExpertises.min.js") ? Url("LanguageExpertises.min.js") : Url("LanguageExpertises.js");
                               
