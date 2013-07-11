@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Web.Http;
 using System.Net;
 using System.Net.Http;
+using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
-using AutoMapper;
-using UCosmic.Domain.Agreements;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -36,12 +33,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //});
 
             //var models = Mapper.Map<AgreementFileApiModel[]>(entities);
-            
+
             var models = new[]
             {
-                new AgreementFileApiModel { AgreementId = "1", Name = "file1", Path = "Path1", Visibility = "Public"},
-                new AgreementFileApiModel { AgreementId = "2", Name = "file2", Path = "Path2", Visibility = "Protected"},
-                new AgreementFileApiModel { AgreementId = "3", Name = "file3", Path = "Path3", Visibility = "Private"},
+                new AgreementFileApiModel { Id = 1, AgreementId = agreementId, OriginalName = "file1.pdf", CustomName = "file1.pdf", Visibility = "Public", },
+                new AgreementFileApiModel { Id = 2, AgreementId = agreementId, OriginalName = "file2.doc", CustomName = "file2.doc", Visibility = "Protected", },
+                new AgreementFileApiModel { Id = 3, AgreementId = agreementId, OriginalName = "file3.xls", CustomName = "file3.xls", Visibility = "Private", },
             };
 
             return models;
@@ -61,27 +58,27 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var model = new AgreementFileApiModel
             {
-                AgreementId = "1",
-                Name = "file1",
-                Path = "Path1",
+                Id = fileId,
+                AgreementId = agreementId,
+                OriginalName = "file1.pdf",
+                CustomName = "file1.pdf",
                 Visibility = "visible"
             };
-
 
             return model;
         }
 
         [POST("{agreementId:int}/files")]
-        public HttpResponseMessage Post(int agreementId, int fileId)
+        public HttpResponseMessage Post(int agreementId, AgreementFileApiModel model)
         {
             var response = Request.CreateResponse(HttpStatusCode.Created,
-               string.Format("File '{0}' was successfully created.", "name"));
+               string.Format("File '{0}' was successfully attached.", model.CustomName));
             var url = Url.Link(null, new
             {
                 controller = "AgreementFiles",
                 action = "Get",
                 agreementId,
-                establishmentNameId = 1//command.Id
+                fileId = 1,
             });
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);
@@ -89,7 +86,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("{agreementId:int}/files/{fileId:int}")]
-        public HttpResponseMessage Put(int agreementId, int fileId)
+        public HttpResponseMessage Put(int agreementId, AgreementFileApiModel model)
         {
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully updated.");
