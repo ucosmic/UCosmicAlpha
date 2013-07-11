@@ -1,6 +1,16 @@
 var App;
 (function (App) {
     (function (Routes) {
+        if(!String.prototype.format) {
+            String.prototype.format = function () {
+                var formatted = this;
+                for(var i = 0; i < arguments.length; i++) {
+                    var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+                    formatted = formatted.replace(regexp, arguments[i]);
+                }
+                return formatted;
+            };
+        }
         Routes.applicationPath = '/';
         function hasTrailingSlash(value) {
             return value.lastIndexOf('/') == value.length - 1;
@@ -299,24 +309,17 @@ var App;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
                 (function (Files) {
-                    function get(agreementId, fileId) {
-                        var url = 'agreements/' + agreementId + '/files';
-                        if(fileId) {
-                            url += '/' + fileId;
+                    function get(agreementId) {
+                        var url = 'agreements/0/files';
+                        if(agreementId) {
+                            url = url.replace('0', agreementId.toString());
                         }
                         return makeUrl(url);
                     }
                     Files.get = get;
-                    function post(agreementId) {
-                        return get(agreementId);
-                    }
-                    Files.post = post;
-                    function put(agreementId, fileId) {
-                        return get(agreementId, fileId);
-                    }
-                    Files.put = put;
-                    function del(agreementId, fileId) {
-                        return get(agreementId, fileId);
+                    function del(agreementId, id) {
+                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
+                        return makeUrl(url);
                     }
                     Files.del = del;
                     (function (Content) {
@@ -343,6 +346,29 @@ var App;
                     Settings.get = get;
                 })(Agreements.Settings || (Agreements.Settings = {}));
                 var Settings = Agreements.Settings;
+                (function (File) {
+                    function get(params) {
+                        var url = post();
+                        if(params) {
+                            url += '?' + $.param(params);
+                        }
+                        return url;
+                    }
+                    File.get = get;
+                    function post() {
+                        return makeUrl('agreements/file');
+                    }
+                    File.post = post;
+                    function del(agreementId, id) {
+                        return post();
+                    }
+                    File.del = del;
+                    function kendoRemove() {
+                        return makeUrl('agreements/file/kendo-remove');
+                    }
+                    File.kendoRemove = kendoRemove;
+                })(Agreements.File || (Agreements.File = {}));
+                var File = Agreements.File;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
             (function (My) {

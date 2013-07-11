@@ -12,9 +12,9 @@
                                 
                                 <div class="item">
                                     <div>
-                                        <strong data-bind="text: name() + ' ' + path()"></strong><br/>
+                                        <strong data-bind="text: customName"></strong><br/>
                                         <label><input name="fileVisibility" type="radio" class="radio" value="Public" data-bind="checked: visibility, attr: { name: 'fileVisibility' + agreementId()}" /><strong>Public:</strong><span class="radioText"> Anyone on the Internet to find this agreement.</span></label><br/>
-                                        <label><input name="fileVisibility" type="radio" class="radio" value="Protected" data-bind="checked: visibility, attr: { name: 'fileVisibility' + agreementId()}"/><strong>Protected:</strong><span class="radioText"> HagreementIde this agreement from the public, but allow my employees and students to find it.</span></label><br/>
+                                        <label><input name="fileVisibility" type="radio" class="radio" value="Protected" data-bind="checked: visibility, attr: { name: 'fileVisibility' + agreementId()}"/><strong>Protected:</strong><span class="radioText"> Hide this agreement from the public, but allow my employees and students to find it.</span></label><br/>
                                         <label><input name="fileVisibility" type="radio" class="radio" value="Private" data-bind="checked: visibility, attr: { name: 'fileVisibility' + agreementId()}"/><strong>Private:</strong><span class="radioText"> Allow only UCosmic administrators to find this agreement.</span></label>
                                     </div>
                                 </div>
@@ -25,10 +25,10 @@
                 <footer id="addAFile">
                     <input id="fileUpload" type="file" name="photo" data-bind="jqObservableElement: '$file'" />
                     <div style="padding-left: 4px;">
-                        <div data-bind="visible: hasFile" style="display: none; padding-top: 4px;">
+                        @*<div data-bind="visible: hasFile" style="display: none; padding-top: 4px;">
                             <input type="button" value="Delete my file" data-bind="click: startDeletingFile, attr: { disabled: fileDeleteSpinner.isVisible } " />
                             <img data-bind="visible: fileDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" style="display: none;" />
-                        </div>
+                        </div>*@
                         <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
                             <div>
                                 <p>
@@ -38,7 +38,7 @@
                         </div>
                         <div data-bind="visible: isFileExtensionInvalid" style="display: none;">
                             <span class="validationMessage">The file extension &quot;<span data-bind="text: fileFileExtension"></span>&quot; 
-                                is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
+                                is either an invalid or unallowed file. Please choose a file with a .pdf, .doc, .docx, .odt, .xls, .xlsx, .ods, .ppt, .pptx extension (case insensitive).</span>
                         </div>
                         <div data-bind="visible: isFileTooManyBytes" style="display: none;">
                             <span class="validationMessage">The file &quot;<span data-bind="text: fileFileName"></span>&quot; 

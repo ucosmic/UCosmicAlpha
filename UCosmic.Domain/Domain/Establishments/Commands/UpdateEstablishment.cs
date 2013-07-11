@@ -55,10 +55,10 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.Id)
             ;
 
-            // user must be authorized to perform this command
+            // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Principal)
                 .Must(x => x.IsInRole(RoleName.EstablishmentAdministrator))
-                    .WithMessage("User '{0}' is not authorized to execute this command.", x => x.Principal.Identity.Name)
+                    .WithMessage("User '{0}' is not authorized to execute this command.")
             ;
 
             RuleFor(x => x.ParentId)
@@ -136,7 +136,6 @@ namespace UCosmic.Domain.Establishments
             if (command.TypeId == entity.Type.RevisionId &&
                 command.CeebCode == entity.CollegeBoardDesignatedIndicator &&
                 command.UCosmicCode == entity.UCosmicCode &&
-                command.ExternalId == entity.ExternalId &&
                 !parentChanged
             )
                 return;
@@ -153,7 +152,7 @@ namespace UCosmic.Domain.Establishments
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
-                    command.ExternalId
+                    ExternalId = command.ExternalId
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };

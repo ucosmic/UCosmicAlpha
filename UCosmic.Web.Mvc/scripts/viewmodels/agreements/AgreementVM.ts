@@ -120,6 +120,7 @@ export class InstitutionalAgreementEditModel {
         this.id = id;
     };
 
+    agreementId = 0;
     visibility = ko.observableArray();
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
@@ -236,7 +237,7 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateParticipants(): void {
-        $.get(App.Routes.WebApi.Agreements.Participants.get())
+        $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
             .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
                 $("#LoadingPage").hide();
@@ -245,14 +246,14 @@ export class InstitutionalAgreementEditModel {
 
     populateFiles(): void {
         // TODO TIM: you need to know the agreementId in order to do Files.get()
-        //$.get(App.Routes.WebApi.Agreements.Files.get())
-        //    .done((response: any): void => {
-        //        ko.mapping.fromJS(response, this.files)
-        //    });
+        $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId))
+            .done((response: any): void => {
+                ko.mapping.fromJS(response, this.files)
+            });
     }
 
     populateContacts(): void {
-        $.get(App.Routes.WebApi.Agreements.Contacts.get())
+        $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId))
             .done((response: any): void => {
                 ko.mapping.fromJS(response, this.contacts)
             });
@@ -262,7 +263,7 @@ export class InstitutionalAgreementEditModel {
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
         
         $("#fileUpload").kendoUpload({
-            multiple: false,
+            multiple: true,
             showFileList: false,
             localization: {
                 select: 'Choose a file to upload...'
@@ -277,7 +278,7 @@ export class InstitutionalAgreementEditModel {
             },
             upload: (e: any): void => {
                 // client-side check for file extension
-                var allowedExtensions: string[] = ['pdf', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods', 'ppt', 'pptx'];
+                var allowedExtensions: string[] = ['.pdf', '.doc', '.docx', '.odt', '.xls', '.xlsx', '.ods', '.ppt', '.pptx'];
                 this.isFileExtensionInvalid(false);
                 this.isFileTooManyBytes(false);
                 this.isFileFailureUnexpected(false);
@@ -297,7 +298,7 @@ export class InstitutionalAgreementEditModel {
                         e.preventDefault(); // prevent upload
                         this.isFileExtensionInvalid(true); // update UI with feedback
                     }
-                    else if (e.files[index].rawFile.size > (1024 * 1024)) {
+                    else if (e.files[index].rawFile.size > (1024 * 1024 * 25)) {
                         e.preventDefault(); // prevent upload
                         this.isFileTooManyBytes(true); // update UI with feedback
                     }
@@ -316,12 +317,14 @@ export class InstitutionalAgreementEditModel {
                     if (e.response && e.response.message) {
                         App.flasher.flash(e.response.message);
                     }
-                    this.hasFile(true);
-                    // TODO TIM: this no longer compiles
-                    // you need to know the agreementId in order to invoke a function
-                    // on App.Routes.WebApi.Agreement.Files
-                    //this.fileSrc(App.Routes.WebApi.Agreements.File
-                    //    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                    //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
+
+                    this.files.push(ko.mapping.fromJS({
+                        id: 0.1,
+                        originalName: "file1new.pdf",
+                        customName: "file1new.pdf",
+                        visibility: "Public"
+                    }));
                 }
             },
             error: (e: any): void => {
@@ -382,10 +385,8 @@ export class InstitutionalAgreementEditModel {
         this.isFileTooManyBytes(false);
         this.isFileFailureUnexpected(false);
         $.ajax({ // submit ajax DELETE request
-            // TODO TIM: this no longer compiles
-            // you need to know the agreementId in order to invoke a function
-            // on App.Routes.WebApi.Agreement.Files
-            url: '', //App.Routes.WebApi.Agreements.File.del(),
+            // TODO TIM: is this uploads files or agreement fils
+            url: App.Routes.WebApi.Agreements.Files.del(this.agreementId, 1),
             type: 'DELETE'
         })
         .always((): void => {

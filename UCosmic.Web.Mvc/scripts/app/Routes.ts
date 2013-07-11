@@ -1,7 +1,20 @@
 /// <reference path="../jquery/jquery-1.8.d.ts" />
+interface String {
+    format(...args: any[]): string;
+}
 
 module App.Routes {
 
+    if (!String.prototype.format) {
+        String.prototype.format = function () {
+            var formatted = this;
+            for (var i = 0; i < arguments.length; i++) {
+                var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+                formatted = formatted.replace(regexp, arguments[i]);
+            }
+            return formatted;
+        };
+    }
     export var applicationPath: string = '/';
 
     function hasTrailingSlash(value: string): bool {
@@ -283,19 +296,15 @@ module App.Routes {
             }
 
             export module Files {
-                export function get (agreementId: number, fileId?: number): string {
-                    var url = 'agreements/' + agreementId + '/files';
-                    if (fileId) url += '/' + fileId;
+                export function get (agreementId: number): string {
+                    var url = 'agreements/0/files';
+                    if (agreementId) url = url.replace('0', agreementId.toString())
                     return makeUrl(url);
                 }
-                export function post(agreementId: number): string {
-                    return get(agreementId);
-                }
-                export function put(agreementId: number, fileId: number): string {
-                    return get(agreementId, fileId);
-                }
-                export function del(agreementId: number, fileId: number) {
-                    return get(agreementId, fileId);
+                export function del(agreementId: number, id: number) {
+                    var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
+                    
+                    return makeUrl(url);
                 }
 
                 export module Content {
@@ -315,6 +324,23 @@ module App.Routes {
             export module Settings {
                 export function get (): string {
                     return makeUrl('agreements/settings');
+                }
+            }
+
+            export module File {
+                export function get (params?: any): string {
+                    var url = post();
+                    if (params) url += '?' + $.param(params);
+                    return url;
+                }
+                export function post() {
+                    return makeUrl('agreements/file');
+                }
+                export function del(agreementId: number, id: number) {
+                    return post();
+                }
+                export function kendoRemove() {
+                    return makeUrl('agreements/file/kendo-remove');
                 }
             }
         }
@@ -365,7 +391,7 @@ module App.Routes {
 
         export module People {
 
-            export function get (personId?: number): string {
+            export function get(personId?: number): string {
                 var url = 'people';
                 if (personId) url += '/' + personId;
                 return makeUrl(url);

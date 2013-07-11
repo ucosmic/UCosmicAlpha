@@ -1,7 +1,5 @@
 ﻿<nav class="side">
     <ul class="top">
-        @if (User.IsInAnyRole(RoleName.AgreementManagers))
-        {
         <li>
             <a href="@Url.Action(MVC.Agreements.New())" class="group" data-xbind="click: gotoAddNew" id="searchSideBarAddNew">
                 <div class="arrow"></div>
@@ -11,13 +9,9 @@
                 </span>
             </a>
         </li>
-        }
-        @{
-            var searchBoxClass = !User.IsInAnyRole(RoleName.AgreementManagers) ? "top" : null;
-        }
         <li class="static square-bottom">
-            <span class="text @searchBoxClass">Search options</span>
-            <div class="content @searchBoxClass">
+            <span class="text">Search options</span>
+            <div class="content">
                 <div class="field">
                     <select class="side" data-xbind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode">
                         <option>[Loading...]</option>
