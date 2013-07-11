@@ -11,6 +11,9 @@ namespace UCosmic.Domain.Agreements
 {
     internal static class QueryAgreements
     {
+        internal static readonly string Public = AgreementVisibility.Public.AsSentenceFragment();
+        internal static readonly string Protected = AgreementVisibility.Protected.AsSentenceFragment();
+
         internal static Agreement ById(this IQueryable<Agreement> queryable, int id)
         {
             return queryable.SingleOrDefault(x => x.Id == id);
@@ -51,16 +54,13 @@ namespace UCosmic.Domain.Agreements
             if (principal == null) throw new ArgumentNullException("principal");
             if (ownedTenantIds == null) throw new ArgumentNullException("ownedTenantIds");
 
-            var publicText = AgreementVisibility.Public.AsSentenceFragment();
-            var protectedText = AgreementVisibility.Protected.AsSentenceFragment();
-
             // when user is not an agreement admin, filter out private agreements
             // and protected agreements that the user does not own
             if (!principal.IsInAnyRole(RoleName.AgreementManagers))
             {
-                return agreements.Where(x => publicText.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
+                return agreements.Where(x => Public.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
                     || (
-                        protectedText.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
+                        Protected.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
                         &&
                         x.Participants.Any(y => y.IsOwner && ownedTenantIds.Contains(y.EstablishmentId))
                     )
@@ -68,7 +68,7 @@ namespace UCosmic.Domain.Agreements
             }
 
             // when user is an agreement admin, include all agreements they own
-            return agreements.Where(x => publicText.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
+            return agreements.Where(x => Public.Equals(x.VisibilityText, StringComparison.OrdinalIgnoreCase)
                 || (
                     x.Participants.Any(y => y.IsOwner && ownedTenantIds.Contains(y.EstablishmentId))
                 )

@@ -169,6 +169,7 @@
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateAgreement.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactsByAgreementId.cs" />
+    <Compile Include="Domain\Agreements\Queries\FilesByAgreementId.cs" />
     <Compile Include="Domain\Agreements\Validation\AgreementConstraints.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveAgreementStatus.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveAgreementVisibility.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Domain\Agreements\Validation\MustHaveAgreementStartsOn.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveAgreementType.cs" />
     <Compile Include="Domain\Agreements\Validation\MustFindAgreementById.cs" />
+    <Compile Include="Domain\Agreements\_Internal\QueryAgreementFiles.cs" />
     <Compile Include="Domain\External\Commands\SendEmailMessageCommand.cs" />
     <Compile Include="Domain\External\Queries\UsfCasFacultyJson.cs" />
     <Compile Include="Domain\External\Queries\UsfCasDepartmentJson.cs" />
