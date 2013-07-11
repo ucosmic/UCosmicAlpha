@@ -103,9 +103,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.isFileFailureUnexpected = ko.observable(false);
             this.fileFileExtension = ko.observable();
             this.fileFileName = ko.observable();
-            this.fileSrc = ko.observable(App.Routes.WebApi.Agreements.File.get({
-                maxSide: 128
-            }));
+            this.fileSrc = ko.observable();
             this.fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.participants = ko.mapping.fromJS([]);
@@ -196,10 +194,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
-            var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Files.get()).done(function (response) {
-                ko.mapping.fromJS(response, _this.files);
-            });
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
             var _this = this;
@@ -216,8 +210,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     select: 'Choose a file to upload...'
                 },
                 async: {
-                    saveUrl: App.Routes.WebApi.Agreements.File.post(),
-                    removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove()
+                    saveUrl: App.Routes.WebApi.Uploads.post()
                 },
                 upload: function (e) {
                     var allowedExtensions = [
@@ -267,10 +260,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             App.flasher.flash(e.response.message);
                         }
                         _this.hasFile(true);
-                        _this.fileSrc(App.Routes.WebApi.Agreements.File.get({
-                            maxSide: 128,
-                            refresh: new Date().toUTCString()
-                        }));
                     }
                 },
                 error: function (e) {
@@ -332,7 +321,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.isFileTooManyBytes(false);
             this.isFileFailureUnexpected(false);
             $.ajax({
-                url: App.Routes.WebApi.Agreements.File.del(),
+                url: '',
                 type: 'DELETE'
             }).always(function () {
                 _this.fileDeleteSpinner.stop();
@@ -341,10 +330,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     App.flasher.flash(response);
                 }
                 _this.hasFile(false);
-                _this.fileSrc(App.Routes.WebApi.Agreements.File.get({
-                    maxSide: 128,
-                    refresh: new Date().toUTCString()
-                }));
             }).fail(function () {
                 _this.isFileFailureUnexpected(true);
             });

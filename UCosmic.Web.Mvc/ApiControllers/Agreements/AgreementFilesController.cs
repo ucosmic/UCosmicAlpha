@@ -47,7 +47,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{agreementId:int}/file/{fileId:int}")]
+        [GET("{agreementId:int}/files/{fileId:int}")]
         public AgreementFileApiModel Get(int agreementId, int fileId)
         {
             //var entities = _queryProcessor.Execute(new FilesByAgreementId(User, agreementId)
@@ -71,7 +71,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [POST("{agreementId:int}/file/{fileId:int}")]
+        [POST("{agreementId:int}/files")]
         public HttpResponseMessage Post(int agreementId, int fileId)
         {
             var response = Request.CreateResponse(HttpStatusCode.Created,
@@ -88,11 +88,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("{agreementId:int}/file/{fileId:int}")]
-        public HttpResponseMessage PUT(int agreementId, int fileId)
+        [PUT("{agreementId:int}/files/{fileId:int}")]
+        public HttpResponseMessage Put(int agreementId, int fileId)
         {
 
-            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully updated.");
+            return response;
+        }
+
+        [DELETE("{agreementId:int}/files/{fileId:int}")]
+        public HttpResponseMessage Delete(int agreementId, int fileId)
+        {
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully deleted.");
             return response;
         }
     }

@@ -184,7 +184,13 @@ export class InstitutionalAgreementEditModel {
     fileFileExtension: KnockoutObservableString = ko.observable();
     fileFileName: KnockoutObservableString = ko.observable();
     fileSrc: KnockoutObservableString = ko.observable(
-        App.Routes.WebApi.Agreements.File.get({ maxSide: 128 }));
+        // TODO TIM: the maxSide and refresh params are not valid for agreement files
+        // maxSide was used for profile photo to request it at a specific size
+        // refresh was used to cache-bust, but i don't think we'll need that here
+        // since i do not have the files controller set to cache anything
+        // (the profile photo controller action is set to cache responses so refresh was needed there)
+        //App.Routes.WebApi.Agreements.File.get({ maxSide: 128 })
+    );
     fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     $confirmPurgeDialog: JQuery;
@@ -238,10 +244,11 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateFiles(): void {
-        $.get(App.Routes.WebApi.Agreements.Files.get())
-            .done((response: any): void => {
-                ko.mapping.fromJS(response, this.files)
-            });
+        // TODO TIM: you need to know the agreementId in order to do Files.get()
+        //$.get(App.Routes.WebApi.Agreements.Files.get())
+        //    .done((response: any): void => {
+        //        ko.mapping.fromJS(response, this.files)
+        //    });
     }
 
     populateContacts(): void {
@@ -261,8 +268,12 @@ export class InstitutionalAgreementEditModel {
                 select: 'Choose a file to upload...'
             },
             async: {
-                saveUrl: App.Routes.WebApi.Agreements.File.post(),
-                removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove()
+                // TODO TIM: I changed this, look at it, but leave it as-is
+                // NOTE: we upload to the uploads endpoint, and POST as a file later with an upload GUID
+                // also, i don't think we will need kendoRemove when this becomes multiple: true
+                //saveUrl: App.Routes.WebApi.Agreements.File.post(),
+                saveUrl: App.Routes.WebApi.Uploads.post()//,
+                //removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove() // should not need this
             },
             upload: (e: any): void => {
                 // client-side check for file extension
@@ -306,8 +317,11 @@ export class InstitutionalAgreementEditModel {
                         App.flasher.flash(e.response.message);
                     }
                     this.hasFile(true);
-                    this.fileSrc(App.Routes.WebApi.Agreements.File
-                        .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                    // TODO TIM: this no longer compiles
+                    // you need to know the agreementId in order to invoke a function
+                    // on App.Routes.WebApi.Agreement.Files
+                    //this.fileSrc(App.Routes.WebApi.Agreements.File
+                    //    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
                 }
             },
             error: (e: any): void => {
@@ -368,7 +382,10 @@ export class InstitutionalAgreementEditModel {
         this.isFileTooManyBytes(false);
         this.isFileFailureUnexpected(false);
         $.ajax({ // submit ajax DELETE request
-            url: App.Routes.WebApi.Agreements.File.del(),
+            // TODO TIM: this no longer compiles
+            // you need to know the agreementId in order to invoke a function
+            // on App.Routes.WebApi.Agreement.Files
+            url: '', //App.Routes.WebApi.Agreements.File.del(),
             type: 'DELETE'
         })
         .always((): void => {
@@ -377,8 +394,11 @@ export class InstitutionalAgreementEditModel {
         .done((response: string, statusText: string, xhr: JQueryXHR): void => {
             if (typeof response === 'string') App.flasher.flash(response);
             this.hasFile(false);
-            this.fileSrc(App.Routes.WebApi.Agreements.File
-                .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+            // TODO TIM: this no longer compiles
+            // you need to know the agreementId in order to invoke a function
+            // on App.Routes.WebApi.Agreement.Files
+            //this.fileSrc(App.Routes.WebApi.Agreements.File
+            //    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
         })
         .fail((): void => {
             this.isFileFailureUnexpected(true);

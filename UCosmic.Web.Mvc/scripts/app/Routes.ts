@@ -283,33 +283,25 @@ module App.Routes {
             }
 
             export module Files {
-                export function get (agreementId?: number): string {
-                    var url = 'agreements/0/files';
-                    if (agreementId) url = url.replace('0', agreementId.toString())
+                export function get (agreementId: number, fileId?: number): string {
+                    var url = 'agreements/' + agreementId + '/files';
+                    if (fileId) url += '/' + fileId;
                     return makeUrl(url);
+                }
+                export function post(agreementId: number): string {
+                    return get(agreementId);
+                }
+                export function put(agreementId: number, fileId: number): string {
+                    return get(agreementId, fileId);
+                }
+                export function del(agreementId: number, fileId: number) {
+                    return get(agreementId, fileId);
                 }
             }
 
             export module Settings {
                 export function get (): string {
                     return makeUrl('agreements/settings');
-                }
-            }
-
-            export module File {
-                export function get (params?: any): string {
-                    var url = post();
-                    if (params) url += '?' + $.param(params);
-                    return url;
-                }
-                export function post() {
-                    return makeUrl('agreements/file');
-                }
-                export function del() {
-                    return post();
-                }
-                export function kendoRemove() {
-                    return makeUrl('agreements/file/kendo-remove');
                 }
             }
         }
@@ -360,7 +352,7 @@ module App.Routes {
 
         export module People {
 
-            export function get(personId?: number): string {
+            export function get (personId?: number): string {
                 var url = 'people';
                 if (personId) url += '/' + personId;
                 return makeUrl(url);

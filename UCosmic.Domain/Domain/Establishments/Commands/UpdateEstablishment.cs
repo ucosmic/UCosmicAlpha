@@ -58,7 +58,7 @@ namespace UCosmic.Domain.Establishments
             // user must be authorized to perform this command
             RuleFor(x => x.Principal)
                 .Must(x => x.IsInRole(RoleName.EstablishmentAdministrator))
-                    .WithMessage("User '{0}' is not authorized to execute this command.")
+                    .WithMessage("User '{0}' is not authorized to execute this command.", x => x.Principal.Identity.Name)
             ;
 
             RuleFor(x => x.ParentId)
