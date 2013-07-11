@@ -74,6 +74,9 @@ body {
                             }
                             &:last-child.static.square-bottom .content {
                                 @include border-radius(0);
+                                &.top {
+                                    @include border-radius(8px 8px 0 0);
+                                }
                             }
                             &:last-child.current > a > .text {
                                 @include border-radius(0 0 8px 0);
@@ -109,6 +112,9 @@ body {
                             }
                             > .text {
                                 margin-left: 15px;
+                                &.top {
+                                    @include border-radius(8px 8px 0 0);
+                                }
                             }
                             &:hover > a > .arrow {
                                 @include transition(all, 250ms);
@@ -137,6 +143,9 @@ body {
                                     &:hover {
                                         text-decoration: none;
                                     }
+                                }
+                                &.top {
+                                    @include border-radius(8px 8px 0 0);
                                 }
                             }
                             &.current > .content {
