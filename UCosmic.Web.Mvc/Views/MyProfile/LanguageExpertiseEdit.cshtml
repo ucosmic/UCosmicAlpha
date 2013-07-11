@@ -97,12 +97,12 @@
                             </div>
 
                              <!-- OTHER LANGUAGE AND DIALECT -->
-                            <div data-bind="visible: languageId() == null">
+                            <div data-bind="visible: languageId() == null" style="display: none">
                                 <label for="other" class="required-field" style="margin-left: 20px">Other</label>
                                 <input type="text" id="other" style="width: 400px" data-bind="value: other"/>
-                                <span data-bind="visible: isOther()" class="validationMessage">Please provide the other language</span>
+                                <span data-bind="visible: isOther()" class="validationMessage" style="display: none">Please provide the other language</span>
                             </div>
-                            <div data-bind="visible: languageId() == null">
+                            <div data-bind="visible: languageId() == null" style="display: none">
                                 <label for="other-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
                                 <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect"/>
                             </div>

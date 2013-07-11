@@ -38,9 +38,9 @@
             var degreeViewModel = new ViewModels.Degrees.Degree(degreeId);
             degreeViewModel.load()
                 .done(function() {
-                    degreeViewModel.setupWidgets("institution");                 
-                    ko.applyBindings( degreeViewModel, $( "#degree-edit" )[0] );
+                    degreeViewModel.setupWidgets( "institution" );
                     degreeViewModel.setupValidation();
+                    ko.applyBindings( degreeViewModel, $( "#degree-edit" )[0] );                   
                     degreeViewModel.setupSubscriptions();
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
