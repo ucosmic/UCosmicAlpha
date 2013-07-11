@@ -7,6 +7,7 @@
 /// <reference path="../../kendo/kendouiweb.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../degrees/ServiceApiModel.d.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 
 module ViewModels.Degrees
 {

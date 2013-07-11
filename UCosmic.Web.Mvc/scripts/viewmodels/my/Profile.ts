@@ -589,12 +589,23 @@ module ViewModels.My {
             ko.computed((): void => {
                 // generate display name if it has been API-initialized
                 if (this.isDisplayNameDerived() /* && this._isInitialized */) {
-                    var data = ko.mapping.toJS(this);
+                    var mapSource = {
+                        id: this.personId,
+                        isDisplayNameDerived: this.isDisplayNameDerived(),
+                        displayName: this.displayName(),
+                        salutation: this.salutation(),
+                        firstName: this.firstName(),
+                        middleName: this.middleName(),
+                        lastName: this.lastName(),
+                        suffix: this.suffix()
+                    };
+                    var data = ko.mapping.toJS(mapSource);
+
                     $.ajax({
                         url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
                         type: 'GET',
                         cache: false,
-                        data: data
+                        data: data,
                     }).done((result: string): void => {
                         this.displayName(result);
                     });

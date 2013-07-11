@@ -488,7 +488,17 @@ var ViewModels;
                 });
                 ko.computed(function () {
                     if(_this.isDisplayNameDerived()) {
-                        var data = ko.mapping.toJS(_this);
+                        var mapSource = {
+                            id: _this.personId,
+                            isDisplayNameDerived: _this.isDisplayNameDerived(),
+                            displayName: _this.displayName(),
+                            salutation: _this.salutation(),
+                            firstName: _this.firstName(),
+                            middleName: _this.middleName(),
+                            lastName: _this.lastName(),
+                            suffix: _this.suffix()
+                        };
+                        var data = ko.mapping.toJS(mapSource);
                         $.ajax({
                             url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
                             type: 'GET',

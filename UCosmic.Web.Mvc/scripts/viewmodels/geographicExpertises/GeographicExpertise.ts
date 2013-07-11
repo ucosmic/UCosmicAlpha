@@ -8,6 +8,7 @@
 /// <reference path="../../tinymce/tinymce.d.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 
 
 module ViewModels.GeographicExpertises {
