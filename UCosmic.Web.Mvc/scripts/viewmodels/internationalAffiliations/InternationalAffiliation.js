@@ -41,6 +41,7 @@ var ViewModels;
                 $("#fromDate").kendoDropDownList({
                     dataSource: this.years,
                     value: me.from(),
+                    optionLabel: " ",
                     change: function (e) {
                         var toDateDropList = $("#toDate").data("kendoDropDownList");
                         if(toDateDropList.value() < this.value()) {
@@ -52,6 +53,7 @@ var ViewModels;
                 $("#toDate").kendoDropDownList({
                     dataSource: this.years,
                     value: me.to(),
+                    optionLabel: " ",
                     change: function (e) {
                         var fromDateDropList = $("#fromDate").data("kendoDropDownList");
                         if(fromDateDropList.value() > this.value()) {
@@ -80,6 +82,9 @@ var ViewModels;
                     required: true,
                     maxLength: 100
                 });
+                this.from.extend({
+                    required: true
+                });
                 ko.validation.group(this);
             };
             InternationalAffiliation.prototype.setupSubscriptions = function () {
@@ -107,8 +112,8 @@ var ViewModels;
                 if(this.id() == 0) {
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
-                    this.from = ko.observable(Number(moment().format('YYYY')));
-                    this.to = ko.observable(Number(moment().format('YYYY')));
+                    this.from = ko.observable(0);
+                    this.to = ko.observable(0);
                     this.onGoing = ko.observable(false);
                     this.institution = ko.observable(null);
                     this.position = ko.observable(null);
@@ -147,6 +152,7 @@ var ViewModels;
             };
             InternationalAffiliation.prototype.save = function (viewModel, event) {
                 if(!this.isValid()) {
+                    this.errors.showAllMessages();
                     return;
                 }
                 var mapSource = {

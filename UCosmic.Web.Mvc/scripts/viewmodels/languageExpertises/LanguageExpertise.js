@@ -5,6 +5,7 @@ var ViewModels;
             function LanguageExpertise(expertiseId) {
                 this.inititializationErrors = "";
                 this.dirtyFlag = ko.observable(false);
+                this.isOther = ko.observable(false);
                 this._initialize(expertiseId);
             }
             LanguageExpertise.prototype._initialize = function (expertiseId) {
@@ -19,20 +20,25 @@ var ViewModels;
                 $("#" + languageInputId).kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
+                    optionLabel: "Select...",
                     dataSource: this.languageList,
                     value: this.languageId() != null ? this.languageId() : 0,
                     change: function (e) {
-                        var item = _this.languageList[e.sender.selectedIndex];
-                        if(item.name == "Other") {
-                            _this.languageId(null);
+                        if(e.sender.selectedIndex > 0) {
+                            var item = _this.languageList[e.sender.selectedIndex - 1];
+                            if(item.name == "Other") {
+                                _this.languageId(null);
+                            } else {
+                                _this.languageId(item.id);
+                            }
                         } else {
-                            _this.languageId(item.id);
+                            _this.languageId(null);
                         }
                     }
                 });
+                this.languageDroplist = $("#" + languageInputId).data("kendoDropDownList");
                 if(this.languageId() == null) {
-                    var dropdownlist = $("#" + languageInputId).data("kendoDropDownList");
-                    dropdownlist.select(function (dataItem) {
+                    this.languageDroplist.select(function (dataItem) {
                         return dataItem.name === "Other";
                     });
                 }
@@ -66,13 +72,9 @@ var ViewModels;
                 });
             };
             LanguageExpertise.prototype.setupValidation = function () {
-                ko.validation.rules['atLeast'] = {
-                    validator: function (val, otherVal) {
-                        return val.length >= otherVal;
-                    },
-                    message: 'At least {0} must be selected.'
-                };
-                ko.validation.registerExtenders();
+                this.languageId.extend({
+                    notEqual: 0
+                });
                 ko.validation.group(this);
             };
             LanguageExpertise.prototype.setupSubscriptions = function () {
@@ -169,7 +171,16 @@ var ViewModels;
             };
             LanguageExpertise.prototype.save = function (viewModel, event) {
                 if(!this.isValid()) {
+                    this.errors.showAllMessages();
                     return;
+                }
+                var selectedLanguageIndex = this.languageDroplist.select() - 1;
+                var selectedLanguageName = this.languageList[selectedLanguageIndex].name;
+                if(selectedLanguageName === "Other") {
+                    if((this.other() == null) || (this.other().length == 0)) {
+                        this.isOther(true);
+                        return;
+                    }
                 }
                 var mapSource = {
                     id: this.id,

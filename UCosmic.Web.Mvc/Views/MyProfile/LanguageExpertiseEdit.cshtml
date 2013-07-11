@@ -50,9 +50,9 @@
             var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(expertiseId);
             expertiseViewModel.load()
                 .done(function() {
-                    expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");
-                    expertiseViewModel.setupValidation();
+                    expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");                
                     ko.applyBindings( expertiseViewModel, $( "#language-expertise-edit" )[0] );
+                    expertiseViewModel.setupValidation();
                     expertiseViewModel.setupSubscriptions();
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
@@ -87,6 +87,7 @@
                             <div style="margin-bottom: 14px;">
                                 <label for="language" class="required-field" data-bind="css: { 'required-field': languageId() != null, 'non-required-field': languageId() == null }">Language</label>
                                 <input id="language" style="width: 400px" />
+                                <span data-bind="validationMessage: languageId" class="validationMessage"></span>
                             </div>
                             
                             <!-- MAIN LANGUAGE DIALECT -->
@@ -99,6 +100,7 @@
                             <div data-bind="visible: languageId() == null">
                                 <label for="other" class="required-field" style="margin-left: 20px">Other</label>
                                 <input type="text" id="other" style="width: 400px" data-bind="value: other"/>
+                                <span data-bind="visible: isOther()" class="validationMessage">Please provide the other language</span>
                             </div>
                             <div data-bind="visible: languageId() == null">
                                 <label for="other-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>

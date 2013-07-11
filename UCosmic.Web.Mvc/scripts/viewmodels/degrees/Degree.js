@@ -134,6 +134,7 @@ var ViewModels;
             };
             Degree.prototype.save = function (viewModel, event) {
                 if(!this.isValid()) {
+                    this.errors.showAllMessages();
                     return;
                 }
                 if(this.yearAwarded() != null) {

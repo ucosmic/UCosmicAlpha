@@ -118,6 +118,13 @@ namespace UCosmic.Web.Mvc.Models
         public string EditingUserEmail { get; set; }
     }
 
+    public class ActivityPlaceCount
+    {
+        public int PlaceId;
+        public string OfficialName;
+        public int Count;
+    }
+
     public class PageOfActivityApiModel : PageOf<ActivityApiModel> { }
 
     public static class ActivityApiProfiler

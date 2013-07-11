@@ -47,6 +47,9 @@ module ViewModels.LanguageExpertises {
         isValid: () => bool;
         isAnyMessageShown: () => bool;
 
+        languageDroplist: any;
+        isOther: KnockoutObservableBool = ko.observable(false);
+
         // --------------------------------------------------------------------------------
         /*
         */
@@ -73,23 +76,29 @@ module ViewModels.LanguageExpertises {
             $("#" + languageInputId).kendoDropDownList({
                 dataTextField: "name",
                 dataValueField: "id",
+                optionLabel: "Select...",
                 dataSource: this.languageList,
                 value: this.languageId() != null ? this.languageId() : 0,
                 change: (e: any) => {
-                    var item = this.languageList[e.sender.selectedIndex];
-                    if ( item.name == "Other" ) {
+                    if (e.sender.selectedIndex > 0) {
+                        var item = this.languageList[e.sender.selectedIndex - 1];
+                        if (item.name == "Other") {
+                            this.languageId(null);
+                        } else {
+                            this.languageId(item.id);
+                        }
+                    }
+                    else {
                         this.languageId(null);
-                    } else {
-                        this.languageId(item.id);
                     }
                 }
             }); 
 
             /* For some reason, setting the value in the droplist creation above to 0,
                 does not set the item to "Other" */
+            this.languageDroplist = $("#" + languageInputId).data("kendoDropDownList");
             if (this.languageId() == null) {
-                var dropdownlist = $("#" + languageInputId).data("kendoDropDownList");
-                dropdownlist.select(function(dataItem) { return dataItem.name === "Other"} );
+                this.languageDroplist.select(function(dataItem) { return dataItem.name === "Other"});
             }
 
             $("#" + speakingInputId).kendoDropDownList({
@@ -130,17 +139,25 @@ module ViewModels.LanguageExpertises {
         */
         // --------------------------------------------------------------------------------
         setupValidation(): void {
-            ko.validation.rules['atLeast'] = {
-                validator: ( val: any, otherVal: any ): bool => {
-                    return val.length >= otherVal;
-                },
-                message: 'At least {0} must be selected.'
-            };
 
-            ko.validation.registerExtenders();
-            
-            //this.locations.extend( { atLeast: 1 } );
-            //this.description.extend( { maxLength: 400 } );
+            //ko.validation.rules['otherRequired'] = {
+            //    validator: (val: any, otherVal: any): bool => {
+            //        debugger;
+                    
+            //        var selectedIndex = this.languageDroplist.select();
+            //        var selectedName = this.languageList[selectedIndex].name;
+            //        if (selectedName !== "Other") {
+            //            return true;
+            //        }
+            //        return (this.other !== null) && (this.other.length > 0);
+            //    },
+            //    message: 'Please provide the other language.'
+            //};
+
+            //ko.validation.registerExtenders();
+
+            this.languageId.extend({ notEqual: 0 });
+            //this.other.extend({ otherRequired: true });
 
             ko.validation.group( this );
         }
@@ -258,7 +275,18 @@ module ViewModels.LanguageExpertises {
 
             if (!this.isValid()) {
                 // TBD - need dialog here.
+                this.errors.showAllMessages(); 
                 return;
+            }
+
+            var selectedLanguageIndex = this.languageDroplist.select() - 1;
+            var selectedLanguageName = this.languageList[selectedLanguageIndex].name;
+            if (selectedLanguageName === "Other") {
+                if ((this.other() == null) || (this.other().length == 0))
+                {
+                    this.isOther(true)
+                    return;
+                }
             }
 
             var mapSource = {

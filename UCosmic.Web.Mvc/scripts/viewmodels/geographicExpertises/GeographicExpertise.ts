@@ -190,6 +190,7 @@ module ViewModels.GeographicExpertises {
 
             if (!this.isValid()) {
                 // TBD - need dialog here.
+                this.errors.showAllMessages(); 
                 return;
             }
 

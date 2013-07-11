@@ -205,6 +205,7 @@ module ViewModels.Degrees {
         save( viewModel: any, event: any ): void {
             if (!this.isValid()) {
                 // TBD - need dialog here.
+                this.errors.showAllMessages(); 
                 return;
             }
 

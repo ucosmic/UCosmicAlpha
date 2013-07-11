@@ -14,6 +14,7 @@ using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
+using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 using Image = UCosmic.Domain.Files.Image;
 
@@ -49,7 +50,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                   , IHandleCommands<CopyDeepActivity> copyDeepActivity
                                   , IHandleCommands<CreateDeepActivity> createDeepActivity
                                   , IHandleCommands<DeleteActivity> deleteActivity
-                                  , IHandleCommands<UpdateActivity> updateActivity )
+                                  , IHandleCommands<UpdateActivity> updateActivity
+                            )
         {
             _queryProcessor = queryProcessor;
             _profileUpdateHandler = profileUpdateHandler;
@@ -103,6 +105,27 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var model = Mapper.Map<ActivityApiModel>(activity);
             return model;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Get activity counts by country
+        */
+        // --------------------------------------------------------------------------------
+        [GET("countrycounts")]
+        public IEnumerable<ActivityPlaceCount> GetCountryCounts()
+        {
+            var countries = _queryProcessor.Execute(new Countries());
+            var countryCounts = new ActivityPlaceCount[countries.Count()];
+
+            for (int i = 0; i < countries.Count(); i += 1)
+            {
+                countryCounts[i].PlaceId = countries[i].RevisionId;
+                countryCounts[i].OfficialName = countries[i].OfficialName;
+                countryCounts[i].Count = _queryProcessor.Execute(new ActivityCountInCountry(countries[i].RevisionId));
+            }
+
+            return countryCounts;
         }
 
         // --------------------------------------------------------------------------------

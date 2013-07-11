@@ -27,6 +27,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ApiTestController ApiTest = new UCosmic.Web.Mvc.Controllers.T4MVC_ApiTestController();
+    public static UCosmic.Web.Mvc.Controllers.EmployeesController Employees = new UCosmic.Web.Mvc.Controllers.T4MVC_EmployeesController();
     public static UCosmic.Web.Mvc.Controllers.ErrorsController Errors = new UCosmic.Web.Mvc.Controllers.T4MVC_ErrorsController();
     public static UCosmic.Web.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Web.Mvc.Controllers.T4MVC_EstablishmentsController();
     public static UCosmic.Web.Mvc.Controllers.HomeController Home = new UCosmic.Web.Mvc.Controllers.T4MVC_HomeController();

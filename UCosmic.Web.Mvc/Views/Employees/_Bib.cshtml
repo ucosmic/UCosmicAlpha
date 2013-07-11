@@ -1,0 +1,11 @@
+﻿<ul class="group">
+    <li class="search">
+        <a href="@Url.Action(MVC.Employees.Index())">Search</a>
+    </li>
+    @if (ViewBag.Edit != null)
+    {
+        <li class="edit">
+            <span>Edit</span>
+        </li>
+    }
+</ul>

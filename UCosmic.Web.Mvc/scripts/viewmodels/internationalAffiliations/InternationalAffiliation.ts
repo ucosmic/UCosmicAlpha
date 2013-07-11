@@ -109,6 +109,7 @@ module ViewModels.InternationalAffiliations {
             $("#fromDate").kendoDropDownList({
             dataSource: this.years,
             value: me.from(),
+            optionLabel: " ",
             change: function (e) {
                 var toDateDropList = $("#toDate").data("kendoDropDownList");
                 if (toDateDropList.value() < this.value()) {
@@ -121,6 +122,7 @@ module ViewModels.InternationalAffiliations {
             $("#toDate").kendoDropDownList({
             dataSource: this.years,
             value: me.to(),
+            optionLabel: " ",
             change: function (e) {
                 var fromDateDropList = $("#fromDate").data("kendoDropDownList");
                 if (fromDateDropList.value() > this.value()) {
@@ -147,7 +149,8 @@ module ViewModels.InternationalAffiliations {
             
             this.locations.extend( { atLeast: 1 } );
             this.institution.extend( { required: true, maxLength: 200 } );
-            this.position.extend( { required: true, maxLength: 100 } );
+            this.position.extend({ required: true, maxLength: 100 });
+            this.from.extend({ required: true });
 
             ko.validation.group( this );
         }
@@ -183,8 +186,8 @@ module ViewModels.InternationalAffiliations {
             if ( this.id() == 0 ) {
                 this.version = ko.observable( null );
                 this.personId = ko.observable( 0 );
-                this.from = ko.observable( Number( moment().format( 'YYYY' ) ) );
-                this.to = ko.observable( Number( moment().format( 'YYYY' ) ) );
+                this.from = ko.observable( 0 );
+                this.to = ko.observable( 0 );
                 this.onGoing = ko.observable( false );
                 this.institution = ko.observable( null );
                 this.position = ko.observable( null );
@@ -240,7 +243,8 @@ module ViewModels.InternationalAffiliations {
         save( viewModel: any, event: any ): void {
 
             if (!this.isValid()) {
-                // TBD - need dialog here.
+                // TBD - need dialog here. 
+                this.errors.showAllMessages();
                 return;
             }
 

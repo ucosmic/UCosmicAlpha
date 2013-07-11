@@ -42,7 +42,7 @@
                 .done(function() {
 
                     affiliationViewModel.setupWidgets("location");
-                    affiliationViewModel.setupValidation();
+                    
                     ko.applyBindings( affiliationViewModel, $( "#international-affiliation-edit" )[0] );
 
                     var locationSelector = $( "#location" ).data( "kendoMultiSelect" );
@@ -77,6 +77,7 @@
                         }
                     } ) );
 
+                    affiliationViewModel.setupValidation();
                     affiliationViewModel.setupSubscriptions();
                 })
             .fail(function(jqXhr, textStatus, errorThrown) {
@@ -113,7 +114,9 @@
                                     <label for="institution" class="required-field" style="width: 200px">Institution/Organization</label>
                                     <input type="text" id="institution" style="width: 500px; margin-right: 8px" data-bind="value: institution"/>
                                 </span>
+                                <span data-bind="validationMessage: institution" class="validationMessage"></span>
                             </div>
+                            
 
                             <!-- COUNTRY/LOCATION -->
                             <div style="margin-bottom: 14px; display: inline-block; vertical-align: middle">
@@ -121,8 +124,9 @@
                                 <div style="display: inline-block; vertical-align: middle">
                                     <select id="location" style="width: 500px; overflow-y:auto"></select>
                                 </div>
+                                <span data-bind="validationMessage: locations" class="validationMessage"></span>
                             </div>
-                            <span data-bind="validationMessage: locations" class="validationMessage"></span>
+                            
                             
                             <!-- POSITION -->
                             <div style="margin-bottom: 14px">
@@ -130,12 +134,13 @@
                                     <label for="position" class="required-field" style="width: 200px">Position</label>
                                     <input type="text" id="position" style="width: 500px; margin-right: 8px" data-bind="value: position"/>
                                 </span>
+                                <span data-bind="validationMessage: position" class="validationMessage"></span>
                             </div>
-
+                            
                             <!-- DATES -->
                             <div>
                                 <span style="display: inline">
-                                    <label for="fromDate" class="non-required-field" style="width: 200px">From</label>
+                                    <label for="fromDate" class="required-field" style="width: 200px">From</label>
                                     <select id="fromDate" style="width: 100px" data-bind="value: from"></select>
  
                                     <label for="onGoing" class="non-required-field" style="width: 90px">On Going</label>
@@ -147,6 +152,7 @@
                                     </span>
                                 </span>
                             </div>
+                            <span style="margin-left: 200px" data-bind="validationMessage: from" class="validationMessage"></span>
                         </div>
                             
                         <!-- BUTTONS -->
