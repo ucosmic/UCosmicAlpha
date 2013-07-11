@@ -15,6 +15,10 @@ module ViewModels.Users {
 
     export class Search extends ViewModels.PagedSearch {
 
+        static KeywordSessionKey = 'UserSearchKeyword';
+        static PageSizeSessionKey = 'UserSearchPageSize';
+        static OrderBySessionKey = 'UserSearchOrderBy';
+
         sammy: Sammy.Application = Sammy();
         $historyJson: KnockoutObservableJQuery = ko.observable();
         private _history: KnockoutObservableStringArray = ko.observableArray([]);
@@ -33,6 +37,7 @@ module ViewModels.Users {
             this._setupSammy();
             this._setupQueryComputed();
             this._setupPagingDefaults();
+            this._setupSessionStorage();
         }
 
         private _pullResults(): JQueryDeferred {
@@ -159,6 +164,25 @@ module ViewModels.Users {
         private _setupPagingDefaults(): void {
             this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
             this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
+        }
+
+        private _setupSessionStorage(): void {
+            this.keyword.subscribe((newValue: string): void => {
+                sessionStorage.setItem(Search.KeywordSessionKey, newValue);
+            });
+            this.pageSize.subscribe((newValue: number): void => {
+                sessionStorage.setItem(Search.PageSizeSessionKey, newValue.toString());
+            });
+            this.orderBy.subscribe((newValue: string): void => {
+                sessionStorage.setItem(Search.OrderBySessionKey, newValue);
+            });
+        }
+
+        applySession(): void {
+            this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
+            this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize'))
+                || parseInt(this.pageSize()));
+            this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
         }
 
         nextPage(): void { // sync prev & next buttons with browser forward & back

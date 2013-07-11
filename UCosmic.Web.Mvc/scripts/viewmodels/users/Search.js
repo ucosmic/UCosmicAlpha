@@ -18,11 +18,15 @@ var ViewModels;
                 this.flasherProxy = new App.FlasherProxy();
                 this._init();
             }
+            Search.KeywordSessionKey = 'UserSearchKeyword';
+            Search.PageSizeSessionKey = 'UserSearchPageSize';
+            Search.OrderBySessionKey = 'UserSearchOrderBy';
             Search.prototype._init = function () {
                 this._setupHistory();
                 this._setupSammy();
                 this._setupQueryComputed();
                 this._setupPagingDefaults();
+                this._setupSessionStorage();
             };
             Search.prototype._pullResults = function () {
                 var _this = this;
@@ -141,6 +145,22 @@ var ViewModels;
             Search.prototype._setupPagingDefaults = function () {
                 this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
                 this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
+            };
+            Search.prototype._setupSessionStorage = function () {
+                this.keyword.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.KeywordSessionKey, newValue);
+                });
+                this.pageSize.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.PageSizeSessionKey, newValue.toString());
+                });
+                this.orderBy.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.OrderBySessionKey, newValue);
+                });
+            };
+            Search.prototype.applySession = function () {
+                this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
+                this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize')) || parseInt(this.pageSize()));
+                this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
             };
             Search.prototype.nextPage = function () {
                 this._gotoPage(1);
