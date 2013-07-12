@@ -19,36 +19,40 @@ namespace UCosmic.Web.Mvc
         {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
 
-            // image file types
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/jpeg"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/jpg"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/pjpeg")); // IE8 uses this
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/png"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/x-png")); // IE8 uses this
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/gif"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/bmp"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/tiff"));
-
-            // document file types
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/pdf"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/msword")); // doc
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.ms-excel")); // xls
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.ms-powerpoint")); // ppt
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document")); // docx
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")); // xlsx
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.presentationml.presentation")); // pptx
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.oasis.opendocument.text")); // odt
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.oasis.opendocument.spreadsheet")); // ods
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
-
-            // video media types
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("video/mp4"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("video/x-ms-wmv"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("video/quicktime"));
-
-            // audio media types
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("audio/mp3"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("audio/mpeg")); // IE8 uses this
+            #region Previous Supported Media Types
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/octet-stream"));
+            //
+            //// image file types
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/jpeg"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/jpg"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/pjpeg")); // IE8 uses this
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/png"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/x-png")); // IE8 uses this
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/gif"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/bmp"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("image/tiff"));
+            //
+            //// document file types
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/pdf"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/msword")); // doc
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.ms-excel")); // xls
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.ms-powerpoint")); // ppt
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document")); // docx
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")); // xlsx
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.presentationml.presentation")); // pptx
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.oasis.opendocument.text")); // odt
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.oasis.opendocument.spreadsheet")); // ods
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
+            //
+            //// video media types
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("video/mp4"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("video/x-ms-wmv"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("video/quicktime"));
+            //
+            //// audio media types
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("audio/mp3"));
+            //SupportedMediaTypes.Add(new MediaTypeHeaderValue("audio/mpeg")); // IE8 uses this
+            #endregion
         }
 
         public override bool CanReadType(Type type)
@@ -76,24 +80,25 @@ namespace UCosmic.Web.Mvc
                 if (t.IsFaulted || t.IsCanceled)
                     throw new HttpResponseException(HttpStatusCode.InternalServerError);
 
-                var fileContents = t.Result.Contents.Where(x => SupportedMediaTypes.Contains(x.Headers.ContentType))
+                var contents = t.Result.Contents
+                    //.Where(x => SupportedMediaTypes.Contains(x.Headers.ContentType))
                     .ToArray();
-                if (!fileContents.Any())
+                if (!contents.Any())
                 {
                     taskCompletionSource.SetResult(null);
                 }
                 else
                 {
                     var fileMedias = new List<FileMedia>();
-                    foreach (var fileContent in fileContents)
+                    foreach (var fileContent in contents)
                     {
                         var fileName = fileContent.Headers.ContentDisposition.FileName;
                         var mediaType = fileContent.Headers.ContentType.MediaType;
 
-                        using (var imgStream = fileContent.ReadAsStreamAsync().Result)
+                        using (var fileStream = fileContent.ReadAsStreamAsync().Result)
                         {
-                            var imageBuffer = imgStream.ReadFully();
-                            var result = new FileMedia(fileName, mediaType, imageBuffer);
+                            var buffer = fileStream.ReadFully();
+                            var result = new FileMedia(fileName, mediaType, buffer);
                             fileMedias.Add(result);
                         }
                     }
