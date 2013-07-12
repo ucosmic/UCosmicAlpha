@@ -297,6 +297,19 @@ module App.Routes {
                 export function del(agreementId: number, fileId: number) {
                     return get(agreementId, fileId);
                 }
+
+                export module Content {
+                    export function view(agreementId: number, fileId: number): string {
+                        var url = Files.get(agreementId, fileId);
+                        url += 'content';
+                        return makeUrl(url);
+                    }
+                    export function download(agreementId: number, fileId: number): string {
+                        var url = Files.get(agreementId, fileId);
+                        url += 'download';
+                        return makeUrl(url);
+                    }
+                }
             }
 
             export module Settings {

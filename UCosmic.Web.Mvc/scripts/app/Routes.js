@@ -319,6 +319,21 @@ var App;
                         return get(agreementId, fileId);
                     }
                     Files.del = del;
+                    (function (Content) {
+                        function view(agreementId, fileId) {
+                            var url = Files.get(agreementId, fileId);
+                            url += 'content';
+                            return makeUrl(url);
+                        }
+                        Content.view = view;
+                        function download(agreementId, fileId) {
+                            var url = Files.get(agreementId, fileId);
+                            url += 'download';
+                            return makeUrl(url);
+                        }
+                        Content.download = download;
+                    })(Files.Content || (Files.Content = {}));
+                    var Content = Files.Content;
                 })(Agreements.Files || (Agreements.Files = {}));
                 var Files = Agreements.Files;
                 (function (Settings) {

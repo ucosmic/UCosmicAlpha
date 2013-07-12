@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -16,10 +18,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class AgreementFilesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IStoreBinaryData _binaryData;
 
-        public AgreementFilesController(IProcessQueries queryProcessor)
+        public AgreementFilesController(IProcessQueries queryProcessor
+            , IStoreBinaryData binaryData
+        )
         {
             _queryProcessor = queryProcessor;
+            _binaryData = binaryData;
         }
 
         [GET("{agreementId:int}/files")]
@@ -44,7 +50,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public AgreementFileApiModel Get(int agreementId, int fileId, [FromUri] bool useTestData = false)
         {
             var entity = _queryProcessor.Execute(new FileById(User, fileId));
-            if (entity.AgreementId != agreementId)
+            if (entity == null || entity.AgreementId != agreementId)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var model = Mapper.Map<AgreementFileApiModel>(entity);
@@ -60,6 +66,37 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 };
 
             return model;
+        }
+
+        [GET("{agreementId:int}/files/{fileId:int}/content")]
+        public HttpResponseMessage GetContent(int agreementId, int fileId)
+        {
+            var entity = _queryProcessor.Execute(new FileById(User, fileId));
+            if (entity == null || entity.AgreementId != agreementId)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var file = _binaryData.Get(entity.Path);
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(new MemoryStream(file)),
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(entity.MimeType);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
+            {
+                FileName = entity.Name ?? entity.FileName,
+            };
+            return response;
+        }
+
+        [GET("{agreementId:int}/files/{fileId:int}/download")]
+        public HttpResponseMessage GetDownload(int agreementId, int fileId)
+        {
+            var response = GetContent(agreementId, fileId);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = response.Content.Headers.ContentDisposition.FileName,
+            };
+            return response;
         }
 
         [POST("{agreementId:int}/files")]
