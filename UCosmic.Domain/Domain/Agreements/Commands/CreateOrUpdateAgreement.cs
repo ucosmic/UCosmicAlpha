@@ -167,7 +167,10 @@ namespace UCosmic.Domain.Agreements
             if (command.AttachFileIds != null)
                 foreach (var attachedFileIds in command.AttachFileIds)
                 {
-                    var attach = new AttachFileToAgreement(command.Principal, attachedFileIds, entity);
+                    var attach = new AttachFileToAgreement(command.Principal, attachedFileIds, entity)
+                    {
+                        Visibility = AgreementVisibility.Protected,
+                    };
                     _fileAttacher.Handle(attach);
                     if (attach.IsNewlyAttached) ++command.ChangeCount;
                 }

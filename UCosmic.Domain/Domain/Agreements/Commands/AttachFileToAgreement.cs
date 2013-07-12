@@ -36,6 +36,7 @@ namespace UCosmic.Domain.Agreements
         public int FileId { get; private set; }
         public int AgreementId { get; private set; }
         internal Agreement Agreement { get; set; }
+        public AgreementVisibility Visibility { get; set; }
         public bool IsNewlyAttached { get; internal set; }
     }
 
@@ -82,6 +83,7 @@ namespace UCosmic.Domain.Agreements
                 MimeType = looseFile.MimeType,
                 Name = looseFile.Name,
                 Path = path,
+                Visibility = command.Visibility,
             };
 
             _entities.Create(file);

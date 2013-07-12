@@ -159,6 +159,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountInCountry.cs" />
+    <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Places\Queries\ActivtyCount.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />

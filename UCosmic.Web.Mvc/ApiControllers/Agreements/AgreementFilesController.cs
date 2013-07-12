@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
+using AutoMapper;
+using UCosmic.Domain.Agreements;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -21,49 +23,41 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{agreementId:int}/files")]
-        public IEnumerable<AgreementFileApiModel> Get(int agreementId)
+        public IEnumerable<AgreementFileApiModel> Get(int agreementId, [FromUri] bool useTestData = false)
         {
-            //var entities = _queryProcessor.Execute(new FilesByAgreementId(User, agreementId)
-            //{
-            //    EagerLoad = new Expression<Func<AgreementFile, object>>[]
-            //    {
-            //        x => x.Person.Emails,
-            //        x => x.PhoneNumbers,
-            //    }
-            //});
+            var entities = _queryProcessor.Execute(new FilesByAgreementId(User, agreementId));
 
-            //var models = Mapper.Map<AgreementFileApiModel[]>(entities);
+            var models = Mapper.Map<AgreementFileApiModel[]>(entities);
 
-            var models = new[]
-            {
-                new AgreementFileApiModel { Id = 1, AgreementId = agreementId, OriginalName = "file1.pdf", CustomName = "file1.pdf", Visibility = "Public", },
-                new AgreementFileApiModel { Id = 2, AgreementId = agreementId, OriginalName = "file2.doc", CustomName = "file2.doc", Visibility = "Protected", },
-                new AgreementFileApiModel { Id = 3, AgreementId = agreementId, OriginalName = "file3.xls", CustomName = "file3.xls", Visibility = "Private", },
-            };
+            if (useTestData)
+                models = new[]
+                {
+                    new AgreementFileApiModel { Id = 1, AgreementId = agreementId, OriginalName = "file1.pdf", CustomName = "file1.pdf", Visibility = "Public", },
+                    new AgreementFileApiModel { Id = 2, AgreementId = agreementId, OriginalName = "file2.doc", CustomName = "file2.doc", Visibility = "Protected", },
+                    new AgreementFileApiModel { Id = 3, AgreementId = agreementId, OriginalName = "file3.xls", CustomName = "file3.xls", Visibility = "Private", },
+                };
 
             return models;
         }
 
         [GET("{agreementId:int}/files/{fileId:int}")]
-        public AgreementFileApiModel Get(int agreementId, int fileId)
+        public AgreementFileApiModel Get(int agreementId, int fileId, [FromUri] bool useTestData = false)
         {
-            //var entities = _queryProcessor.Execute(new FilesByAgreementId(User, agreementId)
-            //{
-            //    EagerLoad = new Expression<Func<AgreementFile, object>>[]
-            //    {
-            //        x => x.Person.Emails,
-            //        x => x.PhoneNumbers,
-            //    }
-            //});
+            var entity = _queryProcessor.Execute(new FileById(User, fileId));
+            if (entity.AgreementId != agreementId)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var model = new AgreementFileApiModel
-            {
-                Id = fileId,
-                AgreementId = agreementId,
-                OriginalName = "file1.pdf",
-                CustomName = "file1.pdf",
-                Visibility = "visible"
-            };
+            var model = Mapper.Map<AgreementFileApiModel>(entity);
+
+            if (useTestData)
+                model = new AgreementFileApiModel
+                {
+                    Id = fileId,
+                    AgreementId = agreementId,
+                    OriginalName = "file1.pdf",
+                    CustomName = "file1.pdf",
+                    Visibility = "visible",
+                };
 
             return model;
         }
