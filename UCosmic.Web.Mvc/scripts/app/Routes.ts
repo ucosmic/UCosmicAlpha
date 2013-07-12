@@ -499,6 +499,13 @@ module App.Routes {
                     return makeUrl('activity-locations');
                 }
             }
+
+            export module CountryCounts {
+                export function get (): string {
+                    return makeUrl('activity-country-counts');
+                }
+            }
+
         } // Activities
 
         export module GeographicExpertises {

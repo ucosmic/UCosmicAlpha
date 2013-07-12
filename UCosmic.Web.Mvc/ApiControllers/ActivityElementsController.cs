@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
     [RoutePrefix("api")]
     public class ActivityElementsController : ApiController
     {
@@ -82,6 +84,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var model = Mapper.Map<IEnumerable<EstablishmentView>, IEnumerable<ActivityEstablishmentApiModel>>(pagedEstablishments.Items);
             return model;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+         * Get activity counts by country
+        */
+        // --------------------------------------------------------------------------------
+        [GET("activity-country-counts")]
+        public IEnumerable<ActivityPlaceCount> GetActivityCountryCounts()
+        {
+            Place[] countries = _queryProcessor.Execute(new Countries()).ToArray();
+            var countryCounts = new ActivityPlaceCount[countries.Length];
+
+            for (int i = 0; i < countries.Length; i += 1)
+            {
+                countryCounts[i] = new ActivityPlaceCount
+                {
+                    PlaceId = countries[i].RevisionId,
+                    OfficialName = countries[i].OfficialName,
+                    Count = _queryProcessor.Execute(new ActivityCountByCountry(countries[i].RevisionId))
+                };
+            }
+
+            return countryCounts;
         }
     }
 }

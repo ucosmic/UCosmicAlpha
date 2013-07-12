@@ -43,6 +43,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
+
         [GET("agreements/{domain}")]
         public IEnumerable<EmployeeApiModel> Get(string domain)
         {

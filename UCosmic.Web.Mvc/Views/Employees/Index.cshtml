@@ -17,30 +17,35 @@
 
         function drawRegionsMap() {
 
-            //var countryData = new Array();
-            //countryData.add(['Country', 'Activities']);
+            var countryData = new Array();
+            countryData.push(['Country', 'Activities']);
 
-            //$.ajax({
-            //    url: url,
-            //    success: function(data, textStatus, jqXHR) {
-            //        for (var i = 0; i < data.count; i += 1) {
-            //            countryData.add([data[i].officialName, data[i].count]);
-            //        }
-            //    },
-            //    dataType: 'json'
-            //} );
+            $.ajax( {
+                type: "GET",
+                async: false,
+                url: App.Routes.WebApi.Activities.CountryCounts.get(),
+                success: function ( data, textStatus, jqXHR ) {
+                    for ( var i = 0; i < data.length; i += 1 ) {                      
+                        countryData.push([data[i].officialName, data[i].count]);
+                    }
+                },
+                error: function(jqXhr, textStatus, errorThrown) {
+                    debugger;
+                },
+                dataType: 'json'
+            } );
 
-            //var countryData = google.visualization.arrayToDataTable(countryCounts);
+            var countryData = google.visualization.arrayToDataTable( countryData );
             
-            var countryData = google.visualization.arrayToDataTable( [
-              ['Country', 'Popularity'],
-              ['Germany', 200],
-              ['United States', 300],
-              ['Brazil', 400],
-              ['Canada', 500],
-              ['France', 600],
-              ['RU', 700]
-            ] );
+            //var countryData = google.visualization.arrayToDataTable( [
+            //  ['Country', 'Popularity'],
+            //  ['Germany', 200],
+            //  ['United States', 300],
+            //  ['Brazil', 400],
+            //  ['Canada', 500],
+            //  ['France', 600],
+            //  ['RU', 700]
+            //] );
 
             var options = {};
 

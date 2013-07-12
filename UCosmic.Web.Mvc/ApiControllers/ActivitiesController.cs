@@ -14,13 +14,11 @@ using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
-using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 using Image = UCosmic.Domain.Files.Image;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
     [RoutePrefix("api/activities")]
     public class ActivitiesController : ApiController
     {
@@ -109,30 +107,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Get activity counts by country
-        */
-        // --------------------------------------------------------------------------------
-        [GET("countrycounts")]
-        public IEnumerable<ActivityPlaceCount> GetCountryCounts()
-        {
-            var countries = _queryProcessor.Execute(new Countries());
-            var countryCounts = new ActivityPlaceCount[countries.Count()];
-
-            for (int i = 0; i < countries.Count(); i += 1)
-            {
-                countryCounts[i].PlaceId = countries[i].RevisionId;
-                countryCounts[i].OfficialName = countries[i].OfficialName;
-                countryCounts[i].Count = _queryProcessor.Execute(new ActivityCountInCountry(countries[i].RevisionId));
-            }
-
-            return countryCounts;
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
          * Get an activity copy for editing (or recover edit copy)
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("{activityId}/edit")]
         public ActivityApiModel GetEdit(int activityId)
         {
@@ -182,6 +160,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an activity's edit state.
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("{activityId}/edit-state")]
         public ActivityEditState GetEditState(int activityId)
         {
@@ -209,6 +188,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create an activity
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [POST("")]
         public HttpResponseMessage Post()
         {
@@ -224,6 +204,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Update an activity
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
@@ -265,6 +246,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * mode Activity.  The activityId must be of that of an Activity in "edit mode".
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] string mode)
         {
@@ -311,6 +293,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an activity
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {
@@ -358,6 +341,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get all activity documents
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("{activityId}/documents")]
         public ICollection<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
         {
@@ -376,6 +360,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get activity document
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("{activityId}/documents/{documentId}")]
         public ActivityDocumentApiModel GetDocuments(int activityId, int documentId)
         {
@@ -387,6 +372,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create activity document
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [POST("{activityId}/documents")]
         public Task<HttpResponseMessage> PostDocuments(int activityId, string activityMode)
         {
@@ -522,6 +508,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * (Might need to use POST here)
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [PUT("{activityId}/documents/{documentId}")]
         public HttpResponseMessage PutDocument(int activityId, int documentId)
         {
@@ -533,6 +520,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete activity document
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [DELETE("{activityId}/documents/{documentId}")]
         public HttpResponseMessage DeleteDocument(int activityId, int documentId)
         {
@@ -558,6 +546,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Rename activity document
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [PUT("{activityId}/documents/{documentId}/title")]
         public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
         {
@@ -581,6 +570,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Validate activity document type
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [POST("{activityid}/documents/validate-upload-filetype")]
         public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] string extension)
         {
@@ -606,6 +596,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get activity document proxy image
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("{activityId}/documents/{documentId}/thumbnail")]
         public HttpResponseMessage GetDocumentsThumbnail(int activityId, int documentId)
         {
