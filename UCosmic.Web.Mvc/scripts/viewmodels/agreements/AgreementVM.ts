@@ -39,16 +39,6 @@ export class InstitutionalAgreementParticipantModel {
     establishmentTranslatedName;
 
 };
-export class phoneNumber{
-    constructor(textValue: string, type: string, id: number) {
-        this.textValue = textValue;
-        this.type = type;
-        this.id = id;
-    };
-    textValue;
-    type;
-    id;
-}
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
@@ -112,13 +102,7 @@ export class InstitutionalAgreementEditModel {
         this.id = id;
     };
 
-    // I won't need file or contact or phone consturctor,  phone observable, and phonenumber class when I get the api endpoint
-    fileConstructor = function (name: string, path: string, visibility: string, id: number) {
-        this.name = name;
-        this.path = path;
-        this.visibility = visibility;
-        this.id = id;
-    };
+    
 
     agreementId = 0;
     visibility = ko.observableArray();
@@ -195,11 +179,12 @@ export class InstitutionalAgreementEditModel {
     fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     $confirmPurgeDialog: JQuery;
+    tempFileId = 0;
+    files = ko.mapping.fromJS([]);
 
     participants = ko.mapping.fromJS([]);
     contacts = ko.mapping.fromJS([]);
     contactPhones = ko.mapping.fromJS([]);
-    files = ko.mapping.fromJS([]);
 
 
     officialNameDoesNotMatchTranslation = ko.computed( function() {
@@ -248,7 +233,20 @@ export class InstitutionalAgreementEditModel {
         // TODO TIM: you need to know the agreementId in order to do Files.get()
         $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId))
             .done((response: any): void => {
-                ko.mapping.fromJS(response, this.files)
+                // use foreach instead of mapping so that I can add isEdit, fileNamewithoutExt , and ext, 
+                // and then push the rest
+                $.each(response, function (i, item) => {
+                    this.files.push(ko.mapping.fromJS({
+                        id: item.id,
+                        originalName: item.originalName,
+                        customName: item.customName,
+                        visibility: item.visibility,
+                        isEdit: false,
+                        customNameFile: item.customName,//use substring
+                        customNameExt: item.customName// use substring
+                    }));
+                });
+                //ko.mapping.fromJS(response, this.files)
             });
     }
 
@@ -318,12 +316,16 @@ export class InstitutionalAgreementEditModel {
                         App.flasher.flash(e.response.message);
                     }
                     //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
-
+                    this.tempFileId  = this.tempFileId + .01
                     this.files.push(ko.mapping.fromJS({
-                        id: 0.1,
+                        id: this.tempFileId,
                         originalName: "file1new.pdf",
                         customName: "file1new.pdf",
-                        visibility: "Public"
+                        visibility: "Public",
+                        guid: e.response.guid,
+                        isEdit: false,
+                        customNameFile: "file1new",//use substring
+                        customNameExt: "pdf"// use substring
                     }));
                 }
             },
@@ -348,63 +350,87 @@ export class InstitutionalAgreementEditModel {
             
     }
 
-    startDeletingFile(): void {
-        if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
-            this.$confirmPurgeDialog.dialog({
-                dialogClass: 'jquery-ui',
-                width: 'auto',
-                resizable: false,
-                modal: true,
-                buttons: [
-                    {
-                        text: 'Yes, confirm delete',
-                        click: (): void => {
-                            this.$confirmPurgeDialog.dialog('close');
-                            this._deleteFile();
-                        }
-                    },
-                    {
-                        text: 'No, cancel delete',
-                        click: (): void => {
-                            this.$confirmPurgeDialog.dialog('close');
-                            this.fileDeleteSpinner.stop();
-                        },
-                        'data-css-link': true
-                    }
-                ]
-            });
+    //startDeletingFile(): void {
+    //    if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
+    //        this.$confirmPurgeDialog.dialog({
+    //            dialogClass: 'jquery-ui',
+    //            width: 'auto',
+    //            resizable: false,
+    //            modal: true,
+    //            buttons: [
+    //                {
+    //                    text: 'Yes, confirm delete',
+    //                    click: (): void => {
+    //                        this.$confirmPurgeDialog.dialog('close');
+    //                        this._deleteFile();
+    //                    }
+    //                },
+    //                {
+    //                    text: 'No, cancel delete',
+    //                    click: (): void => {
+    //                        this.$confirmPurgeDialog.dialog('close');
+    //                        this.fileDeleteSpinner.stop();
+    //                    },
+    //                    'data-css-link': true
+    //                }
+    //            ]
+    //        });
+    //    }
+    //    else if (confirm('Are you sure you want to delete your profile file?')) {
+    //        this._deleteFile();
+    //    }
+    //}
+
+    //private _deleteFile(): void {
+    //    this.fileDeleteSpinner.start();
+    //    this.isFileExtensionInvalid(false);
+    //    this.isFileTooManyBytes(false);
+    //    this.isFileFailureUnexpected(false);
+    //    $.ajax({ // submit ajax DELETE request
+    //        // TODO TIM: is this uploads files or agreement fils
+    //        url: App.Routes.WebApi.Agreements.Files.del(this.agreementId, 1),
+    //        type: 'DELETE'
+    //    })
+    //    .always((): void => {
+    //        this.fileDeleteSpinner.stop();
+    //    })
+    //    .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+    //        if (typeof response === 'string') App.flasher.flash(response);
+    //        this.hasFile(false);
+    //        // TODO TIM: this no longer compiles
+    //        // you need to know the agreementId in order to invoke a function
+    //        // on App.Routes.WebApi.Agreement.Files
+    //        //this.fileSrc(App.Routes.WebApi.Agreements.File
+    //        //    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+    //    })
+    //    .fail((): void => {
+    //        this.isFileFailureUnexpected(true);
+    //    });
+    //}
+
+
+    removeFile(me, e): void {
+        if (confirm('Are you sure you want to remove this file from this agreement?')) {
+            // all files will have a guid in create, none will have a guid in edit agreement
+            // so do a check for agreementId - if it is undefined(for now 0)
+            var url = "";
+            if (this.agreementId != 0) {
+                url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
+            } else {
+                url = App.Routes.WebApi.Agreements.FilesUpload.del(me.guid());
+            }
+            $.ajax({ 
+                url: url,
+                type: 'DELETE',
+                success: (): void => {
+                    this.files.remove(me);
+                }
+            })
         }
-        else if (confirm('Are you sure you want to delete your profile file?')) {
-            this._deleteFile();
-        }
+        e.preventDefault();
+        e.stopPropagation();
     }
 
-    private _deleteFile(): void {
-        this.fileDeleteSpinner.start();
-        this.isFileExtensionInvalid(false);
-        this.isFileTooManyBytes(false);
-        this.isFileFailureUnexpected(false);
-        $.ajax({ // submit ajax DELETE request
-            // TODO TIM: is this uploads files or agreement fils
-            url: App.Routes.WebApi.Agreements.Files.del(this.agreementId, 1),
-            type: 'DELETE'
-        })
-        .always((): void => {
-            this.fileDeleteSpinner.stop();
-        })
-        .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-            if (typeof response === 'string') App.flasher.flash(response);
-            this.hasFile(false);
-            // TODO TIM: this no longer compiles
-            // you need to know the agreementId in order to invoke a function
-            // on App.Routes.WebApi.Agreement.Files
-            //this.fileSrc(App.Routes.WebApi.Agreements.File
-            //    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
-        })
-        .fail((): void => {
-            this.isFileFailureUnexpected(true);
-        });
-    }
 
     getSettings(): void {
 
@@ -653,7 +679,6 @@ export class InstitutionalAgreementEditModel {
             //add sections and when the scroll to the top of the section, change side nav - also change side nav
             // when I click it(style) 
             
-            $("body").height($(window).height() + $("body").height() - 20);
             
             $(window).scroll(function (){
                 var $participants = $("#participants");
@@ -677,7 +702,7 @@ export class InstitutionalAgreementEditModel {
                 var $fileAttachmentsTop = $fileAttachments.offset();
                 var $overallVisibilityTop = $overallVisibility.offset();
 
-                var $body = $("body").scrollTop()
+                var $body = $("body").scrollTop() + 100;
                 if ($body >= $participantsTop.top  && $body <= $participantsTop.top + $participants.height() ) {
                     $("aside").find("li").removeClass("current");
                     $navparticipants.addClass("current");
@@ -1040,6 +1065,7 @@ export class InstitutionalAgreementEditModel {
                         $.when(dfd, dfd2)
                             .done(function () => {
                                 $("#allParticipants").fadeIn(500);
+                                $("body").height($(window).height() + $("body").height() - 300);
                             });
                     } else {
                         window.location.replace(this.establishmentSearchViewModel.sammy.getLocation());
@@ -1222,19 +1248,6 @@ export class InstitutionalAgreementEditModel {
             });
         }
     }
-
-    addAFile(): void {
-        // push to contact array
-    }
-
-    removeFile(me, e): void {
-        if (confirm('Are you sure you want to remove this file from this agreement?')) {
-            this.files.remove(me);
-        }
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
 
     addParticipant(establishmentResultViewModel): void {
         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

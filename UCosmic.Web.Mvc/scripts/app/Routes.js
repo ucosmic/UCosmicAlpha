@@ -339,6 +339,14 @@ var App;
                     var Content = Files.Content;
                 })(Agreements.Files || (Agreements.Files = {}));
                 var Files = Agreements.Files;
+                (function (FilesUpload) {
+                    function del(fileGuid) {
+                        var url = 'uploads/{0}'.format(fileGuid);
+                        return makeUrl(url);
+                    }
+                    FilesUpload.del = del;
+                })(Agreements.FilesUpload || (Agreements.FilesUpload = {}));
+                var FilesUpload = Agreements.FilesUpload;
                 (function (Settings) {
                     function get() {
                         return makeUrl('agreements/settings');

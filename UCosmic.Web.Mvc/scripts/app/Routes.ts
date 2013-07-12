@@ -321,6 +321,14 @@ module App.Routes {
                 }
             }
 
+            export module FilesUpload {
+                export function del(fileGuid: string) {
+                    var url = 'uploads/{0}'.format(fileGuid);
+
+                    return makeUrl(url);
+                }
+            }
+
             export module Settings {
                 export function get (): string {
                     return makeUrl('agreements/settings');

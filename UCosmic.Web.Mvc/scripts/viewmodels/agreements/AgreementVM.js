@@ -24,27 +24,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
     })();
     exports.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;    
     ;
-    var phoneNumber = (function () {
-        function phoneNumber(textValue, type, id) {
-            this.textValue = textValue;
-            this.type = type;
-            this.id = id;
-        }
-        return phoneNumber;
-    })();
-    exports.phoneNumber = phoneNumber;    
     var InstitutionalAgreementEditModel = (function () {
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
             this.initDefaultPageRoute = initDefaultPageRoute;
             this.selectConstructor = function (name, id) {
                 this.name = name;
-                this.id = id;
-            };
-            this.fileConstructor = function (name, path, visibility, id) {
-                this.name = name;
-                this.path = path;
-                this.visibility = visibility;
                 this.id = id;
             };
             this.agreementId = 0;
@@ -107,10 +92,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.fileSrc = ko.observable();
             this.fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+            this.tempFileId = 0;
+            this.files = ko.mapping.fromJS([]);
             this.participants = ko.mapping.fromJS([]);
             this.contacts = ko.mapping.fromJS([]);
             this.contactPhones = ko.mapping.fromJS([]);
-            this.files = ko.mapping.fromJS([]);
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
             });
@@ -197,7 +183,17 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId)).done(function (response) {
-                ko.mapping.fromJS(response, _this.files);
+                $.each(response, function (i, item) {
+                    _this.files.push(ko.mapping.fromJS({
+                        id: item.id,
+                        originalName: item.originalName,
+                        customName: item.customName,
+                        visibility: item.visibility,
+                        isEdit: false,
+                        customNameFile: item.customName,
+                        customNameExt: item.customName
+                    }));
+                });
             });
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
@@ -264,11 +260,16 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         if(e.response && e.response.message) {
                             App.flasher.flash(e.response.message);
                         }
+                        _this.tempFileId = _this.tempFileId + .01;
                         _this.files.push(ko.mapping.fromJS({
-                            id: 0.1,
+                            id: _this.tempFileId,
                             originalName: "file1new.pdf",
                             customName: "file1new.pdf",
-                            visibility: "Public"
+                            visibility: "Public",
+                            guid: e.response.guid,
+                            isEdit: false,
+                            customNameFile: "file1new",
+                            customNameExt: "pdf"
                         }));
                     }
                 },
@@ -294,55 +295,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 }
             });
         };
-        InstitutionalAgreementEditModel.prototype.startDeletingFile = function () {
+        InstitutionalAgreementEditModel.prototype.removeFile = function (me, e) {
             var _this = this;
-            if(this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
-                this.$confirmPurgeDialog.dialog({
-                    dialogClass: 'jquery-ui',
-                    width: 'auto',
-                    resizable: false,
-                    modal: true,
-                    buttons: [
-                        {
-                            text: 'Yes, confirm delete',
-                            click: function () {
-                                _this.$confirmPurgeDialog.dialog('close');
-                                _this._deleteFile();
-                            }
-                        }, 
-                        {
-                            text: 'No, cancel delete',
-                            click: function () {
-                                _this.$confirmPurgeDialog.dialog('close');
-                                _this.fileDeleteSpinner.stop();
-                            },
-                            'data-css-link': true
-                        }
-                    ]
-                });
-            } else if(confirm('Are you sure you want to delete your profile file?')) {
-                this._deleteFile();
-            }
-        };
-        InstitutionalAgreementEditModel.prototype._deleteFile = function () {
-            var _this = this;
-            this.fileDeleteSpinner.start();
-            this.isFileExtensionInvalid(false);
-            this.isFileTooManyBytes(false);
-            this.isFileFailureUnexpected(false);
-            $.ajax({
-                url: App.Routes.WebApi.Agreements.Files.del(this.agreementId, 1),
-                type: 'DELETE'
-            }).always(function () {
-                _this.fileDeleteSpinner.stop();
-            }).done(function (response, statusText, xhr) {
-                if(typeof response === 'string') {
-                    App.flasher.flash(response);
+            if(confirm('Are you sure you want to remove this file from this agreement?')) {
+                var url = "";
+                if(this.agreementId != 0) {
+                    url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
+                } else {
+                    url = App.Routes.WebApi.Agreements.FilesUpload.del(me.guid());
                 }
-                _this.hasFile(false);
-            }).fail(function () {
-                _this.isFileFailureUnexpected(true);
-            });
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    success: function () {
+                        _this.files.remove(me);
+                    }
+                });
+            }
+            e.preventDefault();
+            e.stopPropagation();
         };
         InstitutionalAgreementEditModel.prototype.getSettings = function () {
             var _this = this;
@@ -581,7 +552,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
                     }
                 });
-                $("body").height($(window).height() + $("body").height() - 20);
                 $(window).scroll(function () {
                     var $participants = $("#participants");
                     var $basicInfo = $("#basicInfo");
@@ -601,7 +571,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     var $contactsTop = $contacts.offset();
                     var $fileAttachmentsTop = $fileAttachments.offset();
                     var $overallVisibilityTop = $overallVisibility.offset();
-                    var $body = $("body").scrollTop();
+                    var $body = $("body").scrollTop() + 100;
                     if($body >= $participantsTop.top && $body <= $participantsTop.top + $participants.height()) {
                         $("aside").find("li").removeClass("current");
                         $navparticipants.addClass("current");
@@ -935,6 +905,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
                             $.when(dfd, dfd2).done(function () {
                                 $("#allParticipants").fadeIn(500);
+                                $("body").height($(window).height() + $("body").height() - 300);
                             });
                         } else {
                             window.location.replace(_this.establishmentSearchViewModel.sammy.getLocation());
@@ -1111,15 +1082,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     })
                 });
             }
-        };
-        InstitutionalAgreementEditModel.prototype.addAFile = function () {
-        };
-        InstitutionalAgreementEditModel.prototype.removeFile = function (me, e) {
-            if(confirm('Are you sure you want to remove this file from this agreement?')) {
-                this.files.remove(me);
-            }
-            e.preventDefault();
-            e.stopPropagation();
         };
         InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');

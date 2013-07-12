@@ -17,6 +17,7 @@ namespace UCosmic.Web.Mvc
         public FileMediaFormatter()
         {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/octet-stream"));
 
             #region Previous Supported Media Types
             //SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/octet-stream"));
