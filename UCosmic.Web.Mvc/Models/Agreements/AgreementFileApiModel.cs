@@ -42,8 +42,8 @@ namespace UCosmic.Web.Mvc.Models
             get
             {
                 if (string.IsNullOrWhiteSpace(OriginalName)) return null;
-                var indexOfDot = OriginalName.LastIndexOf('.');
-                return indexOfDot < 0 ? null : OriginalName.Substring(indexOfDot).ToLower();
+                var extension = OriginalName.GetFileExtension();
+                return extension != null ? extension.ToLower() : null;
             }
         }
     }

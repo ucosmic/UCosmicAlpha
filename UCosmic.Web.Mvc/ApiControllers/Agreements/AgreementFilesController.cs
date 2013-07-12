@@ -75,15 +75,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (entity == null || entity.AgreementId != agreementId)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            var fileName = entity.Name ?? entity.FileName;
             var file = _binaryData.Get(entity.Path);
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StreamContent(new MemoryStream(file)),
             };
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(entity.MimeType);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(fileName.GetContentType());
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
             {
-                FileName = entity.Name ?? entity.FileName,
+                FileName = fileName,
             };
             return response;
         }
