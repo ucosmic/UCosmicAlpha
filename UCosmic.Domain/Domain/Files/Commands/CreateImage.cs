@@ -56,11 +56,14 @@ namespace UCosmic.Domain.Files
 
             ImageFormat toFormat; // = unprocessedImage.RawFormat;
 
-            if (command.MimeType == "image/jpeg")
+            if ((command.MimeType == "image/jpeg") ||
+                (command.MimeType == "image/jpg") ||
+                (command.MimeType == "image/pjpeg"))
             {
                 toFormat = ImageFormat.Jpeg;
             }
-            else if (command.MimeType == "image/png")
+            else if ((command.MimeType == "image/png") ||
+                     (command.MimeType == "image/x-png"))
             {
                 toFormat = ImageFormat.Png;
             }
