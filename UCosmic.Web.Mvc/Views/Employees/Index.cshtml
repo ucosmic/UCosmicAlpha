@@ -36,16 +36,6 @@
             } );
 
             var countryData = google.visualization.arrayToDataTable( countryData );
-            
-            //var countryData = google.visualization.arrayToDataTable( [
-            //  ['Country', 'Popularity'],
-            //  ['Germany', 200],
-            //  ['United States', 300],
-            //  ['Brazil', 400],
-            //  ['Canada', 500],
-            //  ['France', 600],
-            //  ['RU', 700]
-            //] );
 
             var options = {};
 
@@ -62,25 +52,17 @@
 }
 
 <div class="content fixed to-top" data-current-module="employees">
-    <form class="group">
-        <div class="on-left from-top">
-            <header>
-                <h1>
-                    @ViewBag.Title
-                </h1>
-            </header>
-            <section>
-                <header>
-                    <h2>Activities</h2>
-                </header>
-            </section>
-            <div id="chart" style="width: 700px; height: 500px;"></div>
+    <div class="on-left from-top">
+        <header>
+            <h1>
+                @ViewBag.Title
+            </h1>
+        </header>
+        <div id="chart" style="width: 700px; height: 500px;"></div>
+    </div>
+    <div class="on-right from-top">
+        <div class="">
+            @Html.Partial(MVC.Employees.Views._SearchSideBar)
         </div>
-        <aside class="on-right from-top" data-fixed-scroll="root">
-            <div data-fixed-scroll="anchor"></div>
-            <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Employees.Views._SearchSideBar)
-            </div>
-        </aside>
-    </form>
+    </div>
 </div>
