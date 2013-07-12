@@ -23,6 +23,7 @@ namespace UCosmic.Web.Mvc
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             AreaRegistration.RegisterAllAreas();
+            MvcHandler.DisableMvcResponseHeader = true;
 
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
         }

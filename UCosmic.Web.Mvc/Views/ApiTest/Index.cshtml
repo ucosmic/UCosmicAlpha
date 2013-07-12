@@ -32,7 +32,8 @@
                     select: 'Choose temporary files to upload...'
                 },
                 async: {
-                    saveUrl: App.Routes.WebApi.Uploads.post()//,
+                    saveUrl: '/api/agreements/6/files'
+                    //saveUrl: App.Routes.WebApi.Uploads.post()//,
                     //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
                 select: function(e) {
@@ -52,6 +53,11 @@
                 upload: function(e) {
                     // validate here and prevent if extensions are not allowed
                     //e.preventDefault();
+                    e.data = {
+                        originalName: 'originalName.pdf',
+                        customName: 'customName',
+                        visibility: 'Private'
+                    };
                     var info = 'uploading of one file is about to begin asynchronously';
                     console.log(info);
                     //alert(info);
@@ -137,7 +143,7 @@
         <div>
             <form enctype="multipart/form-data">
                 <div>
-                    <input id="agreement_files" type="file" name="files[]" />
+                    <input id="agreement_files" type="file" name="upload" />
                 </div>
                 <ul data-bind="foreach: tempUpload.uploads">
                     <li>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
 
@@ -46,6 +47,11 @@ namespace UCosmic.Web.Mvc.Models
                 return extension != null ? extension.ToLower() : null;
             }
         }
+    }
+
+    public class AgreementFileUploadModel : AgreementFileApiModel
+    {
+        public HttpPostedFileBase Upload { get; set; }
     }
 
     public static class AgreementFileProfiler
