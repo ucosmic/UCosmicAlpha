@@ -23,15 +23,13 @@ namespace UCosmic.Domain.People
                 // principal cannot be null
                 .NotNull()
                     .WithMessage(MustNotHaveNullPrincipal.FailMessage)
-            ;
 
-            RuleFor(x => x.Principal.Identity.Name)
                 // principal identity name cannot be null or whitespace
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
 
                 // principal identity name must match User.Name entity property
-                .MustFindUserByName(entities)
+                .MustFindUserByPrincipal(entities)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 

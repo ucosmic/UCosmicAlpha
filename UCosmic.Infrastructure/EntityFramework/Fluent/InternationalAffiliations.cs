@@ -1,5 +1,4 @@
-﻿using UCosmic.Domain;
-using UCosmic.Domain.InternationalAffiliations;
+﻿using UCosmic.Domain.InternationalAffiliation;
 
 namespace UCosmic.EntityFramework
 {

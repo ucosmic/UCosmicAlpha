@@ -25,7 +25,7 @@ namespace UCosmic.Domain.Files
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            ProxyImageMimeTypeXRef xref = new ProxyImageMimeTypeXRef
+            var xref = new ProxyImageMimeTypeXRef
             {
                 MimeType = command.MimeType,
                 ImageId = command.ImageId

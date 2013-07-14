@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using FluentValidation;
 using FluentValidation.Validators;
 
@@ -19,15 +20,17 @@ namespace UCosmic.Domain.Identity
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is string))
+            if (!(context.PropertyValue is string) && !(context.PropertyValue is IPrincipal))
                 throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on string properties", GetType().Name));
+                    "The {0} PropertyValidator can only operate on string and IPrincipal properties", GetType().Name));
 
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var value = (string)context.PropertyValue;
+            var userName = context.PropertyValue is IPrincipal
+                ? ((IPrincipal)context.PropertyValue).Identity.Name
+                : (string)context.PropertyValue;
+            context.MessageFormatter.AppendArgument("PropertyValue", userName);
 
             var entity = _entities.Query<User>()
-                .ByName(value);
+                .ByName(userName);
 
             return entity != null;
         }
@@ -37,6 +40,12 @@ namespace UCosmic.Domain.Identity
     {
         public static IRuleBuilderOptions<T, string> MustFindUserByName<T>
             (this IRuleBuilder<T, string> ruleBuilder, IQueryEntities entities)
+        {
+            return ruleBuilder.SetValidator(new MustFindUserByName(entities));
+        }
+
+        public static IRuleBuilderOptions<T, IPrincipal> MustFindUserByPrincipal<T>
+        (this IRuleBuilder<T, IPrincipal> ruleBuilder, IQueryEntities entities)
         {
             return ruleBuilder.SetValidator(new MustFindUserByName(entities));
         }

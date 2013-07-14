@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class CreateInternationalAffiliation
     {
@@ -30,7 +29,7 @@ namespace UCosmic.Domain.InternationalAffiliations
 
     public class ValidateCreateAffiliationCommand : AbstractValidator<CreateInternationalAffiliation>
     {
-        public ValidateCreateAffiliationCommand(IQueryEntities entities)
+        public ValidateCreateAffiliationCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

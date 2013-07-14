@@ -47,7 +47,7 @@ namespace UCosmic.SeedData
             foreach (FileMimeMapping mapping in fileMimeMappings)
             {
                 string filePath = string.Format("{0}{1}", basePath, mapping.FileName);
-                FileInfo info = new FileInfo(filePath);
+                var info = new FileInfo(filePath);
                 string name = info.Name.Substring(0, info.Name.IndexOf('.'));
                 if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
                 {
@@ -87,7 +87,7 @@ namespace UCosmic.SeedData
             foreach (string fileName in fileNames)
             {
                 string filePath = string.Format("{0}{1}", basePath, fileName);
-                FileInfo info = new FileInfo(filePath);
+                var info = new FileInfo(filePath);
                 string name = info.Name.Substring(0, info.Name.IndexOf('.'));
                 if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
                 {

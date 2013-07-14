@@ -6,7 +6,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-using UCosmic.Domain.InternationalAffiliations;
+using UCosmic.Domain.InternationalAffiliation;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers

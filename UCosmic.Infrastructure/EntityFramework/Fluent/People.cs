@@ -112,7 +112,7 @@ namespace UCosmic.EntityFramework
         }
     }
 
-    public class AffiliationOrm : RevisableEntityTypeConfiguration<UCosmic.Domain.People.Affiliation>
+    public class AffiliationOrm : RevisableEntityTypeConfiguration<Affiliation>
     {
         public AffiliationOrm()
         {

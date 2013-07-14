@@ -69,20 +69,20 @@ namespace UCosmic.Domain.People
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateMyAffiliation> _createMyAffiliation;
         private readonly IHandleCommands<UpdateMyAffiliation> _updateMyAffiliation;
-        private readonly IHandleCommands<DeleteMyAffiliation> _deleteMyAffiliation;
+        //private readonly IHandleCommands<DeleteMyAffiliation> _deleteMyAffiliation;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdatePersonCommand(ICommandEntities entities
                 , IHandleCommands<CreateMyAffiliation> createMyAffiliation
                 , IHandleCommands<UpdateMyAffiliation> updateMyAffiliation
-                , IHandleCommands<DeleteMyAffiliation> deleteMyAffiliation
+                //, IHandleCommands<DeleteMyAffiliation> deleteMyAffiliation
                 , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _createMyAffiliation = createMyAffiliation;
             _updateMyAffiliation = updateMyAffiliation;
-            _deleteMyAffiliation = deleteMyAffiliation;
+            //_deleteMyAffiliation = deleteMyAffiliation;
             _unitOfWork = unitOfWork;
         }
 
@@ -91,7 +91,7 @@ namespace UCosmic.Domain.People
             Handle2(command);
         }
 
-        private bool CompareAffiliation(UpdatePerson.Affiliation a, UCosmic.Domain.People.Affiliation b)
+        private bool CompareAffiliation(UpdatePerson.Affiliation a, Affiliation b)
         {
             return (a.EstablishmentId == b.EstablishmentId) &&
                 (a.JobTitles == b.JobTitles) &&
@@ -110,11 +110,11 @@ namespace UCosmic.Domain.People
                 (a.FacultyRankId == b.FacultyRankId);
         }
 
-        private bool CompareAffiliations(ICollection<UpdatePerson.Affiliation> aList, ICollection<UCosmic.Domain.People.Affiliation> bList)
+        private bool CompareAffiliations(ICollection<UpdatePerson.Affiliation> aList, ICollection<Affiliation> bList)
         {
             if ((aList == null) && (bList == null)) return true;
-            if ((aList== null) && (bList != null)) return false;
-            if ((aList != null) && (bList == null)) return false;
+            if ((aList== null)) return false;
+            if ((bList == null)) return false;
             if (aList.Count != bList.Count) return false;
 
             for (var i = 0; i < aList.Count; i += 1)

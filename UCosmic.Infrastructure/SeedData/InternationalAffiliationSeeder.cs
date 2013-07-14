@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
-using UCosmic.Domain;
-using UCosmic.Domain.InternationalAffiliations;
+using UCosmic.Domain.InternationalAffiliation;
 using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
@@ -40,7 +39,7 @@ namespace UCosmic.SeedData
                 User user = _entities.Get<User>().SingleOrDefault(x => x.Person.RevisionId == person.RevisionId);
                 if (user == null) throw new Exception("USF person Douglas Corarito has no User.");
 
-                string[] developerRoles = new string[]
+                var developerRoles = new[]
                     {
                         RoleName.AuthorizationAgent,
                         RoleName.EstablishmentLocationAgent,
@@ -50,8 +49,8 @@ namespace UCosmic.SeedData
                         RoleName.AgreementSupervisor,
                         RoleName.EmployeeProfileManager,
                     };
-                GenericIdentity identity = new GenericIdentity(user.Name);
-                GenericPrincipal principal = new GenericPrincipal(identity, developerRoles);
+                var identity = new GenericIdentity(user.Name);
+                var principal = new GenericPrincipal(identity, developerRoles);
 
                 CreateInternationalAffiliation createInternationalAffiliationCommand;
                 CreateInternationalAffiliationLocation createInternationalAffiliationLocationCommand;
@@ -59,7 +58,7 @@ namespace UCosmic.SeedData
                 string placeName;
 
                 // AFFILIATION 1
-                Guid entityId = new Guid("2F37D74F-EEDF-4296-8FC4-664F529A93D7");
+                var entityId = new Guid("2F37D74F-EEDF-4296-8FC4-664F529A93D7");
                 bool expertiseExists = _entities.Get<InternationalAffiliation>().Count(x => x.EntityId == entityId) > 0;
                 if (!expertiseExists)
                 {

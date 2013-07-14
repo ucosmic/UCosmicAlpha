@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-using UCosmic.Domain.LanguageExpertises;
+using UCosmic.Domain.LanguageExpertise;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {

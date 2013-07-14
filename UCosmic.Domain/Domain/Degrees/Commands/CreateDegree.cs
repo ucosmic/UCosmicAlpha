@@ -28,7 +28,7 @@ namespace UCosmic.Domain.Degrees
 
     public class ValidateCreateDegreeCommand : AbstractValidator<CreateDegree>
     {
-        public ValidateCreateDegreeCommand(IQueryEntities entities)
+        public ValidateCreateDegreeCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

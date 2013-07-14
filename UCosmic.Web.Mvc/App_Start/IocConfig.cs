@@ -5,7 +5,9 @@ using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using UCosmic.BinaryData;
+#if AZURE
 using UCosmic.Cache;
+#endif
 using UCosmic.Configuration;
 using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
@@ -73,7 +75,9 @@ namespace UCosmic.Web.Mvc
             container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
             container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
             container.RegisterCommandHandlers(Assembly.GetAssembly(typeof(IHandleCommands<>)));
+#if AZURE
             container.TryRegisterAzureCacheProvider();
+#endif
             container.RegisterViewManager();
         }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain;
-using UCosmic.Domain.InternationalAffiliations;
+using UCosmic.Domain.InternationalAffiliation;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models

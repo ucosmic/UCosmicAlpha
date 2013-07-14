@@ -1,8 +1,5 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using UCosmic.Domain.Employees;
-using UCosmic.Domain.Establishments;
-using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {

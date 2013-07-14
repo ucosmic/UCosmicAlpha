@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿#if !DEBUG
+using System.Diagnostics;
+#endif
 using System.Reflection;
 using System.Web.Mvc;
 

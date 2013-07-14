@@ -44,11 +44,6 @@ namespace UCosmic.Domain.Identity
             if (user != null && user.TenantId.HasValue)
                 ownedIds.Add(user.TenantId.Value);
 
-            //if (ownedIds.Any()) // include all establishments downstream from the tenant (its offspring)
-            //    ownedIds.AddRange(_entities.Query<EstablishmentNode>()
-            //        .Where(x => x.AncestorId == ownedIds.FirstOrDefault())
-            //        .Select(x => x.OffspringId));
-
             if (ownedIds.Any())
             {
                 return _entities.Query<EstablishmentNode>()

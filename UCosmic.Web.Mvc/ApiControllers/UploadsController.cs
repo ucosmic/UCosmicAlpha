@@ -7,6 +7,7 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using Newtonsoft.Json;
 using UCosmic.Domain.Files;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {

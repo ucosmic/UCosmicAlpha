@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
-using UCosmic.Domain.LanguageExpertises;
+using UCosmic.Domain.LanguageExpertise;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.Web.Mvc.Models

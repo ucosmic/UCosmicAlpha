@@ -3,7 +3,7 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class MustFindInternationalAffiliationById : PropertyValidator
     {

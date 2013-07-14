@@ -52,19 +52,19 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
-        private readonly IHandleCommands<CreateDeepActivityValues> _createDeepActivityValues;
+        //private readonly IHandleCommands<CreateDeepActivityValues> _createDeepActivityValues;
         private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities,
                                              IUnitOfWork unitOfWork,
                                              IHandleCommands<UpdateActivityValues> updateActivityValues,
-                                             IHandleCommands<CreateDeepActivityValues> createDeepActivityValues,
+                                             //IHandleCommands<CreateDeepActivityValues> createDeepActivityValues,
                                              IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
-            _createDeepActivityValues = createDeepActivityValues;
+            //_createDeepActivityValues = createDeepActivityValues;
             _copyDeepActivityValues = copyDeepActivityValues;
         }
 

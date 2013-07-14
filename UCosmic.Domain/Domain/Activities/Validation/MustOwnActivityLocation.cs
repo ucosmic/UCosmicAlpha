@@ -31,7 +31,7 @@ namespace UCosmic.Domain.Activities
                     "The {0} PropertyValidator can only operate on IPrincipal properties", GetType().Name));
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var principle = (IPrincipal)context.PropertyValue;
+            var principal = (IPrincipal)context.PropertyValue;
             var activityLocationtId = _activityLocationId != null ? _activityLocationId((T)context.Instance) : (int?)null;
 
             Person person = null;
@@ -45,9 +45,7 @@ namespace UCosmic.Domain.Activities
                 person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == activity.PersonId);
             }
 
-            return (person != null)
-                       ? person.User.Name.Equals(principle.Identity.Name, StringComparison.OrdinalIgnoreCase)
-                       : false;
+            return (person != null) && person.User.Name.Equals(principal.Identity.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 

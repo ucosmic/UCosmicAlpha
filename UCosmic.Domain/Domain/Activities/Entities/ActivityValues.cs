@@ -51,10 +51,10 @@ namespace UCosmic.Domain.Activities
             empty &= !StartsOn.HasValue;
             empty &= !EndsOn.HasValue;
             empty &= !OnGoing.HasValue;
-            empty &= Locations != null ? Locations.Count == 0 : true;
-            empty &= Types != null ? Types.Count == 0 : true;
-            empty &= Tags != null ? Tags.Count == 0 : true;
-            empty &= Documents != null ? Documents.Count == 0 : true;
+            empty &= Locations == null || Locations.Count == 0;
+            empty &= Types == null || Types.Count == 0;
+            empty &= Tags == null || Tags.Count == 0;
+            empty &= Documents == null || Documents.Count == 0;
             empty &= !WasExternallyFunded.HasValue;
             empty &= !WasInternallyFunded.HasValue;
             return empty;

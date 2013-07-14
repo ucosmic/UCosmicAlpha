@@ -5,7 +5,7 @@ using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class CreateDeepGeographicExpertise
     {
@@ -27,7 +27,7 @@ namespace UCosmic.Domain.GeographicExpertises
 
     public class ValidateCreateDeepGeographicExpertiseCommand : AbstractValidator<CreateDeepGeographicExpertise>
     {
-        public ValidateCreateDeepGeographicExpertiseCommand(IQueryEntities entities)
+        public ValidateCreateDeepGeographicExpertiseCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

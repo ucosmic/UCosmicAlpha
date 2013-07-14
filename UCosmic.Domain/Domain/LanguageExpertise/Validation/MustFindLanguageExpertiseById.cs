@@ -3,7 +3,7 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace UCosmic.Domain.LanguageExpertises
+namespace UCosmic.Domain.LanguageExpertise
 {
     public class MustFindLanguageExpertiseById : PropertyValidator
     {

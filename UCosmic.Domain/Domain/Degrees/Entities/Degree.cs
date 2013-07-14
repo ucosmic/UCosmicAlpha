@@ -33,7 +33,7 @@ namespace UCosmic.Domain.Degrees
             }
         }
 
-        public Degree()
+        protected internal Degree()
         {
         }
 

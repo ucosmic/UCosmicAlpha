@@ -2,7 +2,7 @@
 using System.Security.Principal;
 using FluentValidation;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class CreateInternationalAffiliationLocation
     {
@@ -26,7 +26,7 @@ namespace UCosmic.Domain.InternationalAffiliations
 
     public class ValidateCreateAffiliationLocationCommand : AbstractValidator<CreateInternationalAffiliationLocation>
     {
-        public ValidateCreateAffiliationLocationCommand(IQueryEntities entities)
+        public ValidateCreateAffiliationLocationCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

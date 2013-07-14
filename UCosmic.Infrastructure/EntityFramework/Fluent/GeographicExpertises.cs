@@ -1,4 +1,4 @@
-﻿using UCosmic.Domain.GeographicExpertises;
+﻿using UCosmic.Domain.GeographicExpertise;
 
 namespace UCosmic.EntityFramework
 {

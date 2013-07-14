@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
-using UCosmic.Domain.Identity;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities

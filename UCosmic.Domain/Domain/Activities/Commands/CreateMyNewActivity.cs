@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Activities
 
     public class ValidateCreateMyNewActivityCommand : AbstractValidator<CreateMyNewActivity>
     {
-        public ValidateCreateMyNewActivityCommand(IQueryEntities entities)
+        public ValidateCreateMyNewActivityCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }
@@ -57,12 +57,13 @@ namespace UCosmic.Domain.Activities
             //var otherActivities = _entities.Get<Activity>()
             //                                   .SingleOrDefault(x => (x.PersonId == person.RevisionId)
             //                                   && (x.ModeText == command.ModeText));
-            Activity otherActivities = null;
+            //Activity otherActivities = null;
 
             var activity = new Activity
             {
                 PersonId = person.RevisionId,
-                Number = (otherActivities != null) ? otherActivities.Number : 0,
+                //Number = (otherActivities != null) ? otherActivities.Number : 0,
+                Number = 0,
                 Mode = command.ModeText.AsEnum<ActivityMode>(),
                 EditSourceId = command.EditSourceId,
 

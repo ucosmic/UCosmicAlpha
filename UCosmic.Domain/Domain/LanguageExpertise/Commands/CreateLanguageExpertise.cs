@@ -4,7 +4,7 @@ using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.LanguageExpertises
+namespace UCosmic.Domain.LanguageExpertise
 {
     public class CreateLanguageExpertise
     {
@@ -37,7 +37,7 @@ namespace UCosmic.Domain.LanguageExpertises
 
     public class ValidateCreateLanguageExpertiseCommand : AbstractValidator<CreateLanguageExpertise>
     {
-        public ValidateCreateLanguageExpertiseCommand(IQueryEntities entities)
+        public ValidateCreateLanguageExpertiseCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

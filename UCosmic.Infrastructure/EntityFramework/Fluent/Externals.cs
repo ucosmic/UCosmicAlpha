@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity.ModelConfiguration;
-using UCosmic.Domain.Degrees;
 using UCosmic.Domain.External;
 
 namespace UCosmic.EntityFramework

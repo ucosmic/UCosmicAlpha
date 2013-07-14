@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Establishments
 {

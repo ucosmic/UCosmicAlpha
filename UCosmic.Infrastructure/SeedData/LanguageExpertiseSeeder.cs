@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Principal;
 using UCosmic.Domain.Identity;
-using UCosmic.Domain.LanguageExpertises;
+using UCosmic.Domain.LanguageExpertise;
 using UCosmic.Domain.Languages;
 using UCosmic.Domain.People;
 
@@ -35,7 +35,7 @@ namespace UCosmic.SeedData
                 User user = _entities.Get<User>().SingleOrDefault(x => x.Person.RevisionId == person.RevisionId);
                 if (user == null) throw new Exception("USF person Douglas Corarito has no User.");
 
-                string[] developerRoles = new string[]
+                var developerRoles = new[]
                     {
                         RoleName.AuthorizationAgent,
                         RoleName.EstablishmentLocationAgent,
@@ -45,14 +45,14 @@ namespace UCosmic.SeedData
                         RoleName.AgreementSupervisor,
                         RoleName.EmployeeProfileManager,
                     };
-                GenericIdentity identity = new GenericIdentity(user.Name);
-                GenericPrincipal principal = new GenericPrincipal(identity, developerRoles);
+                var identity = new GenericIdentity(user.Name);
+                var principal = new GenericPrincipal(identity, developerRoles);
 
                 CreateLanguageExpertise createLanguageExpertiseCommand;
                 LanguageName languageName;
 
                 // LANGUAGE EXPERTISE 1
-                Guid entityId = new Guid("53ECE165-A1BC-4A20-9982-C0FF5E752085");
+                var entityId = new Guid("53ECE165-A1BC-4A20-9982-C0FF5E752085");
                 bool expertiseExists = _entities.Get<LanguageExpertise>().Count(x => x.EntityId == entityId) > 0;
                 if (!expertiseExists)
                 {

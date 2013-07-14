@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -23,7 +24,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class ActivitiesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UpdateActivity> _profileUpdateHandler;
+        //private readonly IHandleCommands<UpdateActivity> _profileUpdateHandler;
         private readonly IValidator<CreateImage> _validateImage;
         private readonly IHandleCommands<CreateImage> _createImage;
         private readonly IValidator<CreateLoadableFile> _validateLoadableFile;
@@ -37,7 +38,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
-                                  , IHandleCommands<UpdateActivity> profileUpdateHandler
+                                  //, IHandleCommands<UpdateActivity> profileUpdateHandler
                                   , IValidator<CreateImage> validateImage
                                   , IHandleCommands<CreateImage> createImage
                                   , IValidator<CreateLoadableFile> validateLoadableFile
@@ -52,7 +53,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             )
         {
             _queryProcessor = queryProcessor;
-            _profileUpdateHandler = profileUpdateHandler;
+            //_profileUpdateHandler = profileUpdateHandler;
             _validateImage = validateImage;
             _createImage = createImage;
             _validateLoadableFile = validateLoadableFile;
@@ -171,13 +172,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var editState = new ActivityEditState();
-
-            editState.IsInEdit = activity.EditSourceId.HasValue;
+            var editState = new ActivityEditState
+            {
+                IsInEdit = activity.EditSourceId.HasValue,
+                EditingUserName = "",
+                EditingUserEmail = ""
+            };
 
             // TBD
-            editState.EditingUserName = "";
-            editState.EditingUserEmail = "";
 
             return editState;
         }
@@ -343,7 +345,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         // --------------------------------------------------------------------------------
         [Authorize]
         [GET("{activityId}/documents")]
-        public ICollection<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
+        public IEnumerable<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
         {
             ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
             if (documents == null)
@@ -351,7 +353,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             
-            var model = Mapper.Map<ICollection<ActivityDocumentApiModel>>(documents);
+            var model = Mapper.Map<ActivityDocumentApiModel[]>(documents);
             return model;
         }
 
@@ -402,7 +404,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var provider = new MultipartMemoryStreamProvider();
 
             var task = Request.Content.ReadAsMultipartAsync(provider).
-                ContinueWith<HttpResponseMessage>(t =>
+                ContinueWith(t =>
                 {
                     if (t.IsFaulted || t.IsCanceled)
                     {
@@ -438,11 +440,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         try
                         {
                             Stream stream = item.ReadAsStreamAsync().Result;
-                            CreateActivityDocument activityDocumentCommand = null;
+                            CreateActivityDocument activityDocumentCommand;
 
                             if (mimeType.Contains("image/"))
                             {
-                                CreateImage createImageCommand = new CreateImage
+                                var createImageCommand = new CreateImage
                                 {
                                     SourceStream = stream,
                                     Width = Int32.Parse(ConfigurationManager.AppSettings["ImageWidth"]),
@@ -467,7 +469,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             }
                             else
                             {
-                                CreateLoadableFile createLoadableFileCommand = new CreateLoadableFile
+                                var createLoadableFileCommand = new CreateLoadableFile
                                 {
                                     SourceStream = stream,
                                     Name = name,
@@ -524,7 +526,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{activityId}/documents/{documentId}")]
         public HttpResponseMessage DeleteDocument(int activityId, int documentId)
         {
-            ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
+            //ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
 
             var command = new DeleteActivityDocument(User, documentId);
 
@@ -538,7 +540,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             return Request.CreateResponse(HttpStatusCode.OK,
-                string.Format("Activity document id '{0}' was successfully deleted.", documentId.ToString()));
+                string.Format("Activity document id '{0}' was successfully deleted.", documentId.ToString(CultureInfo.InvariantCulture)));
         }
 
         // --------------------------------------------------------------------------------
@@ -562,7 +564,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             return Request.CreateResponse(HttpStatusCode.OK,
-                string.Format("Activity document id '{0}' was successfully renamed.", documentId.ToString()));
+                string.Format("Activity document id '{0}' was successfully renamed.", documentId.ToString(CultureInfo.InvariantCulture)));
         }
 
         // --------------------------------------------------------------------------------
@@ -574,11 +576,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{activityid}/documents/validate-upload-filetype")]
         public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] string extension)
         {
-            CreateImage createImageCommand = new CreateImage { Extension = extension };
+            var createImageCommand = new CreateImage { Extension = extension };
             var createImageValidationResult = _validateImage.Validate(createImageCommand);
             if (!createImageValidationResult.IsValid)
             {
-                CreateLoadableFile createLoadableFileCommand = new CreateLoadableFile { Extension = extension };
+                var createLoadableFileCommand = new CreateLoadableFile { Extension = extension };
                 var createLoadableFileValidationResult = _validateLoadableFile.Validate(createLoadableFileCommand);
                 if (!createLoadableFileValidationResult.IsValid)
                 {
@@ -600,14 +602,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{activityId}/documents/{documentId}/thumbnail")]
         public HttpResponseMessage GetDocumentsThumbnail(int activityId, int documentId)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
+            var response = new HttpResponseMessage();
             ActivityDocument document = _queryProcessor.Execute(new ActivityDocumentById(documentId));
             byte[] contentData = null;
 
             /* If the ActivityDocument has an image, resize and use. */
             if (document.Image != null)
             {
-                MemoryStream fullImageStream = new MemoryStream(document.Image.Data);
+                var fullImageStream = new MemoryStream(document.Image.Data);
                 System.Drawing.Image fullImage = System.Drawing.Image.FromStream(fullImageStream);
                 Stream proxyStream = fullImage.ResizeImageConstrained(
                     Int32.Parse(ConfigurationManager.AppSettings["ProxyImageHeight"]),
@@ -616,7 +618,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                 System.Drawing.Image resizedImage = System.Drawing.Image.FromStream(proxyStream);
 
-                MemoryStream stream = new MemoryStream();
+                var stream = new MemoryStream();
                 resizedImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
                 contentData = stream.ToArray();
             }

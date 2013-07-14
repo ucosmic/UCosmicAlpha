@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {

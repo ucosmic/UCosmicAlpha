@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class GeographicExpertise : RevisableEntity
     {
@@ -33,7 +33,9 @@ namespace UCosmic.Domain.GeographicExpertises
 
         public GeographicExpertise()
         {
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Locations = new Collection<GeographicExpertiseLocation>();
+            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         public virtual Person Person { get; protected internal set; }

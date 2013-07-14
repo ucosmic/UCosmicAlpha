@@ -135,7 +135,6 @@
     <Compile Include="Domain\Activities\Commands\DeleteActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityType.cs" />
-    <Compile Include="Domain\Activities\Commands\DeleteActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
@@ -159,7 +158,10 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByCountry.cs" />
+    <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustBeUniqueEstablishmentNameText.cs" />
+    <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyIdentityName.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityDocumentById.cs" />
@@ -426,7 +428,6 @@
     <Compile Include="Domain\Identity\Validation\MustHaveMinimumPasswordLength.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyPassword.cs" />
     <Compile Include="Domain\People\Validation\MustNotHaveEmptyConfirmationTicket.cs" />
-    <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyPrincipalIdentityName.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryEduPersonScopedAffiliations.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryRoleGrants.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryRoles.cs" />

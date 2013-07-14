@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using UCosmic.Domain.Files;
 
-namespace UCosmic.Web.Mvc
+namespace UCosmic.Web.Mvc.Models
 {
     public class FileMedia
     {

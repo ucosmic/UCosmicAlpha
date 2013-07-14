@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Activities
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            ActivityDocument[] documents = new ActivityDocument[0];
+            var documents = new ActivityDocument[0];
 
             var values = _entities.Query<ActivityValues>()
                                     .FirstOrDefault(x => (x.ActivityId == query.Id) && (x.ModeText == query.ModeText));

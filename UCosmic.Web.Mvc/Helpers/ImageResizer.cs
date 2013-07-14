@@ -51,12 +51,12 @@ namespace UCosmic.Web.Mvc
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-            Rectangle destBounds = new Rectangle(0, 0, inDestCanvasWidth, inDestCanvasHeight);
+            var destBounds = new Rectangle(0, 0, inDestCanvasWidth, inDestCanvasHeight);
             g.FillRectangle(new SolidBrush(Color.Transparent), destBounds);
 
             g.DrawImage(inSourceImage, x, y, width, height);
 
-            MemoryStream memStream = new MemoryStream();
+            var memStream = new MemoryStream();
             destImage.Save(memStream, inToFormat);
 
             return memStream;

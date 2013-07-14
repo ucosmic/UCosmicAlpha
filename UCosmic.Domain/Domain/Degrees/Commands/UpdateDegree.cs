@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
@@ -76,7 +75,7 @@ namespace UCosmic.Domain.Degrees
                 throw new Exception(message);
             }
 
-            var updateDegree = new Degree()
+            var updateDegree = new Degree
             {
                 Title = command.Title,
                 FieldOfStudy = command.FieldOfStudy,

@@ -43,10 +43,10 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
-        private readonly IHandleCommands<UpdateActivityLocation> _updateActivityLocation;
+        //private readonly IHandleCommands<UpdateActivityLocation> _updateActivityLocation;
         private readonly IHandleCommands<DeleteActivityLocation> _deleteActivityLocation;
         private readonly IHandleCommands<CreateActivityType> _createActivityType;
-        private readonly IHandleCommands<UpdateActivityType> _updateActivityType;
+        //private readonly IHandleCommands<UpdateActivityType> _updateActivityType;
         private readonly IHandleCommands<DeleteActivityType> _deleteActivityType;
         private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
         private readonly IHandleCommands<DeleteActivityTag> _deleteActivityTag;
@@ -57,10 +57,10 @@ namespace UCosmic.Domain.Activities
         public HandleUpdateActivityValuesCommand(ICommandEntities entities,
                                                  IUnitOfWork unitOfWork,
                                                  IHandleCommands<CreateActivityLocation> createActivityLocation,
-                                                 IHandleCommands<UpdateActivityLocation> updateActivityLocation,
+                                                 //IHandleCommands<UpdateActivityLocation> updateActivityLocation,
                                                  IHandleCommands<DeleteActivityLocation> deleteActivityLocation,
                                                  IHandleCommands<CreateActivityType> createActivityType,
-                                                 IHandleCommands<UpdateActivityType> updateActivityType,
+                                                 //IHandleCommands<UpdateActivityType> updateActivityType,
                                                  IHandleCommands<DeleteActivityType> deleteActivityType,
                                                  IHandleCommands<CreateActivityTag> createActivityTag,
                                                  IHandleCommands<DeleteActivityTag> deleteActivityTag,            
@@ -71,10 +71,10 @@ namespace UCosmic.Domain.Activities
             _entities = entities;
             _unitOfWork = unitOfWork;
             _createActivityLocation = createActivityLocation;
-            _updateActivityLocation = updateActivityLocation;
+            //_updateActivityLocation = updateActivityLocation;
             _deleteActivityLocation = deleteActivityLocation;
             _createActivityType = createActivityType;
-            _updateActivityType = updateActivityType;
+            //_updateActivityType = updateActivityType;
             _deleteActivityType = deleteActivityType;
             _createActivityTag = createActivityTag;
             _deleteActivityTag= deleteActivityTag;

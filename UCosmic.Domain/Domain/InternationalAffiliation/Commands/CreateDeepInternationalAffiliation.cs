@@ -5,7 +5,7 @@ using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class CreateDeepInternationalAffiliation
     {
@@ -31,7 +31,7 @@ namespace UCosmic.Domain.InternationalAffiliations
 
     public class ValidateCreateDeepInternationalAffiliationCommand : AbstractValidator<CreateDeepInternationalAffiliation>
     {
-        public ValidateCreateDeepInternationalAffiliationCommand(IQueryEntities entities)
+        public ValidateCreateDeepInternationalAffiliationCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

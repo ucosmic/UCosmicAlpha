@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Principal;
 using FluentValidation;
-using Newtonsoft.Json;
-using UCosmic.Domain.Audit;
 using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.External
@@ -94,18 +90,18 @@ namespace UCosmic.Domain.External
         private readonly ICommandEntities _entities;
         //private readonly IHandleCommands<UsfUpdateEstablishmentHierarchy> _updateHierarchy;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        //private readonly IProcessEvents _eventProcessor;
 
         public HandleUsfUpdateEstablishmentCommand(ICommandEntities entities
             //, IHandleCommands<UsfUpdateEstablishmentHierarchy> updateHierarchy
             , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            //, IProcessEvents eventProcessor
         )
         {
             _entities = entities;
             //_updateHierarchy = updateHierarchy;
             _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            //_eventProcessor = eventProcessor;
         }
 
         public void Handle(UsfUpdateEstablishment command)

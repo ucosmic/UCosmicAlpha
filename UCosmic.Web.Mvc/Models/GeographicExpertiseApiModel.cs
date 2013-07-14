@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
-using UCosmic.Domain.GeographicExpertises;
+using UCosmic.Domain.GeographicExpertise;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models

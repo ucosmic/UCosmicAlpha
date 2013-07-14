@@ -45,10 +45,6 @@ namespace UCosmic.Domain.Activities
                     empty &= value.IsEmpty();
                 }
             }
-            else
-            {
-                empty = true;
-            }
 
             return empty;
         }

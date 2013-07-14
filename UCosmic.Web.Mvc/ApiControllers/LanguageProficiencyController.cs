@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
-using UCosmic.Domain.LanguageExpertises;
+using UCosmic.Domain.LanguageExpertise;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -28,7 +29,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var meaningApi = new LanguageProficiencyMeaningApiModel
                 {
                     Weight = scale.Weight,
-                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
                     Description = meaning.Description
                 };
                 model.SpeakingMeanings.Add(meaningApi);
@@ -37,7 +38,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 meaningApi = new LanguageProficiencyMeaningApiModel
                 {
                     Weight = scale.Weight,
-                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
                     Description = meaning.Description
                 };
                 model.ListeningMeanings.Add(meaningApi);
@@ -46,7 +47,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 meaningApi = new LanguageProficiencyMeaningApiModel
                 {
                     Weight = scale.Weight,
-                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
                     Description = meaning.Description
                 };
                 model.ReadingMeanings.Add(meaningApi);
@@ -55,7 +56,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 meaningApi = new LanguageProficiencyMeaningApiModel
                 {
                     Weight = scale.Weight,
-                    Title = string.Format("{0}. {1}", scale.Weight.ToString(), scale.Description),
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
                     Description = meaning.Description
                 };
                 model.WritingMeanings.Add(meaningApi);

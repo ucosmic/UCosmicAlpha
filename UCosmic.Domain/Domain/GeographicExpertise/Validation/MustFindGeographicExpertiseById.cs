@@ -3,7 +3,7 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class MustFindGeographicExpertiseById : PropertyValidator
     {

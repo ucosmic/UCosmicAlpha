@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class InternationalAffiliationsByPersonId : BaseEntitiesQuery<InternationalAffiliation>, IDefineQuery<PagedQueryResult<InternationalAffiliation>>
     {

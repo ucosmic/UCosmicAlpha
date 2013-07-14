@@ -2,8 +2,8 @@
 {
     public static class PersonGender
     {
-        public static string Male = "M";
-        public static string Female = "F";
-        public static string NonDisclosed = "P";
+        public const string Male = "M";
+        public const string Female = "F";
+        public const string NonDisclosed = "P";
     }
 }

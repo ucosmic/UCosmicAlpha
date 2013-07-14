@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UCosmic.Web.Mvc.Models
+﻿namespace UCosmic.Web.Mvc.Models
 {
     public class CircleGraphicRequestModel
     {

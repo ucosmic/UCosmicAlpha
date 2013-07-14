@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        private readonly IStoreBinaryData _binaryData;
+        //private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
         private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
@@ -33,7 +33,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         public MyProfileController(IProcessQueries queryProcessor
             , ICommandEntities entities
-            , IStoreBinaryData binaryData
+            //, IStoreBinaryData binaryData
             , IHandleCommands<UpdateMyProfile> profileUpdateHandler
             , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
@@ -43,7 +43,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         )
         {
             _queryProcessor = queryProcessor;
-            _binaryData = binaryData;
+            //_binaryData = binaryData;
             _profileUpdateHandler = profileUpdateHandler;
             _photoUpdateHandler = photoUpdateHandler;
             _photoDeleteHandler = photoDeleteHandler;
@@ -230,7 +230,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [GET("affiliation")]
-        public ICollection<MyProfileAffiliationApiModel> GetAffiliation()
+        public IEnumerable<MyProfileAffiliationApiModel> GetAffiliation()
         {
             var person = _queryProcessor.Execute(new MyPerson(User)
             {
@@ -243,7 +243,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             // throw 404 if route does not match existing record
             if (person == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var model = Mapper.Map<ICollection<MyProfileAffiliationApiModel>>(person.Affiliations);
+            var model = Mapper.Map<MyProfileAffiliationApiModel[]>(person.Affiliations);
 
             return model;
         }

@@ -1,6 +1,6 @@
 ﻿using UCosmic.Domain.Places;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class InternationalAffiliationLocation : RevisableEntity
     {

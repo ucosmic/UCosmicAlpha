@@ -35,7 +35,7 @@ namespace UCosmic.SeedData
                 User user = _entities.Get<User>().SingleOrDefault(x => x.Person.RevisionId == person.RevisionId);
                 if (user == null) throw new Exception("USF person Douglas Corarito has no User.");
 
-                string[] developerRoles = new string[]
+                var developerRoles = new[]
                     {
                         RoleName.AuthorizationAgent,
                         RoleName.EstablishmentLocationAgent,
@@ -45,15 +45,15 @@ namespace UCosmic.SeedData
                         RoleName.AgreementSupervisor,
                         RoleName.EmployeeProfileManager,
                     };
-                GenericIdentity identity = new GenericIdentity(user.Name);
-                GenericPrincipal principal = new GenericPrincipal(identity, developerRoles);
+                var identity = new GenericIdentity(user.Name);
+                var principal = new GenericPrincipal(identity, developerRoles);
 
                 CreateDegree createDegreeCommand;
                 Establishment institution;
                 string institutionName;
 
                 // DEGREE 1
-                Guid entityId = new Guid("89538B2C-D4E9-4ABD-940D-16A7E08741A1");
+                var entityId = new Guid("89538B2C-D4E9-4ABD-940D-16A7E08741A1");
                 bool degreeExists = _entities.Get<Degree>().Count(x => x.EntityId == entityId) > 0;
                 if (!degreeExists)
                 {

@@ -33,18 +33,17 @@ namespace UCosmic.Domain.Identity
                 .NotNull()
                     .WithMessage(MustNotHaveNullPrincipal.FailMessage)
 
+                // principal.identity.name cannot be null or empty
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+
+                // principal.identity.name must match User.Name entity property
+                .MustFindUserByPrincipal(entities)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
+
                 // principal must be authorized to grant roles
                 .MustBeInAnyRole(RoleName.RoleGrantors)
                     .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
-            ;
-            RuleFor(x => x.Principal.Identity.Name)
-                // principal.identity.name cannot be null or empty
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
-
-                // principal.identity.name must match User.Name entity property
-                .MustFindUserByName(entities)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 
             RuleFor(x => x.UserId)

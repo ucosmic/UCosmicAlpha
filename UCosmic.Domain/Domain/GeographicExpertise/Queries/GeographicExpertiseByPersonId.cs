@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class GeographicExpertisesByPersonId : BaseEntitiesQuery<GeographicExpertise>, IDefineQuery<PagedQueryResult<GeographicExpertise>>
     {

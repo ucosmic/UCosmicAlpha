@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
@@ -7,8 +6,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-using UCosmic.Domain.GeographicExpertises;
-using UCosmic.Domain.Places;
+using UCosmic.Domain.GeographicExpertise;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers

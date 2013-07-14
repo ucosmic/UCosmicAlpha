@@ -212,13 +212,13 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<Affiliation, MyProfileAffiliationApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.PersonId, o => o.Ignore())
-                    .ForMember(d => d.Campus, o => o.ResolveUsing<MyProfileApiModelProfiler.EntityToModelProfile.EstablishmentCampusNameResolver>()
+                    .ForMember(d => d.Campus, o => o.ResolveUsing<EstablishmentCampusNameResolver>()
                         .ConstructedBy(() => new EstablishmentCampusNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
-                    .ForMember(d => d.College, o => o.ResolveUsing<MyProfileApiModelProfiler.EntityToModelProfile.EstablishmentCollegeNameResolver>()
+                    .ForMember(d => d.College, o => o.ResolveUsing<EstablishmentCollegeNameResolver>()
                         .ConstructedBy(() => new EstablishmentCollegeNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
-                    .ForMember(d => d.Department, o => o.ResolveUsing<MyProfileApiModelProfiler.EntityToModelProfile.EstablishmentDepartmentNameResolver>()
+                    .ForMember(d => d.Department, o => o.ResolveUsing<EstablishmentDepartmentNameResolver>()
                         .ConstructedBy(() => new EstablishmentDepartmentNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
-                    .ForMember(d => d.FacultyRank, o => o.ResolveUsing<MyProfileApiModelProfiler.EntityToModelProfile.FacultyRankResolver>()
+                    .ForMember(d => d.FacultyRank, o => o.ResolveUsing<FacultyRankResolver>()
                         .ConstructedBy(() => new FacultyRankResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
                         ;
 

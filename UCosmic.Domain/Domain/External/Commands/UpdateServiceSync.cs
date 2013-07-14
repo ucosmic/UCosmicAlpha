@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
-using System.Threading;
 using FluentValidation;
 
 namespace UCosmic.Domain.External
@@ -27,7 +25,7 @@ namespace UCosmic.Domain.External
 
     public class ValidateUpdateServiceSyncCommand : AbstractValidator<UpdateServiceSync>
     {
-        public ValidateUpdateServiceSyncCommand(IQueryEntities entities)
+        public ValidateUpdateServiceSyncCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }
@@ -36,16 +34,16 @@ namespace UCosmic.Domain.External
     public class HandleUpdateServiceSyncCommand : IHandleCommands<UpdateServiceSync>
     {
         private readonly ICommandEntities _entities;
-        private readonly IQueryEntities _query;
+        //private readonly IQueryEntities _query;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdateServiceSyncCommand( ICommandEntities entities
-            , IQueryEntities query
+            //, IQueryEntities query
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
-            _query = query;
+            //_query = query;
             _unitOfWork = unitOfWork;
         }
 

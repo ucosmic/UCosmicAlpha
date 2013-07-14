@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
-using UCosmic.Domain.Files;
 
 namespace UCosmic.Domain.Activities
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 
-namespace UCosmic.Domain.InternationalAffiliations
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class UpdateInternationalAffiliation
     {

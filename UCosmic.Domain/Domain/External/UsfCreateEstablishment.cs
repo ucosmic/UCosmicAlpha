@@ -61,7 +61,7 @@ namespace UCosmic.Domain.External
 
         public HandleUsfCreateEstablishmentCommand(IProcessQueries queryProcessor
             , ICommandEntities entities
-            , IHandleCommands<UpdateEstablishmentHierarchy> hierarchy
+            //, IHandleCommands<UpdateEstablishmentHierarchy> hierarchy
         )
         {
             _queryProcessor = queryProcessor;

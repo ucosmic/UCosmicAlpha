@@ -5,7 +5,7 @@ using FluentValidation;
 using FluentValidation.Validators;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class MustOwnGeographicExpertiseLocation<T> : PropertyValidator
     {
@@ -31,7 +31,7 @@ namespace UCosmic.Domain.GeographicExpertises
                     "The {0} PropertyValidator can only operate on IPrincipal properties", GetType().Name));
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var principle = (IPrincipal)context.PropertyValue;
+            var principal = (IPrincipal)context.PropertyValue;
             var geographicExpertiseLocationId = _geographicExpertiseLocationId != null ? _geographicExpertiseLocationId((T)context.Instance) : (int?)null;
 
             Person person = null;
@@ -41,9 +41,7 @@ namespace UCosmic.Domain.GeographicExpertises
                 person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == geographicExpertiseLocation.Expertise.PersonId);
             }
 
-            return (person != null)
-                       ? person.User.Name.Equals(principle.Identity.Name, StringComparison.OrdinalIgnoreCase)
-                       : false;
+            return (person != null) && person.User.Name.Equals(principal.Identity.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 

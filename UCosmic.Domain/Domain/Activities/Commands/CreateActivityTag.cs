@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
-using UCosmic.Domain.Identity;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
@@ -68,8 +66,8 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var person = _entities.Get<Person>()
-                .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);
+            //var person = _entities.Get<Person>()
+            //    .Single(p => p.RevisionId == activityValues.Activity.Person.RevisionId);
 
             //var otherActivities = _entities.Get<Activity>()
             //                               .WithPersonId(person.RevisionId)

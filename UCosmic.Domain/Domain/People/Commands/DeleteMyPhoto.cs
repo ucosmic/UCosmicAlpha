@@ -30,10 +30,12 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Principal.Identity.Name)
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
-                .MustFindUserByName(entities)
+            RuleFor(x => x.Principal)
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+                .MustFindUserByPrincipal(entities)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
         }

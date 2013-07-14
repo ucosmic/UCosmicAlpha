@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
-using UCosmic.Domain.GeographicExpertises;
+using UCosmic.Domain.GeographicExpertise;
 using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
@@ -38,7 +38,7 @@ namespace UCosmic.SeedData
                 User user = _entities.Get<User>().SingleOrDefault(x => x.Person.RevisionId == person.RevisionId);
                 if (user == null) throw new Exception("USF person Douglas Corarito has no User.");
 
-                string[] developerRoles = new string[]
+                var developerRoles = new[]
                     {
                         RoleName.AuthorizationAgent,
                         RoleName.EstablishmentLocationAgent,
@@ -48,8 +48,8 @@ namespace UCosmic.SeedData
                         RoleName.AgreementSupervisor,
                         RoleName.EmployeeProfileManager,
                     };
-                GenericIdentity identity = new GenericIdentity(user.Name);
-                GenericPrincipal principal = new GenericPrincipal(identity, developerRoles);
+                var identity = new GenericIdentity(user.Name);
+                var principal = new GenericPrincipal(identity, developerRoles);
 
                 CreateGeographicExpertise createGeographicExpertiseCommand;
                 CreateGeographicExpertiseLocation createGeographicExpertiseLocationCommand;
@@ -57,7 +57,7 @@ namespace UCosmic.SeedData
                 string placeName;
 
                 // GEOGRAPHIC EXPERTISE 1
-                Guid entityId = new Guid("82A4789E-7B60-489F-B0FF-79AA6BA24E19");
+                var entityId = new Guid("82A4789E-7B60-489F-B0FF-79AA6BA24E19");
                 bool expertiseExists = _entities.Get<GeographicExpertise>().Count(x => x.EntityId == entityId) > 0;
                 if (!expertiseExists)
                 {

@@ -29,18 +29,12 @@ namespace UCosmic.Domain.Activities
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
-        private readonly IHandleCommands<DeleteActivityLocation> _deleteActivityLocation;
 
         public HandleUpdateActivityTypeCommand(ICommandEntities entities,
-                                               IUnitOfWork unitOfWork,
-                                               IHandleCommands<CreateActivityLocation> createActivityLocation,
-                                               IHandleCommands<DeleteActivityLocation> deleteActivityLocation)
+                                               IUnitOfWork unitOfWork)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _createActivityLocation = createActivityLocation;
-            _deleteActivityLocation = deleteActivityLocation;
         }
 
         public class ValidateUpdateActivityTypeCommand : AbstractValidator<UpdateActivityType>

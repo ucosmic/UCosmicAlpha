@@ -75,7 +75,7 @@ namespace UCosmic.Domain.Files
             byte[] processedImage =
                 Resize(unprocessedImage, command.Width, command.Height, toFormat, command.Constrained);
 
-            Image image = new Image
+            var image = new Image
             {
                 Data = processedImage,
                 Title = command.Title,
@@ -130,28 +130,28 @@ namespace UCosmic.Domain.Files
                 scale = (float)inDestCanvasHeight / srcHeight;
             }
 
-            int dstWidth = (int)(srcWidth * scale);
-            int dstHeight = (int)(srcHeight * scale);
+            var dstWidth = (int)(srcWidth * scale);
+            var dstHeight = (int)(srcHeight * scale);
 
-            int dstCanvasWidth = inConstrained ? inDestCanvasWidth : dstWidth;
-            int dstCanvasHeight = inConstrained ? inDestCanvasHeight : dstHeight;
+            var dstCanvasWidth = inConstrained ? inDestCanvasWidth : dstWidth;
+            var dstCanvasHeight = inConstrained ? inDestCanvasHeight : dstHeight;
 
-            int x = (dstCanvasWidth - dstWidth) / 2;
-            int y = (dstCanvasHeight - dstHeight) / 2;
+            var x = (dstCanvasWidth - dstWidth) / 2;
+            var y = (dstCanvasHeight - dstHeight) / 2;
 
             System.Drawing.Image destImage = new Bitmap(dstCanvasWidth, dstCanvasHeight);
 
-            Graphics g = Graphics.FromImage(destImage);
+            var g = Graphics.FromImage(destImage);
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-            Rectangle destBounds = new Rectangle(0, 0, dstCanvasWidth, dstCanvasHeight);
+            var destBounds = new Rectangle(0, 0, dstCanvasWidth, dstCanvasHeight);
             g.FillRectangle(new SolidBrush(Color.Transparent), destBounds);
 
             g.DrawImage(inSourceImage, x, y, dstWidth, dstHeight);
 
-            MemoryStream memStream = new MemoryStream();
+            var memStream = new MemoryStream();
             destImage.Save(memStream, inToFormat);
 
             return memStream.ToArray();

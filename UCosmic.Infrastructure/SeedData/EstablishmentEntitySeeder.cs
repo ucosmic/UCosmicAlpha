@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.External;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.SeedData
@@ -1489,25 +1486,25 @@ namespace UCosmic.SeedData
     public class EstablishmentUsfEntitySeeder : BaseEstablishmentEntitySeeder
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
-        private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
-        private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
+        //private readonly IHandleCommands<UpdateEstablishmentHierarchy> _hierarchy;
+        //private readonly ICommandEntities _entities;
+        //private readonly IUnitOfWork _unitOfWork;
 
         public EstablishmentUsfEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<SeedEstablishment> createEstablishment
-            , IHandleCommands<UsfCreateEstablishment> createUsfEstablishment
-            , IHandleCommands<UpdateEstablishmentHierarchy> hierarchy
-            , ICommandEntities entities
+            //, IHandleCommands<UsfCreateEstablishment> createUsfEstablishment
+            //, IHandleCommands<UpdateEstablishmentHierarchy> hierarchy
+            //, ICommandEntities entities
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createEstablishment, unitOfWork)
         {
             _queryProcessor = queryProcessor;
-            _entities = entities;
-            _hierarchy = hierarchy;
-            _unitOfWork = unitOfWork;
-            _createUsfEstablishment = createUsfEstablishment;
+            //_entities = entities;
+            //_hierarchy = hierarchy;
+            //_unitOfWork = unitOfWork;
+            //_createUsfEstablishment = createUsfEstablishment;
         }
 
         public override void Seed()
@@ -1796,7 +1793,7 @@ namespace UCosmic.SeedData
                                             .RevisionId,
                 });
 
-                    college = Seed(new SeedEstablishment
+                    Seed(new SeedEstablishment
                     {
                         OfficialName = "College of Business",
                         IsMember = true,
@@ -1818,7 +1815,7 @@ namespace UCosmic.SeedData
                                             .RevisionId,
                 });
 
-                    college = Seed(new SeedEstablishment
+                    Seed(new SeedEstablishment
                     {
                         OfficialName = "College of Arts and Sciences",
                         IsMember = true,

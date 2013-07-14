@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
-using System.Threading;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Files;
@@ -56,7 +55,7 @@ namespace UCosmic.SeedData
                 User user = _entities.Get<User>().SingleOrDefault(x => x.Person.RevisionId == person.RevisionId);
                 if (user == null) throw new Exception("USF person Douglas Corarito has no User.");
 
-                string[] developerRoles = new string[]
+                var developerRoles = new[]
                     {
                         RoleName.AuthorizationAgent,
                         RoleName.EstablishmentLocationAgent,
@@ -66,10 +65,10 @@ namespace UCosmic.SeedData
                         RoleName.AgreementSupervisor,
                         RoleName.EmployeeProfileManager,
                     };
-                GenericIdentity identity = new GenericIdentity(user.Name);
-                GenericPrincipal principal = new GenericPrincipal(identity, developerRoles);
+                var identity = new GenericIdentity(user.Name);
+                var principal = new GenericPrincipal(identity, developerRoles);
 
-                EmployeeModuleSettings employeeModuleSettings =
+                var employeeModuleSettings =
                     _queryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
@@ -77,7 +76,7 @@ namespace UCosmic.SeedData
 
 
                 // ACTIVITY 1
-                Guid entityId = new Guid("95F98FB4-EFB2-4F8E-AE79-E2B23F04D4FE");
+                var entityId = new Guid("95F98FB4-EFB2-4F8E-AE79-E2B23F04D4FE");
                 bool activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
                 if (!activityExists)
                 {
@@ -91,7 +90,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
                         Title =
                             "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
@@ -197,7 +196,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
                         Title = "Professional Development Program for Teachers of English at Shandong University",
                         Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
@@ -245,7 +244,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
                         Title = "Workshop Preparation: Air pollution and Chinese Historic Site",
                         Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
@@ -324,7 +323,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
                         Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
                         Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music"
@@ -403,7 +402,7 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    CreateActivityValues createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
                         Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
                         Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students."

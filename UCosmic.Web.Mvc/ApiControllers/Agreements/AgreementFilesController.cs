@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -9,7 +7,6 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
-using Newtonsoft.Json;
 using UCosmic.Domain.Agreements;
 using UCosmic.Web.Mvc.Models;
 

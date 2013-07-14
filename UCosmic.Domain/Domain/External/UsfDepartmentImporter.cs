@@ -2,13 +2,11 @@
 
 using System;
 using System.Collections.Specialized;
-using System.Configuration;
 using System.Diagnostics;
-using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 using System.Threading;
 using Newtonsoft.Json;
 using UCosmic.Domain.Establishments;
@@ -25,17 +23,23 @@ namespace UCosmic.Domain.External
         [DataContract]
         private class DepartmentRecord
         {
-            [DataMember(Name = "DEPTID")] public string DeptId;
-            [DataMember(Name = "INSTITUTION")] public string Institution;
-            [DataMember(Name = "COLLEGE")] public string College;
-            [DataMember(Name = "DEPARTMENT")] public string Department;
+            [DataMember(Name = "DEPTID")]
+            public string DeptId;
+            [DataMember(Name = "INSTITUTION")]
+            public string Institution;
+            [DataMember(Name = "COLLEGE")]
+            public string College;
+            [DataMember(Name = "DEPARTMENT")]
+            public string Department;
         }
 
         [DataContract]
         private class Record
         {
-            [DataMember(Name = "lastUpdate")] public string LastActivityDate; // MM-DD-YYYY
-            [DataMember(Name = "lookup")]  public DepartmentRecord[] Departments;
+            [DataMember(Name = "lastUpdate")]
+            public string LastActivityDate; // MM-DD-YYYY
+            [DataMember(Name = "lookup")]
+            public DepartmentRecord[] Departments;
         }
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
@@ -58,7 +62,7 @@ namespace UCosmic.Domain.External
         /*
         */
         // ----------------------------------------------------------------------
-        public UsfDepartmentImporter( ICommandEntities entities,
+        public UsfDepartmentImporter(ICommandEntities entities,
                                       IProcessQueries queryProcessor,
                                       IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
                                       IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment,
@@ -85,13 +89,15 @@ namespace UCosmic.Domain.External
             _usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
             if (_usf == null) { throw new Exception("USF Establishment not found."); }
 
-            _campuses = new StringDictionary();
-            _campuses.Add("TAMPA", "USF Tampa Campus");
-            _campuses.Add("USF Tampa", "USF Tampa Campus");
-            _campuses.Add("ST.PETE", "USF St. Petersburg Campus");
-            _campuses.Add("USF St. Petersburg", "USF St. Petersburg Campus");
-            _campuses.Add("SARASOTA", "USF Sarasota-Manatee Campus");
-            _campuses.Add("USF Sarasota", "USF Sarasota-Manatee Campus");
+            _campuses = new StringDictionary
+            {
+                { "TAMPA", "USF Tampa Campus" },
+                { "USF Tampa", "USF Tampa Campus" },
+                { "ST.PETE", "USF St. Petersburg Campus" },
+                { "USF St. Petersburg", "USF St. Petersburg Campus" },
+                { "SARASOTA", "USF Sarasota-Manatee Campus" },
+                { "USF Sarasota", "USF Sarasota-Manatee Campus" }
+            };
 
             string establishmentType = KnownEstablishmentType.UniversityCampus.AsSentenceFragment();
             _campusEstablishmentType =
@@ -114,7 +120,7 @@ namespace UCosmic.Domain.External
                 var campus = _entities.Get<Establishment>().SingleOrDefault(c => c.OfficialName == officialName);
                 if (campus == null)
                 {
-                    var createCampus = new UsfCreateEstablishment()
+                    var createCampus = new UsfCreateEstablishment
                     {
                         OfficialName = officialName,
                         IsMember = true,
@@ -170,7 +176,7 @@ namespace UCosmic.Domain.External
                 DepartmentRecord department = record.Departments[i];
 
                 Debug.WriteLine(DateTime.Now + " Usf: **************************************************");
-                Debug.WriteLine(DateTime.Now + " Usf: Index:      " + i.ToString());
+                Debug.WriteLine(DateTime.Now + " Usf: Index:      " + i.ToString(CultureInfo.InvariantCulture));
                 Debug.WriteLine(DateTime.Now + " Usf: DeptId:      " + department.DeptId);
                 Debug.WriteLine(DateTime.Now + " Usf: Institution: " + department.Institution);
                 Debug.WriteLine(DateTime.Now + " Usf: College:     " + department.College);
@@ -181,7 +187,7 @@ namespace UCosmic.Domain.External
                     _entities.Get<Establishment>().SingleOrDefault(e => e.ExternalId == department.DeptId);
 
                 /* If not found, add. */
-                if ( existingDepartment == null )
+                if (existingDepartment == null)
                 {
                     /* Make sure we have USF and Campuses. */
                     if (_usf == null) { UsfEstablishmentsSetup(); }
@@ -195,7 +201,7 @@ namespace UCosmic.Domain.External
                     }
 
                     /* Get the campus. */
-                    var campus = _entities.Get<Establishment>().SingleOrDefault(e => (e.Parent.RevisionId == _usf.RevisionId) &&     
+                    var campus = _entities.Get<Establishment>().SingleOrDefault(e => (e.Parent.RevisionId == _usf.RevisionId) &&
                                                                                      (e.OfficialName == campusOfficialName));
                     if (campus == null)
                     {
@@ -214,7 +220,7 @@ namespace UCosmic.Domain.External
 
                             if (college == null)
                             {
-                                var createCollege = new UsfCreateEstablishment()
+                                var createCollege = new UsfCreateEstablishment
                                 {
                                     OfficialName = department.College,
                                     IsMember = true,
@@ -231,7 +237,7 @@ namespace UCosmic.Domain.External
                                                                                                (e.OfficialName == "None"));
                             if (noneDept == null)
                             {
-                                var createDept = new UsfCreateEstablishment()
+                                var createDept = new UsfCreateEstablishment
                                 {
                                     OfficialName = "None",
                                     ExternalId = department.DeptId,
@@ -240,7 +246,7 @@ namespace UCosmic.Domain.External
                                     TypeId = _departmentEstablishmentType.RevisionId
                                 };
                                 _createUsfEstablishment.Handle(createDept);
-                                _unitOfWork.SaveChanges();                                
+                                _unitOfWork.SaveChanges();
                             }
                         }
                         else
@@ -260,7 +266,7 @@ namespace UCosmic.Domain.External
 
                             if (college == null)
                             {
-                                var createCollege = new UsfCreateEstablishment()
+                                var createCollege = new UsfCreateEstablishment
                                 {
                                     OfficialName = department.College,
                                     IsMember = true,
@@ -280,7 +286,7 @@ namespace UCosmic.Domain.External
                             /* Create the department (if need be) */
                             if (dept == null)
                             {
-                                var createDepartment = new UsfCreateEstablishment()
+                                var createDepartment = new UsfCreateEstablishment
                                 {
                                     OfficialName = department.Department,
                                     ExternalId = department.DeptId,
@@ -300,7 +306,7 @@ namespace UCosmic.Domain.External
                                 };
 
                                 _updateUsfEstablishment.Handle(updateDepartment);
-                                _unitOfWork.SaveChanges();                                
+                                _unitOfWork.SaveChanges();
                             }
                         }
                         else
@@ -310,10 +316,10 @@ namespace UCosmic.Domain.External
                         }
                     }
                 }
-                else // Update establishment
-                {
-                    /* TBD - Handle name changes */
-                }
+                //else // Update establishment
+                //{
+                //    /* TBD - Handle name changes */
+                //}
             }
 
             _usf = _entities.Get<Establishment>()
@@ -328,7 +334,7 @@ namespace UCosmic.Domain.External
 
 #if DEBUG
             stopwatch.Stop();
-            Debug.WriteLine(DateTime.Now + " USF: Time to import departments: " + stopwatch.ElapsedMilliseconds.ToString() + " ms");
+            Debug.WriteLine(DateTime.Now + " USF: Time to import departments: " + stopwatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture) + " ms");
 #endif
         }
 
@@ -394,7 +400,7 @@ namespace UCosmic.Domain.External
                     }
                 }
 #endif
-                    /* Update status */
+                /* Update status */
                 {
                     long start = DateTime.Now.Ticks;
                     long duration = 0;
@@ -436,7 +442,7 @@ namespace UCosmic.Domain.External
             catch (Exception ex)
             {
                 Debug.WriteLine(DateTime.Now + " USF: Establishment hierarchy update FAILED. " + ex.Message);
-                throw ex;
+                throw;
             }
         }
     }

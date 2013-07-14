@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Security.Principal;
 using FluentValidation;
 using FluentValidation.Validators;
-using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Identity
 {
@@ -22,16 +22,19 @@ namespace UCosmic.Domain.Identity
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is string))
+            if (!(context.PropertyValue is string) && !(context.PropertyValue is IPrincipal))
                 throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on string properties", GetType().Name));
+                    "The {0} PropertyValidator can only operate on string and IPrincipal properties", GetType().Name));
 
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var name = (string)context.PropertyValue;
-            var user = _entities.Query<User>().ByName(name);
+            var userName = context.PropertyValue is IPrincipal
+                ? ((IPrincipal)context.PropertyValue).Identity.Name
+                : (string)context.PropertyValue;
+            var user = _entities.Query<User>().ByName(userName);
+
+            context.MessageFormatter.AppendArgument("PropertyValue", userName);
             var userId = _userId((T)context.Instance);
 
-            return (user != null) ? user.RevisionId != userId : false;
+            return (user != null) && user.RevisionId != userId;
         }
     }
 
@@ -39,6 +42,12 @@ namespace UCosmic.Domain.Identity
     {
         public static IRuleBuilderOptions<T, string> MustNotBeSameUser<T>
             (this IRuleBuilder<T, string> ruleBuilder, IQueryEntities entities, Func<T, int> userId)
+        {
+            return ruleBuilder.SetValidator(new MustNotBeSameUser<T>(entities, userId));
+        }
+
+        public static IRuleBuilderOptions<T, IPrincipal> MustNotBeSameUser<T>
+        (this IRuleBuilder<T, IPrincipal> ruleBuilder, IQueryEntities entities, Func<T, int> userId)
         {
             return ruleBuilder.SetValidator(new MustNotBeSameUser<T>(entities, userId));
         }

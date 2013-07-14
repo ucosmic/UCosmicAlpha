@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
-using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Identity
 {
@@ -24,10 +23,12 @@ namespace UCosmic.Domain.Identity
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Principal.Identity.Name)
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
-                .MustFindUserByName(entities)
+            RuleFor(x => x.Principal)
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+                .MustFindUserByPrincipal(entities)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustNotBeSameUser(entities, x => x.Id)
                     .WithMessage(MustNotBeSameUser<object>.FailMessageFormat, x => x.Principal.Identity.Name)

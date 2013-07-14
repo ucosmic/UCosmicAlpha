@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using UCosmic.Domain.InternationalAffiliations;
+using System.Linq;
 using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
 
-namespace UCosmic.Domain
+namespace UCosmic.Domain.InternationalAffiliation
 {
     public class InternationalAffiliation : RevisableEntity
     {

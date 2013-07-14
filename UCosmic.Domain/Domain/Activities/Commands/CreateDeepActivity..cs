@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Principal;
-using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
@@ -24,17 +23,14 @@ namespace UCosmic.Domain.Activities
 
     public class HandleCreateDeepActivityCommand : IHandleCommands<CreateDeepActivity>
     {
-        private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateMyNewActivity> _createMyNewActivity;
         private readonly IHandleCommands<CreateDeepActivityValues> _createActivityValuesDeep;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateDeepActivityCommand(ICommandEntities entities,
-                                               IUnitOfWork unitOfWork,
+        public HandleCreateDeepActivityCommand(IUnitOfWork unitOfWork,
                                                IHandleCommands<CreateMyNewActivity> createMyNewActivity,
                                                IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep)
         {
-            _entities = entities;
             _unitOfWork = unitOfWork;
             _createMyNewActivity = createMyNewActivity;
             _createActivityValuesDeep = createActivityValuesDeep;

@@ -7,7 +7,6 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers

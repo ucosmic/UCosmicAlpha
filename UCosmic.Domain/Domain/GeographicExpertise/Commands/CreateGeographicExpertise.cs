@@ -4,7 +4,7 @@ using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class CreateGeographicExpertise
     {
@@ -23,7 +23,7 @@ namespace UCosmic.Domain.GeographicExpertises
 
     public class ValidateCreateGeographicExpertiseCommand : AbstractValidator<CreateGeographicExpertise>
     {
-        public ValidateCreateGeographicExpertiseCommand(IQueryEntities entities)
+        public ValidateCreateGeographicExpertiseCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

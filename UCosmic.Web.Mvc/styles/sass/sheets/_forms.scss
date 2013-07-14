@@ -179,7 +179,7 @@ select.inline {
 }
 
 a.addLink{ 
-    padding: 5px 0px 0px 5px;
+    padding: 5px 0 0 5px;
     text-decoration: none !important;
     > i.green.plus {
         display: inline-block;
@@ -438,7 +438,7 @@ section {
         }
         .field-label-description {
             @include border-box;
-            padding: 0px 10px 0 0;
+            padding: 0 10px 0 0;
             float: left;
             color: grey;
             font-size: 14px;
@@ -497,8 +497,8 @@ section {
                 position: relative;
                 top: -10px;
                 left: -25px;
-                width: 0px;
-                height: 0px;
+                width: 0;
+                height: 0;
             }
         }
         

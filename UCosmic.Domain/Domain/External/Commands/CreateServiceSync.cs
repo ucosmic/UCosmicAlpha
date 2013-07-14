@@ -5,10 +5,6 @@ namespace UCosmic.Domain.External
 {
     public class CreateServiceSync
     {
-        public CreateServiceSync()
-        {
-        }
-
         public string Name { get; set; }
         public DateTime? ExternalSyncDate { get; set; }
         public DateTime? LastUpdateAttempt { get; set; }
@@ -22,7 +18,7 @@ namespace UCosmic.Domain.External
 
     public class ValidateCreateServiceSyncCommand : AbstractValidator<CreateServiceSync>
     {
-        public ValidateCreateServiceSyncCommand(IQueryEntities entities)
+        public ValidateCreateServiceSyncCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

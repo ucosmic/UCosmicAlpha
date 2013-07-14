@@ -27,13 +27,10 @@ namespace UCosmic.Domain.Activities
 
     public class HandleCreateDeepActivityValuesCommand : IHandleCommands<CreateDeepActivityValues>
     {
-        private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateActivityValues> _createActivityValues;
 
-        public HandleCreateDeepActivityValuesCommand(ICommandEntities entities,
-                                                     IHandleCommands<CreateActivityValues> createActivityValues )
+        public HandleCreateDeepActivityValuesCommand(IHandleCommands<CreateActivityValues> createActivityValues)
         {
-            _entities = entities;
             _createActivityValues = createActivityValues;
         }
 

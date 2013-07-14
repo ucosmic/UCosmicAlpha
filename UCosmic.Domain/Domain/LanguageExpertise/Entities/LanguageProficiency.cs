@@ -1,4 +1,4 @@
-﻿namespace UCosmic.Domain.LanguageExpertises
+﻿namespace UCosmic.Domain.LanguageExpertise
 {
     public static class LanguageProficiency
     {
@@ -29,7 +29,7 @@
             public string Description;
         };
 
-        public static ScaleEntry[] Scales =
+        public static readonly ScaleEntry[] Scales =
         {
             new ScaleEntry { Weight = 0, Proficiency = Proficiency.None, Description  = "No Proficiency" },
             new ScaleEntry { Weight = 1, Proficiency = Proficiency.Elementary, Description  = "Elementary Proficiency" },
@@ -45,7 +45,7 @@
             public string Description;
         }
 
-        public static Meaning[] ReadingMeanings =
+        public static readonly Meaning[] ReadingMeanings =
         {
             new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited understanding of words, announcements, phrases, and descriptions." },
@@ -55,7 +55,7 @@
             new Meaning { Proficiency = Proficiency.FunctionallyNative, Description = "Is equivalent to a well-educated native reader including full comprehension of archaic, technical and/or highly colloquial writing." }
         };
 
-        public static Meaning[] SpeakingMeanings =
+        public static readonly Meaning[] SpeakingMeanings =
         {
             new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited expression of basic courtesy wants and needs." },
@@ -65,7 +65,7 @@
             new Meaning { Proficiency = Proficiency.FunctionallyNative, Description = "Is functionally equivalent to that of a highly articulate native speaker and reflects the cultural standards of the country where the language is natively spoken." }
         };
 
-        public static Meaning[] ListeningMeanings =
+        public static readonly Meaning[] ListeningMeanings =
         {
             new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited understanding of basic survival needs." },
@@ -75,7 +75,7 @@
             new Meaning { Proficiency = Proficiency.FunctionallyNative, Description = "Has proficiency equivalent to a well-educated native listener and complete understanding of how a native thinker creates discourse." }
         };
 
-        public static Meaning[] WritingMeanings =
+        public static readonly Meaning[] WritingMeanings =
         {
             new Meaning { Proficiency = Proficiency.None, Description = "" },
             new Meaning { Proficiency = Proficiency.Elementary, Description = "Limited ability to convey basic practical needs about familiar topics." },

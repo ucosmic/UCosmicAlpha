@@ -1,4 +1,4 @@
-﻿using UCosmic.Domain.LanguageExpertises;
+﻿using UCosmic.Domain.LanguageExpertise;
 
 namespace UCosmic.EntityFramework
 {

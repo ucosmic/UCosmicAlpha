@@ -1,6 +1,6 @@
 ﻿using UCosmic.Domain.Places;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class GeographicExpertiseLocation : RevisableEntity
     {

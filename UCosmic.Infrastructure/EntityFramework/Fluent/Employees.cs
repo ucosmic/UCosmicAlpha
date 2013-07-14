@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity.ModelConfiguration;
+﻿using System.Data.Entity.ModelConfiguration;
 using UCosmic.Domain.Employees;
 
 namespace UCosmic.EntityFramework

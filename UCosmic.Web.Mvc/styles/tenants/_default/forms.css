@@ -206,7 +206,7 @@ select.inline {
   font-size: 14px; }
 
 a.addLink {
-  padding: 5px 0px 0px 5px;
+  padding: 5px 0 0 5px;
   text-decoration: none !important; }
   a.addLink > i.green.plus {
     display: inline-block;
@@ -367,9 +367,9 @@ section {
   margin-bottom: 40px; }
 
 .k-tooltip {
-  opacity: 1 !important;
-  background-color: white !important;
-  color: black !important; }
+  opacity: 1!important;
+  background-color: white!important;
+  color: black!important; }
 
 .field-table {
   margin: 16px 0; }
@@ -441,7 +441,7 @@ section {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      padding: 0px 10px 0 0;
+      padding: 0 10px 0 0;
       float: left;
       color: grey;
       font-size: 14px; }
@@ -499,8 +499,8 @@ section {
         position: relative;
         top: -10px;
         left: -25px;
-        width: 0px;
-        height: 0px; }
+        width: 0;
+        height: 0; }
     .field-table .field-row .field-column-left {
       float: left; }
     .field-table .field-row .field-column-right {

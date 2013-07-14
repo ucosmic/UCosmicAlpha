@@ -97,7 +97,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("{agreementId:int}/contact/{contactId:int}")]
-        public HttpResponseMessage PUT(int agreementId, int contactId)
+        public HttpResponseMessage Put(int agreementId, int contactId)
         {
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");

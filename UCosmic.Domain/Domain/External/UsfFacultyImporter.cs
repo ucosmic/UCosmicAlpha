@@ -3,8 +3,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Principal;
@@ -49,7 +49,7 @@ namespace UCosmic.Domain.External
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
-        private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
+        //private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
         private readonly IHandleCommands<UsfUpdateEstablishment> _updateUsfEstablishment;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
@@ -63,20 +63,20 @@ namespace UCosmic.Domain.External
                                   IProcessQueries queryProcessor,
                                   IHandleCommands<UpdateServiceSync> updateServiceSync,
                                   IHandleCommands<UpdateMyProfile> updateMyProfile,
-                                  IHandleCommands<CreateServiceSync> createServiceSync,
+                                  //IHandleCommands<CreateServiceSync> createServiceSync,
                                   IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
                                   IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment,
                                   IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy,
                                   IUnitOfWork unitOfWork,
-                                  ILogExceptions exceptionLogger,
-                                  IHandleCommands<SendEmailMessageCommand> sendEmailMessageHandler
+                                  ILogExceptions exceptionLogger
+                                  //IHandleCommands<SendEmailMessageCommand> sendEmailMessageHandler
             )
         {
             _entities = entities;
             _queryProcessor = queryProcessor;
             _updateServiceSync = updateServiceSync;
             _updateMyProfile = updateMyProfile;
-            _createServiceSync = createServiceSync;
+            //_createServiceSync = createServiceSync;
             _createUsfEstablishment = createUsfEstablishment;
             _updateUsfEstablishment = updateUsfEstablishment;
             _updateHierarchy = updateHierarchy;
@@ -120,7 +120,7 @@ namespace UCosmic.Domain.External
             }
 #else
             {
-                Record record = null;
+                Record record;
 
                 var serviceSync = _entities.Get<ServiceSync>().SingleOrDefault(s => s.Name == ServiceSyncName);
                 if (serviceSync == null)
@@ -132,9 +132,9 @@ namespace UCosmic.Domain.External
 
                 Debug.WriteLine(DateTime.Now + "ServiceSync Table Row:");
                 Debug.WriteLine("Name: " + serviceSync.Name);
-                Debug.WriteLine("ExternalSyncDate: " + (serviceSync.ExternalSyncDate.HasValue ? serviceSync.ExternalSyncDate.Value.ToString() : "NULL"));
-                Debug.WriteLine("LastUpdateAttempt: " + (serviceSync.LastUpdateAttempt.HasValue ? serviceSync.LastUpdateAttempt.Value.ToString() : "NULL"));
-                Debug.WriteLine("UpdateFailCount: " + (serviceSync.UpdateFailCount.HasValue ? serviceSync.UpdateFailCount.Value.ToString() : "NULL"));
+                Debug.WriteLine("ExternalSyncDate: " + (serviceSync.ExternalSyncDate.HasValue ? serviceSync.ExternalSyncDate.Value.ToString(CultureInfo.InvariantCulture) : "NULL"));
+                Debug.WriteLine("LastUpdateAttempt: " + (serviceSync.LastUpdateAttempt.HasValue ? serviceSync.LastUpdateAttempt.Value.ToString(CultureInfo.InvariantCulture) : "NULL"));
+                Debug.WriteLine("UpdateFailCount: " + (serviceSync.UpdateFailCount.HasValue ? serviceSync.UpdateFailCount.Value.ToString(CultureInfo.InvariantCulture) : "NULL"));
                 Debug.WriteLine("LastUpdateResult: " + serviceSync.LastUpdateResult);
 
                 Debug.Write(DateTime.Now + " Attempting to get service ticket...");
@@ -207,7 +207,7 @@ namespace UCosmic.Domain.External
                 }
 
                 /* Get the last activity date from the record */
-                DateTime? facultyInfoLastActivityDate = null;
+                DateTime? facultyInfoLastActivityDate;
                 if (!String.IsNullOrEmpty(record.LastActivityDate))
                 {
                     facultyInfoLastActivityDate = DateTime.Parse(record.LastActivityDate);
@@ -327,8 +327,8 @@ namespace UCosmic.Domain.External
                     {
                         ProfileRecord profile = record.Profiles[i];
 
-                        Establishment campus = null;
-                        Establishment college = null;
+                        Establishment campus;
+                        Establishment college;
                         Establishment department = null;
 
                         if (!String.IsNullOrEmpty(profile.DeptId))
@@ -428,7 +428,7 @@ namespace UCosmic.Domain.External
                         MiddleName = record.MiddleName,
                         LastName = record.LastName,
                         Suffix = record.Suffix,
-                        Gender = record.Gender[0].ToString().ToUpper(),
+                        Gender = record.Gender[0].ToString(CultureInfo.InvariantCulture).ToUpper(),
                         Affiliations = affiliations
                     };
                     _updateMyProfile.Handle(updateProfile);
@@ -561,13 +561,13 @@ namespace UCosmic.Domain.External
                     }
 
                     /* If the number of failures exceeds ignore count, send email */
-                    int importServiceFailIgnoreCount = 0;
+                    int importServiceFailIgnoreCount;
                     String importServiceFailIgnoreCountString =
                         ConfigurationManager.AppSettings["UsfImportServiceFailIgnoreCount"];
                     if (Int32.TryParse(importServiceFailIgnoreCountString, out importServiceFailIgnoreCount))
                     {
                         Debug.WriteLine(DateTime.Now + " USF: FailCount = " + updateFailCount);
-                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex.ToString());
+                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex);
                         if (updateFailCount > importServiceFailIgnoreCount)
                         {
                             _exceptionLogger.Log(ex);
@@ -575,7 +575,7 @@ namespace UCosmic.Domain.External
                     }
                     else
                     {
-                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex.ToString());
+                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex);
                         _exceptionLogger.Log(ex);
                     }
                 }
@@ -585,7 +585,7 @@ namespace UCosmic.Domain.External
                 }
             }
 
-        Exit: ;
+        Exit:
 
             Debug.WriteLine("End UsfFacultyImporter");
 

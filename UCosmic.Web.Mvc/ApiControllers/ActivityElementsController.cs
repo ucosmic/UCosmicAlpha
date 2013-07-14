@@ -28,14 +28,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [GET("activity-locations")]
-        public ICollection<ActivityLocationNameApiModel> GetActivityLocations()
+        public IEnumerable<ActivityLocationNameApiModel> GetActivityLocations()
         {
             var locations = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsCountry = true }));
             var water = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsWater = true }));
-            var global = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { WoeIds = new int[] { 1 } }));
+            var global = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { WoeIds = new[] { 1 } }));
             var regions = new List<Place>(_queryProcessor.Execute(new FilteredPlaces
             {
-                WoeIds = new int[]
+                WoeIds = new[]
                 {
                     24865670, // Africa
                     28289421, // Antarctic

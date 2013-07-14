@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 
-namespace UCosmic.Domain.GeographicExpertises
+namespace UCosmic.Domain.GeographicExpertise
 {
     public class UpdateGeographicExpertise
     {

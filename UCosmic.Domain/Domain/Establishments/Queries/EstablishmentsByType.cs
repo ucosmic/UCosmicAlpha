@@ -32,7 +32,6 @@ namespace UCosmic.Domain.Establishments
             return _entities.Query<Establishment>()
                             .EagerLoad(_entities, query.EagerLoad)
                             .Where(x => x.Type.CategoryCode == query.CategoryCode).ToArray();
-            ;
         }
     }
 }

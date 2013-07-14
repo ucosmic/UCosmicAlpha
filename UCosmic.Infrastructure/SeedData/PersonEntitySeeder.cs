@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
-using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
@@ -393,18 +392,18 @@ namespace UCosmic.SeedData
 
     public class AffiliationEntitySeeder : BaseAffiliationEntitySeeder
     {
-        private readonly ICommandEntities _entities;
+        //private readonly ICommandEntities _entities;
         //private readonly IHandleCommands<UpdateMyProfile> _updateProfile;
 
         public AffiliationEntitySeeder(IProcessQueries queryProcessor
-            , ICommandEntities entities
+            //, ICommandEntities entities
             , IHandleCommands<CreateMyAffiliation> createAffiliation
             //, IHandleCommands<UpdateMyProfile> updateProfile
             , IUnitOfWork unitOfWork
         )
             : base(queryProcessor, createAffiliation, unitOfWork)
         {
-            _entities = entities;
+            //_entities = entities;
             //_updateProfile = updateProfile;
         }
 

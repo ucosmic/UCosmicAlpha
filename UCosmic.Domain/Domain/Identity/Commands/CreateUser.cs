@@ -41,18 +41,17 @@ namespace UCosmic.Domain.Identity
                 .NotNull()
                     .WithMessage(MustNotHaveNullPrincipal.FailMessage)
 
-                // principal must be authorized to create user
-                .MustBeInAnyRole(RoleName.UserManagers)
-                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
-            ;
-            RuleFor(x => x.Principal.Identity.Name)
                 // principal.identity.name cannot be null or empty
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyPrincipalIdentityName.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
 
                 // principal.identity.name must match User.Name entity property
-                .MustFindUserByName(entities)
+                .MustFindUserByPrincipal(entities)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
+
+                    // principal must be authorized to create user
+                .MustBeInAnyRole(RoleName.UserManagers)
+                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
 
             RuleFor(x => x.Name)
@@ -117,14 +116,18 @@ namespace UCosmic.Domain.Identity
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProcessEvents _eventProcessor;
+        private readonly ILogExceptions _exceptionLogger;
 
-        public HandleCreateUserCommand( ICommandEntities entities,
-                                        IUnitOfWork unitOfWork,
-                                        IProcessEvents eventProcessor )
+        public HandleCreateUserCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            , IProcessEvents eventProcessor
+            , ILogExceptions exceptionLogger
+        )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
+            _exceptionLogger = exceptionLogger;
         }
 
         public void Handle(CreateUser command)
@@ -190,13 +193,14 @@ namespace UCosmic.Domain.Identity
              * want to make sure all actions complete before we consider a User
              * created.
              */
-            const int CreatedUserEventTimeoutMs = 360000;
+            const int createdUserEventTimeoutMs = 360000;
             try
             {
-                userCreatedEvent.Signal.WaitOne(CreatedUserEventTimeoutMs);
+                userCreatedEvent.Signal.WaitOne(createdUserEventTimeoutMs);
             }
-            catch
+            catch (Exception ex)
             {
+                _exceptionLogger.Log(ex);
             }
         }
     }
