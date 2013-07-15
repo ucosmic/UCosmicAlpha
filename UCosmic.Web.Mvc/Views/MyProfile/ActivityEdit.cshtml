@@ -4,15 +4,6 @@
     ViewBag.Title = "My International Activity";
 }
 
-@section styles
-{
-    <style>
-    h2 {
-        text-transform: uppercase;
-    }
-    </style>
-}
-
 @section scripts
 {
     @* include tinymce unbundled so it can find its plugins and other scripts internally when bundles are optimized *@
@@ -292,7 +283,7 @@
     <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
-            <img alt="thumbnail" data-bind="attr: { src: proxyImageSource, width: proxyWidth, height: proxyHeight }">
+            <img alt="thumbnail" data-bind="attr: { src: proxyImageSource }">
         </td>
         <!-- Title -->
         <td>

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
-using System.ServiceModel.Security;
 
 namespace UCosmic.Domain.Identity
 {
@@ -34,7 +33,7 @@ namespace UCosmic.Domain.Identity
             if (command == null) throw new ArgumentNullException("command");
 
             if (!command.Principal.IsInRole(RoleName.AuthorizationAgent))
-                throw new SecurityAccessDeniedException(string.Format(
+                throw new InvalidOperationException(string.Format(
                     "User '{0}' does not have privileges to invoke this function.",
                         command.Principal.Identity.Name));
 

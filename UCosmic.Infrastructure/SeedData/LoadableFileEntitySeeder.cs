@@ -78,7 +78,7 @@ namespace UCosmic.SeedData
 
         protected LoadableFile Seed(CreateLoadableActivityFile command)
         {
-            var existingEntity = _entities.Get<LoadableFile>().SingleOrDefault(x => x.FileName == command.FileName);
+            var existingEntity = _entities.Get<LoadableFile>().FirstOrDefault(x => x.FileName == command.FileName);
             if (existingEntity == null)
             {
                 using (var fileStream = File.OpenRead(string.Format("{0}{1}", BasePath, command.FileName)))

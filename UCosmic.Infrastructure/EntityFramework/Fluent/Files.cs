@@ -57,12 +57,4 @@ namespace UCosmic.EntityFramework
             Property(p => p.MimeType).IsRequired().HasMaxLength(256);
         }
     }
-
-    public class ProxyImageMimeTypeXRefOrm : EntityTypeConfiguration<ProxyImageMimeTypeXRef>
-    {
-        public ProxyImageMimeTypeXRefOrm()
-        {
-            ToTable(typeof(ProxyImageMimeTypeXRef).Name, DbSchemaName.Files);
-        }
-    }
 }

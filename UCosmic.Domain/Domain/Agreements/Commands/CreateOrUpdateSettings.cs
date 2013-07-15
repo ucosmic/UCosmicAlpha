@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
-using System.ServiceModel.Security;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
@@ -46,7 +45,7 @@ namespace UCosmic.Domain.Agreements
 
             // make sure user is authorized to update settings
             if (!command.Principal.IsInRole(RoleName.AgreementSupervisor))
-                throw new SecurityAccessDeniedException(string.Format(
+                throw new InvalidOperationException(string.Format(
                     "User '{0}' does not have privileges to invoke this function.",
                         command.Principal.Identity.Name));
 
@@ -74,7 +73,7 @@ namespace UCosmic.Domain.Agreements
                     };
 
             if (configuration.RevisionId != command.Id)
-                throw new SecurityAccessDeniedException(string.Format(
+                throw new InvalidOperationException(string.Format(
                     "User '{0}' does not own '{1}' with id '{2}'.",
                         command.Principal.Identity.Name,
                         typeof(AgreementSettings).Name,

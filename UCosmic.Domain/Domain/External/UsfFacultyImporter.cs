@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -560,22 +559,12 @@ namespace UCosmic.Domain.External
                         _unitOfWork.SaveChanges();
                     }
 
-                    /* If the number of failures exceeds ignore count, send email */
-                    int importServiceFailIgnoreCount;
-                    String importServiceFailIgnoreCountString =
-                        ConfigurationManager.AppSettings["UsfImportServiceFailIgnoreCount"];
-                    if (Int32.TryParse(importServiceFailIgnoreCountString, out importServiceFailIgnoreCount))
+                    // do not ignore any exceptions
+                    const int importServiceFailIgnoreCount = 0;
+                    Debug.WriteLine(DateTime.Now + " USF: FailCount = " + updateFailCount);
+                    Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex);
+                    if (updateFailCount > importServiceFailIgnoreCount)
                     {
-                        Debug.WriteLine(DateTime.Now + " USF: FailCount = " + updateFailCount);
-                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex);
-                        if (updateFailCount > importServiceFailIgnoreCount)
-                        {
-                            _exceptionLogger.Log(ex);
-                        }
-                    }
-                    else
-                    {
-                        Debug.WriteLine(DateTime.Now + " USF: ERROR " + ex);
                         _exceptionLogger.Log(ex);
                     }
                 }

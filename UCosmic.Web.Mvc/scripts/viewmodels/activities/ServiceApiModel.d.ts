@@ -57,8 +57,6 @@ module Service.ApiModels {
         id: KnockoutObservableNumber;
         fileId: KnockoutObservableNumber;
         imageId: KnockoutObservableNumber;
-        proxyWidth: KnockoutObservableNumber;
-        proxyHeight: KnockoutObservableNumber;
         title: KnockoutObservableString;
         visible: KnockoutObservableBool;
         fileExt: KnockoutObservableString;

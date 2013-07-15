@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
-using System.ServiceModel.Security;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
@@ -35,7 +34,7 @@ namespace UCosmic.Domain.Agreements
                 case AgreementVisibility.Public:
                     // when user is public and agreement is not public, something went wrong
                     if (agreement.Visibility != AgreementVisibility.Public)
-                        throw new SecurityAccessDeniedException(string.Format(
+                        throw new InvalidOperationException(string.Format(
                             "User '{0}' is not authorized to view this agreement.", principal.Identity.Name));
 
                     // when user is public and agreement is public, obfuscate protected & private data
@@ -51,7 +50,7 @@ namespace UCosmic.Domain.Agreements
                 case AgreementVisibility.Protected:
                     // when user is protected and agreement is private, something went wrong
                     if (agreement.Visibility == AgreementVisibility.Private)
-                        throw new SecurityAccessDeniedException(string.Format(
+                        throw new InvalidOperationException(string.Format(
                             "User '{0}' is not authorized to view this agreement.", principal.Identity.Name));
 
                     // when user is protected and agreement is not private, hide private data

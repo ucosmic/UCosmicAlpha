@@ -550,8 +550,12 @@ var App;
                     }
                     Documents.validateFileExtensions = validateFileExtensions;
                     (function (Thumbnail) {
-                        function get(activityId, documentId) {
-                            return makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
+                        function get(activityId, documentId, params) {
+                            var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
+                            if(params) {
+                                url += '?' + $.param(params);
+                            }
+                            return url;
                         }
                         Thumbnail.get = get;
                     })(Documents.Thumbnail || (Documents.Thumbnail = {}));

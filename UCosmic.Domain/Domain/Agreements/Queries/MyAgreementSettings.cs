@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
-using System.ServiceModel.Security;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
@@ -42,7 +41,7 @@ namespace UCosmic.Domain.Agreements
 
             // make sure user is authorized to view settings
             if (!query.Principal.IsInAnyRole(RoleName.AgreementManagers))
-                throw new SecurityAccessDeniedException(string.Format(
+                throw new InvalidOperationException(string.Format(
                     "User '{0}' does not have privileges to invoke this function.",
                         query.Principal.Identity.Name));
 

@@ -23,6 +23,8 @@ module ViewModels.Activities {
     // ================================================================================
     export class Activity implements Service.ApiModels.IObservableActivity {
 
+        private static iconMaxSide: number = 64;
+
         /* Array of all locations offered in Country/Location multiselect. */
         locations: KnockoutObservableArray = ko.observableArray();
 
@@ -108,7 +110,7 @@ module ViewModels.Activities {
 
             $( "#" + countrySelectorId ).kendoMultiSelect( {
                 filter: 'contains',
-                ignoreCase: true,
+                ignoreCase: 'true',
                 dataTextField: "officialName()",
                 dataValueField: "id()",
                 dataSource: this.locations(),
@@ -471,7 +473,7 @@ module ViewModels.Activities {
                               {
                                   var augmentedDocumentModel = function ( data ) {
                                       ko.mapping.fromJS( data, {}, this );
-                                      this.proxyImageSource = ko.observable( App.Routes.WebApi.Activities.Documents.Thumbnail.get( this.id(), data.id ) );
+                                      this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, { maxSide: Activity.iconMaxSide }));
                                   };
 
                                   var mapping = {
@@ -960,7 +962,7 @@ module ViewModels.Activities {
                     /* TBD - This needs to be combined with the initial load mapping. */
                     var augmentedDocumentModel = function ( data ) {
                         ko.mapping.fromJS( data, {}, this );
-                        this.proxyImageSource = ko.observable( App.Routes.WebApi.Activities.Documents.Thumbnail.get( this.id(), data.id ) );
+                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, { maxSide: Activity.iconMaxSide }));
                     };
 
                     var mapping = {

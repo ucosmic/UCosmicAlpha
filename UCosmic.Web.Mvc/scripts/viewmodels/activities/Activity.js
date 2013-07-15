@@ -16,6 +16,7 @@ var ViewModels;
                 this.saving = false;
                 this._initialize(activityId);
             }
+            Activity.iconMaxSide = 64;
             Activity.prototype._initialize = function (activityId) {
                 var _this = this;
                 this.id = ko.observable(activityId);
@@ -39,7 +40,7 @@ var ViewModels;
                 });
                 $("#" + countrySelectorId).kendoMultiSelect({
                     filter: 'contains',
-                    ignoreCase: true,
+                    ignoreCase: 'true',
                     dataTextField: "officialName()",
                     dataValueField: "id()",
                     dataSource: this.locations(),
@@ -218,7 +219,9 @@ var ViewModels;
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id));
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, {
+                                maxSide: Activity.iconMaxSide
+                            }));
                         };
                         var mapping = {
                             'documents': {
@@ -553,7 +556,9 @@ var ViewModels;
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id));
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, {
+                                maxSide: Activity.iconMaxSide
+                            }));
                         };
                         var mapping = {
                             create: function (options) {

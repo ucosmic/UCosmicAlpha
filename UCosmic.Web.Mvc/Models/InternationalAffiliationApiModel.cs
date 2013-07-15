@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
-using UCosmic.Domain;
 using UCosmic.Domain.InternationalAffiliation;
 using UCosmic.Domain.Places;
 

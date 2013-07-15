@@ -26,6 +26,7 @@ module ViewModels.Activities
     // ================================================================================
     export class ActivityList implements KnockoutValidationGroup
     {
+        private static iconMaxSide: number = 64;
 
         activityLocationsList: Service.ApiModels.IActivityLocation[];
         activityTypesList: Service.ApiModels.IEmployeeActivityType[];
@@ -99,7 +100,7 @@ module ViewModels.Activities
                     {
                         var augmentedDocumentModel = function ( data ) {
                             ko.mapping.fromJS( data, {}, this );
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get( this.id(), data.id );
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, { maxSide: ActivityList.iconMaxSide });
                         };
 
                         var mapping = {

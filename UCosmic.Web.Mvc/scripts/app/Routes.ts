@@ -488,8 +488,10 @@ module App.Routes {
                 }
 
                 export module Thumbnail {
-                    export function get (activityId: number, documentId: number): string {
-                        return makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
+                    export function get (activityId: number, documentId: number, params?: any): string {
+                        var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
+                        if (params) url += '?' + $.param(params);
+                        return url;
                     }
                 }
             }

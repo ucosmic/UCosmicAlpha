@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Activities;
@@ -80,8 +79,8 @@ namespace UCosmic.Web.Mvc.Models
         public int Id { get; set; }
         public int? FileId { get; set; }
         public int? ImageId { get; set; }
-        public int ProxyWidth { get; set; }
-        public int ProxyHeight { get; set; }
+        //public int ProxyWidth { get; set; }
+        //public int ProxyHeight { get; set; }
         public bool Visible { get; set; }
         public string Title { get; set; }
         public string Extension { get; set; }
@@ -140,16 +139,12 @@ namespace UCosmic.Web.Mvc.Models
                                o => o.MapFrom(s => (s.File != null) ? s.FileId : null))
                     .ForMember(d => d.ImageId,
                                o => o.MapFrom(s => (s.Image != null) ? s.ImageId : null))
-                    .ForMember(d => d.ProxyWidth,
-                               o => o.UseValue(ConfigurationManager.AppSettings["ProxyImageWidth"]))
-                    .ForMember(d => d.ProxyHeight,
-                               o => o.UseValue(ConfigurationManager.AppSettings["ProxyImageHeight"]))
                     .ForMember(d => d.Title,
                                o => o.MapFrom(s => s.Title ?? ((s.File != null) ? s.File.Title : s.Image.Title)))
                     .ForMember(d => d.Extension,
                                o => o.MapFrom(s => (s.File != null) ? s.File.Extension : s.Image.Extension))
                     .ForMember(d => d.Size,
-                               o => o.MapFrom(s => (s.File != null) ? s.File.Length.ToFileSize() : s.Image.Size.ToFileSize()))
+                               o => o.MapFrom(s => (s.File != null) ? s.File.Length.ToFileSize() : s.Image.Length.ToFileSize()))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
                     ;

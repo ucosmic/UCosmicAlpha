@@ -10,6 +10,7 @@ var ViewModels;
             function ActivityList(personId) {
                 this.personId = personId;
             }
+            ActivityList.iconMaxSide = 64;
             ActivityList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -47,7 +48,9 @@ var ViewModels;
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id);
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, {
+                                maxSide: ActivityList.iconMaxSide
+                            });
                         };
                         var mapping = {
                             'documents': {

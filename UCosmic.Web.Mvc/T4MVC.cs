@@ -3599,6 +3599,21 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class files {
+                private const string URLPATH = "~/images/icons/files";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string doc_png = Url("doc.png");
+                public static readonly string docx_png = Url("docx.png");
+                public static readonly string pdf_png = Url("pdf.png");
+                public static readonly string ppt_png = Url("ppt.png");
+                public static readonly string pptx_png = Url("pptx.png");
+                public static readonly string unknown_png = Url("unknown.png");
+                public static readonly string xls_png = Url("xls.png");
+                public static readonly string xlsx_png = Url("xlsx.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class help {
                 private const string URLPATH = "~/images/icons/help";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

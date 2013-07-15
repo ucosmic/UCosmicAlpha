@@ -283,8 +283,9 @@
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="ApiControllers\ActivitiesController.cs" />
-    <Compile Include="ApiControllers\ActivityElementsController.cs" />
+    <Compile Include="ApiControllers\Activities\ActivitiesController.cs" />
+    <Compile Include="ApiControllers\Activities\ActivityElementsController.cs" />
+    <Compile Include="ApiControllers\Activities\ActivityDocumentsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementFileUploadsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
@@ -794,6 +795,14 @@
     <None Include="scripts\ko\knockout-2.2.d.ts" />
     <None Include="scripts\ko\knockout.mapping-2.0.d.ts" />
     <None Include="scripts\modernizr\modernizr-2.6.d.ts" />
+    <Content Include="images\icons\files\doc.png" />
+    <Content Include="images\icons\files\docx.png" />
+    <Content Include="images\icons\files\pdf.png" />
+    <Content Include="images\icons\files\ppt.png" />
+    <Content Include="images\icons\files\pptx.png" />
+    <Content Include="images\icons\files\unknown.png" />
+    <Content Include="images\icons\files\xls.png" />
+    <Content Include="images\icons\files\xlsx.png" />
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
