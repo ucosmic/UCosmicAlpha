@@ -1,55 +1,62 @@
-﻿using UCosmic.Domain.Files;
+﻿using System;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityDocument : RevisableEntity
+    public class ActivityDocument : RevisableEntity, IEquatable<ActivityDocument>
     {
-        protected bool Equals(ActivityDocument other)
+        internal const string PathFormat = "/activity-documents/{0}/{1}";
+
+        protected internal ActivityDocument()
         {
-            return FileId == other.FileId &&
-                   ImageId == other.ImageId &&
-                   string.Equals(ModeText, other.ModeText) &&
-                   Visible.Equals(other.Visible) &&
-                   string.Equals(Title, other.Title);
+            Mode = ActivityMode.Draft;
+        }
+
+        public virtual ActivityValues ActivityValues { get; protected internal set; }
+        public int ActivityValuesId { get; protected internal set; }
+
+        public string FileName { get; protected internal set; }
+        public string MimeType { get; protected internal set; }
+        public string Path { get; protected internal set; }
+        public int Length { get; protected internal set; }
+
+        public string ModeText { get; protected set; }
+        public ActivityMode Mode
+        {
+            get { return ModeText.AsEnum<ActivityMode>(); }
+            protected internal set { ModeText = value.AsSentenceFragment(); }
+        }
+
+        public string Title { get; protected internal set; }
+
+        public bool Equals(ActivityDocument other)
+        {
+            return other != null &&
+                string.Equals(MimeType, other.MimeType) &&
+                string.Equals(FileName, other.FileName) &&
+                string.Equals(Length, other.Length) &&
+                string.Equals(Path, other.Path) &&
+                string.Equals(ModeText, other.ModeText) &&
+                string.Equals(Title, other.Title);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            //if (obj.GetType() != this.GetType()) return false;
-            return Equals((ActivityDocument) obj);
+            return ReferenceEquals(this, obj) || Equals(obj as ActivityDocument);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                int hashCode = FileId.GetHashCode();
-                hashCode = (hashCode*397) ^ ImageId.GetHashCode();
-                hashCode = (hashCode*397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ Visible.GetHashCode();
-                hashCode = (hashCode*397) ^ (Title != null ? Title.GetHashCode() : 0);
+                var hashCode = Length.GetHashCode();
+                hashCode = (hashCode * 397) ^ (FileName != null ? FileName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (MimeType != null ? MimeType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Path != null ? Path.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Title != null ? Title.GetHashCode() : 0);
                 return hashCode;
             }
         }
-
-        public virtual ActivityValues ActivityValues { get; protected internal set; }
-        public int ActivityValuesId { get; protected internal set; }
-
-        public virtual LoadableFile File { get; protected internal set; }
-        public int? FileId { get; protected internal set; }
-
-        public virtual Image Image { get; protected internal set; }
-        public int? ImageId { get; protected internal set; }
-
-        private ActivityMode _mode;
-        public string ModeText { get { return _mode.AsSentenceFragment(); }
-                                 set { _mode = value.AsEnum<ActivityMode>(); } }
-        public ActivityMode Mode { get { return _mode; }
-                                   set { _mode = value; } }
-
-        public string Title { get; protected internal set; }
-        public bool Visible { get; protected internal set; }
     }
 }

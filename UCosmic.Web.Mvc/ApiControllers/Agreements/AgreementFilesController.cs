@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -77,7 +76,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var file = _binaryData.Get(entity.Path);
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StreamContent(new MemoryStream(file)),
+                Content = new ByteArrayContent(file),
             };
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(fileName.GetContentType());
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline")

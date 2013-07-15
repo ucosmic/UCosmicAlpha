@@ -55,10 +55,8 @@ module Service.ApiModels {
     export interface IObservableActivityDocument
     {
         id: KnockoutObservableNumber;
-        fileId: KnockoutObservableNumber;
-        imageId: KnockoutObservableNumber;
+        activityId: KnockoutObservableNumber;
         title: KnockoutObservableString;
-        visible: KnockoutObservableBool;
         fileExt: KnockoutObservableString;
         size: KnockoutObservableString;
     }

@@ -152,7 +152,7 @@ namespace UCosmic.Domain.Activities
         public virtual ICollection<ActivityLocation> Locations { get; protected internal set; }
         public virtual ICollection<ActivityType> Types { get; protected internal set; }
         public virtual ICollection<ActivityTag> Tags { get; protected internal set; }
-        public virtual ICollection<ActivityDocument> Documents { get; protected internal set; }
+        public virtual ICollection<ActivityDocument> Documents { get; set; } // TODO: make this protected internal
         private ActivityMode _mode;
         public string ModeText { get { return _mode.AsSentenceFragment(); } set { _mode = value.AsEnum<ActivityMode>(); } }
         public ActivityMode Mode { get { return _mode; } set { _mode = value; } }

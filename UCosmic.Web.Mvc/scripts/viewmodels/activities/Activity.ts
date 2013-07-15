@@ -473,7 +473,7 @@ module ViewModels.Activities {
                               {
                                   var augmentedDocumentModel = function ( data ) {
                                       ko.mapping.fromJS( data, {}, this );
-                                      this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, { maxSide: Activity.iconMaxSide }));
+                                      this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
                                   };
 
                                   var mapping = {
@@ -962,7 +962,7 @@ module ViewModels.Activities {
                     /* TBD - This needs to be combined with the initial load mapping. */
                     var augmentedDocumentModel = function ( data ) {
                         ko.mapping.fromJS( data, {}, this );
-                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, { maxSide: Activity.iconMaxSide }));
+                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
                     };
 
                     var mapping = {

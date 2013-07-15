@@ -8,9 +8,19 @@ namespace UCosmic.Domain.Activities
 {
     public class UpdateActivityValues
     {
-        public IPrincipal Principal { get; protected set; }
-        public int Id { get; protected set; }
-        public DateTime UpdatedOn { get; protected set; }
+        public UpdateActivityValues(IPrincipal principal, int id, DateTime updatedOn)
+        {
+            if (principal == null) { throw new ArgumentNullException("principal"); }
+
+            Principal = principal;
+            Id = id;
+            UpdatedOn = updatedOn.ToUniversalTime();
+            DateFormat = "MM/dd/yyyy";
+        }
+
+        public IPrincipal Principal { get; private set; }
+        public int Id { get; private set; }
+        public DateTime UpdatedOn { get; private set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
@@ -25,17 +35,6 @@ namespace UCosmic.Domain.Activities
         public virtual ICollection<ActivityTag> Tags { get; set; }
         public virtual ICollection<ActivityDocument> Documents { get; set; }
         public bool NoCommit { get; set; }
-
-        public UpdateActivityValues(IPrincipal principal, int id, DateTime updatedOn)
-        {
-            if (principal == null) { throw new ArgumentNullException("principal"); }
-            if (updatedOn == null) { throw new ArgumentNullException("updatedOn"); }
-
-            Principal = principal;
-            Id = id;
-            UpdatedOn = updatedOn.ToUniversalTime();
-            DateFormat = "MM/dd/yyyy";
-        }
     }
 
     public class HandleUpdateActivityValuesCommand : IHandleCommands<UpdateActivityValues>
@@ -43,10 +42,8 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
-        //private readonly IHandleCommands<UpdateActivityLocation> _updateActivityLocation;
         private readonly IHandleCommands<DeleteActivityLocation> _deleteActivityLocation;
         private readonly IHandleCommands<CreateActivityType> _createActivityType;
-        //private readonly IHandleCommands<UpdateActivityType> _updateActivityType;
         private readonly IHandleCommands<DeleteActivityType> _deleteActivityType;
         private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
         private readonly IHandleCommands<DeleteActivityTag> _deleteActivityTag;
@@ -57,10 +54,8 @@ namespace UCosmic.Domain.Activities
         public HandleUpdateActivityValuesCommand(ICommandEntities entities,
                                                  IUnitOfWork unitOfWork,
                                                  IHandleCommands<CreateActivityLocation> createActivityLocation,
-                                                 //IHandleCommands<UpdateActivityLocation> updateActivityLocation,
                                                  IHandleCommands<DeleteActivityLocation> deleteActivityLocation,
                                                  IHandleCommands<CreateActivityType> createActivityType,
-                                                 //IHandleCommands<UpdateActivityType> updateActivityType,
                                                  IHandleCommands<DeleteActivityType> deleteActivityType,
                                                  IHandleCommands<CreateActivityTag> createActivityTag,
                                                  IHandleCommands<DeleteActivityTag> deleteActivityTag,            
@@ -71,10 +66,8 @@ namespace UCosmic.Domain.Activities
             _entities = entities;
             _unitOfWork = unitOfWork;
             _createActivityLocation = createActivityLocation;
-            //_updateActivityLocation = updateActivityLocation;
             _deleteActivityLocation = deleteActivityLocation;
             _createActivityType = createActivityType;
-            //_updateActivityType = updateActivityType;
             _deleteActivityType = deleteActivityType;
             _createActivityTag = createActivityTag;
             _deleteActivityTag= deleteActivityTag;
@@ -255,13 +248,9 @@ namespace UCosmic.Domain.Activities
             {
                 ActivityDocument targetDocument = null;
 
-                if (document.FileId.HasValue)
+                if (!string.IsNullOrWhiteSpace(document.Path))
                 {
-                    targetDocument = target.Documents.SingleOrDefault(x => x.FileId == document.FileId);
-                }
-                else if (document.ImageId.HasValue)
-                {
-                    targetDocument = target.Documents.SingleOrDefault(x => x.ImageId == document.ImageId);
+                    targetDocument = target.Documents.SingleOrDefault(x => document.Path.Equals(x.Path));
                 }
 
                 if (targetDocument == null)
@@ -269,12 +258,13 @@ namespace UCosmic.Domain.Activities
                     var createActivityDocument = new CreateActivityDocument(command.Principal)
                     {
                         ActivityValuesId = target.RevisionId,
-                        FileId = document.FileId,
-                        ImageId = document.ImageId,
+                        FileName = document.FileName,
+                        MimeType = document.MimeType,
+                        Path = document.Path,
+                        Length = document.Length,
                         Mode = command.Mode,
                         Title = document.Title,
-                        Visible = document.Visible,
-                        NoCommit = true
+                        NoCommit = true,
                     };
                     _createActivityDocument.Handle(createActivityDocument);
                 }
@@ -284,11 +274,8 @@ namespace UCosmic.Domain.Activities
                                                                             targetDocument.RevisionId,
                                                                             command.UpdatedOn)
                     {
-                        FileId = document.FileId,
-                        ImageId = document.ImageId,
                         Mode = command.Mode,
                         Title = document.Title,
-                        Visible = document.Visible,
                         NoCommit = true
                     };
                     _updateActivityDocument.Handle(updateActivityDocument);
@@ -297,16 +284,7 @@ namespace UCosmic.Domain.Activities
 
             foreach (var document in target.Documents.ToList())
             {
-                ActivityDocument updateDocument = null;
-
-                if (document.FileId.HasValue)
-                {
-                    updateDocument = command.Documents.SingleOrDefault(x => x.FileId == document.FileId);
-                }
-                else if (document.ImageId.HasValue)
-                {
-                    updateDocument = command.Documents.SingleOrDefault(x => x.ImageId == document.ImageId);
-                }
+                ActivityDocument updateDocument = command.Documents.SingleOrDefault(x => x.Path == document.Path);
 
                 if (updateDocument == null)
                 {

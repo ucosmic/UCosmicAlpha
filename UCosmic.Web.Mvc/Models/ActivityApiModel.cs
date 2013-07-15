@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Activities;
@@ -76,12 +77,8 @@ namespace UCosmic.Web.Mvc.Models
 
     public class ActivityDocumentApiModel
     {
+        public int ActivityId { get; set; }
         public int Id { get; set; }
-        public int? FileId { get; set; }
-        public int? ImageId { get; set; }
-        //public int ProxyWidth { get; set; }
-        //public int ProxyHeight { get; set; }
-        public bool Visible { get; set; }
         public string Title { get; set; }
         public string Extension { get; set; }
         public string Size { get; set; }
@@ -135,19 +132,13 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<ActivityDocument, ActivityDocumentApiModel>()
                     .ForMember(d => d.Id,
                                o => o.MapFrom(s => s.RevisionId))
-                    .ForMember(d => d.FileId,
-                               o => o.MapFrom(s => (s.File != null) ? s.FileId : null))
-                    .ForMember(d => d.ImageId,
-                               o => o.MapFrom(s => (s.Image != null) ? s.ImageId : null))
-                    .ForMember(d => d.Title,
-                               o => o.MapFrom(s => s.Title ?? ((s.File != null) ? s.File.Title : s.Image.Title)))
-                    .ForMember(d => d.Extension,
-                               o => o.MapFrom(s => (s.File != null) ? s.File.Extension : s.Image.Extension))
-                    .ForMember(d => d.Size,
-                               o => o.MapFrom(s => (s.File != null) ? s.File.Length.ToFileSize() : s.Image.Length.ToFileSize()))
+                    .ForMember(d => d.ActivityId,
+                               o => o.MapFrom(s => s.ActivityValues.ActivityId))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
+                    .ForMember(d => d.Extension, o => o.MapFrom(s => Path.GetExtension(s.FileName).Substring(1)))
+                    .ForMember(d => d.Size, o => o.MapFrom(s => s.Length))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
-                    ;
+                ;
 
                 CreateMap<ActivityType, ActivityTypeApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
@@ -199,81 +190,6 @@ namespace UCosmic.Web.Mvc.Models
 
         public class ModelToEntityProfile : Profile
         {
-            //public class LoadableFileResolver : ValueResolver<ActivityDocumentApiModel, LoadableFile>
-            //{
-            //    private readonly IQueryEntities _entities;
-
-            //    public LoadableFileResolver(IQueryEntities entities)
-            //    {
-            //        _entities = entities;
-            //    }
-
-            //    protected override LoadableFile ResolveCore(ActivityDocumentApiModel source)
-            //    {
-            //        return (source.FileId != null) ? _entities.Query<LoadableFile>().SingleOrDefault(x => x.Id == source.FileId) : null;
-            //    }
-            //}
-
-            //public class ImageResolver : ValueResolver<ActivityDocumentApiModel, Image>
-            //{
-            //    private readonly IQueryEntities _entities;
-
-            //    public ImageResolver(IQueryEntities entities)
-            //    {
-            //        _entities = entities;
-            //    }
-
-            //    protected override Image ResolveCore(ActivityDocumentApiModel source)
-            //    {
-            //        return (source.ImageId != null) ? _entities.Query<Image>().SingleOrDefault(x => x.Id == source.ImageId) : null;
-            //    }
-            //}
-
-            //public class TypeResolver : ValueResolver<ActivityTypeApiModel, ActivityType>
-            //{
-            //    private readonly IQueryEntities _entities;
-
-            //    public TypeResolver(IQueryEntities entities)
-            //    {
-            //        _entities = entities;
-            //    }
-
-            //    protected override ActivityType ResolveCore(ActivityTypeApiModel source)
-            //    {
-            //        return _entities.Query<ActivityType>().SingleOrDefault(x => x.RevisionId == source.TypeId);
-            //    }
-            //}
-
-            //public class PlaceResolver : ValueResolver<ActivityLocationApiModel, Place>
-            //{
-            //    private readonly IQueryEntities _entities;
-
-            //    public PlaceResolver(IQueryEntities entities)
-            //    {
-            //        _entities = entities;
-            //    }
-
-            //    protected override Place ResolveCore(ActivityLocationApiModel source)
-            //    {
-            //        return (source.PlaceId != 0) ? _entities.Query<Place>().SingleOrDefault(x => x.RevisionId == source.PlaceId) : null;
-            //    }
-            //}
-
-            //public class PersonResolver : ValueResolver<ActivityApiModel, Person>
-            //{
-            //    private readonly IQueryEntities _entities;
-
-            //    public PersonResolver(IQueryEntities entities)
-            //    {
-            //        _entities = entities;
-            //    }
-
-            //    protected override Person ResolveCore(ActivityApiModel source)
-            //    {
-            //        return (source.PersonId != 0) ? _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == source.PersonId) : null;
-            //    }
-            //}
-
             public class ActivityValuesResolver : ValueResolver<ActivityApiModel, ICollection<ActivityValues>>
             {
                 protected override ICollection<ActivityValues> ResolveCore(ActivityApiModel source)
@@ -289,12 +205,10 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Mode, o => o.Ignore())
-                    //.ForMember(d => d.File, o => o.ResolveUsing<LoadableFileResolver>())
-                    .ForMember(d => d.File, o => o.Ignore())
-                    .ForMember(d => d.FileId, o => o.MapFrom( s => s.FileId))
-                    //.ForMember(d => d.Image, o => o.ResolveUsing<ImageResolver>())
-                    .ForMember(d => d.Image, o => o.Ignore())
-                    .ForMember(d => d.ImageId, o => o.MapFrom(s => s.ImageId))
+                    .ForMember(d => d.FileName, o => o.Ignore())
+                    .ForMember(d => d.MimeType, o => o.Ignore())
+                    .ForMember(d => d.Length, o => o.MapFrom(s => s.Size))
+                    .ForMember(d => d.Path, o => o.Ignore())
                     .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.EntityId, o => o.Ignore())
                     .ForMember(d => d.ActivityValues, o => o.Ignore())
@@ -310,7 +224,6 @@ namespace UCosmic.Web.Mvc.Models
 
                 CreateMap<ActivityTypeApiModel, ActivityType>()
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
-                    //.ForMember(d => d.Type, o => o.ResolveUsing<TypeResolver>())
                     .ForMember(d => d.Type, o => o.Ignore())
                     .ForMember(d => d.TypeId, o => o.MapFrom(s => s.TypeId))
                     .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
@@ -348,7 +261,6 @@ namespace UCosmic.Web.Mvc.Models
 
                 CreateMap<ActivityLocationApiModel, ActivityLocation>()
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
-                    //.ForMember(d => d.Place, o => o.ResolveUsing<PlaceResolver>())
                     .ForMember(d => d.Place, o => o.Ignore())
                     .ForMember(d => d.PlaceId, o => o.MapFrom(s => s.PlaceId))
                     .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
@@ -385,7 +297,6 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Mode, o => o.Ignore())
-                     //.ForMember(d => d.Person, o => o.ResolveUsing<PersonResolver>())
                     .ForMember(d => d.Person, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.PersonId))
                     .ForMember(d => d.Values, o => o.ResolveUsing<ActivityValuesResolver>())

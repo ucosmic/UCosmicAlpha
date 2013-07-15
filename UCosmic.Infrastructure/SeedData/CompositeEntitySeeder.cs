@@ -22,8 +22,6 @@
         private readonly EmployeeEntitySeeder _employeeEntitySeeder;
         private readonly AffiliationEntitySeeder _myAffiliationEntitySeeder;
         private readonly ActivityEntitySeeder _activityEntitySeeder;
-        private readonly LoadableFileEntitySeeder _loadableFileEntitySeeder;
-        private readonly ImageEntitySeeder _imageEntitySeeder;
         private readonly DegreeEntitySeeder _degreeEntitySeeder;
         private readonly GeographicExpertiseEntitySeeder _geographicExpertiseEntitySeeder;
         private readonly LanguageExpertiseEntitySeeder _languageExpertiseEntitySeeder;
@@ -49,8 +47,6 @@
             , AffiliationEntitySeeder myAffiliationEntitySeeder
             , EmployeeEntitySeeder employeeEntitySeeder
             , ActivityEntitySeeder activityEntitySeeder
-            , LoadableFileEntitySeeder loadableFileEntitySeeder
-            , ImageEntitySeeder imageEntitySeeder
             , DegreeEntitySeeder degreeEntitySeeder
             , GeographicExpertiseEntitySeeder geographicExpertiseEntitySeeder
             , LanguageExpertiseEntitySeeder languageExpertiseEntitySeeder
@@ -77,8 +73,6 @@
             _agreementSettingsEntitySeeder = agreementSettingsEntitySeeder;
             _myAffiliationEntitySeeder = myAffiliationEntitySeeder;
             _activityEntitySeeder = activityEntitySeeder;
-            _loadableFileEntitySeeder = loadableFileEntitySeeder;
-            _imageEntitySeeder = imageEntitySeeder;
             _degreeEntitySeeder = degreeEntitySeeder;
             _geographicExpertiseEntitySeeder = geographicExpertiseEntitySeeder;
             _languageExpertiseEntitySeeder = languageExpertiseEntitySeeder;
@@ -96,8 +90,6 @@
 
             /* Note these lines are order dependent. */
             _roleEntitySeeder.Seed();
-            _imageEntitySeeder.Seed();
-            _loadableFileEntitySeeder.Seed();
             _establishmentEntitySeeder.Seed();
 
             _emailTemplateEntitySeeder.Seed();

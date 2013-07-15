@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,29 +25,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class ActivityDocumentsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IStoreBinaryData _binaryData;
         private readonly IValidator<CreateImage> _validateImage;
-        private readonly IHandleCommands<CreateImage> _createImage;
         private readonly IValidator<CreateLoadableActivityFile> _validateLoadableFile;
-        private readonly IHandleCommands<CreateLoadableActivityFile> _createLoadableFile;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
 
         public ActivityDocumentsController(IProcessQueries queryProcessor
+                                  , IStoreBinaryData binaryData
                                   , IValidator<CreateImage> validateImage
-                                  , IHandleCommands<CreateImage> createImage
                                   , IValidator<CreateLoadableActivityFile> validateLoadableFile
-                                  , IHandleCommands<CreateLoadableActivityFile> createLoadableFile
                                   , IHandleCommands<CreateActivityDocument> createActivityDocument
-                                  , IHandleCommands<DeleteActivityDocument> deleteActivityDocument 
+                                  , IHandleCommands<DeleteActivityDocument> deleteActivityDocument
                                   , IHandleCommands<RenameActivityDocument> renameActivityDocument
                             )
         {
             _queryProcessor = queryProcessor;
+            _binaryData = binaryData;
             _validateImage = validateImage;
-            _createImage = createImage;
             _validateLoadableFile = validateLoadableFile;
-            _createLoadableFile = createLoadableFile; 
             _createActivityDocument = createActivityDocument;
             _deleteActivityDocument = deleteActivityDocument;
             _renameActivityDocument = renameActivityDocument;
@@ -65,7 +63,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            
+
             var model = Mapper.Map<ActivityDocumentApiModel[]>(documents);
             return model;
         }
@@ -90,127 +88,41 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public Task<HttpResponseMessage> PostDocuments(int activityId, string activityMode)
         {
             if (!Request.Content.IsMimeMultipartContent())
-            {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-            }
 
-            //Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
-            //if (activity == null)
-            //{
-            //    //string message = string.Format("Activity Id {0} not found", activityId);
-            //    //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
-            //    throw new HttpResponseException(HttpStatusCode.InternalServerError);
-            //}
-
-            ActivityValues activityValues =
-                _queryProcessor.Execute(new ActivityValuesByActivityIdAndMode(activityId, activityMode));
+            var activityValues = _queryProcessor.Execute(
+                new ActivityValuesByActivityIdAndMode(activityId, activityMode));
 
             if (activityValues == null)
-            {
-                //string message = string.Format("Activity Id {0} not found", activityId);
-                //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
 
             var provider = new MultipartMemoryStreamProvider();
 
-            var task = Request.Content.ReadAsMultipartAsync(provider).
-                ContinueWith(t =>
+            var task = Request.Content.ReadAsMultipartAsync(provider).ContinueWith(t =>
+            {
+                if (t.IsFaulted || t.IsCanceled)
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
+
+                foreach (var item in provider.Contents)
                 {
-                    if (t.IsFaulted || t.IsCanceled)
+                    var mimeType = item.Headers.ContentType.MediaType;
+                    var fileName = item.Headers.ContentDisposition.FileName;
+                    fileName = fileName.Trim('"').WithoutTrailingSlash();
+
+                    var stream = item.ReadAsStreamAsync().Result;
+                    var content = stream.ReadFully();
+                    _createActivityDocument.Handle(new CreateActivityDocument(User)
                     {
-                        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
-                    }
-
-                    //Activity activity = _queryProcessor.Execute(new ActivityById(activityId));
-                    //if (activity == null)
-                    //{
-                    //    string message = string.Format("Activity Id {0} not found", activityId);
-                    //    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, message);
-                    //}
-
-                    foreach (var item in provider.Contents)
-                    {
-                        string mimeType = item.Headers.ContentType.MediaType;
-                        string filename = item.Headers.ContentDisposition.FileName;
-                        char[] trimChars = { '"' };
-                        filename = filename.Trim(trimChars).WithoutTrailingSlash();
-                        string name = Path.GetFileNameWithoutExtension(filename);
-                        //string extension = Path.GetExtension(filename);
-
-                        //if (!String.IsNullOrEmpty(extension))
-                        //{
-                        //    extension = extension.Substring(1);
-                        //}
-                        //else
-                        //{
-                        //    // TBD - convert mime type to file extension
-                        //    throw new HttpResponseException(HttpStatusCode.InternalServerError);
-                        //}
-
-                        try
-                        {
-                            Stream stream = item.ReadAsStreamAsync().Result;
-                            CreateActivityDocument activityDocumentCommand;
-
-                            if (mimeType.Contains("image/"))
-                            {
-                                var createImageCommand = new CreateImage
-                                {
-                                    Content = stream.ReadFully(),
-                                    //Width = Int32.Parse(ConfigurationManager.AppSettings["ImageWidth"]),
-                                    //Height = Int32.Parse(ConfigurationManager.AppSettings["ImageHeight"]),
-                                    Title = name,
-                                    MimeType = mimeType,
-                                    //Name = name,
-                                    //Extension = extension,
-                                    FileName = filename,
-                                    //Size = stream.Length,
-                                    //Constrained = false
-                                };
-
-                                _createImage.Handle(createImageCommand);
-
-                                activityDocumentCommand = new CreateActivityDocument(User)
-                                {
-                                    ActivityValuesId = activityValues.RevisionId,
-                                    ImageId = createImageCommand.CreatedImage.Id,
-                                    Mode = activityMode.AsEnum<ActivityMode>(),
-                                    Title = name
-                                };
-                            }
-                            else
-                            {
-                                var createLoadableFileCommand = new CreateLoadableActivityFile
-                                {
-                                    Content = stream.ReadFully(),
-                                    FileName = filename,
-                                    MimeType = mimeType,
-                                    Title = name
-                                };
-
-                                _createLoadableFile.Handle(createLoadableFileCommand);
-
-                                activityDocumentCommand = new CreateActivityDocument(User)
-                                {
-                                    ActivityValuesId = activityValues.RevisionId,
-                                    FileId = createLoadableFileCommand.CreatedLoadableFile.Id,
-                                    Mode = activityMode.AsEnum<ActivityMode>(),
-                                    Title = name
-                                };
-                            }
-
-                            _createActivityDocument.Handle(activityDocumentCommand);
-                        }
-                        catch (Exception ex)
-                        {
-                            Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-                        }
-
-                    }
-
-                    return Request.CreateResponse(HttpStatusCode.Created);
-                });
+                        ActivityValuesId = activityValues.RevisionId,
+                        Title = Path.GetFileNameWithoutExtension(fileName),
+                        Mode = activityMode.AsEnum<ActivityMode>(),
+                        Content = content,
+                        MimeType = mimeType,
+                        FileName = fileName,
+                    });
+                }
+                return Request.CreateResponse(HttpStatusCode.Created);
+            });
 
             return task;
         }
@@ -311,52 +223,35 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             lock (Lock)
             {
-                //var response = new HttpResponseMessage();
-                ActivityDocument document = _queryProcessor.Execute(new ActivityDocumentById(documentId));
-                if (document == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-                //byte[] contentData;
+                var document = _queryProcessor.Execute(new ActivityDocumentById(documentId)
+                {
+                    EagerLoad = new Expression<Func<ActivityDocument, object>>[]
+                    {
+                        x => x.ActivityValues,
+                    }
+                });
+                if (document == null || document.ActivityValues.ActivityId != activityId)
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
 
                 var stream = new MemoryStream(); // do not dispose, StreamContent will dispose internally
                 var mimeType = "image/png";
                 var settings = Mapper.Map<ResizeSettings>(model);
 
                 // If the ActivityDocument has an image, resize and use.
-                if (document.Image != null)
+                if (document.MimeType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
                 {
-                    mimeType = document.Image.MimeType;
-                    ImageBuilder.Current.Build(new MemoryStream(document.Image.Content), stream, settings, true);
-                    //var fullImageStream = new MemoryStream(document.Image.Content);
-                    //System.Drawing.Image fullImage = System.Drawing.Image.FromStream(fullImageStream);
-                    //Stream proxyStream = fullImage.ResizeImageConstrained(
-                    //    Int32.Parse(ConfigurationManager.AppSettings["ProxyImageHeight"]),
-                    //    Int32.Parse(ConfigurationManager.AppSettings["ProxyImageWidth"]),
-                    //    System.Drawing.Imaging.ImageFormat.Png);
-                    //
-                    //System.Drawing.Image resizedImage = System.Drawing.Image.FromStream(proxyStream);
-                    //
-                    //var stream = new MemoryStream();
-                    //resizedImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                    //contentData = stream.ToArray();
+                    mimeType = document.MimeType;
+                    ImageBuilder.Current.Build(new MemoryStream(_binaryData.Get(document.Path)), stream, settings, true);
                 }
 
                 // If the ActivityDocument has no image, let's use the mime type image proxy.
-                else if (document.File != null)
+                else
                 {
-                    var fileExtension = Path.GetExtension(document.File.FileName);
+                    var fileExtension = Path.GetExtension(document.FileName);
                     fileExtension = !string.IsNullOrWhiteSpace(fileExtension) ? fileExtension.Substring(1) : "unknown";
                     var relativePath = string.Format("~/images/icons/files/{0}.png", fileExtension);
                     ImageBuilder.Current.Build(relativePath, stream, settings);
-
-                    //Image dbImage = _queryProcessor.Execute(new ProxyImageByMimeType(document.File.MimeType));
-                    //contentData = (dbImage != null) ? dbImage.Content : null;
                 }
-
-                // Return the generic document proxy, if we haven't found one at this point.
-                //if (contentData == null)
-                //{
-                //    Image dbImage = _queryProcessor.Execute(new ImageByName("GenericDocument"));
-                //    contentData = (dbImage != null) ? dbImage.Content : null;
-                //}
 
                 stream.Position = 0;
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
@@ -365,19 +260,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 };
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
                 return response;
-
-                //if (contentData != null)
-                //{
-                //    response.Content = new ByteArrayContent(contentData);
-                //    response.Content.Headers.ContentType = new MediaTypeHeaderValue(ConfigurationManager.AppSettings["ProxyImageMimeType"]);
-                //    response.StatusCode = HttpStatusCode.OK;
-                //}
-                //else
-                //{
-                //    response.StatusCode = HttpStatusCode.NotFound;
-                //}
-                //
-                //return response;
             }
         }
     }

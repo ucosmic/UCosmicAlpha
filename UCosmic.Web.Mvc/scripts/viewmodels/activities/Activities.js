@@ -48,7 +48,7 @@ var ViewModels;
                         var augmentedDocumentModel = function (data) {
                             ko.mapping.fromJS(data, {
                             }, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(this.id(), data.id, {
+                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, {
                                 maxSide: ActivityList.iconMaxSide
                             });
                         };

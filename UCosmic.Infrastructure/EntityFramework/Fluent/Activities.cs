@@ -114,16 +114,6 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(ActivityDocument).Name, DbSchemaName.ActivitiesV2);
 
-            HasOptional(p => p.File)
-                .WithMany()
-                .HasForeignKey(p => p.FileId)
-                .WillCascadeOnDelete(false);
-
-            HasOptional(p => p.Image)
-                .WithMany()
-                .HasForeignKey(p => p.ImageId)
-                .WillCascadeOnDelete(false);
-
             Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(ActivityDocumentConstraints.ModeTextMaxLength);
             Property(p => p.Title).IsRequired().HasMaxLength(ActivityDocumentConstraints.MaxTitleLength);
 

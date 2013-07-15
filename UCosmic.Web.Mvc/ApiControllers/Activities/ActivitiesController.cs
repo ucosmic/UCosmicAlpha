@@ -213,6 +213,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText)
                 };
+                updateActivityCommand.Values.Documents = _queryProcessor.Execute(
+                    new ActivityDocumentsByActivityIdAndMode(activityId, model.ModeText));
                 _updateActivity.Handle(updateActivityCommand);
             }
             catch (Exception ex)
@@ -242,16 +244,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
                 if (editActivity == null)
-                {
-                    var message = string.Format("Activity Id {0} not found.", activityId);
-                    throw new Exception(message);
-                }
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
 
                 if (!editActivity.EditSourceId.HasValue)
-                {
-                    var message = string.Format("Activity Id {0} is not being edited.", activityId);
-                    throw new Exception(message);
-                }
+                    throw new HttpResponseException(HttpStatusCode.BadRequest);
 
                 var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, DateTime.Now, mode)
                 {

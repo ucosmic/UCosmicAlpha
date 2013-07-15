@@ -6,17 +6,17 @@ namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivityValues
     {
-        public IPrincipal Principal { get; protected set; }
-        public int Id { get; set; }
-        public int ActivityId { get; set; } 
-        public ActivityMode Mode { get; set; }
-        public bool NoCommit { get; set; }
-        public ActivityValues CreatedActivityValues { get; set; }
-
         public CopyDeepActivityValues(IPrincipal principal)
         {
             Principal = principal;
         }
+
+        public IPrincipal Principal { get; private set; }
+        public int Id { get; set; }
+        public int ActivityId { get; set; }
+        public ActivityMode Mode { get; set; }
+        public ActivityValues CreatedActivityValues { get; set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class HandleCopyDeepActivityValuesCommand : IHandleCommands<CopyDeepActivityValues>
@@ -29,13 +29,14 @@ namespace UCosmic.Domain.Activities
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
 
-        public HandleCopyDeepActivityValuesCommand(ICommandEntities entities,
-                                                   IUnitOfWork unitOfWork,
-                                                   IHandleCommands<CreateActivityValues> createActivityValues,
-                                                   IHandleCommands<CreateActivityType> createActivityType,
-                                                   IHandleCommands<CreateActivityTag> createActivityTag,
-                                                   IHandleCommands<CreateActivityLocation> createActivityLocation,
-                                                   IHandleCommands<CreateActivityDocument> createActivityDocument)
+        public HandleCopyDeepActivityValuesCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            , IHandleCommands<CreateActivityValues> createActivityValues
+            , IHandleCommands<CreateActivityType> createActivityType
+            , IHandleCommands<CreateActivityTag> createActivityTag
+            , IHandleCommands<CreateActivityLocation> createActivityLocation
+            , IHandleCommands<CreateActivityDocument> createActivityDocument
+        )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
@@ -79,7 +80,7 @@ namespace UCosmic.Domain.Activities
                 {
                     ActivityValuesId = activityValuesCopy.RevisionId,
                     PlaceId = location.PlaceId,
-                });                
+                });
             }
 
             foreach (var type in sourceActivityValues.Types)
@@ -98,7 +99,7 @@ namespace UCosmic.Domain.Activities
                     DomainType = tag.DomainType,
                     DomainKey = tag.DomainKey,
                     Mode = command.Mode
-                });                
+                });
             }
 
             foreach (var document in sourceActivityValues.Documents)
@@ -106,11 +107,13 @@ namespace UCosmic.Domain.Activities
                 _createActivityDocument.Handle(new CreateActivityDocument(command.Principal)
                 {
                     ActivityValuesId = activityValuesCopy.RevisionId,
-                    FileId = document.FileId,
-                    ImageId = document.ImageId,
+                    FileName = document.FileName,
+                    MimeType = document.MimeType,
+                    Path = document.Path,
+                    Length = document.Length,
                     Mode = command.Mode,
                     Title = document.Title,
-                    Visible = document.Visible
+                    NoCommit = true,
                 });
             }
 

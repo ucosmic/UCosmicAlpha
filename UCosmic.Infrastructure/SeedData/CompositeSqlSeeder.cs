@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Web.Security;
-using UCosmic.Domain.Files;
 
 namespace UCosmic.SeedData
 {
@@ -10,8 +9,6 @@ namespace UCosmic.SeedData
         private readonly IQueryEntities _entities;
         private readonly DevelopmentSqlSeeder _sqlSeeder;
         private readonly MemberEntitySeeder _memberEntitySeeder;
-        private readonly LoadableFileEntitySeeder _loadableFileEntitySeeder;
-        private readonly ImageEntitySeeder _imageEntitySeeder;
         private readonly ExternalFileEntitySeeder _externalFileEntitySeeder;
         private readonly SensativeSqlSeeder _sensativeSeeder;
 
@@ -19,8 +16,6 @@ namespace UCosmic.SeedData
             , IQueryEntities entities
             , DevelopmentSqlSeeder sqlSeeder
             , MemberEntitySeeder memberEntitySeeder
-            , LoadableFileEntitySeeder loadableFileEntitySeeder
-            , ImageEntitySeeder imageEntitySeeder
             , ExternalFileEntitySeeder externalFileEntitySeeder
             , SensativeSqlSeeder sensativeSeeder
         )
@@ -29,29 +24,12 @@ namespace UCosmic.SeedData
             _entities = entities;
             _sqlSeeder = sqlSeeder;
             _memberEntitySeeder = memberEntitySeeder;
-            _loadableFileEntitySeeder = loadableFileEntitySeeder;
-            _imageEntitySeeder = imageEntitySeeder;
             _externalFileEntitySeeder = externalFileEntitySeeder;
             _sensativeSeeder = sensativeSeeder;
         }
 
         public void Seed()
         {
-            // binary data makes .sql files unmanageable
-            var files = _entities.Query<LoadableFile>();
-            if (!files.Any())
-            {
-                _loadableFileEntitySeeder.Seed();
-                _unitOfWork.SaveChanges();
-            }
-
-            var images = _entities.Query<Image>();
-            if (!images.Any())
-            {
-                _imageEntitySeeder.Seed();
-                _unitOfWork.SaveChanges();
-            }
-
             _sqlSeeder.Seed();
             _unitOfWork.SaveChanges();
 
