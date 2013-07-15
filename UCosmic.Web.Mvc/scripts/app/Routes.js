@@ -324,14 +324,14 @@ var App;
                     Files.del = del;
                     (function (Content) {
                         function view(agreementId, fileId) {
-                            var url = Files.get(agreementId, fileId);
-                            url += 'content';
+                            var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
+                            url += '/content';
                             return makeUrl(url);
                         }
                         Content.view = view;
                         function download(agreementId, fileId) {
-                            var url = Files.get(agreementId, fileId);
-                            url += 'download';
+                            var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
+                            url += '/download';
                             return makeUrl(url);
                         }
                         Content.download = download;

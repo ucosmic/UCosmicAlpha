@@ -309,13 +309,15 @@ module App.Routes {
 
                 export module Content {
                     export function view(agreementId: number, fileId: number): string {
-                        var url = Files.get(agreementId, fileId);
-                        url += 'content';
+                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
+                        //var url = Files.get(agreementId, fileId);
+                        url += '/content';
                         return makeUrl(url);
                     }
                     export function download(agreementId: number, fileId: number): string {
-                        var url = Files.get(agreementId, fileId);
-                        url += 'download';
+                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
+                        //var url = Files.get(agreementId, fileId);
+                        url += '/download';
                         return makeUrl(url);
                     }
                 }

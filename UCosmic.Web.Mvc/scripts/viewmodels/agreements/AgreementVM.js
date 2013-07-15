@@ -32,8 +32,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.name = name;
                 this.id = id;
             };
+            this.agreementIsEdit = ko.observable();
             this.agreementId = 0;
-            this.visibility = ko.observableArray();
+            this.visibility = ko.observable();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
             this.typeOptionSelected = ko.observable();
@@ -120,9 +121,18 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
-            this.populateParticipants();
-            this.populateFiles();
-            this.populateContacts();
+            if(window.location.href.indexOf("new") > 0) {
+                this.agreementIsEdit(false);
+                this.visibility("Public");
+                $("#LoadingPage").hide();
+            } else {
+                this.agreementIsEdit(true);
+                this.agreementId = 0;
+                this.populateParticipants();
+                this.populateFiles();
+                this.populateContacts();
+                $("#LoadingPage").hide();
+            }
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
             this.editAContact = this.editAContact.bind(this);
@@ -177,12 +187,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
                 _this.receiveResults(response);
-                $("#LoadingPage").hide();
             });
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId) + "?useTestData=true").done(function (response) {
                 $.each(response, function (i, item) {
                     _this.files.push(ko.mapping.fromJS({
                         id: item.id,
@@ -190,8 +199,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         customName: item.customName,
                         visibility: item.visibility,
                         isEdit: false,
-                        customNameFile: item.customName,
-                        customNameExt: item.customName
+                        customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
+                        customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
                     }));
                 });
             });
@@ -263,13 +272,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         _this.tempFileId = _this.tempFileId + .01;
                         _this.files.push(ko.mapping.fromJS({
                             id: _this.tempFileId,
-                            originalName: "file1new.pdf",
-                            customName: "file1new.pdf",
+                            originalName: e.files[0].name,
+                            customName: e.files[0].name,
                             visibility: "Public",
                             guid: e.response.guid,
                             isEdit: false,
-                            customNameFile: "file1new",
-                            customNameExt: "pdf"
+                            customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
+                            customNameExt: e.files[0].extension
                         }));
                     }
                 },
@@ -314,6 +323,23 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             }
             e.preventDefault();
             e.stopPropagation();
+        };
+        InstitutionalAgreementEditModel.prototype.editAFile = function (me, e) {
+            me.isEdit(true);
+        };
+        InstitutionalAgreementEditModel.prototype.closeEditAFile = function (me, e) {
+            me.customName(me.customNameFile() + me.customNameExt());
+            me.isEdit(false);
+        };
+        InstitutionalAgreementEditModel.prototype.downloadAFile = function (me, e) {
+            this.agreementId = 2;
+            var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
+            window.location.href = url;
+        };
+        InstitutionalAgreementEditModel.prototype.viewAFile = function (me, e) {
+            this.agreementId = 2;
+            var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
+            window.open(url, '_blank');
         };
         InstitutionalAgreementEditModel.prototype.getSettings = function () {
             var _this = this;
@@ -1192,6 +1218,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $("body").scrollTop(offset.top - 20);
             $(event.target).closest("ul").find("li").removeClass("current");
             $(event.target).closest("li").addClass("current");
+        };
+        InstitutionalAgreementEditModel.prototype.saveAgreement = function () {
+            this.validateContact.errors.showAllMessages(true);
+            this.validateBasicInfo.errors.showAllMessages(true);
+            this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
+            this.validateOverallVisibility.errors.showAllMessages(true);
         };
         return InstitutionalAgreementEditModel;
     })();

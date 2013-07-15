@@ -42,10 +42,19 @@ export class InstitutionalAgreementParticipantModel {
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
+        if (window.location.href.indexOf("new") > 0) {
+            this.agreementIsEdit(false);
+            this.visibility("Public");
+            $("#LoadingPage").hide();
+        } else {
+            this.agreementIsEdit(true);
+            this.agreementId = 0 //window.location.subString()
+            this.populateParticipants();
+            this.populateFiles();
+            this.populateContacts();
+            $("#LoadingPage").hide();
+        }
 
-        this.populateParticipants();
-        this.populateFiles();
-        this.populateContacts();
 
         this.isBound(true);
         this.removeParticipant = <() => bool> this.removeParticipant.bind(this);
@@ -103,9 +112,9 @@ export class InstitutionalAgreementEditModel {
     };
 
     
-
+    agreementIsEdit = ko.observable();
     agreementId = 0;
-    visibility = ko.observableArray();
+    visibility = ko.observable();
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
     typeOptionSelected: KnockoutObservableString = ko.observable();
@@ -225,13 +234,12 @@ export class InstitutionalAgreementEditModel {
         $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
             .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
-                $("#LoadingPage").hide();
             });
     }
 
     populateFiles(): void {
         // TODO TIM: you need to know the agreementId in order to do Files.get()
-        $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId))
+        $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId) + "?useTestData=true")
             .done((response: any): void => {
                 // use foreach instead of mapping so that I can add isEdit, fileNamewithoutExt , and ext, 
                 // and then push the rest
@@ -242,8 +250,8 @@ export class InstitutionalAgreementEditModel {
                         customName: item.customName,
                         visibility: item.visibility,
                         isEdit: false,
-                        customNameFile: item.customName,//use substring
-                        customNameExt: item.customName// use substring
+                        customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
+                        customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
                     }));
                 });
                 //ko.mapping.fromJS(response, this.files)
@@ -319,13 +327,13 @@ export class InstitutionalAgreementEditModel {
                     this.tempFileId  = this.tempFileId + .01
                     this.files.push(ko.mapping.fromJS({
                         id: this.tempFileId,
-                        originalName: "file1new.pdf",
-                        customName: "file1new.pdf",
+                        originalName: e.files[0].name,
+                        customName: e.files[0].name,
                         visibility: "Public",
                         guid: e.response.guid,
                         isEdit: false,
-                        customNameFile: "file1new",//use substring
-                        customNameExt: "pdf"// use substring
+                        customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
+                        customNameExt: e.files[0].extension
                     }));
                 }
             },
@@ -431,6 +439,29 @@ export class InstitutionalAgreementEditModel {
         e.stopPropagation();
     }
 
+    editAFile(me, e): void {
+        me.isEdit(true);
+    };
+
+    closeEditAFile(me, e): void {
+        me.customName(me.customNameFile() + me.customNameExt())
+        me.isEdit(false);
+    };
+
+    downloadAFile(me, e): void {
+        this.agreementId = 2
+        var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
+        window.location.href = url;
+    };
+
+    viewAFile(me, e): void {
+        this.agreementId = 2
+        var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
+        window.open(
+          url,
+          '_blank'
+        );
+    };
 
     getSettings(): void {
 
@@ -1379,5 +1410,11 @@ export class InstitutionalAgreementEditModel {
         $(event.target).closest("li").addClass("current");
     };
     
+    saveAgreement(): void {
+        this.validateContact.errors.showAllMessages(true);
+        this.validateBasicInfo.errors.showAllMessages(true);
+        this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
+        this.validateOverallVisibility.errors.showAllMessages(true);
+    };
 }
 
