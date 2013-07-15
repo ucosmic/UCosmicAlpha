@@ -27,8 +27,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //private readonly IHandleCommands<UpdateActivity> _profileUpdateHandler;
         private readonly IValidator<CreateImage> _validateImage;
         private readonly IHandleCommands<CreateImage> _createImage;
-        private readonly IValidator<CreateLoadableFile> _validateLoadableFile;
-        private readonly IHandleCommands<CreateLoadableFile> _createLoadableFile;
+        private readonly IValidator<CreateLoadableActivityFile> _validateLoadableFile;
+        private readonly IHandleCommands<CreateLoadableActivityFile> _createLoadableFile;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
@@ -41,8 +41,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                   //, IHandleCommands<UpdateActivity> profileUpdateHandler
                                   , IValidator<CreateImage> validateImage
                                   , IHandleCommands<CreateImage> createImage
-                                  , IValidator<CreateLoadableFile> validateLoadableFile
-                                  , IHandleCommands<CreateLoadableFile> createLoadableFile
+                                  , IValidator<CreateLoadableActivityFile> validateLoadableFile
+                                  , IHandleCommands<CreateLoadableActivityFile> createLoadableFile
                                   , IHandleCommands<CreateActivityDocument> createActivityDocument
                                   , IHandleCommands<DeleteActivityDocument> deleteActivityDocument 
                                   , IHandleCommands<RenameActivityDocument> renameActivityDocument
@@ -451,8 +451,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                     Height = Int32.Parse(ConfigurationManager.AppSettings["ImageHeight"]),
                                     Title = name,
                                     MimeType = mimeType,
-                                    Name = name,
-                                    Extension = extension,
+                                    //Name = name,
+                                    //Extension = extension,
+                                    FileName = filename,
                                     Size = stream.Length,
                                     Constrained = false
                                 };
@@ -469,11 +470,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             }
                             else
                             {
-                                var createLoadableFileCommand = new CreateLoadableFile
+                                var createLoadableFileCommand = new CreateLoadableActivityFile
                                 {
-                                    SourceStream = stream,
-                                    Name = name,
-                                    Extension = extension,
+                                    Content = stream.ReadFully(),
+                                    FileName = filename,
                                     MimeType = mimeType,
                                     Title = name
                                 };
@@ -574,13 +574,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         // --------------------------------------------------------------------------------
         [Authorize]
         [POST("{activityid}/documents/validate-upload-filetype")]
-        public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] string extension)
+        public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] string fileName)
         {
-            var createImageCommand = new CreateImage { Extension = extension };
+            var createImageCommand = new CreateImage { FileName = fileName };
             var createImageValidationResult = _validateImage.Validate(createImageCommand);
             if (!createImageValidationResult.IsValid)
             {
-                var createLoadableFileCommand = new CreateLoadableFile { Extension = extension };
+                var createLoadableFileCommand = new CreateLoadableActivityFile { FileName = fileName };
                 var createLoadableFileValidationResult = _validateLoadableFile.Validate(createLoadableFileCommand);
                 if (!createLoadableFileValidationResult.IsValid)
                 {

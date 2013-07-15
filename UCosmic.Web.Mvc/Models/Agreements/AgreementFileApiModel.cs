@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
@@ -43,8 +44,8 @@ namespace UCosmic.Web.Mvc.Models
             get
             {
                 if (string.IsNullOrWhiteSpace(OriginalName)) return null;
-                var extension = OriginalName.GetFileExtension();
-                return extension != null ? extension.ToLower() : null;
+                var extension = Path.GetExtension(OriginalName);
+                return !string.IsNullOrWhiteSpace(extension) ? extension.ToLower() : null;
             }
         }
     }

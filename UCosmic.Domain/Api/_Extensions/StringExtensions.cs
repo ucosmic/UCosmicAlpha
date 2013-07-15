@@ -135,14 +135,5 @@ namespace UCosmic
 
             return null;
         }
-
-        public static string GetFileExtension(this string fileName, bool includeDot = true)
-        {
-            if (string.IsNullOrWhiteSpace(fileName)) return null;
-            var indexOfDot = fileName.LastIndexOf('.');
-            if (indexOfDot < 0) return null;
-            var indexOfStrip = includeDot ? indexOfDot : indexOfDot + 1;
-            return fileName.Substring(indexOfStrip);
-        }
     }
 }

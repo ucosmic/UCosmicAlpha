@@ -161,6 +161,8 @@
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeUniqueEstablishmentNameText.cs" />
+    <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
+    <Compile Include="Domain\Files\Validation\MustHaveFileExtension.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyIdentityName.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />
@@ -377,14 +379,12 @@
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentUrlWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\Validation\EstablishmentConstraints.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentNameWhenIsOfficial.cs" />
-    <Compile Include="Domain\Files\Commands\CreateLoadableFile.cs" />
     <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
     <Compile Include="Domain\Files\Commands\CreateProxyImageMimeTypeXRef.cs" />
     <Compile Include="Domain\Files\Entities\LoadableFileBinary.cs" />
     <Compile Include="Domain\Files\Entities\LoadableFile.cs" />
     <Compile Include="Domain\Files\Entities\ProxyImageMimeTypeXRef.cs" />
     <Compile Include="Domain\Files\Queries\ProxyImageByMimeType.cs" />
-    <Compile Include="Domain\Files\Validation\MustBeOfFileType.cs" />
     <Compile Include="Domain\Identity\Commands\CreatePassword.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
     <Compile Include="Api\Validation\EntityWrapper.cs" />

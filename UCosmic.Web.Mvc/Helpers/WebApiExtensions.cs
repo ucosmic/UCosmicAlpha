@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
@@ -58,7 +59,7 @@ namespace UCosmic.Web.Mvc
 
             var indexOfDot = fileName.LastIndexOf('.');
             if (indexOfDot < 1) return octetStream;
-            var extension = fileName.GetFileExtension();
+            var extension = Path.GetExtension(fileName);
 
             return MimeMaps.Any(x => x.Key.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 ? MimeMaps.Single(x => x.Key.Equals(extension, StringComparison.OrdinalIgnoreCase)).Value

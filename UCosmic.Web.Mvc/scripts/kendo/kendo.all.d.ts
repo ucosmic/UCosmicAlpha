@@ -2527,6 +2527,7 @@ module kendo.ui {
     interface UploadUploadEvent extends UploadEvent {
         files?: any;
         data?: any;
+        preventDefault: Function;
     }
 
 

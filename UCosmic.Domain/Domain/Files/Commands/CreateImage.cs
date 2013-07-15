@@ -15,8 +15,9 @@ namespace UCosmic.Domain.Files
         public int Height { get; set; }
         public string Title { get; set; }
         public string MimeType { get; set; }
-        public string Name { get; set; }
-        public string Extension { get; set; }
+        public string FileName { get; set; }
+        //public string Name { get; set; }
+        //public string Extension { get; set; }
         public long Size { get; set; }
 
         public bool Constrained { get; set; }
@@ -30,9 +31,9 @@ namespace UCosmic.Domain.Files
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Extension)
-                .MustBeOfFileType()
-                    .WithMessage(MustBeOfFileType.FailMessageFormat, x => x.Extension)
+            RuleFor(x => x.FileName)
+                .MustHaveFileExtension("jpg", "png", "tif", "bmp", "gif")
+                    .WithMessage(MustHaveFileExtension.FailMessageFormat, x => Path.GetExtension(x.FileName))
             ;
         }
     }
@@ -80,8 +81,9 @@ namespace UCosmic.Domain.Files
                 Data = processedImage,
                 Title = command.Title,
                 MimeType = command.MimeType,
-                Name = command.Name,
-                Extension = command.Extension,
+                Name = Path.GetFileNameWithoutExtension(command.FileName),
+                Extension = Path.GetExtension(command.FileName).Substring(1),
+                FileName = command.FileName,
                 Size = command.Size
             };
 

@@ -4,7 +4,7 @@
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendouiweb.d.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../tinymce/tinymce.d.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -293,12 +293,12 @@ module ViewModels.Activities {
                     saveUrl: App.Routes.WebApi.Activities.Documents.post( this.id(), this.modeText() ),
                     autoUpload: true
                 },
-                select: ( e: any ): void => {
+                select: (e: kendo.ui.UploadUploadEvent): void => {
                     var i = 0;
                     var validFileType = true;
                     while ( ( i < e.files.length ) && validFileType ) {
                         var file = e.files[i];
-                        validFileType = this.validateUploadableFileTypeByExtension( this.id(), file.extension );
+                        validFileType = this.validateUploadableFileTypeByExtension( this.id(), file.name );
                         if ( !validFileType ) {
                             e.preventDefault();
                         }

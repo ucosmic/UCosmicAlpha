@@ -14,16 +14,12 @@ namespace UCosmic.SeedData
             public string MimeType;
         };
 
-        private readonly ICommandEntities _entities;
-
         public ImageEntitySeeder(IHandleCommands<CreateImage> createImage
                                 , IHandleCommands<CreateProxyImageMimeTypeXRef> createProxyImageMimeTypeXRef
                                 , ICommandEntities entities
-                                , IUnitOfWork unitOfWork
             )
-            : base(createImage, createProxyImageMimeTypeXRef, unitOfWork)
+            : base(createImage, createProxyImageMimeTypeXRef, entities)
         {
-            _entities = entities;
         }
 
         public override void Seed()
@@ -46,33 +42,20 @@ namespace UCosmic.SeedData
 
             foreach (FileMimeMapping mapping in fileMimeMappings)
             {
-                string filePath = string.Format("{0}{1}", basePath, mapping.FileName);
-                var info = new FileInfo(filePath);
-                string name = info.Name.Substring(0, info.Name.IndexOf('.'));
-                if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
+                var proxy = Seed(new CreateImage
                 {
-                    using (Stream fileStream = File.OpenRead(string.Format("{0}{1}", basePath, mapping.FileName)))
-                    {
-                        Image proxy = Seed(new CreateImage
-                        {
-                            SourceStream = fileStream,
-                            Width = Int32.Parse(ConfigurationManager.AppSettings["ProxyImageWidth"]),
-                            Height = Int32.Parse(ConfigurationManager.AppSettings["ProxyImageWidth"]),
-                            Title = "Proxy", // arbitrary
-                            MimeType = "image/png",
-                            Name = name,
-                            Extension = info.Extension.Substring(1),
-                            Size = info.Length,
-                            Constrained = true
-                        });
-
-                        Seed(new CreateProxyImageMimeTypeXRef
-                        {
-                            MimeType = mapping.MimeType,
-                            ImageId = proxy.Id
-                        });
-                    }
-                }
+                    Width = Int32.Parse(ConfigurationManager.AppSettings["ProxyImageWidth"]),
+                    Height = Int32.Parse(ConfigurationManager.AppSettings["ProxyImageWidth"]),
+                    Title = "Proxy", // arbitrary
+                    MimeType = "image/png",
+                    FileName = mapping.FileName,
+                    Constrained = true
+                });
+                Seed(new CreateProxyImageMimeTypeXRef
+                {
+                    MimeType = mapping.MimeType,
+                    ImageId = proxy.Id
+                });
             }
 
             string[] fileNames =
@@ -86,27 +69,15 @@ namespace UCosmic.SeedData
 
             foreach (string fileName in fileNames)
             {
-                string filePath = string.Format("{0}{1}", basePath, fileName);
-                var info = new FileInfo(filePath);
-                string name = info.Name.Substring(0, info.Name.IndexOf('.'));
-                if (_entities.Get<Image>().Count(x => x.Name == name) == 0)
+                Seed(new CreateImage
                 {
-                    using (Stream fileStream = File.OpenRead(string.Format("{0}{1}",basePath,fileName)))
-                    {
-                        Seed(new CreateImage
-                        {
-                            SourceStream = fileStream,
-                            Width = Int32.Parse(ConfigurationManager.AppSettings["ImageWidth"]),
-                            Height = Int32.Parse(ConfigurationManager.AppSettings["ImageHeight"]),
-                            Title = "Image", // arbitrary
-                            MimeType = "image/jpeg",
-                            Name = name,
-                            Extension = info.Extension.Substring(1),
-                            Size = info.Length,
-                            Constrained = false
-                        });
-                    }
-                }
+                    FileName = fileName,
+                    Width = Int32.Parse(ConfigurationManager.AppSettings["ImageWidth"]),
+                    Height = Int32.Parse(ConfigurationManager.AppSettings["ImageHeight"]),
+                    Title = "Image", // arbitrary
+                    MimeType = "image/jpeg",
+                    Constrained = false
+                });
             }
         }
     }
@@ -115,34 +86,49 @@ namespace UCosmic.SeedData
     {
         private readonly IHandleCommands<CreateImage> _createImage;
         private readonly IHandleCommands<CreateProxyImageMimeTypeXRef> _createProxyImageMimeTypeXRef;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICommandEntities _entities;
+        private static readonly string BasePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                                        @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\");
 
         protected BaseImageEntitySeeder(IHandleCommands<CreateImage> createImage
             , IHandleCommands<CreateProxyImageMimeTypeXRef> createProxyImageMimeTypeXRef
-            , IUnitOfWork unitOfWork
+            , ICommandEntities entities
         )
         {
             _createImage = createImage;
             _createProxyImageMimeTypeXRef = createProxyImageMimeTypeXRef;
-            _unitOfWork = unitOfWork;
+            _entities = entities;
         }
 
         public abstract void Seed();
 
         protected Image Seed(CreateImage command)
         {
-            _createImage.Handle(command);
-            _unitOfWork.SaveChanges();
-
-            return command.CreatedImage;
+            var existingEntity = _entities.Get<Image>().SingleOrDefault(x => x.FileName == command.FileName);
+            if (existingEntity == null)
+            {
+                var filePath = string.Format("{0}{1}", BasePath, command.FileName);
+                var info = new FileInfo(filePath);
+                using (Stream fileStream = File.OpenRead(string.Format("{0}{1}", BasePath, command.FileName)))
+                {
+                    command.SourceStream = fileStream;
+                    command.Size = info.Length;
+                    _createImage.Handle(command);
+                    return command.CreatedImage;
+                }
+            }
+            return existingEntity;
         }
 
         protected ProxyImageMimeTypeXRef Seed(CreateProxyImageMimeTypeXRef command)
         {
-            _createProxyImageMimeTypeXRef.Handle(command);
-            _unitOfWork.SaveChanges();
-
-            return command.CreatedProxyImageMimeTypeXRef;
+            var existingEntity = _entities.Get<ProxyImageMimeTypeXRef>().SingleOrDefault(x => x.ImageId == command.ImageId);
+            if (existingEntity == null)
+            {
+                _createProxyImageMimeTypeXRef.Handle(command);
+                return command.CreatedProxyImageMimeTypeXRef;
+            }
+            return existingEntity;
         }
     }
 }

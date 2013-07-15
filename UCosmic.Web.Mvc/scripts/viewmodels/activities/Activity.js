@@ -60,7 +60,7 @@ var ViewModels;
                         var validFileType = true;
                         while((i < e.files.length) && validFileType) {
                             var file = e.files[i];
-                            validFileType = _this.validateUploadableFileTypeByExtension(_this.id(), file.extension);
+                            validFileType = _this.validateUploadableFileTypeByExtension(_this.id(), file.name);
                             if(!validFileType) {
                                 e.preventDefault();
                             }
