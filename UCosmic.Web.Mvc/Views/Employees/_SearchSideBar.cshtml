@@ -1,17 +1,43 @@
-﻿<span>Search options</span>
-<div>
+﻿<div class="filter-sidebar">
+    <div class="header">
+        <span>Search Options</span>
+    </div>
     <div>
-        <label for="tagsTextbox">Tags</label>
-        <input type="text" id="tagsTextbox" style="width: 80%"/>
-        <div>
-            <span>Activities</span><input type="radio" id="activitiesRadioButton"/>
-            <span>People</span><input type="radio" id="people"/>
+        <div class="section">
+            <div class="section-header" >Search For</div>
+            <div style="text-align: center; font-size: medium; padding-bottom: 4px">
+                <input type="radio" id="activitiesRadioButton"/><span>Activities</span>
+                <input type="radio" id="peopleRadioButton"/><span>People</span>
+            </div>
         </div>
-        <div>
-                <label for="fromDate" class="required-field">From</label>
-                <select id="fromDate" data-bind="value: from"></select>
-                <label for="toDate" class="non-required-field" style="width: 30px">To</label>
-                <select id="toDate" data-bind="value: to"></select>
+        <div class="section">
+            <div class="section-header">Tags</div>
+            <input type="text" id="tagsTextbox"/>
+        </div>
+        <div class="section">
+            <div class="section-header">Date Range</div>
+            <label for="fromDate">From</label>
+            <select id="fromDate" data-bind="value: from"></select>
+            <label for="toDate" style="width: 30px">To</label>
+            <select id="toDate" data-bind="value: to"></select>
+        </div>
+        <div class="section">
+            <div class="section-header">Location</div>
+            <select id="location" data-bind="value: location"></select>
+        </div>
+        <div class="section">
+            <div class="section-header">Type</div>
+            <div style="font-size: small">
+                <div><input type="checkbox"/><span> Research or Creative Endeavor</span></div>
+                <div><input type="checkbox"/><span> Teaching or Mentoring</span></div>
+                <div><input type="checkbox"/><span> Award or Honor</span></div>
+                <div><input type="checkbox"/><span> Conference Presentation or Proceeding </span></div>
+                <div><input type="checkbox"/><span> Professional Development, Service or Consulting </span></div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-header">College, Campus or Dept</div>
+            <select id="college_campus_dept" data-bind="value: activityType"></select>
         </div>
     </div>
 </div>

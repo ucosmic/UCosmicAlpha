@@ -2033,7 +2033,6 @@
     <Content Include="scripts\viewmodels\amd-modules\Widgets\Flasher.min.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
-    <None Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
@@ -2063,6 +2062,13 @@
     </Content>
     <Content Include="scripts\viewmodels\degrees\Degrees.min.js">
       <DependentUpon>Degrees.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\employees\Employees.ts" />
+    <Content Include="scripts\viewmodels\employees\Employees.js">
+      <DependentUpon>Employees.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\Employees.min.js">
+      <DependentUpon>Employees.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>

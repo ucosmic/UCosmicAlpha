@@ -248,3 +248,36 @@ body .dialog {
 ul.selectableListItems li:hover {
   background-color: #dddddd; }
 
+.filter-sidebar {
+  width: 250px;
+  font: Arial;
+  font-size: small;
+  background-color: white;
+  color: #ffd952;
+  margin-top: 8px;
+  border-color: black;
+  border: 1px;
+  border-style: solid; }
+  .filter-sidebar input[type="text"] {
+    height: 24px;
+    font-size: small;
+    vertical-align: middle; }
+  .filter-sidebar .header {
+    height: 32px;
+    background-color: #502d0e;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase; }
+  .filter-sidebar .section-header {
+    background-color: #502d0e;
+    padding-top: 4px;
+    text-align: left;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom-color: gray;
+    border-bottom: 1px;
+    border-bottom-style: dotted; }
+  .filter-sidebar .section {
+    background-color: #502d0e;
+    margin-top: 16px; }
+

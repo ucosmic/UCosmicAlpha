@@ -1,12 +1,14 @@
 ﻿@{
     ViewBag.Title = "Search Faculty & Staff";
 }
+
 @section bib
 {
     <nav class="bib hide" data-current-bib="search">
         @Html.Partial(MVC.Employees.Views._Bib)
     </nav>
 }
+
 
 @section scripts
 {
@@ -61,7 +63,7 @@
         <div id="chart" style="width: 700px; height: 500px;"></div>
     </div>
     <div class="on-right from-top">
-        <div class="">
+        <div>
             @Html.Partial(MVC.Employees.Views._SearchSideBar)
         </div>
     </div>
