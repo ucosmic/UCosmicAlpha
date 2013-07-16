@@ -33,7 +33,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.id = id;
             };
             this.agreementIsEdit = ko.observable();
-            this.agreementId = 0;
+            this.agreementId = 25;
             this.visibility = ko.observable();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
@@ -122,15 +122,16 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
             if(window.location.href.indexOf("new") > 0) {
+                this.populateParticipants();
                 this.agreementIsEdit(false);
                 this.visibility("Public");
                 $("#LoadingPage").hide();
             } else {
                 this.agreementIsEdit(true);
-                this.agreementId = 0;
-                this.populateParticipants();
+                this.agreementId = 25;
                 this.populateFiles();
                 this.populateContacts();
+                this.populateAgreementData();
                 $("#LoadingPage").hide();
             }
             this.isBound(true);
@@ -187,6 +188,28 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
                 _this.receiveResults(response);
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.populateAgreementData = function () {
+            var _this = this;
+            $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
+                _this.content(response.content);
+                _this.expDate(response.expiresOn);
+                _this.startDate(response.startsOn);
+                if(response.isAutoRenew == null) {
+                    _this.autoRenew(2);
+                } else {
+                    _this.autoRenew(response.isAutoRenew);
+                }
+                ;
+                _this.nickname(response.name);
+                _this.privateNotes(response.notes);
+                _this.statusOptionSelected(response.status);
+                _this.visibility(response.visibility);
+                _this.isEstimated(response.isExpirationEstimated);
+                ko.mapping.fromJS(response.participants, _this.participants);
+                _this.uAgreementSelected(response.umbrellaId);
+                _this.typeOptionSelected(response.type);
             });
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
@@ -341,6 +364,339 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
             window.open(url, '_blank');
         };
+        InstitutionalAgreementEditModel.prototype.bindjQueryKendo = function (result) {
+            var _this = this;
+            this.isCustomTypeAllowed(result.isCustomTypeAllowed);
+            this.isCustomStatusAllowed(result.isCustomStatusAllowed);
+            this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
+            this.statusOptions.push(new this.selectConstructor("", ""));
+            this.contactTypeOptions.push(new this.selectConstructor("", undefined));
+            this.typeOptions.push(new this.selectConstructor("", ""));
+            for(var i = 0; i < result.statusOptions.length; i++) {
+                this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
+            }
+            ;
+            for(var i = 0; i < result.contactTypeOptions.length; i++) {
+                this.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
+            }
+            ;
+            for(var i = 0; i < result.typeOptions.length; i++) {
+                this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
+            }
+            ;
+            if(this.isCustomTypeAllowed) {
+                $("#typeOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.typeOptions()
+                    })
+                });
+            } else {
+                $("#typeOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.typeOptions()
+                    })
+                });
+            }
+            if(this.isCustomStatusAllowed) {
+                $("#statusOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            } else {
+                $("#statusOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            }
+            if(this.isCustomContactTypeAllowed) {
+                $("#contactTypeOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.contactTypeOptions()
+                    })
+                });
+            } else {
+                $("#contactTypeOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.contactTypeOptions()
+                    })
+                });
+            }
+            this.$contactSalutation.kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.contactSalutation())
+                })
+            });
+            this.$contactSuffix.kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: ko.mapping.toJS(this.contactSuffix())
+                })
+            });
+            $(".hasDate").each(function (index, item) {
+                $(item).kendoDatePicker({
+                    value: new Date($(item).val()),
+                    open: function (e) {
+                        this.options.format = "MM/dd/yyyy";
+                    }
+                });
+            });
+            this.$bindKendoFile();
+            $("#helpExpDate").kendoTooltip({
+                width: 120,
+                position: "top",
+                content: "testing",
+                showOn: "click",
+                autoHide: false
+            });
+            this.contactPhoneTextValue.subscribe(function (me) {
+                if(_this.contactPhoneTextValue().length > 0) {
+                    _this.contactPhones.push(ko.mapping.fromJS({
+                        type: _this.contactPhoneType(),
+                        value: _this.contactPhoneTextValue()
+                    }));
+                    _this.contactPhoneTextValue("");
+                    $(".phoneTypes").kendoDropDownList({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: ko.mapping.toJS(_this.phoneTypes())
+                        })
+                    });
+                }
+            });
+            this.$addContactDialog.kendoWindow({
+                width: 950,
+                close: function () {
+                    $("#addAContact").fadeIn(500);
+                },
+                visible: false,
+                draggable: false,
+                resizable: false
+            });
+            $(".k-window").css({
+                position: 'fixed',
+                margin: 'auto',
+                top: '20px'
+            });
+            function kacSelext(me, e) {
+                var dataItem = me.dataItem(e.item.index());
+                _this.contactFirstName(dataItem.firstName);
+                _this.contactLastName(dataItem.lastName);
+                _this.contactEmail(dataItem.defaultEmailAddress);
+                _this.contactMiddleName(dataItem.middleName);
+                _this.contactPersonId(dataItem.id);
+                _this.contactSuffixSelected(dataItem.suffix);
+                _this.contactSalutationSelected(dataItem.salutation);
+                _this.$contactEmail.prop('disabled', true);
+                _this.$contactLastName.prop('disabled', true);
+                _this.$contactFirstName.prop('disabled', true);
+                $("#contactMiddleName").prop('disabled', true);
+                _this.$contactSalutation.data("kendoComboBox").enable(false);
+                _this.$contactSuffix.data("kendoComboBox").enable(false);
+                _this.validateContact.errors.showAllMessages(true);
+            }
+            this.$contactEmail.kendoAutoComplete({
+                dataTextField: "defaultEmailAddress",
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: function (options) {
+                            $.ajax({
+                                url: App.Routes.WebApi.People.get(),
+                                data: {
+                                    email: _this.contactEmail(),
+                                    emailMatch: 'startsWith'
+                                },
+                                success: function (results) {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
+                    }
+                }),
+                change: function (e) {
+                },
+                select: function (e) {
+                    kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+            this.$contactLastName.kendoAutoComplete({
+                dataTextField: "lastName",
+                template: "#=displayName#",
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: function (options) {
+                            $.ajax({
+                                url: App.Routes.WebApi.People.get(),
+                                data: {
+                                    lastName: _this.contactLastName(),
+                                    lastNameMatch: 'startsWith'
+                                },
+                                success: function (results) {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
+                    }
+                }),
+                change: function (e) {
+                },
+                select: function (e) {
+                    kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+            this.$contactFirstName.kendoAutoComplete({
+                dataTextField: "firstName",
+                template: "#=displayName#",
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: function (options) {
+                            $.ajax({
+                                url: App.Routes.WebApi.People.get(),
+                                data: {
+                                    firstName: _this.contactFirstName(),
+                                    firstNameMatch: 'startsWith'
+                                },
+                                success: function (results) {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
+                    }
+                }),
+                change: function (e) {
+                },
+                select: function (e) {
+                    kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
+                }
+            });
+            $(window).scroll(function () {
+                var $participants = $("#participants");
+                var $basicInfo = $("#basicInfo");
+                var $effectiveDatesCurrentStatus = $("#effectiveDatesCurrentStatus");
+                var $contacts = $("#contacts");
+                var $fileAttachments = $("#fileAttachments");
+                var $overallVisibility = $("#overallVisibility");
+                var $navparticipants = $("#navParticipants");
+                var $navbasicInfo = $("#navBasicInfo");
+                var $naveffectiveDatesCurrentStatus = $("#navEffectiveDatesCurrentStatus");
+                var $navcontacts = $("#navContacts");
+                var $navfileAttachments = $("#navFileAttachments");
+                var $navoverallVisibility = $("#navOverallVisibility");
+                var $participantsTop = $participants.offset();
+                var $basicInfoTop = $basicInfo.offset();
+                var $effectiveDatesCurrentStatusTop = $effectiveDatesCurrentStatus.offset();
+                var $contactsTop = $contacts.offset();
+                var $fileAttachmentsTop = $fileAttachments.offset();
+                var $overallVisibilityTop = $overallVisibility.offset();
+                var $body = $("body").scrollTop() + 100;
+                if($body <= $participantsTop.top + $participants.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $navparticipants.addClass("current");
+                } else if($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $navbasicInfo.addClass("current");
+                } else if($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $naveffectiveDatesCurrentStatus.addClass("current");
+                } else if($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $navcontacts.addClass("current");
+                } else if($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height()) {
+                    $("aside").find("li").removeClass("current");
+                    $navfileAttachments.addClass("current");
+                } else if($body >= $overallVisibilityTop.top) {
+                    $("aside").find("li").removeClass("current");
+                    $navoverallVisibility.closest("li").addClass("current");
+                }
+            });
+            $("#agreementContent").kendoEditor({
+                tools: [
+                    "bold", 
+                    "italic", 
+                    "underline", 
+                    "strikethrough", 
+                    "fontName", 
+                    "foreColor", 
+                    "justifyLeft", 
+                    "justifyCenter", 
+                    "justifyRight", 
+                    "justifyFull", 
+                    "insertUnorderedList", 
+                    "insertOrderedList", 
+                    "indent", 
+                    "outdent", 
+                    "createLink", 
+                    "unlink", 
+                    "insertImage", 
+                    "subscript", 
+                    "superscript", 
+                    "viewHtml", 
+                    {
+                        name: "formatBlock",
+                        items: [
+                            {
+                                text: "Paragraph",
+                                value: "p"
+                            }, 
+                            {
+                                text: "Quotation",
+                                value: "blockquote"
+                            }, 
+                            {
+                                text: "Heading 2",
+                                value: "h2"
+                            }, 
+                            {
+                                text: "Heading 3",
+                                value: "h3"
+                            }, 
+                            {
+                                text: "Heading 4",
+                                value: "h4"
+                            }, 
+                            {
+                                text: "Heading 5",
+                                value: "h5"
+                            }, 
+                            {
+                                text: "Heading 6",
+                                value: "h6"
+                            }
+                        ],
+                        width: "200px"
+                    }
+                ]
+            });
+        };
         InstitutionalAgreementEditModel.prototype.getSettings = function () {
             var _this = this;
             var url = 'App.Routes.WebApi.Agreements.Settings.get()';
@@ -349,275 +705,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 url: eval(url),
                 type: 'GET'
             }).done(function (result) {
-                _this.isCustomTypeAllowed(result.isCustomTypeAllowed);
-                _this.isCustomStatusAllowed(result.isCustomStatusAllowed);
-                _this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-                _this.statusOptions.push(new _this.selectConstructor("", ""));
-                _this.contactTypeOptions.push(new _this.selectConstructor("", undefined));
-                _this.typeOptions.push(new _this.selectConstructor("", ""));
-                for(var i = 0; i < result.statusOptions.length; i++) {
-                    _this.statusOptions.push(new _this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
-                }
-                ;
-                for(var i = 0; i < result.contactTypeOptions.length; i++) {
-                    _this.contactTypeOptions.push(new _this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
-                }
-                ;
-                for(var i = 0; i < result.typeOptions.length; i++) {
-                    _this.typeOptions.push(new _this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
-                }
-                ;
-                if(_this.isCustomTypeAllowed) {
-                    $("#typeOptions").kendoComboBox({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: _this.typeOptions()
-                        })
-                    });
-                } else {
-                    $("#typeOptions").kendoDropDownList({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: _this.typeOptions()
-                        })
-                    });
-                }
-                if(_this.isCustomStatusAllowed) {
-                    $("#statusOptions").kendoComboBox({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: _this.statusOptions()
-                        })
-                    });
-                } else {
-                    $("#statusOptions").kendoDropDownList({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: _this.statusOptions()
-                        })
-                    });
-                }
-                if(_this.isCustomContactTypeAllowed) {
-                    $("#contactTypeOptions").kendoComboBox({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: _this.contactTypeOptions()
-                        })
-                    });
-                } else {
-                    $("#contactTypeOptions").kendoDropDownList({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: _this.contactTypeOptions()
-                        })
-                    });
-                }
-                _this.$contactSalutation.kendoComboBox({
-                    dataTextField: "name",
-                    dataValueField: "id",
-                    dataSource: new kendo.data.DataSource({
-                        data: ko.mapping.toJS(_this.contactSalutation())
-                    })
-                });
-                _this.$contactSuffix.kendoComboBox({
-                    dataTextField: "name",
-                    dataValueField: "id",
-                    dataSource: new kendo.data.DataSource({
-                        data: ko.mapping.toJS(_this.contactSuffix())
-                    })
-                });
-                $(".hasDate").kendoDatePicker({
-                    open: function (e) {
-                        this.options.format = "MM/dd/yyyy";
-                    }
-                });
-                _this.$bindKendoFile();
-                $("#helpExpDate").kendoTooltip({
-                    width: 120,
-                    position: "top",
-                    content: "testing",
-                    showOn: "click",
-                    autoHide: false
-                });
-                _this.contactPhoneTextValue.subscribe(function (me) {
-                    if(_this.contactPhoneTextValue().length > 0) {
-                        _this.contactPhones.push(ko.mapping.fromJS({
-                            type: _this.contactPhoneType(),
-                            value: _this.contactPhoneTextValue()
-                        }));
-                        _this.contactPhoneTextValue("");
-                        $(".phoneTypes").kendoDropDownList({
-                            dataTextField: "name",
-                            dataValueField: "id",
-                            dataSource: new kendo.data.DataSource({
-                                data: ko.mapping.toJS(_this.phoneTypes())
-                            })
-                        });
-                    }
-                });
-                _this.$addContactDialog.kendoWindow({
-                    width: 950,
-                    close: function () {
-                        $("#addAContact").fadeIn(500);
-                    },
-                    visible: false,
-                    draggable: false,
-                    resizable: false
-                });
-                $(".k-window").css({
-                    position: 'fixed',
-                    margin: 'auto',
-                    top: '20px'
-                });
-                function kacSelext(me, e) {
-                    var dataItem = me.dataItem(e.item.index());
-                    _this.contactFirstName(dataItem.firstName);
-                    _this.contactLastName(dataItem.lastName);
-                    _this.contactEmail(dataItem.defaultEmailAddress);
-                    _this.contactMiddleName(dataItem.middleName);
-                    _this.contactPersonId(dataItem.id);
-                    _this.contactSuffixSelected(dataItem.suffix);
-                    _this.contactSalutationSelected(dataItem.salutation);
-                    _this.$contactEmail.prop('disabled', true);
-                    _this.$contactLastName.prop('disabled', true);
-                    _this.$contactFirstName.prop('disabled', true);
-                    $("#contactMiddleName").prop('disabled', true);
-                    _this.$contactSalutation.data("kendoComboBox").enable(false);
-                    _this.$contactSuffix.data("kendoComboBox").enable(false);
-                    _this.validateContact.errors.showAllMessages(true);
-                }
-                _this.$contactEmail.kendoAutoComplete({
-                    dataTextField: "defaultEmailAddress",
-                    minLength: 3,
-                    filter: "contains",
-                    ignoreCase: true,
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function (options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.People.get(),
-                                    data: {
-                                        email: _this.contactEmail(),
-                                        emailMatch: 'startsWith'
-                                    },
-                                    success: function (results) {
-                                        options.success(results.items);
-                                    }
-                                });
-                            }
-                        }
-                    }),
-                    change: function (e) {
-                    },
-                    select: function (e) {
-                        kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
-                    }
-                });
-                _this.$contactLastName.kendoAutoComplete({
-                    dataTextField: "lastName",
-                    template: "#=displayName#",
-                    minLength: 3,
-                    filter: "contains",
-                    ignoreCase: true,
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function (options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.People.get(),
-                                    data: {
-                                        lastName: _this.contactLastName(),
-                                        lastNameMatch: 'startsWith'
-                                    },
-                                    success: function (results) {
-                                        options.success(results.items);
-                                    }
-                                });
-                            }
-                        }
-                    }),
-                    change: function (e) {
-                    },
-                    select: function (e) {
-                        kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
-                    }
-                });
-                _this.$contactFirstName.kendoAutoComplete({
-                    dataTextField: "firstName",
-                    template: "#=displayName#",
-                    minLength: 3,
-                    filter: "contains",
-                    ignoreCase: true,
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function (options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.People.get(),
-                                    data: {
-                                        firstName: _this.contactFirstName(),
-                                        firstNameMatch: 'startsWith'
-                                    },
-                                    success: function (results) {
-                                        options.success(results.items);
-                                    }
-                                });
-                            }
-                        }
-                    }),
-                    change: function (e) {
-                    },
-                    select: function (e) {
-                        kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
-                    }
-                });
-                $(window).scroll(function () {
-                    var $participants = $("#participants");
-                    var $basicInfo = $("#basicInfo");
-                    var $effectiveDatesCurrentStatus = $("#effectiveDatesCurrentStatus");
-                    var $contacts = $("#contacts");
-                    var $fileAttachments = $("#fileAttachments");
-                    var $overallVisibility = $("#overallVisibility");
-                    var $navparticipants = $("#navParticipants");
-                    var $navbasicInfo = $("#navBasicInfo");
-                    var $naveffectiveDatesCurrentStatus = $("#navEffectiveDatesCurrentStatus");
-                    var $navcontacts = $("#navContacts");
-                    var $navfileAttachments = $("#navFileAttachments");
-                    var $navoverallVisibility = $("#navOverallVisibility");
-                    var $participantsTop = $participants.offset();
-                    var $basicInfoTop = $basicInfo.offset();
-                    var $effectiveDatesCurrentStatusTop = $effectiveDatesCurrentStatus.offset();
-                    var $contactsTop = $contacts.offset();
-                    var $fileAttachmentsTop = $fileAttachments.offset();
-                    var $overallVisibilityTop = $overallVisibility.offset();
-                    var $body = $("body").scrollTop() + 100;
-                    if($body >= $participantsTop.top && $body <= $participantsTop.top + $participants.height()) {
-                        $("aside").find("li").removeClass("current");
-                        $navparticipants.addClass("current");
-                    } else if($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height()) {
-                        $("aside").find("li").removeClass("current");
-                        $navbasicInfo.addClass("current");
-                    } else if($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height()) {
-                        $("aside").find("li").removeClass("current");
-                        $naveffectiveDatesCurrentStatus.addClass("current");
-                    } else if($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height()) {
-                        $("aside").find("li").removeClass("current");
-                        $navcontacts.addClass("current");
-                    } else if($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height()) {
-                        $("aside").find("li").removeClass("current");
-                        $navfileAttachments.addClass("current");
-                    } else if($body >= $overallVisibilityTop.top && $body <= $overallVisibilityTop.top + $overallVisibility.height()) {
-                        $("aside").find("li").removeClass("current");
-                        $navoverallVisibility.closest("li").addClass("current");
-                    }
-                });
+                _this.bindjQueryKendo(result);
             }).fail(function (xhr) {
                 alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
             });
@@ -699,66 +787,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.bindSearch = function () {
             var _this = this;
             if(!this.hasBoundSearch) {
-                $(document).ready(function () {
-                    $("#agreementContent").kendoEditor({
-                        tools: [
-                            "bold", 
-                            "italic", 
-                            "underline", 
-                            "strikethrough", 
-                            "fontName", 
-                            "foreColor", 
-                            "justifyLeft", 
-                            "justifyCenter", 
-                            "justifyRight", 
-                            "justifyFull", 
-                            "insertUnorderedList", 
-                            "insertOrderedList", 
-                            "indent", 
-                            "outdent", 
-                            "createLink", 
-                            "unlink", 
-                            "insertImage", 
-                            "subscript", 
-                            "superscript", 
-                            "viewHtml", 
-                            {
-                                name: "formatBlock",
-                                items: [
-                                    {
-                                        text: "Paragraph",
-                                        value: "p"
-                                    }, 
-                                    {
-                                        text: "Quotation",
-                                        value: "blockquote"
-                                    }, 
-                                    {
-                                        text: "Heading 2",
-                                        value: "h2"
-                                    }, 
-                                    {
-                                        text: "Heading 3",
-                                        value: "h3"
-                                    }, 
-                                    {
-                                        text: "Heading 4",
-                                        value: "h4"
-                                    }, 
-                                    {
-                                        text: "Heading 5",
-                                        value: "h5"
-                                    }, 
-                                    {
-                                        text: "Heading 6",
-                                        value: "h6"
-                                    }
-                                ],
-                                width: "200px"
-                            }
-                        ]
-                    });
-                });
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                 this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
@@ -1124,13 +1152,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.prevForceDisabled(false);
         };
         InstitutionalAgreementEditModel.prototype._setupValidation = function () {
-            this.validateOverallVisibility = ko.validatedObservable({
-                visibility: this.visibility.extend({
-                    required: {
-                        message: "Overall visibility is required."
-                    }
-                })
-            });
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
                 startDate: this.startDate.extend({
                     required: {
@@ -1220,10 +1241,37 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $(event.target).closest("li").addClass("current");
         };
         InstitutionalAgreementEditModel.prototype.saveAgreement = function () {
-            this.validateContact.errors.showAllMessages(true);
-            this.validateBasicInfo.errors.showAllMessages(true);
-            this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
-            this.validateOverallVisibility.errors.showAllMessages(true);
+            var offset;
+            if(!this.validateEffectiveDatesCurrentStatus.isValid()) {
+                var offset = $("#effectiveDatesCurrentStatus").offset();
+                this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
+                $("#navEffectiveDatesCurrentStatus").closest("ul").find("li").removeClass("current");
+                $("#navEffectiveDatesCurrentStatus").addClass("current");
+            }
+            if(!this.validateBasicInfo.isValid()) {
+                var offset = $("#basicInfo").offset();
+                this.validateBasicInfo.errors.showAllMessages(true);
+                $("#navValidateBasicInfo").closest("ul").find("li").removeClass("current");
+                $("#navValidateBasicInfo").addClass("current");
+            }
+            var validateParticipantsHasOwner = false;
+            var validateParticipantsHasParticipant = false;
+            $.each(this.participants(), function (i, item) {
+                if(item.isOwner() == true) {
+                    validateParticipantsHasOwner = true;
+                }
+                if(item.isOwner() == false) {
+                    validateParticipantsHasParticipant = true;
+                }
+            });
+            if(validateParticipantsHasOwner != true || validateParticipantsHasOwner != true) {
+                var offset = $("#participants").offset();
+                $("#navParticipants").closest("ul").find("li").removeClass("current");
+                $("#navParticipants").addClass("current");
+            }
+            if(offset != undefined) {
+                $("body").scrollTop(offset.top - 20);
+            }
         };
         return InstitutionalAgreementEditModel;
     })();
