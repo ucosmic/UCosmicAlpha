@@ -12,6 +12,8 @@
 
 @section scripts
 {
+    @Scripts.Render("~/bundles/employees")
+
     <script type='text/javascript' src='https://www.google.com/jsapi'></script>
     <script type='text/javascript'>
         google.load( 'visualization', '1', { 'packages': ['geochart'] } );
@@ -20,18 +22,18 @@
         function drawRegionsMap() {
 
             var countryData = new Array();
-            countryData.push(['Country', 'Activities']);
+            countryData.push( ['Country', 'Activities'] );
 
             $.ajax( {
                 type: "GET",
                 async: false,
                 url: App.Routes.WebApi.Activities.CountryCounts.get(),
                 success: function ( data, textStatus, jqXHR ) {
-                    for ( var i = 0; i < data.length; i += 1 ) {                      
-                        countryData.push([data[i].officialName, data[i].count]);
+                    for ( var i = 0; i < data.length; i += 1 ) {
+                        countryData.push( [data[i].officialName, data[i].count] );
                     }
                 },
-                error: function(jqXhr, textStatus, errorThrown) {
+                error: function ( jqXhr, textStatus, errorThrown ) {
                     debugger;
                 },
                 dataType: 'json'
@@ -43,27 +45,77 @@
 
             var chart = new google.visualization.GeoChart( document.getElementById( 'chart' ) );
             chart.draw( countryData, options );
-        };
+            };
+        </script>
+       
+    <script type="text/javascript">
+        $( function () {
+            
 
-        //function ViewModel() {
-        //    var self = this;
-        //};       
-        //ko.applyBindings(new ViewModel(), $('[data-current-module=agreements]')[0]);
-    </script>
+            
+            var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff();
+            facultyAndStaffViewModel.load()
+                .done( function () {
 
+                    facultyAndStaffViewModel.setupWidgets( "location", "fromDate", "toDate", "institution",
+                    "campusDropList", "collegeDropList", "departmentDropList");
+
+                    var rootElement = $( "#faculty-staff" )[0];
+                    ko.applyBindings( facultyAndStaffViewModel, rootElement );
+
+                    var locationSelector = $( "#location" ).data( "kendoMultiSelect" );
+                    locationSelector.setDataSource( new kendo.data.DataSource( {
+                        serverFiltering: true,
+                        transport: {
+                            read: function ( options ) {
+                                $.ajax( {
+                                    url: App.Routes.WebApi.Places.get(),
+
+                                    /*
+                                        Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
+                                        gets called as soon as the widget gets focus.  This is bad as the Place
+                                        service will respond with all the Places in the DB since there is no 
+                                        filter being provided.  Our workaround is to trap the empty filter
+                                        and send a special character for the service to ignore.  Also,
+                                        If options.success() is not actually call, the widget stops functioning
+                                        altogether.
+                                    */
+                                    data: {
+                                        keyword: ( ( options.data.filter != null ) &&
+                                            ( options.data.filter.filters != null ) &&
+                                            ( options.data.filter.filters.length > 0 ) &&
+                                            ( options.data.filter.filters[0].value != null ) ) ?
+                                            options.data.filter.filters[0].value : "~"
+                                    },
+                                    success: function ( results ) {
+                                        options.success( results );
+                                    }
+                                } );
+                            }
+                        }
+                    } ) );
+
+                    facultyAndStaffViewModel.setupValidation();
+                    facultyAndStaffViewModel.setupSubscriptions();
+
+                } )
+                .fail( function ( jqXhr, textStatus, errorThrown ) {
+                    alert( textStatus + "|" + errorThrown );
+                } );
+        } );
+    </script>    
 }
 
 <div class="content fixed to-top" data-current-module="employees">
     <div class="on-left from-top">
         <header>
-            <h1>
-                @ViewBag.Title
-            </h1>
+            <h1>@ViewBag.Title</h1>
         </header>
-        <div id="chart" style="width: 700px; height: 500px;"></div>
+        <div id="chart" style="width: 650px; height: 650px;">
+        </div>
     </div>
     <div class="on-right from-top">
-        <div>
+        <div id="faculty-staff">
             @Html.Partial(MVC.Employees.Views._SearchSideBar)
         </div>
     </div>

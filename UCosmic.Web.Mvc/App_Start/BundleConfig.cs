@@ -141,6 +141,10 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/affiliation").Include(
                 "~/scripts/viewmodels/affiliations/Affiliation.js"));
 
+            // employees, faculty and staff
+            bundles.Add(new ScriptBundle("~/bundles/employees").Include(
+                "~/scripts/viewmodels/employees/Employees.js"));
+
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(
                 //"~/scripts/kendo/2013.1.226/kendo.web.js",

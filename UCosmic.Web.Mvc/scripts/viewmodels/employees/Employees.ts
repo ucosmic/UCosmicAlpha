@@ -8,6 +8,7 @@
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../activities/ServiceApiModel.d.ts" />
 
 
 
@@ -21,25 +22,30 @@ module ViewModels.Employees {
         inititializationErrors: string = "";
 
         /* True if any field changes. */
-        dirtyFlag: KnockoutObservableBool = ko.observable(false);
+        ///dirtyFlag: KnockoutObservableBool = ko.observable(false);
+
+        /* Element id of institution autocomplete */
+        institutionSelectorId: string;
+        institutionId: KnockoutObservableAny;
+        institutionOfficialName: KnockoutObservableString;
+        institutionCountryOfficialName: KnockoutObservableString;
+
+        defaultEstablishmentHasCampuses: KnockoutObservableBool;
+
+        tenantInstitutionId: KnockoutObservableNumber;
+
+        /* Array of activity types displayed as list of checkboxes */
+        activityTypes: KnockoutObservableArray;
 
         /* Locations for multiselect. */
         locationSelectorId: string;
-        initialLocations: any[] = new any[];        // Bug - To overcome bug in Multiselect.
-        selectedLocationValues: any[] = new any[];
+        initialLocations: any[];        // Bug - To overcome bug in Multiselect.
+        selectedLocationValues: any[];
 
-        /* IObservableDegree implemented */
-        id: KnockoutObservableNumber;           // if 0, new expertise
-        version: KnockoutObservableString;      // byte[] converted to base64
-        personId: KnockoutObservableNumber;
-        from: KnockoutObservableNumber;
-        to: KnockoutObservableAny;              // nullable
-        onGoing: KnockoutObservableBool;
-        institution: KnockoutObservableString;
-        position: KnockoutObservableString;
+        fromDate: KnockoutObservableDate;
+        toDate: KnockoutObservableDate;
+        institutions: KnockoutObservableString;
         locations: KnockoutObservableArray;
-        whenLastUpdated: KnockoutObservableString;
-        whoLastUpdated: KnockoutObservableString;
 
         errors: KnockoutValidationErrors;
         isValid: () => bool;
@@ -51,7 +57,19 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize(affiliationId: string): void {
+        _initialize(): void {
+            this.initialLocations = new any[];        // Bug - To overcome bug in Multiselect.
+            this.selectedLocationValues = new any[];
+            this.fromDate = ko.observable();
+            this.toDate = ko.observable();
+            this.institutionId = ko.observable(null);
+            this.institutionOfficialName = ko.observable(null);
+            this.institutionCountryOfficialName = ko.observable(null);
+            this.defaultEstablishmentHasCampuses = ko.observable(true);
+            this.activityTypes = ko.observableArray();
+
+
+            this.tenantInstitutionId = ko.observable(193); // USF
 
             var fromToYearRange: number = 80;
             var thisYear: number = Number(moment().format('YYYY'));
@@ -59,19 +77,28 @@ module ViewModels.Employees {
             for (var i: number = 0; i < fromToYearRange; i += 1) {
                 this.years[i] = thisYear - i;
             }
+        }
 
-            if (affiliationId === "new") {
-                this.id = ko.observable(0);
-            } else {
-                this.id = ko.observable(Number(affiliationId));
-            }
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------  
+        constructor() {
+            this._initialize();
         }
 
         // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------   
-        setupWidgets(locationSelectorId: string): void {
+        setupWidgets(locationSelectorId: string,
+            fromDatePickerId: string,
+            toDatePickerId: string,
+            institutionSelectorId: string,
+            campuseDropListId: string,
+            collegeDropListId: string,
+            departmentDropListId: string ): void {
+
             this.locationSelectorId = locationSelectorId;
 
             /*
@@ -104,32 +131,188 @@ module ViewModels.Employees {
                 placeholder: "[Select Country/Location]"
             });
 
+            $("#" + fromDatePickerId).kendoDatePicker({
+                /* If user clicks date picker button, reset format */
+                open: function (e) { this.options.format = "MM/dd/yyyy"; }
+            });
 
-            $("#fromDate").kendoDropDownList({
-                dataSource: this.years,
-                value: me.from(),
-                optionLabel: " ",
-                change: function (e) {
-                    var toDateDropList = $("#toDate").data("kendoDropDownList");
-                    if (toDateDropList.value() < this.value()) {
-                        toDateDropList.value(this.value());
+            $("#" + toDatePickerId).kendoDatePicker({
+                open: function (e) { this.options.format = "MM/dd/yyyy"; }
+            });
+
+            this.institutionSelectorId = institutionSelectorId;
+
+            $("#" + institutionSelectorId).kendoAutoComplete({
+                minLength: 3,
+                filter: "contains",
+                ignoreCase: true,
+                placeholder: "[Enter Institution]",
+                dataTextField: "officialName",
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: (options: any): void => {
+                            $.ajax({
+                                url: App.Routes.WebApi.Establishments.get(),
+                                data: {
+                                    keyword: options.data.filter.filters[0].value,
+                                    pageNumber: 1,
+                                    pageSize: 2147483647 /* C# Int32.Max */
+                                },
+                                success: (results: any): void => {
+                                    options.success(results.items);
+                                }
+                            });
+                        }
                     }
-                    me.from(this.value());
+                }),
+                change: (e: any): void => {
+                    this.checkInstitutionForNull();
+                },
+                select: (e: any): void => {
+                    var me = $("#" + institutionSelectorId).data("kendoAutoComplete");
+                    var dataItem = me.dataItem(e.item.index());
+                    this.institutionOfficialName(dataItem.officialName);
+                    this.institutionId(dataItem.id);
+                    if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
+                        this.institutionCountryOfficialName(dataItem.countryName);
+                    }
+                    else {
+                        this.institutionCountryOfficialName(null);
+                    }
                 }
             });
 
-            $("#toDate").kendoDropDownList({
-                dataSource: this.years,
-                value: me.to(),
-                optionLabel: " ",
+            $("#" + departmentDropListId ).kendoDropDownList({
+                dataTextField: "officialName",
+                dataValueField: "id",
                 change: function (e) {
-                    var fromDateDropList = $("#fromDate").data("kendoDropDownList");
-                    if (fromDateDropList.value() > this.value()) {
-                        fromDateDropList.value(this.value());
+                    //var item = this.dataItem[e.sender.selectedIndex];
+                },
+                dataBound: function (e) {
+                    if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
+                        var item = this.dataItem(this.selectedIndex);
+                        if (item == null) {
+                            this.text("");
+                            $("#departmenDiv").hide();
+                        }
+                        else {
+                            $("#departmenDiv").show();
+                        }
                     }
-                    me.to(this.value());
+                    else {
+                        $("#departmenDiv").hide();
+                    }
                 }
             });
+
+
+            var collegeDropListDataSource = null;
+
+            if (!this.defaultEstablishmentHasCampuses()) {
+                collegeDropListDataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: App.Routes.WebApi.Establishments.getChildren(this.tenantInstitutionId(), true)
+                        }
+                    }
+                });
+            }
+
+            $("#" + collegeDropListId).kendoDropDownList({
+                dataTextField: "officialName",
+                dataValueField: "id",
+                dataSource: collegeDropListDataSource,
+                change: function (e) {
+                    var selectedIndex = e.sender.selectedIndex;
+                    if (selectedIndex != -1) {
+                        var item = this.dataItem(selectedIndex);
+                        if (item != null) {
+                            var dataSource = new kendo.data.DataSource({
+                                transport: {
+                                    read: {
+                                        url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                    }
+                                }
+                            });
+
+                            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                        }
+                    }
+                },
+                dataBound: function (e) {
+                    if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
+                        var item = this.dataItem(this.selectedIndex);
+                        if (item != null) {
+                            var collegeId = item.id;
+                            if (collegeId != null) {
+                                var dataSource = new kendo.data.DataSource({
+                                    transport: {
+                                        read: {
+                                            url: App.Routes.WebApi.Establishments.getChildren(collegeId, true)
+                                        }
+                                    }
+                                });
+
+                                $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (this.defaultEstablishmentHasCampuses()) {
+                $("#" + campuseDropListId).kendoDropDownList({
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.Establishments.getChildren(this.tenantInstitutionId(), false)
+                            }
+                        }
+                    }),
+                    change: function (e) {
+                        var selectedIndex = e.sender.selectedIndex;
+                        if ((selectedIndex != null) && (selectedIndex != -1)) {
+                            var item = this.dataItem(selectedIndex);
+                            if (item != null) {
+                                var dataSource = new kendo.data.DataSource({
+                                    transport: {
+                                        read: {
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                        }
+                                    }
+                                });
+
+                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                            }
+                        }
+                    },
+                    dataBound: function (e) {
+                        if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
+                            var item = this.dataItem(this.selectedIndex);
+                            if (item != null) {
+                                var campusId = item.id;
+                                if (campusId != null) {
+                                    var dataSource = new kendo.data.DataSource({
+                                        transport: {
+                                            read: {
+                                                url: App.Routes.WebApi.Establishments.getChildren(campusId, true)
+                                            }
+                                        }
+                                    });
+
+                                    $("#" + collegeDropListId ).data("kendoDropDownList").setDataSource(dataSource);
+                                }
+                            }
+                            else {
+                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(null);
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         // --------------------------------------------------------------------------------
@@ -137,21 +320,20 @@ module ViewModels.Employees {
         */
         // --------------------------------------------------------------------------------
         setupValidation(): void {
-            ko.validation.rules['atLeast'] = {
-                validator: (val: any, otherVal: any): bool => {
-                    return val.length >= otherVal;
-                },
-                message: 'At least {0} must be selected.'
-            };
+            //ko.validation.rules['atLeast'] = {
+            //    validator: (val: any, otherVal: any): bool => {
+            //        return val.length >= otherVal;
+            //    },
+            //    message: 'At least {0} must be selected.'
+            //};
 
-            ko.validation.registerExtenders();
+            //ko.validation.registerExtenders();
 
-            this.locations.extend({ atLeast: 1 });
-            this.institution.extend({ required: true, maxLength: 200 });
-            this.position.extend({ required: true, maxLength: 100 });
-            this.from.extend({ required: true });
+            //this.locations.extend({ atLeast: 1 });
+            //this.institutions.extend({ required: true, maxLength: 200 });
+            //this.from.extend({ required: true });
 
-            ko.validation.group(this);
+            //ko.validation.group(this);
         }
 
         // --------------------------------------------------------------------------------
@@ -159,20 +341,13 @@ module ViewModels.Employees {
         */
         // --------------------------------------------------------------------------------  
         setupSubscriptions(): void {
-            this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.institution.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            //this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            //this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
-        constructor(affiliationId: string) {
-            this._initialize(affiliationId);
-        }
 
         // --------------------------------------------------------------------------------
         /* 
@@ -182,55 +357,51 @@ module ViewModels.Employees {
             var me = this;
             var deferred: JQueryDeferred = $.Deferred();
 
-            if (this.id() == 0) {
-                this.version = ko.observable(null);
-                this.personId = ko.observable(0);
-                this.from = ko.observable(0);
-                this.to = ko.observable(0);
-                this.onGoing = ko.observable(false);
-                this.institution = ko.observable(null);
-                this.position = ko.observable(null);
-                this.locations = ko.observableArray();
-                this.whenLastUpdated = ko.observable(null);
-                this.whoLastUpdated = ko.observable(null);
+            var typesPact = $.Deferred();
+            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+                          .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
+                              typesPact.resolve(data);
+                          })
+                          .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                              typesPact.reject(jqXHR, textStatus, errorThrown);
+                          });
+            
+            
+            //var dataPact = $.Deferred();
 
-                deferred.resolve();
-            }
-            else {
-                var dataPact = $.Deferred();
+            //$.ajax({
+            //    type: "GET",
+            //    url: App.Routes.WebApi.InternationalAffiliations.get(this.id()),
+            //    success: function (data: any, textStatus: string, jqXhr: JQueryXHR): void
+            //    { dataPact.resolve(data); },
+            //    error: function (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
+            //    { dataPact.reject(jqXhr, textStatus, errorThrown); },
+            //});
 
-                $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.InternationalAffiliations.get(this.id()),
-                    success: function (data: any, textStatus: string, jqXhr: JQueryXHR): void
-                    { dataPact.resolve(data); },
-                    error: function (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
-                    { dataPact.reject(jqXhr, textStatus, errorThrown); },
-                });
+            // only process after all requests have been resolved
+            $.when(typesPact)
+                            .done((types: Service.ApiModels.IEmployeeActivityType[], ): void => {
 
-                // only process after all requests have been resolved
-                $.when(dataPact)
-                              .done((data: any): void => {
+                                this.activityTypes = ko.mapping.fromJS(types);
 
-                                  ko.mapping.fromJS(data, {}, this);
+                                //ko.mapping.fromJS(data, {}, this);
 
-                                  /* Initialize the list of selected locations with current locations in values. */
-                                  for (var i = 0; i < this.locations().length; i += 1) {
+                                ///* Initialize the list of selected locations with current locations in values. */
+                                //for (var i = 0; i < this.locations().length; i += 1) {
 
-                                      this.initialLocations.push({
-                                          officialName: this.locations()[i].placeOfficialName(),
-                                          id: this.locations()[i].placeId()
-                                      });
+                                //    this.initialLocations.push({
+                                //        officialName: this.locations()[i].placeOfficialName(),
+                                //        id: this.locations()[i].placeId()
+                                //    });
 
-                                      this.selectedLocationValues.push(this.locations()[i].placeId());
-                                  }
+                                //    this.selectedLocationValues.push(this.locations()[i].placeId());
+                                //}
 
-                                  deferred.resolve();
-                              })
-                              .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                                  deferred.reject(xhr, textStatus, errorThrown);
-                              });
-            }
+                                deferred.resolve();
+                            })
+                            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                                deferred.reject(xhr, textStatus, errorThrown);
+                            });
 
             return deferred;
         }
@@ -239,90 +410,19 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        save(viewModel: any, event: any): void {
-
-            if (!this.isValid()) {
-                // TBD - need dialog here. 
-                this.errors.showAllMessages();
-                return;
+        checkInstitutionForNull() {
+            var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
+            var value = (me.value() != null) ? me.value().toString() : null;
+            if (value != null) {
+                value = $.trim(value);
             }
-
-            var mapSource = {
-                id: this.id,
-                version: this.version,
-                personId: this.personId,
-                whenLastUpdated: this.whenLastUpdated,
-                whoLastUpdated: this.whoLastUpdated,
-                from: this.from,
-                to: this.to,
-                onGoing: this.onGoing,
-                institution: this.institution,
-                position: this.position,
-                locations: ko.observableArray()
-            };
-
-            for (var i = 0; i < this.locations().length; i += 1) {
-                mapSource.locations.push({
-                    id: this.locations()[i].id,
-                    version: this.locations()[i].version,
-                    whenLastUpdated: this.locations()[i].whenLastUpdated,
-                    whoLastUpdated: this.locations()[i].whoLastUpdated,
-                    affiliationId: this.locations()[i].affiliationId,
-                    placeOfficialName: this.locations()[i].placeOfficialName,
-                    placeId: this.locations()[i].placeId
-                });
-            }
-
-            var model = ko.mapping.toJS(mapSource);
-
-            var url = (viewModel.id() == 0) ?
-                        App.Routes.WebApi.InternationalAffiliations.post() :
-                        App.Routes.WebApi.InternationalAffiliations.put(viewModel.id());
-            var type = (viewModel.id() == 0) ? "POST" : "PUT";
-
-            $.ajax({
-                type: type,
-                async: false,
-                url: url,
-                data: ko.toJSON(model),
-                dataType: 'json',
-                contentType: 'application/json',
-                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                },
-                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    alert(textStatus + " | " + errorThrown);
-                },
-                complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                    location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
-                }
-            });
-        }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        cancel(item: any, event: any, mode: string): void {
-            if (this.dirtyFlag() == true) {
-                $("#cancelConfirmDialog").dialog({
-                    modal: true,
-                    resizable: false,
-                    width: 450,
-                    buttons: {
-                        "Do not cancel": function () {
-                            $(this).dialog("close");
-                        },
-                        "Cancel and lose changes": function () {
-                            $(this).dialog("close");
-                            location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
-                        }
-                    }
-                });
-            }
-            else {
-                location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
+            if ((value == null) || (value.length == 0)) {
+                me.value(null);
+                this.institutionOfficialName(null);
+                this.institutionId(null);
             }
         }
+
 
         // --------------------------------------------------------------------------------
         /*
@@ -334,7 +434,7 @@ module ViewModels.Employees {
                 var location = ko.mapping.fromJS({ id: 0, placeId: items[i].id, version: "" });
                 this.locations.push(location);
             }
-            this.dirtyFlag(true);
+            //this.dirtyFlag(true);
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿<div class="filter-sidebar">
     <div class="header">
-        <span>Search Options</span>
+        <span>Filter Options</span>
     </div>
     <div>
         <div class="section">
-            <div class="section-header" >Search For</div>
+            <div class="section-header">Search For</div>
             <div style="text-align: center; font-size: medium; padding-bottom: 4px">
-                <input type="radio" id="activitiesRadioButton"/><span>Activities</span>
-                <input type="radio" id="peopleRadioButton"/><span>People</span>
+                <input type="radio" id="activitiesRadioButton" name="activityType" value="activities"/><span>Activities&emsp;&emsp;</span>
+                <input type="radio" id="peopleRadioButton" name="activityType" value="people"/><span>People</span>
             </div>
         </div>
         <div class="section">
@@ -16,28 +16,44 @@
         </div>
         <div class="section">
             <div class="section-header">Date Range</div>
-            <label for="fromDate">From</label>
-            <select id="fromDate" data-bind="value: from"></select>
-            <label for="toDate" style="width: 30px">To</label>
-            <select id="toDate" data-bind="value: to"></select>
+            <div>
+                <label for="fromDate">From</label>
+                <input id="fromDate" style="width: 100px"/>
+                <label for="toDate">To</label>
+                <input id="toDate" style="width: 100px"/>
+            </div>
         </div>
         <div class="section">
-            <div class="section-header">Location</div>
-            <select id="location" data-bind="value: location"></select>
+            <div class="section-header">Country/Location</div>
+            <select id="location" style="overflow-y:auto"></select>
         </div>
         <div class="section">
             <div class="section-header">Type</div>
             <div style="font-size: small">
-                <div><input type="checkbox"/><span> Research or Creative Endeavor</span></div>
+                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes() }" />
+                @*<div><input type="checkbox"/><span> Research or Creative Endeavor</span></div>
                 <div><input type="checkbox"/><span> Teaching or Mentoring</span></div>
                 <div><input type="checkbox"/><span> Award or Honor</span></div>
                 <div><input type="checkbox"/><span> Conference Presentation or Proceeding </span></div>
-                <div><input type="checkbox"/><span> Professional Development, Service or Consulting </span></div>
+                <div><input type="checkbox"/><span> Professional Development, Service or Consulting </span></div>*@
             </div>
         </div>
         <div class="section">
-            <div class="section-header">College, Campus or Dept</div>
-            <select id="college_campus_dept" data-bind="value: activityType"></select>
+            <div class="section-header">Campus</div>
+            <div style="font-size: smaller">
+                <select id="campusDropList" style="width: 100%"></select>
+            </div>
+            <div class="section-header">College</div>
+            <select id="collegeDropList" style="width: 100%"></select>
+            <div id="departmentDiv" class="section-header">Department</div>
+            <select id="departmentDropList" style="width: 100%"></select>
         </div>
     </div>
 </div>
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="activity-types-template">
+    <li>
+        <input type="checkbox"/><span data-bind="text: type()"></span>
+    </li>
+</script>
