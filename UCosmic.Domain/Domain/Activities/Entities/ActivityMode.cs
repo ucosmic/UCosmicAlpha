@@ -4,6 +4,5 @@
     {
         Draft = 1,
         Public = 2,
-        Protected = 3
     }
 }

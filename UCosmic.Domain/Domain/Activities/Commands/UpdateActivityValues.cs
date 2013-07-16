@@ -8,19 +8,17 @@ namespace UCosmic.Domain.Activities
 {
     public class UpdateActivityValues
     {
-        public UpdateActivityValues(IPrincipal principal, int id, DateTime updatedOn)
+        public UpdateActivityValues(IPrincipal principal, int id)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
 
             Principal = principal;
             Id = id;
-            UpdatedOn = updatedOn.ToUniversalTime();
             DateFormat = "MM/dd/yyyy";
         }
 
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
-        public DateTime UpdatedOn { get; private set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
@@ -140,7 +138,7 @@ namespace UCosmic.Domain.Activities
             target.WasExternallyFunded = command.WasExternallyFunded;
             target.WasInternallyFunded = command.WasInternallyFunded;
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
-            target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
+            target.UpdatedOnUtc = DateTime.UtcNow;
 
             /* ----- Activity Locations ----- */
 
@@ -270,9 +268,7 @@ namespace UCosmic.Domain.Activities
                 }
                 else
                 {
-                    var updateActivityDocument = new UpdateActivityDocument(command.Principal,
-                                                                            targetDocument.RevisionId,
-                                                                            command.UpdatedOn)
+                    var updateActivityDocument = new UpdateActivityDocument(command.Principal, targetDocument.RevisionId)
                     {
                         Mode = command.Mode,
                         Title = document.Title,

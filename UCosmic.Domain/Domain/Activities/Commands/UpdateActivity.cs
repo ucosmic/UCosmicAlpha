@@ -10,18 +10,16 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; protected set; }
         public int Id { get; protected set; }
-        public DateTime UpdatedOn { get; protected set; }
         public string ModeText { get; protected set; }
         public int Number { get; set; }
         public ActivityValues Values { get; set; }
         public bool NoCommit { get; set; }
 
-        public UpdateActivity(IPrincipal principal, int id, DateTime updatedOn, string modeText)
+        public UpdateActivity(IPrincipal principal, int id, string modeText)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
             Id = id;
-            UpdatedOn = updatedOn;
             ModeText = modeText;
         }
     }
@@ -34,16 +32,20 @@ namespace UCosmic.Domain.Activities
 
             RuleFor(x => x.Principal)
                 .MustOwnActivity(entities, x => x.Id)
-                .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
+                    .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
                 // id must be within valid range
                 .GreaterThanOrEqualTo(1)
-                .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
+                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
 
                 // id must exist in the database
                 .MustFindActivityById(entities)
-                .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
+                    .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
+
+            RuleFor(x => x.ModeText)
+                .MustHaveActivityMode()
+                    .WithMessage(MustHaveActivityMode.FailMessage);
         }
     }
 
@@ -52,19 +54,17 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
-        //private readonly IHandleCommands<CreateDeepActivityValues> _createDeepActivityValues;
         private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
 
-        public HandleUpdateMyActivityCommand(ICommandEntities entities,
-                                             IUnitOfWork unitOfWork,
-                                             IHandleCommands<UpdateActivityValues> updateActivityValues,
-                                             //IHandleCommands<CreateDeepActivityValues> createDeepActivityValues,
-                                             IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues)
+        public HandleUpdateMyActivityCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            , IHandleCommands<UpdateActivityValues> updateActivityValues
+            , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
+        )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
-            //_createDeepActivityValues = createDeepActivityValues;
             _copyDeepActivityValues = copyDeepActivityValues;
         }
 
@@ -72,13 +72,12 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            /* Retrieve the activity to update. */
+            // Retrieve the activity to update.
             var target = _entities.Get<Activity>().Single(a => a.RevisionId == command.Id);
 
-            /* Attempt to get the ActivityValues of the command'ed type. */
-            ActivityValues targetActivityValues = _entities.Get<ActivityValues>()
-                                        .SingleOrDefault(v => (v.ActivityId == target.RevisionId) &&
-                                                        (v.ModeText == command.ModeText));
+            // Attempt to get the ActivityValues of the command'ed type.
+            var targetActivityValues = _entities.Get<ActivityValues>()
+                .SingleOrDefault(v => v.ActivityId == target.RevisionId && v.ModeText == command.ModeText);
 
             if (targetActivityValues == null)
             {
@@ -92,22 +91,17 @@ namespace UCosmic.Domain.Activities
                 targetActivityValues = copyDeepActivityValues.CreatedActivityValues;
             }
 
-            /* If target fields equal new field values, we do not proceed. */
-            if ( targetActivityValues.Equals(command.Values) )
-            {
-                return;
-            }
+            // If target fields equal new field values, we do not proceed.
+            if (targetActivityValues.Equals(command.Values)) return;
 
-            /* Update fields */
-            target.ModeText = command.ModeText;
+            // Update fields
+            target.Mode = command.ModeText.AsEnum<ActivityMode>();
             target.Number = command.Number;
-            target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
+            target.UpdatedOnUtc = DateTime.UtcNow;
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
 
-            /* Update activity values (for this mode) */
-            var updateActivityValuesCommand = new UpdateActivityValues(command.Principal,
-                                                                       targetActivityValues.RevisionId,
-                                                                       command.UpdatedOn)
+            // Update activity values (for this mode)
+            var updateActivityValuesCommand = new UpdateActivityValues(command.Principal, targetActivityValues.RevisionId)
             {
                 Title = command.Values.Title,
                 Content = command.Values.Content,

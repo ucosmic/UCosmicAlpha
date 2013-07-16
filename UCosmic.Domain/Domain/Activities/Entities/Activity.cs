@@ -1,38 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
-    public class Activity : RevisableEntity, IAmNumbered
+    public class Activity : RevisableEntity, IAmNumbered, IEquatable<Activity>
     {
-        protected bool Equals(Activity other)
+        protected internal Activity()
         {
-            return PersonId == other.PersonId &&
-                   Number == other.Number &&
-                   string.Equals(ModeText, other.ModeText) &&
-                   Equals(Values, other.Values);
+            Mode = ActivityMode.Draft;
+
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
+            Values = new Collection<ActivityValues>();
+            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
-        public override bool Equals(object obj)
+        public virtual Person Person { get; protected internal set; }
+        public int PersonId { get; protected internal set; }
+        public int Number { get; protected internal set; }
+
+        public string ModeText { get; protected set; }
+        public ActivityMode Mode
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            //if (obj.GetType() != this.GetType()) return false;
-            return Equals((Activity) obj);
+            get { return ModeText.AsEnum<ActivityMode>(); }
+            protected internal set { ModeText = value.AsSentenceFragment(); }
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = PersonId;
-                hashCode = (hashCode*397) ^ Number;
-                hashCode = (hashCode*397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Values != null ? Values.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
+        public virtual ICollection<ActivityValues> Values { get; protected internal set; }
+
+        public int? EditSourceId { get; protected internal set; }
 
         public bool IsEmpty()
         {
@@ -49,35 +46,31 @@ namespace UCosmic.Domain.Activities
             return empty;
         }
 
-        public Activity()
+        public bool Equals(Activity other)
         {
-            _mode = ActivityMode.Draft;
-
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            Values = new Collection<ActivityValues>();
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
+            return other != null &&
+                PersonId == other.PersonId &&
+                Number == other.Number &&
+                string.Equals(ModeText, other.ModeText) &&
+                Equals(Values, other.Values);
         }
 
-        public virtual Person Person { get; protected internal set; }
-        public int PersonId { get; protected internal set; }
-        public int Number { get; protected internal set; }
-
-        private ActivityMode _mode;
-
-        public string ModeText
+        public override bool Equals(object obj)
         {
-            get { return _mode.AsSentenceFragment(); }
-            set { _mode = value.AsEnum<ActivityMode>(); }
+            if (ReferenceEquals(null, obj)) return false;
+            return ReferenceEquals(this, obj) || Equals(obj as Activity);
         }
 
-        public ActivityMode Mode
+        public override int GetHashCode()
         {
-            get { return _mode; }
-            set { _mode = value; }
+            unchecked
+            {
+                int hashCode = PersonId;
+                hashCode = (hashCode * 397) ^ Number;
+                hashCode = (hashCode * 397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Values != null ? Values.GetHashCode() : 0);
+                return hashCode;
+            }
         }
-
-        public virtual ICollection<ActivityValues> Values { get; protected internal set; }
-
-        public int? EditSourceId { get; protected internal set; }
     }
 }

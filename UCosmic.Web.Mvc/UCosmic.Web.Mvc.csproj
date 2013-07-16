@@ -325,6 +325,18 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DevelopmentOnlyAttribute.cs" />
+    <Compile Include="Models\Activities\ActivityApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityDocumentApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityEditState.cs" />
+    <Compile Include="Models\Activities\ActivityEstablishmentApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityLocationApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityLocationNameApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityPlaceCount.cs" />
+    <Compile Include="Models\Activities\ActivitySearchInputModel.cs" />
+    <Compile Include="Models\Activities\ActivityTagApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityTypeNameApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityValuesApiModel.cs" />
     <Compile Include="Models\_Etc\FileMedia.cs" />
     <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
@@ -355,7 +367,6 @@
     <Compile Include="Models\Users\RoleApiModel.cs" />
     <Compile Include="Models\Users\UserSearchInputModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentApiFlatModel.cs" />
-    <Compile Include="Models\ActivityApiModel.cs" />
     <Compile Include="Models\EstablishmentConfigurationModel.cs" />
     <Compile Include="Models\EstablishmentEmailModel.cs" />
     <Compile Include="Models\EstablishmentsNotificationConfigurationModel.cs" />

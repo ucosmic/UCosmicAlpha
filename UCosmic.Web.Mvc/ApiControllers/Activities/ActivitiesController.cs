@@ -66,7 +66,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{activityId}")]
         public ActivityApiModel Get(int activityId)
         {
-            var activity = _queryProcessor.Execute( new ActivityByEntityId(activityId) );
+            var activity = _queryProcessor.Execute(new ActivityByEntityId(activityId));
             if (activity == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -119,8 +119,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 try
                 {
-                /* There's no "in progress edit" record, so we make a copy of the
-                     * activity and set it to edit mode. */
+                    /* There's no "in progress edit" record, so we make a copy of the
+                         * activity and set it to edit mode. */
                     var copyDeepActivityCommand = new CopyDeepActivity(User,
                                                                        activity.RevisionId,
                                                                        activity.Mode,
@@ -206,15 +206,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             try
             {
-                var updateActivityCommand = new UpdateActivity(User,
-                                                               activity.RevisionId,
-                                                               DateTime.Now,
-                                                               activity.ModeText)
+                var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
                 {
-                    Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText)
+                    Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
                 };
-                updateActivityCommand.Values.Documents = _queryProcessor.Execute(
-                    new ActivityDocumentsByActivityIdAndMode(activityId, model.ModeText));
                 _updateActivity.Handle(updateActivityCommand);
             }
             catch (Exception ex)
@@ -249,7 +244,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 if (!editActivity.EditSourceId.HasValue)
                     throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-                var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, DateTime.Now, mode)
+                var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, mode)
                 {
                     Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
                 };
@@ -266,7 +261,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     Content = new StringContent(ex.Message),
                     ReasonPhrase = "Activity update error"
                 };
-                throw new HttpResponseException(responseMessage);    
+                throw new HttpResponseException(responseMessage);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK);
@@ -313,7 +308,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     Content = new StringContent(ex.Message),
                     ReasonPhrase = "Activity delete error"
                 };
-                throw new HttpResponseException(responseMessage);               
+                throw new HttpResponseException(responseMessage);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK);

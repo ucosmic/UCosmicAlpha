@@ -117,8 +117,10 @@
                                                 <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
                                                 <span>
                                                     &emsp;
-                                                    <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing"/>
-                                                    <span>&nbsp;On-going&nbsp;</span>
+                                                    <label>
+                                                        <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing"/>
+                                                        <span>&nbsp;On-going&nbsp;</span>
+                                                    </label>
                                                 </span>
                                                 <span data-bind="visible: !values.onGoing()">
                                                     <span>&nbsp;&nbsp;To&nbsp;</span>                                                
@@ -140,10 +142,15 @@
                                     <tr>
                                         <td class="field-name">Funding</td>
                                         <td>
-                                            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded"/>
-                                            <span>External</span>
-                                            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded"/>
-                                            <span>Internal</span>
+                                            <label>
+                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded"/>
+                                                <span>External</span>
+                                            </label>
+                                            &emsp;
+                                            <label>
+                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded"/>
+                                                <span>Internal</span>
+                                            </label>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -188,7 +195,9 @@
                                 <header style="margin-bottom: 10px">
                                     <h2 style="font-weight: normal">
                                         <span>Tags or Keywords</span>
-                                        <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" data-bind="click: function () { this.addingTag(true); }"/>
+                                        <a href="/#" data-bind="click: function () { this.addingTag(true); }" title="Add a new tag">
+                                            <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
+                                        </a>
                                     </h2>
                                 </header>
                                 <div data-bind="visible: addingTag" style="width: 100%; margin-bottom: 16px">
@@ -204,7 +213,9 @@
                                 <header>
                                     <h2>
                                         <span style="font-weight: normal">Shared Documents</span>
-                                        <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" data-bind="click: function () { this.uploadingDocument(true); }"/>
+                                        <a href="/#" data-bind="click: function () { this.uploadingDocument(true); }" title="Add a new document">
+                                            <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" />
+                                        </a>
                                     </h2>
                                 </header>
                                 <div data-bind="visible: uploadingDocument" style="margin-bottom: 16px">
@@ -267,7 +278,7 @@
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-types-template">
     <li>
-        <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked"/><span data-bind="text: type()"></span>
+        <label><input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked"/><span data-bind="text: type()"></span></label>
     </li>
 </script>
 

@@ -4,6 +4,6 @@ namespace UCosmic.Domain.Activities
     {
         Custom = 1,
         Place = 2,
-        Establishment = 3
+        Establishment = 3,
     }
 }

@@ -7,18 +7,17 @@ namespace UCosmic.Domain.Activities
 {
     public class UpdateActivityDocument
     {
-        public UpdateActivityDocument(IPrincipal principal, int id, DateTime updatedOn)
+        public UpdateActivityDocument(IPrincipal principal, int id)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
 
             Principal = principal;
             Id = id;
-            UpdatedOn = updatedOn.ToUniversalTime();
         }
 
         public IPrincipal Principal { get; protected set; }
         public int Id { get; private set; }
-        public DateTime UpdatedOn { get; private set; }
+        //public DateTime UpdatedOn { get; private set; }
         public ActivityMode Mode { get; set; }
         public string Title { get; set; }
         internal bool NoCommit { get; set; }
@@ -68,7 +67,7 @@ namespace UCosmic.Domain.Activities
 
             target.Mode = command.Mode;
             target.Title = command.Title;
-            target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
+            target.UpdatedOnUtc = DateTime.UtcNow;
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
 
             _entities.Update(target);

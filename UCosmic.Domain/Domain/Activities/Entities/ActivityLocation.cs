@@ -1,25 +1,12 @@
-﻿using UCosmic.Domain.Places;
+﻿using System;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityLocation : RevisableEntity
+    public class ActivityLocation : RevisableEntity, IEquatable<ActivityLocation>
     {
-        protected bool Equals(ActivityLocation other)
+        protected internal ActivityLocation()
         {
-            return PlaceId == other.PlaceId;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            //if (obj.GetType() != this.GetType()) return false;
-            return Equals((ActivityLocation) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return PlaceId;
         }
 
         public virtual ActivityValues ActivityValues { get; set; }
@@ -27,5 +14,28 @@ namespace UCosmic.Domain.Activities
 
         public virtual Place Place { get; set; }
         public int PlaceId { get; set; }
+
+        public bool Equals(ActivityLocation other)
+        {
+            return other != null &&
+                PlaceId == other.PlaceId &&
+                ActivityValuesId == other.ActivityValuesId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return ReferenceEquals(this, obj) || Equals(obj as ActivityLocation);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = PlaceId.GetHashCode();
+                hashCode = (hashCode * 397) ^ ActivityValuesId.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }

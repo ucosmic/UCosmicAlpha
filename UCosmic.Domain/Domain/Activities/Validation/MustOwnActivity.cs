@@ -10,7 +10,7 @@ namespace UCosmic.Domain.Activities
     public class MustOwnActivity<T> : PropertyValidator
     {
         public const string FailMessageFormat =
-            "User '{0}' is not authorized to perform this action on activity #{1}.";
+            "User '{0}' is not authorized to perform this action on activity with id '{1}'.";
 
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _activityId;
