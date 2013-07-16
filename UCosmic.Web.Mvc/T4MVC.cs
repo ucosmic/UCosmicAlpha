@@ -2591,7 +2591,10 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/employees";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
+                public static readonly string Employees_ts = Url("Employees.ts");
+                public static readonly string Employees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Employees.min.js") ? Url("Employees.min.js") : Url("Employees.js");
+                              
+                public static readonly string Employees_min_js = Url("Employees.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

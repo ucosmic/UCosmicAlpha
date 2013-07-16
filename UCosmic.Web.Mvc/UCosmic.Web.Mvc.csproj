@@ -2070,6 +2070,10 @@
     <Content Include="scripts\viewmodels\employees\Employees.min.js">
       <DependentUpon>Employees.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\employees\ServerApiModel.d.js">
+      <DependentUpon>ServerApiModel.d.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
