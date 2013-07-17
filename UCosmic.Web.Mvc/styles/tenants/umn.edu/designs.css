@@ -250,7 +250,7 @@ ul.selectableListItems li:hover {
 
 .filter-sidebar {
   width: 270px;
-  font: Arial;
+  font-family: Arial;
   font-size: small;
   background-color: white;
   color: white;
