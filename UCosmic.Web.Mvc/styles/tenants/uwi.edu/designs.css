@@ -1,0 +1,250 @@
+/* uwi designs importer */
+/* main sass bootstrap */
+/* suny brand values */
+/* default variable values */
+/* uwi brand values */
+/* uwi variable values */
+body table.data {
+  width: 100%;
+  margin: 16px 0; }
+  body table.data th {
+    border: solid 1px #fff;
+    padding: 4px 8px;
+    vertical-align: text-top;
+    text-align: left;
+    background-color: #1f7e5c;
+    color: #eeeeee;
+    font-weight: bold; }
+  body table.data td {
+    border: solid 1px #fff;
+    padding: 4px;
+    vertical-align: text-top; }
+  body table.data tbody tr:nth-child(even) td {
+    background-color: #dddddd; }
+  body table.data tbody tr.hover-hilite:hover * {
+    cursor: pointer; }
+  body table.data tbody tr.hover-hilite:hover td {
+    background-color: #ffffaa; }
+body table.activity {
+  width: 100%;
+  margin: 16px 0; }
+  body table.activity td.field-name {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: right;
+    vertical-align: middle; }
+  body table.activity td.required-field-name {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: right;
+    vertical-align: middle; }
+  body table.activity td.required-field-name::after {
+    content: "*";
+    font-size: large;
+    vertical-align: text-top;
+    color: #F00; }
+  body table.activity td {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: left;
+    vertical-align: middle; }
+body ul.data > li.hover-hilite:hover, body ol.data > li.hover-hilite:hover {
+  background-color: #ffffaa; }
+  body ul.data > li.hover-hilite:hover *, body ol.data > li.hover-hilite:hover * {
+    cursor: pointer; }
+body ul.data > li > div, body ol.data > li > div {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 1em;
+  border: solid 1px #555;
+  padding: 16px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px; }
+  body ul.data > li > div > .on-right, body ol.data > li > div > .on-right {
+    margin-left: 5px; }
+body ul.data-items > li, body ol.data-items > li {
+  margin-bottom: 4px; }
+body .badge {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 0 0 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+  vertical-align: top;
+  -webkit-text-shadow: 1px 1px 0 black;
+  text-shadow: 1px 1px 0 black; }
+  body .badge.green {
+    background-color: #090;
+    color: #fff; }
+  body .badge.red {
+    background-color: #c00;
+    color: #fff; }
+  body .badge.blue {
+    background-color: #33f;
+    color: #fff !important; }
+  body .badge.link {
+    -webkit-text-shadow: 0 0 0 black;
+    text-shadow: 0 0 0 black;
+    background-color: #fff;
+    border: solid 1px #4e75bb; }
+  body .badge.branded-dark1 {
+    background-color: #1f7e5c;
+    color: white !important; }
+body .person-profile {
+  margin-bottom: 16px; }
+  body .person-profile.clickable:hover *:hover {
+    cursor: pointer; }
+  body .person-profile.clickable:hover > .card {
+    -moz-border-radius: 8px 8px 8px 0;
+    -webkit-border-radius: 8px 8px 8px 0;
+    border-radius: 8px 8px 8px 0;
+    border-color: #dddddd;
+    background-color: #dddddd; }
+  body .person-profile.clickable:hover > .action {
+    visibility: visible; }
+  body .person-profile > .card {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    border: solid 1px transparent;
+    padding: 8px;
+    background-color: transparent; }
+    body .person-profile > .card .photo {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 138px;
+      padding-right: 10px; }
+      body .person-profile > .card .photo img {
+        max-width: 128px;
+        max-height: 128px; }
+    body .person-profile > .card .name-and-title {
+      width: 410px; }
+      body .person-profile > .card .name-and-title .display-name {
+        font-size: 28px;
+        line-height: 32px; }
+      body .person-profile > .card .name-and-title .titles {
+        font-size: 18px;
+        line-height: 22px; }
+      body .person-profile > .card .name-and-title .admin-only {
+        margin-top: 4px; }
+    body .person-profile > .card .faculty {
+      margin-left: 4px;
+      padding-top: 8px;
+      width: 390px; }
+      body .person-profile > .card .faculty .appointments {
+        padding: 4px 0 0 4px;
+        font-size: 14px;
+        line-height: 16px; }
+  body .person-profile > .action {
+    display: inline-block;
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px;
+    padding: 0 16px 8px 16px;
+    visibility: hidden;
+    background-color: #dddddd; }
+body .profile-tabs.k-tabstrip {
+  background-image: none;
+  border-width: 0; }
+  body .profile-tabs.k-tabstrip ul.k-tabstrip-items {
+    padding: 0; }
+    body .profile-tabs.k-tabstrip ul.k-tabstrip-items li.k-item {
+      margin-left: 4px; }
+  body .profile-tabs.k-tabstrip .k-content {
+    margin: 0;
+    padding: 8px;
+    border-width: 0;
+    border-top-width: 1px; }
+body .user-item .text-data {
+  margin-left: 8px;
+  width: 580px; }
+  body .user-item .text-data .user-name {
+    font-size: 18px;
+    font-weight: bold; }
+  body .user-item .text-data .display-name {
+    font-size: 18px;
+    font-weight: normal; }
+  body .user-item .text-data .roles {
+    margin-top: 2px; }
+    body .user-item .text-data .roles .badge {
+      margin: 2px 2px 2px 0;
+      text-transform: none; }
+      body .user-item .text-data .roles .badge img.revoke-button {
+        vertical-align: top;
+        cursor: pointer;
+        margin-left: 2px; }
+body .user-item .editor {
+  margin-left: 8px;
+  width: 580px; }
+  body .user-item .editor .row {
+    margin-top: 12px; }
+body .user-item .menu-box ul.k-menu {
+  display: inline-block;
+  margin: -8px 0 0 0;
+  border: 0;
+  background: none;
+  background-image: none;
+  width: 16px; }
+  body .user-item .menu-box ul.k-menu > li {
+    border: 0;
+    width: 16px; }
+    body .user-item .menu-box ul.k-menu > li.k-state-hover, body .user-item .menu-box ul.k-menu > li.k-state-hover:hover {
+      border: 0;
+      background: none;
+      background-image: none;
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none; }
+body .user-item .menu-box .k-link {
+  padding: 0; }
+  body .user-item .menu-box .k-link .k-icon.k-i-arrow-s {
+    margin: 0;
+    cursor: pointer; }
+body .ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis; }
+body .help-icon {
+  width: 16px;
+  height: 16px; }
+body .help-icon-position-on-required-field {
+  position: relative;
+  top: -30px;
+  right: 36px;
+  width: 16px;
+  height: 16px; }
+body .help-icon-position {
+  position: relative;
+  top: -28px;
+  right: 20px;
+  width: 16px;
+  height: 16px; }
+body small {
+  font-size: smaller; }
+body .example {
+  font-size: smaller;
+  color: #777; }
+body .dialog {
+  display: none; }
+
+ul.selectableListItems li:hover {
+  background-color: #dddddd; }
+

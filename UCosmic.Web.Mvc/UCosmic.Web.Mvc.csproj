@@ -2426,6 +2426,12 @@
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\uwi.edu\designs.scss" />
+    <Content Include="styles\tenants\uwi.edu\forms.scss" />
+    <Content Include="styles\tenants\uwi.edu\ie8.scss" />
+    <Content Include="styles\tenants\uwi.edu\layout.scss" />
+    <Content Include="styles\tenants\uwi.edu\_brand.scss" />
+    <Content Include="styles\tenants\uwi.edu\_values.scss" />
     <None Include="styles\tenants\testshib.org\banner-logo.png" />
     <None Include="styles\tenants\testshib.org\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2439,6 +2445,19 @@
     <None Include="styles\tenants\testshib.org\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </None>
+    <Content Include="styles\tenants\uwi.edu\banner-logo.png" />
+    <Content Include="styles\tenants\uwi.edu\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uwi.edu\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uwi.edu\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uwi.edu\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\lehigh.edu\banner-logo.png" />
     <Content Include="styles\tenants\lehigh.edu\designs.css">
       <DependentUpon>designs.scss</DependentUpon>

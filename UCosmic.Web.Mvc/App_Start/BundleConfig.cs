@@ -164,7 +164,7 @@ namespace UCosmic.Web.Mvc
                 "_default",
                 "suny.edu",
                 "uc.edu",
-                "umn.edu",
+                "uwi.edu",
                 "lehigh.edu",
                 "usf.edu",
             };
