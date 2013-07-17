@@ -11,7 +11,7 @@ namespace UCosmic.SeedData
         private readonly EstablishmentUcEntitySeeder _ucSeeder;
         private readonly EstablishmentFoundingMemberEntitySeeder _foundingMemberSeeder;
         private readonly EstablishmentSamplePartnerEntitySeeder _samplePartnerSeeder;
-        private readonly EstablishmentUmnEntitySeeder _umnSeeder;
+        private readonly EstablishmentUwiEntitySeeder _uwiSeeder;
         private readonly EstablishmentUsfEntitySeeder _usfSeeder;
         private readonly EstablishmentUwoEntitySeeder _uwoSeeder;
         private readonly EstablishmentTestShibEntitySeeder _testShibSeeder;
@@ -23,7 +23,7 @@ namespace UCosmic.SeedData
             , EstablishmentUcEntitySeeder ucSeeder
             , EstablishmentFoundingMemberEntitySeeder foundingMemberSeeder
             , EstablishmentSamplePartnerEntitySeeder samplePartnerSeeder
-            , EstablishmentUmnEntitySeeder umnSeeder
+            , EstablishmentUwiEntitySeeder uwiSeeder
             , EstablishmentUsfEntitySeeder usfSeeder
             , EstablishmentUwoEntitySeeder uwoSeeder
             , EstablishmentTestShibEntitySeeder testShibSeeder
@@ -36,7 +36,7 @@ namespace UCosmic.SeedData
             _ucSeeder = ucSeeder;
             _foundingMemberSeeder = foundingMemberSeeder;
             _samplePartnerSeeder = samplePartnerSeeder;
-            _umnSeeder = umnSeeder;
+            _uwiSeeder = uwiSeeder;
             _usfSeeder = usfSeeder;
             _uwoSeeder = uwoSeeder;
             _testShibSeeder = testShibSeeder;
@@ -51,7 +51,7 @@ namespace UCosmic.SeedData
             _ucSeeder.Seed();
             _foundingMemberSeeder.Seed();
             _samplePartnerSeeder.Seed();
-            _umnSeeder.Seed();
+            _uwiSeeder.Seed();
             _usfSeeder.Seed();
             _uwoSeeder.Seed();
             _testShibSeeder.Seed();
@@ -1293,11 +1293,11 @@ namespace UCosmic.SeedData
         }
     }
 
-    public class EstablishmentUmnEntitySeeder : BaseEstablishmentEntitySeeder
+    public class EstablishmentUwiEntitySeeder : BaseEstablishmentEntitySeeder
     {
         private readonly IProcessQueries _queryProcessor;
 
-        public EstablishmentUmnEntitySeeder(IProcessQueries queryProcessor
+        public EstablishmentUwiEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<SeedEstablishment> createEstablishment
             , IUnitOfWork unitOfWork
         )
@@ -1308,177 +1308,41 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var umn = _queryProcessor.Execute(new EstablishmentByUrl("www.umn.edu"));
-            Seed(new SeedEstablishment
+            var uwi = Seed(new SeedEstablishment
             {
-                OfficialName = "Center for Allied Health Programs, University of Minnesota",
+                OfficialName = "The University of the West Indies",
                 IsMember = true,
-                ParentId = umn.RevisionId,
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cahp.umn.edu",
+                    KnownEstablishmentType.UniversitySystem.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.uwi.edu",
+                EmailDomains = new[] { "@uwimona.edu.jm", "@mymona.uwi.edu", "@cavehill.uwi.edu", "@sta.uwi.edu", },
+                FindPlacesByCoordinates = true,
+                CenterLatitude = 18.477203,
+                CenterLongitude = -77.92116499999997,
             });
             Seed(new SeedEstablishment
             {
-                OfficialName = "College of Biological Sciences, University of Minnesota",
+                OfficialName = "The University of the West Indies At Cave Hill, Barbados",
                 IsMember = true,
-                ParentId = umn.RevisionId,
+                ParentId = uwi.RevisionId,
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cbs.umn.edu",
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "cavehill.uwi.edu",
+                FindPlacesByCoordinates = true,
+                CenterLatitude = 13.133313,
+                CenterLongitude = -59.62863900000002,
             });
             Seed(new SeedEstablishment
             {
-                OfficialName = "College of Continuing Education, University of Minnesota",
+                OfficialName = "The University of the West Indies at St. Augustine, Trinidad and Tobago",
                 IsMember = true,
-                ParentId = umn.RevisionId,
+                ParentId = uwi.RevisionId,
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cce.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "School of Dentistry, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.dentistry.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Design, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.design.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Education & Human Development, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cehd.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "University of Minnesota Extension",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.extension.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Food, Agricultural and Natural Resource Sciences, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cfans.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "The Graduate School, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.grad.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "University of Minnesota Law School",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.law.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Liberal Arts, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cla.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "Carlson School of Management, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.csom.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "University of Minnesota Medical School",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.med.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "School of Nursing, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.nursing.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Pharmacy, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.pharmacy.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "Hubert H. Humphrey School of Public Affairs, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.hhh.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "School of Public Health, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.sph.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Science & Engineering, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cse.umn.edu",
-            });
-            Seed(new SeedEstablishment
-            {
-                OfficialName = "College of Veterinary Medicine, University of Minnesota",
-                IsMember = true,
-                ParentId = umn.RevisionId,
-                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                    KnownEstablishmentType.College.AsSentenceFragment())).RevisionId,
-                OfficialWebsiteUrl = "www.cvm.umn.edu",
+                    KnownEstablishmentType.UniversityCampus.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "sta.uwi.edu",
+                FindPlacesByCoordinates = true,
+                CenterLatitude = 10.642388,
+                CenterLongitude = -61.40052800000001,
             });
         }
     }

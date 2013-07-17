@@ -60,7 +60,7 @@ namespace UCosmic.SeedData
                 { "www.uc.edu",           "@uc.edu"             },
                 { "www.suny.edu",         "@suny.edu"           },
                 { "www.stonybrook.edu",   "@stonybrook.edu"     },
-                { "www.umn.edu",          "@umn.edu"            },
+                { "www.uwi.edu",          "@uwimona.edu.jm"     },
                 { "www.lehigh.edu",       "@lehigh.edu"         },
                 { "www.usil.edu.pe",      "@usil.edu.pe"        },
                 { "www.bjtu.edu.cn",      "@bjtu.edu.cn"        },

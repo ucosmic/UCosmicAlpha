@@ -164,7 +164,7 @@ namespace UCosmic.Domain.Places
                         searchText.Append(" " + geoName.Admin1Name);
                     searchText.Append(", " + geoName.CountryName);
 
-                    var geoPlanetPlaces = geoPlanetContainer.Places(searchText.ToString())
+                    var geoPlanetPlaces = geoPlanetContainer.Places(searchText.ToString().Replace("/", "-"))
                         .Where(x => x.WoeId > 0).ToArray();
 
                     NGeo.Yahoo.GeoPlanet.Place geoPlanetPlace = null;
