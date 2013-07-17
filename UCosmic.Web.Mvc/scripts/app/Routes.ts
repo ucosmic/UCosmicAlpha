@@ -269,6 +269,10 @@ module App.Routes {
                 return get(agreementId);
             }
 
+            export function post() {
+                return makeUrl('agreements');
+            }
+
             export module Participants {
 
                 export function get (agreementId?: number): string {

@@ -21,7 +21,6 @@ var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
 
 
-
 export class InstitutionalAgreementParticipantModel {
 
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
@@ -66,6 +65,32 @@ export class InstitutionalAgreementEditModel {
         this.addPhone = <() => void > this.addPhone.bind(this);
         this.removeFile = <() => void > this.removeFile.bind(this);
         this._setupValidation = <() => void > this._setupValidation.bind(this);
+        this.participantsShowErrorMsg = ko.computed(function () => {
+
+            var validateParticipantsHasOwner = false;
+            var validateParticipantsHasParticipant = false;
+            $.each(this.participants(), function (i, item) => {
+                if (item.isOwner() == true) {
+                    validateParticipantsHasOwner = true;
+                }
+                if (item.isOwner() == false) {
+                    validateParticipantsHasParticipant = true;
+                }
+            });
+            if (validateParticipantsHasOwner == false && validateParticipantsHasParticipant == false) {
+                this.participantsErrorMsg("Home and Partner participants are required.");
+                return true;
+            } else if (validateParticipantsHasOwner == false) {
+                this.participantsErrorMsg("Home participant is required.");
+                return true;
+            } else if (validateParticipantsHasParticipant == false) {
+                this.participantsErrorMsg("Partner participant is required.");
+                return true;
+            } else {
+                return false;
+            }
+
+        });
         
         this.hideOtherGroups();
         this.bindSearch();
@@ -191,9 +216,13 @@ export class InstitutionalAgreementEditModel {
     tempFileId = 0;
     files = ko.mapping.fromJS([]);
 
+    participantsExport = ko.mapping.fromJS([]);
     participants = ko.mapping.fromJS([]);
     contacts = ko.mapping.fromJS([]);
     contactPhones = ko.mapping.fromJS([]);
+
+    participantsErrorMsg = ko.observable();
+    participantsShowErrorMsg;
 
 
     officialNameDoesNotMatchTranslation = ko.computed( function() {
@@ -380,66 +409,7 @@ export class InstitutionalAgreementEditModel {
         });
             
     }
-
-    //startDeletingFile(): void {
-    //    if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
-    //        this.$confirmPurgeDialog.dialog({
-    //            dialogClass: 'jquery-ui',
-    //            width: 'auto',
-    //            resizable: false,
-    //            modal: true,
-    //            buttons: [
-    //                {
-    //                    text: 'Yes, confirm delete',
-    //                    click: (): void => {
-    //                        this.$confirmPurgeDialog.dialog('close');
-    //                        this._deleteFile();
-    //                    }
-    //                },
-    //                {
-    //                    text: 'No, cancel delete',
-    //                    click: (): void => {
-    //                        this.$confirmPurgeDialog.dialog('close');
-    //                        this.fileDeleteSpinner.stop();
-    //                    },
-    //                    'data-css-link': true
-    //                }
-    //            ]
-    //        });
-    //    }
-    //    else if (confirm('Are you sure you want to delete your profile file?')) {
-    //        this._deleteFile();
-    //    }
-    //}
-
-    //private _deleteFile(): void {
-    //    this.fileDeleteSpinner.start();
-    //    this.isFileExtensionInvalid(false);
-    //    this.isFileTooManyBytes(false);
-    //    this.isFileFailureUnexpected(false);
-    //    $.ajax({ // submit ajax DELETE request
-    //        // TODO TIM: is this uploads files or agreement fils
-    //        url: App.Routes.WebApi.Agreements.Files.del(this.agreementId, 1),
-    //        type: 'DELETE'
-    //    })
-    //    .always((): void => {
-    //        this.fileDeleteSpinner.stop();
-    //    })
-    //    .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-    //        if (typeof response === 'string') App.flasher.flash(response);
-    //        this.hasFile(false);
-    //        // TODO TIM: this no longer compiles
-    //        // you need to know the agreementId in order to invoke a function
-    //        // on App.Routes.WebApi.Agreement.Files
-    //        //this.fileSrc(App.Routes.WebApi.Agreements.File
-    //        //    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
-    //    })
-    //    .fail((): void => {
-    //        this.isFileFailureUnexpected(true);
-    //    });
-    //}
-
-
+    
     removeFile(me, e): void {
         if (confirm('Are you sure you want to remove this file from this agreement?')) {
             // all files will have a guid in create, none will have a guid in edit agreement
@@ -758,19 +728,19 @@ export class InstitutionalAgreementEditModel {
             var $overallVisibilityTop = $overallVisibility.offset();
 
             var $body = $("body").scrollTop() + 100;
-            if ($body <= $participantsTop.top + $participants.height()) {
+            if ($body <= $participantsTop.top + $participants.height() + 40) {
                 $("aside").find("li").removeClass("current");
                 $navparticipants.addClass("current");
-            } else if ($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height()) {
+            } else if ($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height() + 40) {
                 $("aside").find("li").removeClass("current");
                 $navbasicInfo.addClass("current");
-            } else if ($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height()) {
+            } else if ($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height() + 40) {
                 $("aside").find("li").removeClass("current");
                 $naveffectiveDatesCurrentStatus.addClass("current");
-            } else if ($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height()) {
+            } else if ($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height() + 40) {
                 $("aside").find("li").removeClass("current");
                 $navcontacts.addClass("current");
-            } else if ($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height()) {
+            } else if ($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height() + 40) {
                 $("aside").find("li").removeClass("current");
                 $navfileAttachments.addClass("current");
             } else if ($body >= $overallVisibilityTop.top) {
@@ -1103,12 +1073,12 @@ export class InstitutionalAgreementEditModel {
                                     .done(function (response) => {
                                         myParticipant.isOwner(response.isOwner);
                                         this.participants.push(myParticipant);
-                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
+                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
                                     })
                                     .fail(function () => {
                                         //alert('fail');
                                         this.participants.push(myParticipant);
-                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
+                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
                                     });
                                 } else {
                                     alert("This Participant has already been added.")
@@ -1437,6 +1407,7 @@ export class InstitutionalAgreementEditModel {
     saveAgreement(): void {
 
         var offset;
+        // validate in this order to put scroll in right place
         if (!this.validateEffectiveDatesCurrentStatus.isValid()) {
             var offset = $("#effectiveDatesCurrentStatus").offset();
             this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
@@ -1449,25 +1420,77 @@ export class InstitutionalAgreementEditModel {
             $("#navValidateBasicInfo").closest("ul").find("li").removeClass("current");
             $("#navValidateBasicInfo").addClass("current");
         }
-        // lastly validate participants - must have home and partner
-        var validateParticipantsHasOwner = false;
-        var validateParticipantsHasParticipant = false;
-        $.each(this.participants(), function (i, item) => {
-            if (item.isOwner() == true) {
-                validateParticipantsHasOwner = true;
-            }
-            if (item.isOwner() == false) {
-                validateParticipantsHasParticipant = true;
-            }
-        });
-        if (validateParticipantsHasOwner != true || validateParticipantsHasOwner != true) {
+        $("#participantsErrorMsg").show();
+        if (this.participantsShowErrorMsg()) {
             var offset = $("#participants").offset();
             $("#navParticipants").closest("ul").find("li").removeClass("current");
             $("#navParticipants").addClass("current");
-        }
+        } 
         if (offset != undefined) {
             $("body").scrollTop(offset.top - 20);
         }
+        var $LoadingPage = $("#LoadingPage").find("strong")
+        var url = App.Routes.WebApi.Agreements.post();
+        function agreementPostDone(response: any, statusText: string, xhr: JQueryXHR) {
+
+            this.establishmentItemViewModel.createSpinner.stop();
+            $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+            $("#addEstablishment").fadeOut(500, function () => {
+                $("#LoadingPage").fadeIn(500);
+                setTimeout(function () => {
+                    $("#LoadingPage").fadeOut(500, function () {
+                        $LoadingPage.text("Loading Page...");
+                    });
+                    this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                }, 5000);
+            });
+            //get agreementId and post to file and/or contacts if needed
+        }
+        $.each(this.participants(), function (i, item) => {
+            this.participantsExport.push({
+                agreementId: item.agreementId,
+                establishmentId: item.establishmentId,
+                establishmentOfficialName: item.establishmentOfficialName,
+                establishmentTranslatedName: item.establishmentTranslatedName,
+                isOwner: item.isOwner,
+                center: item.center
+            });
+        });
+        var data = ko.mapping.toJSON({
+            content: this.content(),
+            expiresOn:this.expDate(),
+            startsOn:this.startDate(),
+            isAutoRenew:this.autoRenew(),
+            name:this.nickname(),
+            notes:this.privateNotes(),
+            status:this.statusOptionSelected(),
+            visibility:this.visibility(),
+            isExpirationEstimated:this.isEstimated(),
+            participants: this.participantsExport,
+            umbrellaId:this.uAgreementSelected(),
+            type: this.typeOptionSelected()
+        })
+        $.post(url, data)
+        .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+            agreementPostDone(response, statusText, xhr);
+        })
+        .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+
+            if (xhr.status === 400) { // validation message will be in xhr response text...
+                this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                    title: 'Alert Message',
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                        'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                    }
+                });
+            }
+        });
     };
 
 }

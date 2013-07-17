@@ -274,6 +274,10 @@ var App;
                     return get(agreementId);
                 }
                 Agreements.put = put;
+                function post() {
+                    return makeUrl('agreements');
+                }
+                Agreements.post = post;
                 (function (Participants) {
                     function get(agreementId) {
                         var url = 'agreements/0/participants';

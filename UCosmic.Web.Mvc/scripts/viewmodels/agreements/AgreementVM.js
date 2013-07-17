@@ -28,6 +28,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         function InstitutionalAgreementEditModel(initDefaultPageRoute) {
             if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
             this.initDefaultPageRoute = initDefaultPageRoute;
+            var _this = this;
             this.selectConstructor = function (name, id) {
                 this.name = name;
                 this.id = id;
@@ -95,9 +96,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
             this.tempFileId = 0;
             this.files = ko.mapping.fromJS([]);
+            this.participantsExport = ko.mapping.fromJS([]);
             this.participants = ko.mapping.fromJS([]);
             this.contacts = ko.mapping.fromJS([]);
             this.contactPhones = ko.mapping.fromJS([]);
+            this.participantsErrorMsg = ko.observable();
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
             });
@@ -142,6 +145,30 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.addPhone = this.addPhone.bind(this);
             this.removeFile = this.removeFile.bind(this);
             this._setupValidation = this._setupValidation.bind(this);
+            this.participantsShowErrorMsg = ko.computed(function () {
+                var validateParticipantsHasOwner = false;
+                var validateParticipantsHasParticipant = false;
+                $.each(_this.participants(), function (i, item) {
+                    if(item.isOwner() == true) {
+                        validateParticipantsHasOwner = true;
+                    }
+                    if(item.isOwner() == false) {
+                        validateParticipantsHasParticipant = true;
+                    }
+                });
+                if(validateParticipantsHasOwner == false && validateParticipantsHasParticipant == false) {
+                    _this.participantsErrorMsg("Home and Partner participants are required.");
+                    return true;
+                } else if(validateParticipantsHasOwner == false) {
+                    _this.participantsErrorMsg("Home participant is required.");
+                    return true;
+                } else if(validateParticipantsHasParticipant == false) {
+                    _this.participantsErrorMsg("Partner participant is required.");
+                    return true;
+                } else {
+                    return false;
+                }
+            });
             this.hideOtherGroups();
             this.bindSearch();
             this.getSettings();
@@ -618,19 +645,19 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 var $fileAttachmentsTop = $fileAttachments.offset();
                 var $overallVisibilityTop = $overallVisibility.offset();
                 var $body = $("body").scrollTop() + 100;
-                if($body <= $participantsTop.top + $participants.height()) {
+                if($body <= $participantsTop.top + $participants.height() + 40) {
                     $("aside").find("li").removeClass("current");
                     $navparticipants.addClass("current");
-                } else if($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height()) {
+                } else if($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height() + 40) {
                     $("aside").find("li").removeClass("current");
                     $navbasicInfo.addClass("current");
-                } else if($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height()) {
+                } else if($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height() + 40) {
                     $("aside").find("li").removeClass("current");
                     $naveffectiveDatesCurrentStatus.addClass("current");
-                } else if($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height()) {
+                } else if($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height() + 40) {
                     $("aside").find("li").removeClass("current");
                     $navcontacts.addClass("current");
-                } else if($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height()) {
+                } else if($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height() + 40) {
                     $("aside").find("li").removeClass("current");
                     $navfileAttachments.addClass("current");
                 } else if($body >= $overallVisibilityTop.top) {
@@ -936,10 +963,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                         }).done(function (response) {
                                             myParticipant.isOwner(response.isOwner);
                                             _this.participants.push(myParticipant);
-                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
+                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
                                         }).fail(function () {
                                             _this.participants.push(myParticipant);
-                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new');
+                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
                                         });
                                     } else {
                                         alert("This Participant has already been added.");
@@ -1241,6 +1268,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $(event.target).closest("li").addClass("current");
         };
         InstitutionalAgreementEditModel.prototype.saveAgreement = function () {
+            var _this = this;
             var offset;
             if(!this.validateEffectiveDatesCurrentStatus.isValid()) {
                 var offset = $("#effectiveDatesCurrentStatus").offset();
@@ -1254,17 +1282,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 $("#navValidateBasicInfo").closest("ul").find("li").removeClass("current");
                 $("#navValidateBasicInfo").addClass("current");
             }
-            var validateParticipantsHasOwner = false;
-            var validateParticipantsHasParticipant = false;
-            $.each(this.participants(), function (i, item) {
-                if(item.isOwner() == true) {
-                    validateParticipantsHasOwner = true;
-                }
-                if(item.isOwner() == false) {
-                    validateParticipantsHasParticipant = true;
-                }
-            });
-            if(validateParticipantsHasOwner != true || validateParticipantsHasOwner != true) {
+            $("#participantsErrorMsg").show();
+            if(this.participantsShowErrorMsg()) {
                 var offset = $("#participants").offset();
                 $("#navParticipants").closest("ul").find("li").removeClass("current");
                 $("#navParticipants").addClass("current");
@@ -1272,6 +1291,65 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             if(offset != undefined) {
                 $("body").scrollTop(offset.top - 20);
             }
+            var $LoadingPage = $("#LoadingPage").find("strong");
+            var url = App.Routes.WebApi.Agreements.post();
+            function agreementPostDone(response, statusText, xhr) {
+                var _this = this;
+                this.establishmentItemViewModel.createSpinner.stop();
+                $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                $("#addEstablishment").fadeOut(500, function () {
+                    $("#LoadingPage").fadeIn(500);
+                    setTimeout(function () {
+                        $("#LoadingPage").fadeOut(500, function () {
+                            $LoadingPage.text("Loading Page...");
+                        });
+                        _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                    }, 5000);
+                });
+            }
+            $.each(this.participants(), function (i, item) {
+                _this.participantsExport.push({
+                    agreementId: item.agreementId,
+                    establishmentId: item.establishmentId,
+                    establishmentOfficialName: item.establishmentOfficialName,
+                    establishmentTranslatedName: item.establishmentTranslatedName,
+                    isOwner: item.isOwner,
+                    center: item.center
+                });
+            });
+            var data = ko.mapping.toJSON({
+                content: this.content(),
+                expiresOn: this.expDate(),
+                startsOn: this.startDate(),
+                isAutoRenew: this.autoRenew(),
+                name: this.nickname(),
+                notes: this.privateNotes(),
+                status: this.statusOptionSelected(),
+                visibility: this.visibility(),
+                isExpirationEstimated: this.isEstimated(),
+                participants: this.participantsExport,
+                umbrellaId: this.uAgreementSelected(),
+                type: this.typeOptionSelected()
+            });
+            $.post(url, data).done(function (response, statusText, xhr) {
+                agreementPostDone(response, statusText, xhr);
+            }).fail(function (xhr, statusText, errorThrown) {
+                if(xhr.status === 400) {
+                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                        title: 'Alert Message',
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            'Ok': function () {
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
         };
         return InstitutionalAgreementEditModel;
     })();
