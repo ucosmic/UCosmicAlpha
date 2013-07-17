@@ -8,7 +8,7 @@ var ViewModels;
                 this.activityTypes = ko.observableArray();
                 this.addingTag = ko.observable(false);
                 this.newTag = ko.observable();
-                this.uploadingDocument = ko.observable(false);
+                this.fileUploadErrors = ko.observableArray();
                 this.inititializationErrors = "";
                 this.AUTOSAVE_KEYCOUNT = 10;
                 this.keyCounter = 0;
@@ -25,6 +25,9 @@ var ViewModels;
                         _this.autoSave(_this, null);
                     }
                 });
+            };
+            Activity.prototype.dismissFileUploadError = function (index) {
+                this.fileUploadErrors.splice(index, 1);
             };
             Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
                 var _this = this;
@@ -49,27 +52,47 @@ var ViewModels;
                     },
                     placeholder: "[Select Country/Location, Body of Water or Global]"
                 });
+                var invalidFileNames = [];
                 $("#" + uploadFileId).kendoUpload({
-                    multiple: false,
+                    multiple: true,
                     showFileList: false,
+                    localization: {
+                        select: 'Choose one or more documents to share...'
+                    },
                     async: {
-                        saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id(), this.modeText()),
-                        autoUpload: true
+                        saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id(), this.modeText())
                     },
                     select: function (e) {
-                        var i = 0;
-                        var validFileType = true;
-                        while((i < e.files.length) && validFileType) {
+                        for(var i = 0; i < e.files.length; i++) {
                             var file = e.files[i];
-                            validFileType = _this.validateUploadableFileTypeByExtension(_this.id(), file.name);
-                            if(!validFileType) {
+                            $.ajax({
+                                async: false,
+                                type: 'POST',
+                                url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(_this.id()),
+                                data: {
+                                    fileName: file.name
+                                }
+                            }).fail(function (xhr) {
+                                if(xhr.status === 400) {
+                                    if($.inArray(e.files[i].name, invalidFileNames) < 0) {
+                                        invalidFileNames.push(file.name);
+                                    }
+                                    _this.fileUploadErrors.push({
+                                        message: xhr.responseText
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    upload: function (e) {
+                        for(var i = 0; i < e.files.length; i++) {
+                            if($.inArray(e.files[i].name, invalidFileNames) >= 0) {
                                 e.preventDefault();
+                                return;
                             }
-                            i += 1;
                         }
                     },
                     success: function (e) {
-                        _this.uploadingDocument(false);
                         _this.loadDocuments();
                     }
                 });
@@ -519,32 +542,6 @@ var ViewModels;
                     i += 1;
                 }
                 return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
-            };
-            Activity.prototype.validateUploadableFileTypeByExtension = function (activityId, inExtension) {
-                var valid = true;
-                var extension = inExtension;
-                if((extension == null) || (extension.length == 0) || (extension.length > 255)) {
-                    valid = false;
-                } else {
-                    if(extension[0] === ".") {
-                        extension = extension.substring(1);
-                    }
-                    $.ajax({
-                        async: false,
-                        type: 'POST',
-                        url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(activityId),
-                        data: ko.toJSON(extension),
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        success: function (data, textStatus, jqXhr) {
-                            valid = true;
-                        },
-                        error: function (jqXhr, textStatus, errorThrown) {
-                            valid = false;
-                        }
-                    });
-                }
-                return valid;
             };
             Activity.prototype.loadDocuments = function () {
                 var _this = this;

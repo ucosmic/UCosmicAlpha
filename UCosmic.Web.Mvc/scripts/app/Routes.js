@@ -778,8 +778,8 @@ var App;
                     }
                     Profile.post = post;
                     function activityEdit(activityId) {
-                        var url = makeUrl('my/activity/');
-                        return url + activityId;
+                        var url = 'my/activities/' + activityId;
+                        return makeUrl(url);
                     }
                     Profile.activityEdit = activityEdit;
                     function geographicExpertiseEdit(expertiseId) {

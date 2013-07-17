@@ -153,7 +153,7 @@
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeUniqueEstablishmentNameText.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
-    <Compile Include="Domain\Files\Validation\MustHaveFileExtension.cs" />
+    <Compile Include="Domain\Files\Validation\MustHaveAllowedFileExtension.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyIdentityName.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />

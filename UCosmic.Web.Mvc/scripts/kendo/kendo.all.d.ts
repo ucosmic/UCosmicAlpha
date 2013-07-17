@@ -2515,6 +2515,7 @@ module kendo.ui {
     interface UploadSelectEvent extends UploadEvent {
         e?: any;
         files?: any;
+        preventDefault: Function;
     }
 
     interface UploadSuccessEvent extends UploadEvent {

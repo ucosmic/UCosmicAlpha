@@ -102,26 +102,26 @@ namespace UCosmic
             return null;
         }
 
-        //public static string Implode(this IEnumerable<string> exploded, string delimiter)
-        //{
-        //    if (delimiter == null) throw new ArgumentNullException("delimiter");
-        //    if (exploded != null)
-        //    {
-        //        var explodedArray = exploded as string[] ?? exploded.ToArray();
-        //        if (explodedArray.Any())
-        //        {
-        //            var imploded = new StringBuilder();
-        //            foreach (var value in explodedArray)
-        //            {
-        //                imploded.Append(value);
-        //                imploded.Append(delimiter);
-        //            }
-        //            imploded.Remove(imploded.Length - delimiter.Length, delimiter.Length);
-        //            return imploded.ToString();
-        //        }
-        //    }
-        //    return null;
-        //}
+        public static string Implode(this IEnumerable<string> exploded, string delimiter)
+        {
+            if (delimiter == null) throw new ArgumentNullException("delimiter");
+            if (exploded != null)
+            {
+                var explodedArray = exploded as string[] ?? exploded.ToArray();
+                if (explodedArray.Any())
+                {
+                    var imploded = new StringBuilder();
+                    foreach (var value in explodedArray)
+                    {
+                        imploded.Append(value);
+                        imploded.Append(delimiter);
+                    }
+                    imploded.Remove(imploded.Length - delimiter.Length, delimiter.Length);
+                    return imploded.ToString();
+                }
+            }
+            return null;
+        }
 
         public static int? GetLastInt(this string value, char separator = '/')
         {

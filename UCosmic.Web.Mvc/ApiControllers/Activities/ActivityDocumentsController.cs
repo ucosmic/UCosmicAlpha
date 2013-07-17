@@ -13,38 +13,34 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using ImageResizer;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Files;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
     [RoutePrefix("api/activities")]
     public class ActivityDocumentsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
-        private readonly IValidator<CreateImage> _validateImage;
-        private readonly IValidator<CreateLoadableActivityFile> _validateLoadableFile;
+        private readonly IValidator<CreateActivityDocument> _validateActivityDocument;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
         private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
 
         public ActivityDocumentsController(IProcessQueries queryProcessor
-                                  , IStoreBinaryData binaryData
-                                  , IValidator<CreateImage> validateImage
-                                  , IValidator<CreateLoadableActivityFile> validateLoadableFile
-                                  , IHandleCommands<CreateActivityDocument> createActivityDocument
-                                  , IHandleCommands<DeleteActivityDocument> deleteActivityDocument
-                                  , IHandleCommands<RenameActivityDocument> renameActivityDocument
-                            )
+            , IStoreBinaryData binaryData
+            , IValidator<CreateActivityDocument> validateActivityDocument
+            , IHandleCommands<CreateActivityDocument> createActivityDocument
+            , IHandleCommands<DeleteActivityDocument> deleteActivityDocument
+            , IHandleCommands<RenameActivityDocument> renameActivityDocument
+        )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
-            _validateImage = validateImage;
-            _validateLoadableFile = validateLoadableFile;
+            _validateActivityDocument = validateActivityDocument;
             _createActivityDocument = createActivityDocument;
             _deleteActivityDocument = deleteActivityDocument;
             _renameActivityDocument = renameActivityDocument;
@@ -84,6 +80,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create activity document
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [POST("{activityId}/documents")]
         public Task<HttpResponseMessage> PostDocuments(int activityId, string activityMode)
         {
@@ -133,6 +130,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * (Might need to use POST here)
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [PUT("{activityId}/documents/{documentId}")]
         public HttpResponseMessage PutDocument(int activityId, int documentId)
         {
@@ -144,6 +142,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete activity document
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [DELETE("{activityId}/documents/{documentId}")]
         public HttpResponseMessage DeleteDocument(int activityId, int documentId)
         {
@@ -169,6 +168,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Rename activity document
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [PUT("{activityId}/documents/{documentId}/title")]
         public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
         {
@@ -192,22 +192,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Validate activity document type
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [POST("{activityid}/documents/validate-upload-filetype")]
-        public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] string fileName)
+        public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] ActivityDocumentApiModel model)
         {
-            var createImageCommand = new CreateImage { FileName = fileName };
-            var createImageValidationResult = _validateImage.Validate(createImageCommand);
-            if (!createImageValidationResult.IsValid)
-            {
-                var createLoadableFileCommand = new CreateLoadableActivityFile { FileName = fileName };
-                var createLoadableFileValidationResult = _validateLoadableFile.Validate(createLoadableFileCommand);
-                if (!createLoadableFileValidationResult.IsValid)
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest,
-                        createLoadableFileValidationResult.Errors.First().ErrorMessage,
-                        "text/plain");
-                }
-            }
+            var command = new CreateActivityDocument(User) { FileName = model.FileName };
+            var propertyName = command.PropertyName(x => x.FileName);
+            var validationResult = _validateActivityDocument.Validate(command);
+            Func<ValidationFailure, bool> forProperty = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forProperty))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -217,50 +212,46 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get activity document proxy image
         */
         // --------------------------------------------------------------------------------
-        private static readonly object Lock = new object();
         [GET("{activityId}/documents/{documentId}/thumbnail")]
         public HttpResponseMessage GetDocumentsThumbnail(int activityId, int documentId, [FromUri] ImageResizeRequestModel model)
         {
-            lock (Lock)
+            var document = _queryProcessor.Execute(new ActivityDocumentById(documentId)
             {
-                var document = _queryProcessor.Execute(new ActivityDocumentById(documentId)
-                {
-                    EagerLoad = new Expression<Func<ActivityDocument, object>>[]
+                EagerLoad = new Expression<Func<ActivityDocument, object>>[]
                     {
                         x => x.ActivityValues,
                     }
-                });
-                if (document == null || document.ActivityValues.ActivityId != activityId)
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
+            });
+            if (document == null || document.ActivityValues.ActivityId != activityId)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-                var stream = new MemoryStream(); // do not dispose, StreamContent will dispose internally
-                var mimeType = "image/png";
-                var settings = Mapper.Map<ResizeSettings>(model);
+            var stream = new MemoryStream(); // do not dispose, StreamContent will dispose internally
+            var mimeType = "image/png";
+            var settings = Mapper.Map<ResizeSettings>(model);
 
-                // If the ActivityDocument has an image, resize and use.
-                if (document.MimeType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
-                {
-                    mimeType = document.MimeType;
-                    ImageBuilder.Current.Build(new MemoryStream(_binaryData.Get(document.Path)), stream, settings, true);
-                }
-
-                // If the ActivityDocument has no image, let's use the mime type image proxy.
-                else
-                {
-                    var fileExtension = Path.GetExtension(document.FileName);
-                    fileExtension = !string.IsNullOrWhiteSpace(fileExtension) ? fileExtension.Substring(1) : "unknown";
-                    var relativePath = string.Format("~/images/icons/files/{0}.png", fileExtension);
-                    ImageBuilder.Current.Build(relativePath, stream, settings);
-                }
-
-                stream.Position = 0;
-                var response = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StreamContent(stream), // will dispose the stream
-                };
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
-                return response;
+            // If the ActivityDocument has an image, resize and use.
+            if (document.MimeType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            {
+                mimeType = document.MimeType;
+                ImageBuilder.Current.Build(new MemoryStream(_binaryData.Get(document.Path)), stream, settings, true);
             }
+
+            // If the ActivityDocument has no image, let's use the mime type image proxy.
+            else
+            {
+                var fileExtension = Path.GetExtension(document.FileName);
+                fileExtension = !string.IsNullOrWhiteSpace(fileExtension) ? fileExtension.Substring(1) : "unknown";
+                var relativePath = string.Format("~/images/icons/files/{0}.png", fileExtension);
+                ImageBuilder.Current.Build(relativePath, stream, settings);
+            }
+
+            stream.Position = 0;
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream), // will dispose the stream
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            return response;
         }
     }
 }

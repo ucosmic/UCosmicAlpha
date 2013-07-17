@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Agreements;
+using UCosmic.Domain.Activities;
 
 namespace UCosmic.SeedData
 {
@@ -28,6 +29,10 @@ namespace UCosmic.SeedData
             var agreementFiles = _entities.Query<AgreementFile>().ToArray();
             foreach (var agreementFile in agreementFiles.Where(x => !_binaryData.Exists(x.Path)))
                 CopyFile(agreementFile.Name, agreementFile.Path);
+
+            var activityDocuments = _entities.Query<ActivityDocument>().ToArray();
+            foreach (var activityDocument in activityDocuments.Where(x => !_binaryData.Exists(x.Path)))
+                CopyFile(activityDocument.FileName, activityDocument.Path);
         }
 
         private void CopyFile(string fileName, string filePath)

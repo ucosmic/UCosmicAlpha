@@ -2595,6 +2595,9 @@ namespace Links
                 public static readonly string Employees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Employees.min.js") ? Url("Employees.min.js") : Url("Employees.js");
                               
                 public static readonly string Employees_min_js = Url("Employees.min.js");
+                public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
+                public static readonly string ServerApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.d.min.js") ? Url("ServerApiModel.d.min.js") : Url("ServerApiModel.d.js");
+                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

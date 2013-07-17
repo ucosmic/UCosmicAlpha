@@ -11,16 +11,7 @@
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
 
-//interface KnockoutBindingHandlers
-//{
-//    tinymce: KnockoutBindingHandler;
-//}
-
 module ViewModels.Activities {
-    // ================================================================================
-    /* 
-      */
-    // ================================================================================
     export class Activity implements Service.ApiModels.IObservableActivity {
 
         private static iconMaxSide: number = 64;
@@ -41,8 +32,8 @@ module ViewModels.Activities {
         newTag: KnockoutObservableString = ko.observable();
         newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
 
-        /* True if uploading document. */
-        uploadingDocument: KnockoutObservableBool = ko.observable( false );
+        // array to hold file upload errors
+        fileUploadErrors : KnockoutObservableArray = ko.observableArray();
 
         /* Old document name - used during document rename. */
         previousDocumentTitle: string;
@@ -61,11 +52,6 @@ module ViewModels.Activities {
         /* In the process of saving */
         saving: bool = false;
 
-        /* TinyMCE binding handler stuff */
-        //instances_by_id: any;	// needed for referencing instances during updates.
-        //init_queue: any;			// jQuery deferred object used for creating TinyMCE instances synchronously
-        //init_queue_next: any;
-
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
         version: KnockoutObservableString;                      // byte[] converted to base64
@@ -75,10 +61,6 @@ module ViewModels.Activities {
         modeText: KnockoutObservableString;
         values: Service.ApiModels.IObservableActivityValues;    // only values for modeText
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         _initialize( activityId: number ): void {
             this.id = ko.observable( activityId );
 
@@ -89,10 +71,10 @@ module ViewModels.Activities {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------   
+        dismissFileUploadError(index: number): void {
+            this.fileUploadErrors.splice(index, 1);
+        }
+
         setupWidgets( fromDatePickerId: string,
             toDatePickerId: string,
             countrySelectorId: string,
@@ -119,196 +101,45 @@ module ViewModels.Activities {
                 placeholder: "[Select Country/Location, Body of Water or Global]"
             } );
 
-            //tinyMCE.init({
-            //    content_css: "scripts/tinymce/css/content.css",
-            //    convert_urls: false,
-
-            //    // General options
-            //    theme: 'advanced',
-            //    mode: 'exact',
-            //    elements: 'tinymce',
-            //    height: '300',
-            //    width: '100%',
-            //    verify_html: true,
-            //    plugins: 'save,autosave,paste,searchreplace,table,nonbreaking',
-
-            //    // Theme options
-            //    theme_advanced_buttons1: 'undo,redo,restoredraft,|,formatselect,fontsizeselect ,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
-            //    theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
-            //    theme_advanced_buttons3: '',
-
-            //    theme_advanced_font_sizes: "10px,12px,14px,16px,24px",
-            //    theme_advanced_toolbar_location: 'top',
-            //    theme_advanced_toolbar_align: 'left',
-            //    theme_advanced_statusbar_location: 'bottom',
-            //    theme_advanced_resizing: true,
-            //    theme_advanced_resizing_max_height: '580',
-            //    theme_advanced_resize_horizontal: false,
-            //    theme_advanced_blockformats: 'h2,h3,p,blockquote',
-
-            //    save_enablewhendirty: true,
-
-            //    // Drop lists for link/image/media/template dialogs
-            //    template_external_list_url: 'lists/template_list.js',
-            //    external_link_list_url: 'lists/link_list.js',
-            //    external_image_list_url: 'lists/image_list.js',
-            //    media_external_list_url: 'lists/media_list.js'
-            //});
-
-
-            ///* From: https://github.com/SteveSanderson/knockout/wiki/Bindings---tinyMCE */
-            ///* Typscripted by DCC */
-            //this.instances_by_id={};		 // needed for referencing instances during updates.
-            //this.init_queue=$.Deferred() // jQuery deferred object used for creating TinyMCE instances synchronously
-            //this.init_queue_next=this.init_queue;
-            //ko.bindingHandlers.tinymce={
-            //    init: (element: any, valueAccessor: any, allBindingsAccessor: any, context: any): void =>
-            //    {
-            //        var init_arguments=arguments;
-            //        var options=allBindingsAccessor().tinymceOptions||{};
-            //        var modelValue=valueAccessor();
-            //        var value=ko.utils.unwrapObservable(valueAccessor());
-            //        var el=$(element);
-
-            //        options.setup = (ed: any): void =>
-            //        {
-            //            ed.onChange.add((editor: any, l: any): void =>
-            //            { //handle edits made in the editor. Updates after an undo point is reached.
-            //                if(ko.isWriteableObservable(modelValue))
-            //                {
-            //                    modelValue(l.content);
-            //                }
-            //            });
-
-            //            //This is required if you want the HTML Edit Source button to work correctly
-            //            ed.onBeforeSetContent.add((editor: any, l: any): void =>
-            //            {
-            //                if(ko.isWriteableObservable(modelValue))
-            //                {
-            //                    modelValue(l.content);
-            //                }
-            //            });
-
-            //            ed.onPaste.add((ed: any, evt: any): void =>
-            //            { // The paste event for the mouse paste fix.
-            //                var doc=ed.getDoc();
-
-            //                if(ko.isWriteableObservable(modelValue))
-            //                {
-            //                    setTimeout((): void => { modelValue(ed.getContent({ format: 'raw' })); },10);
-            //                }
-            //            });
-
-            //            ed.onInit.add((ed: any, evt: any): void =>
-            //            { // Make sure observable is updated when leaving editor.
-            //                var doc=ed.getDoc();
-            //                tinyMCE.dom.Event.add(doc,'blur',(e: any): void =>
-            //                {
-            //                    if(ko.isWriteableObservable(modelValue))
-            //                    {
-            //                        modelValue(ed.getContent({ format: 'raw' }));
-            //                    }
-            //                });
-            //            });
-
-            //        };
-
-            //        //handle destroying an editor (based on what jQuery plugin does)
-            //        ko.utils.domNodeDisposal.addDisposeCallback(element,(): void =>
-            //        {
-            //            $(element).parent().find("textarea.mceEditor,span.mceEditor,div.mceEditor").each((i: any,node: any): void =>
-            //            {
-            //                var tid=node.id.replace(/_parent$/,'');
-            //                var ed=tinyMCE.get(tid);
-            //                if(ed)
-            //                {
-            //                    ed.remove();
-            //                    // remove referenced instance if possible.
-            //                    if(this.instances_by_id[tid])
-            //                    {
-            //                        delete this.instances_by_id[tid];
-            //                    }
-            //                }
-            //            });
-            //        });
-
-            //        // TinyMCE attaches to the element by DOM id, so we need to make one for the element if it doesn't have one already.
-            //        if(!element.id)
-            //        {
-            //            element.id=tinyMCE.dom.uniqueId();
-            //        }
-
-            //        // create each tinyMCE instance synchronously. This addresses an issue when working with foreach bindings
-            //        this.init_queue_next = this.init_queue_next.pipe((): JQueryDeferred =>
-            //        {
-            //            var defer=$.Deferred();
-            //            var init_options=$.extend({},options,{
-            //                mode: 'none',
-            //                init_instance_callback: (instance: any): void =>
-            //                {
-            //                    this.instances_by_id[element.id]=instance;
-            //                    ko.bindingHandlers.tinymce.update.apply(undefined,init_arguments);
-            //                    defer.resolve(element.id);
-            //                    if(options.hasOwnProperty("init_instance_callback"))
-            //                    {
-            //                        options.init_instance_callback(instance);
-            //                    }
-            //                }
-            //            });
-            //            setTimeout((): void =>
-            //            {
-            //                tinyMCE.init(init_options);
-            //                setTimeout( (): void =>
-            //                {
-            //                    tinyMCE.execCommand("mceAddControl",true,element.id);
-            //                },0);
-            //            },0);
-            //            return defer.promise();
-            //        });
-            //        el.val(value);
-            //    },
-
-            //    update: (element: any, valueAccessor: any, allBindingsAccessor: any, context: any): void =>
-            //    {
-            //        var el=$(element);
-            //        var value=ko.utils.unwrapObservable(valueAccessor());
-            //        var id=el.attr('id');
-
-            //        //handle programmatic updates to the observable
-            //        // also makes sure it doesn't update it if it's the same.
-            //        // otherwise, it will reload the instance, causing the cursor to jump.
-            //        if(id!==undefined&&id!==''&&this.instances_by_id.hasOwnProperty(id))
-            //        {
-            //            var content=this.instances_by_id[id].getContent({ format: 'raw' });
-            //            if(content!==value)
-            //            {
-            //                el.val(value);
-            //            }
-            //        }
-            //    }
-            //};
-
+            var invalidFileNames = [];
             $( "#" + uploadFileId ).kendoUpload( {
-                multiple: false,
+                multiple: true,
                 showFileList: false,
-                async: {
-                    saveUrl: App.Routes.WebApi.Activities.Documents.post( this.id(), this.modeText() ),
-                    autoUpload: true
+                localization: {
+                    select: 'Choose one or more documents to share...'
                 },
-                select: (e: kendo.ui.UploadUploadEvent): void => {
-                    var i = 0;
-                    var validFileType = true;
-                    while ( ( i < e.files.length ) && validFileType ) {
+                async: {
+                    saveUrl: App.Routes.WebApi.Activities.Documents.post( this.id(), this.modeText() )
+                },
+                select: (e: kendo.ui.UploadSelectEvent): void => {
+                    for (var i = 0; i < e.files.length; i++) {
                         var file = e.files[i];
-                        validFileType = this.validateUploadableFileTypeByExtension( this.id(), file.name );
-                        if ( !validFileType ) {
-                            e.preventDefault();
-                        }
-                        i += 1;
+                        $.ajax({
+                            async: false,
+                            type: 'POST',
+                            url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(this.id()),
+                            data: { fileName: file.name },
+                        })
+                        .fail((xhr: JQueryXHR) => {
+                            if (xhr.status === 400) {
+                                if ($.inArray(e.files[i].name, invalidFileNames) < 0)
+                                    invalidFileNames.push(file.name);
+                                this.fileUploadErrors.push({
+                                    message: xhr.responseText
+                                });
+                            }
+                        });
                     }
                 },
-                success: ( e: any ): void => {
-                    this.uploadingDocument( false );
+                upload: (e: kendo.ui.UploadUploadEvent): void => {
+                    for (var i = 0; i < e.files.length; i++) {
+                        if ($.inArray(e.files[i].name, invalidFileNames) >= 0) {
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                },
+                success: (e: kendo.ui.UploadSuccessEvent): void => {
                     this.loadDocuments();
                 }
             } );
@@ -343,10 +174,6 @@ module ViewModels.Activities {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
                 validator: ( val: any, otherVal: any ): bool => {
@@ -396,10 +223,6 @@ module ViewModels.Activities {
             this.values.endsOn.extend( { nullSafeDate: { message: "End date must valid." } } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupSubscriptions(): void {
             /* Autosave when fields change. */
             this.values.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -412,18 +235,10 @@ module ViewModels.Activities {
             this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------  
         constructor( activityId: number ) {
             this._initialize( activityId );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-            */
-        // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var deferred: JQueryDeferred = $.Deferred();
 
@@ -516,10 +331,6 @@ module ViewModels.Activities {
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         keyCountAutoSave( newValue: any ): void {
             this.keyCounter += 1;
             if (this.keyCounter > this.AUTOSAVE_KEYCOUNT) {
@@ -528,10 +339,6 @@ module ViewModels.Activities {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         getDateFormat( dateStr: string ): string {
             var format:string = null;
             var YYYYPattern = new RegExp( "^\\d{4}$" );
@@ -555,10 +362,6 @@ module ViewModels.Activities {
             return format;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         convertDate( date: any ): string {
             var formatted = null;
             var YYYYPattern = new RegExp( "^\\d{4}$" );
@@ -589,10 +392,6 @@ module ViewModels.Activities {
             return formatted;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         autoSave( viewModel: any, event: any ): void {
             if ( this.saving ) {
                 return; // TBD handle this better
@@ -638,10 +437,6 @@ module ViewModels.Activities {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         save( viewModel: any, event: any, mode: string ): void {
             this.autoSave( viewModel, event );
 
@@ -676,10 +471,6 @@ module ViewModels.Activities {
             location.href = App.Routes.Mvc.My.Profile.get();
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             $( "#cancelConfirmDialog" ).dialog( {
                 modal: true,
@@ -710,10 +501,6 @@ module ViewModels.Activities {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-            */
-        // --------------------------------------------------------------------------------
         addActivityType( activityTypeId: number ): void {
             var existingIndex: number = this.getActivityTypeIndexById( activityTypeId );
             if ( existingIndex == -1 ) {
@@ -722,10 +509,6 @@ module ViewModels.Activities {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-            */
-        // --------------------------------------------------------------------------------
         removeActivityType( activityTypeId: number ): void {
             var existingIndex: number = this.getActivityTypeIndexById( activityTypeId );
             if ( existingIndex != -1 ) {
@@ -734,10 +517,6 @@ module ViewModels.Activities {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-            */
-        // --------------------------------------------------------------------------------
         getTypeName( id: number ): string {
             var name: string = "";
             var index: number = this.getActivityTypeIndexById( id );
@@ -745,10 +524,6 @@ module ViewModels.Activities {
             return name;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-            */
-        // --------------------------------------------------------------------------------
         getActivityTypeIndexById( activityTypeId: number ): number {
             var index: number = -1;
 
@@ -765,50 +540,44 @@ module ViewModels.Activities {
             return index;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-            */
-        // --------------------------------------------------------------------------------
         hasActivityType( activityTypeId: number ): bool {
             return this.getActivityTypeIndexById( activityTypeId ) != -1;
         }
 
-        // --------------------------------------------------------------------------------
         /*
-                    ActivityTypes Theory of Operation:
+            ActivityTypes Theory of Operation:
     
-                    Challenge: Present user with a checkbox for each ActivityType as defined
-                                            by EmployeeActivityTypes.  User must select at least one
-                                            ActivityType.  The ViewModel will maintain a list of
-                                            ActivityTypes as selected by the user.
+            Challenge: Present user with a checkbox for each ActivityType as defined
+                                    by EmployeeActivityTypes.  User must select at least one
+                                    ActivityType.  The ViewModel will maintain a list of
+                                    ActivityTypes as selected by the user.
     
-                    The ViewModel contains both a list of possible ActivityTypes (in the 
-                    activityTypes field) and the array of actually selected ActivityTypes
-                    in vm.values.types.
+            The ViewModel contains both a list of possible ActivityTypes (in the
+            activityTypes field) and the array of actually selected ActivityTypes
+            in vm.values.types.
     
-                    In order to support data binding, the ActivityType is augmented with
-                    a "checked" property.
+            In order to support data binding, the ActivityType is augmented with
+            a "checked" property.
     
-                    The desired behavior is to make use of the "checked" data binding
-                    attribute as follows:
+            The desired behavior is to make use of the "checked" data binding
+            attribute as follows:
     
-                    <input type="checkbox" data-bind="checked: checked"/>
+            <input type="checkbox" data-bind="checked: checked"/>
     
-                    See the "activity-types-template" for exact usage.
+            See the "activity-types-template" for exact usage.
     
-                    However, checking/unchecking needes to result in an ActivityType
-                    being added/removed from the Activity.values.types array.
+            However, checking/unchecking needes to result in an ActivityType
+            being added/removed from the Activity.values.types array.
     
-                    To accomplish this, we use a computed observable that has split
-                    read and write behavior.  A Read results in interrogating the
-                    Activity.values.types array for the existence of a typeId. A
-                    write will either add or remove a typeId depending upon checked
-                    state.
+            To accomplish this, we use a computed observable that has split
+            read and write behavior.  A Read results in interrogating the
+            Activity.values.types array for the existence of a typeId. A
+            write will either add or remove a typeId depending upon checked
+            state.
     
-                    Due to the use of computed observable array (activityTypes) we need to
-                    create a closure in order to capture state of array index/element.
+            Due to the use of computed observable array (activityTypes) we need to
+            create a closure in order to capture state of array index/element.
         */
-        // --------------------------------------------------------------------------------
         defHasActivityTypeCallback( activityTypeIndex: number ): KnockoutComputedDefine {
             var def: KnockoutComputedDefine = {
                 read: (): bool => {
@@ -827,11 +596,7 @@ module ViewModels.Activities {
             return def;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            Rebuild values.location with supplied (non-observable) array.
-        */
-        // --------------------------------------------------------------------------------
+        // Rebuild values.location with supplied (non-observable) array.
         updateLocations( locations: Array ): void {
             this.values.locations.removeAll();
             for ( var i = 0; i < locations.length; i += 1 ) {
@@ -841,10 +606,6 @@ module ViewModels.Activities {
             this.dirtyFlag(true);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         addTag( item: any, event: Event ): void {
             var newText: string = null;
             var domainTypeText: string = "Custom";
@@ -881,27 +642,15 @@ module ViewModels.Activities {
             this.dirtyFlag(true);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         removeTag( item: any, event: Event ): void {
             this.values.tags.remove( item );
             this.dirtyFlag(true);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         haveTag( text: string ): bool {
             return this.tagIndex( text ) != -1;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         tagIndex( text: string ): number {
             var i = 0;
             while ( ( i < this.values.tags().length ) &&
@@ -911,47 +660,6 @@ module ViewModels.Activities {
             return ( ( this.values.tags().length > 0 ) && ( i < this.values.tags().length ) ) ? i : -1;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
-        validateUploadableFileTypeByExtension( activityId: number, inExtension: string ): bool {
-            var valid = true;
-            var extension = inExtension;
-
-            if ( ( extension == null ) ||
-                          ( extension.length == 0 ) ||
-                          ( extension.length > 255 ) ) {
-                valid = false;
-            }
-            else {
-                if ( extension[0] === "." ) {
-                    extension = extension.substring( 1 );
-                }
-
-                $.ajax( {
-                    async: false,
-                    type: 'POST',
-                    url: App.Routes.WebApi.Activities.Documents.validateFileExtensions( activityId ),
-                    data: ko.toJSON( extension ),
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                        valid = true;
-                    },
-                    error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                        valid = false;
-                    }
-                } );
-            }
-
-            return valid;
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         loadDocuments(): void {
             $.ajax( {
                 type: 'GET',
@@ -985,10 +693,6 @@ module ViewModels.Activities {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         deleteDocument( item: Service.ApiModels.IObservableActivityDocument, event: any ): void {
             $.ajax( {
                 type: 'DELETE',
@@ -1003,10 +707,6 @@ module ViewModels.Activities {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         startDocumentTitleEdit( item: Service.ApiModels.IObservableActivityDocument, event: any ): void {
             var textElement = event.target;
             $( textElement ).hide();
@@ -1017,10 +717,6 @@ module ViewModels.Activities {
             $( inputElement ).keypress( event, ( event: any ): void => { if ( event.which == 13 ) { inputElement.blur(); } } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-            */
-        // --------------------------------------------------------------------------------
         endDocumentTitleEdit( item: Service.ApiModels.IObservableActivityDocument, event: any ): void {
             var inputElement = event.target;
             $( inputElement ).unbind( "focusout" );

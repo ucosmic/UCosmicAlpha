@@ -13,7 +13,6 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
     [RoutePrefix("api/activities")]
     public class ActivitiesController : ApiController
     {
@@ -78,30 +77,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         // --------------------------------------------------------------------------------
         /*
-         * Get activity counts by country
-        */
-        // --------------------------------------------------------------------------------
-        [GET("countrycounts")]
-        public IEnumerable<ActivityPlaceCount> GetCountryCounts()
-        {
-            var countries = _queryProcessor.Execute(new Countries());
-            var countryCounts = new ActivityPlaceCount[countries.Count()];
-
-            for (int i = 0; i < countries.Count(); i += 1)
-            {
-                countryCounts[i].PlaceId = countries[i].RevisionId;
-                countryCounts[i].OfficialName = countries[i].OfficialName;
-                countryCounts[i].Count = _queryProcessor.Execute(new ActivityCountInCountry(countries[i].RevisionId));
-            }
-
-            return countryCounts;
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
          * Get an activity copy for editing (or recover edit copy)
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [GET("{activityId}/edit")]
         public ActivityApiModel GetEdit(int activityId)
         {
@@ -151,6 +130,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an activity's edit state.
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [GET("{activityId}/edit-state")]
         public ActivityEditState GetEditState(int activityId)
         {
@@ -179,6 +159,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create an activity
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [POST("")]
         public HttpResponseMessage Post()
         {
@@ -195,6 +176,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [PUT("{activityId}")]
+        [TryAuthorize]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
             if ((activityId == 0) || (model == null))
@@ -232,6 +214,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * mode Activity.  The activityId must be of that of an Activity in "edit mode".
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] string mode)
         {
@@ -272,6 +255,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an activity
         */
         // --------------------------------------------------------------------------------
+        [TryAuthorize]
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {

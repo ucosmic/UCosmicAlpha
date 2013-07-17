@@ -691,9 +691,9 @@ module App.Routes {
                     var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
                     return url;
                 }
-                export function activityEdit(activityId: string) {
-                    var url = makeUrl('my/activity/');
-                    return url + activityId;
+                export function activityEdit(activityId: number) {
+                    var url = 'my/activities/' + activityId;
+                    return makeUrl(url);
                 }
                 export function geographicExpertiseEdit(expertiseId: string) {
                     var url = makeUrl('my/geographic-expertise/');

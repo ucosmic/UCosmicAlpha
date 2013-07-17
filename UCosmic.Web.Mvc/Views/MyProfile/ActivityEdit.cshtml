@@ -1,7 +1,16 @@
-﻿ @model UCosmic.Web.Mvc.Models.ActivityModel
+﻿@model UCosmic.Web.Mvc.Models.ActivityModel
 
 @{
     ViewBag.Title = "My International Activity";
+}
+
+@section styles
+{
+    <style>
+        .k-upload-button {
+            max-width: 500px;
+        }
+    </style>
 }
 
 @section scripts
@@ -55,6 +64,7 @@
         });
 
     </script>
+
 }
 
 @section bib
@@ -70,7 +80,7 @@
             <div data-side-swiper="on">
                 <div class="group">
                     <div id="activity-edit" class="on-left from-top" style="width: 100%;">
-				        
+
                         <!-- BUTTONS -->
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
@@ -94,7 +104,7 @@
                                     <tr>
                                         <td class="required-field-name">Country/Location</td>
                                         <td>
-                                            <select id="countrySelector" style="width: 750px; overflow-y:auto" data-bind="selectedOptions: selectedLocations"></select>
+                                            <select id="countrySelector" style="width: 750px; overflow-y: auto" data-bind="selectedOptions: selectedLocations"></select>
                                             <span data-bind="validationMessage: values.locations" class="validationMessage"></span>
                                         </td>
                                     </tr>
@@ -114,18 +124,17 @@
                                         <td class="field-name" style="vertical-align: top">On/From</td>
                                         <td>
                                             <div data-bind='validationOptions: { insertMessages: false }'>
-                                                <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn"/>
-                                                <span>
-                                                    &emsp;
+                                                <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn" />
+                                                <span>&emsp;
                                                     <label>
-                                                        <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing"/>
+                                                        <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing" />
                                                         <span>&nbsp;On-going&nbsp;</span>
                                                     </label>
                                                 </span>
                                                 <span data-bind="visible: !values.onGoing()">
-                                                    <span>&nbsp;&nbsp;To&nbsp;</span>                                                
-                                                    <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn"/>
-                                                    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->  
+                                                    <span>&nbsp;&nbsp;To&nbsp;</span>
+                                                    <input id="toDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.endsOn" />
+                                                    <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
                                                 </span>
                                             </div>
                                             <!--<span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>-->
@@ -143,12 +152,12 @@
                                         <td class="field-name">Funding</td>
                                         <td>
                                             <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded"/>
+                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded" />
                                                 <span>External</span>
                                             </label>
                                             &emsp;
                                             <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded"/>
+                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded" />
                                                 <span>Internal</span>
                                             </label>
                                         </td>
@@ -201,9 +210,9 @@
                                     </h2>
                                 </header>
                                 <div data-bind="visible: addingTag" style="width: 100%; margin-bottom: 16px">
-                                    <input id="newTag" style="width: 400px; white-space: nowrap; overflow: hidden" data-bind="value: newTag"/>
-                                    <input type="button" class="" value="Add" data-bind="click: function (item, event) { this.addTag(item, event); }"/>
-                                    <input type="button" class="" value="Done" data-bind="click: function () { this.addingTag(false); }"/>
+                                    <input id="newTag" style="width: 400px; white-space: nowrap; overflow: hidden" data-bind="value: newTag" />
+                                    <input type="button" class="" value="Add" data-bind="click: function (item, event) { this.addTag(item, event); }" />
+                                    <input type="button" class="" value="Done" data-bind="click: function () { this.addingTag(false); }" />
                                 </div>
                                 <div style="width: 100%; line-height: 150%; margin-bottom: inherit" data-bind="template: { name: 'tags-template', foreach: values.tags() }"></div>
                             </div>
@@ -213,15 +222,27 @@
                                 <header>
                                     <h2>
                                         <span style="font-weight: normal">Shared Documents</span>
-                                        <a href="/#" data-bind="click: function () { this.uploadingDocument(true); }" title="Add a new document">
-                                            <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new document" />
-                                        </a>
                                     </h2>
                                 </header>
-                                <div data-bind="visible: uploadingDocument" style="margin-bottom: 16px">
-                                    <input type="file" name="uploadFile" id="uploadFile"/>
+                                <div data-bind="visible: !values.documents().length">
+                                    <p>
+                                        There are currently no shared documents associated with this activity.
+                                    </p>
                                 </div>
-                                <div>
+                                <div style="margin-bottom: 16px">
+                                    <input type="file" name="uploadFile" id="uploadFile" />
+                                </div>
+                                <div data-bind="visible: fileUploadErrors().length" style="display: none;">
+                                    <ul data-bind="foreach: fileUploadErrors">
+                                        <li style="margin-bottom: 0.5em;">
+                                            <div>
+                                                <span class="validationMessage" data-bind="text: message" style="display: inline; line-height: 1.2em;"></span>
+                                                <a href="#" data-bind="click: function() { $root.dismissFileUploadError($index()); }">OK</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div data-bind="visible: values.documents().length">
                                     <table class="data">
                                         <thead>
                                             <tr>
@@ -237,20 +258,20 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
                             <!-- BUTTONS -->
                             <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
                             <!-- LAST UPDATED -->
                             <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
-                                <span style="font-size:smaller; color:slategray">
+                                <span style="font-size: smaller; color: slategray">
                                     <span>Last updated</span>
                                     <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
-                                    <span> by </span>
+                                    <span>by </span>
                                     <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                                 </span>
                             </div>
-                        </div>                      
+                        </div>
                     </div>
                 </div>
             </div>
@@ -258,7 +279,7 @@
     </div>
 </div>
 
-                  
+
 <!-- JQUERY DIALOGS -->
 <div id="documentRenameErrorDialog" class="dialog" title="Error Renaming Document">
     <span id="message" style="float: left"></span>
@@ -276,9 +297,11 @@
 
 
 <!-- KNOCKOUT TEMPLATES -->
+
 <script type="text/html" id="activity-types-template">
     <li>
-        <label><input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked"/><span data-bind="text: type()"></span></label>
+        <label>
+            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked" /><span data-bind="    text: type()"></span></label>
     </li>
 </script>
 
@@ -286,7 +309,7 @@
     &emsp;
     <span style="white-space: nowrap">
         <span data-bind="text: text()"></span>
-        <img src="../../images/icons/minus/minus-20-red.png" alt="Delete Tag" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }"/>
+        <img src="@Links.images.icons.minus.minus_24_red_png" alt="Delete Tag" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }" />
     </span>
 </script>
 
@@ -299,13 +322,12 @@
         <!-- Title -->
         <td>
             <span style="display: inline"
-                  id="documentTitle"
-                  data-bind="text: title, click: function (item, event) { $parent.startDocumentTitleEdit(item, event); }">
-            </span>
+                id="documentTitle"
+                data-bind="text: title, click: function (item, event) { $parent.startDocumentTitleEdit(item, event); }"></span>
             <input type="text"
-                   id="documentTitleInput"
-                   style="display: none"
-                   data-bind="value: title"/>
+                id="documentTitleInput"
+                style="display: none"
+                data-bind="value: title" />
         </td>
         <!-- Type -->
         <td style="text-align: center">
@@ -322,7 +344,7 @@
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
             <a href="#" title="Remove document" data-bind="click: function (item, event) { $parent.deleteDocument(item, event, 0); }, clickBubble: false">
-                <img src="../../images/icons/minus/minus-24-red.png" alt="Remove document" />
+                <img src="@Links.images.icons.minus.minus_24_red_png" alt="Remove document" />
             </a>
         </td>
     </tr>
@@ -330,9 +352,10 @@
 
 <script type="text/html" id="buttons-template">
     <span>
-        <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Draft'); }, clickBubble: false"/>
-        <input type="button" value="Publish" data-bind="click: function (item, event) { save(item, event, 'Public'); }, clickBubble: false"/>
-        <input type="button" value="Guide Me" style="margin-left: 50px"/>
-        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
+        <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Draft'); }, clickBubble: false" />
+        <input type="button" value="Publish" data-bind="click: function (item, event) { save(item, event, 'Public'); }, clickBubble: false" />
+        <input type="button" value="Guide Me" style="margin-left: 50px" />
+        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
     </span>
 </script>
+

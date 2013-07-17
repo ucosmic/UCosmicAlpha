@@ -22,7 +22,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        [GET("my/activity/{activityId}")]
+        [GET("my/activities/{activityId}")]
         public virtual ActionResult ActivityEdit(int activityId)
         {
             var model = new ActivityModel { ActivityId = activityId };

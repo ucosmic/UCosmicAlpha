@@ -10,6 +10,7 @@ namespace UCosmic.Web.Mvc.Models
         public int ActivityId { get; set; }
         public int Id { get; set; }
         public string Title { get; set; }
+        public string FileName { get; set; }
         public string Extension { get; set; }
         public string Size { get; set; }
         public string ModeText { get; set; }
@@ -42,7 +43,6 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Mode, o => o.Ignore())
-                    .ForMember(d => d.FileName, o => o.Ignore())
                     .ForMember(d => d.MimeType, o => o.Ignore())
                     .ForMember(d => d.Length, o => o.MapFrom(s => s.Size))
                     .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))

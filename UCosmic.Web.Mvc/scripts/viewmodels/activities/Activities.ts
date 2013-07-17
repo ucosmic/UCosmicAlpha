@@ -10,7 +10,7 @@
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Activities
-    {
+{
 
     export class ActivitySearchInput
     {
@@ -236,7 +236,7 @@ module ViewModels.Activities
             $.ajax({
                 type: "POST",
                 url: App.Routes.WebApi.Activities.post(),
-                success: (newActivityId: string, textStatus: string, jqXHR: JQueryXHR): void =>
+                success: (newActivityId: number, textStatus: string, jqXHR: JQueryXHR): void =>
                 {
                     location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
                 },

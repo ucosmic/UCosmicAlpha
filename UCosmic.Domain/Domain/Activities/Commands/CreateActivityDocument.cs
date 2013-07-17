@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Files;
 
 namespace UCosmic.Domain.Activities
 {
@@ -40,6 +41,10 @@ namespace UCosmic.Domain.Activities
                 // activity id must exist in the database
                 .MustFindActivityValuesById(entities)
                     .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
+            ;
+
+            RuleFor(x => x.FileName)
+                .MustHaveAllowedFileExtension("png", "jpg", "jpeg", "gif", "bmp", "tif", "tiff", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx")
             ;
         }
     }
