@@ -291,7 +291,7 @@
     <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementFilesController.cs" />
-    <Compile Include="ApiControllers\Employees\EmployeesController.cs" />
+    <Compile Include="ApiControllers\FacultyStaff\FacultyStaffController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentLocationsController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentNamesController.cs" />
@@ -316,12 +316,12 @@
     <Compile Include="ApiTestController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="Controllers\FacultyStaffController.cs" />
     <Compile Include="Controllers\RepsController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\ApiTestController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="EmployeesController.generated.cs">
+    <Compile Include="FacultyStaffController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DevelopmentOnlyAttribute.cs" />
@@ -353,6 +353,7 @@
     <Compile Include="Models\Agreements\AgreementPlaceApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementFileApiModel.cs" />
+    <Compile Include="Models\Employees\FacultyStaffFilterModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
     <Compile Include="Models\Graphics\CircleGraphicRequestModel.cs" />
@@ -2621,9 +2622,9 @@
     <Content Include="Views\MyProfile\_InternationalAffiliations.cshtml" />
     <Content Include="Views\MyProfile\InternationalAffiliationEdit.cshtml" />
     <Content Include="Views\Reps\Settings.cshtml" />
-    <Content Include="Views\Employees\Index.cshtml" />
-    <Content Include="Views\Employees\_Bib.cshtml" />
-    <Content Include="Views\Employees\_SearchSideBar.cshtml" />
+    <Content Include="Views\FacultyStaff\Index.cshtml" />
+    <Content Include="Views\FacultyStaff\_Bib.cshtml" />
+    <Content Include="Views\FacultyStaff\_SearchSideBar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

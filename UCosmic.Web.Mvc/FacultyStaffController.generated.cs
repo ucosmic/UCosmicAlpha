@@ -22,10 +22,10 @@ using System.Web.Routing;
 using T4MVC;
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class EmployeesController
+    public partial class FacultyStaffController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected EmployeesController(Dummy d) { }
+        protected FacultyStaffController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -43,13 +43,13 @@ namespace UCosmic.Web.Mvc.Controllers
 
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public EmployeesController Actions { get { return MVC.Employees; } }
+        public FacultyStaffController Actions { get { return MVC.FacultyStaff; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "Employees";
+        public readonly string Name = "FacultyStaff";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "Employees";
+        public const string NameConst = "FacultyStaff";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -81,16 +81,16 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Index = "Index";
             }
-            public readonly string _Bib = "~/Views/Employees/_Bib.cshtml";
-            public readonly string _SearchSideBar = "~/Views/Employees/_SearchSideBar.cshtml";
-            public readonly string Index = "~/Views/Employees/Index.cshtml";
+            public readonly string _Bib = "~/Views/FacultyStaff/_Bib.cshtml";
+            public readonly string _SearchSideBar = "~/Views/FacultyStaff/_SearchSideBar.cshtml";
+            public readonly string Index = "~/Views/FacultyStaff/Index.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_EmployeesController : UCosmic.Web.Mvc.Controllers.EmployeesController
+    public class T4MVC_FacultyStaffController : UCosmic.Web.Mvc.Controllers.FacultyStaffController
     {
-        public T4MVC_EmployeesController() : base(Dummy.Instance) { }
+        public T4MVC_FacultyStaffController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.ActionResult Index()
         {

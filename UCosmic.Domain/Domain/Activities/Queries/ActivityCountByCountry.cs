@@ -26,9 +26,10 @@ namespace UCosmic.Domain.Activities
         {
             if (query == null) throw new ArgumentNullException("query");
 
+            string publicMode = ActivityMode.Public.AsSentenceFragment();
             return _entities.Query<Activity>().Count(
-                a => a.Values.Any(v => v.Locations.Any(l => l.Place.RevisionId == query.CountryId)));
-
+                a => a.Values.Any(v => (v.ModeText == publicMode) &&
+                        v.Locations.Any(l => l.Place.RevisionId == query.CountryId)));
         }
     }
 }
