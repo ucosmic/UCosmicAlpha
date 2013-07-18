@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -250,6 +251,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var fileExtension = Path.GetExtension(document.FileName);
                 fileExtension = !string.IsNullOrWhiteSpace(fileExtension) ? fileExtension.Substring(1) : "unknown";
                 var relativePath = string.Format("~/images/icons/files/{0}.png", fileExtension);
+                if (!File.Exists(HostingEnvironment.MapPath(relativePath))) relativePath = "~/images/icons/files/unknown.png";
                 ImageBuilder.Current.Build(relativePath, stream, settings);
             }
 
