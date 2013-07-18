@@ -6,7 +6,6 @@ var ViewModels;
                 this.locations = ko.observableArray();
                 this.selectedLocations = ko.observableArray();
                 this.activityTypes = ko.observableArray();
-                this.addingTag = ko.observable(false);
                 this.newTag = ko.observable();
                 this.fileUploadErrors = ko.observableArray();
                 this.inititializationErrors = "";
@@ -101,7 +100,7 @@ var ViewModels;
                 });
                 $("#" + newTagId).kendoAutoComplete({
                     minLength: 3,
-                    placeholder: "[Enter tag]",
+                    placeholder: "[Enter tag or keyword]",
                     dataTextField: "officialName",
                     dataSource: new kendo.data.DataSource({
                         serverFiltering: true,

@@ -25,9 +25,6 @@ module ViewModels.Activities {
         /* Array of activity types displayed as list of checkboxes */
         activityTypes: KnockoutObservableArray = ko.observableArray();
 
-        /* True if adding new tag. */
-        addingTag: KnockoutObservableBool = ko.observable( false );
-
         /* Data bound to new tag textArea */
         newTag: KnockoutObservableString = ko.observable();
         newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
@@ -151,7 +148,7 @@ module ViewModels.Activities {
 
             $( "#" + newTagId ).kendoAutoComplete( {
                 minLength: 3,
-                placeholder: "[Enter tag]",
+                placeholder: "[Enter tag or keyword]",
                 dataTextField: "officialName",
                 dataSource: new kendo.data.DataSource( {
                     serverFiltering: true,

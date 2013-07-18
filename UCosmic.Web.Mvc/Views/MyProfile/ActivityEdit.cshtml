@@ -9,6 +9,34 @@
     <style>
         .k-upload-button {
             max-width: 500px;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+
+        .k-autocomplete, .k-autocomplete.k-state-focused {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            border: solid 1px #aaa;
+            border-right-color: #ddd;
+            border-bottom-color: #ddd;
+        }
+
+            .k-autocomplete .k-input, .k-autocomplete.k-state-focused .k-input {
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+                border-radius: 0;
+                padding: 8px;
+                font-size: 16px;
+                line-height: 20px;
+                height: auto;
+            }
+
+        .k-list-container, .k-list-container.k-state-border-up, .k-list-container.k-state-border-down {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
         }
     </style>
 }
@@ -204,17 +232,21 @@
                                 <header style="margin-bottom: 10px">
                                     <h2 style="font-weight: normal">
                                         <span>Tags or Keywords</span>
-                                        <a href="/#" data-bind="click: function () { this.addingTag(true); }" title="Add a new tag">
-                                            <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
-                                        </a>
                                     </h2>
                                 </header>
-                                <div data-bind="visible: addingTag" style="width: 100%; margin-bottom: 16px">
-                                    <input id="newTag" style="width: 400px; white-space: nowrap; overflow: hidden" data-bind="value: newTag" />
-                                    <input type="button" class="" value="Add" data-bind="click: function (item, event) { this.addTag(item, event); }" />
-                                    <input type="button" class="" value="Done" data-bind="click: function () { this.addingTag(false); }" />
+                                <div style="width: 100%; margin-bottom: 16px">
+                                    <input id="newTag" style="width: 600px; white-space: nowrap; overflow: hidden" data-bind="value: newTag" />
+                                    &nbsp;
+                                    <a href="/#" data-bind="click: function (item, event) { this.addTag(item, event); }" title="Add tag">
+                                        <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
+                                    </a>
                                 </div>
-                                <div style="width: 100%; line-height: 150%; margin-bottom: inherit" data-bind="template: { name: 'tags-template', foreach: values.tags() }"></div>
+                                <div data-bind="visible: !values.tags().length">
+                                    <p style="padding-bottom: 14px;">
+                                        There are currently no tags or keywords associated with this activity.
+                                    </p>
+                                </div>
+                                <ul data-bind="template: { name: 'tags-template', foreach: values.tags, visible: values.tags().length }"></ul>
                             </div>
 
                             <!-- DOCUMENTS -->
@@ -306,11 +338,16 @@
 </script>
 
 <script type="text/html" id="tags-template">
-    &emsp;
-    <span style="white-space: nowrap">
-        <span data-bind="text: text()"></span>
-        <img src="@Links.images.icons.minus.minus_24_red_png" alt="Delete Tag" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }" />
-    </span>
+    <li style="display: inline-block; margin: 0 8px 8px 0;">
+        <div style="display: inline-block; padding: 4px 4px 4px 8px; background-color: #eee; border: solid 1px #ddd;">
+            <span>
+                <span data-bind="text: text()"></span>
+                &nbsp;
+                <a href="/#" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }" title="Remove tag">
+                    <img src="@Links.images.icons.minus.minus_20_red_png" alt="Remove tag" style="vertical-align: middle;" /></a>
+            </span>
+        </div>
+    </li>
 </script>
 
 <script type="text/html" id="activity-document-template">
