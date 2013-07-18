@@ -16,6 +16,8 @@ module ViewModels.Activities {
 
         private static iconMaxSide: number = 64;
 
+        ready: KnockoutObservableBool = ko.observable(false);
+
         /* Array of all locations offered in Country/Location multiselect. */
         locations: KnockoutObservableArray = ko.observableArray();
 

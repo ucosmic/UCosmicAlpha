@@ -3,6 +3,7 @@ var ViewModels;
     (function (Activities) {
         var Activity = (function () {
             function Activity(activityId) {
+                this.ready = ko.observable(false);
                 this.locations = ko.observableArray();
                 this.selectedLocations = ko.observableArray();
                 this.activityTypes = ko.observableArray();
