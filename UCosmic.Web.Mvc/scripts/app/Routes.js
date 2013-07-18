@@ -583,10 +583,10 @@ var App;
                         return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
                     }
                     Documents.rename = rename;
-                    function validateFileExtensions(activityId) {
-                        return makeUrl('activities/' + activityId + '/documents/validate-upload-filetype');
+                    function validateUpload() {
+                        return makeUrl('activities/documents/validate-upload');
                     }
-                    Documents.validateFileExtensions = validateFileExtensions;
+                    Documents.validateUpload = validateUpload;
                     (function (Thumbnail) {
                         function get(activityId, documentId, params) {
                             var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');

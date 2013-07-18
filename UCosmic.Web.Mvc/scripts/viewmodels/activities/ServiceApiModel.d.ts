@@ -58,6 +58,7 @@ module Service.ApiModels {
         activityId: KnockoutObservableNumber;
         title: KnockoutObservableString;
         fileExt: KnockoutObservableString;
+        length: KnockoutObservableNumber;
         size: KnockoutObservableString;
     }
 

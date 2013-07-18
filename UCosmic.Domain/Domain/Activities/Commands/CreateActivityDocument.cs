@@ -43,8 +43,26 @@ namespace UCosmic.Domain.Activities
                     .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
             ;
 
+            var validFileExtensions = new[]
+            {
+                "png", "jpg", "jpeg", "gif", "bmp", "tif", "tiff",      // images
+                "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",     // documents
+            };
             RuleFor(x => x.FileName)
-                .MustHaveAllowedFileExtension("png", "jpg", "jpeg", "gif", "bmp", "tif", "tiff", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx")
+                // file name is required
+                .NotEmpty()
+                    .WithMessage(MustHaveFileName.FailMessage)
+
+                // only allow whitelisted extensions
+                .MustHaveAllowedFileExtension(
+                    validFileExtensions
+                )
+            ;
+
+            // file size cannot exceed 25 megabytes
+            RuleFor(x => x.Content)
+                .MustNotExceedFileSizeInMegabytes(25, x => x.FileName)
+                .When(x => x.Content != null, ApplyConditionTo.CurrentValidator)
             ;
         }
     }

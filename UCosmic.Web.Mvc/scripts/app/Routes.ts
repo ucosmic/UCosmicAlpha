@@ -523,8 +523,8 @@ module App.Routes {
                     return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
                 }
 
-                export function validateFileExtensions(activityId: number): string {
-                    return makeUrl('activities/' + activityId + '/documents/validate-upload-filetype');
+                export function validateUpload(): string {
+                    return makeUrl('activities/documents/validate-upload');
                 }
 
                 export module Thumbnail {

@@ -117,8 +117,11 @@ module ViewModels.Activities {
                         $.ajax({
                             async: false,
                             type: 'POST',
-                            url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(this.id()),
-                            data: { fileName: file.name },
+                            url: App.Routes.WebApi.Activities.Documents.validateUpload(),
+                            data: {
+                                fileName: file.name,
+                                length: file.size
+                            },
                         })
                         .fail((xhr: JQueryXHR) => {
                             if (xhr.status === 400) {

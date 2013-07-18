@@ -68,9 +68,10 @@ var ViewModels;
                             $.ajax({
                                 async: false,
                                 type: 'POST',
-                                url: App.Routes.WebApi.Activities.Documents.validateFileExtensions(_this.id()),
+                                url: App.Routes.WebApi.Activities.Documents.validateUpload(),
                                 data: {
-                                    fileName: file.name
+                                    fileName: file.name,
+                                    length: file.size
                                 }
                             }).fail(function (xhr) {
                                 if(xhr.status === 400) {

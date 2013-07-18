@@ -51,7 +51,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get all activity documents
         */
         // --------------------------------------------------------------------------------
-        [GET("{activityId}/documents")]
+        [GET("{activityId:int}/documents")]
         public IEnumerable<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
         {
             ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
@@ -69,7 +69,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get activity document
         */
         // --------------------------------------------------------------------------------
-        [GET("{activityId}/documents/{documentId}")]
+        [GET("{activityId:int}/documents/{documentId:int}")]
         public ActivityDocumentApiModel GetDocuments(int activityId, int documentId)
         {
             throw new HttpResponseException(HttpStatusCode.NotImplemented);
@@ -81,7 +81,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [TryAuthorize]
-        [POST("{activityId}/documents")]
+        [POST("{activityId:int}/documents")]
         public Task<HttpResponseMessage> PostDocuments(int activityId, string activityMode)
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -131,7 +131,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [TryAuthorize]
-        [PUT("{activityId}/documents/{documentId}")]
+        [PUT("{activityId:int}/documents/{documentId:int}")]
         public HttpResponseMessage PutDocument(int activityId, int documentId)
         {
             return Request.CreateResponse(HttpStatusCode.NotImplemented);
@@ -143,7 +143,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [TryAuthorize]
-        [DELETE("{activityId}/documents/{documentId}")]
+        [DELETE("{activityId:int}/documents/{documentId:int}")]
         public HttpResponseMessage DeleteDocument(int activityId, int documentId)
         {
             //ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
@@ -169,7 +169,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [TryAuthorize]
-        [PUT("{activityId}/documents/{documentId}/title")]
+        [PUT("{activityId:int}/documents/{documentId:int}/title")]
         public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
         {
             var command = new RenameActivityDocument(User, documentId, newTitle);
@@ -193,16 +193,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [TryAuthorize]
-        [POST("{activityid}/documents/validate-upload-filetype")]
-        public HttpResponseMessage PostDocumentsValidateUploadFiletype(int activityid, [FromBody] ActivityDocumentApiModel model)
+        [POST("documents/validate-upload")]
+        public HttpResponseMessage PostDocumentsValidateUploadFiletype([FromBody] ActivityDocumentApiModel model)
         {
-            var command = new CreateActivityDocument(User) { FileName = model.FileName };
-            var propertyName = command.PropertyName(x => x.FileName);
+            var command = new CreateActivityDocument(User)
+            {
+                FileName = model.FileName,
+                Content = new byte[model.Length]
+            };
             var validationResult = _validateActivityDocument.Validate(command);
-            Func<ValidationFailure, bool> forProperty = x => x.PropertyName == propertyName;
-            if (validationResult.Errors.Any(forProperty))
-                return Request.CreateResponse(HttpStatusCode.BadRequest,
-                    validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
+            IEnumerable<Func<ValidationFailure, bool>> forProperties = new Func<ValidationFailure, bool>[]
+            {
+                x => x.PropertyName == command.PropertyName(y => y.FileName),
+                x => x.PropertyName == command.PropertyName(y => y.Content),
+            };
+            foreach (var forProperty in forProperties)
+                if (validationResult.Errors.Any(forProperty))
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -212,7 +220,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get activity document proxy image
         */
         // --------------------------------------------------------------------------------
-        [GET("{activityId}/documents/{documentId}/thumbnail")]
+        [GET("{activityId:int}/documents/{documentId:int}/thumbnail")]
         public HttpResponseMessage GetDocumentsThumbnail(int activityId, int documentId, [FromUri] ImageResizeRequestModel model)
         {
             var document = _queryProcessor.Execute(new ActivityDocumentById(documentId)
