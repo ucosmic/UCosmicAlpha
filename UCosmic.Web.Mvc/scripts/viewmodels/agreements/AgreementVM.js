@@ -33,8 +33,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.name = name;
                 this.id = id;
             };
+            this.percentOffBodyHeight = .6;
+            this.dfdPopParticipants = $.Deferred();
+            this.dfdPopContacts = $.Deferred();
+            this.dfdPopFiles = $.Deferred();
+            this.dfdPageFadeIn = $.Deferred();
             this.agreementIsEdit = ko.observable();
-            this.agreementId = 25;
+            this.agreementId = 1;
             this.visibility = ko.observable();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
@@ -129,14 +134,25 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.agreementIsEdit(false);
                 this.visibility("Public");
                 $("#LoadingPage").hide();
+                $.when(this.dfdPopParticipants, this.dfdPageFadeIn).done(function () {
+                    _this.updateKendoDialog($(window).width());
+                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
+                });
             } else {
                 this.agreementIsEdit(true);
-                this.agreementId = 25;
+                this.agreementId = 1;
                 this.populateFiles();
                 this.populateContacts();
                 this.populateAgreementData();
                 $("#LoadingPage").hide();
+                $.when(this.dfdPopContacts, this.dfdPopFiles, this.dfdPopParticipants, this.dfdPageFadeIn).done(function () {
+                    _this.updateKendoDialog($(window).width());
+                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
+                });
             }
+            $(window).resize(function () {
+                _this.updateKendoDialog($(window).width());
+            });
             this.isBound(true);
             this.removeParticipant = this.removeParticipant.bind(this);
             this.editAContact = this.editAContact.bind(this);
@@ -215,6 +231,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
                 _this.receiveResults(response);
+                _this.dfdPopParticipants.resolve();
             });
         };
         InstitutionalAgreementEditModel.prototype.populateAgreementData = function () {
@@ -235,6 +252,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 _this.visibility(response.visibility);
                 _this.isEstimated(response.isExpirationEstimated);
                 ko.mapping.fromJS(response.participants, _this.participants);
+                _this.dfdPopParticipants.resolve();
                 _this.uAgreementSelected(response.umbrellaId);
                 _this.typeOptionSelected(response.type);
             });
@@ -253,12 +271,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
                     }));
                 });
+                _this.dfdPopFiles.resolve();
             });
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
+                _this.dfdPopContacts.resolve();
             });
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
@@ -390,6 +410,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.agreementId = 2;
             var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
             window.open(url, '_blank');
+        };
+        InstitutionalAgreementEditModel.prototype.updateKendoDialog = function (windowWidth) {
+            $(".k-window").css({
+                left: (windowWidth / 2 - ($(".k-window").width() / 2) + 10)
+            });
         };
         InstitutionalAgreementEditModel.prototype.bindjQueryKendo = function (result) {
             var _this = this;
@@ -774,12 +799,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
             if(parentOrParticipant === "parent") {
                 $cancelAddParticipant.on("click", function (e) {
+                    _this.percentOffBodyHeight = .2;
                     _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                     e.preventDefault();
                     return false;
                 });
             } else {
                 $cancelAddParticipant.on("click", function (e) {
+                    _this.percentOffBodyHeight = .2;
                     _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                     e.preventDefault();
                     return false;
@@ -792,7 +819,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var time = 500;
             this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
             $.when(dfd, dfd2).done(function () {
-                $("#estSearch").fadeIn(500);
+                $("#estSearch").fadeIn(500, function () {
+                });
             });
         };
         InstitutionalAgreementEditModel.prototype.fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
@@ -887,6 +915,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                                         _this.establishmentItemViewModel.createSpinner.stop();
                                                         $LoadingPage.text("Establishment created, you are being redirected to previous page...");
                                                         $("#addEstablishment").fadeOut(500, function () {
+                                                            _this.percentOffBodyHeight = .2;
                                                             $("#LoadingPage").fadeIn(500);
                                                             setTimeout(function () {
                                                                 $("#LoadingPage").fadeOut(500, function () {
@@ -963,8 +992,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                         }).done(function (response) {
                                             myParticipant.isOwner(response.isOwner);
                                             _this.participants.push(myParticipant);
+                                            _this.percentOffBodyHeight = .2;
                                             _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
                                         }).fail(function () {
+                                            _this.percentOffBodyHeight = .2;
                                             _this.participants.push(myParticipant);
                                             _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
                                         });
@@ -985,8 +1016,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             var time = 500;
                             _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
                             $.when(dfd, dfd2).done(function () {
-                                $("#allParticipants").fadeIn(500);
-                                $("body").height($(window).height() + $("body").height() - 300);
+                                $("#allParticipants").fadeIn(500).promise().done(function () {
+                                    $(_this).show();
+                                    _this.dfdPageFadeIn.resolve();
+                                });
                             });
                         } else {
                             window.location.replace(_this.establishmentSearchViewModel.sammy.getLocation());
@@ -1267,6 +1300,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $(event.target).closest("ul").find("li").removeClass("current");
             $(event.target).closest("li").addClass("current");
         };
+        InstitutionalAgreementEditModel.prototype.updateAgreement = function () {
+        };
         InstitutionalAgreementEditModel.prototype.saveAgreement = function () {
             var _this = this;
             var offset;
@@ -1290,66 +1325,58 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             }
             if(offset != undefined) {
                 $("body").scrollTop(offset.top - 20);
-            }
-            var $LoadingPage = $("#LoadingPage").find("strong");
-            var url = App.Routes.WebApi.Agreements.post();
-            function agreementPostDone(response, statusText, xhr) {
-                var _this = this;
-                this.establishmentItemViewModel.createSpinner.stop();
-                $LoadingPage.text("Establishment created, you are being redirected to previous page...");
-                $("#addEstablishment").fadeOut(500, function () {
-                    $("#LoadingPage").fadeIn(500);
-                    setTimeout(function () {
-                        $("#LoadingPage").fadeOut(500, function () {
-                            $LoadingPage.text("Loading Page...");
-                        });
-                        _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                    }, 5000);
-                });
-            }
-            $.each(this.participants(), function (i, item) {
-                _this.participantsExport.push({
-                    agreementId: item.agreementId,
-                    establishmentId: item.establishmentId,
-                    establishmentOfficialName: item.establishmentOfficialName,
-                    establishmentTranslatedName: item.establishmentTranslatedName,
-                    isOwner: item.isOwner,
-                    center: item.center
-                });
-            });
-            var data = ko.mapping.toJSON({
-                content: this.content(),
-                expiresOn: this.expDate(),
-                startsOn: this.startDate(),
-                isAutoRenew: this.autoRenew(),
-                name: this.nickname(),
-                notes: this.privateNotes(),
-                status: this.statusOptionSelected(),
-                visibility: this.visibility(),
-                isExpirationEstimated: this.isEstimated(),
-                participants: this.participantsExport,
-                umbrellaId: this.uAgreementSelected(),
-                type: this.typeOptionSelected()
-            });
-            $.post(url, data).done(function (response, statusText, xhr) {
-                agreementPostDone(response, statusText, xhr);
-            }).fail(function (xhr, statusText, errorThrown) {
-                if(xhr.status === 400) {
-                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                        title: 'Alert Message',
-                        dialogClass: 'jquery-ui',
-                        width: 'auto',
-                        resizable: false,
-                        modal: true,
-                        buttons: {
-                            'Ok': function () {
-                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                            }
-                        }
-                    });
+            } else {
+                var $LoadingPage = $("#LoadingPage").find("strong");
+                var url = App.Routes.WebApi.Agreements.post();
+                this.spinner.start();
+                function agreementPostDone(response, statusText, xhr) {
+                    this.spinner.stop();
                 }
-            });
+                $.each(this.participants(), function (i, item) {
+                    _this.participantsExport.push({
+                        agreementId: item.agreementId,
+                        establishmentId: item.establishmentId,
+                        establishmentOfficialName: item.establishmentOfficialName,
+                        establishmentTranslatedName: item.establishmentTranslatedName,
+                        isOwner: item.isOwner,
+                        center: item.center
+                    });
+                });
+                var data = ko.mapping.toJSON({
+                    content: this.content(),
+                    expiresOn: this.expDate(),
+                    startsOn: this.startDate(),
+                    isAutoRenew: this.autoRenew(),
+                    name: this.nickname(),
+                    notes: this.privateNotes(),
+                    status: this.statusOptionSelected(),
+                    visibility: this.visibility(),
+                    isExpirationEstimated: this.isEstimated(),
+                    participants: this.participantsExport,
+                    umbrellaId: this.uAgreementSelected(),
+                    type: this.typeOptionSelected()
+                });
+                $.post(url, data).done(function (response, statusText, xhr) {
+                    agreementPostDone(response, statusText, xhr);
+                }).fail(function (xhr, statusText, errorThrown) {
+                    _this.spinner.stop();
+                    if(xhr.status === 400) {
+                        _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                        _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                            title: 'Alert Message',
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                'Ok': function () {
+                                    _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         };
         return InstitutionalAgreementEditModel;
     })();
