@@ -38,6 +38,64 @@
             -moz-border-radius: 0;
             border-radius: 0;
         }
+
+        .k-multiselect {
+            border: solid 1px #aaa;
+            border-right-color: #ddd;
+            border-bottom-color: #ddd;
+            background-image: none;
+            background-color: transparent;
+        }
+
+            .k-multiselect .k-input {
+                padding: 8px 0 8px 4px;
+                font-size: 16px;
+                line-height: 20px;
+                height: 18px;
+                margin: 0;
+                font-family: Arial;
+                color: #000;
+            }
+
+                .k-multiselect .k-input.k-readonly {
+                    color: #666;
+                }
+
+            .k-multiselect.k-state-hover, .xk-multiselect.k-state-hover:hover {
+                background-image: none;
+                background-color: transparent;
+            }
+
+            .k-multiselect, .k-multiselect.k-state-border-down, .k-multiselect.k-state-border-up, .k-multiselect .k-multiselect-wrap {
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+                border-radius: 0;
+                min-height: 36px;
+            }
+
+                .k-multiselect ul .k-button {
+                    -webkit-border-radius: 0;
+                    -moz-border-radius: 0;
+                    border-radius: 0;
+                    margin: 2px 0 0 2px;
+                    padding: 5px 6px 5px 8px;
+                    line-height: 16px;
+                    font-size: 16px;
+                    vertical-align: middle;
+                    color: #000;
+                    background-color: #eee;
+                    background-image: none;
+                    border-color: #ddd;
+                }
+
+                    .k-multiselect ul .k-button .k-delete.k-icon {
+                        background-position: top left;
+                        background-image: url('/images/icons/minus/minus-20-red.png');
+                        width: 20px;
+                        height: 20px;
+                        margin-left: 8px;
+                        cursor: pointer;
+                    }
     </style>
 }
 
@@ -122,23 +180,23 @@
                                 <tbody>
                                     <tr>
                                         <!-- TITLE -->
-                                        <td class="required-field-name">Title</td>
+                                        <td class="label"><span class="container required"><span class="text">Title</span></span></td>
                                         <td>
-                                            <textarea rows="1" style="width: 750px; white-space: nowrap; overflow: hidden" placeholder="[Enter Title]" data-bind="value: values.title"></textarea>
-                                            <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" class="help-icon" data-bind="click: function (data, event) { help(data, event, null); }"/> -->
+                                            <textarea rows="1" placeholder="[Enter Title]" data-bind="value: values.title"></textarea>
                                         </td>
                                     </tr>
                                     <!-- COUNTRY -->
                                     <tr>
-                                        <td class="required-field-name">Country/Location</td>
+                                        <td class="label"><span class="container required"><span class="text">Countries / Locations</span></span></td>
                                         <td>
-                                            <select id="countrySelector" style="width: 750px; overflow-y: auto" data-bind="selectedOptions: selectedLocations"></select>
+                                            <select id="countrySelector" style="overflow-y: auto" data-bind="selectedOptions: selectedLocations"></select>
                                             <span data-bind="validationMessage: values.locations" class="validationMessage"></span>
                                         </td>
                                     </tr>
                                     <!-- TYPE -->
                                     <tr>
-                                        <td class="required-field-name">Types</td>
+                                        <!-- TODO: activity types / categories are not always required -->
+                                        <td class="label" style="padding-top: 0;"><span class="container required"><span class="text">Type(s)</span></span></td>
                                         <td>
                                             <!-- Need this div for the validation message to display. -->
                                             <div>
@@ -149,7 +207,7 @@
                                     </tr>
                                     <!-- FROM and TO DATES -->
                                     <tr>
-                                        <td class="field-name" style="vertical-align: top">On/From</td>
+                                        <td class="label"><span class="container required"><span class="text">On / From</span></span></td>
                                         <td>
                                             <div data-bind='validationOptions: { insertMessages: false }'>
                                                 <input id="fromDatePicker" style="height: 30px; vertical-align: middle" data-bind="value: values.startsOn" />
@@ -177,17 +235,20 @@
                                     </tr>
                                     <!-- FUNDING -->
                                     <tr>
-                                        <td class="field-name">Funding</td>
+                                        <td class="label" style="padding-top: 0;"><span class="container"><span class="text">Funding</span></span></td>
                                         <td>
-                                            <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded" />
-                                                <span>External</span>
-                                            </label>
-                                            &emsp;
-                                            <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded" />
-                                                <span>Internal</span>
-                                            </label>
+                                            <div style="margin-bottom: 4px;">
+                                                <label>
+                                                    <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded" />
+                                                    <span>This activity received <strong>external</strong> funding</span>
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <label>
+                                                    <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded" />
+                                                    <span>This activity received <strong>internal</strong> funding</span>
+                                                </label>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -242,11 +303,12 @@
                                     </a>
                                 </div>
                                 <div data-bind="visible: !values.tags().length">
-                                    <p style="padding-bottom: 14px;">
+                                    <p style="padding-bottom: 10px;">
                                         There are currently no tags or keywords associated with this activity.
                                     </p>
                                 </div>
                                 <ul data-bind="template: { name: 'tags-template', foreach: values.tags, visible: values.tags().length }"></ul>
+                                <div style="clear: left;"></div>
                             </div>
 
                             <!-- DOCUMENTS -->
@@ -338,12 +400,11 @@
 </script>
 
 <script type="text/html" id="tags-template">
-    <li style="display: inline-block; margin: 0 8px 8px 0;">
-        <div style="display: inline-block; padding: 4px 4px 4px 8px; background-color: #eee; border: solid 1px #ddd;">
+    <li style="float: left; margin: 0 2px 2px 0;">
+        <div style="display: inline-block; padding: 5px 6px 5px 8px; background-color: #eee; border: solid 1px #ddd;">
             <span>
                 <span data-bind="text: text()"></span>
-                &nbsp;
-                <a href="/#" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }" title="Remove tag">
+                <a href="/#" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }" title="Remove tag" style="margin-left: 8px;">
                     <img src="@Links.images.icons.minus.minus_20_red_png" alt="Remove tag" style="vertical-align: middle;" /></a>
             </span>
         </div>

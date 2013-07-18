@@ -43,39 +43,23 @@ body {
     table.activity {
         width: 100%;
         margin: 16px 0;
-
-        td.field-name {
-            padding-left: 4px;
-            padding-right: 4px;
-            padding-top: 16px;
-            padding-bottom: 16px;
-            text-align: right;
-            vertical-align: middle;
-        }
-
-        td.required-field-name {
-            padding-left: 4px;
-            padding-right: 4px;
-            padding-top: 16px;
-            padding-bottom: 16px;
-            text-align: right;
-            vertical-align: middle;
-        }
-
-        td.required-field-name::after {
-            content: "*";
-            font-size: large;
-            vertical-align: text-top;
-            color: #F00;
-        }
-
         td {
-            padding-left: 4px;
-            padding-right: 4px;
-            padding-top: 16px;
-            padding-bottom: 16px;
-            text-align: left;
-            vertical-align: middle;
+            vertical-align: top;
+            padding-bottom: 24px;
+            &.label {
+                width: 20%;
+                text-align: left;
+                padding: 11px 8px 0 0;
+                .container {
+                    color: #c00;
+                    .text {
+                        color: #000;
+                        &:after {
+                            content: ':';
+                        }
+                    }
+                }
+            }
         }
     }
 

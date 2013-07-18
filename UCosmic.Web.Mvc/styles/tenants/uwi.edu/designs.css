@@ -28,32 +28,19 @@ body table.data {
 body table.activity {
   width: 100%;
   margin: 16px 0; }
-  body table.activity td.field-name {
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    text-align: right;
-    vertical-align: middle; }
-  body table.activity td.required-field-name {
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    text-align: right;
-    vertical-align: middle; }
-  body table.activity td.required-field-name::after {
-    content: "*";
-    font-size: large;
-    vertical-align: text-top;
-    color: #F00; }
   body table.activity td {
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    text-align: left;
-    vertical-align: middle; }
+    vertical-align: top;
+    padding-bottom: 24px; }
+    body table.activity td.label {
+      width: 20%;
+      text-align: left;
+      padding: 11px 8px 0 0; }
+      body table.activity td.label .container {
+        color: #c00; }
+        body table.activity td.label .container .text {
+          color: #000; }
+          body table.activity td.label .container .text:after {
+            content: ':'; }
 body ul.data > li.hover-hilite:hover, body ol.data > li.hover-hilite:hover {
   background-color: #ffffaa; }
   body ul.data > li.hover-hilite:hover *, body ol.data > li.hover-hilite:hover * {
@@ -247,6 +234,39 @@ body .dialog {
 
 ul.selectableListItems li:hover {
   background-color: #dddddd; }
+
+.filter-sidebar {
+  width: 270px;
+  font-family: Arial;
+  font-size: small;
+  background-color: white;
+  color: #666666;
+  margin-top: 8px;
+  border-color: black;
+  border: 1px;
+  border-style: solid; }
+  .filter-sidebar input[type="text"] {
+    height: 24px;
+    font-size: small;
+    vertical-align: middle; }
+  .filter-sidebar .header {
+    height: 32px;
+    background-color: #1f7e5c;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase; }
+  .filter-sidebar .section-header {
+    background-color: #1f7e5c;
+    padding-top: 4px;
+    text-align: left;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom-color: gray;
+    border-bottom: 1px;
+    border-bottom-style: dotted; }
+  .filter-sidebar .section {
+    background-color: #1f7e5c;
+    margin-top: 16px; }
 
 .filter-sidebar {
   width: 270px;
