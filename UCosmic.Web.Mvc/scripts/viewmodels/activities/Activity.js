@@ -87,8 +87,10 @@ var ViewModels;
                     },
                     upload: function (e) {
                         for(var i = 0; i < e.files.length; i++) {
-                            if($.inArray(e.files[i].name, invalidFileNames) >= 0) {
+                            var indexOfInvalidName = $.inArray(e.files[i].name, invalidFileNames);
+                            if(indexOfInvalidName >= 0) {
                                 e.preventDefault();
+                                invalidFileNames.splice(indexOfInvalidName, 1);
                                 return;
                             }
                         }

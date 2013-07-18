@@ -18,7 +18,7 @@ namespace UCosmic.Web.Mvc.Models
         public long Length { get; set; }
         public string Size
         {
-            get { return Length.ToFileSize(); }
+            get { return Length.ToAbbreviatedFileSize().ToUpper(); }
         }
     }
 

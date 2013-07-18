@@ -340,7 +340,6 @@
     <Compile Include="Models\_Etc\FileMedia.cs" />
     <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
-    <Compile Include="Helpers\FileSizeFormatter.cs" />
     <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />
     <Compile Include="Helpers\LocalApiEndpointAttribute.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />

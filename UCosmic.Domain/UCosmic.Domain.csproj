@@ -105,6 +105,7 @@
     <Compile Include="Api\Data\IQueryEntities.cs" />
     <Compile Include="Api\Data\IUnitOfWork.cs" />
     <Compile Include="Api\Queries\PagedQueryResult.cs" />
+    <Compile Include="Api\_Extensions\FileSizeExtensions.cs" />
     <Compile Include="Api\_Extensions\ReflectionExtensions.cs" />
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
