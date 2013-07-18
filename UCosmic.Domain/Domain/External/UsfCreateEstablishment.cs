@@ -23,7 +23,7 @@ namespace UCosmic.Domain.External
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
         public string ExternalId { get; set; }
-        public int? Order { get; set; }
+        public int? VerticalRank { get; set; }
 
         public Establishment CreatedEstablishment { get; internal set; }
 
@@ -88,15 +88,15 @@ namespace UCosmic.Domain.External
                 IsMember = command.IsMember,
                 Type = type,
                 Location = new EstablishmentLocation(),
-                ExternalId = command.ExternalId
+                ExternalId = command.ExternalId,
+                VerticalRank = command.VerticalRank
             };
 
             // add official name to list
             entity.Names.Add(new EstablishmentName
             {
                 Text = command.OfficialName,
-                IsOfficialName = true,
-                Order = command.Order
+                IsOfficialName = true
             });
 
             // add non-official names

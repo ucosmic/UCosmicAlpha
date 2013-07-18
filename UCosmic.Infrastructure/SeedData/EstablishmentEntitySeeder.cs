@@ -1416,7 +1416,7 @@ namespace UCosmic.SeedData
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
                                             .RevisionId
-                    //Order = 3
+                    //VerticalRank = 3
                 });
 
                 Seed(new SeedEstablishment
@@ -1438,7 +1438,7 @@ namespace UCosmic.SeedData
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
                                             .RevisionId,
-                    Order = 1
+                    VerticalRank = 1
                 });
 
                 var college = Seed(new SeedEstablishment
@@ -1680,7 +1680,7 @@ namespace UCosmic.SeedData
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
                                             .RevisionId,
-                    Order = 2
+                    VerticalRank = 2
                 });
 
                     Seed(new SeedEstablishment

@@ -81,6 +81,8 @@ namespace UCosmic.EntityFramework
             Property(p => p.UCosmicCode).IsFixedLength().HasMaxLength(EstablishmentConstraints.UCosmicCodeLength).IsUnicode(false);
             Property(p => p.ExternalId).HasMaxLength(EstablishmentConstraints.ExternalIdLength).IsUnicode(true);
             Property(p => p.CollegeBoardDesignatedIndicator).IsFixedLength().HasMaxLength(EstablishmentConstraints.CeebCodeLength).IsUnicode(false);
+
+            Property(p => p.VerticalRank).IsOptional();
         }
     }
 
@@ -211,8 +213,6 @@ namespace UCosmic.EntityFramework
 
             Property(p => p.Text).IsRequired().HasMaxLength(EstablishmentNameConstraints.TextMaxLength);
             Property(p => p.AsciiEquivalent).HasMaxLength(EstablishmentNameConstraints.TextMaxLength);
-
-            Property(p => p.Order).IsOptional();
         }
     }
 

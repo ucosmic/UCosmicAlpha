@@ -49,6 +49,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.OfficialUrl, o => o.Ignore())
                     .ForMember(d => d.Location, o => o.Ignore())
                     .ForMember(d => d.CreatedEstablishmentId, o => o.Ignore())
+                    .ForMember(d => d.VerticalRank, o => o.Ignore())
                 ;
             }
         }

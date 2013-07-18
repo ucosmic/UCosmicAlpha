@@ -39,6 +39,8 @@ namespace UCosmic.Domain.Establishments
         public string ExternalId { get; set; }
 
         public int CreatedEstablishmentId { get; internal set; }
+
+        public int? VerticalRank { get; set; }
     }
 
     public class ValidateCreateEstablishmentCommand : AbstractValidator<CreateEstablishment>
@@ -148,7 +150,8 @@ namespace UCosmic.Domain.Establishments
                 Location = new EstablishmentLocation(),
                 CollegeBoardDesignatedIndicator = command.CeebCode,
                 UCosmicCode = command.UCosmicCode,
-                ExternalId = command.ExternalId
+                ExternalId = command.ExternalId,
+                VerticalRank = command.VerticalRank
             };
 
             // log audit

@@ -42,8 +42,6 @@ namespace UCosmic.Domain.Establishments
         {
             return Text;
         }
-
-        public int? Order { get; set; } // Use this to order Establishment other than alphabetical
     }
 
     internal static class EstablishmentNameSerializer

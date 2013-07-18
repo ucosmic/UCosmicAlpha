@@ -135,7 +135,7 @@ namespace UCosmic.Domain.External
                         IsMember = true,
                         ParentId = _usf.RevisionId,
                         TypeId = _campusEstablishmentType.RevisionId,
-                        Order = _campusOrder[""]
+                        VerticalRank = _campusOrder[""]
                     };
 
                     _createUsfEstablishment.Handle(createCampus);

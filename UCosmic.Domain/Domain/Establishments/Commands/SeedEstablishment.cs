@@ -21,7 +21,7 @@ namespace UCosmic.Domain.Establishments
         public NonOfficialUrl[] NonOfficialUrls { get; set; }
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
-        public int? Order { get; set; }
+        public int? VerticalRank { get; set; }
 
         public Establishment CreatedEstablishment { get; internal set; }
 
@@ -86,14 +86,14 @@ namespace UCosmic.Domain.Establishments
                 IsMember = command.IsMember,
                 Type = type,
                 Location = new EstablishmentLocation(),
+                VerticalRank = command.VerticalRank
             };
 
             // add official name to list
             entity.Names.Add(new EstablishmentName
             {
                 Text = command.OfficialName,
-                IsOfficialName = true,
-                Order = command.Order
+                IsOfficialName = true
             });
 
             // add non-official names

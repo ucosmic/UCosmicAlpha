@@ -83,13 +83,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (!String.IsNullOrEmpty(sort) && (String.Compare(sort, "true", true) == 0))
             {
-                if (entity.Children.Count(c => c.Names.Any(n => n.Order.HasValue)) > 0)
+                if (entity.Children.Count(c => c.VerticalRank.HasValue) > 0)
                 {
-                    /* If any child has at least one Name with Order set, use that order for sorting. */
-                    var ordered = entity.Children.Select(c => c).Where(c => c.Names.Any(n => n.Order.HasValue))
-                                        .OrderBy(c => c.Names.First(m => m.Order.HasValue).Order.Value);
+                    var ordered = entity.Children.Select(c => c)
+                                        .Where(c => c.VerticalRank.HasValue)
+                                        .OrderBy(c => c.VerticalRank.Value);
 
-                    var noOrder = entity.Children.Select(c => c).Where(c => c.Names.Any(t => !t.Order.HasValue));
+                    var noOrder = entity.Children.Select(c => c)
+                                        .Where(c => !c.VerticalRank.HasValue);
 
                     children = ordered.ToArray().Concat(noOrder.ToArray());
                 }
