@@ -663,7 +663,7 @@ var ViewModels;
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), false)
+                                    url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), true)
                                 }
                             }
                         }),

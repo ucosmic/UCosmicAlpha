@@ -21,6 +21,7 @@ namespace UCosmic.Domain.Establishments
         public NonOfficialUrl[] NonOfficialUrls { get; set; }
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
+        public int? Order { get; set; }
 
         public Establishment CreatedEstablishment { get; internal set; }
 
@@ -92,6 +93,7 @@ namespace UCosmic.Domain.Establishments
             {
                 Text = command.OfficialName,
                 IsOfficialName = true,
+                Order = command.Order
             });
 
             // add non-official names

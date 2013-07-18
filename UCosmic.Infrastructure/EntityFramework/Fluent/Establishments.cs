@@ -211,6 +211,8 @@ namespace UCosmic.EntityFramework
 
             Property(p => p.Text).IsRequired().HasMaxLength(EstablishmentNameConstraints.TextMaxLength);
             Property(p => p.AsciiEquivalent).HasMaxLength(EstablishmentNameConstraints.TextMaxLength);
+
+            Property(p => p.Order).IsOptional();
         }
     }
 

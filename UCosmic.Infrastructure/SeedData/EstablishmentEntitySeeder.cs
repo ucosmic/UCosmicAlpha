@@ -1408,12 +1408,37 @@ namespace UCosmic.SeedData
             {
                 var campus = Seed(new SeedEstablishment
                 {
-                    OfficialName = "USF Tampa Campus",
+                    OfficialName = "USF Sarasota-Manatee",
+                    OfficialWebsiteUrl = "www.usfsm.edu",
+                    EmailDomains = new[] { "@usfsm.edu" },
+                    IsMember = true,
+                    ParentId = university.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
+                                            .RevisionId
+                    //Order = 3
+                });
+
+                Seed(new SeedEstablishment
+                {
+                    OfficialName = "College of Arts and Sciences",
+                    IsMember = true,
+                    ParentId = campus.RevisionId,
+                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                                                         KnownEstablishmentType.College.AsSentenceFragment()))
+                                            .RevisionId
+                });
+
+
+                campus = Seed(new SeedEstablishment
+                {
+                    OfficialName = "USF Tampa",
                     IsMember = true,
                     ParentId = university.RevisionId,
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
                                             .RevisionId,
+                    Order = 1
                 });
 
                 var college = Seed(new SeedEstablishment
@@ -1647,7 +1672,7 @@ namespace UCosmic.SeedData
 
                 campus = Seed(new SeedEstablishment
                 {
-                    OfficialName = "USF St. Petersburg Campus",
+                    OfficialName = "USF St. Petersburg",
                     OfficialWebsiteUrl = "www.usfsp.edu",
                     EmailDomains = new[] {"@usfsp.edu"},
                     IsMember = true,
@@ -1655,33 +1680,12 @@ namespace UCosmic.SeedData
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
                                             .RevisionId,
+                    Order = 2
                 });
 
                     Seed(new SeedEstablishment
                     {
                         OfficialName = "College of Business",
-                        IsMember = true,
-                        ParentId = campus.RevisionId,
-                        TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                                                             KnownEstablishmentType.College.AsSentenceFragment()))
-                                                .RevisionId
-                    });
-
-                campus = Seed(new SeedEstablishment
-                {
-                    OfficialName = "USF Sarasota-Manatee Campus",
-                    OfficialWebsiteUrl = "www.usfsm.edu",
-                    EmailDomains = new[] { "@usfsm.edu" },
-                    IsMember = true,
-                    ParentId = university.RevisionId,
-                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                                                         KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
-                                            .RevisionId,
-                });
-
-                    Seed(new SeedEstablishment
-                    {
-                        OfficialName = "College of Arts and Sciences",
                         IsMember = true,
                         ParentId = campus.RevisionId,
                         TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(

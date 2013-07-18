@@ -23,6 +23,7 @@ namespace UCosmic.Domain.External
         public Address[] Addresses { get; set; }
         public ContactInfo PublicContactInfo { get; set; }
         public string ExternalId { get; set; }
+        public int? Order { get; set; }
 
         public Establishment CreatedEstablishment { get; internal set; }
 
@@ -95,6 +96,7 @@ namespace UCosmic.Domain.External
             {
                 Text = command.OfficialName,
                 IsOfficialName = true,
+                Order = command.Order
             });
 
             // add non-official names

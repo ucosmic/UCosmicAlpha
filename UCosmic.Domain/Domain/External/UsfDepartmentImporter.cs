@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 649
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
@@ -57,6 +58,7 @@ namespace UCosmic.Domain.External
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
         private DateTime? _lastDepartmentListActivityDate;
+        private Dictionary<string, int?> _campusOrder;
 
         // ----------------------------------------------------------------------
         /*
@@ -91,12 +93,19 @@ namespace UCosmic.Domain.External
 
             _campuses = new StringDictionary
             {
-                { "TAMPA", "USF Tampa Campus" },
-                { "USF Tampa", "USF Tampa Campus" },
-                { "ST.PETE", "USF St. Petersburg Campus" },
-                { "USF St. Petersburg", "USF St. Petersburg Campus" },
-                { "SARASOTA", "USF Sarasota-Manatee Campus" },
-                { "USF Sarasota", "USF Sarasota-Manatee Campus" }
+                { "TAMPA", "USF Tampa" },
+                { "USF Tampa", "USF Tampa" },
+                { "ST.PETE", "USF St. Petersburg" },
+                { "USF St. Petersburg", "USF St. Petersburg" },
+                { "SARASOTA", "USF Sarasota-Manatee" },
+                { "USF Sarasota", "USF Sarasota-Manatee" }
+            };
+
+            _campusOrder = new Dictionary<string, int?>
+            {
+                {"USF Tampa", 1},
+                {"USF St. Petersburg", 2},
+                {"USF Sarasota-Manatee", 3},
             };
 
             string establishmentType = KnownEstablishmentType.UniversityCampus.AsSentenceFragment();
@@ -125,7 +134,8 @@ namespace UCosmic.Domain.External
                         OfficialName = officialName,
                         IsMember = true,
                         ParentId = _usf.RevisionId,
-                        TypeId = _campusEstablishmentType.RevisionId
+                        TypeId = _campusEstablishmentType.RevisionId,
+                        Order = _campusOrder[""]
                     };
 
                     _createUsfEstablishment.Handle(createCampus);

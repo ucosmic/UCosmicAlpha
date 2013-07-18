@@ -79,9 +79,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var children = (!String.IsNullOrEmpty(sort) && (String.Compare(sort,"true",true) == 0)) ?
-                            entity.Children.OrderBy(x => x.OfficialName).ToArray() :
-                            entity.Children.ToArray();
+            IEnumerable<Establishment> children = null;
+
+            if (!String.IsNullOrEmpty(sort) && (String.Compare(sort, "true", true) == 0))
+            {
+                if (entity.Children.Count(c => c.Names.Any(n => n.Order.HasValue)) > 0)
+                {
+                    /* If any child has at least one Name with Order set, use that order for sorting. */
+                    var ordered = entity.Children.Select(c => c).Where(c => c.Names.Any(n => n.Order.HasValue))
+                                        .OrderBy(c => c.Names.First(m => m.Order.HasValue).Order.Value);
+
+                    var noOrder = entity.Children.Select(c => c).Where(c => c.Names.Any(t => !t.Order.HasValue));
+
+                    children = ordered.ToArray().Concat(noOrder.ToArray());
+                }
+                else
+                {
+                    children = entity.Children.OrderBy(x => x.OfficialName).ToArray();
+                }
+            }
+            else
+            {
+                children = entity.Children.ToArray();
+            }
+
             var model = Mapper.Map<ICollection<EstablishmentApiScalarModel>>(children);
 
             return model;

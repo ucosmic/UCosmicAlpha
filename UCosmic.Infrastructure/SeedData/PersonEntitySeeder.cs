@@ -427,7 +427,7 @@ namespace UCosmic.SeedData
                 var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
                 if (establishment == null) throw new Exception("Establishment is null");
 
-                var campus = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "USF Tampa Campus");
+                var campus = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "USF Tampa");
                 if (campus == null) throw new Exception("Campus is null");
 
                 var college = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "College of Medicine" && e.Parent.RevisionId == campus.RevisionId);
