@@ -251,31 +251,35 @@ ul.selectableListItems li:hover {
   font-family: Arial;
   font-size: small;
   background-color: white;
-  color: white;
-  margin-top: 8px;
-  border-color: black;
-  border: 1px;
-  border-style: solid; }
+  color: #01529a;
+  margin-top: 8px; }
   .filter-sidebar input[type="text"] {
     height: 24px;
     font-size: small;
     vertical-align: middle; }
   .filter-sidebar .header {
     height: 32px;
-    background-color: #01529a;
+    background-color: #dddddd;
     text-align: center;
     font-weight: bold;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px; }
   .filter-sidebar .section-header {
-    background-color: #01529a;
+    background-color: #dddddd;
     padding-top: 4px;
     text-align: left;
     font-weight: bold;
     padding-bottom: 8px;
-    border-bottom-color: gray;
-    border-bottom: 1px;
-    border-bottom-style: dotted; }
+    border-top-color: white;
+    border-top: 1px;
+    border-top-style: dotted; }
   .filter-sidebar .section {
-    background-color: #01529a;
-    margin-top: 16px; }
+    background-color: #dddddd;
+    padding-bottom: 8px; }
+
+.maptype-hover:hover {
+  text-decoration: underline; }
+  .maptype-hover:hover * {
+    cursor: pointer; }
 

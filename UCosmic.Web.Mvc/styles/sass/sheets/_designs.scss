@@ -380,11 +380,8 @@ ul.selectableListItems li:hover {
     font-family: Arial;
     font-size: small;
     background-color: white;
-    color: $sidebar-content-text-color;
+    color: $sidebar-default-text-color;
     margin-top: 8px;
-    border-color: black;
-    border: 1px;
-    border-style: solid;
 
     input[type="text"] {
         height: 24px;
@@ -394,25 +391,32 @@ ul.selectableListItems li:hover {
 
     .header {
         height: 32px;
-        background-color: $sidebar-current-bg-color;
+        background-color: $sidebar-default-bg-color;
         text-align: center;
         font-weight: bold;
         text-transform: uppercase;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
 
     .section-header {
-        background-color: $sidebar-current-bg-color;
+        background-color: $sidebar-default-bg-color;
         padding-top: 4px;
         text-align: left;
         font-weight: bold;
         padding-bottom: 8px;
-        border-bottom-color: gray;
-        border-bottom: 1px;
-        border-bottom-style: dotted;
+        border-top-color: $sidebar-current-text-color;
+        border-top: 1px;
+        border-top-style: dotted;
     }
 
     .section {
-        background-color: $sidebar-current-bg-color;
-        margin-top: 16px;
+        background-color: $sidebar-default-bg-color;
+        padding-bottom: 8px;
     }
+}
+
+.maptype-hover:hover {
+    text-decoration: underline;
+    * { cursor: pointer; }
 }

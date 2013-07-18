@@ -248,3 +248,40 @@ body .dialog {
 ul.selectableListItems li:hover {
   background-color: #dddddd; }
 
+.filter-sidebar {
+  width: 270px;
+  font-family: Arial;
+  font-size: small;
+  background-color: white;
+  color: #1f7e5c;
+  margin-top: 8px; }
+  .filter-sidebar input[type="text"] {
+    height: 24px;
+    font-size: small;
+    vertical-align: middle; }
+  .filter-sidebar .header {
+    height: 32px;
+    background-color: #dddddd;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px; }
+  .filter-sidebar .section-header {
+    background-color: #dddddd;
+    padding-top: 4px;
+    text-align: left;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-top-color: white;
+    border-top: 1px;
+    border-top-style: dotted; }
+  .filter-sidebar .section {
+    background-color: #dddddd;
+    padding-bottom: 8px; }
+
+.maptype-hover:hover {
+  text-decoration: underline; }
+  .maptype-hover:hover * {
+    cursor: pointer; }
+

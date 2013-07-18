@@ -45,7 +45,7 @@
             var options = {
                 is3D: true,
                 magnifyingGlass: { enable: true, zoomFactor: 7.5 },
-                region: '150', //'150',    // 002 Africa, 142 Asia
+                region: 'world', //'150',    // 002 Africa, 142 Asia
                 backgroundColor: 'lightBlue',
                 keepAspectRatio: false,
                 colorAxis: { colors: ['#FFFFFF', 'green'] },
@@ -118,6 +118,13 @@
         <header>
             <h1>@ViewBag.Title</h1>
         </header>
+        <div style="width: 680px; margin-bottom: 8px; text-align: center">
+            <span style="font-family: monospace; font-size: large">
+                <span class="maptype-hover" style="margin-right: 12px; text-decoration: underline">HEATMAP</span>
+                <span class="maptype-hover" style="margin-right: 12px">MAP</span>
+                <span class="maptype-hover">TABLE</span>
+            </span>
+        </div>
         <div id="chart" style="width:680px; height: 500px; border-style: solid; border-color: black;">
         </div>
     </div>
