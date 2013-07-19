@@ -53,6 +53,10 @@ module ViewModels.Employees {
 
         years: number[];
 
+        isHeatmapVisible: KnockoutObservableBool;
+        isPointmapVisible: KnockoutObservableBool;
+        isTableVisible: KnockoutObservableBool;
+
         // --------------------------------------------------------------------------------
         /*
         */
@@ -67,6 +71,9 @@ module ViewModels.Employees {
             this.institutionCountryOfficialName = ko.observable(null);
             this.defaultEstablishmentHasCampuses = ko.observable(true);
             this.activityTypes = ko.observableArray();
+            this.isHeatmapVisible = ko.observable(false);
+            this.isPointmapVisible = ko.observable(true);
+            this.isTableVisible = ko.observable(false);
 
 
             this.tenantInstitutionId = ko.observable(193); // USF
@@ -92,12 +99,13 @@ module ViewModels.Employees {
         */
         // --------------------------------------------------------------------------------   
         setupWidgets(locationSelectorId: string,
-            fromDatePickerId: string,
-            toDatePickerId: string,
-            institutionSelectorId: string,
-            campuseDropListId: string,
-            collegeDropListId: string,
-            departmentDropListId: string ): void {
+                fromDatePickerId: string,
+                toDatePickerId: string,
+                institutionSelectorId: string,
+                campuseDropListId: string,
+                collegeDropListId: string,
+                departmentDropListId: string
+            ): void {
 
             this.locationSelectorId = locationSelectorId;
 
@@ -435,6 +443,33 @@ module ViewModels.Employees {
                 this.locations.push(location);
             }
             //this.dirtyFlag(true);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        selectMap(type: string): void {
+
+            $('#heatmapText').css("font-weight", "normal");
+            this.isHeatmapVisible(false);
+
+            $('#pointmapText').css("font-weight", "normal");
+            this.isPointmapVisible(false);
+
+            $('#resultstableText').css("font-weight", "normal");
+            this.isTableVisible(false);
+
+            if (type === "heatmap") {
+                $('#heatmapText').css("font-weight", "bold");
+                this.isHeatmapVisible(true);
+            } else if (type === "pointmap") {
+                $('#pointmapText').css("font-weight", "bold");
+                this.isPointmapVisible(true);
+            } else if (type === "resultstable") {
+                $('#resultstableText').css("font-weight", "bold");
+                this.isTableVisible(true);
+            }
         }
     }
 }

@@ -16,6 +16,9 @@ var ViewModels;
                 this.institutionCountryOfficialName = ko.observable(null);
                 this.defaultEstablishmentHasCampuses = ko.observable(true);
                 this.activityTypes = ko.observableArray();
+                this.isHeatmapVisible = ko.observable(false);
+                this.isPointmapVisible = ko.observable(true);
+                this.isTableVisible = ko.observable(false);
                 this.tenantInstitutionId = ko.observable(193);
                 var fromToYearRange = 80;
                 var thisYear = Number(moment().format('YYYY'));
@@ -251,6 +254,24 @@ var ViewModels;
                         version: ""
                     });
                     this.locations.push(location);
+                }
+            };
+            FacultyAndStaff.prototype.selectMap = function (type) {
+                $('#heatmapText').css("font-weight", "normal");
+                this.isHeatmapVisible(false);
+                $('#pointmapText').css("font-weight", "normal");
+                this.isPointmapVisible(false);
+                $('#resultstableText').css("font-weight", "normal");
+                this.isTableVisible(false);
+                if(type === "heatmap") {
+                    $('#heatmapText').css("font-weight", "bold");
+                    this.isHeatmapVisible(true);
+                } else if(type === "pointmap") {
+                    $('#pointmapText').css("font-weight", "bold");
+                    this.isPointmapVisible(true);
+                } else if(type === "resultstable") {
+                    $('#resultstableText').css("font-weight", "bold");
+                    this.isTableVisible(true);
                 }
             };
             return FacultyAndStaff;

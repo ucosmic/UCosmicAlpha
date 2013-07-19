@@ -787,6 +787,10 @@
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
+    <TypeScriptCompile Include="scripts\google\google.charts.d.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
     <None Include="content\kendo\2012.3.1114\kendo.black.less" />
     <None Include="content\kendo\2012.3.1114\kendo.blueopal.less" />
@@ -802,6 +806,7 @@
     <None Include="content\kendo\2012.3.1114\template.less" />
     <Content Include="content\kendo\2013.1.226\images\KendoUI.ttf" />
     <Content Include="content\kendo\2013.1.226\images\KendoUI.woff" />
+    <Content Include="scripts\google\google.maps.d.ts" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
@@ -815,6 +820,13 @@
     <Content Include="images\icons\files\unknown.png" />
     <Content Include="images\icons\files\xls.png" />
     <Content Include="images\icons\files\xlsx.png" />
+    <Content Include="scripts\google\jsapi.js" />
+    <Content Include="scripts\google\ToolsOverlay.js">
+      <DependentUpon>ToolsOverlay.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\google\ToolsOverlay.min.js">
+      <DependentUpon>ToolsOverlay.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
@@ -853,14 +865,6 @@
     </Content>
     <Content Include="scripts\app\SideSwiper.min.js">
       <DependentUpon>SideSwiper.ts</DependentUpon>
-    </Content>
-    <None Include="scripts\google\google.maps.d.ts" />
-    <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
-    <Content Include="scripts\google\ToolsOverlay.js">
-      <DependentUpon>ToolsOverlay.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\google\ToolsOverlay.min.js">
-      <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
     <None Include="scripts\jquery\jquery-1.8.2.intellisense.js" />
     <Content Include="scripts\jquery\jquery-1.8.2.js" />
@@ -2544,6 +2548,7 @@
     <None Include="styles\_resharper-unused.css" />
     <Content Include="styles\tinymce.css" />
     <Content Include="T4MVC.tt.settings.xml" />
+    <Content Include="typings\google.maps.d.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

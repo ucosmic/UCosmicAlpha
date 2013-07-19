@@ -15,11 +15,13 @@
     @Scripts.Render("~/bundles/employees")
 
     <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-    <script type='text/javascript'>
-        var geoChart;
-        google.load('visualization', '1', { 'packages': ['geochart'] });
-        google.setOnLoadCallback(drawRegionsMap);
+    <@*script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>*@
+       
+    <script type="text/javascript">
 
+        google.load( 'visualization', '1', { 'packages': ['geochart'] } );
+        google.setOnLoadCallback( drawRegionsMap );
+        
         function drawRegionsMap() {
 
             var countryData = new Array();
@@ -40,24 +42,33 @@
                 dataType: 'json'
             });
 
-            var countryData = google.visualization.arrayToDataTable(countryData);
+            var countryDataTable = google.visualization.arrayToDataTable(countryData);
 
             var options = {
-                is3D: true,
-                magnifyingGlass: { enable: true, zoomFactor: 7.5 },
+                //is3D: true,
+                width: 680,
+                height: 500,
+                //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
                 region: 'world', //'150',    // 002 Africa, 142 Asia
                 backgroundColor: 'lightBlue',
-                keepAspectRatio: false,
+                keepAspectRatio: true,
                 colorAxis: { colors: ['#FFFFFF', 'green'] },
                 //displayMode: 'markers'
             };
 
-        geoChart = new google.visualization.GeoChart(document.getElementById('chart'));
-        geoChart.draw(countryData, options);
-        };
-    </script>
-       
-    <script type="text/javascript">
+            window.heatmap = new google.visualization.GeoChart( $( '#heatmap' )[0] );
+            window.heatmap.draw( countryDataTable, options );
+        }
+        
+        window.pointmap = new google.maps.Map( document.getElementById('pointmap'),
+        {
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            center: new google.maps.LatLng( 0, 0 ), // americas on left, australia on right
+            zoom: 1, // zoom out
+            draggable: true, // allow map panning
+            scrollwheel: false // prevent mouse wheel zooming
+        } );
+
         $(function() {
 
             var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff();
@@ -65,7 +76,7 @@
                 .done(function() {
 
                     facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institution",
-                        "campusDropList", "collegeDropList", "departmentDropList");
+                        "campusDropList", "collegeDropList", "departmentDropList" );
 
                     var rootElement = $("#faculty-staff")[0];
                     ko.applyBindings(facultyAndStaffViewModel, rootElement);
@@ -111,26 +122,52 @@
                 });
         });
     </script>    
-}
+    }
 
-<div class="content fixed to-top" data-current-module="employees">
-    <div class="on-left from-top">
-        <header>
-            <h1>@ViewBag.Title</h1>
-        </header>
-        <div style="width: 680px; margin-bottom: 8px; text-align: center">
-            <span style="font-family: monospace; font-size: large">
-                <span class="maptype-hover" style="margin-right: 12px; text-decoration: underline">HEATMAP</span>
-                <span class="maptype-hover" style="margin-right: 12px">MAP</span>
-                <span class="maptype-hover">TABLE</span>
-            </span>
+    <div class="content fixed to-top" data-current-module="employees">
+        <div id="faculty-staff" class="on-left from-top">
+            <header>
+                <h1>@ViewBag.Title</h1>
+            </header>
+            <div style="width: 680px; margin-bottom: 8px; text-align: center">
+                <span style="font-family: monospace; font-size: large">
+                    <span id="heatmapText" class="maptype-hover" style="margin-right: 12px; font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'heatmap' ); }">HEATMAP</span>
+                    <span id="pointmapText" class="maptype-hover" style="margin-right: 12px; font-weight: bold" data-bind="click: function ( item, event ) { selectMap( 'pointmap' ); }">MAP</span>
+                    <span id="resultstableText" class="maptype-hover" style="font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'resultstable' ); }">TABLE</span>
+                </span>
+            </div>
+            <div style="width: 680px; height: 500px">
+                <div id="heatmap" style="display: none" data-bind="visible: isHeatmapVisible()"></div>
+                <div data-bind="visible: isPointmapVisible()">
+                    <div id="pointmap" style="width: 680px; height: 500px"></div>
+                </div>
+                <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
+                    
+                    <table class="data">
+                        <colgroup>
+                            <col style="width: 40%;" />
+                            <col style="width: 30%;" />
+                            <col style="width: 30%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Faculty</th>
+                                <th>Activity</th>
+                                <th>Locations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                            </tr>
+                        </tbody>
+                    </table>                  
+                </div>
+            </div>
         </div>
-        <div id="chart" style="width:680px; height: 500px; border-style: solid; border-color: black;">
-        </div>
-    </div>
-    <div class="on-right from-top">
-        <div id="faculty-staff">
+        <div class="on-right from-top">
             @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
         </div>
     </div>
-</div>
