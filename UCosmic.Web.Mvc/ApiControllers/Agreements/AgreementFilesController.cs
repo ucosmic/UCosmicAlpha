@@ -110,8 +110,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new CreateFile(User);
             Mapper.Map(model, command);
 
-            command.FileData = null;
-            command.UploadGuid = new Guid("ba5469dd-1fd2-434d-b126-1165be266a0b");
+            //command.FileData = null;
+            //command.UploadGuid = new Guid("ba5469dd-1fd2-434d-b126-1165be266a0b");
             //command.UploadGuid = new Guid("b31e77f8-43df-413b-b480-e37048aecf64");
 
             _createFile.Handle(command);
