@@ -45,9 +45,10 @@ body > nav.my {
       body > nav.my > .container > .content > .left {
         float: left; }
       body > nav.my > .container > .content > .right {
-        float: right; }
-        body > nav.my > .container > .content > .right a:first-child {
-          /*border-left: solid 1px $nav-my-link-border-color;*/ }
+        float: right;
+        /*a:first-child {
+            border-left: solid 1px $nav-my-link-border-color;
+        }*/ }
         @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
           body > nav.my > .container > .content > .right a:last-child {
             border-right: 0 none !important; } }
@@ -70,24 +71,25 @@ body > nav.my {
         font-size: 14px;
         line-height: 1;
         font-weight: bold;
-        color: #eeeeee; }
+        color: #eeeeee;
+        /*&.principal {
+            padding-left: 0;
+            color: $nav-my-email-link-color;
+            text-decoration: none;
+            cursor: default;
+            > * {
+                cursor: default;
+            }
+            &:hover {
+                background-color: transparent;
+            }
+        }*/ }
         body > nav.my > .container > .content a:hover {
           background-color: #eeeeee;
           color: #1f7e5c;
           text-decoration: none; }
-        body > nav.my > .container > .content a.principal {
-          /*padding-left: 0;
-          color: $nav-my-email-link-color;
-          text-decoration: none;
-          cursor: default;
-          > * {
-              cursor: default;
-          }
-          &:hover {
-              background-color: transparent;
-          }*/ }
-          body > nav.my > .container > .content a.principal .tenant-domain {
-            display: inline; }
+        body > nav.my > .container > .content a.principal .tenant-domain {
+          display: inline; }
         body > nav.my > .container > .content a.in {
           border-right: 0 none;
           margin-left: -6px; }
@@ -396,10 +398,6 @@ body #main {
           -moz-border-radius: 0;
           -webkit-border-radius: 0;
           border-radius: 0; }
-          body #main > .content.fixed nav.side > ul > li:last-child.static.square-bottom .content.top {
-            -moz-border-radius: 8px 8px 0 0;
-            -webkit-border-radius: 8px 8px 0 0;
-            border-radius: 8px 8px 0 0; }
         body #main > .content.fixed nav.side > ul > li:last-child.current > a > .text {
           -moz-border-radius: 0 0 8px 0;
           -webkit-border-radius: 0 0 8px 0;
@@ -433,10 +431,6 @@ body #main {
           background-color: #dddddd; }
         body #main > .content.fixed nav.side > ul > li > .text {
           margin-left: 15px; }
-          body #main > .content.fixed nav.side > ul > li > .text.top {
-            -moz-border-radius: 8px 8px 0 0;
-            -webkit-border-radius: 8px 8px 0 0;
-            border-radius: 8px 8px 0 0; }
         body #main > .content.fixed nav.side > ul > li:hover > a > .arrow {
           -webkit-transition: all 250ms;
           -moz-transition: all 250ms;
@@ -465,10 +459,6 @@ body #main {
             text-decoration: underline; }
             body #main > .content.fixed nav.side > ul > li > .content a:hover {
               text-decoration: none; }
-          body #main > .content.fixed nav.side > ul > li > .content.top {
-            -moz-border-radius: 8px 8px 0 0;
-            -webkit-border-radius: 8px 8px 0 0;
-            border-radius: 8px 8px 0 0; }
         body #main > .content.fixed nav.side > ul > li.current > .content {
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
