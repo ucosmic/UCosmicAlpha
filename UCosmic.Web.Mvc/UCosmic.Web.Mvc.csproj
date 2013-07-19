@@ -286,7 +286,6 @@
     <Compile Include="ApiControllers\Activities\ActivitiesController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityDocumentsController.cs" />
-    <Compile Include="ApiControllers\Agreements\AgreementFileUploadsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />
@@ -337,7 +336,6 @@
     <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeNameApiModel.cs" />
     <Compile Include="Models\Activities\ActivityValuesApiModel.cs" />
-    <Compile Include="Models\_Etc\FileMedia.cs" />
     <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
     <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />
@@ -374,6 +372,7 @@
     <Compile Include="Models\Establishments\EstablishmentPostModel.cs" />
     <Compile Include="Models\EstablishmentWelcomeMessageConfigurationModel.cs" />
     <Compile Include="Models\_Etc\BaseSearchInputModel.cs" />
+    <Compile Include="Models\_Etc\FileMedium.cs" />
     <Compile Include="Models\_Etc\ValidationFailureApiModel.cs" />
     <Compile Include="Models\_Etc\ImageResizeRequestModel.cs" />
     <Compile Include="ApiControllers\MyProfileController.cs" />

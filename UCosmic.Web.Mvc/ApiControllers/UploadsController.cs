@@ -27,7 +27,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("")]
-        public HttpResponseMessage Post(FileMedia file)
+        public HttpResponseMessage Post(FileMedium file)
         {
             if (file == null || file.Content == null || file.Content.Length < 1
                 || string.IsNullOrWhiteSpace(file.ContentType) || string.IsNullOrWhiteSpace(file.FileName))

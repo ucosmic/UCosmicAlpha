@@ -3,27 +3,20 @@ using UCosmic.Domain.Files;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class FileMedia
+    public sealed class FileMedium
     {
-        internal FileMedia(string fileName, string contentType, byte[] content)
-        {
-            FileName = fileName.WithoutEnclosingDoubleQuotes();
-            ContentType = contentType;
-            Content = content;
-        }
-
-        public string FileName { get; private set; }
-        public string ContentType { get; private set; }
-        public byte[] Content { get; private set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
     }
 
-    public static class FileMediaProfiler
+    public static class FileMediumProfiler
     {
         public class ModelToCreateLooseFile : Profile
         {
             protected override void Configure()
             {
-                CreateMap<FileMedia, CreateLooseFile>()
+                CreateMap<FileMedium, CreateLooseFile>()
                     .ForMember(d => d.Content, o => o.MapFrom(s => s.Content))
                     .ForMember(d => d.MimeType, o => o.MapFrom(s => s.ContentType))
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.FileName))

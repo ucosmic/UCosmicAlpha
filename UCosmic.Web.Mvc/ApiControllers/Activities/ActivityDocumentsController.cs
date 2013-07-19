@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
 using AttributeRouting;
@@ -83,46 +82,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
         // --------------------------------------------------------------------------------
         [TryAuthorize]
         [POST("{activityId:int}/documents")]
-        public Task<HttpResponseMessage> PostDocuments(int activityId, string activityMode)
+        public HttpResponseMessage Post(int activityId, string activityMode, FileMedium fileMedium)
         {
-            if (!Request.Content.IsMimeMultipartContent())
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-
             var activityValues = _queryProcessor.Execute(
                 new ActivityValuesByActivityIdAndMode(activityId, activityMode));
 
             if (activityValues == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var provider = new MultipartMemoryStreamProvider();
-
-            var task = Request.Content.ReadAsMultipartAsync(provider).ContinueWith(t =>
+            _createActivityDocument.Handle(new CreateActivityDocument(User)
             {
-                if (t.IsFaulted || t.IsCanceled)
-                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, t.Exception);
-
-                foreach (var item in provider.Contents)
-                {
-                    var mimeType = item.Headers.ContentType.MediaType;
-                    var fileName = item.Headers.ContentDisposition.FileName;
-                    fileName = fileName.Trim('"').WithoutTrailingSlash();
-
-                    var stream = item.ReadAsStreamAsync().Result;
-                    var content = stream.ReadFully();
-                    _createActivityDocument.Handle(new CreateActivityDocument(User)
-                    {
-                        ActivityValuesId = activityValues.RevisionId,
-                        Title = Path.GetFileNameWithoutExtension(fileName),
-                        Mode = activityMode.AsEnum<ActivityMode>(),
-                        Content = content,
-                        MimeType = mimeType,
-                        FileName = fileName,
-                    });
-                }
-                return Request.CreateResponse(HttpStatusCode.Created);
+                ActivityValuesId = activityValues.RevisionId,
+                Title = Path.GetFileNameWithoutExtension(fileMedium.FileName),
+                Mode = activityMode.AsEnum<ActivityMode>(),
+                Content = fileMedium.Content,
+                MimeType = fileMedium.ContentType,
+                FileName = fileMedium.FileName,
             });
-
-            return task;
+            return Request.CreateResponse(HttpStatusCode.Created);
         }
 
         // --------------------------------------------------------------------------------
@@ -221,15 +198,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get activity document proxy image
         */
         // --------------------------------------------------------------------------------
+        [CacheHttpGet(Duration = 3600)]
         [GET("{activityId:int}/documents/{documentId:int}/thumbnail")]
         public HttpResponseMessage GetDocumentsThumbnail(int activityId, int documentId, [FromUri] ImageResizeRequestModel model)
         {
             var document = _queryProcessor.Execute(new ActivityDocumentById(documentId)
             {
                 EagerLoad = new Expression<Func<ActivityDocument, object>>[]
-                    {
-                        x => x.ActivityValues,
-                    }
+                {
+                    x => x.ActivityValues,
+                },
             });
             if (document == null || document.ActivityValues.ActivityId != activityId)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

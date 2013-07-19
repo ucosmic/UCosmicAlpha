@@ -516,7 +516,7 @@
             </td>-->
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Remove document" data-bind="click: function (item, event) { $parent.deleteDocument(item, event, 0); }, clickBubble: false">
+            <a href="#" title="Remove document" data-bind="click: function (item, index, event) { $parent.deleteDocument(item, $index(), event, 0); }, clickBubble: false">
                 <img src="@Links.images.icons.minus.minus_24_red_png" alt="Remove document" />
             </a>
         </td>

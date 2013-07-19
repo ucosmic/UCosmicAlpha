@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +7,6 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -96,29 +94,29 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
             if (editActivity == null)
             {
-                try
-                {
-                    /* There's no "in progress edit" record, so we make a copy of the
-                         * activity and set it to edit mode. */
-                    var copyDeepActivityCommand = new CopyDeepActivity(User,
-                                                                       activity.RevisionId,
-                                                                       activity.Mode,
-                                                                       activity.RevisionId);
+                //try
+                //{
+                /* There's no "in progress edit" record, so we make a copy of the
+                     * activity and set it to edit mode. */
+                var copyDeepActivityCommand = new CopyDeepActivity(User,
+                                                                   activity.RevisionId,
+                                                                   activity.Mode,
+                                                                   activity.RevisionId);
 
-                    _copyDeepActivity.Handle(copyDeepActivityCommand);
+                _copyDeepActivity.Handle(copyDeepActivityCommand);
 
-                    editActivity = copyDeepActivityCommand.CreatedActivity;
-                }
-                catch (Exception ex)
-                {
-                    var responseMessage = new HttpResponseMessage
-                    {
-                        StatusCode = HttpStatusCode.InternalServerError,
-                        Content = new StringContent(ex.Message),
-                        ReasonPhrase = "Error preparing activity for edit"
-                    };
-                    throw new HttpResponseException(responseMessage);
-                }
+                editActivity = copyDeepActivityCommand.CreatedActivity;
+                //}
+                //catch (Exception ex)
+                //{
+                //    var responseMessage = new HttpResponseMessage
+                //    {
+                //        StatusCode = HttpStatusCode.InternalServerError,
+                //        Content = new StringContent(ex.Message),
+                //        ReasonPhrase = "Error preparing activity for edit"
+                //    };
+                //    throw new HttpResponseException(responseMessage);
+                //}
             }
 
             var model = Mapper.Map<ActivityApiModel>(editActivity);
@@ -186,24 +184,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var activity = Mapper.Map<Activity>(model);
 
-            try
+            //try
+            //{
+            var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
             {
-                var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
-                {
-                    Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
-                };
-                _updateActivity.Handle(updateActivityCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "Activity update error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+                Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
+            };
+            _updateActivity.Handle(updateActivityCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "Activity update error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -218,34 +216,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] string mode)
         {
-            try
+            //try
+            //{
+            var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
+            if (editActivity == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            if (!editActivity.EditSourceId.HasValue)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, mode)
             {
-                var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
-                if (editActivity == null)
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
+            };
+            _updateActivity.Handle(updateActivityCommand);
 
-                if (!editActivity.EditSourceId.HasValue)
-                    throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-                var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, mode)
-                {
-                    Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
-                };
-                _updateActivity.Handle(updateActivityCommand);
-
-                var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
-                _deleteActivity.Handle(deleteActivityCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "Activity update error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+            var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
+            _deleteActivity.Handle(deleteActivityCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "Activity update error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -259,41 +257,41 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {
-            try
+            //try
+            //{
+            var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
+            if (editActivity == null)
             {
-                var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
-                if (editActivity == null)
-                {
-                    var message = string.Format("Activity Id {0} not found.", activityId);
-                    throw new Exception(message);
-                }
+                var message = string.Format("Activity Id {0} not found.", activityId);
+                throw new Exception(message);
+            }
 
-                if (editActivity.EditSourceId.HasValue)
+            if (editActivity.EditSourceId.HasValue)
+            {
+                var activity = _queryProcessor.Execute(new ActivityById(editActivity.EditSourceId.Value));
+                if (activity != null)
                 {
-                    var activity = _queryProcessor.Execute(new ActivityById(editActivity.EditSourceId.Value));
-                    if (activity != null)
+                    if (activity.IsEmpty())
                     {
-                        if (activity.IsEmpty())
-                        {
-                            var deleteActivityCommand = new DeleteActivity(User, activity.RevisionId);
-                            _deleteActivity.Handle(deleteActivityCommand);
-                        }
+                        var deleteActivityCommand = new DeleteActivity(User, activity.RevisionId);
+                        _deleteActivity.Handle(deleteActivityCommand);
                     }
                 }
+            }
 
-                var deleteEditActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
-                _deleteActivity.Handle(deleteEditActivityCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "Activity delete error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+            var deleteEditActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
+            _deleteActivity.Handle(deleteEditActivityCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "Activity delete error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

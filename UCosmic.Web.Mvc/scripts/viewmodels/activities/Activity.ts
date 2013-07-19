@@ -697,13 +697,13 @@ module ViewModels.Activities {
             } );
         }
 
-        deleteDocument( item: Service.ApiModels.IObservableActivityDocument, event: any ): void {
+        deleteDocument( item: Service.ApiModels.IObservableActivityDocument, index: number, event: any ): void {
             $.ajax( {
                 type: 'DELETE',
                 url: App.Routes.WebApi.Activities.Documents.del( this.id(), item.id() ),
                 dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                    this.loadDocuments();
+                    this.values.documents.splice(index, 1);
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
                     alert( "Unable to delete document. " + textStatus + "|" + errorThrown );

@@ -576,14 +576,14 @@ var ViewModels;
                     }
                 });
             };
-            Activity.prototype.deleteDocument = function (item, event) {
+            Activity.prototype.deleteDocument = function (item, index, event) {
                 var _this = this;
                 $.ajax({
                     type: 'DELETE',
                     url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id()),
                     dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
-                        _this.loadDocuments();
+                        _this.values.documents.splice(index, 1);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         alert("Unable to delete document. " + textStatus + "|" + errorThrown);

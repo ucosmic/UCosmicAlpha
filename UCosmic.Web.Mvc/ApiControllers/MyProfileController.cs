@@ -23,7 +23,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        //private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
         private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
@@ -33,7 +32,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         public MyProfileController(IProcessQueries queryProcessor
             , ICommandEntities entities
-            //, IStoreBinaryData binaryData
             , IHandleCommands<UpdateMyProfile> profileUpdateHandler
             , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
@@ -43,7 +41,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         )
         {
             _queryProcessor = queryProcessor;
-            //_binaryData = binaryData;
             _profileUpdateHandler = profileUpdateHandler;
             _photoUpdateHandler = photoUpdateHandler;
             _photoDeleteHandler = photoDeleteHandler;
@@ -86,31 +83,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        //[POST("")]
-        //public MyProfileApiModel Post(MyProfileNavigationApiModel nav)
-        //{
-        //    var person = _queryProcessor.Execute(new MyPerson(User)
-        //    {
-        //        EagerLoad = new Expression<Func<Person, object>>[]
-        //        {
-        //            x => x.Employee,
-        //            x => x.Photo,
-        //        }
-        //    });
-
-        //    // throw 404 if route does not match existing record
-        //    if (person == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-        //    // only need the destination type int he Map generic argument.
-        //    // the source type is implicit based on the method argument.
-        //    var model = Mapper.Map<MyProfileApiModel>(person);
-
-        //    model.StartInEdit = nav.StartInEdit;
-        //    model.StartTabName = nav.StartTabName;
-
-        //    return model;
-        //}
-
         [PUT("")]
         public HttpResponseMessage Put(MyProfileApiModel model)
         {
@@ -147,11 +119,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 personId = person.RevisionId;
             }
 
-            //var peopleController = new PeopleController(_queryProcessor, __binaryData)
-            //{
-            //    Request = Request,
-            //}
-
             var peopleController = DependencyResolver.Current.GetService<PeopleController>();
             peopleController.Request = Request;
 
@@ -160,7 +127,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("photo")]
-        public HttpResponseMessage PostPhoto(FileMedia photo)
+        public HttpResponseMessage PostPhoto(FileMedium photo)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
             //throw new Exception("Oops"); // test unexpected server error

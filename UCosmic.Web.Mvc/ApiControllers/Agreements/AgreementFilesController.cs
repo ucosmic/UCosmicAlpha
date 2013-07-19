@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -6,6 +8,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using Newtonsoft.Json;
 using UCosmic.Domain.Agreements;
 using UCosmic.Web.Mvc.Models;
 
@@ -97,23 +100,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        //[POST("{agreementId:int}/files")]
-        //public HttpResponseMessage Post(int agreementId, FileMedia model)
-        //{
-        //    var successPayload = new { message = string.Format("File '{0}' was successfully attached.", model.FileName) };
-        //    var successJson = JsonConvert.SerializeObject(successPayload);
-        //    var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
-        //    var url = Url.Link(null, new
-        //    {
-        //        controller = "AgreementFiles",
-        //        action = "Get",
-        //        agreementId,
-        //        fileId = 1,
-        //    });
-        //    Debug.Assert(url != null);
-        //    response.Headers.Location = new Uri(url);
-        //    return response;
-        //}
+        [POST("{agreementId:int}/files")]
+        public HttpResponseMessage Post(int agreementId, AgreementFileApiModel model)
+        {
+            var successPayload = new { message = string.Format("File '{0}' was successfully attached.", model.CustomName) };
+            var successJson = JsonConvert.SerializeObject(successPayload);
+            var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
+            var url = Url.Link(null, new
+            {
+                controller = "AgreementFiles",
+                action = "Get",
+                agreementId,
+                fileId = 1,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
+        }
 
         [PUT("{agreementId:int}/files/{fileId:int}")]
         public HttpResponseMessage Put(int agreementId, AgreementFileApiModel model)

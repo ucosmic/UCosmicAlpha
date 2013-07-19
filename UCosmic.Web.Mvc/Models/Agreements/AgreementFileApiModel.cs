@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Web;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
 
@@ -11,6 +10,7 @@ namespace UCosmic.Web.Mvc.Models
         public int? Id { get; set; }
         public int AgreementId { get; set; }
         public Guid? UploadGuid { get; set; }
+        public FileMedium FileMedium { get; set; }
 
         private string _originalName;
         private string _customName;
@@ -50,11 +50,6 @@ namespace UCosmic.Web.Mvc.Models
         }
     }
 
-    public class AgreementFileUploadModel : AgreementFileApiModel
-    {
-        public HttpPostedFileBase Upload { get; set; }
-    }
-
     public static class AgreementFileProfiler
     {
         public class EntityToModelProfile : Profile
@@ -66,6 +61,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.OriginalName, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.FileName) ? s.Name : s.FileName))
                     .ForMember(d => d.CustomName, o => o.MapFrom(s => s.Name))
                     .ForMember(d => d.Extension, o => o.Ignore())
+                    .ForMember(d => d.FileMedium, o => o.Ignore())
                 ;
             }
         }

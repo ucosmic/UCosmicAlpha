@@ -26,13 +26,13 @@ namespace UCosmic.Web.Mvc
 
         private IProvideCache _cache;
 
-        private bool IsCacheable(HttpActionContext actionContext)
+        private bool IsCacheable(HttpRequestMessage request)
         {
             if (Duration < 1)
                 throw new InvalidOperationException("Duration must be greater than zero.");
 
             // only cache for GET requests
-            return actionContext.Request.Method == HttpMethod.Get;
+            return request.Method == HttpMethod.Get;
         }
 
         private CacheControlHeaderValue SetClientCache()
@@ -40,49 +40,62 @@ namespace UCosmic.Web.Mvc
             var cachecontrol = new CacheControlHeaderValue
             {
                 MaxAge = TimeSpan.FromSeconds(Duration),
-                MustRevalidate = true
+                MustRevalidate = true,
             };
             return cachecontrol;
         }
 
-        private string _serverCacheKey;
-        private string _clientCacheKey;
+        private static string GetServerCacheKey(HttpRequestMessage request)
+        {
+            var acceptHeaders = request.Headers.Accept;
+            var acceptHeader = acceptHeaders.Any() ? acceptHeaders.First().ToString() : "*/*";
+            return string.Join(":", new[]
+            {
+                request.RequestUri.AbsoluteUri,
+                acceptHeader,
+            });
+        }
+
+        private static string GetClientCacheKey(string serverCacheKey)
+        {
+            return string.Join(":", new[]
+            {
+                serverCacheKey,
+                "response-content-type",
+            });
+        }
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
             if (actionContext == null) throw new ArgumentNullException("actionContext");
-            if (!IsCacheable(actionContext)) return;
+            var request = actionContext.Request;
+            if (!IsCacheable(request)) return;
 
             try
             {
-                var acceptHeaders = actionContext.Request.Headers.Accept;
-                var acceptHeader = acceptHeaders.Any() ? acceptHeaders.First().ToString() : "*/*";
-                _serverCacheKey = string.Join(":",
-                    new[]
-                {
-                    actionContext.Request.RequestUri.AbsoluteUri,
-                    acceptHeader,
-                });
-                _clientCacheKey = string.Join(":",
-                    new[]
-                {
-                    _serverCacheKey,
-                    "response-content-type",
-                });
+                // do NOT store cache keys on this attribute because the same instance
+                // can be reused for multiple requests
+                var serverCacheKey = GetServerCacheKey(request);
+                var clientCacheKey = GetClientCacheKey(serverCacheKey);
 
                 var cache = GetCache();
-                if (cache.Contains(_serverCacheKey))
+                if (cache.Contains(serverCacheKey))
                 {
-                    var serverValue = cache.Get(_serverCacheKey);
-                    var clientValue = cache.Get(_clientCacheKey);
+                    var serverValue = cache.Get(serverCacheKey);
+                    var clientValue = cache.Get(clientCacheKey);
                     if (serverValue == null) return;
 
                     var contentType = clientValue != null
                         ? JsonConvert.DeserializeObject<MediaTypeHeaderValue>(clientValue.ToString())
-                        : new MediaTypeHeaderValue(_serverCacheKey.Substring(_serverCacheKey.LastIndexOf(':') + 1));
+                        : new MediaTypeHeaderValue(serverCacheKey.Substring(serverCacheKey.LastIndexOf(':') + 1));
 
                     actionContext.Response = actionContext.Request.CreateResponse();
-                    actionContext.Response.Content = new StringContent(serverValue.ToString());
+
+                    // do not try to create a string content if the value is binary
+                    actionContext.Response.Content = serverValue is byte[]
+                        ? new ByteArrayContent((byte[])serverValue)
+                        : new StringContent(serverValue.ToString());
+
                     actionContext.Response.Content.Headers.ContentType = contentType;
                     actionContext.Response.Headers.CacheControl = SetClientCache();
                 }
@@ -97,23 +110,32 @@ namespace UCosmic.Web.Mvc
         {
             try
             {
+                var request = actionExecutedContext.Request;
+
+                // do NOT store cache keys on this attribute because the same instance
+                // can be reused for multiple requests
+                var serverCacheKey = GetServerCacheKey(request);
+                var clientCacheKey = GetClientCacheKey(serverCacheKey);
                 var cache = GetCache();
-                if (!cache.Contains(_serverCacheKey))
+                if (!cache.Contains(serverCacheKey))
                 {
-                    var serverValue = actionExecutedContext.Response.Content.ReadAsStringAsync().Result;
                     var contentType = actionExecutedContext.Response.Content.Headers.ContentType;
+                    object serverValue;
+                    if (contentType.MediaType.StartsWith("image/"))
+                        serverValue = actionExecutedContext.Response.Content.ReadAsByteArrayAsync().Result;
+                    else
+                        serverValue = actionExecutedContext.Response.Content.ReadAsStringAsync().Result;
                     var clientValue = JsonConvert.SerializeObject(
                         new
                         {
                             contentType.MediaType,
-                            contentType.CharSet
+                            contentType.CharSet,
                         });
-
-                    cache.Add(_serverCacheKey, serverValue, new TimeSpan(0, 0, Duration));
-                    cache.Add(_clientCacheKey, clientValue, new TimeSpan(0, 0, Duration));
+                    cache.Add(serverCacheKey, serverValue, new TimeSpan(0, 0, Duration));
+                    cache.Add(clientCacheKey, clientValue, new TimeSpan(0, 0, Duration));
                 }
 
-                if (IsCacheable(actionExecutedContext.ActionContext))
+                if (IsCacheable(actionExecutedContext.Request))
                     actionExecutedContext.ActionContext.Response.Headers.CacheControl = SetClientCache();
             }
             catch (Exception ex)
