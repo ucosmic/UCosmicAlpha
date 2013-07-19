@@ -41,7 +41,7 @@ export class InstitutionalAgreementParticipantModel {
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
-        if (window.location.href.indexOf("new") > 0) {
+        if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             this.populateParticipants();
             this.agreementIsEdit(false);
             this.visibility("Public");
@@ -344,7 +344,12 @@ export class InstitutionalAgreementEditModel {
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
-        
+        var saveUrl = "";
+        if (this.agreementIsEdit) {
+            saveUrl = App.Routes.WebApi.Uploads.post()
+        } else {
+            saveUrl = App.Routes.WebApi.Agreements.File.post()
+        }
         $("#fileUpload").kendoUpload({
             multiple: true,
             showFileList: false,
@@ -355,8 +360,8 @@ export class InstitutionalAgreementEditModel {
                 // TODO TIM: I changed this, look at it, but leave it as-is
                 // NOTE: we upload to the uploads endpoint, and POST as a file later with an upload GUID
                 // also, i don't think we will need kendoRemove when this becomes multiple: true
-                //saveUrl: App.Routes.WebApi.Agreements.File.post(),
-                saveUrl: App.Routes.WebApi.Uploads.post()//,
+                
+                saveUrl: saveUrl,
                 //removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove() // should not need this
             },
             upload: (e: any): void => {
@@ -365,27 +370,33 @@ export class InstitutionalAgreementEditModel {
                 this.isFileExtensionInvalid(false);
                 this.isFileTooManyBytes(false);
                 this.isFileFailureUnexpected(false);
-                $(e.files).each((index: number): void => {
-                    var isExtensionAllowed: bool = false;
-                    var isByteNumberAllowed: bool = false;
-                    var extension: string = e.files[index].extension;
-                    this.fileFileExtension(extension || '[NONE]');
-                    this.fileFileName(e.files[index].name);
-                    for (var i = 0; i < allowedExtensions.length; i++) {
-                        if (allowedExtensions[i] === extension.toLowerCase()) {
-                            isExtensionAllowed = true;
-                            break;
-                        }
+                var isExtensionAllowed: bool = false;
+                var isByteNumberAllowed: bool = false;
+                var extension: string = e.files[0].extension;
+                this.fileFileExtension(extension || '[NONE]');
+                this.fileFileName(e.files[0].name);
+                for (var i = 0; i < allowedExtensions.length; i++) {
+                    if (allowedExtensions[i] === extension.toLowerCase()) {
+                        isExtensionAllowed = true;
+                        break;
                     }
-                    if (!isExtensionAllowed) {
-                        e.preventDefault(); // prevent upload
-                        this.isFileExtensionInvalid(true); // update UI with feedback
+                }
+                if (!isExtensionAllowed) {
+                    e.preventDefault(); // prevent upload
+                    this.isFileExtensionInvalid(true); // update UI with feedback
+                }
+                else if (e.files[0].rawFile.size > (1024 * 1024 * 25)) {
+                    e.preventDefault(); // prevent upload
+                    this.isFileTooManyBytes(true); // update UI with feedback
+                }
+                if (this.agreementIsEdit) {
+                    e.data = {
+                        originalName: e.files[0].name,
+                        visibility: 'Private',
+                        customName: e.files[0].name,
+                        agreementId: this.agreementId
                     }
-                    else if (e.files[index].rawFile.size > (1024 * 1024 * 25)) {
-                        e.preventDefault(); // prevent upload
-                        this.isFileTooManyBytes(true); // update UI with feedback
-                    }
-                });
+                } 
                 if (!e.isDefaultPrevented()) {
                     this.fileUploadSpinner.start(); // display async wait message
                 }
@@ -1483,11 +1494,93 @@ export class InstitutionalAgreementEditModel {
             var $LoadingPage = $("#LoadingPage").find("strong")
             var url = App.Routes.WebApi.Agreements.post();
             this.spinner.start();
+
+            function postFiles(file) => {
+                var data = ko.mapping.toJSON({
+                    agreementId: file.agreementId,
+                    uploadId: file.guid,
+                    originalName: file.guid,
+                    customName: file.customName,
+                    visibility: file.visibility
+                })
+                $.post(App.Routes.WebApi.Agreements.File.post(), data)
+                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                        agreementPostDone(response, statusText, xhr);
+                    })
+                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.spinner.stop();
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
+                    });
+            }
+
+            function postContacts(data, url) => {
+                $.post(url, data)
+                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                        //agreementPostDone(response, statusText, xhr);
+                    })
+                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.spinner.stop();
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
+                    });
+            }
             function agreementPostDone(response: any, statusText: string, xhr: JQueryXHR) {
 
                 this.spinner.stop();
-                //get agreementId and post to file and/or contacts if needed
+                this.agreementId = 2;//response.agreementId
+
+                // make the postFiles/postContacts more generic and use the same function...
+                //post files
+                var tempUrl = App.Routes.WebApi.Agreements.File.post();
+                $.each(this.participants(), function (i, item) => {
+                    var data = ko.mapping.toJSON({
+                        agreementId: item.agreementId,
+                        uploadId: item.guid,
+                        originalName: item.guid,
+                        customName: item.customName,
+                        visibility: item.visibility
+                    })
+                    postContacts(data, tempUrl);
+                });
+                //post contacts
+                tempUrl = App.Routes.WebApi.Agreements.Contacts.post();
+                $.each(this.contacts(), function (i, item) => {
+                    var data = ko.mapping.toJSON({
+                        agreementId: item.agreementId,
+                        uploadId: item.guid,
+                        originalName: item.guid,
+                        customName: item.customName,
+                        visibility: item.visibility
+                    })
+                    postContacts(data, tempUrl);
+                });
             }
+
             $.each(this.participants(), function (i, item) => {
                 this.participantsExport.push({
                     agreementId: item.agreementId,

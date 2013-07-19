@@ -297,6 +297,11 @@ module App.Routes {
                     if (agreementId) url = url.replace('0', agreementId.toString())
                     return makeUrl(url);
                 }
+                export function post (agreementId?: number): string {
+                    var url = 'agreements/0/contacts';
+                    if (agreementId) url = url.replace('0', agreementId.toString())
+                    return makeUrl(url);
+                }
             }
 
             export module Files {
