@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
@@ -16,7 +17,14 @@ namespace UCosmic.Domain.Agreements
         public IPrincipal Principal { get; private set; }
         public int AgreementId { get; set; }
         public string Visibility { get; set; }
-        public Guid? UploadId { get; set; }
+        public Guid? UploadGuid { get; set; }
+        public FileDataWrapper FileData { get; set; }
+        public class FileDataWrapper
+        {
+            public byte[] Content { get; set; }
+            public string MimeType { get; set; }
+            public string FileName { get; set; }
+        }
     }
 
     public class ValidateCreateFileCommand : AbstractValidator<CreateFile>
@@ -49,6 +57,21 @@ namespace UCosmic.Domain.Agreements
             RuleFor(x => x.Visibility)
                 .MustHaveAgreementVisibility()
                     .WithMessage(MustHaveAgreementVisibility.FileFailMessage)
+            ;
+
+            RuleFor(x => x.UploadGuid)
+                // upload id must exist when provided
+                .MustFindUploadByGuid(entities)
+                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
+                    .WithMessage(MustFindUploadByGuid.FailMessageFormat, x => x.UploadGuid)
+
+                // uploaded file must have valid extension
+                .MustHaveAllowedFileExtension(entities, AgreementFileConstraints.AllowedFileExtensions)
+                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
+
+                // uploaded file not be too large
+                .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, entities)
+                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
             ;
         }
     }

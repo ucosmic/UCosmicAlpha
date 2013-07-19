@@ -61,7 +61,7 @@ namespace UCosmic.Domain.Activities
 
             // file size cannot exceed 25 megabytes
             RuleFor(x => x.Content)
-                .MustNotExceedFileSizeInMegabytes(25, x => x.FileName)
+                .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, x => x.FileName)
                 .When(x => x.Content != null, ApplyConditionTo.CurrentValidator)
             ;
         }

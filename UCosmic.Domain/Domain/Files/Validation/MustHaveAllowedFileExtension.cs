@@ -15,23 +15,33 @@ namespace UCosmic.Domain.Files
         private const string FailMessageDisallowedSingledFormat = "The file '{0}' is not allowed because it has a '{1}' extension. Only files with the '{1}' extension are allowed.";
 
         private readonly string[] _validExtensions;
+        private readonly IQueryEntities _entities;
 
-        internal MustHaveAllowedFileExtension(string[] validExtensions)
+        internal MustHaveAllowedFileExtension(string[] validExtensions, IQueryEntities entities = null)
             : base("{Message}")
         {
             if (validExtensions == null || !validExtensions.Any() || string.IsNullOrWhiteSpace(validExtensions.Implode("")))
                 throw new ArgumentException("Cannot be empty.", "validExtensions");
             _validExtensions = validExtensions.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            _entities = entities;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is string))
+            if (!(context.PropertyValue is string) && !(context.PropertyValue is Guid) && !(context.PropertyValue is Guid?))
                 throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on string properties", GetType().Name));
+                    "The {0} PropertyValidator can only operate on string or Guid properties", GetType().Name));
+
+            string fileName = null;
+            if (_entities != null)
+            {
+                var looseFileId = (Guid?) context.PropertyValue;
+                var looseFile = _entities.Query<LooseFile>().Single(x => x.EntityId == looseFileId.Value);
+                fileName = looseFile.Name;
+            }
 
             // file name must have character content
-            var fileName = (string)context.PropertyValue;
+            if (fileName == null)  fileName = (string)context.PropertyValue;
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 context.MessageFormatter.AppendArgument("Message", MustHaveFileName.FailMessage);
@@ -82,6 +92,18 @@ namespace UCosmic.Domain.Files
             (this IRuleBuilder<T, string> ruleBuilder, params string[] validExtensions)
         {
             return ruleBuilder.SetValidator(new MustHaveAllowedFileExtension(validExtensions));
+        }
+
+        public static IRuleBuilderOptions<T, Guid> MustHaveAllowedFileExtension<T>
+            (this IRuleBuilder<T, Guid> ruleBuilder, IQueryEntities entities, params string[] validExtensions)
+        {
+            return ruleBuilder.SetValidator(new MustHaveAllowedFileExtension(validExtensions, entities));
+        }
+
+        public static IRuleBuilderOptions<T, Guid?> MustHaveAllowedFileExtension<T>
+            (this IRuleBuilder<T, Guid?> ruleBuilder, IQueryEntities entities, params string[] validExtensions)
+        {
+            return ruleBuilder.SetValidator(new MustHaveAllowedFileExtension(validExtensions, entities));
         }
     }
 }

@@ -154,6 +154,7 @@
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeUniqueEstablishmentNameText.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
+    <Compile Include="Domain\Files\Validation\MustFindUploadByGuid.cs" />
     <Compile Include="Domain\Files\Validation\MustNotExceedFileSize.cs" />
     <Compile Include="Domain\Files\Validation\MustHaveFileName.cs" />
     <Compile Include="Domain\Files\Validation\MustHaveAllowedFileExtension.cs" />

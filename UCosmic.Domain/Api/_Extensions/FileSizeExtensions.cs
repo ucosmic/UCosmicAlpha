@@ -8,25 +8,35 @@ namespace UCosmic
     {
         private const long Factor = 1024;
 
-        public static string ToFileSize(this long lengthInBytes, int maxPrecision = 2, FileSizeUnitName? fileSizeUnitName = null)
+        public static string ToFileSize(this decimal lengthInBytes, int maxPrecision = 2, FileSizeUnitName? fileSizeUnitName = null)
         {
             if (maxPrecision < 0) throw new ArgumentOutOfRangeException("maxPrecision", "Must be greater than or equal to zero.");
             var unit = fileSizeUnitName ?? GetSmartUnitName(lengthInBytes);
-            var size = ((decimal)lengthInBytes).ConvertBytesTo(unit);
+            var size = lengthInBytes.ConvertBytesTo(unit);
             var precision = size.GetPrecision(maxPrecision);
             var sizeText = size.ToString(precision.GetSizeFormat());
             var unitText = unit.GetUnitText(sizeText);
             return string.Format("{0} {1}", sizeText, unitText);
         }
 
-        public static string ToAbbreviatedFileSize(this long lengthInBytes, int maxPrecision = 2, FileSizeUnitAbbreviation? fileSizeUnitAbbreviation = null)
+        public static string ToAbbreviatedFileSize(this decimal lengthInBytes, int maxPrecision = 2, FileSizeUnitAbbreviation? fileSizeUnitAbbreviation = null)
         {
             if (maxPrecision < 0) throw new ArgumentOutOfRangeException("maxPrecision", "Must be greater than or equal to zero.");
             var unit = fileSizeUnitAbbreviation ?? GetSmartUnitAbbreviation(lengthInBytes);
-            var size = ((decimal)lengthInBytes).ConvertBytesTo(unit);
+            var size = lengthInBytes.ConvertBytesTo(unit);
             var precision = size.GetPrecision(maxPrecision);
             var sizeText = size.ToString(precision.GetSizeFormat());
             return string.Format("{0} {1}", sizeText, unit);
+        }
+
+        public static string ToFileSize(this long lengthInBytes, int maxPrecision = 2, FileSizeUnitName? fileSizeUnitName = null)
+        {
+            return ((decimal) lengthInBytes).ToFileSize(maxPrecision, fileSizeUnitName);
+        }
+
+        public static string ToAbbreviatedFileSize(this long lengthInBytes, int maxPrecision = 2, FileSizeUnitAbbreviation? fileSizeUnitAbbreviation = null)
+        {
+            return ((decimal)lengthInBytes).ToAbbreviatedFileSize(maxPrecision, fileSizeUnitAbbreviation);
         }
 
         private static string GetSizeFormat(this int precision)

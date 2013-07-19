@@ -43,7 +43,8 @@
                             extension: file.extension,
                             name: file.name,
                             size: file.size,
-                            percentComplete: ko.observable(1)
+                            percentComplete: ko.observable(1),
+                            isFinished: false
                         });
                         var info = 'selected file ' + file.name;
                         console.log(info);
@@ -66,15 +67,28 @@
                     var info = 'progress for ' + e.files[0].name + ' ' + e.percentComplete + '% complete';
                     console.log(info);
                     //alert(info);
-                    var upload = self.getUpload(e.files[0]);
+                    var criteria = e.files[0];
+                    criteria.isFinished = false;
+                    var upload = self.getUpload(criteria);
+                    if (!upload) return;
                     upload.percentComplete(e.percentComplete);
+                    if (e.percentComplete == 100) {
+                        upload.isFinished = true;
+                    }
                 },
                 success: function(e) {
                     var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response.guid;
                     //alert(info);
                     console.log(info);
-                    var upload = self.getUpload(e.files[0]);
+                    var criteria = e.files[0];
+                    criteria.isFinished = false;
+                    var upload = self.getUpload(criteria);
+                    if (!upload) return;
                     upload.percentComplete(100);
+                    upload.percentComplete(e.percentComplete);
+                    if (e.percentComplete == 100) {
+                        upload.isFinished = true;
+                    }
                 },
                 error: function(e) {
                     alert('there was an error uploading ' + e.files[0].name);
@@ -89,7 +103,11 @@
                 var uploads = self.uploads();
                 for (var i = 0; i < uploads.length; i++) {
                     var upload = uploads[i];
-                    if (upload.name === criteria.name && upload.size === criteria.size) return upload;
+                    if (upload.name === criteria.name && upload.size === criteria.size) {
+                        if (typeof(criteria.isFinished) === 'undefined' || upload.isFinished === criteria.isFinished) {
+                            return upload;
+                        }
+                    }
                 }
                 return null;
             };

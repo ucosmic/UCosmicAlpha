@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
@@ -8,30 +9,46 @@ namespace UCosmic.Domain.Files
     {
         public const string FailMessageFormat = "The file '{0}' is not allowed because it is {1} in size. Only files {2} and smaller are allowed.";
 
-        private readonly long _fileSizeInBytes;
+        private readonly decimal _fileSizeInBytes;
         private readonly Func<T, string> _fileName;
-        private readonly FileSizeUnitName _unitAbbreviation = FileSizeUnitName.Byte;
+        private readonly FileSizeUnitName _unit = FileSizeUnitName.Byte;
+        private readonly IQueryEntities _entities;
 
-        internal MustNotExceedFileSize(decimal fileSizeInBytes, Func<T, string> fileName, FileSizeUnitName? unitAbbreviation = null)
+        internal MustNotExceedFileSize(decimal fileSizeInBytes, FileSizeUnitName unit, Func<T, string> fileName, IQueryEntities entities)
             : base(FailMessageFormat.Replace("{0}", "{FileName}").Replace("{1}", "{ActualSize}").Replace("{2}", "{MaxSize}"))
         {
-            _fileSizeInBytes = (long)fileSizeInBytes;
+            _fileSizeInBytes = fileSizeInBytes;
             _fileName = fileName;
-            if (unitAbbreviation.HasValue) _unitAbbreviation = unitAbbreviation.Value;
+            _unit = unit;
+            _entities = entities;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is byte[]))
+            if (!(context.PropertyValue is byte[]) && !(context.PropertyValue is Guid) && !(context.PropertyValue is Guid?))
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on byte[] properties", GetType().Name));
 
-            var contentLengthInBytes = (long)((byte[])context.PropertyValue).Length;
+            decimal contentLengthInBytes;
+            string fileName;
+            if (_entities != null)
+            {
+                var looseFileId = (Guid?) context.PropertyValue;
+                var looseFile = _entities.Query<LooseFile>().Single(x => x.EntityId == looseFileId.Value);
+                contentLengthInBytes = looseFile.Length;
+                fileName = looseFile.Name;
+            }
+            else
+            {
+                contentLengthInBytes = ((byte[])context.PropertyValue).Length;
+                fileName = _fileName((T) context.Instance);
+            }
+
             if (contentLengthInBytes > _fileSizeInBytes)
             {
-                context.MessageFormatter.AppendArgument("FileName", _fileName((T)context.Instance));
-                context.MessageFormatter.AppendArgument("ActualSize", contentLengthInBytes.ToFileSize(2, _unitAbbreviation).ToLower());
-                context.MessageFormatter.AppendArgument("MaxSize", _fileSizeInBytes.ToFileSize(2, _unitAbbreviation).ToLower());
+                context.MessageFormatter.AppendArgument("FileName", fileName);
+                context.MessageFormatter.AppendArgument("ActualSize", contentLengthInBytes.ToFileSize(2, _unit).ToLower());
+                context.MessageFormatter.AppendArgument("MaxSize", _fileSizeInBytes.ToFileSize(2, _unit).ToLower());
                 return false;
             }
 
@@ -42,21 +59,38 @@ namespace UCosmic.Domain.Files
     public static class MustNotExceedFileSizeExtensions
     {
         public static IRuleBuilderOptions<T, byte[]> MustNotExceedFileSize<T>
-            (this IRuleBuilder<T, byte[]> ruleBuilder, int fileSizeInBytes, Func<T, string> fileName)
+            (this IRuleBuilder<T, byte[]> ruleBuilder, decimal fileSize, FileSizeUnitName unit, Func<T, string> fileName)
         {
-            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, fileName));
+            var fileSizeInBytes = fileSize.ConvertToBytes(unit);
+            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, fileName, null));
         }
 
-        public static IRuleBuilderOptions<T, byte[]> MustNotExceedFileSizeInKilobytes<T>
-            (this IRuleBuilder<T, byte[]> ruleBuilder, decimal fileSizeInKilobytes, Func<T, string> fileName)
+        public static IRuleBuilderOptions<T, Guid> MustNotExceedFileSize<T>
+            (this IRuleBuilder<T, Guid> ruleBuilder, decimal fileSize, FileSizeUnitName unit, IQueryEntities entities)
         {
-            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInKilobytes * 1024, fileName, FileSizeUnitName.Kilobyte));
+            var fileSizeInBytes = fileSize.ConvertToBytes(unit);
+            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, null, entities));
         }
 
-        public static IRuleBuilderOptions<T, byte[]> MustNotExceedFileSizeInMegabytes<T>
-            (this IRuleBuilder<T, byte[]> ruleBuilder, decimal fileSizeInMegabytes, Func<T, string> fileName)
+        public static IRuleBuilderOptions<T, Guid?> MustNotExceedFileSize<T>
+            (this IRuleBuilder<T, Guid?> ruleBuilder, decimal fileSize, FileSizeUnitName unit, IQueryEntities entities)
         {
-            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInMegabytes * 1024 * 1024, fileName, FileSizeUnitName.Megabyte));
+            var fileSizeInBytes = fileSize.ConvertToBytes(unit);
+            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, null, entities));
+        }
+
+        private static decimal ConvertToBytes(this decimal fileSize, FileSizeUnitName unit)
+        {
+            const int factor = 1024;
+            const int twoFactor = 1024 * 1024;
+            var fileSizeInBytes = fileSize;
+            if (unit == FileSizeUnitName.Kilobyte) fileSizeInBytes = fileSizeInBytes * factor;
+            if (unit == FileSizeUnitName.Megabyte) fileSizeInBytes = fileSizeInBytes * twoFactor;
+            if (unit == FileSizeUnitName.Gigabyte) fileSizeInBytes = fileSizeInBytes * twoFactor * factor;
+            if (unit == FileSizeUnitName.Terabyte) fileSizeInBytes = fileSizeInBytes * twoFactor * twoFactor;
+            if (unit == FileSizeUnitName.Petabyte) fileSizeInBytes = fileSizeInBytes * twoFactor * twoFactor * factor;
+            if (unit == FileSizeUnitName.Exabyte) fileSizeInBytes = fileSizeInBytes * twoFactor * twoFactor * twoFactor;
+            return fileSizeInBytes;
         }
     }
 }

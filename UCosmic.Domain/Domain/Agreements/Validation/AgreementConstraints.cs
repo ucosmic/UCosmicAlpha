@@ -12,6 +12,14 @@
         public const int TitleMaxLength = 300;
     }
 
+    public static class AgreementFileConstraints
+    {
+        public static string[] AllowedFileExtensions = new[]
+        {
+            "pdf", "doc", "docx", "ods", "odt",
+        };
+    }
+
     public static class AgreementContactPhoneConstraints
     {
         public const int TypeMaxLength = 150;

@@ -1,5 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Linq.Expressions;
+using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Activities;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -25,6 +28,17 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/activities/{activityId}")]
         public virtual ActionResult ActivityEdit(int activityId)
         {
+            var activity = _queryProcessor.Execute(new ActivityById(activityId)
+            {
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Person.User,
+                }
+            });
+            if (activity.Person.User == null ||
+                !User.Identity.Name.Equals(activity.Person.User.Name, StringComparison.OrdinalIgnoreCase))
+                return HttpNotFound();
+
             var model = new ActivityModel { ActivityId = activityId };
             return View(model);
         }

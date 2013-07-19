@@ -65,5 +65,20 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class ModelToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementFileApiModel, CreateFile>()
+                    .ForMember(d => d.FileData, o => o.MapFrom(s => s.FileMedium))
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                ;
+
+                CreateMap<FileMedium, CreateFile.FileDataWrapper>()
+                    .ForMember(d => d.MimeType, o => o.MapFrom(s => s.ContentType))
+                ;
+            }
+        }
     }
 }

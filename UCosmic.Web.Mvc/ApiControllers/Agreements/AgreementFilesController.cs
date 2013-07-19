@@ -19,13 +19,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
+        private readonly IHandleCommands<CreateFile> _createFile;
 
         public AgreementFilesController(IProcessQueries queryProcessor
             , IStoreBinaryData binaryData
+            , IHandleCommands<CreateFile> createFile
         )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
+            _createFile = createFile;
         }
 
         [GET("{agreementId:int}/files")]
@@ -103,6 +106,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("{agreementId:int}/files")]
         public HttpResponseMessage Post(int agreementId, AgreementFileApiModel model)
         {
+            model.AgreementId = agreementId;
+            var command = new CreateFile(User);
+            Mapper.Map(model, command);
+
+            command.FileData = null;
+            command.UploadGuid = new Guid("ba5469dd-1fd2-434d-b126-1165be266a0b");
+            //command.UploadGuid = new Guid("b31e77f8-43df-413b-b480-e37048aecf64");
+
+            _createFile.Handle(command);
+
             var successPayload = new { message = string.Format("File '{0}' was successfully attached.", model.CustomName) };
             var successJson = JsonConvert.SerializeObject(successPayload);
             var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
@@ -119,7 +132,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("{agreementId:int}/files/{fileId:int}")]
-        public HttpResponseMessage Put(int agreementId, AgreementFileApiModel model)
+        public HttpResponseMessage Put(int agreementId, int fileId, AgreementFileApiModel model)
         {
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully updated.");

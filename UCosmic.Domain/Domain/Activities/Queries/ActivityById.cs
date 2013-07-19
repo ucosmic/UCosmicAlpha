@@ -6,9 +6,9 @@ namespace UCosmic.Domain.Activities
     {
         public int Id { get; private set; }
 
-        public ActivityById(int inEntityId)
+        public ActivityById(int id)
         {
-            Id = inEntityId;
+            Id = id;
         }
     }
 
