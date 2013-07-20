@@ -134,7 +134,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{agreementId:int}/files/{fileId:int}")]
         public HttpResponseMessage Put(int agreementId, int fileId, AgreementFileApiModel model)
         {
-
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully updated.");
             return response;
         }

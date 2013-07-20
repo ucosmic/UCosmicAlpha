@@ -33,7 +33,7 @@ namespace UCosmic.Domain.Files
             if (principal == null || string.IsNullOrWhiteSpace(principal.Identity.Name)) return false;
 
             // make sure principal uploaded the file
-            var upload = _entities.Query<LooseFile>().Single(x => x.EntityId == uploadId);
+            var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId);
             if (!principal.Identity.Name.Equals(upload.CreatedByPrincipal, StringComparison.OrdinalIgnoreCase))
             {
                 context.MessageFormatter.AppendArgument("PropertyValue", uploadId);

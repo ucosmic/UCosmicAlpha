@@ -28,8 +28,8 @@ namespace UCosmic.Domain.Files
             var value = (Guid?)context.PropertyValue;
             if (value == null || value == Guid.Empty) return false;
 
-            var entity = _entities.Query<LooseFile>()
-                .SingleOrDefault(x => value.Value.Equals(x.EntityId));
+            var entity = _entities.Query<Upload>()
+                .SingleOrDefault(x => value.Value.Equals(x.Guid));
 
             return entity != null;
         }

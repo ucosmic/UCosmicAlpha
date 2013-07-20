@@ -59,6 +59,7 @@ namespace UCosmic.Domain.Agreements
                     .WithMessage(MustHaveAgreementVisibility.FileFailMessage)
             ;
 
+            // when uploadid is present
             RuleFor(x => x.UploadGuid)
                 // upload id must exist when provided
                 .MustFindUploadByGuid(entities)

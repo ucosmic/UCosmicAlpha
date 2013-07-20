@@ -30,7 +30,8 @@ namespace UCosmic.Domain.Files
                 entity.MimeType,
                 entity.Title,
                 entity.Name,
-                entity.Extension
+                entity.Extension,
+                entity.FileName,
                 //file.Binary.Content, // this works, but unnecessarily bloats the database
             });
             return state;

@@ -154,7 +154,10 @@
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByEnglishNameType.cs" />
+    <Compile Include="Domain\Files\Commands\PurgeUpload.cs" />
+    <Compile Include="Domain\Files\Commands\CreateUpload.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
+    <Compile Include="Domain\Files\Entities\Upload.cs" />
     <Compile Include="Domain\Files\Validation\MustBeUploadedByPrincipal.cs" />
     <Compile Include="Domain\Files\Validation\MustFindUploadByGuid.cs" />
     <Compile Include="Domain\Files\Validation\MustNotExceedFileSize.cs" />

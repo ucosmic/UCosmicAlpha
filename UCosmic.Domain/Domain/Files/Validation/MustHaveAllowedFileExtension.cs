@@ -35,9 +35,9 @@ namespace UCosmic.Domain.Files
             string fileName = null;
             if (_entities != null)
             {
-                var looseFileId = (Guid?) context.PropertyValue;
-                var looseFile = _entities.Query<LooseFile>().Single(x => x.EntityId == looseFileId.Value);
-                fileName = looseFile.Name;
+                var uploadId = (Guid?) context.PropertyValue;
+                var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId.Value);
+                fileName = upload.FileName;
             }
 
             // file name must have character content

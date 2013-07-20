@@ -33,10 +33,10 @@ namespace UCosmic.Domain.Files
             string fileName;
             if (_entities != null)
             {
-                var looseFileId = (Guid?) context.PropertyValue;
-                var looseFile = _entities.Query<LooseFile>().Single(x => x.EntityId == looseFileId.Value);
-                contentLengthInBytes = looseFile.Length;
-                fileName = looseFile.Name;
+                var uploadId = (Guid?) context.PropertyValue;
+                var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId.Value);
+                contentLengthInBytes = upload.Length;
+                fileName = upload.FileName;
             }
             else
             {

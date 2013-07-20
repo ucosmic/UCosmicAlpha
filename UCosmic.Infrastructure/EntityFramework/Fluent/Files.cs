@@ -37,6 +37,15 @@ namespace UCosmic.EntityFramework
         }
     }
 
+    public class UploadOrm : EntityTypeConfiguration<Upload>
+    {
+        public UploadOrm()
+        {
+            ToTable(typeof(Upload).Name, DbSchemaName.Files);
+            HasKey(x => x.Guid);
+        }
+    }
+
     public class ExternalFileOrm : EntityTypeConfiguration<ExternalFile>
     {
         public ExternalFileOrm()

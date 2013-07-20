@@ -15,15 +15,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [TryAuthorize(Roles = RoleName.AgreementManagers)]
     public class UploadsController : ApiController
     {
-        private readonly IHandleCommands<CreateLooseFile> _createFile;
-        private readonly IHandleCommands<PurgeLooseFile> _purgeFile;
+        private readonly IHandleCommands<CreateUpload> _createUpload;
+        private readonly IHandleCommands<PurgeUpload> _purgeUpload;
 
-        public UploadsController(IHandleCommands<CreateLooseFile> createFile
-            , IHandleCommands<PurgeLooseFile> purgeFile
+        public UploadsController(IHandleCommands<CreateUpload> createUpload
+            , IHandleCommands<PurgeUpload> purgeUpload
         )
         {
-            _createFile = createFile;
-            _purgeFile = purgeFile;
+            _createUpload = createUpload;
+            _purgeUpload = purgeUpload;
         }
 
         [POST("")]
@@ -35,21 +35,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var command = new CreateLooseFile(User);
+            var command = new CreateUpload(User);
             Mapper.Map(file, command);
-            _createFile.Handle(command);
+            _createUpload.Handle(command);
 
             // only return the guid
-            var fileGuid = command.Created.EntityId;
-            var successPayload = new { guid = fileGuid };
+            var uploadId = command.CreatedGuid;
+            var successPayload = new { guid = uploadId };
             var successJson = JsonConvert.SerializeObject(successPayload);
             return Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
         }
 
-        [DELETE("{fileGuid:guid}")]
-        public HttpResponseMessage Delete(Guid fileGuid)
+        [DELETE("{uploadId:guid}")]
+        public HttpResponseMessage Delete(Guid uploadId)
         {
-            _purgeFile.Handle(new PurgeLooseFile(fileGuid));
+            _purgeUpload.Handle(new PurgeUpload(uploadId));
             return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
