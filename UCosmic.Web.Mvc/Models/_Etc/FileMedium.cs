@@ -20,6 +20,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Content, o => o.MapFrom(s => s.Content))
                     .ForMember(d => d.MimeType, o => o.MapFrom(s => s.ContentType))
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.FileName))
+                    .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.Created, o => o.Ignore())
                 ;
             }

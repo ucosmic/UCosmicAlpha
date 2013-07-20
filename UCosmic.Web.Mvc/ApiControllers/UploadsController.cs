@@ -35,7 +35,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var command = Mapper.Map<CreateLooseFile>(file);
+            var command = new CreateLooseFile(User);
+            Mapper.Map(file, command);
             _createFile.Handle(command);
 
             // only return the guid

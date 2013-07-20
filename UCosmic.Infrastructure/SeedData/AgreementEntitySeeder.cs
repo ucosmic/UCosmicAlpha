@@ -303,7 +303,7 @@ namespace UCosmic.SeedData
                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\", fileName)))
             {
                 var content = fileStream.ReadFully();
-                var fileCommand = new CreateLooseFile
+                var fileCommand = new CreateLooseFile(GetPrincipal("uc.edu"))
                 {
                     MimeType = "application/pdf",
                     Name = "Jinan University ICA.pdf",

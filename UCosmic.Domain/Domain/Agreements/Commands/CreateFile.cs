@@ -65,6 +65,10 @@ namespace UCosmic.Domain.Agreements
                 .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
                     .WithMessage(MustFindUploadByGuid.FailMessageFormat, x => x.UploadGuid)
 
+                // uploaded file must have been created by same user who us creating this file
+                .MustBeUploadedByPrincipal(entities, x => x.Principal)
+                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
+
                 // uploaded file must have valid extension
                 .MustHaveAllowedFileExtension(entities, AgreementFileConstraints.AllowedFileExtensions)
                 .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)

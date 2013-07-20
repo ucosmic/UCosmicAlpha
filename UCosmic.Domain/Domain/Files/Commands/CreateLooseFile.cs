@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 
 namespace UCosmic.Domain.Files
 {
     public class CreateLooseFile
     {
+        public CreateLooseFile(IPrincipal principal)
+        {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
+        }
+
+        public IPrincipal Principal { get; private set; }
         public byte[] Content { get; set; }
         public string Name { get; set; }
         public string MimeType { get; set; }
@@ -36,6 +44,7 @@ namespace UCosmic.Domain.Files
                 Length = command.Content.Length,
                 MimeType = command.MimeType,
                 Name = command.Name,
+                CreatedByPrincipal = command.Principal.Identity.Name,
             };
 
             _entities.Create(entity);
