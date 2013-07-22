@@ -13,6 +13,16 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
     var Search = SearchModule.Search;
     var Item = ItemModule.Item;
     var SearchResult = SearchResultModule.SearchResult;
+    if(!String.prototype.format) {
+        String.prototype.format = function () {
+            var formatted = this;
+            for(var i = 0; i < arguments.length; i++) {
+                var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+                formatted = formatted.replace(regexp, arguments[i]);
+            }
+            return formatted;
+        };
+    }
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
             this.isOwner = ko.observable(isOwner);
@@ -80,7 +90,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.startDate = ko.observable();
             this.expDate = ko.observable();
             this.isEstimated = ko.observable();
-            this.autoRenew = ko.observable();
+            this.autoRenew = ko.observable(2);
             this.privateNotes = ko.observable();
             this.agreementContent = ko.observable();
             this.isCustomTypeAllowed = ko.observable();
@@ -601,7 +611,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 change: function (e) {
                 },
                 select: function (e) {
-                    kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
+                    kacSelext(_this.$contactEmail.data("kendoAutoComplete"), e);
                 }
             });
             this.$contactLastName.kendoAutoComplete({
@@ -659,7 +669,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 change: function (e) {
                 },
                 select: function (e) {
-                    kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
+                    kacSelext(_this.$contactFirstName.data("kendoAutoComplete"), e);
                 }
             });
             $(window).scroll(function () {
@@ -1224,6 +1234,17 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.prevForceDisabled(false);
         };
         InstitutionalAgreementEditModel.prototype._setupValidation = function () {
+            ko.validation.rules['greaterThan'] = {
+                validator: function (val, otherVal) {
+                    if(otherVal() == undefined) {
+                        return true;
+                    } else {
+                        return val > otherVal();
+                    }
+                },
+                message: 'The field must be greater than start date'
+            };
+            ko.validation.registerExtenders();
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
                 startDate: this.startDate.extend({
                     required: {
@@ -1235,7 +1256,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     required: {
                         message: "Expiration date is required."
                     },
-                    maxLength: 50
+                    maxLength: 50,
+                    greaterThan: this.startDate
                 }),
                 autoRenew: this.autoRenew.extend({
                     required: {
@@ -1341,36 +1363,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 var $LoadingPage = $("#LoadingPage").find("strong");
                 var url = App.Routes.WebApi.Agreements.post();
                 this.spinner.start();
-                function postFiles(file) {
-                    var data = ko.mapping.toJSON({
-                        agreementId: file.agreementId,
-                        uploadId: file.guid,
-                        originalName: file.guid,
-                        customName: file.customName,
-                        visibility: file.visibility
-                    });
-                    $.post(App.Routes.WebApi.Agreements.File.post(), data).done(function (response, statusText, xhr) {
-                        agreementPostDone(response, statusText, xhr);
-                    }).fail(function (xhr, statusText, errorThrown) {
-                        _this.spinner.stop();
-                        if(xhr.status === 400) {
-                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': function () {
-                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-                function postContacts(data, url) {
+                function postMe(data, url) {
                     $.post(url, data).done(function (response, statusText, xhr) {
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();
@@ -1392,10 +1385,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     });
                 }
                 function agreementPostDone(response, statusText, xhr) {
-                    this.spinner.stop();
-                    this.agreementId = 2;
+                    _this.spinner.stop();
+                    _this.agreementId = 2;
                     var tempUrl = App.Routes.WebApi.Agreements.File.post();
-                    $.each(this.participants(), function (i, item) {
+                    $.each(_this.files(), function (i, item) {
                         var data = ko.mapping.toJSON({
                             agreementId: item.agreementId,
                             uploadId: item.guid,
@@ -1403,10 +1396,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             customName: item.customName,
                             visibility: item.visibility
                         });
-                        postContacts(data, tempUrl);
+                        postMe(data, tempUrl);
                     });
                     tempUrl = App.Routes.WebApi.Agreements.Contacts.post();
-                    $.each(this.contacts(), function (i, item) {
+                    $.each(_this.contacts(), function (i, item) {
                         var data = ko.mapping.toJSON({
                             agreementId: item.agreementId,
                             uploadId: item.guid,
@@ -1414,7 +1407,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             customName: item.customName,
                             visibility: item.visibility
                         });
-                        postContacts(data, tempUrl);
+                        postMe(data, tempUrl);
                     });
                 }
                 $.each(this.participants(), function (i, item) {

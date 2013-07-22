@@ -19,6 +19,21 @@ import Url = module('../amd-modules/Establishments/Url')
 var Search = SearchModule.Search;
 var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
+interface String {
+    format(...args: any[]): string;
+}
+
+
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var formatted = this;
+        for (var i = 0; i < arguments.length; i++) {
+            var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+            formatted = formatted.replace(regexp, arguments[i]);
+        }
+        return formatted;
+    };
+}
 
 
 export class InstitutionalAgreementParticipantModel {
@@ -38,6 +53,7 @@ export class InstitutionalAgreementParticipantModel {
     establishmentTranslatedName;
 
 };
+
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
@@ -207,7 +223,7 @@ export class InstitutionalAgreementEditModel {
     startDate = ko.observable();
     expDate = ko.observable();
     isEstimated = ko.observable();
-    autoRenew = ko.observable();
+    autoRenew = ko.observable(2);
     privateNotes = ko.observable();
     agreementContent = ko.observable();
     isCustomTypeAllowed = ko.observable();
@@ -679,7 +695,7 @@ export class InstitutionalAgreementEditModel {
                 //this.checkInstitutionForNull();
             },
             select: (e: any): void => {
-                kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
+                kacSelext(this.$contactEmail.data("kendoAutoComplete"), e);
             }
         });
 
@@ -741,7 +757,7 @@ export class InstitutionalAgreementEditModel {
                 //this.checkInstitutionForNull();
             },
             select: (e: any): void => {
-                kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
+                kacSelext(this.$contactFirstName.data("kendoAutoComplete"), e);
             }
         });
 
@@ -1362,6 +1378,19 @@ export class InstitutionalAgreementEditModel {
     }
     
     private _setupValidation(): void {
+        ko.validation.rules['greaterThan'] = {
+            validator: function (val, otherVal) => {
+                if (otherVal() == undefined) {
+                    return true;
+                } else {
+                    return val > otherVal();
+                }
+            },
+            message: 'The field must be greater than start date'//{0}'
+        };
+
+        ko.validation.registerExtenders();
+
         this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
             startDate: this.startDate.extend({
                 required: {
@@ -1373,7 +1402,8 @@ export class InstitutionalAgreementEditModel {
                 required: {
                     message: "Expiration date is required."
                 },
-                maxLength: 50
+                maxLength: 50,
+                greaterThan: this.startDate
             }),
             autoRenew: this.autoRenew.extend({
                 required: {
@@ -1490,43 +1520,10 @@ export class InstitutionalAgreementEditModel {
         if (offset != undefined) {
             $("body").scrollTop(offset.top - 20);
         } else {
-
             var $LoadingPage = $("#LoadingPage").find("strong")
             var url = App.Routes.WebApi.Agreements.post();
             this.spinner.start();
-
-            function postFiles(file) => {
-                var data = ko.mapping.toJSON({
-                    agreementId: file.agreementId,
-                    uploadId: file.guid,
-                    originalName: file.guid,
-                    customName: file.customName,
-                    visibility: file.visibility
-                })
-                $.post(App.Routes.WebApi.Agreements.File.post(), data)
-                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        agreementPostDone(response, statusText, xhr);
-                    })
-                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    });
-            }
-
-            function postContacts(data, url) => {
+            function postMe(data, url) => {
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         //agreementPostDone(response, statusText, xhr);
@@ -1549,7 +1546,7 @@ export class InstitutionalAgreementEditModel {
                         }
                     });
             }
-            function agreementPostDone(response: any, statusText: string, xhr: JQueryXHR) {
+            function agreementPostDone(response: any, statusText: string, xhr: JQueryXHR) => {
 
                 this.spinner.stop();
                 this.agreementId = 2;//response.agreementId
@@ -1557,7 +1554,7 @@ export class InstitutionalAgreementEditModel {
                 // make the postFiles/postContacts more generic and use the same function...
                 //post files
                 var tempUrl = App.Routes.WebApi.Agreements.File.post();
-                $.each(this.participants(), function (i, item) => {
+                $.each(this.files(), function (i, item) => {
                     var data = ko.mapping.toJSON({
                         agreementId: item.agreementId,
                         uploadId: item.guid,
@@ -1565,7 +1562,7 @@ export class InstitutionalAgreementEditModel {
                         customName: item.customName,
                         visibility: item.visibility
                     })
-                    postContacts(data, tempUrl);
+                    postMe(data, tempUrl);
                 });
                 //post contacts
                 tempUrl = App.Routes.WebApi.Agreements.Contacts.post();
@@ -1577,7 +1574,7 @@ export class InstitutionalAgreementEditModel {
                         customName: item.customName,
                         visibility: item.visibility
                     })
-                    postContacts(data, tempUrl);
+                    postMe(data, tempUrl);
                 });
             }
 

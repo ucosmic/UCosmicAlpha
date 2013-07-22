@@ -69,7 +69,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             //var model = Mapper.Map<AgreementApiModel>(entity);
             //return model;
-            return null;
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [POST("agreements/validate")]

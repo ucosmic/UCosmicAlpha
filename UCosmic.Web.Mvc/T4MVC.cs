@@ -144,7 +144,10 @@ namespace Links
             private const string URLPATH = "~/scripts/google";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string google_charts_d_ts = Url("google.charts.d.ts");
             public static readonly string google_maps_d_ts = Url("google.maps.d.ts");
+            public static readonly string jsapi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jsapi.min.js") ? Url("jsapi.min.js") : Url("jsapi.js");
+                          
             public static readonly string ToolsOverlay_ts = Url("ToolsOverlay.ts");
             public static readonly string ToolsOverlay_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ToolsOverlay.min.js") ? Url("ToolsOverlay.min.js") : Url("ToolsOverlay.js");
                           
