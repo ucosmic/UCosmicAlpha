@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
@@ -18,10 +19,32 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("facultystaff")]
-        public virtual ActionResult Index(/*string domain = null*/)
+        public virtual ActionResult Index()
         {
+            FacultyStaffFilterModel model = new FacultyStaffFilterModel
+            {
+                FilterType = "activities",
+                FromDate = new DateTime(1900,1,1),
+                ToDate = null,
+                LocationIds = new int[0],
+                TypeIds = new int[0],
+                InstitutionId  = 0,
+                CampusId = null,
+                CollegeId = null,
+                DepartmentId = null
+            };
 
-            return View();
+            if (!String.IsNullOrEmpty(User.Identity.Name))
+            {
+                var establishment =
+                    _queryProcessor.Execute(new EstablishmentByEmail(User.Identity.Name.GetEmailDomain()));
+                if (establishment != null)
+                {
+                    model.InstitutionId = establishment.RevisionId;
+                }
+            }
+
+            return View(model);
         }
     }
 }

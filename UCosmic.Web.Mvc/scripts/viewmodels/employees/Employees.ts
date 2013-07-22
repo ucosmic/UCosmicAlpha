@@ -61,7 +61,7 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize(): void {
+        _initialize(model: any): void {
             this.initialLocations = new any[];        // Bug - To overcome bug in Multiselect.
             this.selectedLocationValues = new any[];
             this.fromDate = ko.observable();
@@ -75,8 +75,7 @@ module ViewModels.Employees {
             this.isPointmapVisible = ko.observable(true);
             this.isTableVisible = ko.observable(false);
 
-
-            this.tenantInstitutionId = ko.observable(193); // USF
+            this.tenantInstitutionId = ko.observable(model.institutionId);
 
             var fromToYearRange: number = 80;
             var thisYear: number = Number(moment().format('YYYY'));
@@ -90,8 +89,8 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor() {
-            this._initialize();
+        constructor(model: any) {
+            this._initialize(model);
         }
 
         // --------------------------------------------------------------------------------
@@ -161,12 +160,8 @@ module ViewModels.Employees {
                     transport: {
                         read: (options: any): void => {
                             $.ajax({
-                                url: App.Routes.WebApi.Establishments.get(),
-                                data: {
-                                    keyword: options.data.filter.filters[0].value,
-                                    pageNumber: 1,
-                                    pageSize: 2147483647 /* C# Int32.Max */
-                                },
+                                url: App.Routes.WebApi.Establishments.getUniversities(),
+                                dataType: 'json',
                                 success: (results: any): void => {
                                     options.success(results.items);
                                 }
@@ -213,7 +208,6 @@ module ViewModels.Employees {
                     }
                 }
             });
-
 
             var collegeDropListDataSource = null;
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -44,9 +46,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
+
             var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
             var views = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfEstablishmentApiFlatModel>(views);
+            return model;
+        }
+
+        [GET("universities")]
+        public IEnumerable<EstablishmentApiScalarModel> GetUniversities()
+        {
+            string[] englishNameTypes = {"University", "University System"};
+
+            ICollection<Establishment> establishments = new Collection<Establishment>();
+            foreach (var englishNameType in englishNameTypes)
+            {
+                var sublist = _queryProcessor.Execute(new EstablishmentsByEnglishNameType(englishNameType));
+                establishments.Concat(sublist);
+            }
+
+            var model = Mapper.Map<IEnumerable<EstablishmentApiScalarModel>>(establishments);
             return model;
         }
 

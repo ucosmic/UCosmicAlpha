@@ -1,4 +1,6 @@
-﻿@{
+﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffFilterModel
+
+@{
     ViewBag.Title = "Search Faculty & Staff";
 }
 
@@ -19,9 +21,9 @@
        
     <script type="text/javascript">
 
-        google.load( 'visualization', '1', { 'packages': ['geochart'] } );
-        google.setOnLoadCallback( drawRegionsMap );
-        
+        google.load('visualization', '1', { 'packages': ['geochart'] });
+        google.setOnLoadCallback(drawRegionsMap);
+
         function drawRegionsMap() {
 
             var countryData = new Array();
@@ -56,26 +58,29 @@
                 //displayMode: 'markers'
             };
 
-            window.heatmap = new google.visualization.GeoChart( $( '#heatmap' )[0] );
-            window.heatmap.draw( countryDataTable, options );
+            window.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
+            window.heatmap.draw(countryDataTable, options);
         }
-        
-        window.pointmap = new google.maps.Map( document.getElementById('pointmap'),
-        {
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            center: new google.maps.LatLng( 0, 0 ), // americas on left, australia on right
-            zoom: 1, // zoom out
-            draggable: true, // allow map panning
-            scrollwheel: false // prevent mouse wheel zooming
-        } );
+
+        window.pointmap = new google.maps.Map(document.getElementById('pointmap'),
+            {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                zoom: 1, // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
+            });
 
         $(function() {
 
-            var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff();
+            debugger;
+
+            var model = @Model;
+            var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(model);
             facultyAndStaffViewModel.load()
                 .done(function() {
 
-                    facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institution",
+                    facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institutionTextbox",
                         "campusDropList", "collegeDropList", "departmentDropList" );
 
                     var rootElement = $("#faculty-staff")[0];

@@ -166,6 +166,11 @@ var App;
                     return makeUrl(url);
                 }
                 Establishments.get = get;
+                function getUniversities() {
+                    var url = 'establishments/universities';
+                    return makeUrl(url);
+                }
+                Establishments.getUniversities = getUniversities;
                 function getChildren(establishmentId, sort) {
                     var url = 'establishments/' + establishmentId + '/children';
                     return makeUrlWithParams(url) + "sort=" + sort;

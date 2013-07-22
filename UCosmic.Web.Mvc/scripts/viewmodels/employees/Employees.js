@@ -2,11 +2,11 @@ var ViewModels;
 (function (ViewModels) {
     (function (Employees) {
         var FacultyAndStaff = (function () {
-            function FacultyAndStaff() {
+            function FacultyAndStaff(model) {
                 this.inititializationErrors = "";
-                this._initialize();
+                this._initialize(model);
             }
-            FacultyAndStaff.prototype._initialize = function () {
+            FacultyAndStaff.prototype._initialize = function (model) {
                 this.initialLocations = new Array();
                 this.selectedLocationValues = new Array();
                 this.fromDate = ko.observable();
@@ -19,7 +19,7 @@ var ViewModels;
                 this.isHeatmapVisible = ko.observable(false);
                 this.isPointmapVisible = ko.observable(true);
                 this.isTableVisible = ko.observable(false);
-                this.tenantInstitutionId = ko.observable(193);
+                this.tenantInstitutionId = ko.observable(model.institutionId);
                 var fromToYearRange = 80;
                 var thisYear = Number(moment().format('YYYY'));
                 this.years = new Array();
@@ -65,12 +65,8 @@ var ViewModels;
                         transport: {
                             read: function (options) {
                                 $.ajax({
-                                    url: App.Routes.WebApi.Establishments.get(),
-                                    data: {
-                                        keyword: options.data.filter.filters[0].value,
-                                        pageNumber: 1,
-                                        pageSize: 2147483647
-                                    },
+                                    url: App.Routes.WebApi.Establishments.getUniversities(),
+                                    dataType: 'json',
                                     success: function (results) {
                                         options.success(results.items);
                                     }

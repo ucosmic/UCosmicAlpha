@@ -12,6 +12,7 @@ namespace UCosmic.Web.Mvc.Models
         public DateTime? ToDate { get; set; }
         public int[] LocationIds { get; set; }
         public int[] TypeIds { get; set; }
+        public int InstitutionId { get; set; }
         public int? CampusId { get; set; }
         public int? CollegeId { get; set; }
         public int? DepartmentId { get; set; }

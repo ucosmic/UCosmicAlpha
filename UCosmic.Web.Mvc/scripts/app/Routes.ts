@@ -158,6 +158,11 @@ module App.Routes {
                 return makeUrl(url);
             }
 
+            export function getUniversities(): string {
+                var url = 'establishments/universities';
+                return makeUrl(url);
+            }
+
             export function getChildren(establishmentId: number, sort: bool): string {
                 var url = 'establishments/' + establishmentId + '/children';
                 return makeUrlWithParams(url) + "sort=" + sort;

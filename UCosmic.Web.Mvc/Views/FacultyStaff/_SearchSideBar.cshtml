@@ -22,6 +22,10 @@
                 <label for="toDate">To</label>
                 <input id="toDate" style="width: 100px"/>
             </div>
+            <div style="margin-top: 4px">
+                <input id="undatedActivities" type="checkbox"/>
+                <span>Include undated activities</span>
+            </div>
         </div>
         <div class="section">
             <div class="section-header">Country/Location</div>
@@ -34,12 +38,15 @@
             </div>
         </div>
         <div class="section">
+            <div class="section-header">Institution</div>
+            <input type="text" id="institutionTextbox" style="width: 100%" />
+
             <div class="section-header">Campus</div>
-            <div style="font-size: smaller">
-                <select id="campusDropList" style="width: 100%"></select>
-            </div>
+            <select id="campusDropList" style="width: 100%"></select>
+
             <div class="section-header">College</div>
             <select id="collegeDropList" style="width: 100%"></select>
+
             <div id="departmentDiv" class="section-header">Department</div>
             <select id="departmentDropList" style="width: 100%"></select>
         </div>
