@@ -14,6 +14,7 @@ var ViewModels;
                 this.keyCounter = 0;
                 this.dirtyFlag = ko.observable(false);
                 this.saving = false;
+                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this._initialize(activityId);
             }
             Activity.iconMaxSide = 64;
@@ -282,7 +283,7 @@ var ViewModels;
             };
             Activity.prototype.keyCountAutoSave = function (newValue) {
                 this.keyCounter += 1;
-                if(this.keyCounter > this.AUTOSAVE_KEYCOUNT) {
+                if(this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
                     this.dirtyFlag(true);
                     this.keyCounter = 0;
                 }
@@ -335,12 +336,16 @@ var ViewModels;
             };
             Activity.prototype.autoSave = function (viewModel, event) {
                 var _this = this;
+                var deferred = $.Deferred();
                 if(this.saving) {
-                    return;
+                    deferred.resolve();
+                    return deferred;
                 }
-                if(!this.dirtyFlag()) {
-                    return;
+                if(!this.dirtyFlag() && (this.keyCounter == 0)) {
+                    deferred.resolve();
+                    return deferred;
                 }
+                this.saving = true;
                 var model = ko.mapping.toJS(this);
                 if(model.values.startsOn != null) {
                     var dateStr = $("#fromDatePicker").get(0).value;
@@ -354,7 +359,7 @@ var ViewModels;
                         model.values.endsOn = this.convertDate(model.values.endsOn);
                     }
                 }
-                this.saving = true;
+                this.saveSpinner.start();
                 $.ajax({
                     type: 'PUT',
                     url: App.Routes.WebApi.Activities.put(viewModel.id()),
@@ -362,45 +367,50 @@ var ViewModels;
                     dataType: 'json',
                     contentType: 'application/json',
                     success: function (data, textStatus, jqXhr) {
-                        _this.saving = false;
                         _this.dirtyFlag(false);
+                        _this.saveSpinner.stop();
+                        _this.saving = false;
+                        deferred.resolve();
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
-                        _this.saving = false;
                         _this.dirtyFlag(false);
-                        alert(textStatus + "; " + errorThrown);
+                        _this.saveSpinner.stop();
+                        _this.saving = false;
+                        deferred.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
+                return deferred;
             };
             Activity.prototype.save = function (viewModel, event, mode) {
                 var _this = this;
-                this.autoSave(viewModel, event);
-                if(!this.values.isValid()) {
-                    this.values.errors.showAllMessages();
-                    return;
-                }
-                while(this.saving) {
-                    alert("Please wait while activity is saved.");
-                }
-                this.saving = true;
-                $.ajax({
-                    async: false,
-                    type: 'PUT',
-                    url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
-                    data: ko.toJSON(mode),
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: function (data, textStatus, jqXhr) {
-                        _this.saving = false;
-                        _this.dirtyFlag(false);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        _this.saving = false;
-                        _this.dirtyFlag(false);
-                        alert(textStatus + "; " + errorThrown);
+                this.autoSave(viewModel, event).done(function (data, textStatus, jqXHR) {
+                    if(!_this.values.isValid()) {
+                        _this.values.errors.showAllMessages();
+                        return;
                     }
+                    _this.saveSpinner.start();
+                    $.ajax({
+                        async: false,
+                        type: 'PUT',
+                        url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
+                        data: ko.toJSON(mode),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (data, textStatus, jqXhr) {
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            alert(textStatus + "; " + errorThrown);
+                        },
+                        complete: function (jqXhr, textStatus) {
+                            _this.dirtyFlag(false);
+                            _this.saveSpinner.stop();
+                            location.href = App.Routes.Mvc.My.Profile.get();
+                        }
+                    });
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    _this.saveSpinner.stop();
+                    location.href = App.Routes.Mvc.My.Profile.get();
                 });
-                location.href = App.Routes.Mvc.My.Profile.get();
             };
             Activity.prototype.cancel = function (item, event, mode) {
                 $("#cancelConfirmDialog").dialog({

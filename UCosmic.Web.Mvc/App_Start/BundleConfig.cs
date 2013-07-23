@@ -109,7 +109,8 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/activities").Include(
                 "~/scripts/viewmodels/activities/Activities.js"));
             bundles.Add(new ScriptBundle("~/bundles/activity").Include( // do not bundle tinyMCE, causes errors when optimized.
-                "~/scripts/viewmodels/activities/Activity.js"));
+                "~/scripts/viewmodels/activities/Activity.js",
+                "~/scripts/viewmodels/Spinner.js"));
 
             // geographic expertise
             bundles.Add(new ScriptBundle("~/bundles/geographicExpertises").Include(

@@ -10,6 +10,7 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../Spinner.ts" />
 
 module ViewModels.Activities {
     export class Activity implements Service.ApiModels.IObservableActivity {
@@ -50,6 +51,7 @@ module ViewModels.Activities {
 
         /* In the process of saving */
         saving: bool = false;
+        saveSpinner: ViewModels.Spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
 
         /* IObservableActivity implemented */
         id: KnockoutObservableNumber;
@@ -67,7 +69,7 @@ module ViewModels.Activities {
                 if ( this.dirtyFlag() ) {
                     this.autoSave( this, null );
                 }
-            } );
+            });
         }
 
         dismissFileUploadError(index: number): void {
@@ -337,7 +339,7 @@ module ViewModels.Activities {
 
         keyCountAutoSave( newValue: any ): void {
             this.keyCounter += 1;
-            if (this.keyCounter > this.AUTOSAVE_KEYCOUNT) {
+            if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
                 this.dirtyFlag(true);
                 this.keyCounter = 0;
             }
@@ -396,14 +398,20 @@ module ViewModels.Activities {
             return formatted;
         }
 
-        autoSave( viewModel: any, event: any ): void {
-            if ( this.saving ) {
-                return; // TBD handle this better
+        autoSave(viewModel: any, event: any): JQueryPromise {
+            var deferred: JQueryDeferred = $.Deferred();
+
+            if (this.saving) {
+                deferred.resolve();
+                return deferred;
             }
 
-            if ( !this.dirtyFlag() ) {
-                return;
+            if (!this.dirtyFlag() && (this.keyCounter == 0)) {
+                deferred.resolve();
+                return deferred;
             }
+
+            this.saving = true;
 
             var model = ko.mapping.toJS( this );
 
@@ -422,57 +430,66 @@ module ViewModels.Activities {
                 }
             }
 
-            this.saving = true;
+            this.saveSpinner.start();
+
             $.ajax( {
                 type: 'PUT',
                 url: App.Routes.WebApi.Activities.put( viewModel.id() ),
                 data: ko.toJSON(model),
                 dataType: 'json',
                 contentType: 'application/json',
-                success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                    this.saving = false;
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                     this.dirtyFlag(false);
+                    this.saveSpinner.stop();
+                    this.saving = false;
+                    deferred.resolve();
                 },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    this.saving = false;
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     this.dirtyFlag(false);
-                    alert( textStatus + "; " + errorThrown );
+                    this.saveSpinner.stop();
+                    this.saving = false;
+                    deferred.reject(jqXhr, textStatus, errorThrown);
                 }
-            } );
+            });
+
+            return deferred;
         }
 
-        save( viewModel: any, event: any, mode: string ): void {
-            this.autoSave( viewModel, event );
+        save(viewModel: any, event: any, mode: string): void {
 
-            if (!this.values.isValid()) {
-                this.values.errors.showAllMessages();
-                return;
-            }
+            this.autoSave(viewModel, event)
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
 
-            while ( this.saving ) {
-                alert( "Please wait while activity is saved." ); // TBD: dialog
-            }
+                    if (!this.values.isValid()) {
+                        this.values.errors.showAllMessages();
+                        return;
+                    }
 
-            this.saving = true;
-            $.ajax( {
-                async: false,
-                type: 'PUT',
-                url: App.Routes.WebApi.Activities.putEdit( viewModel.id() ),
-                data: ko.toJSON( mode ),
-                dataType: 'json',
-                contentType: 'application/json',
-                success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                    this.saving = false;
-                    this.dirtyFlag(false);
-                },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    this.saving = false;
-                    this.dirtyFlag(false);
-                    alert( textStatus + "; " + errorThrown );
-                }
-            } );
+                    this.saveSpinner.start();
 
-            location.href = App.Routes.Mvc.My.Profile.get();
+                    $.ajax({
+                        async: false,
+                        type: 'PUT',
+                        url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
+                        data: ko.toJSON(mode),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                        },
+                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                            alert(textStatus + "; " + errorThrown);
+                        },
+                        complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                            this.dirtyFlag(false);
+                            this.saveSpinner.stop();
+                            location.href = App.Routes.Mvc.My.Profile.get();
+                        }
+                    });
+                })
+                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    this.saveSpinner.stop();
+                    location.href = App.Routes.Mvc.My.Profile.get();
+                });
         }
 
         cancel( item: any, event: any, mode: string ): void {
