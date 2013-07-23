@@ -1016,6 +1016,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                             _this.participants.push(myParticipant);
                                             _this.percentOffBodyHeight = .2;
                                             _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
+                                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                         }).fail(function () {
                                             _this.percentOffBodyHeight = .2;
                                             _this.participants.push(myParticipant);
@@ -1155,6 +1156,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.clearContactInfo();
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
+                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
             } else {
                 this.validateContact.errors.showAllMessages(true);
             }
@@ -1239,7 +1241,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(otherVal() == undefined) {
                         return true;
                     } else {
-                        return val > otherVal();
+                        return new Date(val) > new Date(otherVal());
                     }
                 },
                 message: 'The field must be greater than start date'
@@ -1387,25 +1389,32 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 function agreementPostDone(response, statusText, xhr) {
                     _this.spinner.stop();
                     _this.agreementId = 2;
-                    var tempUrl = App.Routes.WebApi.Agreements.File.post();
+                    var tempUrl = App.Routes.WebApi.Agreements.Files.post(_this.agreementId);
                     $.each(_this.files(), function (i, item) {
-                        var data = ko.mapping.toJSON({
+                        var data = ko.mapping.toJS({
                             agreementId: item.agreementId,
-                            uploadId: item.guid,
+                            uploadGuid: item.guid,
                             originalName: item.guid,
+                            extension: item.extension,
                             customName: item.customName,
                             visibility: item.visibility
                         });
                         postMe(data, tempUrl);
                     });
-                    tempUrl = App.Routes.WebApi.Agreements.Contacts.post();
+                    tempUrl = App.Routes.WebApi.Agreements.Contacts.post(_this.agreementId);
                     $.each(_this.contacts(), function (i, item) {
-                        var data = ko.mapping.toJSON({
-                            agreementId: item.agreementId,
-                            uploadId: item.guid,
-                            originalName: item.guid,
-                            customName: item.customName,
-                            visibility: item.visibility
+                        var data = ko.mapping.toJS({
+                            agreementId: _this.agreementId,
+                            PersonId: item.personId,
+                            Type: item.type,
+                            DisplayName: item.displayName,
+                            FirstName: item.firstName,
+                            MiddleName: item.middleName,
+                            LastName: item.lastName,
+                            Suffix: item.suffix,
+                            EmailAddress: item.emailAddress,
+                            PersonId: item.personId,
+                            Phones: item.phones
                         });
                         postMe(data, tempUrl);
                     });
@@ -1420,7 +1429,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         center: item.center
                     });
                 });
-                var data = ko.mapping.toJSON({
+                var data = ko.mapping.toJS({
                     content: this.content(),
                     expiresOn: this.expDate(),
                     startsOn: this.startDate(),

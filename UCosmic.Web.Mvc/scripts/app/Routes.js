@@ -339,6 +339,11 @@ var App;
                         return makeUrl(url);
                     }
                     Files.del = del;
+                    function post(agreementId) {
+                        var url = 'agreements/{0}/files'.format(agreementId.toString());
+                        return makeUrl(url);
+                    }
+                    Files.post = post;
                     (function (Content) {
                         function view(agreementId, fileId) {
                             var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());

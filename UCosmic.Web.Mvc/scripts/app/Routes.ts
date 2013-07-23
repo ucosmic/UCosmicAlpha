@@ -297,12 +297,12 @@ module App.Routes {
             }
 
             export module Contacts {
-                export function get (agreementId?: number): string {
+                export function get (agreementId: number): string {
                     var url = 'agreements/0/contacts';
                     if (agreementId) url = url.replace('0', agreementId.toString())
                     return makeUrl(url);
                 }
-                export function post (agreementId?: number): string {
+                export function post (agreementId: number): string {
                     var url = 'agreements/0/contacts';
                     if (agreementId) url = url.replace('0', agreementId.toString())
                     return makeUrl(url);
@@ -318,6 +318,10 @@ module App.Routes {
                 export function del(agreementId: number, id: number) {
                     var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
                     
+                    return makeUrl(url);
+                }
+                export function post(agreementId: number) {
+                    var url = 'agreements/{0}/files'.format(agreementId.toString());
                     return makeUrl(url);
                 }
 

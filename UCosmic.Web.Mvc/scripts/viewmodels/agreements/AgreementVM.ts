@@ -239,14 +239,7 @@ export class InstitutionalAgreementEditModel {
     isFileFailureUnexpected: KnockoutObservableBool = ko.observable(false);
     fileFileExtension: KnockoutObservableString = ko.observable();
     fileFileName: KnockoutObservableString = ko.observable();
-    fileSrc: KnockoutObservableString = ko.observable(
-        // TODO TIM: the maxSide and refresh params are not valid for agreement files
-        // maxSide was used for profile photo to request it at a specific size
-        // refresh was used to cache-bust, but i don't think we'll need that here
-        // since i do not have the files controller set to cache anything
-        // (the profile photo controller action is set to cache responses so refresh was needed there)
-        //App.Routes.WebApi.Agreements.File.get({ maxSide: 128 })
-    );
+    fileSrc: KnockoutObservableString = ko.observable();
     fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     $confirmPurgeDialog: JQuery;
@@ -1142,6 +1135,7 @@ export class InstitutionalAgreementEditModel {
                                         this.participants.push(myParticipant);
                                         this.percentOffBodyHeight = .2;
                                         this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
+                                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     })
                                     .fail(function () => {
                                         //alert('fail');
@@ -1283,6 +1277,7 @@ export class InstitutionalAgreementEditModel {
             this.clearContactInfo();
             this.$addContactDialog.data("kendoWindow").close();
             $("#addAContact").fadeIn(500);
+            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
 
         } else {
             this.validateContact.errors.showAllMessages(true);
@@ -1383,7 +1378,7 @@ export class InstitutionalAgreementEditModel {
                 if (otherVal() == undefined) {
                     return true;
                 } else {
-                    return val > otherVal();
+                    return new Date(val) > new Date(otherVal());
                 }
             },
             message: 'The field must be greater than start date'//{0}'
@@ -1553,26 +1548,33 @@ export class InstitutionalAgreementEditModel {
 
                 // make the postFiles/postContacts more generic and use the same function...
                 //post files
-                var tempUrl = App.Routes.WebApi.Agreements.File.post();
+                var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
                 $.each(this.files(), function (i, item) => {
-                    var data = ko.mapping.toJSON({
+                    var data = ko.mapping.toJS({
                         agreementId: item.agreementId,
-                        uploadId: item.guid,
+                        uploadGuid: item.guid,
                         originalName: item.guid,
+                        extension: item.extension,
                         customName: item.customName,
                         visibility: item.visibility
                     })
                     postMe(data, tempUrl);
                 });
                 //post contacts
-                tempUrl = App.Routes.WebApi.Agreements.Contacts.post();
+                tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                 $.each(this.contacts(), function (i, item) => {
-                    var data = ko.mapping.toJSON({
-                        agreementId: item.agreementId,
-                        uploadId: item.guid,
-                        originalName: item.guid,
-                        customName: item.customName,
-                        visibility: item.visibility
+                    var data = ko.mapping.toJS({ 
+                        agreementId: this.agreementId,
+                        PersonId: item.personId,
+                        Type: item.type,
+                        DisplayName: item.displayName,
+                        FirstName: item.firstName,
+                        MiddleName: item.middleName,
+                        LastName: item.lastName,
+                        Suffix: item.suffix,
+                        EmailAddress: item.emailAddress,
+                        PersonId: item.personId,
+                        Phones: item.phones
                     })
                     postMe(data, tempUrl);
                 });
@@ -1588,7 +1590,7 @@ export class InstitutionalAgreementEditModel {
                     center: item.center
                 });
             });
-            var data = ko.mapping.toJSON({
+            var data = ko.mapping.toJS({
                 content: this.content(),
                 expiresOn: this.expDate(),
                 startsOn: this.startDate(),
