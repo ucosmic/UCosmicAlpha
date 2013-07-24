@@ -420,8 +420,76 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             me.isEdit(true);
         };
         InstitutionalAgreementEditModel.prototype.closeEditAFile = function (me, e) {
+            var _this = this;
             me.customName(me.customNameFile() + me.customNameExt());
             me.isEdit(false);
+            if(this.agreementIsEdit) {
+                var data = {
+                };
+                var url = App.Routes.WebApi.Agreements.post();
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response, statusText, xhr) {
+                    },
+                    error: function (xhr, statusText, errorThrown) {
+                        _this.spinner.stop();
+                        if(xhr.status === 400) {
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': function () {
+                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        };
+        InstitutionalAgreementEditModel.prototype.fileVisibilityClicked = function (me, e) {
+            var _this = this;
+            if(this.agreementIsEdit) {
+                var data = {
+                };
+                var url = App.Routes.WebApi.Agreements.post();
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response, statusText, xhr) {
+                    },
+                    error: function (xhr, statusText, errorThrown) {
+                        _this.spinner.stop();
+                        if(xhr.status === 400) {
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': function () {
+                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         };
         InstitutionalAgreementEditModel.prototype.downloadAFile = function (me, e) {
             this.agreementId = 2;
@@ -559,6 +627,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 width: 950,
                 close: function () {
                     $("#addAContact").fadeIn(500);
+                    _this.clearContactInfo();
                 },
                 visible: false,
                 draggable: false,
@@ -571,6 +640,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
             function kacSelext(me, e) {
                 var dataItem = me.dataItem(e.item.index());
+                _this.contactDisplayName(dataItem.displayName);
                 _this.contactFirstName(dataItem.firstName);
                 _this.contactLastName(dataItem.lastName);
                 _this.contactEmail(dataItem.defaultEmailAddress);
@@ -1117,6 +1187,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             dropdownlist.select(0);
         };
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
+            var _this = this;
             if(this.validateContact.isValid()) {
                 this.contactsIsEdit(false);
                 this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
@@ -1130,15 +1201,50 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
                 this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
                 this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-                this.clearContactInfo();
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
+                if(this.agreementIsEdit) {
+                    var data = {
+                    };
+                    var url = App.Routes.WebApi.Agreements.post();
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: data,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response, statusText, xhr) {
+                        },
+                        error: function (xhr, statusText, errorThrown) {
+                            _this.spinner.stop();
+                            if(xhr.status === 400) {
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': function () {
+                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             } else {
                 this.validateContact.errors.showAllMessages(true);
             }
         };
         InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
+            var _this = this;
             if(this.validateContact.isValid()) {
+                if(this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
+                    this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
+                }
                 this.contacts.push(ko.mapping.fromJS({
                     title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
@@ -1153,15 +1259,42 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     displayName: this.contactDisplayName(),
                     middleName: this.contactMiddleName
                 }));
-                this.clearContactInfo();
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
+                if(this.agreementIsEdit) {
+                    var data = {
+                    };
+                    var url = App.Routes.WebApi.Agreements.post();
+                    $.post(url, data).done(function (response, statusText, xhr) {
+                        _this.agreementId = 2;
+                        _this.agreementPostFiles(response, statusText, xhr);
+                        _this.agreementPostContacts(response, statusText, xhr);
+                    }).fail(function (xhr, statusText, errorThrown) {
+                        _this.spinner.stop();
+                        if(xhr.status === 400) {
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': function () {
+                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
             } else {
                 this.validateContact.errors.showAllMessages(true);
             }
         };
         InstitutionalAgreementEditModel.prototype.addAContact = function (me, e) {
+            this.contactsIsEdit(false);
             this.$contactEmail.prop('disabled', false);
             this.$contactLastName.prop('disabled', false);
             this.$contactFirstName.prop('disabled', false);
@@ -1336,9 +1469,65 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $(event.target).closest("ul").find("li").removeClass("current");
             $(event.target).closest("li").addClass("current");
         };
-        InstitutionalAgreementEditModel.prototype.updateAgreement = function () {
+        InstitutionalAgreementEditModel.prototype.postMe = function (data, url) {
+            var _this = this;
+            $.post(url, data).done(function (response, statusText, xhr) {
+            }).fail(function (xhr, statusText, errorThrown) {
+                _this.spinner.stop();
+                if(xhr.status === 400) {
+                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                        title: 'Alert Message',
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            'Ok': function () {
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
         };
-        InstitutionalAgreementEditModel.prototype.saveAgreement = function () {
+        InstitutionalAgreementEditModel.prototype.agreementPostFiles = function (response, statusText, xhr) {
+            var _this = this;
+            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
+            $.each(this.files(), function (i, item) {
+                var data = ko.mapping.toJS({
+                    agreementId: item.agreementId,
+                    uploadGuid: item.guid,
+                    originalName: item.guid,
+                    extension: item.extension,
+                    customName: item.customName,
+                    visibility: item.visibility
+                });
+                _this.postMe(data, tempUrl);
+            });
+            this.spinner.stop();
+        };
+        InstitutionalAgreementEditModel.prototype.agreementPostContacts = function (response, statusText, xhr) {
+            var _this = this;
+            var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
+            $.each(this.contacts(), function (i, item) {
+                var data = ko.mapping.toJS({
+                    agreementId: _this.agreementId,
+                    PersonId: item.personId,
+                    Type: item.type,
+                    DisplayName: item.displayName,
+                    FirstName: item.firstName,
+                    MiddleName: item.middleName,
+                    LastName: item.lastName,
+                    Suffix: item.suffix,
+                    EmailAddress: item.emailAddress,
+                    PersonId: item.personId,
+                    Phones: item.phones
+                });
+                _this.postMe(data, tempUrl);
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.saveUpdateAgreement = function () {
             var _this = this;
             var offset;
             if(!this.validateEffectiveDatesCurrentStatus.isValid()) {
@@ -1362,63 +1551,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             if(offset != undefined) {
                 $("body").scrollTop(offset.top - 20);
             } else {
+                var url;
                 var $LoadingPage = $("#LoadingPage").find("strong");
-                var url = App.Routes.WebApi.Agreements.post();
                 this.spinner.start();
-                function postMe(data, url) {
-                    $.post(url, data).done(function (response, statusText, xhr) {
-                    }).fail(function (xhr, statusText, errorThrown) {
-                        _this.spinner.stop();
-                        if(xhr.status === 400) {
-                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': function () {
-                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-                function agreementPostDone(response, statusText, xhr) {
-                    _this.spinner.stop();
-                    _this.agreementId = 2;
-                    var tempUrl = App.Routes.WebApi.Agreements.Files.post(_this.agreementId);
-                    $.each(_this.files(), function (i, item) {
-                        var data = ko.mapping.toJS({
-                            agreementId: item.agreementId,
-                            uploadGuid: item.guid,
-                            originalName: item.guid,
-                            extension: item.extension,
-                            customName: item.customName,
-                            visibility: item.visibility
-                        });
-                        postMe(data, tempUrl);
-                    });
-                    tempUrl = App.Routes.WebApi.Agreements.Contacts.post(_this.agreementId);
-                    $.each(_this.contacts(), function (i, item) {
-                        var data = ko.mapping.toJS({
-                            agreementId: _this.agreementId,
-                            PersonId: item.personId,
-                            Type: item.type,
-                            DisplayName: item.displayName,
-                            FirstName: item.firstName,
-                            MiddleName: item.middleName,
-                            LastName: item.lastName,
-                            Suffix: item.suffix,
-                            EmailAddress: item.emailAddress,
-                            PersonId: item.personId,
-                            Phones: item.phones
-                        });
-                        postMe(data, tempUrl);
-                    });
-                }
                 $.each(this.participants(), function (i, item) {
                     _this.participantsExport.push({
                         agreementId: item.agreementId,
@@ -1443,26 +1578,60 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     umbrellaId: this.uAgreementSelected(),
                     type: this.typeOptionSelected()
                 });
-                $.post(url, data).done(function (response, statusText, xhr) {
-                    agreementPostDone(response, statusText, xhr);
-                }).fail(function (xhr, statusText, errorThrown) {
-                    _this.spinner.stop();
-                    if(xhr.status === 400) {
-                        _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                        _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                            title: 'Alert Message',
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                'Ok': function () {
-                                    _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                }
+                if(this.agreementIsEdit) {
+                    url = App.Routes.WebApi.Agreements.post();
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: data,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response, statusText, xhr) {
+                        },
+                        error: function (xhr, statusText, errorThrown) {
+                            _this.spinner.stop();
+                            if(xhr.status === 400) {
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': function () {
+                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                        }
+                                    }
+                                });
                             }
-                        });
-                    }
-                });
+                        }
+                    });
+                } else {
+                    url = App.Routes.WebApi.Agreements.post();
+                    $.post(url, data).done(function (response, statusText, xhr) {
+                        _this.agreementId = 2;
+                        _this.agreementPostFiles(response, statusText, xhr);
+                        _this.agreementPostContacts(response, statusText, xhr);
+                    }).fail(function (xhr, statusText, errorThrown) {
+                        _this.spinner.stop();
+                        if(xhr.status === 400) {
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': function () {
+                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
             }
         };
         return InstitutionalAgreementEditModel;

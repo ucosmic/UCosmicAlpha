@@ -19,9 +19,9 @@
                                         <strong data-bind="text: customName, visible: !isEdit()"></strong>
                                         <input id="typeOptions" type="text" placeholder="[None]" style="width: 300px;"
                                         data-bind="value: customNameFile, visible: isEdit" /><strong data-bind="text: customNameExt, visible: isEdit"></strong><br/>
-                                        <label><input name="fileVisibility" type="radio" class="radio" value="Public" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id()}" /><strong>Public:</strong><span class="radioText"> Anyone on the Internet to find this agreement.</span></label><br/>
-                                        <label><input name="fileVisibility" type="radio" class="radio" value="Protected" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id()}"/><strong>Protected:</strong><span class="radioText"> Hide this agreement from the public, but allow my employees and students to find it.</span></label><br/>
-                                        <label><input name="fileVisibility" type="radio" class="radio" value="Private" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id()}"/><strong>Private:</strong><span class="radioText"> Allow only UCosmic administrators to find this agreement.</span></label>
+                                        <label><input name="fileVisibility" type="radio" class="radio" value="Public" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id()}, click: $root.fileVisibilityClicked" /><strong>Public:</strong><span class="radioText"> Anyone on the Internet to find this agreement.</span></label><br/>
+                                        <label><input name="fileVisibility" type="radio" class="radio" value="Protected" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id() }, click: $root.fileVisibilityClicked"/><strong>Protected:</strong><span class="radioText"> Hide this agreement from the public, but allow my employees and students to find it.</span></label><br/>
+                                        <label><input name="fileVisibility" type="radio" class="radio" value="Private" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id() }, click: $root.fileVisibilityClicked"/><strong>Private:</strong><span class="radioText"> Allow only UCosmic administrators to find this agreement.</span></label>
                                     </div>
                                 </div>
                             </div>

@@ -484,6 +484,72 @@ export class InstitutionalAgreementEditModel {
     closeEditAFile(me, e): void {
         me.customName(me.customNameFile() + me.customNameExt())
         me.isEdit(false);
+        if (this.agreementIsEdit) {
+            var data = {};
+            var url = App.Routes.WebApi.Agreements.post();
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                data: data,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                    //agreementPostDone(response, statusText, xhr);
+                },
+                error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    this.spinner.stop();
+                    if (xhr.status === 400) { // validation message will be in xhr response text...
+                        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                            .html(xhr.responseText.replace('\n', '<br /><br />'));
+                        this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                            title: 'Alert Message',
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    };
+
+    fileVisibilityClicked(me, e): void {
+        
+        if (this.agreementIsEdit) {
+            var data = {};
+            var url = App.Routes.WebApi.Agreements.post();
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                data: data,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                    //agreementPostDone(response, statusText, xhr);
+                },
+                error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    this.spinner.stop();
+                    if (xhr.status === 400) { // validation message will be in xhr response text...
+                        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                            .html(xhr.responseText.replace('\n', '<br /><br />'));
+                        this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                            title: 'Alert Message',
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     };
 
     downloadAFile(me, e): void {
@@ -500,6 +566,7 @@ export class InstitutionalAgreementEditModel {
           '_blank'
         );
     };
+
 
 
     updateKendoDialog(windowWidth): void {
@@ -632,6 +699,7 @@ export class InstitutionalAgreementEditModel {
             width: 950,
             close: function () => {
                 $("#addAContact").fadeIn(500);
+                this.clearContactInfo();
             },
             visible: false,
             draggable: false,
@@ -646,6 +714,7 @@ export class InstitutionalAgreementEditModel {
         function kacSelext(me, e) => {
 
             var dataItem = me.dataItem(e.item.index());
+            this.contactDisplayName(dataItem.displayName)
             this.contactFirstName(dataItem.firstName);
             this.contactLastName(dataItem.lastName);
             this.contactEmail(dataItem.defaultEmailAddress);
@@ -1263,9 +1332,40 @@ export class InstitutionalAgreementEditModel {
             this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
             this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
             this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-            this.clearContactInfo();
+            //this.clearContactInfo();
             this.$addContactDialog.data("kendoWindow").close()
             $("#addAContact").fadeIn(500);
+            if (this.agreementIsEdit) {
+                var data = {};
+                var url = App.Routes.WebApi.Agreements.post();
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                        //agreementPostDone(response, statusText, xhr);
+                    },
+                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.spinner.stop();
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         } else {
             this.validateContact.errors.showAllMessages(true);
         }
@@ -1273,18 +1373,49 @@ export class InstitutionalAgreementEditModel {
 
     addContact(me, e): void {
         if (this.validateContact.isValid()) {
+            if (this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
+                this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
+            }
             this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
-            this.clearContactInfo();
+            //this.clearContactInfo();
             this.$addContactDialog.data("kendoWindow").close();
             $("#addAContact").fadeIn(500);
             $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
 
+            if (this.agreementIsEdit) {
+                var data = {};
+                var url = App.Routes.WebApi.Agreements.post();
+                $.post(url, data)
+                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                        this.agreementId = 2;//response.agreementId
+                        this.agreementPostFiles(response, statusText, xhr);
+                        this.agreementPostContacts(response, statusText, xhr);
+                    })
+                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.spinner.stop();
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
+                    });
+            }
         } else {
             this.validateContact.errors.showAllMessages(true);
         }
     }
 
     addAContact(me, e): void {
+        this.contactsIsEdit(false);
         this.$contactEmail.prop('disabled', false);
         this.$contactLastName.prop('disabled', false);
         this.$contactFirstName.prop('disabled', false);
@@ -1298,6 +1429,7 @@ export class InstitutionalAgreementEditModel {
     }
 
     cancelContact(): void {
+        //this.clearContactInfo();
         this.$addContactDialog.data("kendoWindow").close()
         $("#addAContact").fadeIn(500);
     }
@@ -1486,11 +1618,67 @@ export class InstitutionalAgreementEditModel {
         $(event.target).closest("li").addClass("current");
     };
 
-    updateAgreement(): void {
+    postMe(data, url): void {
+        $.post(url, data)
+            .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                //agreementPostDone(response, statusText, xhr);
+            })
+            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                this.spinner.stop();
+                if (xhr.status === 400) { // validation message will be in xhr response text...
+                    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                        .html(xhr.responseText.replace('\n', '<br /><br />'));
+                    this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                        title: 'Alert Message',
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                        }
+                    });
+                }
+            });
+    }
+    agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
+        var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
 
+        $.each(this.files(), function (i, item) => {
+            var data = ko.mapping.toJS({
+                agreementId: item.agreementId,
+                uploadGuid: item.guid,
+                originalName: item.guid,
+                extension: item.extension,
+                customName: item.customName,
+                visibility: item.visibility
+            })
+            this.postMe(data, tempUrl);
+        });
+        this.spinner.stop();
+    }
+    agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
+        //post contacts
+        var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
+        $.each(this.contacts(), function (i, item) => {
+            var data = ko.mapping.toJS({
+                agreementId: this.agreementId,
+                PersonId: item.personId,
+                Type: item.type,
+                DisplayName: item.displayName,
+                FirstName: item.firstName,
+                MiddleName: item.middleName,
+                LastName: item.lastName,
+                Suffix: item.suffix,
+                EmailAddress: item.emailAddress,
+                PersonId: item.personId,
+                Phones: item.phones
+            })
+            this.postMe(data, tempUrl);
+        });
     }
     
-    saveAgreement(): void {
+    saveUpdateAgreement(): void {
 
         var offset;
         // validate in this order to put scroll in right place
@@ -1515,70 +1703,10 @@ export class InstitutionalAgreementEditModel {
         if (offset != undefined) {
             $("body").scrollTop(offset.top - 20);
         } else {
+            var url;
             var $LoadingPage = $("#LoadingPage").find("strong")
-            var url = App.Routes.WebApi.Agreements.post();
             this.spinner.start();
-            function postMe(data, url) => {
-                $.post(url, data)
-                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        //agreementPostDone(response, statusText, xhr);
-                    })
-                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    });
-            }
-            function agreementPostDone(response: any, statusText: string, xhr: JQueryXHR) => {
-
-                this.spinner.stop();
-                this.agreementId = 2;//response.agreementId
-
-                // make the postFiles/postContacts more generic and use the same function...
-                //post files
-                var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
-                $.each(this.files(), function (i, item) => {
-                    var data = ko.mapping.toJS({
-                        agreementId: item.agreementId,
-                        uploadGuid: item.guid,
-                        originalName: item.guid,
-                        extension: item.extension,
-                        customName: item.customName,
-                        visibility: item.visibility
-                    })
-                    postMe(data, tempUrl);
-                });
-                //post contacts
-                tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
-                $.each(this.contacts(), function (i, item) => {
-                    var data = ko.mapping.toJS({ 
-                        agreementId: this.agreementId,
-                        PersonId: item.personId,
-                        Type: item.type,
-                        DisplayName: item.displayName,
-                        FirstName: item.firstName,
-                        MiddleName: item.middleName,
-                        LastName: item.lastName,
-                        Suffix: item.suffix,
-                        EmailAddress: item.emailAddress,
-                        PersonId: item.personId,
-                        Phones: item.phones
-                    })
-                    postMe(data, tempUrl);
-                });
-            }
+           
 
             $.each(this.participants(), function (i, item) => {
                 this.participantsExport.push({
@@ -1604,27 +1732,61 @@ export class InstitutionalAgreementEditModel {
                 umbrellaId: this.uAgreementSelected(),
                 type: this.typeOptionSelected()
             })
-            $.post(url, data)
-                .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                    agreementPostDone(response, statusText, xhr);
-                })
-                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                    this.spinner.stop();
-                    if (xhr.status === 400) { // validation message will be in xhr response text...
-                        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                            .html(xhr.responseText.replace('\n', '<br /><br />'));
-                        this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                            title: 'Alert Message',
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                            }
-                        });
+            if (this.agreementIsEdit) {
+                url = App.Routes.WebApi.Agreements.post();
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                        //agreementPostDone(response, statusText, xhr);
+                    },
+                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.spinner.stop();
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
                     }
                 });
+            } else {
+                url = App.Routes.WebApi.Agreements.post();
+                $.post(url, data)
+                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                        this.agreementId = 2;//response.agreementId
+                        this.agreementPostFiles(response, statusText, xhr);
+                        this.agreementPostContacts(response, statusText, xhr);
+                    })
+                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        this.spinner.stop();
+                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                }
+                            });
+                        }
+                    });
+            }
         }
 
 
