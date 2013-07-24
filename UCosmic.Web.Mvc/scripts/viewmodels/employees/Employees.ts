@@ -112,7 +112,7 @@ module ViewModels.Employees {
                 fromDatePickerId: string,
                 toDatePickerId: string,
                 institutionSelectorId: string,
-                campuseDropListId: string,
+                campusDropListId: string,
                 collegeDropListId: string,
                 departmentDropListId: string
             ): void {
@@ -200,6 +200,7 @@ module ViewModels.Employees {
             $("#" + departmentDropListId ).kendoDropDownList({
                 dataTextField: "officialName",
                 dataValueField: "id",
+                optionLabel: { officialName: "ALL", id: 0 },
                 change: function (e) {
                     //var item = this.dataItem[e.sender.selectedIndex];
                 },
@@ -235,12 +236,13 @@ module ViewModels.Employees {
             $("#" + collegeDropListId).kendoDropDownList({
                 dataTextField: "officialName",
                 dataValueField: "id",
+                optionLabel: { officialName: "ALL", id: 0 },
                 dataSource: collegeDropListDataSource,
                 change: function (e) {
                     var selectedIndex = e.sender.selectedIndex;
                     if (selectedIndex != -1) {
                         var item = this.dataItem(selectedIndex);
-                        if (item != null) {
+                        if ((item != null) && (item.id != 0)) {
                             var dataSource = new kendo.data.DataSource({
                                 transport: {
                                     read: {
@@ -256,7 +258,7 @@ module ViewModels.Employees {
                 dataBound: function (e) {
                     if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                         var item = this.dataItem(this.selectedIndex);
-                        if (item != null) {
+                        if ((item != null) && (item.id != 0)) {
                             var collegeId = item.id;
                             if (collegeId != null) {
                                 var dataSource = new kendo.data.DataSource({
@@ -275,9 +277,10 @@ module ViewModels.Employees {
             });
 
             if (this.institutionHasCampuses()) {
-                $("#" + campuseDropListId).kendoDropDownList({
+                $("#" + campusDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
+                    optionLabel: { officialName: "ALL", id: 0 },
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
@@ -289,7 +292,7 @@ module ViewModels.Employees {
                         var selectedIndex = e.sender.selectedIndex;
                         if ((selectedIndex != null) && (selectedIndex != -1)) {
                             var item = this.dataItem(selectedIndex);
-                            if (item != null) {
+                            if ((item != null) && (item.id != 0)) {
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
@@ -305,7 +308,7 @@ module ViewModels.Employees {
                     dataBound: function (e) {
                         if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                             var item = this.dataItem(this.selectedIndex);
-                            if (item != null) {
+                            if ((item != null) && (item.id != 0)) {
                                 var campusId = item.id;
                                 if (campusId != null) {
                                     var dataSource = new kendo.data.DataSource({

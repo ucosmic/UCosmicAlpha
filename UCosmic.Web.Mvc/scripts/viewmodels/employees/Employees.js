@@ -38,7 +38,7 @@ var ViewModels;
                     }
                 }
             };
-            FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, institutionSelectorId, campuseDropListId, collegeDropListId, departmentDropListId) {
+            FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, institutionSelectorId, campusDropListId, collegeDropListId, departmentDropListId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
                 var me = this;
@@ -103,6 +103,10 @@ var ViewModels;
                 $("#" + departmentDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
+                    optionLabel: {
+                        officialName: "ALL",
+                        id: 0
+                    },
                     change: function (e) {
                     },
                     dataBound: function (e) {
@@ -132,12 +136,16 @@ var ViewModels;
                 $("#" + collegeDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
+                    optionLabel: {
+                        officialName: "ALL",
+                        id: 0
+                    },
                     dataSource: collegeDropListDataSource,
                     change: function (e) {
                         var selectedIndex = e.sender.selectedIndex;
                         if(selectedIndex != -1) {
                             var item = this.dataItem(selectedIndex);
-                            if(item != null) {
+                            if((item != null) && (item.id != 0)) {
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
@@ -152,7 +160,7 @@ var ViewModels;
                     dataBound: function (e) {
                         if((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                             var item = this.dataItem(this.selectedIndex);
-                            if(item != null) {
+                            if((item != null) && (item.id != 0)) {
                                 var collegeId = item.id;
                                 if(collegeId != null) {
                                     var dataSource = new kendo.data.DataSource({
@@ -169,9 +177,13 @@ var ViewModels;
                     }
                 });
                 if(this.institutionHasCampuses()) {
-                    $("#" + campuseDropListId).kendoDropDownList({
+                    $("#" + campusDropListId).kendoDropDownList({
                         dataTextField: "officialName",
                         dataValueField: "id",
+                        optionLabel: {
+                            officialName: "ALL",
+                            id: 0
+                        },
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
@@ -183,7 +195,7 @@ var ViewModels;
                             var selectedIndex = e.sender.selectedIndex;
                             if((selectedIndex != null) && (selectedIndex != -1)) {
                                 var item = this.dataItem(selectedIndex);
-                                if(item != null) {
+                                if((item != null) && (item.id != 0)) {
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
@@ -198,7 +210,7 @@ var ViewModels;
                         dataBound: function (e) {
                             if((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                                 var item = this.dataItem(this.selectedIndex);
-                                if(item != null) {
+                                if((item != null) && (item.id != 0)) {
                                     var campusId = item.id;
                                     if(campusId != null) {
                                         var dataSource = new kendo.data.DataSource({

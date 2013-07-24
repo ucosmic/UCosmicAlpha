@@ -243,8 +243,9 @@ ul.selectableListItems li:hover {
   color: #502d0e;
   margin-top: 8px; }
   .filter-sidebar input[type="text"] {
-    height: 24px;
-    font-size: small;
+    height: 28px;
+    line-height: 13px;
+    font-size: 12px;
     vertical-align: middle; }
   .filter-sidebar .header {
     height: 32px;

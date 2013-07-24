@@ -11,10 +11,6 @@
             </div>
         </div>
         <div class="section">
-            <div class="section-header">Tags</div>
-            <input type="text" id="tagsTextbox" style="height: 28px;"/>
-        </div>
-        <div class="section">
             <div class="section-header">Date Range</div>
             <div style="margin-left: 4px">
                 <label for="fromDate">From</label>
@@ -28,8 +24,12 @@
             </div>
         </div>
         <div class="section">
+            <div class="section-header">Tags</div>
+            <input type="text" id="tagsTextbox" style="height: 28px;"/>
+        </div>
+        <div class="section">
             <div class="section-header">Country/Location</div>
-            <select id="location" style="overflow-y:auto"></select>
+            <select id="location" style="width: 100%; overflow-y:auto"></select>
         </div>
         <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
             <div class="section-header">Types</div>

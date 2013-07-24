@@ -48,13 +48,31 @@
         }
 
         .k-multiselect .k-input {
-            padding: 8px 0 8px 4px;
-            font-size: 16px;
-            line-height: 20px;
-            height: 18px;
-            margin: 0;
             font-family: Arial;
             color: #000;
+            height: 28px;
+            line-height: 13px;
+            font-size: 12px;
+        }
+
+        .k-multiselect ul .k-button {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            line-height: 18px;
+            font-size: 16px;
+            vertical-align: middle;
+            color: #000;
+            background-color: #eee;
+            background-image: none;
+            border-color: #ddd;
+        }
+
+        .k-multiselect, .k-multiselect.k-state-border-down, .k-multiselect.k-state-border-up, .k-multiselect .k-multiselect-wrap {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            min-height: 34px;
         }
 
         .k-multiselect .k-input.k-readonly {
@@ -66,41 +84,38 @@
             background-color: transparent;
         }
 
-        .k-multiselect, .k-multiselect.k-state-border-down, .k-multiselect.k-state-border-up, .k-multiselect .k-multiselect-wrap {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            min-height: 36px;
-        }
-
-        .k-multiselect ul .k-button {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            margin: 2px 0 0 2px;
-            padding: 5px 6px 5px 8px;
-            line-height: 16px;
-            font-size: 16px;
-            vertical-align: middle;
-            color: #000;
-            background-color: #eee;
-            background-image: none;
-            border-color: #ddd;
-        }
-
-        .k-multiselect ul .k-button .k-delete.k-icon {
-            background-position: top left;
-            background-image: url('/images/icons/minus/minus-20-red.png');
-            width: 20px;
-            height: 20px;
-            margin-left: 8px;
-            cursor: pointer;
-        }
-
         .k-animation-container .k-calendar-container {
             -webkit-border-radius: 0;
             -moz-border-radius: 0;
             border-radius: 0;
+        }
+
+        .k-dropdown .k-dropdown-wrap .k-input,
+        .k-dropdown .k-state-default.k-dropdown-wrap .k-input,
+        .k-dropdown .k-state-border-down.k-dropdown-wrap .k-input,
+        .k-dropdown .k-state-hover.k-dropdown-wrap .k-input,
+        .k-dropdown .k-state-focused.k-dropdown-wrap .k-input {
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .k-picker-wrap .k-select,
+        .k-numeric-wrap .k-select,
+        .k-dropdown-wrap .k-select {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .k-dropdown .k-dropdown-wrap .k-icon,
+        .k-dropdown .k-state-default.k-dropdown-wrap .k-icon,
+        .k-dropdown .k-state-border-down.k-dropdown-wrap .k-icon,
+        .k-dropdown .k-state-hover.k-dropdown-wrap .k-icon,
+        .k-dropdown .k-state-focused.k-dropdown-wrap .k-icon {
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
     </style>
