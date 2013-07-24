@@ -5,24 +5,24 @@
     <div>
         <div class="section">
             <div class="section-header">Search For</div>
-            <div style="text-align: center; font-size: medium; padding-bottom: 4px">
-                <input type="radio" id="activitiesRadioButton" name="activityType" value="activities"/><span>Activities&emsp;&emsp;</span>
-                <input type="radio" id="peopleRadioButton" name="activityType" value="people"/><span>People</span>
+            <div style="text-align: center; font-size: large; padding-bottom: 4px">
+                <input type="radio" id="activitiesRadioButton" name="activityType" value="activities" data-bind="checked: searchType()"/><span>Activities&emsp;</span>
+                <input type="radio" id="peopleRadioButton" name="activityType" value="people" data-bind="checked: searchType()"/><span>People</span>
             </div>
         </div>
         <div class="section">
             <div class="section-header">Tags</div>
-            <input type="text" id="tagsTextbox"/>
+            <input type="text" id="tagsTextbox" style="height: 28px;"/>
         </div>
         <div class="section">
             <div class="section-header">Date Range</div>
-            <div>
+            <div style="margin-left: 4px">
                 <label for="fromDate">From</label>
                 <input id="fromDate" style="width: 100px"/>
                 <label for="toDate">To</label>
                 <input id="toDate" style="width: 100px"/>
             </div>
-            <div style="margin-top: 4px">
+            <div style="margin-top: 4px; margin-left: 4px">
                 <input id="undatedActivities" type="checkbox"/>
                 <span>Include undated activities</span>
             </div>
@@ -31,18 +31,22 @@
             <div class="section-header">Country/Location</div>
             <select id="location" style="overflow-y:auto"></select>
         </div>
-        <div class="section">
-            <div class="section-header">Type</div>
+        <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
+            <div class="section-header">Types</div>
             <div style="font-size: small">
-                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes() }" />
+                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
             </div>
         </div>
         <div class="section">
-            <div class="section-header">Institution</div>
-            <input type="text" id="institutionTextbox" style="width: 100%" />
-
-            <div class="section-header">Campus</div>
-            <select id="campusDropList" style="width: 100%"></select>
+            <div style="display: none" data-bind="visible: institutionId() == null">
+                <div class="section-header">Institution</div>
+                <input type="text" id="institutionTextbox" style="width: 100%" />
+            </div>
+            
+            <div style="display: none" data-bind="visible: institutionHasCampuses()">
+                <div class="section-header">Campus</div>
+                <select id="campusDropList" style="width: 100%"></select>
+            </div>
 
             <div class="section-header">College</div>
             <select id="collegeDropList" style="width: 100%"></select>
@@ -55,7 +59,7 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-types-template">
-    <li>
-        <input type="checkbox"/><span data-bind="text: type()"></span>
+    <li style="margin-left: 8px">
+        <input type="checkbox" value="true" checked/><span style="width: 100%" data-bind="text: $data.type"></span>
     </li>
 </script>

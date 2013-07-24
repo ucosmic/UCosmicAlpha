@@ -2,11 +2,11 @@ var ViewModels;
 (function (ViewModels) {
     (function (Employees) {
         var FacultyAndStaff = (function () {
-            function FacultyAndStaff(model) {
+            function FacultyAndStaff(institutionInfo) {
                 this.inititializationErrors = "";
-                this._initialize(model);
+                this._initialize(institutionInfo);
             }
-            FacultyAndStaff.prototype._initialize = function (model) {
+            FacultyAndStaff.prototype._initialize = function (institutionInfo) {
                 this.initialLocations = new Array();
                 this.selectedLocationValues = new Array();
                 this.fromDate = ko.observable();
@@ -14,17 +14,28 @@ var ViewModels;
                 this.institutionId = ko.observable(null);
                 this.institutionOfficialName = ko.observable(null);
                 this.institutionCountryOfficialName = ko.observable(null);
-                this.defaultEstablishmentHasCampuses = ko.observable(true);
+                this.institutionHasCampuses = ko.observable(false);
                 this.activityTypes = ko.observableArray();
-                this.isHeatmapVisible = ko.observable(false);
-                this.isPointmapVisible = ko.observable(true);
+                this.isHeatmapVisible = ko.observable(true);
+                this.isPointmapVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
-                this.tenantInstitutionId = ko.observable(model.institutionId);
-                var fromToYearRange = 80;
-                var thisYear = Number(moment().format('YYYY'));
-                this.years = new Array();
-                for(var i = 0; i < fromToYearRange; i += 1) {
-                    this.years[i] = thisYear - i;
+                this.searchType = ko.observable('activities');
+                if(institutionInfo != null) {
+                    if(institutionInfo.InstitutionId != null) {
+                        this.institutionId(Number(institutionInfo.InstitutionId));
+                    }
+                    if(institutionInfo.ActivityTypes != null) {
+                        for(var i = 0; i < institutionInfo.ActivityTypes.length; i += 1) {
+                            this.activityTypes.push(ko.observable({
+                                id: institutionInfo.ActivityTypes[i].Id,
+                                type: institutionInfo.ActivityTypes[i].Name,
+                                filter: ko.observable(true)
+                            }));
+                        }
+                    }
+                    if(institutionInfo.InstitutionHasCampuses != null) {
+                        this.institutionHasCampuses(Boolean(institutionInfo.InstitutionHasCampuses));
+                    }
                 }
             };
             FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, institutionSelectorId, campuseDropListId, collegeDropListId, departmentDropListId) {
@@ -109,11 +120,11 @@ var ViewModels;
                     }
                 });
                 var collegeDropListDataSource = null;
-                if(!this.defaultEstablishmentHasCampuses()) {
+                if(!this.institutionHasCampuses()) {
                     collegeDropListDataSource = new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(this.tenantInstitutionId(), true)
+                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
                             }
                         }
                     });
@@ -157,14 +168,14 @@ var ViewModels;
                         }
                     }
                 });
-                if(this.defaultEstablishmentHasCampuses()) {
+                if(this.institutionHasCampuses()) {
                     $("#" + campuseDropListId).kendoDropDownList({
                         dataTextField: "officialName",
                         dataValueField: "id",
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.Establishments.getChildren(this.tenantInstitutionId(), false)
+                                    url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
                                 }
                             }
                         }),
@@ -242,14 +253,16 @@ var ViewModels;
                 }
             };
             FacultyAndStaff.prototype.updateLocations = function (items) {
-                this.locations.removeAll();
-                for(var i = 0; i < items.length; i += 1) {
-                    var location = ko.mapping.fromJS({
-                        id: 0,
-                        placeId: items[i].id,
-                        version: ""
-                    });
-                    this.locations.push(location);
+                if(this.locations != null) {
+                    this.locations.removeAll();
+                    for(var i = 0; i < items.length; i += 1) {
+                        var location = ko.mapping.fromJS({
+                            id: 0,
+                            placeId: items[i].id,
+                            version: ""
+                        });
+                        this.locations.push(location);
+                    }
                 }
             };
             FacultyAndStaff.prototype.selectMap = function (type) {

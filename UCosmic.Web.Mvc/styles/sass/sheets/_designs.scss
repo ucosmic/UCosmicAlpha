@@ -381,17 +381,20 @@ ul.selectableListItems li:hover {
         text-transform: uppercase;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
+        font-size: large;
     }
 
     .section-header {
         background-color: $sidebar-default-bg-color;
-        padding-top: 4px;
+        padding-top: 10px;
         text-align: left;
         font-weight: bold;
         padding-bottom: 8px;
+        padding-left: 8px;
         border-top-color: $sidebar-current-text-color;
         border-top: 1px;
         border-top-style: dotted;
+        text-transform: uppercase;
     }
 
     .section {

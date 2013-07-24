@@ -24,15 +24,15 @@ module ViewModels.Employees {
         /* True if any field changes. */
         ///dirtyFlag: KnockoutObservableBool = ko.observable(false);
 
+        searchType: KnockoutObservableString;
+
         /* Element id of institution autocomplete */
         institutionSelectorId: string;
         institutionId: KnockoutObservableAny;
         institutionOfficialName: KnockoutObservableString;
         institutionCountryOfficialName: KnockoutObservableString;
 
-        defaultEstablishmentHasCampuses: KnockoutObservableBool;
-
-        tenantInstitutionId: KnockoutObservableNumber;
+        institutionHasCampuses: KnockoutObservableBool;
 
         /* Array of activity types displayed as list of checkboxes */
         activityTypes: KnockoutObservableArray;
@@ -51,8 +51,6 @@ module ViewModels.Employees {
         isValid: () => bool;
         isAnyMessageShown: () => bool;
 
-        years: number[];
-
         isHeatmapVisible: KnockoutObservableBool;
         isPointmapVisible: KnockoutObservableBool;
         isTableVisible: KnockoutObservableBool;
@@ -61,7 +59,7 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize(model: any): void {
+        _initialize(institutionInfo: any): void {
             this.initialLocations = new any[];        // Bug - To overcome bug in Multiselect.
             this.selectedLocationValues = new any[];
             this.fromDate = ko.observable();
@@ -69,19 +67,32 @@ module ViewModels.Employees {
             this.institutionId = ko.observable(null);
             this.institutionOfficialName = ko.observable(null);
             this.institutionCountryOfficialName = ko.observable(null);
-            this.defaultEstablishmentHasCampuses = ko.observable(true);
+            this.institutionHasCampuses = ko.observable(false);
             this.activityTypes = ko.observableArray();
-            this.isHeatmapVisible = ko.observable(false);
-            this.isPointmapVisible = ko.observable(true);
+            this.isHeatmapVisible = ko.observable(true);
+            this.isPointmapVisible = ko.observable(false);
             this.isTableVisible = ko.observable(false);
+            this.searchType = ko.observable('activities');
 
-            this.tenantInstitutionId = ko.observable(model.institutionId);
+            if (institutionInfo != null) {
 
-            var fromToYearRange: number = 80;
-            var thisYear: number = Number(moment().format('YYYY'));
-            this.years = new Array();
-            for (var i: number = 0; i < fromToYearRange; i += 1) {
-                this.years[i] = thisYear - i;
+                if (institutionInfo.InstitutionId != null) {
+                    this.institutionId(Number(institutionInfo.InstitutionId));
+                }
+
+                if (institutionInfo.ActivityTypes != null) {
+                    for (var i = 0; i < institutionInfo.ActivityTypes.length; i += 1) {
+                        this.activityTypes.push(ko.observable({
+                            id: institutionInfo.ActivityTypes[i].Id,
+                            type: institutionInfo.ActivityTypes[i].Name,
+                            filter: ko.observable(true)
+                        }));
+                    }
+                }
+
+                if (institutionInfo.InstitutionHasCampuses != null) {
+                    this.institutionHasCampuses(Boolean(institutionInfo.InstitutionHasCampuses));
+                }
             }
         }
 
@@ -89,8 +100,8 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor(model: any) {
-            this._initialize(model);
+        constructor(institutionInfo: any) {
+            this._initialize(institutionInfo);
         }
 
         // --------------------------------------------------------------------------------
@@ -211,11 +222,11 @@ module ViewModels.Employees {
 
             var collegeDropListDataSource = null;
 
-            if (!this.defaultEstablishmentHasCampuses()) {
+            if (!this.institutionHasCampuses()) {
                 collegeDropListDataSource = new kendo.data.DataSource({
                     transport: {
                         read: {
-                            url: App.Routes.WebApi.Establishments.getChildren(this.tenantInstitutionId(), true)
+                            url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
                         }
                     }
                 });
@@ -263,14 +274,14 @@ module ViewModels.Employees {
                 }
             });
 
-            if (this.defaultEstablishmentHasCampuses()) {
+            if (this.institutionHasCampuses()) {
                 $("#" + campuseDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(this.tenantInstitutionId(), false)
+                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
                             }
                         }
                     }),
@@ -431,12 +442,13 @@ module ViewModels.Employees {
         */
         // --------------------------------------------------------------------------------
         updateLocations(items: Array): void {
-            this.locations.removeAll();
-            for (var i = 0; i < items.length; i += 1) {
-                var location = ko.mapping.fromJS({ id: 0, placeId: items[i].id, version: "" });
-                this.locations.push(location);
+            if (this.locations != null) {
+                this.locations.removeAll();
+                for (var i = 0; i < items.length; i += 1) {
+                    var location = ko.mapping.fromJS({ id: 0, placeId: items[i].id, version: "" });
+                    this.locations.push(location);
+                }
             }
-            //this.dirtyFlag(true);
         }
 
         // --------------------------------------------------------------------------------

@@ -253,16 +253,19 @@ ul.selectableListItems li:hover {
     font-weight: bold;
     text-transform: uppercase;
     border-top-left-radius: 8px;
-    border-top-right-radius: 8px; }
+    border-top-right-radius: 8px;
+    font-size: large; }
   .filter-sidebar .section-header {
     background-color: #dddddd;
-    padding-top: 4px;
+    padding-top: 10px;
     text-align: left;
     font-weight: bold;
     padding-bottom: 8px;
+    padding-left: 8px;
     border-top-color: white;
     border-top: 1px;
-    border-top-style: dotted; }
+    border-top-style: dotted;
+    text-transform: uppercase; }
   .filter-sidebar .section {
     background-color: #dddddd;
     padding-bottom: 8px; }

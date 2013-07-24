@@ -1,4 +1,4 @@
-﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffFilterModel
+﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffInstitutionInfoModel
 
 @{
     ViewBag.Title = "Search Faculty & Staff";
@@ -10,6 +10,103 @@
         @Html.Partial(MVC.FacultyStaff.Views._Bib)
     </nav>
 }
+
+@section styles
+{
+    <style>
+        .k-autocomplete, .k-autocomplete.k-state-focused {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            border: solid 1px #aaa;
+            border-right-color: #ddd;
+            border-bottom-color: #ddd;
+        }
+
+        .k-autocomplete .k-input, .k-autocomplete.k-state-focused .k-input {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            padding: 8px;
+            font-size: 12px;
+            line-height: 10px;
+            height: auto;
+        }
+
+        .k-list-container, .k-list-container.k-state-border-up, .k-list-container.k-state-border-down {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+
+        .k-multiselect {
+            border: solid 1px #aaa;
+            border-right-color: #ddd;
+            border-bottom-color: #ddd;
+            background-image: none;
+            background-color: transparent;
+        }
+
+        .k-multiselect .k-input {
+            padding: 8px 0 8px 4px;
+            font-size: 16px;
+            line-height: 20px;
+            height: 18px;
+            margin: 0;
+            font-family: Arial;
+            color: #000;
+        }
+
+        .k-multiselect .k-input.k-readonly {
+            color: #666;
+        }
+
+        .k-multiselect.k-state-hover, .xk-multiselect.k-state-hover:hover {
+            background-image: none;
+            background-color: transparent;
+        }
+
+        .k-multiselect, .k-multiselect.k-state-border-down, .k-multiselect.k-state-border-up, .k-multiselect .k-multiselect-wrap {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            min-height: 36px;
+        }
+
+        .k-multiselect ul .k-button {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            margin: 2px 0 0 2px;
+            padding: 5px 6px 5px 8px;
+            line-height: 16px;
+            font-size: 16px;
+            vertical-align: middle;
+            color: #000;
+            background-color: #eee;
+            background-image: none;
+            border-color: #ddd;
+        }
+
+        .k-multiselect ul .k-button .k-delete.k-icon {
+            background-position: top left;
+            background-image: url('/images/icons/minus/minus-20-red.png');
+            width: 20px;
+            height: 20px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .k-animation-container .k-calendar-container {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+
+    </style>
+}
+
+
 
 
 @section scripts
@@ -73,10 +170,11 @@
 
         $(function() {
 
-            debugger;
+            $("#main").css("height", 760);
 
-            var model = @Model;
-            var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(model);
+            var institutionInfo = @Html.Raw(Json.Encode(Model));
+
+            var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
             facultyAndStaffViewModel.load()
                 .done(function() {
 
@@ -129,15 +227,15 @@
     </script>    
     }
 
-    <div class="content fixed to-top" data-current-module="employees">
-        <div id="faculty-staff" class="on-left from-top">
+    <div id="faculty-staff" class="content fixed to-top" data-current-module="faculty-staff">
+        <div class="on-left from-top">
             <header>
                 <h1>@ViewBag.Title</h1>
             </header>
             <div style="width: 680px; margin-bottom: 8px; text-align: center">
                 <span style="font-family: monospace; font-size: large">
-                    <span id="heatmapText" class="maptype-hover" style="margin-right: 12px; font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'heatmap' ); }">HEATMAP</span>
-                    <span id="pointmapText" class="maptype-hover" style="margin-right: 12px; font-weight: bold" data-bind="click: function ( item, event ) { selectMap( 'pointmap' ); }">MAP</span>
+                    <span id="heatmapText" class="maptype-hover" style="margin-right: 12px; font-weight: bold" data-bind="click: function ( item, event ) { selectMap( 'heatmap' ); }">HEATMAP</span>
+                    <span id="pointmapText" class="maptype-hover" style="margin-right: 12px; font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'pointmap' ); }">MAP</span>
                     <span id="resultstableText" class="maptype-hover" style="font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'resultstable' ); }">TABLE</span>
                 </span>
             </div>
