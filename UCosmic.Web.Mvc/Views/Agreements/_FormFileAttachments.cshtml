@@ -11,8 +11,8 @@
                                 <a title="Remove this file" data-bind="click: $root.removeFile"><i class="red minus on-right"></i></a>
                                 <a title="Edit file name" data-bind="click: $root.editAFile, visible: !isEdit()"><i class="edit on-right"></i></a>
                                 <a title="Update file name" data-bind="click: $root.closeEditAFile, visible: isEdit"><i class="edit on-right"></i></a>
-                                <a title="Download this file" data-bind="click: $root.downloadAFile"><i class="download on-right">- Download </i></a>
-                                <a title="View this file" data-bind="click: $root.viewAFile"><i class="view on-right"> View -</i></a>
+                                <a title="Download this file" data-bind="click: $root.downloadAFile, visible: id() >= 1"><i class="download on-right">- Download </i></a>
+                                <a title="View this file" data-bind="click: $root.viewAFile, visible: id() >= 1"><i class="view on-right"> View -</i></a>
                                 
                                 <div class="item">
                                     <div>

@@ -323,6 +323,11 @@ var App;
                         return makeUrl(url);
                     }
                     Contacts.post = post;
+                    function put(agreementId, id) {
+                        var url = 'agreements/{0}/contacts/{1}'.format(agreementId.toString(), id.toString());
+                        return makeUrl(url);
+                    }
+                    Contacts.put = put;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
                 (function (Files) {
@@ -344,6 +349,11 @@ var App;
                         return makeUrl(url);
                     }
                     Files.post = post;
+                    function put(agreementId, id) {
+                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
+                        return makeUrl(url);
+                    }
+                    Files.put = put;
                     (function (Content) {
                         function view(agreementId, fileId) {
                             var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());

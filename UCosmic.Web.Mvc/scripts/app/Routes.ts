@@ -307,6 +307,11 @@ module App.Routes {
                     if (agreementId) url = url.replace('0', agreementId.toString())
                     return makeUrl(url);
                 }
+                export function put(agreementId: number, id: number) {
+                    var url = 'agreements/{0}/contacts/{1}'.format(agreementId.toString(), id.toString());
+
+                    return makeUrl(url);
+                }
             }
 
             export module Files {
@@ -322,6 +327,11 @@ module App.Routes {
                 }
                 export function post(agreementId: number) {
                     var url = 'agreements/{0}/files'.format(agreementId.toString());
+                    return makeUrl(url);
+                }
+                export function put(agreementId: number, id: number) {
+                    var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
+
                     return makeUrl(url);
                 }
 
