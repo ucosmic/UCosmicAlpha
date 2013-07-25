@@ -372,6 +372,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
                             customNameExt: e.files[0].extension
                         }));
+                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                     }
                 },
                 error: function (e) {
@@ -400,7 +401,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             if(confirm('Are you sure you want to remove this file from this agreement?')) {
                 var url = "";
-                if(this.agreementId != 0) {
+                if(this.agreementIsEdit) {
                     url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
                 } else {
                     url = App.Routes.WebApi.Agreements.FilesUpload.del(me.guid());
@@ -410,6 +411,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     type: 'DELETE',
                     success: function () {
                         _this.files.remove(me);
+                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                     }
                 });
             }
@@ -615,7 +617,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $("#helpExpDate").kendoTooltip({
                 width: 120,
                 position: "top",
-                content: "testing",
+                content: $("#templateExpToolTip").html(),
                 showOn: "click",
                 autoHide: false
             });
@@ -878,6 +880,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                         $(item.participantEl).slideUp('fast', function () {
                             self.participants.remove(item);
+                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                         });
                     }
                     return false;
@@ -1362,6 +1365,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
             if(confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
                 this.contacts.remove(me);
+                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
             }
             e.preventDefault();
             e.stopPropagation();

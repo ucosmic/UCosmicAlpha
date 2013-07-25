@@ -432,6 +432,7 @@ export class InstitutionalAgreementEditModel {
                         customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
                         customNameExt: e.files[0].extension
                     }));
+                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                 }
             },
             error: (e: any): void => {
@@ -460,7 +461,7 @@ export class InstitutionalAgreementEditModel {
             // all files will have a guid in create, none will have a guid in edit agreement
             // so do a check for agreementId - if it is undefined(for now 0)
             var url = "";
-            if (this.agreementId != 0) {
+            if (this.agreementIsEdit) {
                 url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
             } else {
                 url = App.Routes.WebApi.Agreements.FilesUpload.del(me.guid());
@@ -470,6 +471,7 @@ export class InstitutionalAgreementEditModel {
                 type: 'DELETE',
                 success: (): void => {
                     this.files.remove(me);
+                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                 }
             })
         }
@@ -688,11 +690,12 @@ export class InstitutionalAgreementEditModel {
 
 
         this.$bindKendoFile();
-
+        //var x: string = kendo.template($("#template").html());
+        //var x2 = x.
         $("#helpExpDate").kendoTooltip({
             width: 120,
             position: "top",
-            content: "testing",
+            content: $("#templateExpToolTip").html(),
             showOn: "click",
             autoHide: false
         })
@@ -956,6 +959,7 @@ export class InstitutionalAgreementEditModel {
                 if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                     $(item.participantEl).slideUp('fast', function () {
                         self.participants.remove(item);
+                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                     });
                 }
                 return false;
@@ -1493,6 +1497,7 @@ export class InstitutionalAgreementEditModel {
             me.firstName() + " " + me.lastName() +
             '" as a contact from this agreement?')) {
             this.contacts.remove(me);
+            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
         }
         e.preventDefault();
         e.stopPropagation();
