@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="section">
-            <div class="section-header">Tags</div>
+            <div class="section-header">Tags/Keywords</div>
             <input type="text" id="tagsTextbox" style="height: 28px;"/>
         </div>
         <div class="section">
@@ -32,7 +32,7 @@
             <select id="location" style="width: 100%; overflow-y:auto"></select>
         </div>
         <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
-            <div class="section-header">Types</div>
+            <div class="section-header">Type of Engagement</div>
             <div style="font-size: small">
                 <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
             </div>
@@ -44,7 +44,7 @@
             </div>
             
             <div style="display: none" data-bind="visible: institutionHasCampuses()">
-                <div class="section-header">Campus</div>
+                <div class="section-header">Institution/Campus</div>
                 <select id="campusDropList" style="width: 100%"></select>
             </div>
 

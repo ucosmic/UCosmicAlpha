@@ -118,17 +118,11 @@
             margin-bottom: 0;
         }
 
-        input[type="button"] {
-            height: 28px;
-            width: 120px;
-            padding: 0 0 0 0;
-            margin: 0 0 0 0;
-            font-size: 16px;
-            text-transform: uppercase;
-            border-radius: 0 0 0 0;
-        }
     </style>
 }
+
+
+
 
 @section scripts
 {
@@ -139,7 +133,7 @@
        
     <script type="text/javascript">
 
-        google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
+        google.load('visualization', '1', { 'packages': ['geochart'] });
         google.setOnLoadCallback(drawRegionsMap);
 
         function drawRegionsMap() {
@@ -171,26 +165,14 @@
                 //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
                 region: 'world', //'150',    // 002 Africa, 142 Asia
                 backgroundColor: 'lightBlue',
-                keepAspectRatio: false,
+                keepAspectRatio: true,
                 colorAxis: { colors: ['#FFFFFF', 'green'] },
                 //displayMode: 'markers'
             };
 
             window.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
             window.heatmap.draw(countryDataTable, options);
-
-
-            var data2 = google.visualization.arrayToDataTable([['Task', 'Hours per Day'], ['Work', 11], ['Eat', 2], ['Commute', 2], ['Watch TV', 2], ['Sleep', 7]]);
-            var options2 = {
-                title: 'Engagements',
-                width: 270
-            };
-            window.piechart = new google.visualization.PieChart(document.getElementById('typeChart'));
-            window.piechart.draw(data2, options2);
-
-
         }
-
 
         window.pointmap = new google.maps.Map(document.getElementById('pointmap'),
             {
@@ -212,7 +194,7 @@
                 .done(function() {
 
                     facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institutionTextbox",
-                        "campusDropList", "collegeDropList", "departmentDropList");
+                        "campusDropList", "collegeDropList", "departmentDropList" );
 
                     var rootElement = $("#faculty-staff")[0];
                     ko.applyBindings(facultyAndStaffViewModel, rootElement);
@@ -258,29 +240,23 @@
                 });
         });
     </script>    
-}
+    }
 
     <div id="faculty-staff" class="content fixed to-top" data-current-module="faculty-staff">
         <div class="on-left from-top">
             <header>
                 <h1>@ViewBag.Title</h1>
             </header>
-            <div>
-                <span>Keywords</span>
-                <input type="text" id="keywords" class="reset"/>
+            <div style="width: 680px; margin-bottom: 8px; text-align: center">
+                <span style="font-family: monospace; font-size: large">
+                    <span id="heatmapText" class="maptype-hover" style="margin-right: 12px; font-weight: bold" data-bind="click: function ( item, event ) { selectMap( 'heatmap' ); }">HEATMAP</span>
+                    <span id="pointmapText" class="maptype-hover" style="margin-right: 12px; font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'pointmap' ); }">MAP</span>
+                    <span id="resultstableText" class="maptype-hover" style="font-weight: normal" data-bind="click: function ( item, event ) { selectMap( 'resultstable' ); }">TABLE</span>
+                </span>
+                @*<img src="../../images/icons/print/print-24-black.png" style="float: right; opacity: 0.33"/>*@
             </div>
             <div style="width: 680px; height: 500px">
-                <div data-bind="visible: isHeatmapVisible()">
-                    <div style="text-align: left">
-                        <span>
-                            <input type="button" id="activitiesButton" value="Activites"/>
-                            <input type="button" id="peopleButton" value="People"/>
-                            <select id="activityTypesDropList" style="display: none"></select>
-                            <select id="campusDropList" style="display: none"></select>
-                        </span>
-                    </div>
-                    <div id="heatmap"></div>
-                </div>
+                <div id="heatmap" style="display: none" data-bind="visible: isHeatmapVisible()"></div>
                 <div data-bind="visible: isPointmapVisible()">
                     <div id="pointmap" style="width: 680px; height: 500px"></div>
                 </div>
@@ -310,10 +286,7 @@
                 </div>
             </div>
         </div>
-        <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible() || isTableVisible()">
+        <div class="on-right from-top">
             @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
-        </div>
-        <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
-            @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
         </div>
     </div>

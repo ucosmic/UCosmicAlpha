@@ -804,6 +804,8 @@
     <None Include="content\kendo\2012.3.1114\template.less" />
     <Content Include="content\kendo\2013.1.226\images\KendoUI.ttf" />
     <Content Include="content\kendo\2013.1.226\images\KendoUI.woff" />
+    <Content Include="images\icons\print\print-24-black.png" />
+    <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <Content Include="scripts\google\google.maps.d.ts" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
@@ -2628,6 +2630,8 @@
     <Content Include="Views\FacultyStaff\Index.cshtml" />
     <Content Include="Views\FacultyStaff\_Bib.cshtml" />
     <Content Include="Views\FacultyStaff\_SearchSideBar.cshtml" />
+    <Content Include="Views\FacultyStaff\OldIndex.cshtml" />
+    <Content Include="Views\FacultyStaff\_StatsSideBar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

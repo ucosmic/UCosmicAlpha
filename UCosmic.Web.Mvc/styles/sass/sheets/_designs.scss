@@ -401,10 +401,56 @@ ul.selectableListItems li:hover {
     .section {
         background-color: $sidebar-default-bg-color;
         padding-bottom: 8px;
+        white-space: nowrap;
     }
 }
 
 .maptype-hover:hover {
     text-decoration: underline;
     * { cursor: pointer; }
+}
+
+.stats-sidebar {
+    width: 270px;
+    font-family: Arial;
+    font-size: small;
+    background-color: white;
+    color: $sidebar-default-text-color;
+    margin-top: 8px;
+
+    input[type="text"] {
+        height: 28px;
+        line-height: 13px;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+
+    .header {
+        height: 32px;
+        background-color: $sidebar-default-bg-color;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        font-size: large;
+    }
+
+    .section-header {
+        background-color: $sidebar-default-bg-color;
+        padding-top: 10px;
+        text-align: left;
+        font-weight: bold;
+        padding-bottom: 8px;
+        padding-left: 8px;
+        border-top-color: $sidebar-current-text-color;
+        border-top: 1px;
+        border-top-style: dotted;
+        text-transform: uppercase;
+    }
+
+    .section {
+        background-color: $sidebar-default-bg-color;
+        padding-bottom: 8px;
+    }
 }

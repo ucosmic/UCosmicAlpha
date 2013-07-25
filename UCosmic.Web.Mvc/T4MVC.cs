@@ -3689,11 +3689,20 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class print {
+                private const string URLPATH = "~/images/icons/print";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string print_24_black_png = Url("print-24-black.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class spinner {
                 private const string URLPATH = "~/images/icons/spinner";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
+                public static readonly string spinner_24_blue_gif = Url("spinner-24-blue.gif");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

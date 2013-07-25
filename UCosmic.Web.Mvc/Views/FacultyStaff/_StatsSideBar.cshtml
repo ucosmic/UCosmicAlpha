@@ -1,0 +1,22 @@
+﻿<div class="stats-sidebar" style="margin-top: 80px">
+    <div>
+        <div><span>Country:</span><span data-bind=""></span></div>
+        <div><span>Total Activities:</span><span data-bind=""></span></div>
+    </div>
+    <div>
+        <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
+            <div class="section-header">Type of Engagement</div>
+            <div style="font-size: small">
+                <ul class="data-items" data-bind="template: { name: 'activity-counts-template', foreach: activityTypes }" />
+            </div>
+        </div>
+        <div id="typeChart" style="width: 120px"></div>
+    </div>
+</div>
+
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="activity-counts-template">
+    <li style="margin-left: 8px">
+        <span style="width: 60%" data-bind="text: $data.type"></span><span data-bind=""></span>
+    </li>
+</script>
