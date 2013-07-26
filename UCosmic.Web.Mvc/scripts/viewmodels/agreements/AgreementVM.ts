@@ -57,7 +57,7 @@ export class InstitutionalAgreementParticipantModel {
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
-        if (window.location.href.toLowerCase().indexOf("agreements/new3") > 0) {
+        if (window.location.href.toLowerCase().indexOf("agreements/new2") > 0) {
             this.populateParticipants();
             this.agreementIsEdit(false);
             this.visibility("Public");
@@ -354,10 +354,10 @@ export class InstitutionalAgreementEditModel {
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff
         var saveUrl = "";
-        if (this.agreementIsEdit) {
-            saveUrl = App.Routes.WebApi.Uploads.post()
+        if (this.agreementIsEdit()) {
+            saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId)
         } else {
-            saveUrl = App.Routes.WebApi.Agreements.File.post()
+            saveUrl = App.Routes.WebApi.Uploads.post()
         }
         $("#fileUpload").kendoUpload({
             multiple: true,
@@ -421,9 +421,15 @@ export class InstitutionalAgreementEditModel {
                         App.flasher.flash(e.response.message);
                     }
                     //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
-                    this.tempFileId  = this.tempFileId + .01
+                    var myId;
+                    if (this.agreementIsEdit()) {
+                        var myUrl = e.XMLHttpRequest.getResponseHeader('Location')
+                        myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                    } else {
+                        myId = this.tempFileId + .01
+                    }
                     this.files.push(ko.mapping.fromJS({
-                        id: this.tempFileId,
+                        id: myId,
                         originalName: e.files[0].name,
                         customName: e.files[0].name,
                         visibility: "Public",
@@ -693,7 +699,7 @@ export class InstitutionalAgreementEditModel {
         //var x: string = kendo.template($("#template").html());
         //var x2 = x.
         $("#helpExpDate").kendoTooltip({
-            width: 120,
+            width: 520,
             position: "top",
             content: $("#templateExpToolTip").html(),
             showOn: "click",

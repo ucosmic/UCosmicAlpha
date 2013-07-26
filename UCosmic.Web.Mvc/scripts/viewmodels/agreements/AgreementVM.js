@@ -139,7 +139,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
-            if(window.location.href.toLowerCase().indexOf("agreements/new3") > 0) {
+            if(window.location.href.toLowerCase().indexOf("agreements/new2") > 0) {
                 this.populateParticipants();
                 this.agreementIsEdit(false);
                 this.visibility("Public");
@@ -294,10 +294,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
             var _this = this;
             var saveUrl = "";
-            if(this.agreementIsEdit) {
-                saveUrl = App.Routes.WebApi.Uploads.post();
+            if(this.agreementIsEdit()) {
+                saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
             } else {
-                saveUrl = App.Routes.WebApi.Agreements.File.post();
+                saveUrl = App.Routes.WebApi.Uploads.post();
             }
             $("#fileUpload").kendoUpload({
                 multiple: true,
@@ -361,9 +361,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         if(e.response && e.response.message) {
                             App.flasher.flash(e.response.message);
                         }
-                        _this.tempFileId = _this.tempFileId + .01;
+                        var myId;
+                        if(_this.agreementIsEdit()) {
+                            var myUrl = e.XMLHttpRequest.getResponseHeader('Location');
+                            myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        } else {
+                            myId = _this.tempFileId + .01;
+                        }
                         _this.files.push(ko.mapping.fromJS({
-                            id: _this.tempFileId,
+                            id: myId,
                             originalName: e.files[0].name,
                             customName: e.files[0].name,
                             visibility: "Public",
@@ -615,7 +621,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             });
             this.$bindKendoFile();
             $("#helpExpDate").kendoTooltip({
-                width: 120,
+                width: 520,
                 position: "top",
                 content: $("#templateExpToolTip").html(),
                 showOn: "click",
