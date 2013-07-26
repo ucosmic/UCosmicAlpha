@@ -54,6 +54,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{id}/photo")]
+        [CacheHttpGet(Duration = 3600)]
         public virtual HttpResponseMessage GetPhoto(int id, [FromUri] ImageResizeRequestModel model)
         {
             var person = _queryProcessor.Execute(new PersonById(id)

@@ -105,6 +105,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("photo")]
+        [CacheHttpGet(Duration = 3600)]
         public HttpResponseMessage GetPhoto([FromUri] ImageResizeRequestModel model)
         {
             var tenancy = Request.Tenancy();
