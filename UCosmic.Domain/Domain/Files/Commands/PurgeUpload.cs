@@ -12,6 +12,7 @@ namespace UCosmic.Domain.Files
         }
 
         public Guid Guid { get; private set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class HandlePurgeUploadCommand : IHandleCommands<PurgeUpload>
@@ -40,7 +41,11 @@ namespace UCosmic.Domain.Files
 
             _binaryData.Delete(entity.Path);
             _entities.Purge(entity);
-            _unitOfWork.SaveChanges();
+
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
         }
     }
 }

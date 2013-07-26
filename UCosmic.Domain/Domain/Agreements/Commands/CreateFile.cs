@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Files;
@@ -17,6 +19,7 @@ namespace UCosmic.Domain.Agreements
         public IPrincipal Principal { get; private set; }
         public int AgreementId { get; set; }
         public string Visibility { get; set; }
+        public string CustomName { get; set; }
         public Guid? UploadGuid { get; set; }
         public FileDataWrapper FileData { get; set; }
         public class FileDataWrapper
@@ -127,23 +130,82 @@ namespace UCosmic.Domain.Agreements
 
     public class HandleCreateFileCommand : IHandleCommands<CreateFile>
     {
-        //private readonly ICommandEntities _entities;
-        //private readonly IUnitOfWork _unitOfWork;
-        //private readonly IStoreBinaryData _binaryData;
+        private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IStoreBinaryData _binaryData;
+        private readonly IHandleCommands<PurgeUpload> _purgeUpload;
 
-        //public HandleCreateFileCommand(ICommandEntities entities
-        //    , IUnitOfWork unitOfWork
-        //    , IStoreBinaryData binaryData
-        //)
-        //{
-        //    _entities = entities;
-        //    _unitOfWork = unitOfWork;
-        //    _binaryData = binaryData;
-        //}
+        public HandleCreateFileCommand(ICommandEntities entities
+            , IUnitOfWork unitOfWork
+            , IStoreBinaryData binaryData
+            , IHandleCommands<PurgeUpload> purgeUpload
+        )
+        {
+            _entities = entities;
+            _unitOfWork = unitOfWork;
+            _binaryData = binaryData;
+            _purgeUpload = purgeUpload;
+        }
 
         public void Handle(CreateFile command)
         {
-            command.CreatedFileId = 1;
+            if (command == null) throw new ArgumentNullException("command");
+
+            // create the initial entity
+            var entity = new AgreementFile
+            {
+                AgreementId = command.AgreementId,
+                Visibility = command.Visibility.AsEnum<AgreementVisibility>(),
+                Path = string.Format(AgreementFile.PathFormat, command.AgreementId, Guid.NewGuid()),
+            };
+            _entities.Create(entity);
+
+            // will we be moving an upload or creating a new file from scratch?
+            var upload = command.UploadGuid.HasValue
+                ? _entities.Get<Upload>().Single(x => x.Guid.Equals(command.UploadGuid.Value)) : null;
+
+            // populate other entity properties and store binary data
+            if (upload != null)
+            {
+                entity.FileName = upload.FileName;
+                entity.Length = (int)upload.Length;
+                entity.MimeType = upload.MimeType;
+                entity.Name = GetExtensionedCustomName(command.CustomName, upload.FileName);
+                _binaryData.Move(upload.Path, entity.Path);
+                _purgeUpload.Handle(new PurgeUpload(upload.Guid) { NoCommit = true });
+            }
+            else
+            {
+                entity.FileName = command.FileData.FileName;
+                entity.Length = command.FileData.Content.Length;
+                entity.MimeType = command.FileData.MimeType;
+                entity.Name = GetExtensionedCustomName(command.CustomName, command.FileData.FileName);
+                _binaryData.Put(entity.Path, command.FileData.Content);
+            }
+
+            try
+            {
+                _unitOfWork.SaveChanges();
+                command.CreatedFileId = entity.Id;
+            }
+            // ReSharper disable EmptyGeneralCatchClause
+            catch
+            {
+                // restore binary data state when the db save fails
+                if (_binaryData.Exists(entity.Path))
+                    if (upload != null) _binaryData.Move(entity.Path, upload.Path);
+                    else _binaryData.Delete(entity.Path);
+            }
+            // ReSharper restore EmptyGeneralCatchClause
+        }
+
+        private static string GetExtensionedCustomName(string customName, string originalName)
+        {
+            var extension = Path.GetExtension(originalName);
+            if (string.IsNullOrWhiteSpace(extension)) throw new InvalidOperationException(string.Format(
+                "The file name '{0}' does not have an extension.", originalName));
+            if (customName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) return customName;
+            return string.Format("{0}{1}", customName, extension);
         }
     }
 }

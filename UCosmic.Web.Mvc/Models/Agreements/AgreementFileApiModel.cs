@@ -73,6 +73,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<AgreementFileApiModel, CreateFile>()
                     .ForMember(d => d.FileData, o => o.MapFrom(s => s.FileMedium))
                     .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.CreatedFileId, o => o.Ignore())
                 ;
 
                 CreateMap<FileMedium, CreateFile.FileDataWrapper>()

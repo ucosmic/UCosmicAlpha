@@ -32,8 +32,11 @@
                     originalName: 'originalName.pdf',
                     customName: 'customName',
                     visibility: 'Private'
-                }).done(function() {
-                    alert('post of uploaded file is done with success.');
+                }).done(function (responseText, statusText, xhr) {
+                    var location = xhr.getResponseHeader('location');
+                    var fileId = parseInt(location.substring(location.lastIndexOf('/') + 1));
+                    var info = 'post of uploaded file resulted in new agreement id ' + fileId;
+                    console.log(info);
                 });
             });
 
@@ -44,8 +47,8 @@
                     select: 'Choose temporary files to upload...'
                 },
                 async: {
-                    saveUrl: '/api/agreements/6/files'
-                    //saveUrl: App.Routes.WebApi.Uploads.post()//,
+                    //saveUrl: '/api/agreements/6/files'
+                    saveUrl: App.Routes.WebApi.Uploads.post()//,
                     //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
                 select: function(e) {
@@ -67,7 +70,7 @@
                     // validate here and prevent if extensions are not allowed
                     //e.preventDefault();
                     e.data = {
-                        uploadGuid: '4fc91d48-62b8-42ec-99b1-06816774ac93',
+                        //uploadGuid: '4fc91d48-62b8-42ec-99b1-06816774ac93',
                         originalName: 'originalName.pdf',
                         customName: 'customName',
                         visibility: 'Private'
@@ -207,8 +210,10 @@
                 </ul>
                 <div style="margin-top: 16px;">
                     <select id="post_agreement_upload_guid">
-                        <option value="4fc91d48-62b8-42ec-99b1-06816774ac93">Uploaded DOCX file</option>
-                        <option value="7ecc8b66-ecd3-49a3-8e8f-96f4443abd5b">Uploaded WMV file</option>
+                        <option value="4158BC28-D8A8-4F3E-A9EE-539FBE7FEF39">Uploaded DOCX file</option>
+                        <option value="D33CE26E-DA81-4966-8AD1-8FAF14E7A4B8">Uploaded WMV file</option>
+                        <option value="DA78D228-B774-49BE-AB22-47EFB99003F8">Uploaded XLS file</option>
+                        <option value="2CA0ED34-635E-4199-801E-B95F2F5AB27B">Uploaded PPT file</option>
                     </select>
                     <input id="post_agreement_upload_button" type="button" value="Post Without File Upload" />
                 </div>

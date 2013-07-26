@@ -16,7 +16,7 @@
     {
         public static string[] AllowedFileExtensions = new[]
         {
-            "pdf", "doc", "docx", "ods", "odt",
+            "pdf", "doc", "docx", "odt", "xls", "xlsx", "ods", "ppt", "pptx",
         };
     }
 

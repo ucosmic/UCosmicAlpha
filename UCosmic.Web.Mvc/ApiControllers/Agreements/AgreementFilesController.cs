@@ -109,12 +109,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             model.AgreementId = agreementId;
             var command = new CreateFile(User);
             Mapper.Map(model, command);
-
-            //command.UploadGuid = new Guid("4fc91d48-62b8-42ec-99b1-06816774ac93"); // docx
-            //command.UploadGuid = new Guid("7ecc8b66-ecd3-49a3-8e8f-96f4443abd5b"); // wmv
-            //command.FileData = null;
-            //command.UploadGuid = null;
-
             _createFile.Handle(command);
 
             var successPayload = new { message = string.Format("File '{0}' was successfully attached.", model.CustomName) };
