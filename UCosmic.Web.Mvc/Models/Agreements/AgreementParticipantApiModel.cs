@@ -30,5 +30,14 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class EntityToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementParticipantApiModel, CreateAgreement.AgreementParticipantWrapper>()
+                ;
+            }
+        }
     }
 }

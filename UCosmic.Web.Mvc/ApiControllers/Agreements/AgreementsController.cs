@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -17,22 +18,25 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     //[DefaultApiHttpRouteConvention]
-    [RoutePrefix("api")]
+    [RoutePrefix("api/agreements")]
     public class AgreementsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IValidator<CreateAgreement> _createValidator;
+        private readonly IHandleCommands<CreateAgreement> _createHandler;
 
         public AgreementsController(IProcessQueries queryProcessor
             , IValidator<CreateAgreement> createValidator
+            , IHandleCommands<CreateAgreement> createHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createValidator = createValidator;
+            _createHandler = createHandler;
         }
 
-        [GET("agreements/{agreementId:int}")]
-        public AgreementApiModel GetOne(int agreementId)
+        [GET("{agreementId:int}")]
+        public AgreementApiModel Get(int agreementId)
         {
             var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -40,7 +44,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("agreements/{domain}")]
+        [GET("{domain}")]
         public IEnumerable<AgreementApiModel> Get(string domain)
         {
             // use domain parameter, but fall back to style cookie if not passed.
@@ -62,17 +66,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [POST("agreements")]
+        [POST("")]
         public HttpResponseMessage Post(AgreementApiModel model)
         {
-            //var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
-            //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            //var model = Mapper.Map<AgreementApiModel>(entity);
-            //return model;
-            return Request.CreateResponse(HttpStatusCode.OK);
+            var command = new CreateAgreement(User);
+            Mapper.Map(model, command);
+            _createHandler.Handle(command);
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Agreement was successfully created.");
+            var url = Url.Link(null, new
+            {
+                controller = "Agreements",
+                action = "Get",
+                agreementId = command.CreatedAgreementId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
-        [POST("agreements/validate")]
+        [POST("validate")]
         public HttpResponseMessage Validate(AgreementApiModel model)
         {
             var command = new CreateAgreement(User);
@@ -86,7 +99,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [GET("agreements/{domain}/partners")]
+        [GET("{domain}/partners")]
         public IEnumerable<AgreementParticipantApiModel> GetPartners(string domain)
         {
             var query = new PartnerParticipantsByOwnerDomain(User, domain)
@@ -105,7 +118,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("agreements/{domain}/partners/places/{placeType?}")]
+        [GET("{domain}/partners/places/{placeType?}")]
         public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaces(string domain, string placeType = null)
         {
             var query = new PartnerPlacesByOwnerDomain(User, domain)
@@ -132,7 +145,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("agreements/{agreementId:int}/participants")]
+        [GET("{agreementId:int}/participants")]
         public IEnumerable<AgreementParticipantApiModel> GetParticipants(int agreementId)
         {
             var entities = _queryProcessor.Execute(new ParticipantsByAgreementId(User, agreementId)
@@ -151,7 +164,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("agreements/{agreementId:int}/participant/{establishmentId}")]
+        [GET("{agreementId:int}/participant/{establishmentId}")]
         public AgreementParticipantApiModel GetParticipant(int agreementId, int establishmentId)
         {
             var entity = _queryProcessor.Execute(new ParticipantByEstablishmentId(User, establishmentId, agreementId)

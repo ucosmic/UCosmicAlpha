@@ -7,6 +7,33 @@
 
     <script type="text/javascript">
 
+        $('#agreement_post_button').click(function () {
+            $.post(App.Routes.WebApi.Agreements.post(), {
+                participants: [
+                    { establishmentId: 66, isOwner: true },
+                    { establishmentId: 1, isOwner: false }
+                ],
+                umbrellaId: 2,
+                type: 'Institutional Agreement',
+                name: 'FIPSE Brazil',
+                content: '<p>Here is my agreement content</p>',
+                notes: 'Here are my agreement notes',
+                startsOn: '6/5/2008',
+                expiresOn: '6/4/2013',
+                isExpirationEstimated: true,
+                isAutoRenew: false,
+                status: 'Pending',
+                visibility: 'Protected'
+            })
+            .done(function (responseText, statusText, xhr) {
+                var location = xhr.getResponseHeader('location');
+                var agreementId = parseInt(location.substring(location.lastIndexOf('/') + 1));
+                var info = 'post of uploaded file resulted in new agreement id ' + agreementId;
+                console.log(info);
+                alert(info);
+            });
+        });
+
         window.countGraphicValue = ko.observable(-1);
         window.countGraphicOpacity = ko.observable(1);
         setInterval(function () {
@@ -25,7 +52,7 @@
 
             this.uploads = ko.observableArray();
 
-            $('#post_agreement_upload_button').click(function() {
+            $('#post_agreement_upload_button').click(function () {
                 var guid = $('#post_agreement_upload_guid').val();
                 $.post('/api/agreements/6/files', {
                     uploadGuid: guid,
@@ -51,7 +78,7 @@
                     saveUrl: App.Routes.WebApi.Uploads.post()//,
                     //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
-                select: function(e) {
+                select: function (e) {
                     for (var i = 0; i < e.files.length; i++) {
                         var file = e.files[i];
                         self.uploads.push({
@@ -66,7 +93,7 @@
                         //alert(info);
                     }
                 },
-                upload: function(e) {
+                upload: function (e) {
                     // validate here and prevent if extensions are not allowed
                     //e.preventDefault();
                     e.data = {
@@ -79,7 +106,7 @@
                     console.log(info);
                     //alert(info);
                 },
-                progress: function(e) {
+                progress: function (e) {
                     var info = 'progress for ' + e.files[0].name + ' ' + e.percentComplete + '% complete';
                     console.log(info);
                     //alert(info);
@@ -92,7 +119,7 @@
                         upload.isFinished = true;
                     }
                 },
-                success: function(e) {
+                success: function (e) {
                     var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response.guid;
                     //alert(info);
                     console.log(info);
@@ -106,21 +133,21 @@
                         upload.isFinished = true;
                     }
                 },
-                error: function(e) {
+                error: function (e) {
                     alert('there was an error uploading ' + e.files[0].name);
                 },
-                complete: function() {
+                complete: function () {
                     //alert('uploading of all files is complete');
                     console.log('upload of all files is complete');
                 }
             });
 
-            this.getUpload = function(criteria) {
+            this.getUpload = function (criteria) {
                 var uploads = self.uploads();
                 for (var i = 0; i < uploads.length; i++) {
                     var upload = uploads[i];
                     if (upload.name === criteria.name && upload.size === criteria.size) {
-                        if (typeof(criteria.isFinished) === 'undefined' || upload.isFinished === criteria.isFinished) {
+                        if (typeof (criteria.isFinished) === 'undefined' || upload.isFinished === criteria.isFinished) {
                             return upload;
                         }
                     }
@@ -138,22 +165,22 @@
             this.agreementSettings = {
                 urlString: 'App.Routes.WebApi.Agreements.Settings.get()',
                 result: ko.observable(),
-                invoke: function() {
+                invoke: function () {
                     $.ajax({
                         url: eval(this.urlString),
                         type: 'GET'
                     })
-                        .done(function(result) {
+                        .done(function (result) {
                             //if (result) alert('done: result = ' + result);
                             //else alert('done: NO RESULT (' + result + ')');
                             self.agreementSettings.result(JSON.stringify(result, undefined, 4));
                             //$('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
                         })
-                        .fail(function(xhr) {
+                        .fail(function (xhr) {
                             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
                         });
                 },
-                clear: function() {
+                clear: function () {
                     self.agreementSettings.result(undefined);
                 }
             };
@@ -170,6 +197,14 @@
     <header>
         <h1>@ViewBag.Title</h1>
     </header>
+    <section>
+        <header>
+            <h2>Agreement POST</h2>
+        </header>
+        <div>
+            <input id="agreement_post_button" type="button" value="POST test agreement" />
+        </div>
+    </section>
     <section data-bind="visible: tempUpload" style="display: none;">
         <header>
             <h2>Temporary File Upload</h2>
@@ -195,7 +230,7 @@
                                         </div>
                                     </div>
                                     <div style="height: 28px; background-color: #bdebbd; width: 1%; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
-                                         data-bind="style: { 'width': percentComplete() + '%' }">
+                                        data-bind="style: { 'width': percentComplete() + '%' }">
                                     </div>
                                 </div>
                             </div>

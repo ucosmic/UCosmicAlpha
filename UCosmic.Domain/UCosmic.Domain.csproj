@@ -152,6 +152,9 @@
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustBeOwningTenant.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByEnglishNameType.cs" />
     <Compile Include="Domain\Files\Commands\PurgeUpload.cs" />

@@ -43,6 +43,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<AgreementApiModel, CreateAgreement>()
                     .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.CreatedAgreementId, o => o.Ignore())
                 ;
             }
         }

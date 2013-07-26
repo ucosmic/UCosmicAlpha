@@ -123,13 +123,16 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.AncestorId)
                 .WillCascadeOnDelete(false);
 
-            Property(p => p.Title).IsRequired().HasMaxLength(500);
+            Property(p => p.Title).IsRequired().HasMaxLength(AgreementConstraints.TitleMaxLength);
+            Property(p => p.Name).HasMaxLength(AgreementConstraints.NameMaxLength);
+            Property(p => p.Description).IsMaxLength();
+            Property(p => p.Content).HasColumnType("ntext");
+            Property(p => p.Notes).IsMaxLength();
             Property(p => p.Type).IsRequired().HasMaxLength(AgreementConstraints.TypeMaxLength);
+            Property(p => p.Status).IsRequired().HasMaxLength(AgreementConstraints.StatusMaxLength);
             Property(p => p.StartsOn);
             Property(p => p.ExpiresOn);
-            Property(p => p.Status).IsRequired().HasMaxLength(AgreementConstraints.StatusMaxLength);
-            Property(p => p.Description).IsMaxLength();
-            Property(p => p.VisibilityText).HasColumnName("Visibility").IsRequired().HasMaxLength(20);
+            Property(p => p.VisibilityText).HasColumnName("Visibility").IsRequired().HasMaxLength(10);
         }
     }
 

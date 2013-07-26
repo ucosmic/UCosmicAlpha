@@ -2,6 +2,8 @@
 {
     public static class AgreementConstraints
     {
+        public const int TitleMaxLength = 500;
+        public const int NameMaxLength = 500;
         public const int TypeMaxLength = 150;
         public const int StatusMaxLength = 50;
     }
@@ -14,7 +16,7 @@
 
     public static class AgreementFileConstraints
     {
-        public static string[] AllowedFileExtensions = new[]
+        public static readonly string[] AllowedFileExtensions = new[]
         {
             "pdf", "doc", "docx", "odt", "xls", "xlsx", "ods", "ppt", "pptx",
         };

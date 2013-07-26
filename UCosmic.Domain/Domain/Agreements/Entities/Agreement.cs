@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 
 namespace UCosmic.Domain.Agreements
@@ -13,12 +14,12 @@ namespace UCosmic.Domain.Agreements
             CreatedByPrincipal = Thread.CurrentPrincipal.Identity.Name;
 
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            Participants = new List<AgreementParticipant>();
-            Contacts = new List<AgreementContact>();
-            Files = new List<AgreementFile>();
-            Children = new List<Agreement>();
-            Ancestors = new List<AgreementNode>();
-            Offspring = new List<AgreementNode>();
+            Participants = new Collection<AgreementParticipant>();
+            Contacts = new Collection<AgreementContact>();
+            Files = new Collection<AgreementFile>();
+            Children = new Collection<Agreement>();
+            Ancestors = new Collection<AgreementNode>();
+            Offspring = new Collection<AgreementNode>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
 
             Visibility = AgreementVisibility.Public;

@@ -19,8 +19,7 @@ namespace UCosmic.Domain.Agreements
     {
         private readonly ICommandEntities _entities;
 
-        public HandleUpdateAgreementHierarchyCommand(ICommandEntities entities
-        )
+        public HandleUpdateAgreementHierarchyCommand(ICommandEntities entities)
         {
             _entities = entities;
         }
