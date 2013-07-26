@@ -167,7 +167,7 @@ var ViewModels;
                 this.values.title.extend({
                     required: true,
                     minLength: 1,
-                    maxLength: 200
+                    maxLength: 500
                 });
                 this.values.locations.extend({
                     atLeast: 1

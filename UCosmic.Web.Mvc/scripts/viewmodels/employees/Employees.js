@@ -229,6 +229,18 @@ var ViewModels;
                         }
                     });
                 }
+                var activities = new Array();
+                for(var i = 0; i < this.activityTypes().length; i += 1) {
+                    activities.push({
+                        type: this.activityTypes()[i].type(),
+                        selected: false
+                    });
+                }
+                $("#heatmapActivityDropList").kendoDropDownList({
+                    dataTextField: "type",
+                    dataValueField: "selected",
+                    dataSource: activities
+                });
             };
             FacultyAndStaff.prototype.setupValidation = function () {
             };

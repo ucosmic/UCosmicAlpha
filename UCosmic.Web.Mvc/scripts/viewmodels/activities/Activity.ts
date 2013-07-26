@@ -222,7 +222,7 @@ module ViewModels.Activities {
 
             ko.validation.group( this.values );
 
-            this.values.title.extend( { required: true, minLength: 1, maxLength: 200 } );
+            this.values.title.extend( { required: true, minLength: 1, maxLength: 500 } );
             this.values.locations.extend( { atLeast: 1 } );
             this.values.types.extend( { atLeast: 1 } );
             this.values.startsOn.extend( { nullSafeDate: { message: "Start date must valid." } } );

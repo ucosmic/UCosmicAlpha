@@ -31,7 +31,7 @@ namespace UCosmic.Domain.Establishments
 
             return _entities.Query<Establishment>()
                             .EagerLoad(_entities, query.EagerLoad)
-                            .Where(x => String.Compare(x.Type.EnglishName, query.EnglishNameType, true) == 0).ToArray();
+                            .Where(x => Equals(x.Type.EnglishName, StringComparison.OrdinalIgnoreCase)).ToArray();
         }
     }
 }

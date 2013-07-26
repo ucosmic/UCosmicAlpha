@@ -51,7 +51,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ActivityValuesId)
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.Title).HasMaxLength(200);
+            Property(p => p.Title);
             Property(p => p.Content).HasColumnType("ntext");
             Property(p => p.StartsOn).IsOptional();
             Property(p => p.EndsOn).IsOptional();

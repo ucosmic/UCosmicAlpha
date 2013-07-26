@@ -33,6 +33,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 ActivityTypes = null
             };
 
+//            var tenancy = Request.Tenancy();
+//            tenancy.StyleDomain
+
             if (!String.IsNullOrEmpty(User.Identity.Name))
             {
                 var establishment =

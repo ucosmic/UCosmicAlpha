@@ -1,7 +1,7 @@
 ﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffInstitutionInfoModel
 
 @{
-    ViewBag.Title = "Search Faculty & Staff";
+    ViewBag.Title = "Faculty & Staff Engagements";
 }
 
 @section bib
@@ -126,6 +126,11 @@
             font-size: 16px;
             text-transform: uppercase;
             border-radius: 0 0 0 0;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            color: black !important;
+            background-color: white;
         }
     </style>
 }
@@ -179,7 +184,6 @@
             window.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
             window.heatmap.draw(countryDataTable, options);
 
-
             var data2 = google.visualization.arrayToDataTable([['Task', 'Hours per Day'], ['Work', 11], ['Eat', 2], ['Commute', 2], ['Watch TV', 2], ['Sleep', 7]]);
             var options2 = {
                 title: 'Engagements',
@@ -187,8 +191,6 @@
             };
             window.piechart = new google.visualization.PieChart(document.getElementById('typeChart'));
             window.piechart.draw(data2, options2);
-
-
         }
 
 
@@ -265,23 +267,21 @@
             <header>
                 <h1>@ViewBag.Title</h1>
             </header>
-            <div>
-                <span>Keywords</span>
-                <input type="text" id="keywords" class="reset"/>
-            </div>
             <div style="width: 680px; height: 500px">
                 <div data-bind="visible: isHeatmapVisible()">
                     <div style="text-align: left">
                         <span>
-                            <input type="button" id="activitiesButton" value="Activites"/>
-                            <input type="button" id="peopleButton" value="People"/>
-                            <select id="activityTypesDropList" style="display: none"></select>
-                            <select id="campusDropList" style="display: none"></select>
+                            <input type="button" id="activitiesButton" style="font-weight: bold" value="Activites"/>
+                            <input type="button" id="peopleButton" style=""  value="People"/>
                         </span>
+                        <div style="float: right">
+                            <select id="heatmapActivityDropList"></select>
+                        </div>
+                        <select id="heatmapPeopleDropList" style="display: none"></select>
                     </div>
                     <div id="heatmap"></div>
                 </div>
-                <div data-bind="visible: isPointmapVisible()">
+                <div style="display: none" data-bind="visible: isPointmapVisible()">
                     <div id="pointmap" style="width: 680px; height: 500px"></div>
                 </div>
                 <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
