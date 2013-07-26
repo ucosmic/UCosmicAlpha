@@ -110,9 +110,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new CreateFile(User);
             Mapper.Map(model, command);
 
+            //command.UploadGuid = new Guid("4fc91d48-62b8-42ec-99b1-06816774ac93"); // docx
+            //command.UploadGuid = new Guid("7ecc8b66-ecd3-49a3-8e8f-96f4443abd5b"); // wmv
             //command.FileData = null;
-            //command.UploadGuid = new Guid("ba5469dd-1fd2-434d-b126-1165be266a0b");
-            //command.UploadGuid = new Guid("b31e77f8-43df-413b-b480-e37048aecf64");
+            //command.UploadGuid = null;
 
             _createFile.Handle(command);
 
@@ -124,7 +125,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 controller = "AgreementFiles",
                 action = "Get",
                 agreementId,
-                fileId = 1,
+                fileId = command.CreatedFileId,
             });
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);

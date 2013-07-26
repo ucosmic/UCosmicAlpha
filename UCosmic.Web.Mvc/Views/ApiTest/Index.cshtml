@@ -9,7 +9,7 @@
 
         window.countGraphicValue = ko.observable(-1);
         window.countGraphicOpacity = ko.observable(1);
-        setInterval(function() {
+        setInterval(function () {
             window.countGraphicValue(window.countGraphicValue() + 1);
             if (window.countGraphicValue() > 1299) {
                 window.countGraphicValue(0);
@@ -25,6 +25,18 @@
 
             this.uploads = ko.observableArray();
 
+            $('#post_agreement_upload_button').click(function() {
+                var guid = $('#post_agreement_upload_guid').val();
+                $.post('/api/agreements/6/files', {
+                    uploadGuid: guid,
+                    originalName: 'originalName.pdf',
+                    customName: 'customName',
+                    visibility: 'Private'
+                }).done(function() {
+                    alert('post of uploaded file is done with success.');
+                });
+            });
+
             $('#agreement_files').kendoUpload({
                 multiple: true,
                 showFileList: false,
@@ -32,8 +44,8 @@
                     select: 'Choose temporary files to upload...'
                 },
                 async: {
-                    //saveUrl: '/api/agreements/6/files'
-                    saveUrl: App.Routes.WebApi.Uploads.post()//,
+                    saveUrl: '/api/agreements/6/files'
+                    //saveUrl: App.Routes.WebApi.Uploads.post()//,
                     //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
                 select: function(e) {
@@ -55,6 +67,7 @@
                     // validate here and prevent if extensions are not allowed
                     //e.preventDefault();
                     e.data = {
+                        uploadGuid: '4fc91d48-62b8-42ec-99b1-06816774ac93',
                         originalName: 'originalName.pdf',
                         customName: 'customName',
                         visibility: 'Private'
@@ -93,7 +106,7 @@
                 error: function(e) {
                     alert('there was an error uploading ' + e.files[0].name);
                 },
-                complete: function(e) {
+                complete: function() {
                     //alert('uploading of all files is complete');
                     console.log('upload of all files is complete');
                 }
@@ -166,20 +179,20 @@
                 <ul data-bind="foreach: tempUpload.uploads">
                     <li>
                         <div class="group">
-                            <div class="on-left" style="width: 500px; box-sizing: border-box;">
-                                <div style="border: solid 1px #666; position: relative; margin-top: 4px; box-sizing: border-box;">
-                                    <div style="height: 28px; overflow: hidden; position: absolute; display: block; width: 100%; box-sizing: border-box; line-height: 28px; padding: 0 4px;">
+                            <div class="on-left" style="width: 500px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+                                <div style="border: solid 1px #666; position: relative; margin-top: 4px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+                                    <div style="height: 28px; overflow: hidden; position: absolute; display: block; width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; line-height: 28px; padding: 0 4px;">
                                         <div class="group">
                                             <div class="on-left">
                                                 <span data-bind="text: name"></span>
                                             </div>
-                                            <div class="on-right" style="box-sizing: border-box; padding: 4px 0 4px 4px;">
+                                            <div class="on-right" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; padding: 4px 0 4px 4px;">
                                                 <img style="vertical-align: top;" alt="" src="~/images/icons/spinner/spinner-20-blue.gif" data-bind="visible: percentComplete() < 100" />
                                             </div>
                                         </div>
                                     </div>
                                     <div style="height: 28px; background-color: #bdebbd; width: 1%; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
-                                        data-bind="style: { 'width': percentComplete() + '%' }">
+                                         data-bind="style: { 'width': percentComplete() + '%' }">
                                     </div>
                                 </div>
                             </div>
@@ -192,6 +205,13 @@
                         </div>
                     </li>
                 </ul>
+                <div style="margin-top: 16px;">
+                    <select id="post_agreement_upload_guid">
+                        <option value="4fc91d48-62b8-42ec-99b1-06816774ac93">Uploaded DOCX file</option>
+                        <option value="7ecc8b66-ecd3-49a3-8e8f-96f4443abd5b">Uploaded WMV file</option>
+                    </select>
+                    <input id="post_agreement_upload_button" type="button" value="Post Without File Upload" />
+                </div>
             </form>
         </div>
         <div>
@@ -203,8 +223,8 @@
         </header>
         <div>
             <div style="background-color: #999; padding: 10px;">
-                <img id="placemark_graphic" alt="" src="/api/graphics/circle?side=024&text=0" style="border: solid 1px transparent;" />
-                <span>Opacity: </span> <span data-bind="text: window.countGraphicOpacity"></span>
+                <img id="placemark_graphic" alt="" src="@Url.HttpRouteUrl(null, new { controller = "Graphics", action = "GetCircle", Side = 24, Text = 0, })" style="border: solid 1px transparent;" />
+                <span>Opacity: </span><span data-bind="text: window.countGraphicOpacity"></span>
             </div>
         </div>
     </section>

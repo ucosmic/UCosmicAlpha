@@ -25,6 +25,7 @@ namespace UCosmic.Domain.Agreements
             public string MimeType { get; set; }
             public string FileName { get; set; }
         }
+        public int CreatedFileId { get; internal set; }
     }
 
     public class ValidateCreateFileCommand : AbstractValidator<CreateFile>
@@ -60,46 +61,89 @@ namespace UCosmic.Domain.Agreements
             ;
 
             // when uploadid is present
-            RuleFor(x => x.UploadGuid)
-                // upload id must exist when provided
-                .MustFindUploadByGuid(entities)
-                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
-                    .WithMessage(MustFindUploadByGuid.FailMessageFormat, x => x.UploadGuid)
+            When(x => x.UploadGuid.HasValue, () =>
+            {
+                // there must be no raw file data
+                RuleFor(x => x.FileData)
+                    .Must(x => x == null)
+                        .WithMessage("FileData must be null when an UploadGuid value is provided.");
 
-                // uploaded file must have been created by same user who us creating this file
-                .MustBeUploadedByPrincipal(entities, x => x.Principal)
-                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
+                RuleFor(x => x.UploadGuid.Value)
+                    // upload id must exist
+                    .MustFindUploadByGuid(entities)
+                        .WithMessage(MustFindUploadByGuid.FailMessageFormat, x => x.UploadGuid)
 
-                // uploaded file must have valid extension
-                .MustHaveAllowedFileExtension(entities, AgreementFileConstraints.AllowedFileExtensions)
-                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
+                    // uploaded file must have been created by same user who us creating this file
+                    .MustBeUploadedByPrincipal(entities, x => x.Principal)
 
-                // uploaded file not be too large
-                .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, entities)
-                .When(x => x.UploadGuid.HasValue, ApplyConditionTo.CurrentValidator)
-            ;
+                    // uploaded file must have valid extension
+                    .MustHaveAllowedFileExtension(entities, AgreementFileConstraints.AllowedFileExtensions)
+
+                    // uploaded file not be too large
+                    .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, entities)
+                ;
+            });
+
+            // when file data is not null
+            When(x => x.FileData != null, () =>
+            {
+                // there must be no upload id
+                RuleFor(x => x.UploadGuid)
+                    .Must(x => !x.HasValue)
+                        .WithMessage("UploadGuid must be null when FileData is provided.");
+
+                RuleFor(x => x.FileData.MimeType)
+                    // file must have mime type
+                    .NotEmpty().WithMessage(MustHaveFileMimeType.FailMessage)
+                ;
+
+                RuleFor(x => x.FileData.FileName)
+                    // file name must be present
+                    .NotEmpty().WithMessage(MustHaveFileName.FailMessage)
+
+                    // file name must have valid extension
+                    .MustHaveAllowedFileExtension(AgreementFileConstraints.AllowedFileExtensions)
+                ;
+
+                RuleFor(x => x.FileData.Content)
+                    // content cannot be null or zero length
+                    .NotNull().WithMessage(MustHaveFileContent.FailMessage)
+                    .Must(x => x.Length > 0).WithMessage(MustHaveFileContent.FailMessage)
+
+                    // uploaded file not be too large
+                    .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, x => x.FileData.FileName)
+                ;
+            });
+
+            // when neither upload id or file data is present
+            const string noFileContentMessage = "Both UploadGuid and FileData are null. Exactly one of these must be provided for this command.";
+            When(x => !x.UploadGuid.HasValue && x.FileData == null, () =>
+            {
+                RuleFor(x => x.FileData).Must(x => false).WithMessage(noFileContentMessage);
+                RuleFor(x => x.UploadGuid).Must(x => false).WithMessage(noFileContentMessage);
+            });
         }
     }
 
     public class HandleCreateFileCommand : IHandleCommands<CreateFile>
     {
-        private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IStoreBinaryData _binaryData;
+        //private readonly ICommandEntities _entities;
+        //private readonly IUnitOfWork _unitOfWork;
+        //private readonly IStoreBinaryData _binaryData;
 
-        public HandleCreateFileCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
-            , IStoreBinaryData binaryData
-        )
-        {
-            _entities = entities;
-            _unitOfWork = unitOfWork;
-            _binaryData = binaryData;
-        }
+        //public HandleCreateFileCommand(ICommandEntities entities
+        //    , IUnitOfWork unitOfWork
+        //    , IStoreBinaryData binaryData
+        //)
+        //{
+        //    _entities = entities;
+        //    _unitOfWork = unitOfWork;
+        //    _binaryData = binaryData;
+        //}
 
         public void Handle(CreateFile command)
         {
-            
+            command.CreatedFileId = 1;
         }
     }
 }
