@@ -28,6 +28,7 @@ declare module google.maps {
     export class MVCObject {
         constructor ();
         bindTo(key: string, target: MVCObject, targetKey?: string, noNotify?: bool): void;
+        addListener(eventName: string, handler: () => void): MapsEventListener;
         changed(key: string): void;
         get(key: string): any;
         notify(key: string): void;
@@ -76,6 +77,8 @@ declare module google.maps {
         setTilt(tilt: number): void;
         setZoom(zoom: number): void;
         controls: MVCArray[];
+        mapTypes: MapTypeRegistry;
+        overlayMapTypes: MVCArray;
     }
 
     export interface MapOptions {
@@ -186,7 +189,6 @@ declare module google.maps {
 
     /***** Overlays *****/
     export class Marker extends MVCObject {
-        static MAX_ZINDEX: number;
         constructor (opts?: MarkerOptions);
         getAnimation(): Animation;
         getClickable(): bool;
@@ -1124,7 +1126,8 @@ declare module google.maps {
         worldSize?: Size;
     }
 
-    export interface StreetViewService {
+    export class StreetViewService {
+        constructor ();
         getPanoramaById(pano: string, callback: (streetViewPanoramaData: StreetViewPanoramaData, streetViewStatus: StreetViewStatus) => void );
         getPanoramaByLocation(latlng: LatLng, radius: number, callback: (streetViewPanoramaData: StreetViewPanoramaData, streetViewStatus: StreetViewStatus) => void );
     }
@@ -1143,9 +1146,9 @@ declare module google.maps {
         static addDomListener(instance: any, eventName: string, handler: Function, capture?: bool): MapsEventListener;
         static addDomListenerOnce(instance: any, eventName: string, handler: (event?: any, ...args: any[]) => void , capture?: bool): MapsEventListener;
         static addDomListenerOnce(instance: any, eventName: string, handler: Function, capture?: bool): MapsEventListener;
-        static addListener(instance: any, eventName: string, handler: (event?: any, ...args: any[]) => void ): MapsEventListener;
+        static addListener(instance: any, eventName: string, handler: (event?: any, ...args: any[]) => void): MapsEventListener;
         static addListener(instance: any, eventName: string, handler: Function): MapsEventListener;
-        static addListenerOnce(instance: any, eventName: string, handler: (event?: any, ...args: any[]) => void ): MapsEventListener;
+        static addListenerOnce(instance: any, eventName: string, handler: (event?: any, ...args: any[]) => void): MapsEventListener;
         static addListenerOnce(instance: any, eventName: string, handler: Function): MapsEventListener;
         static clearInstanceListeners(instance: any): void;
         static clearListeners(instance: any, eventName: string): void;
@@ -1532,13 +1535,6 @@ declare module google.maps {
             location: LatLng;
             weight: number;
         }
-
-        export class MouseEvent {
-            stop(): void;
-        }
-
-        export class MapsEventListener {
-
-        }        
     }
 }
+

@@ -351,7 +351,7 @@
     <Compile Include="Models\Agreements\AgreementPlaceApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementFileApiModel.cs" />
-    <Compile Include="Models\Agreements\AgreementUmbrellaApiModel.cs" />
+    <Compile Include="Models\Agreements\AgreementUmbrellaOptionApiProfiler.cs" />
     <Compile Include="Models\Employees\FacultyStaffFilterModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
@@ -809,7 +809,6 @@
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
-    <Content Include="scripts\google\google.maps.d.ts" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />
     <None Include="scripts\jquery\jqueryui-1.9.d.ts" />
     <None Include="scripts\ko\knockout-2.2.d.ts" />
@@ -2551,7 +2550,7 @@
     <None Include="styles\_resharper-unused.css" />
     <Content Include="styles\tinymce.css" />
     <Content Include="T4MVC.tt.settings.xml" />
-    <Content Include="typings\google.maps.d.ts" />
+    <Content Include="scripts\google\google.maps.d.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
