@@ -27,12 +27,7 @@ namespace UCosmic.Domain.Agreements
         public bool? IsAutoRenew { get; set; }
         public string Status { get; set; }
         public string Visibility { get; set; }
-        public IEnumerable<AgreementParticipantWrapper> Participants { get; set; }
-        public class AgreementParticipantWrapper
-        {
-            public int EstablishmentId { get; set; }
-            public bool IsOwner { get; set; }
-        }
+        public IEnumerable<CreateParticipant> Participants { get; set; }
         public int CreatedAgreementId { get; internal set; }
     }
 
@@ -121,10 +116,7 @@ namespace UCosmic.Domain.Agreements
                 .Must(x => x != null && x.Any()).WithMessage(MustHaveParticipants.FailMessage)
 
                 // needs at least one owning participant
-                .MustHaveOwningParticipant().WithMessage(MustHaveOwningParticipant.FailMessage)
-
-                // principal executing the command must be a tenant of all owner participants
-                .MustBeOwningTenant(queryProcessor, x => x.Principal)
+                .Must(x => x.Any(y => y.IsOwner)).WithMessage(MustHaveOwningParticipant.FailMessage)
             ;
         }
     }
@@ -133,15 +125,18 @@ namespace UCosmic.Domain.Agreements
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<CreateParticipant> _createParticipant;
         private readonly IHandleCommands<UpdateAgreementHierarchy> _hierarchyHandler;
 
         public HandleCreateAgreementCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
+            , IHandleCommands<CreateParticipant> createParticipant
             , IHandleCommands<UpdateAgreementHierarchy> hierarchyHandler
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
+            _createParticipant = createParticipant;
             _hierarchyHandler = hierarchyHandler;
         }
 
@@ -171,11 +166,12 @@ namespace UCosmic.Domain.Agreements
             };
 
             foreach (var participant in command.Participants)
-                entity.Participants.Add(new AgreementParticipant
-                {
-                    EstablishmentId = participant.EstablishmentId,
-                    IsOwner = participant.IsOwner,
-                });
+            {
+                participant.Principal = command.Principal;
+                participant.Agreement = entity;
+                participant.NoCommit = true;
+                _createParticipant.Handle(participant);
+            }
 
             _entities.Create(entity);
             DeriveNodes(entity);

@@ -150,9 +150,9 @@
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByCountry.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
+    <Compile Include="Domain\Agreements\Commands\CreateParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
-    <Compile Include="Domain\Agreements\Validation\MustBeOwningTenant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
@@ -170,6 +170,7 @@
     <Compile Include="Domain\Files\Validation\MustHaveAllowedFileExtension.cs" />
     <Compile Include="Domain\Files\_Etc\FileSizeUnitAbbreviation.cs" />
     <Compile Include="Domain\Files\_Etc\FileSizeUnitName.cs" />
+    <Compile Include="Domain\Identity\Validation\MustBeTenantOfEstablishment.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyIdentityName.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />

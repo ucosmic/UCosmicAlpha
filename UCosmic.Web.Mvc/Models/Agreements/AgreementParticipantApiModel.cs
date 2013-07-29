@@ -35,7 +35,8 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<AgreementParticipantApiModel, CreateAgreement.AgreementParticipantWrapper>()
+                CreateMap<AgreementParticipantApiModel, CreateParticipant>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
                 ;
             }
         }
