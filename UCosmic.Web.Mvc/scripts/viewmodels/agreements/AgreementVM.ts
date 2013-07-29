@@ -95,6 +95,8 @@ export class InstitutionalAgreementEditModel {
         this.removeContact = <() => bool> this.removeContact.bind(this);
         this.removePhone = <() => void > this.removePhone.bind(this);
         this.addPhone = <() => void > this.addPhone.bind(this);
+        this.closeEditAFile = <() => void > this.closeEditAFile.bind(this);
+        this.fileVisibilityClicked = <() => bool > this.fileVisibilityClicked.bind(this);
         this.removeFile = <() => void > this.removeFile.bind(this);
         this._setupValidation = <() => void > this._setupValidation.bind(this);
         this.participantsShowErrorMsg = ko.computed(function () => {
@@ -388,11 +390,13 @@ export class InstitutionalAgreementEditModel {
                     e.preventDefault(); // prevent upload
                     this.isFileExtensionInvalid(true); // update UI with feedback
                 }
-                else if (e.files[0].rawFile.size > (1024 * 1024 * 25)) {
+                else if(e.files[0].rawFile != undefined) {
+                    if (e.files[0].rawFile.size > (1024 * 1024 * 25)) {
                     e.preventDefault(); // prevent upload
                     this.isFileTooManyBytes(true); // update UI with feedback
+                    }
                 }
-                if (this.agreementIsEdit) {
+                if (this.agreementIsEdit()) {
                     e.data = {
                         originalName: e.files[0].name,
                         visibility: 'Private',
@@ -417,7 +421,12 @@ export class InstitutionalAgreementEditModel {
                     //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
                     var myId;
                     if (this.agreementIsEdit()) {
-                        var myUrl = e.XMLHttpRequest.getResponseHeader('Location')
+                        var myUrl;
+                        if (e.XMLHttpRequest != undefined) {
+                            myUrl = e.XMLHttpRequest.getResponseHeader('Location')
+                        } else {
+                            myUrl = e.response.location
+                        }
                         myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                     } else {
                         myId = this.tempFileId + .01
@@ -461,7 +470,7 @@ export class InstitutionalAgreementEditModel {
             // all files will have a guid in create, none will have a guid in edit agreement
             // so do a check for agreementId - if it is undefined(for now 0)
             var url = "";
-            if (this.agreementIsEdit) {
+            if (this.agreementIsEdit()) {
                 url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
             } else {
                 url = App.Routes.WebApi.Uploads.del(me.guid());
@@ -486,7 +495,7 @@ export class InstitutionalAgreementEditModel {
     closeEditAFile(me, e): void {
         me.customName(me.customNameFile() + me.customNameExt())
         me.isEdit(false);
-        if (this.agreementIsEdit) {
+        if (this.agreementIsEdit()) {
             var data = ko.mapping.toJS({
                 agreementId: me.agreementId,
                 uploadGuid: me.guid,
@@ -526,9 +535,9 @@ export class InstitutionalAgreementEditModel {
         }
     };
 
-    fileVisibilityClicked(me, e): void {
+    fileVisibilityClicked(me, e): bool {
         
-        if (this.agreementIsEdit) {
+        if (this.agreementIsEdit()) {
             var data = ko.mapping.toJS({
                 agreementId: me.agreementId,
                 uploadGuid: me.guid,
@@ -566,6 +575,7 @@ export class InstitutionalAgreementEditModel {
                 }
             });
         }
+        return true;
     };
 
     downloadAFile(me, e): void {
@@ -866,7 +876,14 @@ export class InstitutionalAgreementEditModel {
             var $fileAttachmentsTop = $fileAttachments.offset();
             var $overallVisibilityTop = $overallVisibility.offset();
 
-            var $body = $("body").scrollTop() + 100;
+
+            var $body;
+            //ie sucks!
+            if (!$("body").scrollTop()){
+                $body = $("html, body").scrollTop() + 100;
+            } else {
+                $body = $("body").scrollTop() + 100;
+            }
             if ($body <= $participantsTop.top + $participants.height() + 40) {
                 $("aside").find("li").removeClass("current");
                 $navparticipants.addClass("current");
@@ -1353,7 +1370,7 @@ export class InstitutionalAgreementEditModel {
             //this.clearContactInfo();
             this.$addContactDialog.data("kendoWindow").close()
             $("#addAContact").fadeIn(500);
-            if (this.agreementIsEdit) {
+            if (this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: this.agreementId,
                     PersonId: this.contacts()[this.contactIndex].personId,
@@ -1412,7 +1429,7 @@ export class InstitutionalAgreementEditModel {
             $("#addAContact").fadeIn(500);
             $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
 
-            if (this.agreementIsEdit) {
+            if (this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: this.agreementId,
                     PersonId: me.personId,
@@ -1655,8 +1672,12 @@ export class InstitutionalAgreementEditModel {
     goToSection(location, data, event): void {
 
         var offset = $("#" + location).offset();
-       
-        $("body").scrollTop(offset.top - 20);
+        //ie sucks!
+        if (!$("body").scrollTop()) {
+            $("html, body").scrollTop(offset.top - 20);
+        } else {
+            $("body").scrollTop(offset.top - 20);
+        }
         $(event.target).closest("ul").find("li").removeClass("current");
         $(event.target).closest("li").addClass("current");
     };
@@ -1744,7 +1765,13 @@ export class InstitutionalAgreementEditModel {
             $("#navParticipants").addClass("current");
         } 
         if (offset != undefined) {
-            $("body").scrollTop(offset.top - 20);
+
+            //ie sucks!
+            if (!$("body").scrollTop()) {
+                $("html, body").scrollTop(offset.top - 20);
+            } else {
+               $("body").scrollTop(offset.top - 20);
+            }
         } else {
             var url;
             var $LoadingPage = $("#LoadingPage").find("strong")
@@ -1775,7 +1802,7 @@ export class InstitutionalAgreementEditModel {
                 umbrellaId: this.uAgreementSelected(),
                 type: this.typeOptionSelected()
             })
-            if (this.agreementIsEdit) {
+            if (this.agreementIsEdit()) {
                 url = App.Routes.WebApi.Agreements.post();
                 $.ajax({
                     type: 'PUT',

@@ -169,6 +169,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.removeContact = this.removeContact.bind(this);
             this.removePhone = this.removePhone.bind(this);
             this.addPhone = this.addPhone.bind(this);
+            this.closeEditAFile = this.closeEditAFile.bind(this);
+            this.fileVisibilityClicked = this.fileVisibilityClicked.bind(this);
             this.removeFile = this.removeFile.bind(this);
             this._setupValidation = this._setupValidation.bind(this);
             this.participantsShowErrorMsg = ko.computed(function () {
@@ -337,11 +339,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(!isExtensionAllowed) {
                         e.preventDefault();
                         _this.isFileExtensionInvalid(true);
-                    } else if(e.files[0].rawFile.size > (1024 * 1024 * 25)) {
-                        e.preventDefault();
-                        _this.isFileTooManyBytes(true);
+                    } else if(e.files[0].rawFile != undefined) {
+                        if(e.files[0].rawFile.size > (1024 * 1024 * 25)) {
+                            e.preventDefault();
+                            _this.isFileTooManyBytes(true);
+                        }
                     }
-                    if(_this.agreementIsEdit) {
+                    if(_this.agreementIsEdit()) {
                         e.data = {
                             originalName: e.files[0].name,
                             visibility: 'Private',
@@ -363,7 +367,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         }
                         var myId;
                         if(_this.agreementIsEdit()) {
-                            var myUrl = e.XMLHttpRequest.getResponseHeader('Location');
+                            var myUrl;
+                            if(e.XMLHttpRequest != undefined) {
+                                myUrl = e.XMLHttpRequest.getResponseHeader('Location');
+                            } else {
+                                myUrl = e.response.location;
+                            }
                             myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         } else {
                             myId = _this.tempFileId + .01;
@@ -407,7 +416,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             if(confirm('Are you sure you want to remove this file from this agreement?')) {
                 var url = "";
-                if(this.agreementIsEdit) {
+                if(this.agreementIsEdit()) {
                     url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
                 } else {
                     url = App.Routes.WebApi.Uploads.del(me.guid());
@@ -431,7 +440,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             me.customName(me.customNameFile() + me.customNameExt());
             me.isEdit(false);
-            if(this.agreementIsEdit) {
+            if(this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
                     uploadGuid: me.guid,
@@ -472,7 +481,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.fileVisibilityClicked = function (me, e) {
             var _this = this;
-            if(this.agreementIsEdit) {
+            if(this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
                     uploadGuid: me.guid,
@@ -510,6 +519,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     }
                 });
             }
+            return true;
         };
         InstitutionalAgreementEditModel.prototype.downloadAFile = function (me, e) {
             this.agreementId = 2;
@@ -781,7 +791,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 var $contactsTop = $contacts.offset();
                 var $fileAttachmentsTop = $fileAttachments.offset();
                 var $overallVisibilityTop = $overallVisibility.offset();
-                var $body = $("body").scrollTop() + 100;
+                var $body;
+                if(!$("body").scrollTop()) {
+                    $body = $("html, body").scrollTop() + 100;
+                } else {
+                    $body = $("body").scrollTop() + 100;
+                }
                 if($body <= $participantsTop.top + $participants.height() + 40) {
                     $("aside").find("li").removeClass("current");
                     $navparticipants.addClass("current");
@@ -1224,7 +1239,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
-                if(this.agreementIsEdit) {
+                if(this.agreementIsEdit()) {
                     var data = ko.mapping.toJS({
                         agreementId: this.agreementId,
                         PersonId: this.contacts()[this.contactIndex].personId,
@@ -1294,7 +1309,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
-                if(this.agreementIsEdit) {
+                if(this.agreementIsEdit()) {
                     var data = ko.mapping.toJS({
                         agreementId: this.agreementId,
                         PersonId: me.personId,
@@ -1509,7 +1524,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.goToSection = function (location, data, event) {
             var offset = $("#" + location).offset();
-            $("body").scrollTop(offset.top - 20);
+            if(!$("body").scrollTop()) {
+                $("html, body").scrollTop(offset.top - 20);
+            } else {
+                $("body").scrollTop(offset.top - 20);
+            }
             $(event.target).closest("ul").find("li").removeClass("current");
             $(event.target).closest("li").addClass("current");
         };
@@ -1593,7 +1612,11 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 $("#navParticipants").addClass("current");
             }
             if(offset != undefined) {
-                $("body").scrollTop(offset.top - 20);
+                if(!$("body").scrollTop()) {
+                    $("html, body").scrollTop(offset.top - 20);
+                } else {
+                    $("body").scrollTop(offset.top - 20);
+                }
             } else {
                 var url;
                 var $LoadingPage = $("#LoadingPage").find("strong");
@@ -1622,7 +1645,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     umbrellaId: this.uAgreementSelected(),
                     type: this.typeOptionSelected()
                 });
-                if(this.agreementIsEdit) {
+                if(this.agreementIsEdit()) {
                     url = App.Routes.WebApi.Agreements.post();
                     $.ajax({
                         type: 'PUT',

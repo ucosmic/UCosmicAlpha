@@ -1,5 +1,28 @@
 # Developer Daily Pull / Rebase Process
 
+## Sometime during the workday(summary)
+
+1.   `git stash -u` (optional)  
+2.   `git push origin work`
+3.    `git checkout team`  
+4.    `git pull mainline team`  
+5.    `git push origin team`  
+6.    `git checkout work` 
+7.    `git branch worksafe` 
+8.    `git rebase team`  
+   1.   `git mergetool` (if you run into a conflict)  
+   2.    `git rebase --continue` (after resolving conflicts)  
+   3.    `git rebase --abort` (to undo the rebase and start over)  
+9.    Delete any .orig files that git created because of merge conflicts.  
+10.    `git push -f origin work`  
+11.    `git checkout team`
+12.    `git merge --ff-only work`
+13.    `git push origin team`
+14.    `git push mainline team`
+15.    `git checkout work`
+16.    `git branch -D worksafe`
+17.    `git stash pop` (optional)  
+
 ## At the beginning of the workday(summary)
 
 1.   `git stash -u` (optional)  
@@ -24,9 +47,32 @@
 2.    `git push origin work`    or    `git push -f origin work`  
 3.    https://github.com/danludwig/Layout3/pulls.
 
+## Sometime during the workday(detailed)
+
+1.   `git stash -u` (optional, if you have a dirty index that you want to restore later. You shouldn’t need to do this if all of your work is committed before you’re ready to push)
+2.   `git push origin work`  (upload all of your latest commits to your fork repository on github)
+3.    `git checkout team`  
+4.    `git pull mainline team`  (get all of the latest team commits into your local repository)
+5.    `git push origin team`  
+6.    `git checkout work` 
+7.    `git branch worksafe`  (this creates a local git branch pointer to your work commits before they are rebased, just in case something goes wrong. It is a double-safety measure in addition to step #2 above)
+8.    `git rebase team`  
+   1.   `git mergetool` (if you run into a conflict)  
+   2.    `git rebase --continue` (after resolving conflicts)  
+   3.    `git rebase --abort` (to undo the rebase and start over)  
+9.    Delete any .orig files that git created because of merge conflicts.  
+10.    `git push -f origin work`   (you will need the –f option here)
+11.    `git checkout team` (switch back to the team branch)
+12.    `git merge --ff-only work` (fast forward the team branch to incorporate your commits into it)
+13.    `git push origin team` (this is why step #5 above was optional)
+14.     `git push mainline team` (BE SURE YOU ONLY PUSH TO MAINLINE TEAM, NOT MAINLINE WORK OR MAINLINE MASTER, OR ANY OTHER MAINLINE BRANCH. JUST TEAM.)
+15.     `git checkout work`
+16.     `git branch -D worksafe` (delete the safety pointer, only do this after you are sure all of your commits are in both work and team locally and on github)
+17.    `git stash pop` (optional)  
+
 ## At the beginning of the workday(detailed)
 
-1. `git stash -u` (optional)
+1. `git stash -u` (optional, if you stashed in step #1)
 
   **Don't forget to *Save All* in Visual Studio and rescan to inspect changes to sln and csproj files before stashing.** Remember, Visual Studio normally keeps changes to these files in memory and only writes them to the filesystem when you close the solution, build the solution, or Save All.
 
