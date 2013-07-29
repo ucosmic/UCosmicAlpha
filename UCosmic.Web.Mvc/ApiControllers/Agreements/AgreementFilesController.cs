@@ -111,9 +111,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             Mapper.Map(model, command);
             _createFile.Handle(command);
 
-            var successPayload = new { message = string.Format("File '{0}' was successfully attached.", model.CustomName) };
-            var successJson = JsonConvert.SerializeObject(successPayload);
-            var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
             var url = Url.Link(null, new
             {
                 controller = "AgreementFiles",
@@ -122,6 +119,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 fileId = command.CreatedFileId,
             });
             Debug.Assert(url != null);
+            var successPayload = new
+            {
+                message = string.Format("File '{0}' was successfully attached.", model.CustomName),
+                location = url,
+            };
+            var successJson = JsonConvert.SerializeObject(successPayload);
+            var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
             response.Headers.Location = new Uri(url);
             return response;
         }
