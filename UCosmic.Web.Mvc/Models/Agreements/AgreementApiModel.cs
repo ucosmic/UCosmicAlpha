@@ -22,7 +22,7 @@ namespace UCosmic.Web.Mvc.Models
         public AgreementParticipantApiModel[] Participants { get; set; }
     }
 
-    public static class AgreementProfiler
+    public static class AgreementApiProfiler
     {
         public class EntityToModelProfile : Profile
         {

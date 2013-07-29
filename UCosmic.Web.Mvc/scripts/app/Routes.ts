@@ -351,34 +351,17 @@ module App.Routes {
                 }
             }
 
-            export module FilesUpload {
-                export function del(fileGuid: string) {
-                    var url = 'uploads/{0}'.format(fileGuid);
-
-                    return makeUrl(url);
-                }
-            }
-
             export module Settings {
                 export function get (): string {
                     return makeUrl('agreements/settings');
                 }
             }
 
-            export module File {
-                export function get (params?: any): string {
-                    var url = post();
-                    if (params) url += '?' + $.param(params);
-                    return url;
-                }
-                export function post() {
-                    return makeUrl('agreements/file');
-                }
-                export function del(agreementId: number, id: number) {
-                    return post();
-                }
-                export function kendoRemove() {
-                    return makeUrl('agreements/file/kendo-remove');
+            export module UmbrellaOptions {
+                export function get (agreementId?: number): string {
+                    var url = 'agreements/0/umbrellas';
+                    if (agreementId) url = url.replace('0', agreementId.toString());
+                    return makeUrl(url);
                 }
             }
         }
@@ -691,6 +674,10 @@ module App.Routes {
         export module Uploads {
             export function post(): string {
                 return makeUrl('uploads');
+            }
+            export function del(fileGuid: string) {
+                var url = 'uploads/{0}'.format(fileGuid);
+                return makeUrl(url);
             }
         }
     }

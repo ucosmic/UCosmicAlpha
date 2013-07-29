@@ -152,6 +152,7 @@
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
+    <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />

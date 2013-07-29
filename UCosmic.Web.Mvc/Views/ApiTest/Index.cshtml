@@ -7,6 +7,10 @@
 
     <script type="text/javascript">
 
+        $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(2)).done(function(results) {
+            //alert('have results');
+        });
+
         $('#agreement_post_button').click(function () {
             $.post(App.Routes.WebApi.Agreements.post(), {
                 participants: [

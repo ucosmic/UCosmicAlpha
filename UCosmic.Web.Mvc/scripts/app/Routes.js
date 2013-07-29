@@ -371,14 +371,6 @@ var App;
                     var Content = Files.Content;
                 })(Agreements.Files || (Agreements.Files = {}));
                 var Files = Agreements.Files;
-                (function (FilesUpload) {
-                    function del(fileGuid) {
-                        var url = 'uploads/{0}'.format(fileGuid);
-                        return makeUrl(url);
-                    }
-                    FilesUpload.del = del;
-                })(Agreements.FilesUpload || (Agreements.FilesUpload = {}));
-                var FilesUpload = Agreements.FilesUpload;
                 (function (Settings) {
                     function get() {
                         return makeUrl('agreements/settings');
@@ -386,29 +378,17 @@ var App;
                     Settings.get = get;
                 })(Agreements.Settings || (Agreements.Settings = {}));
                 var Settings = Agreements.Settings;
-                (function (File) {
-                    function get(params) {
-                        var url = post();
-                        if(params) {
-                            url += '?' + $.param(params);
+                (function (UmbrellaOptions) {
+                    function get(agreementId) {
+                        var url = 'agreements/0/umbrellas';
+                        if(agreementId) {
+                            url = url.replace('0', agreementId.toString());
                         }
-                        return url;
+                        return makeUrl(url);
                     }
-                    File.get = get;
-                    function post() {
-                        return makeUrl('agreements/file');
-                    }
-                    File.post = post;
-                    function del(agreementId, id) {
-                        return post();
-                    }
-                    File.del = del;
-                    function kendoRemove() {
-                        return makeUrl('agreements/file/kendo-remove');
-                    }
-                    File.kendoRemove = kendoRemove;
-                })(Agreements.File || (Agreements.File = {}));
-                var File = Agreements.File;
+                    UmbrellaOptions.get = get;
+                })(Agreements.UmbrellaOptions || (Agreements.UmbrellaOptions = {}));
+                var UmbrellaOptions = Agreements.UmbrellaOptions;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
             (function (My) {
@@ -768,6 +748,11 @@ var App;
                     return makeUrl('uploads');
                 }
                 Uploads.post = post;
+                function del(fileGuid) {
+                    var url = 'uploads/{0}'.format(fileGuid);
+                    return makeUrl(url);
+                }
+                Uploads.del = del;
             })(WebApi.Uploads || (WebApi.Uploads = {}));
             var Uploads = WebApi.Uploads;
         })(Routes.WebApi || (Routes.WebApi = {}));

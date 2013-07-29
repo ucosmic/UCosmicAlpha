@@ -322,7 +322,6 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateFiles(): void {
-        // TODO TIM: you need to know the agreementId in order to do Files.get()
         $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId) + "?useTestData=true")
             .done((response: any): void => {
                 // use foreach instead of mapping so that I can add isEdit, fileNamewithoutExt , and ext, 
@@ -366,12 +365,7 @@ export class InstitutionalAgreementEditModel {
                 select: 'Choose a file to upload...'
             },
             async: {
-                // TODO TIM: I changed this, look at it, but leave it as-is
-                // NOTE: we upload to the uploads endpoint, and POST as a file later with an upload GUID
-                // also, i don't think we will need kendoRemove when this becomes multiple: true
-                
-                saveUrl: saveUrl,
-                //removeUrl: App.Routes.WebApi.Agreements.File.kendoRemove() // should not need this
+                saveUrl: saveUrl
             },
             upload: (e: any): void => {
                 // client-side check for file extension
@@ -470,7 +464,7 @@ export class InstitutionalAgreementEditModel {
             if (this.agreementIsEdit) {
                 url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
             } else {
-                url = App.Routes.WebApi.Agreements.FilesUpload.del(me.guid());
+                url = App.Routes.WebApi.Uploads.del(me.guid());
             }
             $.ajax({ 
                 url: url,

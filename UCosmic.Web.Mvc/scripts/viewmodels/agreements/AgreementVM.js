@@ -410,7 +410,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 if(this.agreementIsEdit) {
                     url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
                 } else {
-                    url = App.Routes.WebApi.Agreements.FilesUpload.del(me.guid());
+                    url = App.Routes.WebApi.Uploads.del(me.guid());
                 }
                 $.ajax({
                     url: url,

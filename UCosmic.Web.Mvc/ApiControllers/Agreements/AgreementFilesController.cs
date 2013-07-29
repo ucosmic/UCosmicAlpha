@@ -122,7 +122,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var successPayload = new
             {
                 message = string.Format("File '{0}' was successfully attached.", model.CustomName),
-                location = url,
+                location = url, // TODO: when IE8 dies, no need to do this (it is a workaround for kendo + IE only)
             };
             var successJson = JsonConvert.SerializeObject(successPayload);
             var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -39,6 +40,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var model = Mapper.Map<AgreementApiModel>(entity);
             return model;
+        }
+
+        [GET("{agreementId:int}/umbrellas")]
+        public IEnumerable<TextValuePair> GetUmbrellaOptions(int agreementId)
+        {
+            var entities = _queryProcessor.Execute(new UmbrellaOptions(User, agreementId)
+            {
+                EagerLoad = new Expression<Func<Agreement, object>>[]
+                {
+                    x => x.Participants.Select(y => y.Establishment.Names.Select(z => z.TranslationToLanguage)),
+                }
+            });
+            var models = Mapper.Map<IEnumerable<TextValuePair>>(entities)
+                .OrderBy(x => x.Value);
+            return models;
         }
 
         [GET("{domain}")]
