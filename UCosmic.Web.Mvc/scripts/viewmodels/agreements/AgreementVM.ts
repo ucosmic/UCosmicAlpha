@@ -81,7 +81,7 @@ export class InstitutionalAgreementEditModel {
                 });
         }
         //this.populateAgreementData();
-
+        this.populateUmbrella();
 
         $(window).resize(function () => {
             this.updateKendoDialog($(window).width());
@@ -131,12 +131,12 @@ export class InstitutionalAgreementEditModel {
 
         this.getSettings();
 
-        this.uAgreements = ko.mapping.fromJS([
-                new this.selectConstructor("[None - this is a top-level or standalone agreement]", ""),
-                new this.selectConstructor("test", "test"),
-                new this.selectConstructor("test2", "test2"),
-                new this.selectConstructor("test3", "test3")
-        ]);
+        //this.uAgreements = ko.mapping.fromJS([
+        //        new this.selectConstructor("[None - this is a top-level or standalone agreement]", ""),
+        //        new this.selectConstructor("test", "test"),
+        //        new this.selectConstructor("test2", "test2"),
+        //        new this.selectConstructor("test3", "test3")
+        //]);
         this.contactSalutation = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""),
                 new this.selectConstructor("Dr.", "Dr."),
@@ -351,6 +351,14 @@ export class InstitutionalAgreementEditModel {
                 this.dfdPopContacts.resolve();
             });
 
+    }
+
+
+    populateUmbrella(): void {
+        $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
+            .done((response: any): void => {
+                ko.mapping.fromJS(response, this.uAgreements)
+            });
     }
 
     $bindKendoFile(): void {// this is getting a little long, can probably factor out event handlers / validation stuff

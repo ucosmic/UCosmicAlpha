@@ -160,6 +160,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
                 });
             }
+            this.populateUmbrella();
             $(window).resize(function () {
                 _this.updateKendoDialog($(window).width());
             });
@@ -200,12 +201,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.hideOtherGroups();
             this.bindSearch();
             this.getSettings();
-            this.uAgreements = ko.mapping.fromJS([
-                new this.selectConstructor("[None - this is a top-level or standalone agreement]", ""), 
-                new this.selectConstructor("test", "test"), 
-                new this.selectConstructor("test2", "test2"), 
-                new this.selectConstructor("test3", "test3")
-            ]);
             this.contactSalutation = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""), 
                 new this.selectConstructor("Dr.", "Dr."), 
@@ -291,6 +286,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
                 _this.dfdPopContacts.resolve();
+            });
+        };
+        InstitutionalAgreementEditModel.prototype.populateUmbrella = function () {
+            var _this = this;
+            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId)).done(function (response) {
+                ko.mapping.fromJS(response, _this.uAgreements);
             });
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {
