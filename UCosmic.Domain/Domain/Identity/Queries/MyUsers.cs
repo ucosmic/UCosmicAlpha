@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -50,18 +53,30 @@ namespace UCosmic.Domain.Identity
                     }
                 });
 
-                int? tenantId = user.Person.DefaultAffiliation.EstablishmentId;
+                if ((user != null) && (user.Person != null) && (user.Person.DefaultAffiliation != null))
+                {
+                    int tenantId = user.Person.DefaultAffiliation.EstablishmentId;
 
-                // get the pk's of all establishments under the default affiliation
-                var controlledEstablishmentIds = _entities.Query<Establishment>()
-                    .Where(x => x.Ancestors.Any(y => y.Ancestor.RevisionId == tenantId.Value))
-                    .Select(x => x.RevisionId).ToList();
-                controlledEstablishmentIds.Add(tenantId.Value); // add the default affiliation to offspring
+                    // get the pk's of all establishments under the default affiliation
+                    var controlledEstablishmentIds = _entities.Query<Establishment>()
+                                                              .Where(
+                                                                  x =>
+                                                                  x.Ancestors.Any(
+                                                                      y => y.Ancestor.RevisionId == tenantId))
+                                                              .Select(x => x.RevisionId).ToList();
+                    controlledEstablishmentIds.Add(tenantId); // add the default affiliation to offspring
 
-                // filter results to exclude users not controlled by the requesting principal
-                results = results.Where(x => x.Person.Affiliations.Any(y =>
-                    (y.IsDefault && controlledEstablishmentIds.Contains(y.EstablishmentId))
-                ));
+                    // filter results to exclude users not controlled by the requesting principal
+                    results = results.Where(x => x.Person.Affiliations.Any(y =>
+                                                                           (y.IsDefault &&
+                                                                            controlledEstablishmentIds.Contains(
+                                                                                y.EstablishmentId))
+                                                     ));
+                }
+                else
+                {
+                    results = Enumerable.Empty<User>().AsQueryable();
+                }
             }
 
             results = query.OrderBy != null ? results.OrderBy(query.OrderBy) : results.OrderBy(x => x.RevisionId);

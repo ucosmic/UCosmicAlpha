@@ -19,7 +19,7 @@ namespace UCosmic.Domain.Identity
 
     public class ValidateDeleteUserCommand : AbstractValidator<DeleteUser>
     {
-        public ValidateDeleteUserCommand(IQueryEntities entities)
+        public ValidateDeleteUserCommand(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -32,6 +32,11 @@ namespace UCosmic.Domain.Identity
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustNotBeSameUser(entities, x => x.Id)
                     .WithMessage(MustNotBeSameUser<object>.FailMessageFormat, x => x.Principal.Identity.Name)
+            ;
+
+            RuleFor(x => x.Id)
+                .MustBeTenantUserId(queryProcessor, x => x.Principal)
+                    .WithMessage(MustBeTenantUserId<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.Id)
             ;
         }
     }
