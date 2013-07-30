@@ -7,6 +7,7 @@ var ViewModels;
                 this._initialize(institutionInfo);
             }
             FacultyAndStaff.prototype._initialize = function (institutionInfo) {
+                this.sammy = Sammy();
                 this.initialLocations = new Array();
                 this.selectedLocationValues = new Array();
                 this.fromDate = ko.observable();
@@ -236,6 +237,19 @@ var ViewModels;
             };
             FacultyAndStaff.prototype.setupSubscriptions = function () {
             };
+            FacultyAndStaff.prototype.setupRouting = function () {
+                var _this = this;
+                this.sammy.get('#/engagements', function () {
+                    _this.selectMap('heatmap');
+                });
+                this.sammy.get('#/map', function () {
+                    _this.selectMap('pointmap');
+                });
+                this.sammy.get('#/results', function () {
+                    _this.selectMap('resultstable');
+                });
+                this.sammy.run('#/engagements');
+            };
             FacultyAndStaff.prototype.load = function () {
                 var _this = this;
                 var me = this;
@@ -283,6 +297,8 @@ var ViewModels;
                 }
             };
             FacultyAndStaff.prototype.selectMap = function (type) {
+                debugger;
+
                 $('#heatmapText').css("font-weight", "normal");
                 this.isHeatmapVisible(false);
                 $('#pointmapText').css("font-weight", "normal");
@@ -292,9 +308,12 @@ var ViewModels;
                 if(type === "heatmap") {
                     $('#heatmapText').css("font-weight", "bold");
                     this.isHeatmapVisible(true);
+                    fsheatmap.draw(fsheatmapData, fsheatmapOptions);
+                    fspiechart.draw(fspiechartData, fspiechartOptions);
                 } else if(type === "pointmap") {
                     $('#pointmapText').css("font-weight", "bold");
                     this.isPointmapVisible(true);
+                    fspointmap.draw(fspointmapData, fspointmapOptions);
                 } else if(type === "resultstable") {
                     $('#resultstableText').css("font-weight", "bold");
                     this.isTableVisible(true);
@@ -375,6 +394,11 @@ var ViewModels;
                     owner: this
                 };
                 return def;
+            };
+            FacultyAndStaff.prototype.setupMaps = function () {
+                var deferred = $.Deferred();
+                deferred.resolve();
+                return deferred;
             };
             return FacultyAndStaff;
         })();

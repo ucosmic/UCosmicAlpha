@@ -146,87 +146,95 @@
        
     <script type="text/javascript">
 
-        google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
-        google.setOnLoadCallback(drawRegionsMap);
+        var fsheatmap;
+        var fsheatmapOptions;
+        var fsheatmapData;
+        var fspointmap;
+        var fspointmapOptions;
+        var fspointmapData;
+        var fspiechart;
+        var fspiechartOptions;
+        var fspiechartData;
 
-        function drawRegionsMap() {
+        //google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
+        //google.setOnLoadCallback(drawRegionsMap);
+        //function drawRegionsMap() {
+        //    var countryData = new Array();
+        //    countryData.push(['Country', 'Activities']);
 
-            var countryData = new Array();
-            countryData.push(['Country', 'Activities']);
+        //    $.ajax({
+        //        type: "GET",
+        //        async: false,
+        //        url: App.Routes.WebApi.Activities.CountryCounts.post(),
+        //        success: function(data, textStatus, jqXHR) {
+        //            for (var i = 0; i < data.length; i += 1) {
+        //                countryData.push([data[i].officialName, data[i].count]);
+        //            }
+        //        },
+        //        error: function(jqXhr, textStatus, errorThrown) {
+        //            debugger;
+        //        },
+        //        dataType: 'json'
+        //    });
 
-            $.ajax({
-                type: "GET",
-                async: false,
-                url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                success: function(data, textStatus, jqXHR) {
-                    for (var i = 0; i < data.length; i += 1) {
-                        countryData.push([data[i].officialName, data[i].count]);
-                    }
-                },
-                error: function(jqXhr, textStatus, errorThrown) {
-                    debugger;
-                },
-                dataType: 'json'
-            });
-            
-            //$.ajax({
-            //    type: "POST",
-            //    async: false,
-            //    url: App.Routes.WebApi.Activities.CountryCounts.post(),
-            //    data: ko.toJSON(this.selectedActivityIds()),
-            //    success: function(data, textStatus, jqXHR) {
-            //        for (var i = 0; i < data.length; i += 1) {
-            //            countryData.push([data[i].officialName, data[i].count]);
-            //        }
-            //    },
-            //    error: function(jqXhr, textStatus, errorThrown) {
-            //        debugger;
-            //    },
-            //    dataType: 'json'
-            //});
+        //    $.ajax({
+        //        type: "POST",
+        //        async: false,
+        //        url: App.Routes.WebApi.Activities.CountryCounts.post(),
+        //        data: ko.toJSON(this.selectedActivityIds()),
+        //        success: function(data, textStatus, jqXHR) {
+        //            for (var i = 0; i < data.length; i += 1) {
+        //                countryData.push([data[i].officialName, data[i].count]);
+        //            }
+        //        },
+        //        error: function(jqXhr, textStatus, errorThrown) {
+        //            debugger;
+        //        },
+        //        dataType: 'json'
+        //    });
 
-            var countryDataTable = google.visualization.arrayToDataTable(countryData);
+        //    var countryDataTable = google.visualization.arrayToDataTable(countryData);
 
-            var options = {
-                //is3D: true,
-                width: 680,
-                height: 500,
-                //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
-                region: 'world', //'150',    // 002 Africa, 142 Asia
-                backgroundColor: 'lightBlue',
-                keepAspectRatio: false,
-                colorAxis: { colors: ['#FFFFFF', 'green'] },
-                //displayMode: 'markers'
-            };
+        //    var options = {
+        //        //is3D: true,
+        //        width: 680,
+        //        height: 500,
+        //        //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
+        //        region: 'world', //'150',    // 002 Africa, 142 Asia
+        //        backgroundColor: 'lightBlue',
+        //        keepAspectRatio: false,
+        //        colorAxis: { colors: ['#FFFFFF', 'green'] },
+        //        //displayMode: 'markers'
+        //    };
 
-            window.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
-            window.heatmap.draw(countryDataTable, options);
-
-
-
-            var data2 = google.visualization.arrayToDataTable([['Engagement', 'Count'],
-                ['Research or Creative Endeavor', 11],
-                ['Teaching or Mentoring', 2],
-                ['Award or Honor', 2],
-                ['Conference Presentation or Proceeding', 2],
-                ['Professional Development, Service or Consulting ', 7]]);
-            
-            var options2 = {
-                title: 'Engagements'
-            };
-            window.piechart = new google.visualization.PieChart(document.getElementById('typeChart'));
-            window.piechart.draw(data2, options2);
-        }
+        //    fsheatmap = new google.visualization.GeoChart($('#heatmap')[0]);
+        //    fsheatmap.draw(countryDataTable, options);
 
 
-        window.pointmap = new google.maps.Map(document.getElementById('pointmap'),
-            {
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
-                zoom: 1, // zoom out
-                draggable: true, // allow map panning
-                scrollwheel: false // prevent mouse wheel zooming
-            });
+        //    var data2 = google.visualization.arrayToDataTable([['Engagement', 'Count'],
+        //        ['Research or Creative Endeavor', 11],
+        //        ['Teaching or Mentoring', 2],
+        //        ['Award or Honor', 2],
+        //        ['Conference Presentation or Proceeding', 2],
+        //        ['Professional Development, Service or Consulting ', 7]]);
+
+        //    var options2 = {
+        //        title: 'Engagements'
+        //    };
+        //    fspiechart = new google.visualization.PieChart(document.getElementById('typeChart'));
+        //    fspiechart.draw(data2, options2);
+        //}
+
+        //fspointmap = new google.maps.Map(document.getElementById('pointmap'),
+        //    {
+        //        width: 680,
+        //        height: 500,
+        //        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        //        center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+        //        zoom: 1, // zoom out
+        //        draggable: true, // allow map panning
+        //        scrollwheel: false // prevent mouse wheel zooming
+        //    });
 
         $(function() {
 
@@ -237,6 +245,8 @@
             var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
             facultyAndStaffViewModel.load()
                 .done(function() {
+
+                    debugger;
 
                     facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institutionTextbox",
                         "campusDropList", "collegeDropList", "departmentDropList");
@@ -253,14 +263,14 @@
                                     url: App.Routes.WebApi.Places.get(),
 
                                     /*
-                                        Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
-                                        gets called as soon as the widget gets focus.  This is bad as the Place
-                                        service will respond with all the Places in the DB since there is no 
-                                        filter being provided.  Our workaround is to trap the empty filter
-                                        and send a special character for the service to ignore.  Also,
-                                        If options.success() is not actually call, the widget stops functioning
-                                        altogether.
-                                    */
+                                            Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
+                                            gets called as soon as the widget gets focus.  This is bad as the Place
+                                            service will respond with all the Places in the DB since there is no 
+                                            filter being provided.  Our workaround is to trap the empty filter
+                                            and send a special character for the service to ignore.  Also,
+                                            If options.success() is not actually call, the widget stops functioning
+                                            altogether.
+                                        */
                                     data: {
                                         keyword: ((options.data.filter != null) &&
                                             (options.data.filter.filters != null) &&
@@ -276,13 +286,95 @@
                         }
                     }));
 
-                    facultyAndStaffViewModel.setupValidation();
-                    facultyAndStaffViewModel.setupSubscriptions();
+                    google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
+                    google.setOnLoadCallback(function() {
 
+                        debugger;
+                        
+                        var countryData = new Array();
+                        countryData.push(['Country', 'Activities']);
+
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                            success: function(data, textStatus, jqXHR) {
+                                for (var i = 0; i < data.length; i += 1) {
+                                    countryData.push([data[i].officialName, data[i].count]);
+                                }
+                            },
+                            error: function(jqXhr, textStatus, errorThrown) {
+                                debugger;
+                            },
+                            dataType: 'json'
+                        });
+
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                            data: ko.toJSON(facultyAndStaffViewModel.selectedActivityIds()),
+                            success: function(data, textStatus, jqXHR) {
+                                for (var i = 0; i < data.length; i += 1) {
+                                    countryData.push([data[i].officialName, data[i].count]);
+                                }
+                            },
+                            error: function(jqXhr, textStatus, errorThrown) {
+                                debugger;
+                            },
+                            dataType: 'json'
+                        });
+
+                        fsheatmapData = google.visualization.arrayToDataTable(countryData);
+
+                        fsheatmapOptions = {
+                            //is3D: true,
+                            width: 680,
+                            height: 500,
+                            //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
+                            region: 'world', //'150',    // 002 Africa, 142 Asia
+                            backgroundColor: 'lightBlue',
+                            keepAspectRatio: false,
+                            colorAxis: { colors: ['#FFFFFF', 'green'] },
+                            //displayMode: 'markers'
+                        };
+
+                        fsheatmap = new google.visualization.GeoChart($('#heatmap')[0]);
+                        //fsheatmap.draw(countryDataTable, options);
+
+
+                        fspiechartData = google.visualization.arrayToDataTable([['Engagement', 'Count'],
+                            ['Research or Creative Endeavor', 11],
+                            ['Teaching or Mentoring', 2],
+                            ['Award or Honor', 2],
+                            ['Conference Presentation or Proceeding', 2],
+                            ['Professional Development, Service or Consulting ', 7]]);
+
+                        fspiechartOptions = {
+                            title: 'Engagements'
+                        };
+                        fspiechart = new google.visualization.PieChart(document.getElementById('typeChart'));
+                        //fspiechart.draw(data2, options2);
+
+                        fspointmap = new google.maps.Map(document.getElementById('pointmap'),
+                            {
+                                width: 680,
+                                height: 500,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                                zoom: 1, // zoom out
+                                draggable: true, // allow map panning
+                                scrollwheel: false // prevent mouse wheel zooming
+                            });
+
+                        facultyAndStaffViewModel.setupValidation();
+                        facultyAndStaffViewModel.setupSubscriptions();
+                        facultyAndStaffViewModel.setupRouting();
+                    });
                 })
-                .fail(function(jqXhr, textStatus, errorThrown) {
-                    alert(textStatus + "|" + errorThrown);
-                });
+            .fail(function(jqXhr, textStatus, errorThrown) {
+            alert(textStatus + "|" + errorThrown);
+        });
         });
     </script>    
 }
@@ -293,7 +385,7 @@
                 <h1>@ViewBag.Title</h1>
             </header>
             <div style="width: 680px; height: 500px">
-                <div data-bind="visible: isHeatmapVisible()">
+                <div style="display: none" data-bind="visible: isHeatmapVisible()">
                     <div style="text-align: left">
                         <span>
                             <input type="button" id="activitiesButton" value="Activites" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>

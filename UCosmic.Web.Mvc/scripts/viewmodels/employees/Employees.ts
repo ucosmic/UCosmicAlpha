@@ -8,16 +8,30 @@
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../../sammy/sammyjs-0.7.d.ts" />
+/// <reference path="../../google/google.charts.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-
+declare var fsheatmap: any;
+declare var fsheatmapOptions: any;
+declare var fsheatmapData: any;
+declare var fspointmap: any;
+declare var fspointmapOptions: any;
+declare var fspointmapData: any;
+declare var fspiechart: any;
+declare var fspiechartOptions: any;
+declare var fspiechartData: any;
 
 module ViewModels.Employees {
+
     // ================================================================================
     /* 
     */
     // ================================================================================
     export class FacultyAndStaff {
+
+        sammy: Sammy.Application;
+
         /* Initialization errors. */
         inititializationErrors: string = "";
 
@@ -56,12 +70,28 @@ module ViewModels.Employees {
         isPointmapVisible: KnockoutObservableBool;
         isTableVisible: KnockoutObservableBool;
 
+        //heatmap: any;
+        //heatmapOptions: any;
+        //heatmapData: any;
+
+        //pointmap: any;
+        //pointmapOptions: any;
+        //pointmapData: any;
+        
+        //resultsTable: any;
+        //resultsTableOptions: any;
+        //resultsTableData: any;
+
+        //piechart: any;
+        //piechartOptions: any;
+        //piechartData: any;
 
         // --------------------------------------------------------------------------------
         /*
         */
         // --------------------------------------------------------------------------------
         _initialize(institutionInfo: any): void {
+            this.sammy = Sammy();
             this.initialLocations = new any[];        // Bug - To overcome bug in Multiselect.
             this.selectedLocationValues = new any[];
             this.fromDate = ko.observable();
@@ -99,6 +129,7 @@ module ViewModels.Employees {
                     this.institutionHasCampuses(Boolean(institutionInfo.InstitutionHasCampuses));
                 }
             }
+
         }
 
         // --------------------------------------------------------------------------------
@@ -380,6 +411,16 @@ module ViewModels.Employees {
             //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------  
+        setupRouting(): void {
+            this.sammy.get('#/engagements', ():void => { this.selectMap('heatmap'); });
+            this.sammy.get('#/map', (): void => { this.selectMap('pointmap'); });
+            this.sammy.get('#/results', (): void => { this.selectMap('resultstable'); });
+            this.sammy.run('#/engagements');
+        }
 
         // --------------------------------------------------------------------------------
         /* 
@@ -481,6 +522,8 @@ module ViewModels.Employees {
         // --------------------------------------------------------------------------------
         selectMap(type: string): void {
 
+            debugger;
+
             $('#heatmapText').css("font-weight", "normal");
             this.isHeatmapVisible(false);
 
@@ -493,15 +536,17 @@ module ViewModels.Employees {
             if (type === "heatmap") {
                 $('#heatmapText').css("font-weight", "bold");
                 this.isHeatmapVisible(true);
+                fsheatmap.draw(fsheatmapData, fsheatmapOptions);
+                fspiechart.draw(fspiechartData, fspiechartOptions);
             } else if (type === "pointmap") {
                 $('#pointmapText').css("font-weight", "bold");
                 this.isPointmapVisible(true);
+                fspointmap.draw(fspointmapData, fspointmapOptions)
             } else if (type === "resultstable") {
                 $('#resultstableText').css("font-weight", "bold");
                 this.isTableVisible(true);
             }
         }
-
 
         // --------------------------------------------------------------------------------
         /*
@@ -619,6 +664,88 @@ module ViewModels.Employees {
             };
 
             return def;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        setupMaps(): JQueryPromise {
+            var deferred: JQueryDeferred = $.Deferred();
+
+            //google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
+            //google.setOnLoadCallback(function () {
+
+                ///* ----- Setup heatmap ----- */
+                //{
+                //    var heatmapData = new Array();
+                //    heatmapData.push(['Country', 'Activities']);
+                //    $.ajax({
+                //        type: "GET",
+                //        async: false,
+                //        url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                //        success: function (data, textStatus, jqXHR) {
+                //            for (var i = 0; i < data.length; i += 1) {
+                //                heatmapData.push([data[i].officialName, data[i].count]);
+                //            }
+                //        },
+                //        error: function (jqXhr, textStatus, errorThrown) {
+                //            debugger;
+                //        },
+                //        dataType: 'json'
+                //    });
+                //    this.heatmapData = google.visualization.arrayToDataTable(heatmapData);
+
+                //    this.heatmap.options = {
+                //        //is3D: true,
+                //        width: 680,
+                //        height: 500,
+                //        //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
+                //        region: 'world', //'150',    // 002 Africa, 142 Asia
+                //        backgroundColor: 'lightBlue',
+                //        keepAspectRatio: false,
+                //        colorAxis: { colors: ['#FFFFFF', 'green'] },
+                //        //displayMode: 'markers'
+                //    };
+
+                //    this.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
+                //}
+
+                ///* ----- Setup pointmap ----- */
+                //{
+                //    this.pointmap = new google.maps.Map($('#pointmap')[0]),
+                //        {
+                //            mapTypeId: google.maps.MapTypeId.ROADMAP,
+                //            center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                //            zoom: 1, // zoom out
+                //            draggable: true, // allow map panning
+                //            scrollwheel: false // prevent mouse wheel zooming
+                //        };
+                //}
+
+                ///* ----- Setup piechart ----- */
+                //{
+                //    var piechartData = google.visualization.arrayToDataTable(
+                //        [
+                //            ['Engagement', 'Count']
+                //            //['Research or Creative Endeavor', 11],
+                //            //['Teaching or Mentoring', 2],
+                //            //['Award or Honor', 2],
+                //            //['Conference Presentation or Proceeding', 2],
+                //            //['Professional Development, Service or Consulting ', 7]
+                //        ]);
+
+                //    this.piechartOptions = {
+                //        title: 'Engagements'
+                //    };
+
+                //    this.piechart = new google.visualization.PieChart($('#typeChart')[0]);
+                //}
+
+                deferred.resolve();
+            //});
+
+            return deferred;
         }
     }
 }
