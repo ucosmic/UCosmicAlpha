@@ -116,7 +116,6 @@ textarea {
     border: solid 1px #aaa;
     border-right-color: #ddd;
     border-bottom-color: #ddd;
-    padding: 0 22px 0 0;
     -moz-box-shadow: inset 0 0 0 0 black;
     -webkit-box-shadow: inset 0 0 0 0 black;
     box-shadow: inset 0 0 0 0 black; }
@@ -125,9 +124,9 @@ textarea {
       -webkit-border-radius: 0;
       border-radius: 0;
       border: 0;
-      border-right: solid 1px #ddd;
       padding: 8px 0 8px 8px;
       height: 36px;
+      /**/
       text-indent: 0;
       font-size: 16px;
       line-height: 20px;
@@ -136,8 +135,11 @@ textarea {
       -webkit-box-shadow: inset 0 0 0 0 black;
       box-shadow: inset 0 0 0 0 black;
       color: #000; }
-    .k-combobox .k-dropdown-wrap .k-icon, .k-combobox .k-dropdown-wrap.k-state-default .k-icon, .k-combobox .k-dropdown-wrap.k-state-border-down .k-icon, .k-combobox .k-dropdown-wrap.k-state-hover .k-icon, .k-combobox .k-dropdown-wrap.k-state-focused .k-icon {
-      margin-top: 8px; }
+    .k-combobox .k-dropdown-wrap .k-select, .k-combobox .k-dropdown-wrap.k-state-default .k-select, .k-combobox .k-dropdown-wrap.k-state-border-down .k-select, .k-combobox .k-dropdown-wrap.k-state-hover .k-select, .k-combobox .k-dropdown-wrap.k-state-focused .k-select {
+      cursor: pointer;
+      width: 30px; }
+      .k-combobox .k-dropdown-wrap .k-select .k-icon, .k-combobox .k-dropdown-wrap.k-state-default .k-select .k-icon, .k-combobox .k-dropdown-wrap.k-state-border-down .k-select .k-icon, .k-combobox .k-dropdown-wrap.k-state-hover .k-select .k-icon, .k-combobox .k-dropdown-wrap.k-state-focused .k-select .k-icon {
+        margin-top: 2px; }
 
 select {
   -webkit-box-sizing: border-box;
@@ -176,8 +178,7 @@ select.inline {
     border-radius: 0;
     border: solid 1px #aaa;
     border-right-color: #ddd;
-    border-bottom-color: #ddd;
-    padding: 0 22px 0 0; }
+    border-bottom-color: #ddd; }
     .k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-input, .k-dropdown .k-dropdown-wrap.k-state-hover .k-input, .k-dropdown .k-dropdown-wrap.k-state-focused .k-input {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
@@ -186,7 +187,7 @@ select.inline {
       -webkit-border-radius: 0;
       border-radius: 0;
       border: 0;
-      border-right: solid 1px #ddd;
+      border-right: solid 1px #ccc;
       padding: 8px 0 8px 8px;
       height: 36px;
       text-indent: 0;
@@ -195,8 +196,10 @@ select.inline {
       font-family: Arial, Helvetica, sans-serif;
       background-color: #fff;
       color: #000; }
-    .k-dropdown .k-dropdown-wrap .k-icon, .k-dropdown .k-dropdown-wrap.k-state-default .k-icon, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-icon, .k-dropdown .k-dropdown-wrap.k-state-hover .k-icon, .k-dropdown .k-dropdown-wrap.k-state-focused .k-icon {
-      margin-top: 8px; }
+    .k-dropdown .k-dropdown-wrap .k-select, .k-dropdown .k-dropdown-wrap.k-state-default .k-select, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-select, .k-dropdown .k-dropdown-wrap.k-state-hover .k-select, .k-dropdown .k-dropdown-wrap.k-state-focused .k-select {
+      width: 30px; }
+      .k-dropdown .k-dropdown-wrap .k-select .k-icon, .k-dropdown .k-dropdown-wrap.k-state-default .k-select .k-icon, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-select .k-icon, .k-dropdown .k-dropdown-wrap.k-state-hover .k-select .k-icon, .k-dropdown .k-dropdown-wrap.k-state-focused .k-select .k-icon {
+        margin-top: 2px; }
 
 .k-list-container .k-list > .k-state-focused {
   background-image: -webkit-linear-gradient(270deg, #dbdbdb 0, #f2f2f2 100%);
@@ -287,9 +290,17 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
     text-decoration: none !important;
     cursor: not-allowed; }
 
-.k-upload-button {
-  width: auto;
-  max-width: 300px; }
+.k-upload {
+  border-width: 0;
+  background-color: transparent;
+  background-image: none; }
+  .k-upload .k-dropzone {
+    padding: 4px 0 4px 4px; }
+  .k-upload .k-upload-button {
+    width: auto;
+    max-width: 300px; }
+  .k-upload .k-upload-status {
+    display: none; }
 
 .validationMessage, .field-validation-error {
   display: inline-block;
@@ -378,9 +389,9 @@ section {
   margin-bottom: 40px; }
 
 .k-tooltip {
-  opacity: 1 !important;
-  background-color: white !important;
-  color: black !important; }
+  opacity: 1!important;
+  background-color: white!important;
+  color: black!important; }
 
 .field-table {
   margin: 16px 0; }

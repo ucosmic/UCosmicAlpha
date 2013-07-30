@@ -57,9 +57,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/ko/knockout.validation.js",
                 "~/scripts/ko/knockout.binding-handlers.js",
                 "~/scripts/sammy/sammy-{version}.js",
-                //"~/scripts/kendo/2012.3.1114/kendo.web.js",
-                "~/scripts/kendo/2013.1.226/kendo.web.js",
-                //"~/scripts/kendo/knockout-kendo.min.js",
+                "~/scripts/kendo/2013.2.716/kendo.web.js",
                 "~/scripts/oss/jquery.placeholder.js",
                 "~/scripts/oss/jquery.animate-enhanced.js",
                 "~/scripts/oss/jquery.autosize.js",
@@ -148,7 +146,6 @@ namespace UCosmic.Web.Mvc
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(
-                //"~/scripts/kendo/2013.1.226/kendo.web.js",
                 "~/scripts/viewmodels/Spinner.js",
                 "~/scripts/viewmodels/PagedSearch.js",
                 "~/scripts/viewmodels/users/SearchResult.js",
@@ -208,14 +205,9 @@ namespace UCosmic.Web.Mvc
                 "~/content/themes/base/jquery.ui.theme.css"));
 
             // KendoUI uniform theme
-            bundles.Add(new StyleBundle(
-                //"~/content/kendo/2012.3.1114/uniform-css"
-                "~/content/kendo/2013.1.226/uniform-css"
-                ).Include(
-                //"~/content/kendo/2012.3.1114/kendo.common.css",
-                //"~/content/kendo/2012.3.1114/kendo.uniform.css",
-                "~/content/kendo/2013.1.226/kendo.common.css",
-                "~/content/kendo/2013.1.226/kendo.uniform.css"));
+            bundles.Add(new StyleBundle("~/content/kendo/2013.2.716/uniform-css").Include(
+                "~/content/kendo/2013.2.716/kendo.common.css",
+                "~/content/kendo/2013.2.716/kendo.uniform.css"));
 
 
         }

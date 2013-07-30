@@ -4,7 +4,7 @@
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendouiweb.d.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../tinymce/tinymce.d.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -106,7 +106,7 @@ module ViewModels.LanguageExpertises {
                 dataTextField: "title",
                 dataValueField: "weight",
                 dataSource: this.proficiencyInfo.speakingMeanings,
-                value: this.speakingProficiency(),
+                value: this.speakingProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
 
@@ -114,7 +114,7 @@ module ViewModels.LanguageExpertises {
                 dataTextField: "title",
                 dataValueField: "weight",
                 dataSource: this.proficiencyInfo.listeningMeanings,
-                value: this.listeningProficiency(),
+                value: this.listeningProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
 
@@ -122,7 +122,7 @@ module ViewModels.LanguageExpertises {
                 dataTextField: "title",
                 dataValueField: "weight",
                 dataSource: this.proficiencyInfo.readingMeanings,
-                value: this.readingProficiency(),
+                value: this.readingProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
 
@@ -130,7 +130,7 @@ module ViewModels.LanguageExpertises {
                 dataTextField: "title",
                 dataValueField: "weight",
                 dataSource: this.proficiencyInfo.writingMeanings,
-                value: this.writingProficiency(),
+                value: this.writingProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
         }

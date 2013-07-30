@@ -92,22 +92,24 @@ textarea {
         border: solid 1px #aaa;
         border-right-color: #ddd;
         border-bottom-color: #ddd;
-        padding: 0 22px 0 0;
         @include inset-box-shadow(0, 0, 0, 0);
         input.k-input {
             @include border-radius(0);
             border: 0;
-            border-right: solid 1px #ddd;
             padding: 8px 0 8px 8px;
-            height: 36px;
+            height: 36px;/**/
             text-indent: 0;
             @include font-height(16px, 20px);
             @include font-arial;
             @include inset-box-shadow(0, 0, 0, 0);
             color: #000;
         }
-        .k-icon{
-            margin-top: 8px;
+        .k-select {
+            cursor: pointer;
+            width: 30px;
+            .k-icon{
+                margin-top: 2px;
+            }
         }
     }
 }
@@ -146,12 +148,11 @@ select.inline {
         border: solid 1px #aaa;
         border-right-color: #ddd;
         border-bottom-color: #ddd;
-        padding: 0 22px 0 0;
         .k-input {
             @include border-box;
             @include border-radius(0);
             border: 0;
-            border-right: solid 1px #ddd;
+            border-right: solid 1px #ccc;
             padding: 8px 0 8px 8px;
             height: 36px;
             text-indent: 0;
@@ -160,8 +161,11 @@ select.inline {
             background-color: #fff;
             color: #000;
         }
-        .k-icon{
-            margin-top: 8px;
+        .k-select {
+            width: 30px;
+            .k-icon{
+                margin-top: 2px;
+            }
         }
     }
 }
@@ -257,9 +261,20 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
     }
 }
 
-.k-upload-button {
-    width: auto;
-    max-width: 300px;
+.k-upload {
+    border-width: 0;
+    background-color: transparent;
+    background-image: none;
+    .k-dropzone {
+        padding: 4px 0 4px 4px;
+    }
+    .k-upload-button {
+        width: auto;
+        max-width: 300px;
+    }
+    .k-upload-status {
+        display: none;
+    }
 }
 
 .validationMessage, .field-validation-error {

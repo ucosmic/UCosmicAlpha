@@ -7,14 +7,14 @@
 @section styles
 {
     <style>
-        .k-upload-button {
+        .k-upload .k-upload-button {
             max-width: 500px;
             -webkit-border-radius: 0;
             -moz-border-radius: 0;
             border-radius: 0;
         }
 
-        .k-autocomplete, .k-autocomplete.k-state-focused {
+        .k-autocomplete, .k-autocomplete.k-state-default, .k-autocomplete.k-state-focused {
             -webkit-border-radius: 0;
             -moz-border-radius: 0;
             border-radius: 0;
@@ -31,6 +31,7 @@
                 font-size: 16px;
                 line-height: 20px;
                 height: auto;
+                text-indent: 0;
             }
 
         .k-list-container, .k-list-container.k-state-border-up, .k-list-container.k-state-border-down {
@@ -40,18 +41,30 @@
         }
 
         .k-multiselect {
-            border: solid 1px #aaa;
-            border-right-color: #ddd;
-            border-bottom-color: #ddd;
             background-image: none;
             background-color: transparent;
         }
 
+            .k-multiselect.k-header {
+                border: solid 1px #aaa;
+                border-right-color: #ddd;
+                border-bottom-color: #ddd;
+            }
+
+            .k-multiselect.k-state-focused {
+                -webkit-box-shadow: none;
+                box-shadow: none;
+            }
+
             .k-multiselect .k-input {
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                display: block;
                 padding: 8px 0 8px 4px;
                 font-size: 16px;
                 line-height: 20px;
-                height: 18px;
+                height: 36px;
                 margin: 0;
                 font-family: Arial;
                 color: #000;
@@ -105,25 +118,35 @@
                 -webkit-border-radius: 0;
                 -moz-border-radius: 0;
                 border-radius: 0;
-                padding-right: 26px;
+                padding-right: 28px;
+                border-color: #aaa;
+                border-right-color: #ddd;
+                border-bottom-color: #ddd;
             }
 
                 .k-datepicker .k-picker-wrap .k-input {
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
                     color: #000;
                     font-size: 16px;
                     line-height: 20px;
                     color: #000;
                     padding: 8px 0 8px 8px;
                     height: 36px;
+                    text-indent: 0;
                 }
 
                 .k-datepicker .k-picker-wrap .k-select {
-                    height: 28px;
-                    width: 18px;
-                    padding-top: 5px;
-                    padding-left: 5px;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    height: 36px;
+                    width: 29px;
+                    padding-top: 1px;
+                    padding-left: 0;
                     cursor: pointer;
-                    margin-left: 10px;
+                    margin-left: 0;
                 }
 
         .k-animation-container .k-calendar-container {
@@ -256,7 +279,7 @@
                                     <!-- TITLE -->
                                     <td class="label"><span class="container required"><span class="text">Title</span></span></td>
                                     <td>
-                                        <textarea rows="1" placeholder="[Enter Title]" maxlength="500"  data-bind="value: values.title"></textarea>
+                                        <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: values.title"></textarea>
                                     </td>
                                 </tr>
                                 <!-- COUNTRY -->
@@ -530,8 +553,8 @@
         <input type="button" value="Publish" data-bind="click: function (item, event) { save(item, event, 'Public'); }, clickBubble: false" />
         <input type="button" value="Guide Me" style="margin-left: 50px" />
         <span style="margin-left: 50px" data-bind="visible: saveSpinner.isVisible()">
-                <img src="../../../images/icons/spinner/spinner-20-blue.gif" alt="" />
-                <strong>Saving...</strong>
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+            <strong>Saving...</strong>
         </span>
         <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
     </span>

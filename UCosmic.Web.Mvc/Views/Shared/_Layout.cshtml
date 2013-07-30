@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/content/themes/base/css")
-    @*@Styles.Render("~/content/kendo/2012.3.1114/uniform-css")*@
-    @Styles.Render("~/content/kendo/2013.1.226/uniform-css")
+    @Styles.Render("~/content/kendo/2013.2.716/uniform-css")
     @Html.Action(MVC.Tenancy.Css())
     @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
@@ -173,12 +172,7 @@
     <input id="scroll_top_tracker" type="hidden" />
 
     @*
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-    <script src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
-    *@
-
-    @*
-        for some reason, kendo web ui does not work when jQuery is minified & bundled like this.
+        for some reason, kendo web ui does not work when jQuery is minified & bundled.
         current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
     *@
     @if (Html.IsOffline())
@@ -187,8 +181,7 @@
     }
     else
     {
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>*@
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     }
 
     @Html.Partial(MVC.Shared.Views._GoogleMapsScript)
@@ -209,10 +202,8 @@
         });
     </script>
 
-
     @Html.Partial(MVC.Shared.Views._UserVoiceScript)
     @RenderSection("scripts", required: false)
-
 
 </body>
 </html>

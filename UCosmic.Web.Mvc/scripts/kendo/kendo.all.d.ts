@@ -1041,7 +1041,7 @@ module kendo.ui {
         ignoreCase?: string;
         index?: number;
         optionLabel?: any;
-        template?: string;
+        template?: any;
         text?: string;
         value?: string;
         change?(e: DropDownListEvent): void;

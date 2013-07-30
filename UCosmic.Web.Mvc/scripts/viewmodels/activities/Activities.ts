@@ -4,7 +4,7 @@
 /// <reference path="../../ko/knockout.mapping-2.0.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendouiweb.d.ts" />
+/// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
@@ -155,28 +155,30 @@ module ViewModels.Activities
         /*  
         */
         // --------------------------------------------------------------------------------
-        deleteActivity(data: any, event: any, viewModel: any): void {
+        deleteActivity(data: any, e: any, viewModel: any): void {
             $("#confirmActivityDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
                 width: 'auto',
                 resizable: false,
                 modal: true,
                 buttons: [
-                            {
-                                text: "Yes, confirm delete", click: function (): void {
-                                    viewModel.deleteActivityById(data.id());
-                                    $(this).dialog("close");
+                {
+                    text: "Yes, confirm delete",
+                    click: function (): void {
+                        viewModel.deleteActivityById(data.id());
+                        $(this).dialog("close");
 
-                                    /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get();
-                                }
-                            },
-                            {
-                                text: "No, cancel delete", click: function (): void {
-                                    $(this).dialog("close");
-                                }
-                            },
-                ]
+                        /* TBD - Don't reload page. */
+                        location.href = App.Routes.Mvc.My.Profile.get();
+                    }
+                },
+                {
+                    text: "No, cancel delete",
+                    click: function (): void {
+                        $(this).dialog("close");
+                    },
+                    'data-css-link': true
+                }]
             });
         }
 

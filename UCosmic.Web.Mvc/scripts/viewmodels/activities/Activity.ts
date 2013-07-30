@@ -506,8 +506,6 @@ module ViewModels.Activities {
                             async: false,
                             type: 'DELETE',
                             url: App.Routes.WebApi.Activities.del( item.id() ),
-                            dataType: 'json',
-                            contentType: 'application/json',
                             success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                             },
                             error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {

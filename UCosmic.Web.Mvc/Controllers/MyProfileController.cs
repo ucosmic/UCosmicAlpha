@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     x => x.Person.User,
                 }
             });
-            if (activity.Person.User == null ||
+            if (activity == null ||
                 !User.Identity.Name.Equals(activity.Person.User.Name, StringComparison.OrdinalIgnoreCase))
                 return HttpNotFound();
 

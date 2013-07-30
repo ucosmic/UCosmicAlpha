@@ -89,7 +89,7 @@ var ViewModels;
                     }
                 });
             };
-            ActivityList.prototype.deleteActivity = function (data, event, viewModel) {
+            ActivityList.prototype.deleteActivity = function (data, e, viewModel) {
                 $("#confirmActivityDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
                     width: 'auto',
@@ -108,9 +108,9 @@ var ViewModels;
                             text: "No, cancel delete",
                             click: function () {
                                 $(this).dialog("close");
-                            }
-                        }, 
-                        
+                            },
+                            'data-css-link': true
+                        }
                     ]
                 });
             };

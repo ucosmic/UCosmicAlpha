@@ -40,7 +40,7 @@ var ViewModels;
                 });
                 $("#fromDate").kendoDropDownList({
                     dataSource: this.years,
-                    value: me.from(),
+                    value: me.from().toString(),
                     optionLabel: " ",
                     change: function (e) {
                         var toDateDropList = $("#toDate").data("kendoDropDownList");

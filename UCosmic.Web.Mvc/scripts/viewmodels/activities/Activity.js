@@ -426,8 +426,6 @@ var ViewModels;
                                 async: false,
                                 type: 'DELETE',
                                 url: App.Routes.WebApi.Activities.del(item.id()),
-                                dataType: 'json',
-                                contentType: 'application/json',
                                 success: function (data, textStatus, jqXhr) {
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {

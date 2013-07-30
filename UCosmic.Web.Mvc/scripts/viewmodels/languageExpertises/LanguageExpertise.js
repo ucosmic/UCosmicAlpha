@@ -46,28 +46,28 @@ var ViewModels;
                     dataTextField: "title",
                     dataValueField: "weight",
                     dataSource: this.proficiencyInfo.speakingMeanings,
-                    value: this.speakingProficiency(),
+                    value: this.speakingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
                 $("#" + listeningInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
                     dataSource: this.proficiencyInfo.listeningMeanings,
-                    value: this.listeningProficiency(),
+                    value: this.listeningProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
                 $("#" + readingInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
                     dataSource: this.proficiencyInfo.readingMeanings,
-                    value: this.readingProficiency(),
+                    value: this.readingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
                 $("#" + writingInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
                     dataSource: this.proficiencyInfo.writingMeanings,
-                    value: this.writingProficiency(),
+                    value: this.writingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
             };
