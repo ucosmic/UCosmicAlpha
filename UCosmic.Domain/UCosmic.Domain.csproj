@@ -352,8 +352,10 @@
     <Compile Include="Domain\People\Commands\DeletePerson.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
+    <Compile Include="Domain\People\Queries\MyPeople.cs" />
     <Compile Include="Domain\People\Queries\PeopleByCriteria.cs" />
     <Compile Include="Domain\People\Validation\PersonConstraints.cs" />
+    <Compile Include="Domain\People\Validation\MustBeTenantPersonId.cs" />
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeSamePerson.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
