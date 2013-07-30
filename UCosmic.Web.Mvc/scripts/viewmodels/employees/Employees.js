@@ -16,10 +16,12 @@ var ViewModels;
                 this.institutionCountryOfficialName = ko.observable(null);
                 this.institutionHasCampuses = ko.observable(false);
                 this.activityTypes = ko.observableArray();
+                this.selectedActivityIds = ko.observableArray();
                 this.isHeatmapVisible = ko.observable(true);
                 this.isPointmapVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
                 this.searchType = ko.observable('activities');
+                this.selectSearchType('activities');
                 if(institutionInfo != null) {
                     if(institutionInfo.InstitutionId != null) {
                         this.institutionId(Number(institutionInfo.InstitutionId));
@@ -229,18 +231,6 @@ var ViewModels;
                         }
                     });
                 }
-                var activities = new Array();
-                for(var i = 0; i < this.activityTypes().length; i += 1) {
-                    activities.push({
-                        type: this.activityTypes()[i].type(),
-                        selected: false
-                    });
-                }
-                $("#heatmapActivityDropList").kendoDropDownList({
-                    dataTextField: "type",
-                    dataValueField: "selected",
-                    dataSource: activities
-                });
             };
             FacultyAndStaff.prototype.setupValidation = function () {
             };
@@ -258,6 +248,9 @@ var ViewModels;
                 });
                 $.when(typesPact).done(function (types) {
                     _this.activityTypes = ko.mapping.fromJS(types);
+                    for(var i = 0; i < _this.activityTypes().length; i += 1) {
+                        _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
+                    }
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
@@ -306,6 +299,82 @@ var ViewModels;
                     $('#resultstableText').css("font-weight", "bold");
                     this.isTableVisible(true);
                 }
+            };
+            FacultyAndStaff.prototype.selectSearchType = function (type) {
+                if(type === 'activities') {
+                    this.setActivitiesSearch();
+                } else {
+                    this.setPeopleSearch();
+                }
+            };
+            FacultyAndStaff.prototype.setActivitiesSearch = function () {
+                $('#activitiesButton').css("font-weight", "bold");
+                $('#peopleButton').css("font-weight", "normal");
+                this.searchType('activities');
+            };
+            FacultyAndStaff.prototype.setPeopleSearch = function () {
+                $('#activitiesButton').css("font-weight", "normal");
+                $('#peopleButton').css("font-weight", "bold");
+                this.searchType('people');
+            };
+            FacultyAndStaff.prototype.addActivityType = function (activityTypeId) {
+                var existingIndex = this.getActivityTypeIndexById(activityTypeId);
+                if(existingIndex == -1) {
+                    var newActivityType = ko.mapping.fromJS({
+                        id: 0,
+                        typeId: activityTypeId,
+                        version: ""
+                    });
+                    this.selectedActivityIds.push(newActivityType);
+                }
+            };
+            FacultyAndStaff.prototype.removeActivityType = function (activityTypeId) {
+                var existingIndex = this.getActivityTypeIndexById(activityTypeId);
+                if(existingIndex != -1) {
+                    var activityType = this.selectedActivityIds()[existingIndex];
+                    this.selectedActivityIds.remove(activityType);
+                }
+            };
+            FacultyAndStaff.prototype.getTypeName = function (id) {
+                var name = "";
+                var index = this.getActivityTypeIndexById(id);
+                if(index != -1) {
+                    name = this.activityTypes[index].type;
+                }
+                return name;
+            };
+            FacultyAndStaff.prototype.getActivityTypeIndexById = function (activityTypeId) {
+                var index = -1;
+                if((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
+                    var i = 0;
+                    while((i < this.selectedActivityIds().length) && (activityTypeId != this.selectedActivityIds()[i].typeId())) {
+                        i += 1;
+                    }
+                    if(i < this.selectedActivityIds().length) {
+                        index = i;
+                    }
+                }
+                return index;
+            };
+            FacultyAndStaff.prototype.hasActivityType = function (activityTypeId) {
+                return this.getActivityTypeIndexById(activityTypeId) != -1;
+            };
+            FacultyAndStaff.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
+                var _this = this;
+                var def = {
+                    read: function () {
+                        return _this.hasActivityType(_this.activityTypes()[activityTypeIndex].id());
+                    },
+                    write: function (checked) {
+                        if(checked) {
+                            _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
+                        } else {
+                            _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
+                        }
+                    },
+                    owner: this
+                };
+                return def;
             };
             return FacultyAndStaff;
         })();

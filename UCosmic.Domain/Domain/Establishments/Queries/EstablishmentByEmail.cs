@@ -24,13 +24,24 @@ namespace UCosmic.Domain.Establishments
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            if (string.IsNullOrWhiteSpace(query.Email) || !query.Email.Contains("@"))
+            if (string.IsNullOrWhiteSpace(query.Email))
                 return null;
+
+            if (!query.Email.Contains("@"))
+            {
+                string emailDomain = "@" + query.Email;
+                return _entities.Query<Establishment>()
+                    .EagerLoad(_entities, query.EagerLoad)
+                    .ByEmailDomain(emailDomain)
+                ;
+            }
+
 
             return _entities.Query<Establishment>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .ByEmail(query.Email)
             ;
+
         }
     }
 }

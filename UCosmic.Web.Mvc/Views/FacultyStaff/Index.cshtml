@@ -132,6 +132,8 @@
             color: black !important;
             background-color: white;
         }
+
+
     </style>
 }
 
@@ -155,7 +157,7 @@
             $.ajax({
                 type: "GET",
                 async: false,
-                url: App.Routes.WebApi.Activities.CountryCounts.get(),
+                url: App.Routes.WebApi.Activities.CountryCounts.post(),
                 success: function(data, textStatus, jqXHR) {
                     for (var i = 0; i < data.length; i += 1) {
                         countryData.push([data[i].officialName, data[i].count]);
@@ -166,6 +168,22 @@
                 },
                 dataType: 'json'
             });
+            
+            //$.ajax({
+            //    type: "POST",
+            //    async: false,
+            //    url: App.Routes.WebApi.Activities.CountryCounts.post(),
+            //    data: ko.toJSON(this.selectedActivityIds()),
+            //    success: function(data, textStatus, jqXHR) {
+            //        for (var i = 0; i < data.length; i += 1) {
+            //            countryData.push([data[i].officialName, data[i].count]);
+            //        }
+            //    },
+            //    error: function(jqXhr, textStatus, errorThrown) {
+            //        debugger;
+            //    },
+            //    dataType: 'json'
+            //});
 
             var countryDataTable = google.visualization.arrayToDataTable(countryData);
 
@@ -184,10 +202,17 @@
             window.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
             window.heatmap.draw(countryDataTable, options);
 
-            var data2 = google.visualization.arrayToDataTable([['Task', 'Hours per Day'], ['Work', 11], ['Eat', 2], ['Commute', 2], ['Watch TV', 2], ['Sleep', 7]]);
+
+
+            var data2 = google.visualization.arrayToDataTable([['Engagement', 'Count'],
+                ['Research or Creative Endeavor', 11],
+                ['Teaching or Mentoring', 2],
+                ['Award or Honor', 2],
+                ['Conference Presentation or Proceeding', 2],
+                ['Professional Development, Service or Consulting ', 7]]);
+            
             var options2 = {
-                title: 'Engagements',
-                width: 270
+                title: 'Engagements'
             };
             window.piechart = new google.visualization.PieChart(document.getElementById('typeChart'));
             window.piechart.draw(data2, options2);
@@ -271,13 +296,13 @@
                 <div data-bind="visible: isHeatmapVisible()">
                     <div style="text-align: left">
                         <span>
-                            <input type="button" id="activitiesButton" style="font-weight: bold" value="Activites"/>
-                            <input type="button" id="peopleButton" style=""  value="People"/>
+                            <input type="button" id="activitiesButton" value="Activites" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
+                            <input type="button" id="peopleButton" value="People" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
                         </span>
-                        <div style="float: right">
+@*                        <div style="float: right">
                             <select id="heatmapActivityDropList"></select>
                         </div>
-                        <select id="heatmapPeopleDropList" style="display: none"></select>
+                        <select id="heatmapPeopleDropList" style="display: none"></select>*@
                     </div>
                     <div id="heatmap"></div>
                 </div>

@@ -283,6 +283,19 @@ ul.selectableListItems li:hover {
   background-color: white;
   color: #ff0302;
   margin-top: 8px; }
+  .stats-sidebar .keywords-search {
+    margin-bottom: 16px; }
+    .stats-sidebar .keywords-search h1 {
+      font-size: large; }
+    .stats-sidebar .keywords-search input[type="text"] {
+      height: 28px;
+      font-size: 16px;
+      font-weight: bold; }
+  .stats-sidebar .stats h2 {
+    font-size: medium; }
+  .stats-sidebar .type-filters li {
+    margin: 8px;
+    font-size: medium; }
   .stats-sidebar input[type="text"] {
     height: 28px;
     line-height: 13px;

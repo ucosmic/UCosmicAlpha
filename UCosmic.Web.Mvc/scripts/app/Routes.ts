@@ -553,6 +553,9 @@ module App.Routes {
                 export function get (): string {
                     return makeUrl('activity-country-counts');
                 }
+                export function post (): string {
+                    return makeUrl('activity-country-counts');
+                }
             }
 
         } // Activities

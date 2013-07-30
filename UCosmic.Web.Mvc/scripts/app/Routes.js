@@ -620,6 +620,10 @@ var App;
                         return makeUrl('activity-country-counts');
                     }
                     CountryCounts.get = get;
+                    function post() {
+                        return makeUrl('activity-country-counts');
+                    }
+                    CountryCounts.post = post;
                 })(Activities.CountryCounts || (Activities.CountryCounts = {}));
                 var CountryCounts = Activities.CountryCounts;
             })(WebApi.Activities || (WebApi.Activities = {}));

@@ -36,6 +36,7 @@ module ViewModels.Employees {
 
         /* Array of activity types displayed as list of checkboxes */
         activityTypes: KnockoutObservableArray;
+        selectedActivityIds: KnockoutObservableArray;
 
         /* Locations for multiselect. */
         locationSelectorId: string;
@@ -55,6 +56,7 @@ module ViewModels.Employees {
         isPointmapVisible: KnockoutObservableBool;
         isTableVisible: KnockoutObservableBool;
 
+
         // --------------------------------------------------------------------------------
         /*
         */
@@ -69,10 +71,13 @@ module ViewModels.Employees {
             this.institutionCountryOfficialName = ko.observable(null);
             this.institutionHasCampuses = ko.observable(false);
             this.activityTypes = ko.observableArray();
+            this.selectedActivityIds = ko.observableArray();
             this.isHeatmapVisible = ko.observable(true);
             this.isPointmapVisible = ko.observable(false);
             this.isTableVisible = ko.observable(false);
             this.searchType = ko.observable('activities');
+
+            this.selectSearchType('activities');
 
             if (institutionInfo != null) {
 
@@ -330,16 +335,16 @@ module ViewModels.Employees {
                 });
             }
 
-            var activities = new Array();
-            for (var i = 0; i < this.activityTypes().length; i += 1) {
-                activities.push({ type: this.activityTypes()[i].type(), selected: false });
-            }
+            //var activities = new Array();
+            //for (var i = 0; i < this.activityTypes().length; i += 1) {
+            //    activities.push({ type: this.activityTypes()[i].type(), selected: false });
+            //}
 
-            $("#heatmapActivityDropList").kendoDropDownList({
-                dataTextField: "type",
-                dataValueField: "selected",
-                dataSource: activities
-            });
+            //$("#heatmapActivityDropList").kendoDropDownList({
+            //    dataTextField: "type",
+            //    dataValueField: "selected",
+            //    dataSource: activities
+            //});
         }
 
         // --------------------------------------------------------------------------------
@@ -410,6 +415,11 @@ module ViewModels.Employees {
                             .done((types: Service.ApiModels.IEmployeeActivityType[], ): void => {
 
                                 this.activityTypes = ko.mapping.fromJS(types);
+
+                                /* Check the activity types checkboxes if the activity type exists in values. */
+                                for (var i = 0; i < this.activityTypes().length; i += 1) {
+                                    this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
+                                }
 
                                 //ko.mapping.fromJS(data, {}, this);
 
@@ -490,6 +500,125 @@ module ViewModels.Employees {
                 $('#resultstableText').css("font-weight", "bold");
                 this.isTableVisible(true);
             }
+        }
+
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        selectSearchType(type: string): void {
+            if (type === 'activities') {
+                this.setActivitiesSearch();
+            }
+            else {
+                this.setPeopleSearch();
+            }
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        setActivitiesSearch(): void {
+            $('#activitiesButton').css("font-weight", "bold");
+            $('#peopleButton').css("font-weight", "normal");
+            this.searchType('activities');
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        setPeopleSearch(): void {
+            $('#activitiesButton').css("font-weight", "normal");
+            $('#peopleButton').css("font-weight", "bold");
+            this.searchType('people');
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        addActivityType(activityTypeId: number): void {
+            var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
+            if (existingIndex == -1) {
+                var newActivityType: KnockoutObservableAny = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
+                this.selectedActivityIds.push(newActivityType);
+            }
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        removeActivityType(activityTypeId: number): void {
+            var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
+            if (existingIndex != -1) {
+                var activityType = this.selectedActivityIds()[existingIndex];
+                this.selectedActivityIds.remove(activityType);
+            }
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        getTypeName(id: number): string {
+            var name: string = "";
+            var index: number = this.getActivityTypeIndexById(id);
+            if (index != -1) { name = this.activityTypes[index].type; }
+            return name;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        getActivityTypeIndexById(activityTypeId: number): number {
+            var index: number = -1;
+
+            if ((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
+                var i = 0;
+                while ((i < this.selectedActivityIds().length) &&
+                                     (activityTypeId != this.selectedActivityIds()[i].typeId())) { i += 1 }
+
+                if (i < this.selectedActivityIds().length) {
+                    index = i;
+                }
+            }
+
+            return index;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        hasActivityType(activityTypeId: number): bool {
+            return this.getActivityTypeIndexById(activityTypeId) != -1;
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine {
+            var def: KnockoutComputedDefine = {
+                read: (): bool => {
+                    return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
+                },
+                write: function (checked) => {
+                    if (checked) {
+                        this.addActivityType(this.activityTypes()[activityTypeIndex].id());
+                    } else {
+                        this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
+                    }
+                },
+                owner: this
+            };
+
+            return def;
         }
     }
 }

@@ -1,26 +1,26 @@
 ﻿<div class="stats-sidebar" style="margin-top: 10px">
-    <div style="margin-bottom: 16px">
+    <div class="keywords-search">
         <h1>Keyword Search</h1>
-        <input type="text" id="keywords"/>
+        <input type="text" id="keywords" style="width: 85%"/>
+        <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
     </div>
-    <div>
-        <div><span>Country:</span><span data-bind=""></span></div>
-        <div><span>Total Activities:</span><span data-bind=""></span></div>
+    <div class="stats">
+        <p><h2>Country:</h2><span data-bind=""></span></p>
+        <div data-bind="visible: searchType() === 'activities'"><h2>Total Activities:</h2><span data-bind=""></span></div>
+        <div data-bind="visible: searchType() === 'people'"><h2>Total People:</h2><span data-bind=""></span></div>
     </div>
-    <div>
-        <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
-            <div class="section-header">Type of Engagement</div>
-            <div style="font-size: small">
-                <ul class="data-items" data-bind="template: { name: 'activity-counts-template', foreach: activityTypes }" />
-            </div>
+    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
+        <div style="font-size: small">
+            <ul class="data-items" data-bind="template: { name: 'activity-counts-template', foreach: activityTypes }" />
         </div>
-        <div id="typeChart" style="width: 120px"></div>
+        <div id="typeChart" style="width: 100%"></div>
     </div>
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-counts-template">
-    <li style="margin-left: 8px">
-        <span style="width: 60%" data-bind="text: $data.type"></span><span data-bind=""></span>
+    <li>
+        <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="" />
+        <span style="width: 100%" data-bind="text: $data.type"></span>
     </li>
 </script>

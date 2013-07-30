@@ -807,6 +807,7 @@
     <Content Include="content\kendo\2013.1.226\images\KendoUI.ttf" />
     <Content Include="content\kendo\2013.1.226\images\KendoUI.woff" />
     <Content Include="images\icons\print\print-24-black.png" />
+    <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <Content Include="scripts\google\google.maps.d.ts" />
     <None Include="scripts\jquery\jquery-1.8.d.ts" />

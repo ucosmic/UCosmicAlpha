@@ -22,6 +22,20 @@ namespace UCosmic.Domain.Establishments
             return establishment;
         }
 
+        internal static Establishment ByEmailDomain(this IQueryable<Establishment> queryable, string emailDomain)
+        {
+            var establishment = queryable.SingleOrDefault
+            (
+                e =>
+                e.EmailDomains.Any
+                (
+                    d =>
+                    d.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)
+                )
+            );
+            return establishment;
+        }
+
         internal static Establishment ByUrl(this IQueryable<Establishment> queryable, string url)
         {
             var establishment = queryable.SingleOrDefault
