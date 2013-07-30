@@ -8,14 +8,14 @@ namespace UCosmic.Domain.People
 {
     public class DeletePerson
     {
-        public IPrincipal Principal { get; protected internal set; }
-        public int Id { get; protected internal set; }
-
         public DeletePerson(IPrincipal principal, int id)
         {
             Principal = principal;
             Id = id;
         }
+
+        public IPrincipal Principal { get; private set; }
+        public int Id { get; private set; }
     }
 
     public class ValidateDeletePersonCommand : AbstractValidator<DeletePerson>

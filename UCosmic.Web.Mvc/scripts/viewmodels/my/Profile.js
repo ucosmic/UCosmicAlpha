@@ -33,13 +33,10 @@ var ViewModels;
                 this._degreesViewModel = null;
                 this._internationalAffiliationsViewModel = null;
                 this.hasPhoto = ko.observable();
-                this.isPhotoExtensionInvalid = ko.observable(false);
-                this.isPhotoTooManyBytes = ko.observable(false);
-                this.isPhotoFailureUnexpected = ko.observable(false);
-                this.photoFileExtension = ko.observable();
-                this.photoFileName = ko.observable();
+                this.photoUploadError = ko.observable();
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get({
-                    maxSide: 128
+                    maxSide: 128,
+                    refresh: new Date().toUTCString()
                 }));
                 this.photoUploadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
                 this.photoDeleteSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
@@ -69,6 +66,7 @@ var ViewModels;
                 this.startTabName = ko.observable("Activities");
                 this._initialize();
             }
+            Profile.photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
             Profile.prototype._initialize = function () {
             };
             Profile.prototype.load = function (startTab) {
@@ -286,9 +284,7 @@ var ViewModels;
             Profile.prototype._deletePhoto = function () {
                 var _this = this;
                 this.photoDeleteSpinner.start();
-                this.isPhotoExtensionInvalid(false);
-                this.isPhotoTooManyBytes(false);
-                this.isPhotoFailureUnexpected(false);
+                this.photoUploadError(undefined);
                 $.ajax({
                     url: App.Routes.WebApi.My.Profile.Photo.del(),
                     type: 'DELETE'
@@ -304,7 +300,7 @@ var ViewModels;
                         refresh: new Date().toUTCString()
                     }));
                 }).fail(function () {
-                    _this.isPhotoFailureUnexpected(true);
+                    _this.photoUploadError(Profile.photoUploadUnexpectedErrorMessage);
                 });
             };
             Profile.prototype._setupRouting = function () {
@@ -403,42 +399,25 @@ var ViewModels;
                                 select: 'Choose a photo to upload...'
                             },
                             async: {
-                                saveUrl: App.Routes.WebApi.My.Profile.Photo.post(),
-                                removeUrl: App.Routes.WebApi.My.Profile.Photo.kendoRemove()
+                                saveUrl: App.Routes.WebApi.My.Profile.Photo.post()
                             },
-                            upload: function (e) {
-                                var allowedExtensions = [
-                                    '.png', 
-                                    '.jpg', 
-                                    '.jpeg', 
-                                    '.gif'
-                                ];
-                                _this.isPhotoExtensionInvalid(false);
-                                _this.isPhotoTooManyBytes(false);
-                                _this.isPhotoFailureUnexpected(false);
-                                $(e.files).each(function (index) {
-                                    var isExtensionAllowed = false;
-                                    var isByteNumberAllowed = false;
-                                    var extension = e.files[index].extension;
-                                    _this.photoFileExtension(extension || '[NONE]');
-                                    _this.photoFileName(e.files[index].name);
-                                    for(var i = 0; i < allowedExtensions.length; i++) {
-                                        if(allowedExtensions[i] === extension.toLowerCase()) {
-                                            isExtensionAllowed = true;
-                                            break;
-                                        }
+                            select: function (e) {
+                                _this.photoUploadSpinner.start();
+                                $.ajax({
+                                    type: 'POST',
+                                    async: false,
+                                    url: '/api/my/profile/photo/validate',
+                                    data: {
+                                        name: e.files[0].name,
+                                        length: e.files[0].size
                                     }
-                                    if(!isExtensionAllowed) {
-                                        e.preventDefault();
-                                        _this.isPhotoExtensionInvalid(true);
-                                    } else if(e.files[index].size && e.files[index].size > (1024 * 1024)) {
-                                        e.preventDefault();
-                                        _this.isPhotoTooManyBytes(true);
-                                    }
+                                }).done(function () {
+                                    _this.photoUploadError(undefined);
+                                }).fail(function (xhr) {
+                                    _this.photoUploadError(xhr.responseText);
+                                    e.preventDefault();
+                                    _this.photoUploadSpinner.stop();
                                 });
-                                if(!e.isDefaultPrevented()) {
-                                    _this.photoUploadSpinner.start();
-                                }
                             },
                             complete: function () {
                                 _this.photoUploadSpinner.stop();
@@ -456,23 +435,10 @@ var ViewModels;
                                 }
                             },
                             error: function (e) {
-                                var fileName, fileExtension;
-                                if(e.files && e.files.length > 0) {
-                                    fileName = e.files[0].name;
-                                    fileExtension = e.files[0].extension;
-                                }
-                                if(fileName) {
-                                    _this.photoFileName(fileName);
-                                }
-                                if(fileExtension) {
-                                    _this.photoFileExtension(fileExtension);
-                                }
-                                if(e.XMLHttpRequest.status === 415) {
-                                    _this.isPhotoExtensionInvalid(true);
-                                } else if(e.XMLHttpRequest.status === 413) {
-                                    _this.isPhotoTooManyBytes(true);
+                                if(e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                                    _this.photoUploadError(e.XMLHttpRequest.responseText);
                                 } else {
-                                    _this.isPhotoFailureUnexpected(true);
+                                    _this.photoUploadError(Profile.photoUploadUnexpectedErrorMessage);
                                 }
                             }
                         });

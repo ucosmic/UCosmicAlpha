@@ -361,6 +361,7 @@
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
     <Compile Include="Models\DegreeApiModel.cs" />
     <Compile Include="Models\Identity\ActivityModel.cs" />
+    <Compile Include="Models\People\PersonPhotoApiModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />

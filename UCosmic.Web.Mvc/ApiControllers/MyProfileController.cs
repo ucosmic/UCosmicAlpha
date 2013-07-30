@@ -10,6 +10,7 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using Newtonsoft.Json;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
@@ -25,6 +26,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateMyProfile> _profileUpdateHandler;
         private readonly IHandleCommands<UpdateMyPhoto> _photoUpdateHandler;
+        private readonly IValidator<UpdateMyPhoto> _photoUpdateValidator;
         private readonly IHandleCommands<DeleteMyPhoto> _photoDeleteHandler;
         private readonly IHandleCommands<CreateMyAffiliation> _createAffiliationHandler;
         private readonly IHandleCommands<UpdateMyAffiliation> _updateAffiliationHandler;
@@ -33,6 +35,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public MyProfileController(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IHandleCommands<UpdateMyProfile> profileUpdateHandler
+            , IValidator<UpdateMyPhoto> photoUpdateValidator
             , IHandleCommands<UpdateMyPhoto> photoUpdateHandler
             , IHandleCommands<DeleteMyPhoto> photoDeleteHandler
             , IHandleCommands<CreateMyAffiliation> createAffiliationHandler
@@ -42,6 +45,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             _queryProcessor = queryProcessor;
             _profileUpdateHandler = profileUpdateHandler;
+            _photoUpdateValidator = photoUpdateValidator;
             _photoUpdateHandler = photoUpdateHandler;
             _photoDeleteHandler = photoDeleteHandler;
             _entities = entities;
@@ -138,15 +142,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
             // do not allow photo uploads exceeding 1MB (413)
-            if (photo.Content.Length > (1024 * 1024))
-                throw new HttpResponseException(HttpStatusCode.RequestEntityTooLarge);
+            //if (photo.Content.Length > (1024 * 1024))
+            //    throw new HttpResponseException(HttpStatusCode.RequestEntityTooLarge);
 
-            _photoUpdateHandler.Handle(new UpdateMyPhoto(User)
+            var command = new UpdateMyPhoto(User)
             {
                 Name = photo.FileName,
                 MimeType = photo.ContentType,
                 Content = photo.Content,
-            });
+            };
+            try
+            {
+                _photoUpdateHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.Name);
+                Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.Content);
+                if (ex.Errors.Any(forName))
+                    return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
+                        ex.Errors.First(forName).ErrorMessage, "text/plain");
+                if (ex.Errors.Any(forContent))
+                    return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
+                        ex.Errors.First(forContent).ErrorMessage, "text/plain");
+            }
 
             // for some reason, KendoUIWeb's upload widget will only think the upload succeeded
             // when the response is either empty, or contains a JSON payload with text/plain encoding.
@@ -155,6 +174,31 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var successPayload = new { message = successMessage };
             var successJson = JsonConvert.SerializeObject(successPayload);
             return Request.CreateResponse(HttpStatusCode.OK, successJson, "text/plain");
+        }
+
+        [POST("photo/validate")]
+        public HttpResponseMessage ValidatePhoto(PersonPhotoApiModel photo)
+        {
+            //System.Threading.Thread.Sleep(2000); // test api latency
+
+            var command = new UpdateMyPhoto(User)
+            {
+                Name = photo.Name,
+            };
+            command.Content = photo.Length.HasValue ? new byte[photo.Length.Value] : new byte[0];
+            var validationResult = _photoUpdateValidator.Validate(command);
+            var forProperties = new List<Func<ValidationFailure, bool>>
+            {
+                x => x.PropertyName == command.PropertyName(y => y.Name),
+            };
+            if (photo.Length.HasValue)
+                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
+            foreach (var forProperty in forProperties)
+                if (validationResult.Errors.Any(forProperty))
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [DELETE("photo")]
@@ -174,25 +218,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK, "Your photo was deleted successfully.");
         }
 
-        [POST("photo/kendo-remove")]
-        public HttpResponseMessage KendoRemovePhoto()
-        {
-            /*
-             * KendoUIWeb's Upload widget requires a remove URL endpoint.
-             * When it is aware of a previous photo, and when it disallows
-             * multiple file uploads, uploading will issue a request to this
-             * URL in order to delete them. However it is possible for both
-             * the saveUrl and removeUrl to be issued in parallel, which can
-             * lead to concurrency issues. Because the PostPhoto action &
-             * command take care of deleting any previously-existing photo,
-             * this action is left empty and simply returns a result to tell
-             * Kendo Upload that the removal operation was successful.
-             */
-
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        // --------------------------------------------------------------------------------
         /*
          * Get affiliations
         */

@@ -2529,6 +2529,7 @@ module kendo.ui {
         files?: any;
         data?: any;
         preventDefault: Function;
+        isDefaultPrevented: () => bool;
     }
 
 

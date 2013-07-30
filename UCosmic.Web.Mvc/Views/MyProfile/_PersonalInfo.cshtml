@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     var viewingUser = Session.UserImpersonating() ?? User;
 }
 
@@ -6,9 +7,8 @@
     <div class="field-table w870-l300-v570">
         <div class="field-row">
             <div class="field-label" style="padding-top: 0;">
-                @* ReSharper disable Html.PathError *@
-                <img src="~/api/my/profile/photo?maxSide=128" alt="" data-bind="attr: { src: photoSrc }" />
-                @* ReSharper restore Html.PathError *@
+                <img src="@Url.HttpRouteUrl(null, new { controller = "MyProfile", action = "GetPhoto", maxSide = "128", refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
+                    alt="" data-bind="attr: { src: photoSrc }" />
             </div>
             <div class="field-input">
                 <div>
@@ -26,18 +26,8 @@
                             </p>
                         </div>
                     </div>
-                    <div data-bind="visible: isPhotoExtensionInvalid" style="display: none;">
-                        <span class="validationMessage">The file extension &quot;<span data-bind="text: photoFileExtension"></span>&quot; 
-                            is either an invalid or unallowed image file. Please choose a file with a .jpg, .jpeg, .gif, or .png extension (case insensitive).</span>
-                    </div>
-                    <div data-bind="visible: isPhotoTooManyBytes" style="display: none;">
-                        <span class="validationMessage">The photo &quot;<span data-bind="text: photoFileName"></span>&quot; 
-                            is too large. Please choose a photo that is less than 1 megabyte in size.</span>
-                    </div>
-                    <div data-bind="visible: isPhotoFailureUnexpected" style="display: none;">
-                        <span class="validationMessage">UCosmic experienced an unexpected error managing your photo, please try again. 
-                            If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
-                        </span>
+                    <div data-bind="visible: photoUploadError" style="display: none;">
+                        <span class="validationMessage" data-bind="text: photoUploadError"></span>
                     </div>
                     <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px; display: none;">
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />

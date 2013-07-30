@@ -1,4 +1,5 @@
-﻿ @model UCosmic.Web.Mvc.Models.ProfileModel
+﻿@using System.Globalization
+@model UCosmic.Web.Mvc.Models.ProfileModel
 
 @{
     var customProfileTitle = "My UCosmic Profile";
@@ -104,9 +105,8 @@
                                 <div class="card">
                                     <div class="group">
                                         <div class="on-left photo">
-                                            @* ReSharper disable Html.PathError *@
-                                            <img src="~/api/my/profile/photo?maxSide=128" alt="" data-bind="attr: { src: photoSrc }" />
-                                            @* ReSharper restore Html.PathError *@
+                                            <img src="@Url.HttpRouteUrl(null, new { controller = "MyProfile", action = "GetPhoto", maxSide = 128, refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
+                                                alt="" data-bind="attr: { src: photoSrc }" />
                                         </div>
                                         <div class="on-left name-and-title">
                                             <div>

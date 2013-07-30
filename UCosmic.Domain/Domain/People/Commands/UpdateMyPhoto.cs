@@ -41,21 +41,19 @@ namespace UCosmic.Domain.People
             ;
 
             RuleFor(x => x.Content)
-                .NotNull()
-                    .WithMessage("File content is missing.");
-
-            RuleFor(x => x.Content.Length)
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage("File content has no length.");
+                .NotNull().WithMessage(MustHaveFileContent.FailMessage)
+                .Must(x => x.Length > 0).WithMessage(MustHaveFileContent.FailMessage)
+                .MustNotExceedFileSize(1, FileSizeUnitName.Megabyte, x => x.Name)
+            ;
 
             RuleFor(x => x.Name)
-                .NotEmpty()
-                    .WithMessage("File name is required.");
+                .NotEmpty().WithMessage(MustHaveFileName.FailMessage)
+                .MustHaveAllowedFileExtension(PersonConstraints.AllowedPhotoFileExtensions)
+            ;
 
             RuleFor(x => x.MimeType)
-                .NotEmpty()
-                    .WithMessage("File mime type is required.");
-
+                .NotEmpty().WithMessage(MustHaveFileMimeType.FailMessage)
+            ;
         }
     }
 
