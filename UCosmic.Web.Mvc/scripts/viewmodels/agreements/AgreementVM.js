@@ -113,9 +113,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.files = ko.mapping.fromJS([]);
             this.participantsExport = ko.mapping.fromJS([]);
             this.participants = ko.mapping.fromJS([]);
+            this.participantsErrorMsg = ko.observable();
             this.contacts = ko.mapping.fromJS([]);
             this.contactPhones = ko.mapping.fromJS([]);
-            this.participantsErrorMsg = ko.observable();
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                 return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
             });
@@ -128,9 +128,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 frameWidth: 970,
                 root: '[data-current-module=agreements]'
             });
-            this.owner = new Search(false);
-            this.owner2 = new Search(false);
-            this.tenantDomain = "uc.edu";
             this.spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
@@ -709,8 +706,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         }
                     }
                 }),
-                change: function (e) {
-                },
                 select: function (e) {
                     kacSelext(_this.$contactEmail.data("kendoAutoComplete"), e);
                 }
@@ -738,8 +733,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         }
                     }
                 }),
-                change: function (e) {
-                },
                 select: function (e) {
                     kacSelext(_this.$contactLastName.data("kendoAutoComplete"), e);
                 }
@@ -767,8 +760,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         }
                     }
                 }),
-                change: function (e) {
-                },
                 select: function (e) {
                     kacSelext(_this.$contactFirstName.data("kendoAutoComplete"), e);
                 }
