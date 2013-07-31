@@ -354,6 +354,13 @@ var App;
                         return makeUrl(url);
                     }
                     Files.put = put;
+                    (function (Validate) {
+                        function post() {
+                            return makeUrl('agreements/files/validate');
+                        }
+                        Validate.post = post;
+                    })(Files.Validate || (Files.Validate = {}));
+                    var Validate = Files.Validate;
                     (function (Content) {
                         function view(agreementId, fileId) {
                             var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());

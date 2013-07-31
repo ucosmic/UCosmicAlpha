@@ -177,21 +177,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("photo/validate")]
-        public HttpResponseMessage ValidatePhoto(PersonPhotoApiModel photo)
+        public HttpResponseMessage ValidatePhoto(FileUploadValidationModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
             var command = new UpdateMyPhoto(User)
             {
-                Name = photo.Name,
+                Name = model.Name,
+                Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
             };
-            command.Content = photo.Length.HasValue ? new byte[photo.Length.Value] : new byte[0];
             var validationResult = _photoUpdateValidator.Validate(command);
             var forProperties = new List<Func<ValidationFailure, bool>>
             {
                 x => x.PropertyName == command.PropertyName(y => y.Name),
             };
-            if (photo.Length.HasValue)
+            if (model.Length.HasValue)
                 forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
             foreach (var forProperty in forProperties)
                 if (validationResult.Errors.Any(forProperty))

@@ -11,7 +11,7 @@ namespace UCosmic.Domain.Files
         private const string FailMessageExtensionlessFormat = "The file '{0}' is not allowed because it has no extension. Only files with the {2} or {3} extension are allowed.";
         private const string FailMessageExtensionlessSingleFormat = "The file '{0}' is not allowed because it has no extension. Only files with the '{1}' extension are allowed.";
         private const string FailMessageNamelessFormat = "The file '{0}' is not allowed because it has no name before the extension.";
-        private const string FailMessageDisallowedFormat = "The file '{0}' is not allowed because it has a '{1}' extension. Only files eith the {2} or {3} extension are allowed.";
+        private const string FailMessageDisallowedFormat = "The file '{0}' is not allowed because it has a '{1}' extension. Only files with the {2} or {3} extension are allowed.";
         private const string FailMessageDisallowedSingledFormat = "The file '{0}' is not allowed because it has a '{1}' extension. Only files with the '{1}' extension are allowed.";
 
         private readonly string[] _validExtensions;

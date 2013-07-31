@@ -335,6 +335,12 @@ module App.Routes {
                     return makeUrl(url);
                 }
 
+                export module Validate {
+                    export function post() {
+                        return makeUrl('agreements/files/validate');
+                    }
+                }
+
                 export module Content {
                     export function view(agreementId: number, fileId: number): string {
                         var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());

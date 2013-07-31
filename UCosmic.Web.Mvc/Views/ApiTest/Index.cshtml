@@ -11,7 +11,7 @@
             //alert('have results');
         });
 
-        $('#agreement_post_button').click(function () {
+        $('#agreement_post_button').click(function() {
             $.post(App.Routes.WebApi.Agreements.post(), {
                 participants: [
                     { establishmentId: 66, isOwner: true },
@@ -29,18 +29,18 @@
                 status: 'Pending',
                 visibility: 'Protected'
             })
-            .done(function (responseText, statusText, xhr) {
-                var location = xhr.getResponseHeader('location');
-                var agreementId = parseInt(location.substring(location.lastIndexOf('/') + 1));
-                var info = 'post of uploaded file resulted in new agreement id ' + agreementId;
-                console.log(info);
-                alert(info);
-            });
+                .done(function(responseText, statusText, xhr) {
+                    var location = xhr.getResponseHeader('location');
+                    var agreementId = parseInt(location.substring(location.lastIndexOf('/') + 1));
+                    var info = 'post of uploaded file resulted in new agreement id ' + agreementId;
+                    console.log(info);
+                    alert(info);
+                });
         });
 
         window.countGraphicValue = ko.observable(-1);
         window.countGraphicOpacity = ko.observable(1);
-        setInterval(function () {
+        setInterval(function() {
             window.countGraphicValue(window.countGraphicValue() + 1);
             if (window.countGraphicValue() > 1299) {
                 window.countGraphicValue(0);
@@ -55,15 +55,20 @@
             var self = this;
 
             this.uploads = ko.observableArray();
+            var console = window.console || {
+                log: function(message) {
+                    alert(message);
+                }
+            };
 
-            $('#post_agreement_upload_button').click(function () {
+            $('#post_agreement_upload_button').click(function() {
                 var guid = $('#post_agreement_upload_guid').val();
                 $.post('/api/agreements/6/files', {
                     uploadGuid: guid,
                     originalName: 'originalName.pdf',
                     customName: 'customName',
                     visibility: 'Private'
-                }).done(function (responseText, statusText, xhr) {
+                }).done(function(responseText, statusText, xhr) {
                     var location = xhr.getResponseHeader('location');
                     var fileId = parseInt(location.substring(location.lastIndexOf('/') + 1));
                     var info = 'post of uploaded file resulted in new agreement id ' + fileId;
@@ -78,80 +83,172 @@
                     select: 'Choose temporary files to upload...'
                 },
                 async: {
-                    //saveUrl: '/api/agreements/6/files'
-                    saveUrl: App.Routes.WebApi.Uploads.post()//,
+                    saveUrl: '/api/agreements/6/files'
+                    //saveUrl: App.Routes.WebApi.Uploads.post()//,
                     //removeUrl: '/somepaththatdoesnotexistatleastyet'
                 },
-                select: function (e) {
+                select: function(e) {
+                    // the select event fires once no matter how many files were selected.
+                    console.log('KendoUpload.select fired.');
+                    console.log('Looping through all files, ' + e.files.length + ' total.');
+                    // the e.files array may contain more than 1 file.
                     for (var i = 0; i < e.files.length; i++) {
+                        var fileNumber = i + 1;
                         var file = e.files[i];
-                        self.uploads.push({
+                        console.log('File #' + fileNumber + ' is"' + file.name + '", size is ' + (file.size === null ? 'unknown' : file.size + ' bytes') + '.');
+                        // prepare the uploads observable array and do non-async server-side validation here.
+                        var upload = {
                             extension: file.extension,
                             name: file.name,
                             size: file.size,
                             percentComplete: ko.observable(1),
-                            isFinished: false
-                        });
-                        var info = 'selected file ' + file.name;
-                        console.log(info);
-                        //alert(info);
+                            isFinished: false,
+                            errorMessage: ko.observable(),
+                            clearError: function(index) {
+                                self.uploads.splice(index, 1);
+                            }
+                        };
+                        console.log('Adding file #' + fileNumber + ' into to observable array.');
+                        self.uploads.push(upload);
+                        console.log('Validating file #' + fileNumber + ' name and size against server.');
+                        $.ajax({
+                            url: App.Routes.WebApi.Agreements.Files.Validate.post(),
+                            type: 'POST',
+                            async: false,
+                            data: {
+                                name: file.name,
+                                length: file.size
+                            }
+                        })
+                            .done(function() {
+                                console.log('File #' + fileNumber + ' passed server-side validation.');
+                            })
+                            .fail(function(xhr) {
+                                // do not preventDefault here as that would prevent validated files from uploading
+                                console.log('File #' + fileNumber + ' failed server-side validation with message"' + xhr.responseText + '".');
+                                upload.errorMessage(xhr.responseText);
+                            });
                     }
+                    console.log('KendoUpload.select event handler completed.');
                 },
-                upload: function (e) {
-                    // validate here and prevent if extensions are not allowed
-                    //e.preventDefault();
-                    e.data = {
-                        //uploadGuid: '4fc91d48-62b8-42ec-99b1-06816774ac93',
-                        originalName: 'originalName.pdf',
-                        customName: 'customName',
-                        visibility: 'Private'
+                upload: function(e) {
+                    // the upload event fires once for each file selected.
+                    // the e.files array should only contain 1 file.
+                    var file = e.files[0];
+                    console.log('KendoUpload.upload fired for file "' + file.name + '" with size "' + (file.size === null ? 'unknown' : file.size) + '".');
+                    console.log('Checking observable uploads array for unfinished file named "' + file.name + '".');
+                    var criteria = file;
+                    criteria.isFinished = false;
+                    var upload = self.getUpload(criteria);
+                    if (!upload) {
+                        console.log('Could not find unfinished file named "' + file.name + '" in observable uploads array.');
+                        e.preventDefault();
+                    } else {
+                        console.log('Found unfinished file named "' + file.name + '" in observable uploads array.');
+                        if (upload.errorMessage()) {
+                            console.log('Preventing upload of file named "' + file.name + '" because it has an error message.');
+                            upload.percentComplete(100);
+                            upload.isFinished = true;
+                            e.preventDefault();
+                        } else {
+                            console.log('Adding POST parameters for upload of file named "' + file.name + '".');
+                            e.data = {
+                                //uploadGuid: '4fc91d48-62b8-42ec-99b1-06816774ac93',
+                                originalName: e.files[0].name,
+                                customName: 'customName',
+                                visibility: 'Private'
+                            };
+                        }
+                    }
+                    console.log('KendoUpload.upload event handler completed.');
+                },
+                progress: function(e) {
+                    // the progress event may fire many times for each file selected.
+                    // the e.files array should only contain 1 file.
+                    // note this event will not fire for IE8
+                    var file = e.files[0];
+                    console.log('KendoUpload.progress fired for file "' + file.name + '" with size "' + (file.size === null ? 'unknown' : file.size) + '".');
+                    console.log('Checking observable uploads array for unfinished file named "' + file.name + '".');
+                    var criteria = e.files[0];
+                    criteria.isFinished = false;
+                    var upload = self.getUpload(criteria);
+                    if (!upload) {
+                        console.log('Could not find unfinished file named "' + file.name + '" in observable uploads array.');
+                    } else {
+                        console.log('Updating observable progress for unfinished file named "' + file.name + '" in observable uploads array.');
+                        upload.percentComplete(e.percentComplete);
+                        if (e.percentComplete == 100) {
+                            console.log('Progress for unfinished file named "' + file.name + '" is complete, marking finished.');
+                            upload.isFinished = true;
+                        }
+                    }
+                    console.log('KendoUpload.progress event handler completed.');
+                },
+                success: function(e) {
+                    // the success event fires once for each file selected.
+                    // the e.files array should only contain 1 file.
+                    var file = e.files[0];
+                    console.log('KendoUpload.success fired for file "' + file.name + '" with size "' + (file.size === null ? 'unknown' : file.size) + '".');
+                    console.log('Checking observable uploads array for unfinished file named "' + file.name + '".');
+                    var criteria = file;
+                    criteria.isFinished = false;
+                    var upload = self.getUpload(criteria);
+                    if (!upload) {
+                        console.log('Could not find unfinished file named "' + file.name + '" in observable uploads array.');
+                    } else {
+                        console.log('Updating observable progress for unfinished file named "' + file.name + '" in observable uploads array.');
+                        upload.percentComplete(100);
+                        console.log('Progress for unfinished file named "' + file.name + '" is complete, marking finished.');
+                        upload.isFinished = true;
                     };
-                    var info = 'uploading of one file is about to begin asynchronously';
-                    console.log(info);
-                    //alert(info);
+                    console.log('KendoUpload.success event handler completed.');
                 },
-                progress: function (e) {
-                    var info = 'progress for ' + e.files[0].name + ' ' + e.percentComplete + '% complete';
-                    console.log(info);
-                    //alert(info);
-                    var criteria = e.files[0];
+                error: function(e) {
+                    // the error event fires once for each file selected.
+                    // the e.files array should only contain 1 file.
+                    // IE8 is unable to validate file size, so we need to handle it here
+                    var file = e.files[0];
+                    console.log('KendoUpload.error fired for file "' + file.name + '" with size "' + (file.size === null ? 'unknown' : file.size) + '".');
+                    console.log('Checking observable uploads array for unfinished file named "' + file.name + '".');
+                    var criteria = file;
                     criteria.isFinished = false;
                     var upload = self.getUpload(criteria);
-                    if (!upload) return;
-                    upload.percentComplete(e.percentComplete);
-                    if (e.percentComplete == 100) {
-                        upload.isFinished = true;
+                    if (!upload) {
+                        console.log('Could not find unfinished file named "' + file.name + '" in observable uploads array, checking for finished file with the same name.');
+                        criteria.isFinished = true;
+                        upload = self.getUpload(criteria);
+                        if (upload) {
+                            console.log('Updating observable progress for finished file named "' + file.name + '" in observable uploads array.');
+                            upload.percentComplete(100);
+                        }
                     }
-                },
-                success: function (e) {
-                    var info = 'there was success uploading: ' + e.files[0].name + ' is temporarily stored under GUID ' + e.response.guid;
-                    //alert(info);
-                    console.log(info);
-                    var criteria = e.files[0];
-                    criteria.isFinished = false;
-                    var upload = self.getUpload(criteria);
-                    if (!upload) return;
+                    console.log('Updating observable progress for unfinished file named "' + file.name + '" in observable uploads array.');
                     upload.percentComplete(100);
-                    upload.percentComplete(e.percentComplete);
-                    if (e.percentComplete == 100) {
-                        upload.isFinished = true;
+                    console.log('Progress for unfinished file named "' + file.name + '" is complete, marking finished.');
+                    upload.isFinished = true;
+                    if (e.XMLHttpRequest.responseText &&
+                        e.XMLHttpRequest.responseText.length < 1000) {
+                        console.log('Displaying error message "' + e.XMLHttpRequest.responseText + '" to user.');
+                        upload.errorMessage(e.XMLHttpRequest.responseText);
+                    } else {
+                        console.log('Displaying generic error message to user.');
+                        upload.errorMessage('UCosmic experienced an unexpected error managing your file attachment, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.');
                     }
+                    console.log('KendoUpload.error event handler completed.');
                 },
-                error: function (e) {
-                    alert('there was an error uploading ' + e.files[0].name);
-                },
-                complete: function () {
-                    //alert('uploading of all files is complete');
-                    console.log('upload of all files is complete');
+                complete: function() {
+                    // the complete event fires once no matter how successes or fails occurred.
+                    console.log('KendoUpload.complete fired.');
+                    console.log('KendoUpload.complete event handler completed.');
                 }
             });
 
-            this.getUpload = function (criteria) {
+            this.getUpload = function(criteria) {
                 var uploads = self.uploads();
                 for (var i = 0; i < uploads.length; i++) {
                     var upload = uploads[i];
                     if (upload.name === criteria.name && upload.size === criteria.size) {
-                        if (typeof (criteria.isFinished) === 'undefined' || upload.isFinished === criteria.isFinished) {
+                        if (typeof(criteria.isFinished) === 'undefined' || upload.isFinished === criteria.isFinished) {
                             return upload;
                         }
                     }
@@ -169,22 +266,22 @@
             this.agreementSettings = {
                 urlString: 'App.Routes.WebApi.Agreements.Settings.get()',
                 result: ko.observable(),
-                invoke: function () {
+                invoke: function() {
                     $.ajax({
                         url: eval(this.urlString),
                         type: 'GET'
                     })
-                        .done(function (result) {
+                        .done(function(result) {
                             //if (result) alert('done: result = ' + result);
                             //else alert('done: NO RESULT (' + result + ')');
                             self.agreementSettings.result(JSON.stringify(result, undefined, 4));
                             //$('#agreementSettingsGet').text(JSON.stringify(result, undefined, 4));
                         })
-                        .fail(function (xhr) {
+                        .fail(function(xhr) {
                             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
                         });
                 },
-                clear: function () {
+                clear: function() {
                     self.agreementSettings.result(undefined);
                 }
             };
@@ -220,7 +317,7 @@
                 </div>
                 <ul data-bind="foreach: tempUpload.uploads">
                     <li>
-                        <div class="group">
+                        <div class="group" data-bind="visible: !errorMessage()">
                             <div class="on-left" style="width: 500px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
                                 <div style="border: solid 1px #666; position: relative; margin-top: 4px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
                                     <div style="height: 28px; overflow: hidden; position: absolute; display: block; width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; line-height: 28px; padding: 0 4px;">
@@ -234,7 +331,7 @@
                                         </div>
                                     </div>
                                     <div style="height: 28px; background-color: #bdebbd; width: 1%; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
-                                        data-bind="style: { 'width': percentComplete() + '%' }">
+                                         data-bind="style: { 'width': percentComplete() + '%' }">
                                     </div>
                                 </div>
                             </div>
@@ -244,6 +341,11 @@
                                     <a href="#/delete/" data-bind="visible: percentComplete() >= 100"><img alt="Delete file" src="~/images/icons/minus/minus-20-red.png" /></a>
                                 </div>*@
                             </div>
+                        </div>
+                        <div data-bind="visible: errorMessage">
+                            <span class="validationMessage" data-bind="text: errorMessage" style="display: inline;"></span>
+                            &nbsp;
+                            <a href="#" data-bind="click: function () { clearError($index()) }">OK</a>
                         </div>
                     </li>
                 </ul>

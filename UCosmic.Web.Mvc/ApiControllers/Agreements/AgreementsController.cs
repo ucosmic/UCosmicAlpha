@@ -42,21 +42,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("{agreementId:int}/umbrellas")]
-        public IEnumerable<TextValuePair> GetUmbrellaOptions(int agreementId)
-        {
-            var entities = _queryProcessor.Execute(new UmbrellaOptions(User, agreementId)
-            {
-                EagerLoad = new Expression<Func<Agreement, object>>[]
-                {
-                    x => x.Participants.Select(y => y.Establishment.Names.Select(z => z.TranslationToLanguage)),
-                }
-            });
-            var models = Mapper.Map<IEnumerable<TextValuePair>>(entities)
-                .OrderBy(x => x.Value);
-            return models;
-        }
-
         [GET("{domain}")]
         public IEnumerable<AgreementApiModel> Get(string domain)
         {
@@ -79,7 +64,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        [GET("{agreementId:int}/umbrellas")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        public IEnumerable<TextValuePair> GetUmbrellaOptions(int agreementId)
+        {
+            var entities = _queryProcessor.Execute(new UmbrellaOptions(User, agreementId)
+            {
+                EagerLoad = new Expression<Func<Agreement, object>>[]
+                {
+                    x => x.Participants.Select(y => y.Establishment.Names.Select(z => z.TranslationToLanguage)),
+                }
+            });
+            var models = Mapper.Map<IEnumerable<TextValuePair>>(entities)
+                .OrderBy(x => x.Value);
+            return models;
+        }
+
         [POST("")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Post(AgreementApiModel model)
         {
             var command = new CreateAgreement(User);
@@ -99,6 +101,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("validate")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Validate(AgreementApiModel model)
         {
             var command = new CreateAgreement(User);

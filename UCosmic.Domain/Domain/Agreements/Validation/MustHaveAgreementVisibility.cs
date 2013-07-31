@@ -16,7 +16,7 @@ namespace UCosmic.Domain.Agreements
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is int) && !(context.PropertyValue is string))
+            if (!(context.PropertyValue is string))
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on string properties", GetType().Name));
 

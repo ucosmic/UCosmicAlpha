@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,6 +9,8 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using Newtonsoft.Json;
 using UCosmic.Domain.Agreements;
 using UCosmic.Web.Mvc.Models;
@@ -19,16 +22,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
-        private readonly IHandleCommands<CreateFile> _createFile;
+        private readonly IValidator<CreateFile> _createValidator;
+        private readonly IHandleCommands<CreateFile> _createHandler;
 
         public AgreementFilesController(IProcessQueries queryProcessor
             , IStoreBinaryData binaryData
-            , IHandleCommands<CreateFile> createFile
+            , IValidator<CreateFile> createValidator
+            , IHandleCommands<CreateFile> createHandler
         )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
-            _createFile = createFile;
+            _createValidator = createValidator;
+            _createHandler = createHandler;
         }
 
         [GET("{agreementId:int}/files")]
@@ -104,12 +110,36 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("{agreementId:int}/files")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Post(int agreementId, AgreementFileApiModel model)
         {
             model.AgreementId = agreementId;
-            var command = new CreateFile(User);
+            var command = new CreateFile(User)
+            {
+                FileData = model.FileMedium == null ? null : new CreateFile.FileDataWrapper
+                {
+                    FileName = model.FileMedium.FileName,
+                    MimeType = model.FileMedium.ContentType,
+                    Content = model.FileMedium.Content,
+                },
+            };
             Mapper.Map(model, command);
-            _createFile.Handle(command);
+
+            try
+            {
+                _createHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.FileData.FileName);
+                Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.FileData.Content);
+                if (ex.Errors.Any(forName))
+                    return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
+                        ex.Errors.First(forName).ErrorMessage, "text/plain");
+                if (ex.Errors.Any(forContent))
+                    return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
+                        ex.Errors.First(forContent).ErrorMessage, "text/plain");
+            }
 
             var url = Url.Link(null, new
             {
@@ -130,7 +160,36 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
+        [POST("files/validate")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        public HttpResponseMessage ValidatePost(FileUploadValidationModel model)
+        {
+            var command = new CreateFile(User)
+            {
+                FileData = new CreateFile.FileDataWrapper
+                {
+                    FileName = model.Name,
+                    Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
+                },
+            };
+            var validationResult = _createValidator.Validate(command);
+
+            var forProperties = new List<Func<ValidationFailure, bool>>
+            {
+                x => x.PropertyName == command.PropertyName(y => y.FileData.FileName),
+            };
+            if (model.Length.HasValue)
+                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.FileData.Content));
+            foreach (var forProperty in forProperties)
+                if (validationResult.Errors.Any(forProperty))
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
         [PUT("{agreementId:int}/files/{fileId:int}")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, int fileId, AgreementFileApiModel model)
         {
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully updated.");
@@ -138,6 +197,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("{agreementId:int}/files/{fileId:int}")]
+        [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Delete(int agreementId, int fileId)
         {
 
