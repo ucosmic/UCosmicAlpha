@@ -508,7 +508,7 @@ module ViewModels.My {
                             $.ajax({
                                 type: 'POST',
                                 async: false,
-                                url: '/api/my/profile/photo/validate',
+                                url: App.Routes.WebApi.My.Profile.Photo.validate(),
                                 data: {
                                     name: e.files[0].name,
                                     length: e.files[0].size

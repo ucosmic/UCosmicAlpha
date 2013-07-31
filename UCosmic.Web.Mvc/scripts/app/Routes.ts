@@ -400,6 +400,9 @@ module App.Routes {
                     export function post() {
                         return makeUrl('my/profile/photo');
                     }
+                    export function validate() {
+                        return makeUrl('my/profile/photo/validate');
+                    }
                     export function del() {
                         return post();
                     }

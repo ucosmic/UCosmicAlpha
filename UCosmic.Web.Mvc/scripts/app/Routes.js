@@ -437,6 +437,10 @@ var App;
                             return makeUrl('my/profile/photo');
                         }
                         Photo.post = post;
+                        function validate() {
+                            return makeUrl('my/profile/photo/validate');
+                        }
+                        Photo.validate = validate;
                         function del() {
                             return post();
                         }
