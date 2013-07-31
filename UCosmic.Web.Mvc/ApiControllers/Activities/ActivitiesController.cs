@@ -214,7 +214,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         // --------------------------------------------------------------------------------
         [TryAuthorize]
         [PUT("{activityId}/edit")]
-        public HttpResponseMessage PutEdit(int activityId, [FromBody] string mode)
+        public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
         {
             //try
             //{
@@ -225,7 +225,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (!editActivity.EditSourceId.HasValue)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, mode)
+            var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, model.Mode)
             {
                 Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
             };

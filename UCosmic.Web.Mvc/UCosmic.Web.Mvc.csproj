@@ -346,6 +346,7 @@
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
+    <Compile Include="Models\Activities\ActivityPutEditApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementSettingsApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementPlaceApiModel.cs" />

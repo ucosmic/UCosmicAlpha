@@ -90,7 +90,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (activityValues == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            _createActivityDocument.Handle(new CreateActivityDocument(User)
+            var command = new CreateActivityDocument(User)
             {
                 ActivityValuesId = activityValues.RevisionId,
                 Title = Path.GetFileNameWithoutExtension(fileMedium.FileName),
@@ -98,7 +98,22 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 Content = fileMedium.Content,
                 MimeType = fileMedium.ContentType,
                 FileName = fileMedium.FileName,
-            });
+            };
+            try
+            {
+                _createActivityDocument.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.FileName);
+                Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.Content);
+                if (ex.Errors.Any(forName))
+                    return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
+                        ex.Errors.First(forName).ErrorMessage, "text/plain");
+                if (ex.Errors.Any(forContent))
+                    return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
+                        ex.Errors.First(forContent).ErrorMessage, "text/plain");
+            }
             return Request.CreateResponse(HttpStatusCode.Created);
         }
 
@@ -172,19 +187,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
         // --------------------------------------------------------------------------------
         [TryAuthorize]
         [POST("documents/validate-upload")]
-        public HttpResponseMessage PostDocumentsValidateUploadFiletype([FromBody] ActivityDocumentApiModel model)
+        public HttpResponseMessage PostDocumentsValidateUploadFiletype([FromBody] FileUploadValidationModel model)
         {
             var command = new CreateActivityDocument(User)
             {
-                FileName = model.FileName,
-                Content = new byte[model.Length]
+                FileName = model.Name,
+                Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
             };
             var validationResult = _validateActivityDocument.Validate(command);
-            IEnumerable<Func<ValidationFailure, bool>> forProperties = new Func<ValidationFailure, bool>[]
+            var forProperties = new List<Func<ValidationFailure, bool>>
             {
                 x => x.PropertyName == command.PropertyName(y => y.FileName),
-                x => x.PropertyName == command.PropertyName(y => y.Content),
             };
+            if (model.Length.HasValue)
+                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
             foreach (var forProperty in forProperties)
                 if (validationResult.Errors.Any(forProperty))
                     return Request.CreateResponse(HttpStatusCode.BadRequest,

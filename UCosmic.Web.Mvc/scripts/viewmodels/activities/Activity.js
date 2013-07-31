@@ -71,7 +71,7 @@ var ViewModels;
                                 type: 'POST',
                                 url: App.Routes.WebApi.Activities.Documents.validateUpload(),
                                 data: {
-                                    fileName: file.name,
+                                    name: file.name,
                                     length: file.size
                                 }
                             }).fail(function (xhr) {
@@ -87,17 +87,27 @@ var ViewModels;
                         }
                     },
                     upload: function (e) {
-                        for(var i = 0; i < e.files.length; i++) {
-                            var indexOfInvalidName = $.inArray(e.files[i].name, invalidFileNames);
-                            if(indexOfInvalidName >= 0) {
-                                e.preventDefault();
-                                invalidFileNames.splice(indexOfInvalidName, 1);
-                                return;
-                            }
+                        var file = e.files[0];
+                        var indexOfInvalidName = $.inArray(file.name, invalidFileNames);
+                        if(indexOfInvalidName >= 0) {
+                            e.preventDefault();
+                            invalidFileNames.splice(indexOfInvalidName, 1);
+                            return;
                         }
                     },
                     success: function (e) {
                         _this.loadDocuments();
+                    },
+                    error: function (e) {
+                        if(e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                            _this.fileUploadErrors.push({
+                                message: e.XMLHttpRequest.responseText
+                            });
+                        } else {
+                            _this.fileUploadErrors.push({
+                                message: 'UCosmic experienced an unexpected error uploading your document, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.'
+                            });
+                        }
                     }
                 });
                 $("#" + newTagId).kendoAutoComplete({
@@ -393,9 +403,9 @@ var ViewModels;
                         async: false,
                         type: 'PUT',
                         url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
-                        data: ko.toJSON(mode),
-                        dataType: 'json',
-                        contentType: 'application/json',
+                        data: {
+                            mode: mode
+                        },
                         success: function (data, textStatus, jqXhr) {
                         },
                         error: function (jqXhr, textStatus, errorThrown) {

@@ -120,7 +120,7 @@ module ViewModels.Activities {
                             type: 'POST',
                             url: App.Routes.WebApi.Activities.Documents.validateUpload(),
                             data: {
-                                fileName: file.name,
+                                name: file.name,
                                 length: file.size
                             },
                         })
@@ -136,17 +136,29 @@ module ViewModels.Activities {
                     }
                 },
                 upload: (e: kendo.ui.UploadUploadEvent): void => {
-                    for (var i = 0; i < e.files.length; i++) {
-                        var indexOfInvalidName = $.inArray(e.files[i].name, invalidFileNames);
-                        if (indexOfInvalidName >= 0) {
-                            e.preventDefault();
-                            invalidFileNames.splice(indexOfInvalidName, 1);
-                            return;
-                        }
+                    var file = e.files[0];
+                    var indexOfInvalidName = $.inArray(file.name, invalidFileNames);
+                    if (indexOfInvalidName >= 0) {
+                        e.preventDefault();
+                        invalidFileNames.splice(indexOfInvalidName, 1);
+                        return;
                     }
                 },
                 success: (e: kendo.ui.UploadSuccessEvent): void => {
                     this.loadDocuments();
+                },
+                error: (e: kendo.ui.UploadErrorEvent): void => {
+                    if (e.XMLHttpRequest.responseText &&
+                        e.XMLHttpRequest.responseText.length < 1000) {
+                        this.fileUploadErrors.push({
+                            message: e.XMLHttpRequest.responseText
+                        });
+                    }
+                    else {
+                        this.fileUploadErrors.push({
+                            message: 'UCosmic experienced an unexpected error uploading your document, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.'
+                        });
+                    }
                 }
             } );
 
@@ -471,9 +483,9 @@ module ViewModels.Activities {
                         async: false,
                         type: 'PUT',
                         url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
-                        data: ko.toJSON(mode),
-                        dataType: 'json',
-                        contentType: 'application/json',
+                        data: {
+                            mode: mode
+                        },
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
