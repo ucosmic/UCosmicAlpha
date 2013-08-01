@@ -1,26 +1,31 @@
 ﻿<div class="stats-sidebar" style="margin-top: 10px">
-    <div class="keywords-search">
+@*    <div class="keywords-search">
         <h1>Keyword Search</h1>
         <input type="text" id="keywords" style="width: 85%"/>
         <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
+    </div>*@
+    <div class="stats" style="margin-top: 30px" >
+        <br/>
+        <h2>Total Countries:</h2><span data-bind=""></span>
+        <br/>
+        <h2>Total Countries with Activities:</h2><span data-bind=""></span>
+        <br/>
+        <h2>[BAR CHART HERE}:</h2>
+        <br/>
+        <h2>[TREND CHART HERE}:</h2>
     </div>
-    <div class="stats">
-        <p><h2>Country:</h2><span data-bind=""></span></p>
-        <div data-bind="visible: searchType() === 'activities'"><h2>Total Activities:</h2><span data-bind=""></span></div>
-        <div data-bind="visible: searchType() === 'people'"><h2>Total People:</h2><span data-bind=""></span></div>
-    </div>
-    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
+@*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
         <div style="font-size: small">
             <ul class="data-items" data-bind="template: { name: 'activity-counts-template', foreach: activityTypes }" />
         </div>
         <div id="typeChart" style="width: 100%"></div>
-    </div>
+    </div>*@
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
-<script type="text/html" id="activity-counts-template">
+@*<script type="text/html" id="activity-counts-template">
     <li>
         <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="" />
         <span style="width: 100%" data-bind="text: $data.type"></span>
     </li>
-</script>
+</script>*@

@@ -9,18 +9,9 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
-/// <reference path="../../google/google.charts.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-declare var fsheatmap: any;
-declare var fsheatmapOptions: any;
-declare var fsheatmapData: any;
-declare var fspointmap: any;
-declare var fspointmapOptions: any;
-declare var fspointmapData: any;
-declare var fspiechart: any;
-declare var fspiechartOptions: any;
-declare var fspiechartData: any;
+
 
 module ViewModels.Employees {
 
@@ -30,6 +21,7 @@ module ViewModels.Employees {
     // ================================================================================
     export class FacultyAndStaff {
 
+        google: any;
         sammy: Sammy.Application;
 
         /* Initialization errors. */
@@ -70,13 +62,13 @@ module ViewModels.Employees {
         isPointmapVisible: KnockoutObservableBool;
         isTableVisible: KnockoutObservableBool;
 
-        //heatmap: any;
-        //heatmapOptions: any;
-        //heatmapData: any;
+        heatmap: any;
+        heatmapOptions: any;
+        heatmapData: any;
 
-        //pointmap: any;
-        //pointmapOptions: any;
-        //pointmapData: any;
+        pointmap: google.maps.Map;
+        pointmapOptions: any;
+        pointmapData: any;
         
         //resultsTable: any;
         //resultsTableOptions: any;
@@ -85,6 +77,8 @@ module ViewModels.Employees {
         //piechart: any;
         //piechartOptions: any;
         //piechartData: any;
+
+        selectedCountry: KnockoutObservableString;
 
         // --------------------------------------------------------------------------------
         /*
@@ -106,6 +100,7 @@ module ViewModels.Employees {
             this.isPointmapVisible = ko.observable(false);
             this.isTableVisible = ko.observable(false);
             this.searchType = ko.observable('activities');
+            this.selectedCountry = ko.observable();
 
             this.selectSearchType('activities');
 
@@ -423,6 +418,109 @@ module ViewModels.Employees {
         }
 
         // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        setupMaps(): void {
+            var me = this;
+
+            /* ----- Setup Pointmap ----- */
+
+            this.google = window["google"];
+            this.google.maps.visualRefresh = true;
+
+            this.pointmap = new this.google.maps.Map($('#pointmap')[0], {
+                width: 680,
+                height: 500,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                zoom: 1, // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
+            });
+
+            /* ----- Setup Heatmap (chart) ----- */
+
+            var countryData = new Array();
+            countryData.push(['Country', 'Activities']);
+
+            $.ajax({
+                type: "GET",
+                async: false,
+                url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                success: function (data, textStatus, jqXHR) {
+                    for (var i = 0; i < data.length; i += 1) {
+                        countryData.push([data[i].officialName, data[i].count]);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    //debugger;
+                },
+                dataType: 'json'
+            });
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                data: ko.toJSON(this.selectedActivityIds()),
+                success: function (data, textStatus, jqXHR) {
+                    for (var i = 0; i < data.length; i += 1) {
+                        countryData.push([data[i].officialName, data[i].count]);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    //debugger;
+                },
+                dataType: 'json'
+            });
+
+            this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
+
+            this.heatmapOptions = {
+                //is3D: true,
+                width: 680,
+                height: 500,
+                //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
+                region: 'world', //'150',    // 002 Africa, 142 Asia
+                backgroundColor: 'lightBlue',
+                keepAspectRatio: false,
+                colorAxis: { colors: ['#FFFFFF', 'green'] }
+                //displayMode: 'markers'
+            };
+
+            this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
+            this.google.visualization.events.addListener(this.heatmap, 'select', function () { me.heatmapSelectHandler(); });
+
+
+            /* ----- Setup Piechart ----- */
+
+            //this.piechartData = this.google.visualization.DataTable();
+            //this.piechartData.addColumn('string', 'Engagement');
+            //this.piechartData.addColumn('number', 'Count');
+            //this.piechartData.addRows([[<any>'Research or Creative Endeavor', <any>11],
+            //    [<any>'Teaching or Mentoring', <any>2],
+            //    [<any>'Award or Honor', <any>2],
+            //    [<any>'Conference Presentation or Proceeding', <any>2],
+            //    [<any>'Professional Development, Service or Consulting ', <any>7]]);
+
+
+            //this.piechartData = this.google.visualization.arrayToDataTable([
+            //    [<any>'Research or Creative Endeavor', <any>11],
+            //    [<any>'Teaching or Mentoring', <any>2],
+            //    [<any>'Award or Honor', <any>2],
+            //    [<any>'Conference Presentation or Proceeding', <any>2],
+            //    [<any>'Professional Development, Service or Consulting ', <any>7]]);
+
+            //this.piechartOptions = {
+            //    title: 'Engagements'
+            //};
+
+
+            //this.piechart = new this.google.visualization.PieChart($('#typeChart')[0]);
+        }
+
+        // --------------------------------------------------------------------------------
         /* 
         */
         // --------------------------------------------------------------------------------
@@ -522,8 +620,6 @@ module ViewModels.Employees {
         // --------------------------------------------------------------------------------
         selectMap(type: string): void {
 
-            debugger;
-
             $('#heatmapText').css("font-weight", "normal");
             this.isHeatmapVisible(false);
 
@@ -533,15 +629,22 @@ module ViewModels.Employees {
             $('#resultstableText').css("font-weight", "normal");
             this.isTableVisible(false);
 
+            $("#bib-faculty-staff-summary").removeClass("current");
+            $("#bib-faculty-staff-search").removeClass("current");
+
             if (type === "heatmap") {
                 $('#heatmapText').css("font-weight", "bold");
                 this.isHeatmapVisible(true);
-                fsheatmap.draw(fsheatmapData, fsheatmapOptions);
-                fspiechart.draw(fspiechartData, fspiechartOptions);
+                this.heatmap.draw(this.heatmapData, this.heatmapOptions);
+                //this.piechart.draw(this.piechartData, this.piechartOptions);
+                $("#bib-faculty-staff-summary").addClass("current");
             } else if (type === "pointmap") {
                 $('#pointmapText').css("font-weight", "bold");
                 this.isPointmapVisible(true);
-                fspointmap.draw(fspointmapData, fspointmapOptions)
+                $('#pointmap').css("display", "inline-block");
+                //fspointmap.draw(fspointmapData, fspointmapOptions)
+                this.google.maps.event.trigger(this.pointmap, "resize");
+                $("#bib-faculty-staff-search").addClass("current");
             } else if (type === "resultstable") {
                 $('#resultstableText').css("font-weight", "bold");
                 this.isTableVisible(true);
@@ -670,82 +773,11 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        setupMaps(): JQueryPromise {
-            var deferred: JQueryDeferred = $.Deferred();
-
-            //google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
-            //google.setOnLoadCallback(function () {
-
-                ///* ----- Setup heatmap ----- */
-                //{
-                //    var heatmapData = new Array();
-                //    heatmapData.push(['Country', 'Activities']);
-                //    $.ajax({
-                //        type: "GET",
-                //        async: false,
-                //        url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                //        success: function (data, textStatus, jqXHR) {
-                //            for (var i = 0; i < data.length; i += 1) {
-                //                heatmapData.push([data[i].officialName, data[i].count]);
-                //            }
-                //        },
-                //        error: function (jqXhr, textStatus, errorThrown) {
-                //            debugger;
-                //        },
-                //        dataType: 'json'
-                //    });
-                //    this.heatmapData = google.visualization.arrayToDataTable(heatmapData);
-
-                //    this.heatmap.options = {
-                //        //is3D: true,
-                //        width: 680,
-                //        height: 500,
-                //        //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
-                //        region: 'world', //'150',    // 002 Africa, 142 Asia
-                //        backgroundColor: 'lightBlue',
-                //        keepAspectRatio: false,
-                //        colorAxis: { colors: ['#FFFFFF', 'green'] },
-                //        //displayMode: 'markers'
-                //    };
-
-                //    this.heatmap = new google.visualization.GeoChart($('#heatmap')[0]);
-                //}
-
-                ///* ----- Setup pointmap ----- */
-                //{
-                //    this.pointmap = new google.maps.Map($('#pointmap')[0]),
-                //        {
-                //            mapTypeId: google.maps.MapTypeId.ROADMAP,
-                //            center: new google.maps.LatLng(0, 0), // americas on left, australia on right
-                //            zoom: 1, // zoom out
-                //            draggable: true, // allow map panning
-                //            scrollwheel: false // prevent mouse wheel zooming
-                //        };
-                //}
-
-                ///* ----- Setup piechart ----- */
-                //{
-                //    var piechartData = google.visualization.arrayToDataTable(
-                //        [
-                //            ['Engagement', 'Count']
-                //            //['Research or Creative Endeavor', 11],
-                //            //['Teaching or Mentoring', 2],
-                //            //['Award or Honor', 2],
-                //            //['Conference Presentation or Proceeding', 2],
-                //            //['Professional Development, Service or Consulting ', 7]
-                //        ]);
-
-                //    this.piechartOptions = {
-                //        title: 'Engagements'
-                //    };
-
-                //    this.piechart = new google.visualization.PieChart($('#typeChart')[0]);
-                //}
-
-                deferred.resolve();
-            //});
-
-            return deferred;
+        heatmapSelectHandler() {
+            var selection = this.heatmap.getSelection();
+            var str = this.heatmapData.getFormattedValue(selection[0].row, 0);
+            this.selectedCountry(str);
         }
+
     }
 }

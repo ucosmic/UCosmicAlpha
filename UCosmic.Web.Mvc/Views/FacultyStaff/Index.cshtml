@@ -1,12 +1,12 @@
 ﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffInstitutionInfoModel
 
 @{
-    ViewBag.Title = "Faculty & Staff Engagements";
+    ViewBag.Title = "Professional Engagement Summary";
 }
 
 @section bib
 {
-    <nav class="bib hide" data-current-bib="search">
+    <nav id="bib-faculty-staff" class="bib hide" data-current-bib="summary">
         @Html.Partial(MVC.FacultyStaff.Views._Bib)
     </nav>
 }
@@ -118,13 +118,18 @@
             margin-bottom: 0;
         }
 
+        .k-picker-wrap .k-select,
+        .k-numeric-wrap .k-select,
+        .k-dropdown-wrap .k-select {
+            line-height: 1em;
+        }
+
         input[type="button"] {
-            height: 28px;
-            width: 120px;
+            height: 20px;
+            width: 70px;
             padding: 0 0 0 0;
             margin: 0 0 0 0;
-            font-size: 16px;
-            text-transform: uppercase;
+            font-size: 12px;
             border-radius: 0 0 0 0;
             border-color: black;
             border-style: solid;
@@ -142,111 +147,19 @@
     @Scripts.Render("~/bundles/employees")
 
     <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-    <@*script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>*@
-       
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.0','packages':['corechart','geochart'],'language':'en'}]}"></script>
+ 
     <script type="text/javascript">
 
-        var fsheatmap;
-        var fsheatmapOptions;
-        var fsheatmapData;
-        var fspointmap;
-        var fspointmapOptions;
-        var fspointmapData;
-        var fspiechart;
-        var fspiechartOptions;
-        var fspiechartData;
-
-        //google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
-        //google.setOnLoadCallback(drawRegionsMap);
-        //function drawRegionsMap() {
-        //    var countryData = new Array();
-        //    countryData.push(['Country', 'Activities']);
-
-        //    $.ajax({
-        //        type: "GET",
-        //        async: false,
-        //        url: App.Routes.WebApi.Activities.CountryCounts.post(),
-        //        success: function(data, textStatus, jqXHR) {
-        //            for (var i = 0; i < data.length; i += 1) {
-        //                countryData.push([data[i].officialName, data[i].count]);
-        //            }
-        //        },
-        //        error: function(jqXhr, textStatus, errorThrown) {
-        //            debugger;
-        //        },
-        //        dataType: 'json'
-        //    });
-
-        //    $.ajax({
-        //        type: "POST",
-        //        async: false,
-        //        url: App.Routes.WebApi.Activities.CountryCounts.post(),
-        //        data: ko.toJSON(this.selectedActivityIds()),
-        //        success: function(data, textStatus, jqXHR) {
-        //            for (var i = 0; i < data.length; i += 1) {
-        //                countryData.push([data[i].officialName, data[i].count]);
-        //            }
-        //        },
-        //        error: function(jqXhr, textStatus, errorThrown) {
-        //            debugger;
-        //        },
-        //        dataType: 'json'
-        //    });
-
-        //    var countryDataTable = google.visualization.arrayToDataTable(countryData);
-
-        //    var options = {
-        //        //is3D: true,
-        //        width: 680,
-        //        height: 500,
-        //        //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
-        //        region: 'world', //'150',    // 002 Africa, 142 Asia
-        //        backgroundColor: 'lightBlue',
-        //        keepAspectRatio: false,
-        //        colorAxis: { colors: ['#FFFFFF', 'green'] },
-        //        //displayMode: 'markers'
-        //    };
-
-        //    fsheatmap = new google.visualization.GeoChart($('#heatmap')[0]);
-        //    fsheatmap.draw(countryDataTable, options);
-
-
-        //    var data2 = google.visualization.arrayToDataTable([['Engagement', 'Count'],
-        //        ['Research or Creative Endeavor', 11],
-        //        ['Teaching or Mentoring', 2],
-        //        ['Award or Honor', 2],
-        //        ['Conference Presentation or Proceeding', 2],
-        //        ['Professional Development, Service or Consulting ', 7]]);
-
-        //    var options2 = {
-        //        title: 'Engagements'
-        //    };
-        //    fspiechart = new google.visualization.PieChart(document.getElementById('typeChart'));
-        //    fspiechart.draw(data2, options2);
-        //}
-
-        //fspointmap = new google.maps.Map(document.getElementById('pointmap'),
-        //    {
-        //        width: 680,
-        //        height: 500,
-        //        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        //        center: new google.maps.LatLng(0, 0), // americas on left, australia on right
-        //        zoom: 1, // zoom out
-        //        draggable: true, // allow map panning
-        //        scrollwheel: false // prevent mouse wheel zooming
-        //    });
-
-        $(function() {
+        $(document).ready(function() {
 
             $("#main").css("height", 760);
-
+            
             var institutionInfo = @Html.Raw(Json.Encode(Model));
 
             var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
             facultyAndStaffViewModel.load()
                 .done(function() {
-
-                    debugger;
 
                     facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institutionTextbox",
                         "campusDropList", "collegeDropList", "departmentDropList");
@@ -286,117 +199,35 @@
                         }
                     }));
 
-                    google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
-                    google.setOnLoadCallback(function() {
-
-                        debugger;
-                        
-                        var countryData = new Array();
-                        countryData.push(['Country', 'Activities']);
-
-                        $.ajax({
-                            type: "GET",
-                            async: false,
-                            url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                            success: function(data, textStatus, jqXHR) {
-                                for (var i = 0; i < data.length; i += 1) {
-                                    countryData.push([data[i].officialName, data[i].count]);
-                                }
-                            },
-                            error: function(jqXhr, textStatus, errorThrown) {
-                                debugger;
-                            },
-                            dataType: 'json'
-                        });
-
-                        $.ajax({
-                            type: "POST",
-                            async: false,
-                            url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                            data: ko.toJSON(facultyAndStaffViewModel.selectedActivityIds()),
-                            success: function(data, textStatus, jqXHR) {
-                                for (var i = 0; i < data.length; i += 1) {
-                                    countryData.push([data[i].officialName, data[i].count]);
-                                }
-                            },
-                            error: function(jqXhr, textStatus, errorThrown) {
-                                debugger;
-                            },
-                            dataType: 'json'
-                        });
-
-                        fsheatmapData = google.visualization.arrayToDataTable(countryData);
-
-                        fsheatmapOptions = {
-                            //is3D: true,
-                            width: 680,
-                            height: 500,
-                            //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
-                            region: 'world', //'150',    // 002 Africa, 142 Asia
-                            backgroundColor: 'lightBlue',
-                            keepAspectRatio: false,
-                            colorAxis: { colors: ['#FFFFFF', 'green'] },
-                            //displayMode: 'markers'
-                        };
-
-                        fsheatmap = new google.visualization.GeoChart($('#heatmap')[0]);
-                        //fsheatmap.draw(countryDataTable, options);
-
-
-                        fspiechartData = google.visualization.arrayToDataTable([['Engagement', 'Count'],
-                            ['Research or Creative Endeavor', 11],
-                            ['Teaching or Mentoring', 2],
-                            ['Award or Honor', 2],
-                            ['Conference Presentation or Proceeding', 2],
-                            ['Professional Development, Service or Consulting ', 7]]);
-
-                        fspiechartOptions = {
-                            title: 'Engagements'
-                        };
-                        fspiechart = new google.visualization.PieChart(document.getElementById('typeChart'));
-                        //fspiechart.draw(data2, options2);
-
-                        fspointmap = new google.maps.Map(document.getElementById('pointmap'),
-                            {
-                                width: 680,
-                                height: 500,
-                                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
-                                zoom: 1, // zoom out
-                                draggable: true, // allow map panning
-                                scrollwheel: false // prevent mouse wheel zooming
-                            });
-
-                        facultyAndStaffViewModel.setupValidation();
-                        facultyAndStaffViewModel.setupSubscriptions();
-                        facultyAndStaffViewModel.setupRouting();
-                    });
+                    facultyAndStaffViewModel.setupValidation();
+                    facultyAndStaffViewModel.setupSubscriptions();
+                    facultyAndStaffViewModel.setupMaps();
+                    facultyAndStaffViewModel.setupRouting();
                 })
-            .fail(function(jqXhr, textStatus, errorThrown) {
-            alert(textStatus + "|" + errorThrown);
-        });
+                .fail(function(jqXhr, textStatus, errorThrown) {
+                    alert(textStatus + "|" + errorThrown);
+                });
         });
     </script>    
 }
 
-    <div id="faculty-staff" class="content fixed to-top" data-current-module="faculty-staff">
+    <div id="faculty-staff" class="content fixed to-top" data-current-module="employees">
         <div class="on-left from-top">
             <header>
                 <h1>@ViewBag.Title</h1>
             </header>
             <div style="width: 680px; height: 500px">
                 <div style="display: none" data-bind="visible: isHeatmapVisible()">
-                    <div style="text-align: left">
-                        <span>
-                            <input type="button" id="activitiesButton" value="Activites" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
-                            <input type="button" id="peopleButton" value="People" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
-                        </span>
-@*                        <div style="float: right">
-                            <select id="heatmapActivityDropList"></select>
-                        </div>
-                        <select id="heatmapPeopleDropList" style="display: none"></select>*@
+                    <div style="width: 100%; height: 28px; text-align: right">
+                        <span style="margin-right: 4px">Global View</span><img src="../../images/icons/global/global_24_black.png" alt="Global View"/>
                     </div>
-                    <div id="heatmap"></div>
+                    <div style="position: relative">
+                        <div id="heatmap"></div>
+                        <div style="z-index: 1; position: absolute; margin: 5px; right: 0; top: 0">
+                            <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
+                            <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
+                        </div>
+                    </div>
                 </div>
                 <div style="display: none" data-bind="visible: isPointmapVisible()">
                     <div id="pointmap" style="width: 680px; height: 500px"></div>

@@ -22,6 +22,7 @@ var ViewModels;
                 this.isPointmapVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
                 this.searchType = ko.observable('activities');
+                this.selectedCountry = ko.observable();
                 this.selectSearchType('activities');
                 if(institutionInfo != null) {
                     if(institutionInfo.InstitutionId != null) {
@@ -250,6 +251,76 @@ var ViewModels;
                 });
                 this.sammy.run('#/engagements');
             };
+            FacultyAndStaff.prototype.setupMaps = function () {
+                var me = this;
+                this.google = window["google"];
+                this.google.maps.visualRefresh = true;
+                this.pointmap = new this.google.maps.Map($('#pointmap')[0], {
+                    width: 680,
+                    height: 500,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: new google.maps.LatLng(0, 0),
+                    zoom: 1,
+                    draggable: true,
+                    scrollwheel: false
+                });
+                var countryData = new Array();
+                countryData.push([
+                    'Country', 
+                    'Activities'
+                ]);
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                    success: function (data, textStatus, jqXHR) {
+                        for(var i = 0; i < data.length; i += 1) {
+                            countryData.push([
+                                data[i].officialName, 
+                                data[i].count
+                            ]);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                    },
+                    dataType: 'json'
+                });
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: App.Routes.WebApi.Activities.CountryCounts.post(),
+                    data: ko.toJSON(this.selectedActivityIds()),
+                    success: function (data, textStatus, jqXHR) {
+                        for(var i = 0; i < data.length; i += 1) {
+                            countryData.push([
+                                data[i].officialName, 
+                                data[i].count
+                            ]);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                    },
+                    dataType: 'json'
+                });
+                this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
+                this.heatmapOptions = {
+                    width: 680,
+                    height: 500,
+                    region: 'world',
+                    backgroundColor: 'lightBlue',
+                    keepAspectRatio: false,
+                    colorAxis: {
+                        colors: [
+                            '#FFFFFF', 
+                            'green'
+                        ]
+                    }
+                };
+                this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
+                this.google.visualization.events.addListener(this.heatmap, 'select', function () {
+                    me.heatmapSelectHandler();
+                });
+            };
             FacultyAndStaff.prototype.load = function () {
                 var _this = this;
                 var me = this;
@@ -297,23 +368,25 @@ var ViewModels;
                 }
             };
             FacultyAndStaff.prototype.selectMap = function (type) {
-                debugger;
-
                 $('#heatmapText').css("font-weight", "normal");
                 this.isHeatmapVisible(false);
                 $('#pointmapText').css("font-weight", "normal");
                 this.isPointmapVisible(false);
                 $('#resultstableText').css("font-weight", "normal");
                 this.isTableVisible(false);
+                $("#bib-faculty-staff-summary").removeClass("current");
+                $("#bib-faculty-staff-search").removeClass("current");
                 if(type === "heatmap") {
                     $('#heatmapText').css("font-weight", "bold");
                     this.isHeatmapVisible(true);
-                    fsheatmap.draw(fsheatmapData, fsheatmapOptions);
-                    fspiechart.draw(fspiechartData, fspiechartOptions);
+                    this.heatmap.draw(this.heatmapData, this.heatmapOptions);
+                    $("#bib-faculty-staff-summary").addClass("current");
                 } else if(type === "pointmap") {
                     $('#pointmapText').css("font-weight", "bold");
                     this.isPointmapVisible(true);
-                    fspointmap.draw(fspointmapData, fspointmapOptions);
+                    $('#pointmap').css("display", "inline-block");
+                    this.google.maps.event.trigger(this.pointmap, "resize");
+                    $("#bib-faculty-staff-search").addClass("current");
                 } else if(type === "resultstable") {
                     $('#resultstableText').css("font-weight", "bold");
                     this.isTableVisible(true);
@@ -395,10 +468,10 @@ var ViewModels;
                 };
                 return def;
             };
-            FacultyAndStaff.prototype.setupMaps = function () {
-                var deferred = $.Deferred();
-                deferred.resolve();
-                return deferred;
+            FacultyAndStaff.prototype.heatmapSelectHandler = function () {
+                var selection = this.heatmap.getSelection();
+                var str = this.heatmapData.getFormattedValue(selection[0].row, 0);
+                this.selectedCountry(str);
             };
             return FacultyAndStaff;
         })();

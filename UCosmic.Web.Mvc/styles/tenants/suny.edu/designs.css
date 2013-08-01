@@ -235,7 +235,7 @@ ul.selectableListItems li:hover {
   background-color: #dddddd; }
 
 .filter-sidebar {
-  width: 270px;
+  width: 275px;
   font-family: Arial;
   background-color: white;
   color: #01529a;
@@ -267,7 +267,7 @@ ul.selectableListItems li:hover {
     text-transform: uppercase; }
   .filter-sidebar .section {
     background-color: #dddddd;
-    padding-bottom: 8px;
+    padding-bottom: 16px;
     white-space: nowrap; }
 
 .maptype-hover:hover {
@@ -323,4 +323,58 @@ ul.selectableListItems li:hover {
   .stats-sidebar .section {
     background-color: #dddddd;
     padding-bottom: 8px; }
+
+.faculty-staff-summary-map-button {
+  position: relative;
+  padding: 0 0 2px 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAADCAYAAACEeL/nAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MkFDNTEyQ0YyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MkFDNTEyQkYyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1MjY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgxVvS8AAAAfSURBVHjaYmRgYGhhGADAAsT3B8JiRiBWHAiLAQIMAJ6pAYtOzUtHAAAAAElFTkSuQmCC");
+  background-position: top left;
+  background-repeat: repeat-x;
+  background-color: #009ee0;
+  z-index: 100; }
+  .faculty-staff-summary-map-button.hide {
+    display: none; }
+  .faculty-staff-summary-map-button > ul {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 980px;
+    margin: 0 auto; }
+    .faculty-staff-summary-map-button > ul > li {
+      float: left; }
+      .faculty-staff-summary-map-button > ul > li > a, .faculty-staff-summary-map-button > ul > li span {
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0 2px 0 0;
+        -moz-border-radius: 0 0 8px 8px;
+        -webkit-border-radius: 0 0 8px 8px;
+        border-radius: 0 0 8px 8px;
+        font-size: 16px;
+        line-height: 1;
+        font-size: 14px;
+        line-height: 16px;
+        padding: 10px 16px 8px;
+        color: #eeeeee;
+        text-decoration: none; }
+      .faculty-staff-summary-map-button > ul > li:first-child a {
+        margin-left: 5px; }
+      .faculty-staff-summary-map-button > ul > li:hover a {
+        color: #eeeeee;
+        background-color: #01529a;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAADCAYAAACEeL/nAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MkFDNTEyQ0YyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MkFDNTEyQkYyNjExMUUxODQ4RDk4MUIxODdFQzdDRSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1MjY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1MTY1NjJFNDM3RjJFMTExOTMxQzkxRUZCOEQ1MDMyQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgxVvS8AAAAfSURBVHjaYmRgYGhhGADAAsT3B8JiRiBWHAiLAQIMAJ6pAYtOzUtHAAAAAElFTkSuQmCC");
+        background-position: top left;
+        background-repeat: repeat-x; }
+      .faculty-staff-summary-map-button > ul > li.current a, .faculty-staff-summary-map-button > ul > li.current span {
+        display: inline-block;
+        padding: 9px 16px 9px;
+        background-color: #01529a;
+        background-image: none;
+        color: #eeeeee;
+        font-weight: bold;
+        cursor: default; }
 

@@ -360,7 +360,7 @@ ul.selectableListItems li:hover {
 }
 
 .filter-sidebar {
-    width: 270px;
+    width: 275px;
     font-family: Arial;
     background-color: white;
     color: $sidebar-default-text-color;
@@ -399,7 +399,7 @@ ul.selectableListItems li:hover {
 
     .section {
         background-color: $sidebar-default-bg-color;
-        padding-bottom: 8px;
+        padding-bottom: 16px;
         white-space: nowrap;
     }
 }
@@ -481,5 +481,53 @@ ul.selectableListItems li:hover {
     .section {
         background-color: $sidebar-default-bg-color;
         padding-bottom: 8px;
+    }
+}
+
+.faculty-staff-summary-map-button {
+    position: relative;
+    padding: 0 0 2px 0;
+    @include border-box;
+    @include ie-box-shadow;
+    background-color: $nav-bib-bg-color;
+    z-index: 100;
+    &.hide {
+        display: none;
+    }
+    > ul {
+        @include border-box;
+        width: $tube-outer-width;
+        margin: 0 auto;
+        > li {
+            float: left;
+            > a, span {
+                display: inline-block;
+                @include border-box;
+                margin: 0 2px 0 0;
+                @include border-radius(0 0 8px 8px);
+                @include font-height(16px, 1);
+                @include font-height(14px, 16px);
+                padding: 10px 16px 8px;
+                color: $nav-bib-link-text-color;
+                text-decoration: none;
+            }
+            &:first-child a {
+                margin-left: 5px;
+            }
+            &:hover a {
+                color: $nav-bib-link-hover-text-color;
+                background-color: $nav-bib-link-hover-bg-color;
+                @include ie-box-shadow;
+            }
+            &.current a, &.current span {
+                display: inline-block;
+                padding: 9px 16px 9px;
+                background-color: $nav-bib-current-bg-color;
+                background-image: none;
+                color: $nav-bib-current-text-color;
+                font-weight: bold;
+                cursor: default;
+            }
+        }
     }
 }

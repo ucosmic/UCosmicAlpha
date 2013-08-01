@@ -1,7 +1,4 @@
 ﻿<div class="filter-sidebar">
-    <div class="header">
-        <span>Filter Options</span>
-    </div>
     <div>
         <div class="section">
             <div class="section-header">Search For</div>
@@ -10,6 +7,24 @@
                 <input type="radio" id="peopleRadioButton" name="activityType" value="people" data-bind="checked: searchType()"/><span>People</span>
             </div>
         </div>
+
+        <div class="section">
+            <div class="section-header">Country / Location</div>
+            <select id="location" style="width: 99%; overflow-y:auto"></select>
+        </div>
+
+        <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
+            <div class="section-header">Type of Engagement</div>
+            <div style="font-size: small">
+                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">Tags / Keywords</div>
+            <input type="text" id="tagsTextbox" style="height: 28px;"/>
+        </div>
+
         <div class="section">
             <div class="section-header">Date Range</div>
             <div style="margin-left: 4px">
@@ -23,43 +38,37 @@
                 <span>Include undated activities</span>
             </div>
         </div>
-        <div class="section">
-            <div class="section-header">Tags/Keywords</div>
-            <input type="text" id="tagsTextbox" style="height: 28px;"/>
-        </div>
-        <div class="section">
-            <div class="section-header">Country/Location</div>
-            <select id="location" style="width: 100%; overflow-y:auto"></select>
-        </div>
-        <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
-            <div class="section-header">Type of Engagement</div>
-            <div style="font-size: small">
-                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
-            </div>
-        </div>
-        <div class="section">
+
+        <div class="section" style="margin-bottom: 16px">
             <div style="display: none" data-bind="visible: institutionId() == null">
                 <div class="section-header">Institution</div>
                 <input type="text" id="institutionTextbox" style="width: 100%" />
             </div>
             
             <div style="display: none" data-bind="visible: institutionHasCampuses()">
-                <div class="section-header">Institution/Campus</div>
+                <div class="section-header">Institution / Campus</div>
                 <select id="campusDropList" style="width: 100%"></select>
             </div>
 
-            <div class="section-header">College</div>
-            <select id="collegeDropList" style="width: 100%"></select>
+            @*<div class="section-header">College</div>*@
+            <div>
+                <select id="collegeDropList" style="width: 100%"></select>
+            </div>
 
-            <div id="departmentDiv" class="section-header">Department</div>
-            <select id="departmentDropList" style="width: 100%"></select>
+            @*<div id="departmentDiv" class="section-header">Department</div>*@
+            <div>
+                <select id="departmentDropList" style="width: 100%"></select>
+            </div>
         </div>
+
     </div>
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-types-template">
     <li style="margin-left: 8px">
-        <input type="checkbox" value="true" checked/><span style="width: 100%" data-bind="text: $data.type"></span>
+        <div class="ellipsis">
+            <input type="checkbox" value="true" checked/><span data-bind="text: $data.type"></span>
+        </div>
     </li>
 </script>

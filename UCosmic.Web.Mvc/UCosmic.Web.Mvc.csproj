@@ -686,6 +686,7 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
+    <Content Include="images\icons\global\global_24_black.png" />
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
