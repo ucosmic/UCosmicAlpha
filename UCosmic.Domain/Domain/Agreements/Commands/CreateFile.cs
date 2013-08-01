@@ -65,6 +65,13 @@ namespace UCosmic.Domain.Agreements
                     .WithMessage(MustHaveAgreementVisibility.FileFailMessage)
             ;
 
+            // when custom name is provided
+            When(x => !string.IsNullOrWhiteSpace(x.CustomName), () =>
+                RuleFor(x => x.CustomName)
+                    .Length(1, AgreementFileConstraints.NameMaxLength)
+                        .WithMessage(MustNotExceedFileNameLength.FailMessageFormat, x => AgreementFileConstraints.NameMaxLength)
+            );
+
             // when uploadid is present
             When(x => x.UploadGuid.HasValue, () =>
             {
@@ -129,13 +136,6 @@ namespace UCosmic.Domain.Agreements
                     .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, x => x.FileData.FileName)
                 ;
             });
-
-            // when custom name is provided
-            When(x => !string.IsNullOrWhiteSpace(x.CustomName), () =>
-                RuleFor(x => x.CustomName)
-                    .Length(1, AgreementFileConstraints.NameMaxLength)
-                        .WithMessage(MustNotExceedFileNameLength.FailMessageFormat, x => AgreementFileConstraints.NameMaxLength)
-            );
 
             // when neither upload id or file data is present
             const string noFileContentMessage = "Both UploadGuid and FileData are null. Exactly one of these must be provided for this command.";
@@ -207,7 +207,6 @@ namespace UCosmic.Domain.Agreements
                 _unitOfWork.SaveChanges();
                 command.CreatedFileId = entity.Id;
             }
-            // ReSharper disable EmptyGeneralCatchClause
             catch
             {
                 // restore binary data state when the db save fails
@@ -215,10 +214,9 @@ namespace UCosmic.Domain.Agreements
                     if (upload != null) _binaryData.Move(entity.Path, upload.Path);
                     else _binaryData.Delete(entity.Path);
             }
-            // ReSharper restore EmptyGeneralCatchClause
         }
 
-        private static string GetExtensionedCustomName(string customName, string originalName)
+        internal static string GetExtensionedCustomName(string customName, string originalName)
         {
             var extension = Path.GetExtension(originalName);
             if (string.IsNullOrWhiteSpace(extension)) throw new InvalidOperationException(string.Format(

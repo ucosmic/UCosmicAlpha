@@ -24,17 +24,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IStoreBinaryData _binaryData;
         private readonly IValidator<CreateFile> _createValidator;
         private readonly IHandleCommands<CreateFile> _createHandler;
+        private readonly IHandleCommands<UpdateFile> _updateHandler;
 
         public AgreementFilesController(IProcessQueries queryProcessor
             , IStoreBinaryData binaryData
             , IValidator<CreateFile> createValidator
             , IHandleCommands<CreateFile> createHandler
+            , IHandleCommands<UpdateFile> updateHandler
         )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
             _createValidator = createValidator;
             _createHandler = createHandler;
+            _updateHandler = updateHandler;
         }
 
         [GET("{agreementId:int}/files")]
@@ -192,6 +195,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, int fileId, AgreementFileApiModel model)
         {
+            model.AgreementId = agreementId;
+            model.Id = fileId;
+            var command = new UpdateFile(User);
+            Mapper.Map(model, command);
+
+            _updateHandler.Handle(command);
+
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully updated.");
             return response;
         }

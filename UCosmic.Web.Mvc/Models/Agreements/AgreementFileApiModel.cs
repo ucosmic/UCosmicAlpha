@@ -81,5 +81,15 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementFileApiModel, UpdateFile>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                ;
+            }
+        }
     }
 }

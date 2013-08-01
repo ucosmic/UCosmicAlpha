@@ -150,10 +150,12 @@
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByCountry.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
+    <Compile Include="Domain\Agreements\Commands\UpdateFile.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustOwnFileWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Domain\Files\Commands\CreateUpload.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
     <Compile Include="Domain\Files\Entities\Upload.cs" />
+    <Compile Include="Domain\Files\Validation\MustNotExceedFileNameLength.cs" />
     <Compile Include="Domain\Files\Validation\MustHaveFileMimeType.cs" />
     <Compile Include="Domain\Files\Validation\MustHaveFileContent.cs" />
     <Compile Include="Domain\Files\Validation\MustBeUploadedByPrincipal.cs" />
