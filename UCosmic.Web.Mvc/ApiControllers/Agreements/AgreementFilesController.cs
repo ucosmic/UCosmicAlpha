@@ -117,7 +117,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [POST("{agreementId:int}/files")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
-        public HttpResponseMessage Post(int agreementId, AgreementFileApiModel model)
+        public HttpResponseMessage Post(int agreementId, [FromBody] AgreementFileApiModel model)
         {
             model.AgreementId = agreementId;
             var command = new CreateFile(User)
@@ -168,7 +168,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [POST("files/validate")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
-        public HttpResponseMessage ValidatePost(FileUploadValidationModel model)
+        public HttpResponseMessage ValidatePost([FromBody] FileUploadValidationModel model)
         {
             var command = new CreateFile(User)
             {
@@ -196,8 +196,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [PUT("{agreementId:int}/files/{fileId:int}")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
-        public HttpResponseMessage Put(int agreementId, int fileId, AgreementFileApiModel model)
+        public HttpResponseMessage Put(int agreementId, int fileId, [FromBody] AgreementFileApiModel model)
         {
+            // PUT will only update the file's custom name and visibility properties
             model.AgreementId = agreementId;
             model.Id = fileId;
             var command = new UpdateFile(User);

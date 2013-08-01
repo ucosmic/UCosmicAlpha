@@ -332,29 +332,27 @@ var App;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
                 (function (Files) {
-                    function get(agreementId) {
-                        var url = 'agreements/0/files';
-                        if(agreementId) {
-                            url = url.replace('0', agreementId.toString());
+                    function get(agreementId, fileId) {
+                        var url = 'agreements/{0}/files'.format(agreementId);
+                        if(fileId) {
+                            url += '/' + fileId;
                         }
                         return makeUrl(url);
                     }
                     Files.get = get;
-                    function del(agreementId, id) {
-                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
-                        return makeUrl(url);
-                    }
-                    Files.del = del;
                     function post(agreementId) {
-                        var url = 'agreements/{0}/files'.format(agreementId.toString());
-                        return makeUrl(url);
+                        return get(agreementId);
                     }
                     Files.post = post;
-                    function put(agreementId, id) {
-                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
+                    function put(agreementId, fileId) {
+                        var url = 'agreements/{0}/files/{1}'.format(agreementId, fileId);
                         return makeUrl(url);
                     }
                     Files.put = put;
+                    function del(agreementId, fileId) {
+                        return put(agreementId, fileId);
+                    }
+                    Files.del = del;
                     (function (Validate) {
                         function post() {
                             return makeUrl('agreements/files/validate');
@@ -364,13 +362,13 @@ var App;
                     var Validate = Files.Validate;
                     (function (Content) {
                         function view(agreementId, fileId) {
-                            var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
+                            var url = Files.get(agreementId, fileId);
                             url += '/content';
                             return makeUrl(url);
                         }
                         Content.view = view;
                         function download(agreementId, fileId) {
-                            var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
+                            var url = Files.get(agreementId, fileId);
                             url += '/download';
                             return makeUrl(url);
                         }

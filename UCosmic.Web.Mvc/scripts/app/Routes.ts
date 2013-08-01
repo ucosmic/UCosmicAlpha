@@ -317,24 +317,20 @@ module App.Routes {
             }
 
             export module Files {
-                export function get (agreementId: number): string {
-                    var url = 'agreements/0/files';
-                    if (agreementId) url = url.replace('0', agreementId.toString())
-                    return makeUrl(url);
-                }
-                export function del(agreementId: number, id: number) {
-                    var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
-                    
+                export function get (agreementId: number, fileId?: number): string {
+                    var url = 'agreements/{0}/files'.format(agreementId);
+                    if (fileId) url += '/' + fileId
                     return makeUrl(url);
                 }
                 export function post(agreementId: number) {
-                    var url = 'agreements/{0}/files'.format(agreementId.toString());
+                    return get(agreementId);
+                }
+                export function put(agreementId: number, fileId: number) {
+                    var url = 'agreements/{0}/files/{1}'.format(agreementId, fileId);
                     return makeUrl(url);
                 }
-                export function put(agreementId: number, id: number) {
-                    var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), id.toString());
-
-                    return makeUrl(url);
+                export function del(agreementId: number, fileId: number) {
+                    return put(agreementId, fileId);
                 }
 
                 export module Validate {
@@ -345,14 +341,12 @@ module App.Routes {
 
                 export module Content {
                     export function view(agreementId: number, fileId: number): string {
-                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
-                        //var url = Files.get(agreementId, fileId);
+                        var url = Files.get(agreementId, fileId);
                         url += '/content';
                         return makeUrl(url);
                     }
                     export function download(agreementId: number, fileId: number): string {
-                        var url = 'agreements/{0}/files/{1}'.format(agreementId.toString(), fileId.toString());
-                        //var url = Files.get(agreementId, fileId);
+                        var url = Files.get(agreementId, fileId);
                         url += '/download';
                         return makeUrl(url);
                     }
