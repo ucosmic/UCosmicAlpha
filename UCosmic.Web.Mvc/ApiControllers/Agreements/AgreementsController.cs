@@ -100,6 +100,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
+        [PUT("{id}")]
+        public HttpResponseMessage Put(int id, AgreementApiModel model)
+        {
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment was successfully updated.");
+            return response;
+        }
+
         [POST("validate")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Validate(AgreementApiModel model)

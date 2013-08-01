@@ -271,7 +271,9 @@ module App.Routes {
             }
 
             export function put(agreementId: number): string {
-                return get(agreementId);
+                var url = 'agreements/{0}'.format(agreementId.toString());
+
+                return makeUrl(url);
             }
 
             export function post() {

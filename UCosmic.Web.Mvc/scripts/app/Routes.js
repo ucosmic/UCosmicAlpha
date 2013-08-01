@@ -276,7 +276,8 @@ var App;
                 }
                 Agreements.get = get;
                 function put(agreementId) {
-                    return get(agreementId);
+                    var url = 'agreements/{0}'.format(agreementId.toString());
+                    return makeUrl(url);
                 }
                 Agreements.put = put;
                 function post() {

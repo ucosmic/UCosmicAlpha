@@ -1613,6 +1613,16 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 var url;
                 var $LoadingPage = $("#LoadingPage").find("strong");
                 this.spinner.start();
+                if(!$("body").scrollTop()) {
+                    $("html, body").scrollTop(0);
+                } else {
+                    $("body").scrollTop(0);
+                }
+                var $LoadingPage = $("#LoadingPage").find("strong");
+                $LoadingPage.text("Saving agreement...");
+                $("#allParticipants").fadeOut(500, function () {
+                    $("#LoadingPage").fadeIn(500);
+                });
                 $.each(this.participants(), function (i, item) {
                     _this.participantsExport.push({
                         agreementId: item.agreementId,
@@ -1638,7 +1648,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     type: this.typeOptionSelected()
                 });
                 if(this.agreementIsEdit()) {
-                    url = App.Routes.WebApi.Agreements.post();
+                    url = App.Routes.WebApi.Agreements.put(this.agreementId);
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -1646,6 +1656,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         dataType: 'json',
                         contentType: 'application/json',
                         success: function (response, statusText, xhr) {
+                            $LoadingPage.text("Agreement Saved...");
+                            setTimeout(function () {
+                                $("#LoadingPage").fadeOut(500, function () {
+                                    $("#allParticipants").fadeIn(500);
+                                });
+                            }, 5000);
                         },
                         error: function (xhr, statusText, errorThrown) {
                             _this.spinner.stop();
@@ -1672,6 +1688,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         _this.agreementId = 2;
                         _this.agreementPostFiles(response, statusText, xhr);
                         _this.agreementPostContacts(response, statusText, xhr);
+                        $LoadingPage.text("Agreement Saved...");
+                        setTimeout(function () {
+                            $("#LoadingPage").fadeOut(500, function () {
+                                $("#allParticipants").fadeIn(500);
+                            });
+                        }, 5000);
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();
                         if(xhr.status === 400) {

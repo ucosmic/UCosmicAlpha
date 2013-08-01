@@ -1696,7 +1696,17 @@ export class InstitutionalAgreementEditModel {
             var url;
             var $LoadingPage = $("#LoadingPage").find("strong")
             this.spinner.start();
-           
+            //ie sucks!
+            if (!$("body").scrollTop()) {
+                $("html, body").scrollTop(0);
+            } else {
+                $("body").scrollTop(0);
+            }
+            var $LoadingPage = $("#LoadingPage").find("strong")
+            $LoadingPage.text("Saving agreement...");
+            $("#allParticipants").fadeOut(500, function () => {
+                $("#LoadingPage").fadeIn(500);
+            });
 
             $.each(this.participants(), function (i, item) => {
                 this.participantsExport.push({
@@ -1723,7 +1733,7 @@ export class InstitutionalAgreementEditModel {
                 type: this.typeOptionSelected()
             })
             if (this.agreementIsEdit()) {
-                url = App.Routes.WebApi.Agreements.post();
+                url = App.Routes.WebApi.Agreements.put(this.agreementId);
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -1731,6 +1741,12 @@ export class InstitutionalAgreementEditModel {
                     dataType: 'json',
                     contentType: 'application/json',
                     success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                        $LoadingPage.text("Agreement Saved...");
+                        setTimeout(function () => {
+                            $("#LoadingPage").fadeOut(500, function () {
+                                $("#allParticipants").fadeIn(500);
+                            });
+                        }, 5000);
                     },
                     error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                         this.spinner.stop();
@@ -1757,6 +1773,13 @@ export class InstitutionalAgreementEditModel {
                         this.agreementId = 2;//response.agreementId
                         this.agreementPostFiles(response, statusText, xhr);
                         this.agreementPostContacts(response, statusText, xhr);
+                        //change url to edit
+                        $LoadingPage.text("Agreement Saved...");
+                        setTimeout(function () => {
+                            $("#LoadingPage").fadeOut(500, function () {
+                                $("#allParticipants").fadeIn(500);
+                            });
+                        }, 5000);
                     })
                     .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                         this.spinner.stop();
