@@ -28,15 +28,15 @@ namespace UCosmic.Domain.Files
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is string) && !(context.PropertyValue is Guid) && !(context.PropertyValue is Guid?))
+            if (!(context.PropertyValue is string) && !(context.PropertyValue is Guid))
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on string or Guid properties", GetType().Name));
 
             string fileName = null;
             if (_entities != null)
             {
-                var uploadId = (Guid?) context.PropertyValue;
-                var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId.Value);
+                var uploadId = (Guid) context.PropertyValue;
+                var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId);
                 fileName = upload.FileName;
             }
 
@@ -96,12 +96,6 @@ namespace UCosmic.Domain.Files
 
         public static IRuleBuilderOptions<T, Guid> MustHaveAllowedFileExtension<T>
             (this IRuleBuilder<T, Guid> ruleBuilder, IQueryEntities entities, params string[] validExtensions)
-        {
-            return ruleBuilder.SetValidator(new MustHaveAllowedFileExtension(validExtensions, entities));
-        }
-
-        public static IRuleBuilderOptions<T, Guid?> MustHaveAllowedFileExtension<T>
-            (this IRuleBuilder<T, Guid?> ruleBuilder, IQueryEntities entities, params string[] validExtensions)
         {
             return ruleBuilder.SetValidator(new MustHaveAllowedFileExtension(validExtensions, entities));
         }

@@ -16,6 +16,8 @@
 
     public static class AgreementFileConstraints
     {
+        public const int FileNameMaxLength = 210;
+        public const int NameMaxLength = 200;
         public static readonly string[] AllowedFileExtensions = new[]
         {
             "pdf", "doc", "docx", "odt", "xls", "xlsx", "ods", "ppt", "pptx",

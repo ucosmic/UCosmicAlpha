@@ -25,16 +25,16 @@ namespace UCosmic.Domain.Files
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is byte[]) && !(context.PropertyValue is Guid) && !(context.PropertyValue is Guid?))
+            if (!(context.PropertyValue is byte[]) && !(context.PropertyValue is Guid))
                 throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on byte[] properties", GetType().Name));
+                    "The {0} PropertyValidator can only operate on Guid or byte[] properties", GetType().Name));
 
             decimal contentLengthInBytes;
             string fileName;
             if (_entities != null)
             {
-                var uploadId = (Guid?) context.PropertyValue;
-                var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId.Value);
+                var uploadId = (Guid) context.PropertyValue;
+                var upload = _entities.Query<Upload>().Single(x => x.Guid == uploadId);
                 contentLengthInBytes = upload.Length;
                 fileName = upload.FileName;
             }
@@ -67,13 +67,6 @@ namespace UCosmic.Domain.Files
 
         public static IRuleBuilderOptions<T, Guid> MustNotExceedFileSize<T>
             (this IRuleBuilder<T, Guid> ruleBuilder, decimal fileSize, FileSizeUnitName unit, IQueryEntities entities)
-        {
-            var fileSizeInBytes = fileSize.ConvertToBytes(unit);
-            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, null, entities));
-        }
-
-        public static IRuleBuilderOptions<T, Guid?> MustNotExceedFileSize<T>
-            (this IRuleBuilder<T, Guid?> ruleBuilder, decimal fileSize, FileSizeUnitName unit, IQueryEntities entities)
         {
             var fileSizeInBytes = fileSize.ConvertToBytes(unit);
             return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, null, entities));

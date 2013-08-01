@@ -20,16 +20,16 @@ namespace UCosmic.Domain.Files
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is Guid) && !(context.PropertyValue is Guid?))
+            if (!(context.PropertyValue is Guid))
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on Guid properties", GetType().Name));
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var value = (Guid?)context.PropertyValue;
+            var value = (Guid)context.PropertyValue;
             if (value == null || value == Guid.Empty) return false;
 
             var entity = _entities.Query<Upload>()
-                .SingleOrDefault(x => value.Value.Equals(x.Guid));
+                .SingleOrDefault(x => value.Equals(x.Guid));
 
             return entity != null;
         }
@@ -37,12 +37,6 @@ namespace UCosmic.Domain.Files
 
     public static class MustFindUploadByGuidExtensions
     {
-        public static IRuleBuilderOptions<T, Guid?> MustFindUploadByGuid<T>
-            (this IRuleBuilder<T, Guid?> ruleBuilder, IQueryEntities entities)
-        {
-            return ruleBuilder.SetValidator(new MustFindUploadByGuid(entities));
-        }
-
         public static IRuleBuilderOptions<T, Guid> MustFindUploadByGuid<T>
         (this IRuleBuilder<T, Guid> ruleBuilder, IQueryEntities entities)
         {

@@ -23,11 +23,11 @@ namespace UCosmic.Domain.Files
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is Guid) && !(context.PropertyValue is Guid?))
+            if (!(context.PropertyValue is Guid))
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on Guid properties", GetType().Name));
 
-            var uploadId = (Guid?)context.PropertyValue;
+            var uploadId = (Guid)context.PropertyValue;
             var principal = _principal != null ? _principal((T)context.Instance) : null;
 
             if (principal == null || string.IsNullOrWhiteSpace(principal.Identity.Name)) return false;
@@ -48,12 +48,6 @@ namespace UCosmic.Domain.Files
     {
         public static IRuleBuilderOptions<T, Guid> MustBeUploadedByPrincipal<T>
             (this IRuleBuilder<T, Guid> ruleBuilder, IQueryEntities entities, Func<T, IPrincipal> principal)
-        {
-            return ruleBuilder.SetValidator(new MustBeUploadedByPrincipal<T>(entities, principal));
-        }
-
-        public static IRuleBuilderOptions<T, Guid?> MustBeUploadedByPrincipal<T>
-        (this IRuleBuilder<T, Guid?> ruleBuilder, IQueryEntities entities, Func<T, IPrincipal> principal)
         {
             return ruleBuilder.SetValidator(new MustBeUploadedByPrincipal<T>(entities, principal));
         }

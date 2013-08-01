@@ -81,6 +81,11 @@ namespace UCosmic.Domain.Agreements
                     // uploaded file must have been created by same user who us creating this file
                     .MustBeUploadedByPrincipal(entities, x => x.Principal)
 
+                    // file name must be within length requirements
+                    .MustNotExceedFileNameLength(AgreementFileConstraints.FileNameMaxLength, entities)
+                        .WithMessage(MustNotExceedFileNameLength.FailMessageFormat,
+                            x => AgreementFileConstraints.FileNameMaxLength)
+
                     // uploaded file must have valid extension
                     .MustHaveAllowedFileExtension(entities, AgreementFileConstraints.AllowedFileExtensions)
 
@@ -106,6 +111,11 @@ namespace UCosmic.Domain.Agreements
                     // file name must be present
                     .NotEmpty().WithMessage(MustHaveFileName.FailMessage)
 
+                    // file name must be within length requirements
+                    .Length(1, AgreementFileConstraints.FileNameMaxLength)
+                        .WithMessage(MustNotExceedFileNameLength.FailMessageFormat,
+                            x => AgreementFileConstraints.FileNameMaxLength)
+
                     // file name must have valid extension
                     .MustHaveAllowedFileExtension(AgreementFileConstraints.AllowedFileExtensions)
                 ;
@@ -119,6 +129,13 @@ namespace UCosmic.Domain.Agreements
                     .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, x => x.FileData.FileName)
                 ;
             });
+
+            // when custom name is provided
+            When(x => !string.IsNullOrWhiteSpace(x.CustomName), () =>
+                RuleFor(x => x.CustomName)
+                    .Length(1, AgreementFileConstraints.NameMaxLength)
+                        .WithMessage(MustNotExceedFileNameLength.FailMessageFormat, x => AgreementFileConstraints.NameMaxLength)
+            );
 
             // when neither upload id or file data is present
             const string noFileContentMessage = "Both UploadGuid and FileData are null. Exactly one of these must be provided for this command.";

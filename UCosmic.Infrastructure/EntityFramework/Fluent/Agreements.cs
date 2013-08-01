@@ -229,6 +229,8 @@ namespace UCosmic.EntityFramework
             Property(p => p.UpdatedByPrincipal).HasMaxLength(256);
             Property(p => p.Version).IsConcurrencyToken(true).IsRowVersion();
 
+            Property(x => x.FileName).HasMaxLength(AgreementFileConstraints.FileNameMaxLength);
+            Property(x => x.Name).HasMaxLength(AgreementFileConstraints.NameMaxLength);
             Property(x => x.VisibilityText).HasColumnName("Visibility")
                 //.IsRequired()
                 .HasMaxLength(20);
