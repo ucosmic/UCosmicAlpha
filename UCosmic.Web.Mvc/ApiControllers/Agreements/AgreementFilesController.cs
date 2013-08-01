@@ -25,12 +25,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IValidator<CreateFile> _createValidator;
         private readonly IHandleCommands<CreateFile> _createHandler;
         private readonly IHandleCommands<UpdateFile> _updateHandler;
+        private readonly IHandleCommands<PurgeFile> _purgeHandler;
 
         public AgreementFilesController(IProcessQueries queryProcessor
             , IStoreBinaryData binaryData
             , IValidator<CreateFile> createValidator
             , IHandleCommands<CreateFile> createHandler
             , IHandleCommands<UpdateFile> updateHandler
+            , IHandleCommands<PurgeFile> purgeHandler
         )
         {
             _queryProcessor = queryProcessor;
@@ -38,6 +40,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _createValidator = createValidator;
             _createHandler = createHandler;
             _updateHandler = updateHandler;
+            _purgeHandler = purgeHandler;
         }
 
         [GET("{agreementId:int}/files")]
@@ -210,7 +213,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Delete(int agreementId, int fileId)
         {
-
+            var command = new PurgeFile(User, agreementId, fileId);
+            _purgeHandler.Handle(command);
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement file was successfully deleted.");
             return response;
         }
