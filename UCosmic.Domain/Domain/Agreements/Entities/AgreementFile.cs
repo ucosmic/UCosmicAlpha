@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -39,10 +40,30 @@ namespace UCosmic.Domain.Agreements
             protected internal set { VisibilityText = value.AsSentenceFragment(); }
         }
 
-        public DateTime CreatedOnUtc { get; protected internal set; }
-        public string CreatedByPrincipal { get; protected internal set; }
+        public DateTime CreatedOnUtc { get; protected set; }
+        public string CreatedByPrincipal { get; protected set; }
         public DateTime? UpdatedOnUtc { get; protected internal set; }
         public string UpdatedByPrincipal { get; protected internal set; }
         public byte[] Version { get; protected internal set; }
+    }
+
+    internal static class AgreementFileSerializer
+    {
+        internal static string ToJsonAudit(this AgreementFile entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                entity.Id,
+                entity.Guid,
+                entity.AgreementId,
+                entity.Length,
+                entity.MimeType,
+                entity.Name,
+                entity.Path,
+                entity.FileName,
+                entity.Visibility,
+            });
+            return state;
+        }
     }
 }

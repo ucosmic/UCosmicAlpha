@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
 
@@ -87,11 +89,29 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             var entity = _entities.Get<AgreementFile>().Single(x => x.Id == command.FileId);
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.AgreementId,
+                    command.FileId,
+                    command.CustomName,
+                    command.Visibility,
+                }),
+                PreviousState = entity.ToJsonAudit(),
+            };
+
             entity.Visibility = command.Visibility.AsEnum<AgreementVisibility>();
             entity.Name = HandleCreateFileCommand.GetExtensionedCustomName(command.CustomName, entity.FileName);
             entity.UpdatedByPrincipal = command.Principal.Identity.Name;
             entity.UpdatedOnUtc = DateTime.UtcNow;
 
+            audit.NewState = entity.ToJsonAudit();
+            _entities.Create(audit);
             _entities.Update(entity);
             _unitOfWork.SaveChanges();
         }

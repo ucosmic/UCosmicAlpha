@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
@@ -75,6 +77,21 @@ namespace UCosmic.Domain.Agreements
 
             var entity = _entities.Get<AgreementFile>().Single(x => x.Id == command.FileId);
             var path = entity.Path;
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.AgreementId,
+                    command.FileId,
+                }),
+                PreviousState = entity.ToJsonAudit(),
+            };
+
+            _entities.Create(audit);
             _entities.Purge(entity);
             _unitOfWork.SaveChanges();
             _binaryData.Delete(path);

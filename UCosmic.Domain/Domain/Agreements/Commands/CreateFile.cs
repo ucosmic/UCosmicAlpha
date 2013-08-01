@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
 
@@ -201,6 +203,28 @@ namespace UCosmic.Domain.Agreements
                 entity.Name = GetExtensionedCustomName(command.CustomName, command.FileData.FileName);
                 _binaryData.Put(entity.Path, command.FileData.Content);
             }
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.AgreementId,
+                    command.CustomName,
+                    command.Visibility,
+                    command.UploadGuid,
+                    FileData = command.FileData == null ? null : new
+                    {
+                        command.FileData.FileName,
+                        ContentType = command.FileData.MimeType,
+                        ContentLength = command.FileData.Content.Length,
+                    }
+                }),
+                NewState = entity.ToJsonAudit(),
+            };
+            _entities.Create(audit);
 
             try
             {
