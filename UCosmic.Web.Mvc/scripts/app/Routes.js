@@ -308,27 +308,27 @@ var App;
                 })(Agreements.Participant || (Agreements.Participant = {}));
                 var Participant = Agreements.Participant;
                 (function (Contacts) {
-                    function get(agreementId) {
-                        var url = 'agreements/0/contacts';
-                        if(agreementId) {
-                            url = url.replace('0', agreementId.toString());
+                    function get(agreementId, contactId) {
+                        var url = 'agreements/{0}/contacts'.format(agreementId);
+                        if(contactId) {
+                            url += '/' + contactId;
                         }
                         return makeUrl(url);
                     }
                     Contacts.get = get;
                     function post(agreementId) {
-                        var url = 'agreements/0/contacts';
-                        if(agreementId) {
-                            url = url.replace('0', agreementId.toString());
-                        }
-                        return makeUrl(url);
+                        return get(agreementId);
                     }
                     Contacts.post = post;
-                    function put(agreementId, id) {
-                        var url = 'agreements/{0}/contacts/{1}'.format(agreementId.toString(), id.toString());
+                    function put(agreementId, contactId) {
+                        var url = 'agreements/{0}/contacts/{1}'.format(agreementId, contactId);
                         return makeUrl(url);
                     }
                     Contacts.put = put;
+                    function del(agreementId, contactId) {
+                        return put(agreementId, contactId);
+                    }
+                    Contacts.del = del;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
                 (function (Files) {

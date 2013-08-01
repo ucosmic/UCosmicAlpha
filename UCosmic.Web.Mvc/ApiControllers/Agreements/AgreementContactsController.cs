@@ -56,7 +56,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{agreementId:int}/contact/{contactId:int}")]
+        [GET("{agreementId:int}/contacts/{contactId:int}")]
         public AgreementContactApiModel Get(int agreementId, int contactId)
         {
             var entities = _queryProcessor.Execute(new ContactsByAgreementId(User, agreementId)
@@ -79,9 +79,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [POST("{agreementId:int}/contact/{contactId:int}")]
-        public HttpResponseMessage Post(int agreementId, int contactId)
+        [POST("{agreementId:int}/contacts/{contactId:int}")]
+        public HttpResponseMessage Post(int agreementId, int contactId, [FromBody] AgreementContactApiModel model)
         {
+            model.AgreementId = agreementId;
+            model.Id = contactId;
+
             var response = Request.CreateResponse(HttpStatusCode.Created,
                string.Format("Contact '{0}' was successfully created.", "name"));
             var url = Url.Link(null, new
@@ -96,11 +99,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("{agreementId:int}/contact/{contactId:int}")]
-        public HttpResponseMessage Put(int agreementId, int contactId)
+        [PUT("{agreementId:int}/contacts/{contactId:int}")]
+        public HttpResponseMessage Put(int agreementId, int contactId, [FromBody] AgreementContactApiModel model)
         {
 
-            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement contact was successfully updated.");
+            return response;
+        }
+
+        [DELETE("{agreementId:int}/contacts/{contactId:int}")]
+        public HttpResponseMessage Delete(int agreementId, int contactId)
+        {
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement contact was successfully deleted.");
             return response;
         }
     }

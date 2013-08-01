@@ -299,20 +299,20 @@ module App.Routes {
             }
 
             export module Contacts {
-                export function get (agreementId: number): string {
-                    var url = 'agreements/0/contacts';
-                    if (agreementId) url = url.replace('0', agreementId.toString())
+                export function get (agreementId: number, contactId?: number): string {
+                    var url = 'agreements/{0}/contacts'.format(agreementId);
+                    if (contactId) url += '/' + contactId;
                     return makeUrl(url);
                 }
                 export function post (agreementId: number): string {
-                    var url = 'agreements/0/contacts';
-                    if (agreementId) url = url.replace('0', agreementId.toString())
+                    return get(agreementId);
+                }
+                export function put(agreementId: number, contactId: number) {
+                    var url = 'agreements/{0}/contacts/{1}'.format(agreementId, contactId);
                     return makeUrl(url);
                 }
-                export function put(agreementId: number, id: number) {
-                    var url = 'agreements/{0}/contacts/{1}'.format(agreementId.toString(), id.toString());
-
-                    return makeUrl(url);
+                export function del(agreementId: number, contactId: number) {
+                    return put(agreementId, contactId);
                 }
             }
 
