@@ -88,6 +88,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<AgreementFileApiModel, UpdateFile>()
                     .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
                 ;
             }
         }
