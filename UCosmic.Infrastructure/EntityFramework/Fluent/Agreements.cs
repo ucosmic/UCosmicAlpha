@@ -67,7 +67,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ConfigurationId)
                 .WillCascadeOnDelete();
 
-            Property(p => p.Text).IsRequired().HasMaxLength(AgreementContactConstraints.ContactTypeMaxLength);
+            Property(p => p.Text).IsRequired().HasMaxLength(AgreementContactConstraints.TypeMaxLength);
         }
     }
 
@@ -192,7 +192,7 @@ namespace UCosmic.EntityFramework
                 .WithRequired(d => d.Owner)
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.Type).IsRequired().HasMaxLength(AgreementContactConstraints.ContactTypeMaxLength);
+            Property(p => p.Type).IsRequired().HasMaxLength(AgreementContactConstraints.TypeMaxLength);
             Property(p => p.Title).IsOptional().HasMaxLength(AgreementContactConstraints.TitleMaxLength);
         }
     }

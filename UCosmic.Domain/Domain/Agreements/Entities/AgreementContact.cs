@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Newtonsoft.Json;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
@@ -37,5 +38,23 @@ namespace UCosmic.Domain.Agreements
         public DateTime? UpdatedOnUtc { get; protected internal set; }
         public string UpdatedByPrincipal { get; protected internal set; }
         public byte[] Version { get; protected internal set; }
+    }
+
+    internal static class AgreementContactSerializer
+    {
+        internal static string ToJsonAudit(this AgreementContact entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                entity.Id,
+                entity.Guid,
+                entity.AgreementId,
+                entity.PersonId,
+                entity.ParticipantAffiliationId,
+                entity.Type,
+                entity.Title,
+            });
+            return state;
+        }
     }
 }

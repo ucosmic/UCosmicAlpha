@@ -8,8 +8,11 @@ namespace UCosmic.Domain.People
     public class CreatePerson
     {
         public string DisplayName { get; set; }
+        public string Salutation { get; set; }
         public string FirstName { get; set; }
+        public string MiddleName { get; set; }
         public string LastName { get; set; }
+        public string Suffix { get; set; }
         public string UserName { get; set; }
         public bool UserIsRegistered { get; set; }
         public EmailAddress[] EmailAddresses { get; set; }
@@ -23,6 +26,8 @@ namespace UCosmic.Domain.People
             public bool IsConfirmed { get; set; }
             public bool IsDefault { get; set; }
         }
+
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateCreatePersonCommand : AbstractValidator<CreatePerson>
@@ -39,9 +44,6 @@ namespace UCosmic.Domain.People
 
             RuleFor(x => x.UserName)
                 // if username is present, validate that it is not attached to another person
-                //.Must(p => ValidateUser.NameMatchesNoEntity(p, queryProcessor))
-                //    .WithMessage(ValidateUser.FailedBecauseNameMatchedEntity,
-                //        p => p.UserName)
                 .MustNotFindUserByName(entities)
                     .WithMessage(MustNotFindUserByName.FailMessageFormat, x => x.UserName)
             ;
@@ -64,8 +66,11 @@ namespace UCosmic.Domain.People
             // construct the person
             var person = new Person
             {
+                Salutation = command.Salutation,
                 FirstName = command.FirstName,
+                MiddleName = command.MiddleName,
                 LastName = command.LastName,
+                Suffix = command.Suffix,
                 DisplayName = command.DisplayName,
                 Gender = command.Gender,
             };

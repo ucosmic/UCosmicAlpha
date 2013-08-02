@@ -36,7 +36,7 @@ namespace UCosmic.Domain.People
         public virtual ExternalFile Photo { get; protected internal set; }
         public virtual ICollection<EmailAddress> Emails { get; protected internal set; }
         public virtual ICollection<Affiliation> Affiliations { get; protected internal set; }
-    
+
         public virtual User User { get; protected internal set; }
         public virtual Employee Employee { get; protected internal set; }
         public virtual ICollection<EmailMessage> Messages { get; protected internal set; }

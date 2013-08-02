@@ -49,12 +49,12 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.PersonId)
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.DisplayName).IsRequired().HasMaxLength(200);
-            Property(p => p.Salutation).HasMaxLength(50);
-            Property(p => p.FirstName).HasMaxLength(100);
-            Property(p => p.MiddleName).HasMaxLength(100);
-            Property(p => p.LastName).HasMaxLength(100);
-            Property(p => p.Suffix).HasMaxLength(50);
+            Property(p => p.DisplayName).IsRequired().HasMaxLength(PersonConstraints.DisplayNameMaxLength);
+            Property(p => p.Salutation).HasMaxLength(PersonConstraints.SalutationMaxLength);
+            Property(p => p.FirstName).HasMaxLength(PersonConstraints.FirstNameMaxLength);
+            Property(p => p.MiddleName).HasMaxLength(PersonConstraints.MiddleNameMaxLength);
+            Property(p => p.LastName).HasMaxLength(PersonConstraints.LastNameMaxLength);
+            Property(p => p.Suffix).HasMaxLength(PersonConstraints.SuffixMaxLength);
             Property(p => p.Gender).HasMaxLength(1).IsFixedLength().IsUnicode(false).IsOptional();
         }
     }
@@ -73,7 +73,7 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => new { d.PersonId, d.EmailAddressNumber, })
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.Value).IsRequired().HasMaxLength(256);
+            Property(p => p.Value).IsRequired().HasMaxLength(EmailAddressConstraints.ValueMaxLength);
         }
     }
 

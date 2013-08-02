@@ -17,10 +17,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class AgreementContactsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<CreateContact> _createHandler;
 
-        public AgreementContactsController(IProcessQueries queryProcessor)
+        public AgreementContactsController(IProcessQueries queryProcessor
+            , IHandleCommands<CreateContact> createHandler
+        )
         {
             _queryProcessor = queryProcessor;
+            _createHandler = createHandler;
         }
 
         [GET("{agreementId:int}/contacts")]
@@ -154,10 +158,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("{agreementId:int}/contacts/{contactId:int}")]
-        public HttpResponseMessage Post(int agreementId, int contactId, [FromBody] AgreementContactApiModel model)
+        public HttpResponseMessage Post(int agreementId, [FromBody] AgreementContactApiModel model)
         {
             model.AgreementId = agreementId;
-            model.Id = contactId;
+            var command = new CreateContact(User);
+            Mapper.Map(model, command);
+
+            _createHandler.Handle(command);
 
             var response = Request.CreateResponse(HttpStatusCode.Created,
                string.Format("Contact '{0}' was successfully created.", "name"));
@@ -166,7 +173,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 controller = "AgreementContacts",
                 action = "Get",
                 agreementId,
-                establishmentNameId = 1//command.Id
+                contactId = command.CreatedContactId,
             });
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);

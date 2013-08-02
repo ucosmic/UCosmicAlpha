@@ -8,12 +8,6 @@
         public const int StatusMaxLength = 50;
     }
 
-    public static class AgreementContactConstraints
-    {
-        public const int ContactTypeMaxLength = 150;
-        public const int TitleMaxLength = 300;
-    }
-
     public static class AgreementFileConstraints
     {
         public const int FileNameMaxLength = 210;
@@ -22,6 +16,12 @@
         {
             "pdf", "doc", "docx", "odt", "xls", "xlsx", "ods", "ppt", "pptx",
         };
+    }
+
+    public static class AgreementContactConstraints
+    {
+        public const int TypeMaxLength = 150;
+        public const int TitleMaxLength = 300;
     }
 
     public static class AgreementContactPhoneConstraints
