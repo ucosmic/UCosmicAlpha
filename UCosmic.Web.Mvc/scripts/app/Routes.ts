@@ -472,6 +472,12 @@ module App.Routes {
             }
         }
 
+        export module FacultyStaff {
+            export function getSummary (): string {
+                return makeUrl('faculty-staff/summary');
+            }
+        }
+
         export module Activities {
             export function get (activityId?: number): string {
                 var url = makeUrl('activities');

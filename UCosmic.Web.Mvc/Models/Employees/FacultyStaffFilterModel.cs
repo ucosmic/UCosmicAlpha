@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace UCosmic.Web.Mvc.Models
 {
@@ -29,10 +31,35 @@ namespace UCosmic.Web.Mvc.Models
         public int? DepartmentId { get; set; }
     }
 
-    public class FacultyStaffResultsModel
+    public class FacultyStaffActivityCountModel
+    {
+        public int TypeId { get; set; }
+        public string Type { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class FacultyStaffActivitiesInCountryModel
     {
         public int PlaceId { get; set; }
         public string OfficialName { get; set; }
         public int Count { get; set; }
+        public ICollection<FacultyStaffActivityCountModel> TypeCounts { get; set; }
+
+        public FacultyStaffActivitiesInCountryModel()
+        {
+            TypeCounts = new Collection<FacultyStaffActivityCountModel>();
+        }
+    }
+
+    public class FacultyStaffActivitiesSummaryModel
+    {
+        public int TotalActivities { get; set; }
+        public int TotalCountriesWithActivities { get; set; }
+        public ICollection<FacultyStaffActivitiesInCountryModel> CountryCounts { get; set; }
+
+        public FacultyStaffActivitiesSummaryModel()
+        {
+            CountryCounts = new Collection<FacultyStaffActivitiesInCountryModel>();
+        }
     }
 }

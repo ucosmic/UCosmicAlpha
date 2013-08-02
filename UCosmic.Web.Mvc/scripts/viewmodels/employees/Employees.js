@@ -240,16 +240,16 @@ var ViewModels;
             };
             FacultyAndStaff.prototype.setupRouting = function () {
                 var _this = this;
-                this.sammy.get('#/engagements', function () {
+                this.sammy.get('#/summary', function () {
                     _this.selectMap('heatmap');
                 });
-                this.sammy.get('#/map', function () {
+                this.sammy.get('#/search', function () {
                     _this.selectMap('pointmap');
                 });
                 this.sammy.get('#/results', function () {
                     _this.selectMap('resultstable');
                 });
-                this.sammy.run('#/engagements');
+                this.sammy.run('#/summary');
             };
             FacultyAndStaff.prototype.setupMaps = function () {
                 var me = this;
@@ -331,11 +331,25 @@ var ViewModels;
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                $.when(typesPact).done(function (types) {
+                var summaryPact = $.Deferred();
+                $.ajax({
+                    type: "GET",
+                    url: App.Routes.WebApi.FacultyStaff.getSummary(),
+                    success: function (data, textStatus, jqXhr) {
+                        summaryPact.resolve(data);
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        summaryPact.reject(jqXhr, textStatus, errorThrown);
+                    }
+                });
+                $.when(typesPact, summaryPact).done(function (types, summary) {
                     _this.activityTypes = ko.mapping.fromJS(types);
                     for(var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
                     }
+                    debugger;
+
+                    ko.mapping.fromJS(_this.summary, types);
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);

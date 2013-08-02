@@ -80,6 +80,8 @@ module ViewModels.Employees {
 
         selectedCountry: KnockoutObservableString;
 
+        summary: KnockoutObservableAny;
+
         // --------------------------------------------------------------------------------
         /*
         */
@@ -411,10 +413,11 @@ module ViewModels.Employees {
         */
         // --------------------------------------------------------------------------------  
         setupRouting(): void {
-            this.sammy.get('#/engagements', ():void => { this.selectMap('heatmap'); });
-            this.sammy.get('#/map', (): void => { this.selectMap('pointmap'); });
+            this.sammy.get('#/summary', ():void => { this.selectMap('heatmap'); });
+            this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); });
             this.sammy.get('#/results', (): void => { this.selectMap('resultstable'); });
-            this.sammy.run('#/engagements');
+
+            this.sammy.run('#/summary');
         }
 
         // --------------------------------------------------------------------------------
@@ -536,22 +539,21 @@ module ViewModels.Employees {
                           .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
                               typesPact.reject(jqXHR, textStatus, errorThrown);
                           });
-            
-            
-            //var dataPact = $.Deferred();
-
-            //$.ajax({
-            //    type: "GET",
-            //    url: App.Routes.WebApi.InternationalAffiliations.get(this.id()),
-            //    success: function (data: any, textStatus: string, jqXhr: JQueryXHR): void
-            //    { dataPact.resolve(data); },
-            //    error: function (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
-            //    { dataPact.reject(jqXhr, textStatus, errorThrown); },
-            //});
+        
+            var summaryPact = $.Deferred();
+            $.ajax({
+                type: "GET",
+                url: App.Routes.WebApi.FacultyStaff.getSummary(),
+                success: function (data: any, textStatus: string, jqXhr: JQueryXHR): void
+                    { summaryPact.resolve(data); },
+                error: function (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
+                    { summaryPact.reject(jqXhr, textStatus, errorThrown); },
+            });
 
             // only process after all requests have been resolved
-            $.when(typesPact)
-                            .done((types: Service.ApiModels.IEmployeeActivityType[], ): void => {
+            $.when(typesPact, summaryPact)
+                            .done(( types: Service.ApiModels.IEmployeeActivityType[],
+                                    summary: any): void => {
 
                                 this.activityTypes = ko.mapping.fromJS(types);
 
@@ -572,6 +574,10 @@ module ViewModels.Employees {
 
                                 //    this.selectedLocationValues.push(this.locations()[i].placeId());
                                 //}
+
+                                debugger;
+
+                                ko.mapping.fromJS(this.summary, types)
 
                                 deferred.resolve();
                             })

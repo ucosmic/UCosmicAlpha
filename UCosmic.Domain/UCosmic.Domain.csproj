@@ -144,6 +144,10 @@
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEditSourceEntityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityById.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityCountByCountryIdEstablishmentId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityCountByEstablishmentId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityCountByTypeIdCountryIdEstablishmentId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityCountryCountByEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
@@ -365,6 +369,7 @@
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeSamePerson.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
+    <Compile Include="Domain\Places\Queries\CountryCountWithActivitiesByEstablishmentId.cs" />
     <Compile Include="Domain\Places\_Etc\PlaceGroup.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />

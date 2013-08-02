@@ -539,6 +539,13 @@ var App;
                 var ModuleSettings = Employees.ModuleSettings;
             })(WebApi.Employees || (WebApi.Employees = {}));
             var Employees = WebApi.Employees;
+            (function (FacultyStaff) {
+                function getSummary() {
+                    return makeUrl('faculty-staff/summary');
+                }
+                FacultyStaff.getSummary = getSummary;
+            })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));
+            var FacultyStaff = WebApi.FacultyStaff;
             (function (Activities) {
                 function get(activityId) {
                     var url = makeUrl('activities');
