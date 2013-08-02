@@ -24,7 +24,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{agreementId:int}/contacts")]
-        public IEnumerable<AgreementContactApiModel> Get(int agreementId)
+        public IEnumerable<AgreementContactApiModel> Get(int agreementId, [FromUri] bool useTestData = false)
         {
             var entities = _queryProcessor.Execute(new ContactsByAgreementId(User, agreementId)
             {
@@ -37,27 +37,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var models = Mapper.Map<AgreementContactApiModel[]>(entities);
             
-            var newPhone2 = new[]
+            if (useTestData)
             {
-                new AgreementContactPhoneApiModel {Value = "3213456452", Type = "work", ContactId = "3" },
-                new AgreementContactPhoneApiModel {Value = "321345", Type = "home", ContactId = "3" }
-            };
-            var newPhone1 = new[]
-            {
-                new AgreementContactPhoneApiModel {Value = "3213456452111", Type = "home", ContactId = "3" },
-                new AgreementContactPhoneApiModel {Value = "321345111", Type = "work", ContactId = "3" }
-            };
-            models = new[]
-            {
-                new AgreementContactApiModel { Title = "job2", FirstName = "arya", LastName = "stark", Id = 2, PersonId = 44, Phones = newPhone2, EmailAddress = "asdf@as.as22", Type = "Home Principal", Suffix = "Sr.", Salutation = "Ms.", DisplayName = "Arya Stark", MiddleName = "middle2" },
-                new AgreementContactApiModel { Title = "job3", FirstName = "Rob", LastName = "stark", Id = 2, PersonId = 45, Phones = newPhone1, EmailAddress = "111asdf@as.as22", Type = "Home Principal", Suffix = "Sr.", Salutation = "Mr.", DisplayName = "Rob Stark", MiddleName = "middle2" }
-            };
+                var newPhone2 = new[]
+                {
+                    new AgreementContactPhoneApiModel {Value = "3213456452", Type = "work", ContactId = "3" },
+                    new AgreementContactPhoneApiModel {Value = "321345", Type = "home", ContactId = "3" }
+                };
+                var newPhone1 = new[]
+                {
+                    new AgreementContactPhoneApiModel {Value = "3213456452111", Type = "home", ContactId = "3" },
+                    new AgreementContactPhoneApiModel {Value = "321345111", Type = "work", ContactId = "3" }
+                };
+                models = new[]
+                {
+                    new AgreementContactApiModel { Title = "job2", FirstName = "arya", LastName = "stark", Id = 2, PersonId = 44, Phones = newPhone2, EmailAddress = "asdf@as.as22", Type = "Home Principal", Suffix = "Sr.", Salutation = "Ms.", DisplayName = "Arya Stark", MiddleName = "middle2" },
+                    new AgreementContactApiModel { Title = "job3", FirstName = "Rob", LastName = "stark", Id = 2, PersonId = 45, Phones = newPhone1, EmailAddress = "111asdf@as.as22", Type = "Home Principal", Suffix = "Sr.", Salutation = "Mr.", DisplayName = "Rob Stark", MiddleName = "middle2" }
+                };
+            }
 
             return models;
         }
 
         [GET("{agreementId:int}/contacts/{contactId:int}")]
-        public AgreementContactApiModel Get(int agreementId, int contactId)
+        public AgreementContactApiModel Get(int agreementId, int contactId, [FromUri] bool useTestData = false)
         {
             var entities = _queryProcessor.Execute(new ContactsByAgreementId(User, agreementId)
             {

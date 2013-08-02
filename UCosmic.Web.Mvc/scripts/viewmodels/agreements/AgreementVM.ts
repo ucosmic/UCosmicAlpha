@@ -306,7 +306,7 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateFiles(): void {
-        $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId) + "?useTestData=true")
+        $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
             .done((response: any): void => {
                 $.each(response, function (i, item) => {
                     this.files.push(ko.mapping.fromJS({
@@ -324,7 +324,7 @@ export class InstitutionalAgreementEditModel {
     }
 
     populateContacts(): void {
-        $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId))
+        $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: true })
             .done((response: any): void => {
                 ko.mapping.fromJS(response, this.contacts)
                 this.dfdPopContacts.resolve();

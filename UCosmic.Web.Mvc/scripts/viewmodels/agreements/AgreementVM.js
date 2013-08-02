@@ -267,7 +267,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId) + "?useTestData=true").done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), {
+                useTestData: true
+            }).done(function (response) {
                 $.each(response, function (i, item) {
                     _this.files.push(ko.mapping.fromJS({
                         id: item.id,
@@ -284,7 +286,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.populateContacts = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), {
+                useTestData: true
+            }).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
                 _this.dfdPopContacts.resolve();
             });
