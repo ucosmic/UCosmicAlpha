@@ -60,6 +60,14 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.Form);
         }
 
+        //[GET("agreements/edit/", SitePrecedence = 1)]
+        //[TryAuthorize(Roles = RoleName.AgreementManagers)]
+        //public virtual ViewResult Edit()
+        //{
+        //    ViewBag.Id = 0;
+        //    return View(MVC.Agreements.Views.Form);
+        //}
+
         [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ActionResult Edit(int agreementId)

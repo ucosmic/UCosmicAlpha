@@ -51,7 +51,8 @@ export class InstitutionalAgreementParticipantModel {
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
-        if (window.location.href.toLowerCase().indexOf("agreements/new2") > 0) {
+        if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
+            this.editOrNewUrl = "new/"
             this.populateParticipants();
             this.agreementIsEdit(false);
             this.visibility("Public");
@@ -62,8 +63,10 @@ export class InstitutionalAgreementEditModel {
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         } else {
+            this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
+            this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
-            this.agreementId = 1 //window.location.subString()
+            this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"))
             this.populateFiles();
             this.populateContacts();
             this.populateAgreementData();
@@ -151,6 +154,10 @@ export class InstitutionalAgreementEditModel {
         this.id = id;
     };
 
+
+    editOrNewUrl;
+
+
     percentOffBodyHeight = .6;
     dfdPopParticipants = $.Deferred();
     dfdPopContacts = $.Deferred();
@@ -158,7 +165,7 @@ export class InstitutionalAgreementEditModel {
     dfdPageFadeIn = $.Deferred();
     
     agreementIsEdit = ko.observable();
-    agreementId = 1;
+    agreementId;// = 1;
     visibility = ko.observable();
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
@@ -217,6 +224,8 @@ export class InstitutionalAgreementEditModel {
     isFileExtensionInvalid: KnockoutObservableBool = ko.observable(false);
     isFileTooManyBytes: KnockoutObservableBool = ko.observable(false);
     isFileFailureUnexpected: KnockoutObservableBool = ko.observable(false);
+    isFileInvalid: KnockoutObservableBool = ko.observable(false);
+    fileError: KnockoutObservableString = ko.observable();
     fileFileExtension: KnockoutObservableString = ko.observable();
     fileFileName: KnockoutObservableString = ko.observable();
     fileSrc: KnockoutObservableString = ko.observable();
@@ -344,36 +353,58 @@ export class InstitutionalAgreementEditModel {
             localization: {
                 select: 'Choose a file to upload...'
             },
+            select: (e: any): void => {
+                var data = ko.mapping.toJS({
+                    Name: e.files[0].name,
+                    Length: e.files[0].rawFile.size
+                })
+                var url = App.Routes.WebApi.Agreements.Files.Validate.post();
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    async: false,
+                    data: data,
+                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                    },
+                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        if (xhr.status !== 200) {
+                            e.preventDefault(); // prevent upload
+                            this.isFileInvalid(true); // update UI with feedback
+                            this.fileError(xhr.responseText);
+                        }
+                    }
+                });
+            },
             async: {
                 saveUrl: saveUrl
             },
             upload: (e: any): void => {
                 // client-side check for file extension
-                var allowedExtensions: string[] = ['.pdf', '.doc', '.docx', '.odt', '.xls', '.xlsx', '.ods', '.ppt', '.pptx'];
-                this.isFileExtensionInvalid(false);
-                this.isFileTooManyBytes(false);
-                this.isFileFailureUnexpected(false);
-                var isExtensionAllowed: bool = false;
-                var isByteNumberAllowed: bool = false;
-                var extension: string = e.files[0].extension;
-                this.fileFileExtension(extension || '[NONE]');
-                this.fileFileName(e.files[0].name);
-                for (var i = 0; i < allowedExtensions.length; i++) {
-                    if (allowedExtensions[i] === extension.toLowerCase()) {
-                        isExtensionAllowed = true;
-                        break;
-                    }
-                }
-                if (!isExtensionAllowed) {
-                    e.preventDefault(); // prevent upload
-                    this.isFileExtensionInvalid(true); // update UI with feedback
-                }
-                else if(e.files[0].rawFile != undefined) {
-                    if (e.files[0].rawFile.size > (1024 * 1024 * 25)) {
-                    e.preventDefault(); // prevent upload
-                    this.isFileTooManyBytes(true); // update UI with feedback
-                    }
-                }
+                //var allowedExtensions: string[] = ['.pdf', '.doc', '.docx', '.odt', '.xls', '.xlsx', '.ods', '.ppt', '.pptx'];
+                //this.isFileExtensionInvalid(false);
+                //this.isFileTooManyBytes(false);
+                //this.isFileFailureUnexpected(false);
+                //var isExtensionAllowed: bool = false;
+                //var isByteNumberAllowed: bool = false;
+                //var extension: string = e.files[0].extension;
+                //this.fileFileExtension(extension || '[NONE]');
+                //this.fileFileName(e.files[0].name);
+                //for (var i = 0; i < allowedExtensions.length; i++) {
+                //    if (allowedExtensions[i] === extension.toLowerCase()) {
+                //        isExtensionAllowed = true;
+                //        break;
+                //    }
+                //}
+                //if (!isExtensionAllowed) {
+                //    e.preventDefault(); // prevent upload
+                //    this.isFileExtensionInvalid(true); // update UI with feedback
+                //}
+                //else if(e.files[0].rawFile != undefined) {
+                //    if (e.files[0].rawFile.size > (1024 * 1024 * 25)) {
+                //    e.preventDefault(); // prevent upload
+                //    this.isFileTooManyBytes(true); // update UI with feedback
+                //    }
+                //}
                 if (this.agreementIsEdit()) {
                     e.data = {
                         originalName: e.files[0].name,
@@ -486,8 +517,6 @@ export class InstitutionalAgreementEditModel {
                 type: 'PUT',
                 url: url,
                 data: data,
-                dataType: 'json',
-                contentType: 'application/json',
                 success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                 },
                 error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
@@ -527,8 +556,6 @@ export class InstitutionalAgreementEditModel {
                 type: 'PUT',
                 url: url,
                 data: data,
-                dataType: 'json',
-                contentType: 'application/json',
                 success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                 },
                 error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
@@ -554,13 +581,13 @@ export class InstitutionalAgreementEditModel {
     };
 
     downloadAFile(me, e): void {
-        this.agreementId = 2
+        //this.agreementId = 2
         var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
         window.location.href = url;
     };
 
     viewAFile(me, e): void {
-        this.agreementId = 2
+        //this.agreementId = 2
         var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
         window.open(
           url,
@@ -1000,6 +1027,16 @@ export class InstitutionalAgreementEditModel {
             dfd2.resolve();
         }
     };
+
+    scrollMyBody(position): void {
+        var $body;
+        //ie sucks!
+        if (!$("body").scrollTop()) {
+            $("html, body").scrollTop(position);
+        } else {
+            $("body").scrollTop(position);
+        }
+    }
     
     bindSearch(): void{
         if (!this.hasBoundSearch) {
@@ -1009,8 +1046,8 @@ export class InstitutionalAgreementEditModel {
             ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
             var lastURL = "asdf";
             if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
-                if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/") === -1) {
-                    this.establishmentSearchViewModel.sammy.setLocation('/agreements/new/#/index');
+                if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl + "") === -1) {
+                    this.establishmentSearchViewModel.sammy.setLocation("/agreements/" + this.editOrNewUrl + "#/index");
                 } else {
                     this.establishmentSearchViewModel.sammy.setLocation('#/index');
                 }
@@ -1022,7 +1059,7 @@ export class InstitutionalAgreementEditModel {
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                     var $asideRootSearch = $("#asideRootSearch");
                     var $asideParentSearch = $("#asideParentSearch");
-                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/new/") > 0) {
+                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl + "#/new/") > 0) {
                         var $addEstablishment = $("#addEstablishment");
                         var dfd = $.Deferred();
                         var dfd2 = $.Deferred();
@@ -1126,8 +1163,9 @@ export class InstitutionalAgreementEditModel {
                                     }
                                 });
                             })
+                        this.scrollMyBody(0);
                         lastURL = "#/new/";
-                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/page/") > 0) {
+                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl + "#/page/") > 0) {
                         if (sessionStorage.getItem("addest") === "yes") {
                             this.establishmentSearchViewModel.clickAction = function (context): bool => {
                                 this.establishmentItemViewModel.parentEstablishment(context);
@@ -1169,21 +1207,22 @@ export class InstitutionalAgreementEditModel {
                                         myParticipant.isOwner(response.isOwner);
                                         this.participants.push(myParticipant);
                                         this.percentOffBodyHeight = .2;
-                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
+                                        this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     })
                                     .fail(function () => {
                                         this.percentOffBodyHeight = .2;
                                         this.participants.push(myParticipant);
-                                        this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
+                                        this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                     });
                                 } else {
                                     alert("This Participant has already been added.")
                                 }
                             }
                         }
+                        this.scrollMyBody(0);
                         lastURL = "#/page/";
-                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/new") > 0) {
+                    } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + this.editOrNewUrl + "") > 0) {
                         sessionStorage.setItem("addest", "no");
                         lastURL = "#/index";
                         this.establishmentSearchViewModel.sammy.setLocation('#/index');
@@ -1197,6 +1236,7 @@ export class InstitutionalAgreementEditModel {
                             .done(function () => {
                                 $("#allParticipants").fadeIn(500).promise().done(function () => {
                                     $(this).show();
+                                    this.scrollMyBody(0);
                                     this.dfdPageFadeIn.resolve();
                                 });
                             });
@@ -1317,8 +1357,6 @@ export class InstitutionalAgreementEditModel {
                     type: 'PUT',
                     url: url,
                     data: data,
-                    dataType: 'json',
-                    contentType: 'application/json',
                     success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                     },
                     error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
@@ -1373,7 +1411,7 @@ export class InstitutionalAgreementEditModel {
                 var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        this.agreementId = 2;//response.agreementId
+                        //this.agreementId = 2;//response.agreementId
                         this.agreementPostFiles(response, statusText, xhr);
                         this.agreementPostContacts(response, statusText, xhr);
                     })
@@ -1738,8 +1776,6 @@ export class InstitutionalAgreementEditModel {
                     type: 'PUT',
                     url: url,
                     data: data,
-                    dataType: 'json',
-                    contentType: 'application/json',
                     success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function () => {
@@ -1770,7 +1806,7 @@ export class InstitutionalAgreementEditModel {
                 url = App.Routes.WebApi.Agreements.post();
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        this.agreementId = 2;//response.agreementId
+                        //this.agreementId = 2;//response.agreementId
                         this.agreementPostFiles(response, statusText, xhr);
                         this.agreementPostContacts(response, statusText, xhr);
                         //change url to edit

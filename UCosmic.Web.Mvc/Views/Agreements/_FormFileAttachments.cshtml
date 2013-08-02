@@ -42,6 +42,9 @@
                                 </p>
                             </div>
                         </div>
+                        <div data-bind="visible: isFileInvalid" style="display: none;">
+                            <span class="validationMessage" data-bind="text: fileError"></span>
+                        </div>
                         <div data-bind="visible: isFileExtensionInvalid" style="display: none;">
                             <span class="validationMessage">The file extension &quot;<span data-bind="text: fileFileExtension"></span>&quot; 
                                 is either an invalid or unallowed file. Please choose a file with a .pdf, .doc, .docx, .odt, .xls, .xlsx, .ods, .ppt, .pptx extension (case insensitive).</span>

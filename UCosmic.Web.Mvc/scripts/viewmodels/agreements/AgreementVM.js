@@ -49,7 +49,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.dfdPopFiles = $.Deferred();
             this.dfdPageFadeIn = $.Deferred();
             this.agreementIsEdit = ko.observable();
-            this.agreementId = 1;
             this.visibility = ko.observable();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
@@ -104,6 +103,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.isFileExtensionInvalid = ko.observable(false);
             this.isFileTooManyBytes = ko.observable(false);
             this.isFileFailureUnexpected = ko.observable(false);
+            this.isFileInvalid = ko.observable(false);
+            this.fileError = ko.observable();
             this.fileFileExtension = ko.observable();
             this.fileFileName = ko.observable();
             this.fileSrc = ko.observable();
@@ -136,7 +137,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
             this.pageNumber = ko.observable();
-            if(window.location.href.toLowerCase().indexOf("agreements/new2") > 0) {
+            if(window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
+                this.editOrNewUrl = "new/";
                 this.populateParticipants();
                 this.agreementIsEdit(false);
                 this.visibility("Public");
@@ -146,8 +148,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
                 });
             } else {
+                this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
+                this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
                 this.agreementIsEdit(true);
-                this.agreementId = 1;
+                this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
                 this.populateFiles();
                 this.populateContacts();
                 this.populateAgreementData();
@@ -305,44 +309,32 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 localization: {
                     select: 'Choose a file to upload...'
                 },
+                select: function (e) {
+                    var data = ko.mapping.toJS({
+                        Name: e.files[0].name,
+                        Length: e.files[0].rawFile.size
+                    });
+                    var url = App.Routes.WebApi.Agreements.Files.Validate.post();
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        async: false,
+                        data: data,
+                        success: function (response, statusText, xhr) {
+                        },
+                        error: function (xhr, statusText, errorThrown) {
+                            if(xhr.status !== 200) {
+                                e.preventDefault();
+                                _this.isFileInvalid(true);
+                                _this.fileError(xhr.responseText);
+                            }
+                        }
+                    });
+                },
                 async: {
                     saveUrl: saveUrl
                 },
                 upload: function (e) {
-                    var allowedExtensions = [
-                        '.pdf', 
-                        '.doc', 
-                        '.docx', 
-                        '.odt', 
-                        '.xls', 
-                        '.xlsx', 
-                        '.ods', 
-                        '.ppt', 
-                        '.pptx'
-                    ];
-                    _this.isFileExtensionInvalid(false);
-                    _this.isFileTooManyBytes(false);
-                    _this.isFileFailureUnexpected(false);
-                    var isExtensionAllowed = false;
-                    var isByteNumberAllowed = false;
-                    var extension = e.files[0].extension;
-                    _this.fileFileExtension(extension || '[NONE]');
-                    _this.fileFileName(e.files[0].name);
-                    for(var i = 0; i < allowedExtensions.length; i++) {
-                        if(allowedExtensions[i] === extension.toLowerCase()) {
-                            isExtensionAllowed = true;
-                            break;
-                        }
-                    }
-                    if(!isExtensionAllowed) {
-                        e.preventDefault();
-                        _this.isFileExtensionInvalid(true);
-                    } else if(e.files[0].rawFile != undefined) {
-                        if(e.files[0].rawFile.size > (1024 * 1024 * 25)) {
-                            e.preventDefault();
-                            _this.isFileTooManyBytes(true);
-                        }
-                    }
                     if(_this.agreementIsEdit()) {
                         e.data = {
                             originalName: e.files[0].name,
@@ -452,8 +444,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     type: 'PUT',
                     url: url,
                     data: data,
-                    dataType: 'json',
-                    contentType: 'application/json',
                     success: function (response, statusText, xhr) {
                     },
                     error: function (xhr, statusText, errorThrown) {
@@ -493,8 +483,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     type: 'PUT',
                     url: url,
                     data: data,
-                    dataType: 'json',
-                    contentType: 'application/json',
                     success: function (response, statusText, xhr) {
                     },
                     error: function (xhr, statusText, errorThrown) {
@@ -520,12 +508,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             return true;
         };
         InstitutionalAgreementEditModel.prototype.downloadAFile = function (me, e) {
-            this.agreementId = 2;
             var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
             window.location.href = url;
         };
         InstitutionalAgreementEditModel.prototype.viewAFile = function (me, e) {
-            this.agreementId = 2;
             var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
             window.open(url, '_blank');
         };
@@ -959,6 +945,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 dfd2.resolve();
             }
         };
+        InstitutionalAgreementEditModel.prototype.scrollMyBody = function (position) {
+            var $body;
+            if(!$("body").scrollTop()) {
+                $("html, body").scrollTop(position);
+            } else {
+                $("body").scrollTop(position);
+            }
+        };
         InstitutionalAgreementEditModel.prototype.bindSearch = function () {
             var _this = this;
             if(!this.hasBoundSearch) {
@@ -968,8 +962,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
                 var lastURL = "asdf";
                 if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
-                    if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/") === -1) {
-                        this.establishmentSearchViewModel.sammy.setLocation('/agreements/new/#/index');
+                    if(this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl + "") === -1) {
+                        this.establishmentSearchViewModel.sammy.setLocation("/agreements/" + this.editOrNewUrl + "#/index");
                     } else {
                         this.establishmentSearchViewModel.sammy.setLocation('#/index');
                     }
@@ -981,7 +975,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                         var $asideRootSearch = $("#asideRootSearch");
                         var $asideParentSearch = $("#asideParentSearch");
-                        if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/new/") > 0) {
+                        if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl + "#/new/") > 0) {
                             var $addEstablishment = $("#addEstablishment");
                             var dfd = $.Deferred();
                             var dfd2 = $.Deferred();
@@ -1077,8 +1071,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                     }
                                 });
                             });
+                            _this.scrollMyBody(0);
                             lastURL = "#/new/";
-                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("new/#/page/") > 0) {
+                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl + "#/page/") > 0) {
                             if(sessionStorage.getItem("addest") === "yes") {
                                 _this.establishmentSearchViewModel.clickAction = function (context) {
                                     _this.establishmentItemViewModel.parentEstablishment(context);
@@ -1113,20 +1108,21 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                             myParticipant.isOwner(response.isOwner);
                                             _this.participants.push(myParticipant);
                                             _this.percentOffBodyHeight = .2;
-                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
+                                            _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                             $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                         }).fail(function () {
                                             _this.percentOffBodyHeight = .2;
                                             _this.participants.push(myParticipant);
-                                            _this.establishmentSearchViewModel.sammy.setLocation('agreements/new/');
+                                            _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                         });
                                     } else {
                                         alert("This Participant has already been added.");
                                     }
                                 };
                             }
+                            _this.scrollMyBody(0);
                             lastURL = "#/page/";
-                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/new") > 0) {
+                        } else if(_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + _this.editOrNewUrl + "") > 0) {
                             sessionStorage.setItem("addest", "no");
                             lastURL = "#/index";
                             _this.establishmentSearchViewModel.sammy.setLocation('#/index');
@@ -1139,6 +1135,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             $.when(dfd, dfd2).done(function () {
                                 $("#allParticipants").fadeIn(500).promise().done(function () {
                                     $(_this).show();
+                                    _this.scrollMyBody(0);
                                     _this.dfdPageFadeIn.resolve();
                                 });
                             });
@@ -1250,8 +1247,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         type: 'PUT',
                         url: url,
                         data: data,
-                        dataType: 'json',
-                        contentType: 'application/json',
                         success: function (response, statusText, xhr) {
                         },
                         error: function (xhr, statusText, errorThrown) {
@@ -1317,7 +1312,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     });
                     var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                     $.post(url, data).done(function (response, statusText, xhr) {
-                        _this.agreementId = 2;
                         _this.agreementPostFiles(response, statusText, xhr);
                         _this.agreementPostContacts(response, statusText, xhr);
                     }).fail(function (xhr, statusText, errorThrown) {
@@ -1653,8 +1647,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         type: 'PUT',
                         url: url,
                         data: data,
-                        dataType: 'json',
-                        contentType: 'application/json',
                         success: function (response, statusText, xhr) {
                             $LoadingPage.text("Agreement Saved...");
                             setTimeout(function () {
@@ -1685,7 +1677,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 } else {
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data).done(function (response, statusText, xhr) {
-                        _this.agreementId = 2;
                         _this.agreementPostFiles(response, statusText, xhr);
                         _this.agreementPostContacts(response, statusText, xhr);
                         $LoadingPage.text("Agreement Saved...");
