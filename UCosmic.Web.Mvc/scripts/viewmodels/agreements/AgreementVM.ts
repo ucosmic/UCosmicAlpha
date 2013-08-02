@@ -88,6 +88,8 @@ export class InstitutionalAgreementEditModel {
         this.editAContact = <() => bool> this.editAContact.bind(this);
         this.removeContact = <() => bool> this.removeContact.bind(this);
         this.removePhone = <() => void > this.removePhone.bind(this);
+        this.viewAFile = <() => void > this.viewAFile.bind(this);
+        this.downloadAFile = <() => void > this.downloadAFile.bind(this);
         this.addPhone = <() => void > this.addPhone.bind(this);
         this.closeEditAFile = <() => void > this.closeEditAFile.bind(this);
         this.fileVisibilityClicked = <() => bool > this.fileVisibilityClicked.bind(this);
@@ -499,6 +501,13 @@ export class InstitutionalAgreementEditModel {
     editAFile(me, e): void {
         me.isEdit(true);
     };
+
+    cancelEditAFile(me, e): bool {
+        me.customNameFile(me.customName().substring(0, me.customName().lastIndexOf(".")))
+        me.isEdit(false);
+        e.stopImmediatePropagation();
+        return false;
+    }
 
     closeEditAFile(me, e): void {
         me.customName(me.customNameFile() + me.customNameExt())

@@ -170,6 +170,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.editAContact = this.editAContact.bind(this);
             this.removeContact = this.removeContact.bind(this);
             this.removePhone = this.removePhone.bind(this);
+            this.viewAFile = this.viewAFile.bind(this);
+            this.downloadAFile = this.downloadAFile.bind(this);
             this.addPhone = this.addPhone.bind(this);
             this.closeEditAFile = this.closeEditAFile.bind(this);
             this.fileVisibilityClicked = this.fileVisibilityClicked.bind(this);
@@ -429,6 +431,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         };
         InstitutionalAgreementEditModel.prototype.editAFile = function (me, e) {
             me.isEdit(true);
+        };
+        InstitutionalAgreementEditModel.prototype.cancelEditAFile = function (me, e) {
+            me.customNameFile(me.customName().substring(0, me.customName().lastIndexOf(".")));
+            me.isEdit(false);
+            e.stopImmediatePropagation();
+            return false;
         };
         InstitutionalAgreementEditModel.prototype.closeEditAFile = function (me, e) {
             var _this = this;
