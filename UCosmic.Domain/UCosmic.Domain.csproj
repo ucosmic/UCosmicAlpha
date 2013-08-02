@@ -154,12 +154,14 @@
     <Compile Include="Domain\Agreements\Commands\UpdateFile.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
+    <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnFileWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
+    <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsByEnglishNameType.cs" />
     <Compile Include="Domain\Files\Commands\PurgeUpload.cs" />
     <Compile Include="Domain\Files\Commands\CreateUpload.cs" />

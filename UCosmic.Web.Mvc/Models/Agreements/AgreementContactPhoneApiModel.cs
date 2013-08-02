@@ -5,7 +5,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class AgreementContactPhoneApiModel
     {
-        public string ContactId { get; set; }
+        public int ContactId { get; set; }
         public string Value { get; set; }
         public string Type { get; set; }
     }

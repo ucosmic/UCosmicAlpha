@@ -5,14 +5,16 @@ namespace UCosmic.Domain.Agreements
 {
     public class FileById : BaseEntityQuery<AgreementFile>, IDefineQuery<AgreementFile>
     {
-        public FileById(IPrincipal principal, int fileId)
+        public FileById(IPrincipal principal, int agreementId, int fileId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
+            AgreementId = agreementId;
             FileId = fileId;
         }
 
         public IPrincipal Principal { get; private set; }
+        public int AgreementId { get; private set; }
         public int FileId { get; private set; }
     }
 
@@ -33,6 +35,7 @@ namespace UCosmic.Domain.Agreements
 
             var entity = _entities.Query<AgreementFile>()
                 .EagerLoad(_entities, query.EagerLoad)
+                .ByAgreementId(query.AgreementId)
                 .VisibleTo(query.Principal, _queryProcessor)
                 .ById(query.FileId)
             ;

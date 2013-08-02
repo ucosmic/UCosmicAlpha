@@ -64,7 +64,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{agreementId:int}/files/{fileId:int}", ControllerPrecedence = 1)]
         public AgreementFileApiModel Get(int agreementId, int fileId, [FromUri] bool useTestData = false)
         {
-            var entity = _queryProcessor.Execute(new FileById(User, fileId));
+            var entity = _queryProcessor.Execute(new FileById(User, agreementId, fileId));
             if (entity == null || entity.AgreementId != agreementId)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -86,7 +86,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{agreementId:int}/files/{fileId:int}/content")]
         public HttpResponseMessage GetContent(int agreementId, int fileId)
         {
-            var entity = _queryProcessor.Execute(new FileById(User, fileId));
+            var entity = _queryProcessor.Execute(new FileById(User, agreementId, fileId));
             if (entity == null || entity.AgreementId != agreementId)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
