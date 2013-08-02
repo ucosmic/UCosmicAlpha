@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using FluentValidation;
-using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
 {
@@ -13,12 +12,11 @@ namespace UCosmic.Domain.People
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Suffix { get; set; }
-        public string UserName { get; set; }
-        public bool UserIsRegistered { get; set; }
         public EmailAddress[] EmailAddresses { get; set; }
         public string Gender { get; set; }
 
-        public Person CreatedPerson { get; internal set; }
+        internal Person CreatedPerson { get; set; }
+        public int CreatedPersonId { get; internal set; }
 
         public class EmailAddress
         {
@@ -32,31 +30,34 @@ namespace UCosmic.Domain.People
 
     public class ValidateCreatePersonCommand : AbstractValidator<CreatePerson>
     {
-        public ValidateCreatePersonCommand(IQueryEntities entities)
+        public ValidateCreatePersonCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.DisplayName)
-                // display name cannot be empty
-                .NotEmpty()
-                    .WithMessage(MustNotHaveEmptyDisplayName.FailMessage)
-            ;
-
-            RuleFor(x => x.UserName)
-                // if username is present, validate that it is not attached to another person
-                .MustNotFindUserByName(entities)
-                    .WithMessage(MustNotFindUserByName.FailMessageFormat, x => x.UserName)
-            ;
+            // when first and last name are not provided, display name cannot be empty
+            When(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName), () =>
+                RuleFor(x => x.DisplayName)
+                    // display name cannot be empty
+                    .NotEmpty()
+                        .WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
+            );
         }
     }
 
     public class HandleCreatePersonCommand : IHandleCommands<CreatePerson>
     {
         private readonly ICommandEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreatePersonCommand(ICommandEntities entities)
+        public HandleCreatePersonCommand(ICommandEntities entities
+            , IProcessQueries queryProcessor
+            , IUnitOfWork unitOfWork
+        )
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreatePerson command)
@@ -66,14 +67,26 @@ namespace UCosmic.Domain.People
             // construct the person
             var person = new Person
             {
+                DisplayName = command.DisplayName,
                 Salutation = command.Salutation,
                 FirstName = command.FirstName,
                 MiddleName = command.MiddleName,
                 LastName = command.LastName,
                 Suffix = command.Suffix,
-                DisplayName = command.DisplayName,
                 Gender = command.Gender,
             };
+
+            if (string.IsNullOrWhiteSpace(person.DisplayName))
+            {
+                person.DisplayName = _queryProcessor.Execute(new GenerateDisplayName
+                {
+                    Salutation = command.Salutation,
+                    FirstName = command.FirstName,
+                    MiddleName = command.MiddleName,
+                    LastName = command.LastName,
+                    Suffix = command.Suffix,
+                });
+            }
 
             // attach email addresses
             if (command.EmailAddresses != null && command.EmailAddresses.Any())
@@ -89,18 +102,15 @@ namespace UCosmic.Domain.People
                 }
             }
 
-            // attach a user if commanded
-            if (!string.IsNullOrWhiteSpace(command.UserName))
-                person.User = new User
-                {
-                    Name = command.UserName,
-                    IsRegistered = command.UserIsRegistered,
-                };
-
             // store
             _entities.Create(person);
+            if (!command.NoCommit)
+            {
+                _unitOfWork.SaveChanges();
+            }
 
             command.CreatedPerson = person;
+            command.CreatedPersonId = person.RevisionId;
         }
     }
 }

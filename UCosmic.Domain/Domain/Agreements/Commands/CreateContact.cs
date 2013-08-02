@@ -121,18 +121,15 @@ namespace UCosmic.Domain.Agreements
     public class HandleCreateContactCommand : IHandleCommands<CreateContact>
     {
         private readonly ICommandEntities _entities;
-        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreatePerson> _createPerson;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateContactCommand(ICommandEntities entities
-            , IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
-            _queryProcessor = queryProcessor;
             _createPerson = createPerson;
             _unitOfWork = unitOfWork;
         }
@@ -149,22 +146,14 @@ namespace UCosmic.Domain.Agreements
             }
             else
             {
-                var displayName = _queryProcessor.Execute(new GenerateDisplayName
-                {
-                    Salutation = command.Salutation,
-                    FirstName = command.FirstName,
-                    MiddleName = command.MiddleName,
-                    LastName = command.LastName,
-                    Suffix = command.Suffix,
-                });
                 var createPersonCommand = new CreatePerson
                 {
-                    DisplayName = displayName,
                     Salutation = command.Salutation,
                     FirstName = command.FirstName,
                     MiddleName = command.MiddleName,
                     LastName = command.LastName,
                     Suffix = command.Suffix,
+                    NoCommit = true,
                 };
                 if (!string.IsNullOrWhiteSpace(command.EmailAddress))
                 {

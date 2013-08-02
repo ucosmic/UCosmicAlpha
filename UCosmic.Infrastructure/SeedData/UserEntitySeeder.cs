@@ -16,11 +16,11 @@ namespace UCosmic.SeedData
 
         public UserEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateMyAffiliation> createAffiliation
+            , IHandleCommands<CreateUser> createUser
             , IHandleCommands<GrantRoleToUser> grantRole
             , IUnitOfWork unitOfWork
         )
-            : base(queryProcessor, createPerson, createAffiliation, unitOfWork)
+            : base(queryProcessor, createPerson, createUser)
         {
             _queryProcessor = queryProcessor;
             _grantRole = grantRole;
@@ -119,12 +119,10 @@ namespace UCosmic.SeedData
                 throw new InvalidOperationException(string.Format(
                     "There is no establishment for URL '{0}'.", establishmentUrl));
 
-            var person = Seed(establishment.RevisionId, new CreatePerson
+            var person = Seed(new CreatePerson
             {
                 FirstName = firstName,
                 LastName = lastName,
-                UserName = emails.First(),
-                UserIsRegistered = true,
                 EmailAddresses = emails.Select(e =>
                     new CreatePerson.EmailAddress
                     {
@@ -134,7 +132,7 @@ namespace UCosmic.SeedData
                     })
                     .ToArray(),
                 Gender = gender,
-            });
+            }, true);
 
             var principal = new GenericPrincipal(new GenericIdentity("ludwigd@uc.edu"), new[] { RoleName.AuthorizationAgent, });
             if (roles != null && roles.Any())

@@ -21,7 +21,6 @@ namespace UCosmic.Domain.People
             public int EstablishmentId { get; set; }
             public string JobTitles { get; set; }
             public bool IsDefault { get; set; }
-            public bool IsPrimary { get; set; }
             public bool IsAcknowledged { get; set; }
             public bool IsClaimingStudent { get; set; }
             public bool IsClaimingEmployee { get; set; }
@@ -96,7 +95,6 @@ namespace UCosmic.Domain.People
             return (a.EstablishmentId == b.EstablishmentId) &&
                 (a.JobTitles == b.JobTitles) &&
                 (a.IsDefault == b.IsDefault) &&
-                (a.IsPrimary == b.IsPrimary) &&
                 (a.IsAcknowledged == b.IsAcknowledged) &&
                 (a.IsClaimingStudent == b.IsClaimingStudent) &&
                 (a.IsClaimingEmployee == b.IsClaimingEmployee) &&
@@ -203,7 +201,6 @@ namespace UCosmic.Domain.People
                         {
                             PersonId = command.Id,
                             EstablishmentId = update.EstablishmentId,
-                            IsPrimary = update.IsPrimary,
                             IsClaimingStudent = update.IsClaimingStudent,
                             IsClaimingEmployee = update.IsClaimingEmployee,
                             CampusId = update.CampusId,
@@ -223,7 +220,6 @@ namespace UCosmic.Domain.People
                                                                     command.Id,
                                                                     existing.EstablishmentId)
                         {
-                            IsPrimary = update.IsPrimary,
                             IsClaimingStudent = update.IsClaimingStudent,
                             IsClaimingEmployee = update.IsClaimingEmployee,
                             CampusId = update.CampusId,

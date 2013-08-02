@@ -9,7 +9,6 @@ namespace UCosmic.Domain.People
             return  EstablishmentId == other.EstablishmentId &&
                     string.Equals(JobTitles, other.JobTitles) &&
                     IsDefault.Equals(other.IsDefault) &&
-                    IsPrimary.Equals(other.IsPrimary) &&
                     IsAcknowledged.Equals(other.IsAcknowledged) &&
                     IsClaimingStudent.Equals(other.IsClaimingStudent) &&
                     IsClaimingEmployee.Equals(other.IsClaimingEmployee) &&
@@ -38,7 +37,6 @@ namespace UCosmic.Domain.People
                 int hashCode = EstablishmentId;
                 hashCode = (hashCode*397) ^ (JobTitles != null ? JobTitles.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ IsDefault.GetHashCode();
-                hashCode = (hashCode*397) ^ IsPrimary.GetHashCode();
                 hashCode = (hashCode*397) ^ IsAcknowledged.GetHashCode();
                 hashCode = (hashCode*397) ^ IsClaimingStudent.GetHashCode();
                 hashCode = (hashCode*397) ^ IsClaimingEmployee.GetHashCode();
@@ -69,9 +67,6 @@ namespace UCosmic.Domain.People
 
         /* Default affiliation should be linked to a University type Establishment. */
         public bool IsDefault { get; protected internal set; }
-
-        /* Primary affiliation is the Department, College or Campus the employee is primarily associated with. */
-        public bool IsPrimary { get; protected internal set; }
 
         public bool IsAcknowledged { get; protected internal set; }
         public bool IsClaimingStudent { get; protected internal set; }

@@ -279,7 +279,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(responseMessage);                
             }
 
-            var id = createAffiliationCommand.CreatedAffiliation.RevisionId;
+            var id = createAffiliationCommand.CreatedAffiliationId;
 
             return Request.CreateResponse(HttpStatusCode.Created, id);
         }

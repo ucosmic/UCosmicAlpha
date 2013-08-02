@@ -183,6 +183,7 @@
     <Compile Include="Domain\Files\Validation\MustHaveAllowedFileExtension.cs" />
     <Compile Include="Domain\Files\_Etc\FileSizeUnitAbbreviation.cs" />
     <Compile Include="Domain\Files\_Etc\FileSizeUnitName.cs" />
+    <Compile Include="Domain\Identity\Events\UserTenancyConfigurator.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantOfEstablishment.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyIdentityName.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
@@ -327,7 +328,6 @@
     <Compile Include="Domain\GeographicExpertise\Validation\MustOwnGeographicExpertiseLocation.cs" />
     <Compile Include="Domain\GeographicExpertise\Validation\MustFindGeographicExpertiseById.cs" />
     <Compile Include="Domain\GeographicExpertise\Validation\MustOwnGeographicExpertise.cs" />
-    <Compile Include="Domain\Identity\Commands\EnsureUserTenancy.cs" />
     <Compile Include="Domain\Identity\Commands\CreateUser.cs" />
     <Compile Include="Domain\Identity\Commands\DeleteUser.cs" />
     <Compile Include="Domain\Identity\Events\UserCreated.cs" />

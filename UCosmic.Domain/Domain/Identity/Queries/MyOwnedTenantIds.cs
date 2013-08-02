@@ -20,27 +20,20 @@ namespace UCosmic.Domain.Identity
     public class HandleMyOwnedTenantIdsQuery : IHandleQueries<MyOwnedTenantIds, IQueryable<int>>
     {
         private readonly IQueryEntities _entities;
-        private readonly IHandleCommands<EnsureUserTenancy> _ensureTenancy;
 
-        public HandleMyOwnedTenantIdsQuery(IQueryEntities entities
-            , IHandleCommands<EnsureUserTenancy> ensureTenancy
-        )
+        public HandleMyOwnedTenantIdsQuery(IQueryEntities entities)
         {
             _entities = entities;
-            _ensureTenancy = ensureTenancy;
         }
 
         public IQueryable<int> Handle(MyOwnedTenantIds query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            // make sure user has a tenant id
-            var ensuredTenancy = new EnsureUserTenancy(query.Principal.Identity.Name);
-            _ensureTenancy.Handle(ensuredTenancy);
-
             // only return tenants that fall under the query principal
             var ownedIds = new List<int>();
-            var user = ensuredTenancy.EnsuredUser;
+            var user = _entities.Query<User>().SingleOrDefault(x =>
+                x.Name.Equals(query.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase));
             if (user != null && user.TenantId.HasValue)
                 ownedIds.Add(user.TenantId.Value);
 

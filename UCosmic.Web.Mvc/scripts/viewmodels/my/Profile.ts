@@ -26,7 +26,6 @@ module ViewModels.My {
         establishment: KnockoutObservableString = ko.observable();
         jobTitles: KnockoutObservableNumber = ko.observable();
         isDefault: KnockoutObservableBool = ko.observable(false);
-        isPrimary: KnockoutObservableBool = ko.observable(false);
         isAcknowledged: KnockoutObservableBool = ko.observable(false);
         isClaimingStudent: KnockoutObservableBool = ko.observable(false);
         isClaimingEmployee: KnockoutObservableBool = ko.observable(false);

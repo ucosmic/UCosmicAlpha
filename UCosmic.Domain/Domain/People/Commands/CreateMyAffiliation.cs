@@ -10,7 +10,6 @@ namespace UCosmic.Domain.People
     {
         public int PersonId { get; set; }
         public int EstablishmentId { get; set; }
-        public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
         public int? CampusId { get; set; }
@@ -18,7 +17,7 @@ namespace UCosmic.Domain.People
         public int? DepartmentId { get; set; }
         public int? FacultyRankId { get; set; }
 
-        public Affiliation CreatedAffiliation { get; set; }
+        public int CreatedAffiliationId { get; internal set; }
     }
 
     public class ValidateCreateAffiliationCommand : AbstractValidator<CreateMyAffiliation>
@@ -89,7 +88,6 @@ namespace UCosmic.Domain.People
                 IsClaimingStudent = command.IsClaimingStudent,
                 IsClaimingEmployee = command.IsClaimingEmployee,
                 IsDefault = !person.Affiliations.Any(a => a.IsDefault),
-                IsPrimary = command.IsPrimary,
                 CampusId = command.CampusId,
                 CollegeId = command.CollegeId,
                 DepartmentId = command.DepartmentId,
@@ -103,7 +101,7 @@ namespace UCosmic.Domain.People
             _unitOfWork.SaveChanges();
 
             // return
-            command.CreatedAffiliation = affiliation;
+            command.CreatedAffiliationId = affiliation.RevisionId;
         }
     }
 }

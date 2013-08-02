@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
@@ -15,7 +16,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/users")]
     [Authorize(Roles = RoleName.UserManagers)]
     public class UsersController : ApiController
     {
@@ -39,7 +40,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _createValidator = createValidator;
         }
 
-        public PageOfUserApiModel GetAll([FromUri] UserSearchInputModel input)
+        [GET("")]
+        public PageOfUserApiModel Get([FromUri] UserSearchInputModel input)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
@@ -67,8 +69,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{userId}")]
-        public UserApiModel GetOne(int userId)
+        [GET("{userId:int}", ControllerPrecedence = 1)]
+        public UserApiModel Get(int userId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
@@ -88,14 +90,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("")]
-        public HttpResponseMessage Create(UserApiModel model)
+        public HttpResponseMessage Post(UserApiModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
-            var command = new CreateUser(User, model.Name)
-            {
-                PersonDisplayName = model.PersonDisplayName,
-            };
+            var command = new CreateUser(User, model.Name);
+            Mapper.Map(model, command);
 
             try
             {
@@ -112,7 +112,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var url = Url.Link(null, new
             {
                 controller = "Users",
-                action = "GetOne",
+                action = "Get",
                 userId = command.CreatedUserId,
             });
             Debug.Assert(url != null);
@@ -121,17 +121,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [DELETE("{id}")]
-        public HttpResponseMessage Delete(int id)
+        [POST("{userId:int}/validate-name")]
+        public HttpResponseMessage ValidateName(int userId, UserApiModel model)
         {
-            if (id == 0)
-            {
+            //System.Threading.Thread.Sleep(10000); // test api latency
+
+            model.Id = userId;
+
+            var command = new CreateUser(User, model.Name);
+            var validationResult = _createValidator.Validate(command);
+            var propertyName = command.PropertyName(y => y.Name);
+
+            Func<ValidationFailure, bool> forName = x => x.PropertyName == propertyName;
+            if (validationResult.Errors.Any(forName))
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    validationResult.Errors.First(forName).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [DELETE("{userId:int}")]
+        public HttpResponseMessage Delete(int userId)
+        {
+            if (userId == 0)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
 
             try
             {
-                var user = _queryProcessor.Execute(new UserById(id)
+                var user = _queryProcessor.Execute(new UserById(userId)
                 {
                     EagerLoad = new Expression<Func<User, object>>[]
                     {
@@ -160,25 +177,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 };
                 throw new HttpResponseException(responseMessage);
             }
-
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        [POST("{userId}/validate-name")]
-        public HttpResponseMessage ValidateName(int userId, UserApiModel model)
-        {
-            //System.Threading.Thread.Sleep(10000); // test api latency
-
-            model.Id = userId;
-
-            var command = new CreateUser(User, model.Name);
-            var validationResult = _createValidator.Validate(command);
-            var propertyName = command.PropertyName(y => y.Name);
-
-            Func<ValidationFailure, bool> forName = x => x.PropertyName == propertyName;
-            if (validationResult.Errors.Any(forName))
-                return Request.CreateResponse(HttpStatusCode.BadRequest,
-                    validationResult.Errors.First(forName).ErrorMessage, "text/plain");
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

@@ -24,10 +24,10 @@ namespace UCosmic.Domain.Identity
 
         public IPrincipal Principal { get; private set; }
         public string Name { get; private set; }
-        public string PersonDisplayName { get; set; }
+        public bool IsRegistered { get; set; }
+        public int? PersonId { get; set; }
+        internal Person Person { get; set; }
 
-        /* ----- Not persisted ----- */
-        internal bool IsSeeding { get; set; }
         public int CreatedUserId { get; internal set; }
     }
 
@@ -45,11 +45,12 @@ namespace UCosmic.Domain.Identity
                 .MustNotHaveEmptyIdentityName()
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
 
-                // principal.identity.name must match User.Name entity property
+                // principal.identity.name must exist as a user
                 .MustFindUserByPrincipal(entities)
+                .When(x => !x.Principal.IsInRole(RoleName.AuthenticationAgent), ApplyConditionTo.CurrentValidator)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
 
-                    // principal must be authorized to create user
+                // principal must be authorized to create user
                 .MustBeInAnyRole(RoleName.UserManagers)
                     .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
@@ -95,6 +96,12 @@ namespace UCosmic.Domain.Identity
                         })
                         .WithMessage(InvalidEmailDomainFailMessageFormat, x => x.Name.GetEmailDomain())
             );
+
+            // must find person by id when provided
+            When(x => x.PersonId.HasValue, () =>
+                RuleFor(x => x.PersonId.Value).MustFindPersonById(entities)
+                    .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
+            );
         }
 
         private const string InvalidEmailDomainFailMessageFormat = "The email domain '{0}' is not eligible for user accounts.";
@@ -115,11 +122,13 @@ namespace UCosmic.Domain.Identity
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<CreatePerson> _createPerson;
         private readonly IProcessEvents _eventProcessor;
         private readonly ILogExceptions _exceptionLogger;
 
         public HandleCreateUserCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
+            , IHandleCommands<CreatePerson> createPerson
             , IProcessEvents eventProcessor
             , ILogExceptions exceptionLogger
         )
@@ -127,6 +136,7 @@ namespace UCosmic.Domain.Identity
             _entities = entities;
             _unitOfWork = unitOfWork;
             _eventProcessor = eventProcessor;
+            _createPerson = createPerson;
             _exceptionLogger = exceptionLogger;
         }
 
@@ -134,6 +144,7 @@ namespace UCosmic.Domain.Identity
         {
             if (command == null) throw new ArgumentNullException("command");
 
+            // determine which establishment the user should be affiliated with
             var emailDomain = command.Name.GetEmailDomain();
             var establishmentToAffiliate =
                 _entities.Get<Establishment>()
@@ -142,15 +153,29 @@ namespace UCosmic.Domain.Identity
                              x.EmailDomains.Any(y => y.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)));
 
             
-            var person = new Person
+            // default person to the one provided by another internal command
+            var person = command.Person;
+            if (person == null && command.PersonId.HasValue)
             {
-                DisplayName = command.PersonDisplayName ?? command.Name
-            };
+                // get person by id when provided by command
+                person = _entities.Get<Person>().Single(x => x.RevisionId == command.PersonId.Value);
+            }
+            else if (person == null)
+            {
+                // otherwise, must create a new person
+                var createPersonCommand = new CreatePerson
+                {
+                    DisplayName = command.Name,
+                    NoCommit = true,
+                };
+                _createPerson.Handle(createPersonCommand);
+                person = createPersonCommand.CreatedPerson;
+            }
 
             var affiliation = new Affiliation
             {
                 IsDefault = true,
-                PersonId = person.RevisionId,
+                Person = person,
                 EstablishmentId = establishmentToAffiliate.RevisionId
             };
             person.Affiliations.Add(affiliation);
@@ -158,7 +183,9 @@ namespace UCosmic.Domain.Identity
             var user = new User
             {
                 Name = command.Name,
-                Person = person
+                IsRegistered = command.IsRegistered,
+                TenantId = establishmentToAffiliate.RevisionId,
+                Person = person,
             };
 
             // log audit
@@ -169,7 +196,8 @@ namespace UCosmic.Domain.Identity
                 Value = JsonConvert.SerializeObject(new
                 {
                     command.Name,
-                    command.PersonDisplayName,
+                    command.PersonId,
+                    command.IsRegistered,
                 }),
                 NewState = user.ToJsonAudit(),
             };
@@ -180,10 +208,7 @@ namespace UCosmic.Domain.Identity
 
             command.CreatedUserId = user.RevisionId;
 
-            var userCreatedEvent = new UserCreated(command.Principal, command.CreatedUserId)
-            {
-                IsSeeding = command.IsSeeding,
-            };
+            var userCreatedEvent = new UserCreated(command.Principal, command.CreatedUserId);
             _eventProcessor.Raise(userCreatedEvent);
 
             /*

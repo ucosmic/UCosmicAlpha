@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 
 namespace UCosmic.SeedData
@@ -14,11 +16,10 @@ namespace UCosmic.SeedData
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateMyAffiliation> createAffiliation
+            , IHandleCommands<CreateUser> createUser
             , IHandleCommands<UpdateMyPhoto> updatePhoto
-            , IUnitOfWork unitOfWork
         )
-            : base(queryProcessor, createPerson, createAffiliation, unitOfWork)
+            : base(queryProcessor, createPerson, createUser)
         {
             _queryProcessor = queryProcessor;
             _updatePhoto = updatePhoto;
@@ -26,19 +27,10 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var suny = _queryProcessor.Execute(new EstablishmentByUrl("www.suny.edu"));
-            var uc = _queryProcessor.Execute(new EstablishmentByUrl("www.uc.edu"));
-            var lehigh = _queryProcessor.Execute(new EstablishmentByUrl("www.lehigh.edu"));
-            var usil = _queryProcessor.Execute(new EstablishmentByUrl("www.usil.edu.pe"));
-            var collegeBoard = _queryProcessor.Execute(new EstablishmentByUrl("www.collegeboard.org"));
-            var terraDotta = _queryProcessor.Execute(new EstablishmentByUrl("www.terradotta.com"));
-
-            Seed(suny.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Mitch",
                 LastName = "Leventhal",
-                UserName = "Mitch.Leventhal@suny.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -49,14 +41,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Male
-            });
+            }, true);
 
-            Seed(suny.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Sally",
                 LastName = "Crimmins Villela",
-                UserName = "Sally.Crimmins@suny.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -67,14 +57,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Female
-            });
+            }, true);
 
-            Seed(uc.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Ron",
                 LastName = "Cushing",
-                UserName = "Ronald.Cushing@uc.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -100,14 +88,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Male
-            });
+            }, true);
 
-            Seed(uc.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Mary",
                 LastName = "Watkins",
-                UserName = "Mary.Watkins@uc.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -133,14 +119,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Female
-            });
+            }, true);
 
-            Seed(lehigh.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Debra",
                 LastName = "Nyby",
-                UserName = "Debra.Nyby@lehigh.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -156,14 +140,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Female
-            });
+            }, true);
 
-            Seed(lehigh.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Gary",
                 LastName = "Lutz",
-                UserName = "Gary.Lutz@lehigh.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -179,14 +161,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Male
-            });
+            }, true);
 
-            Seed(lehigh.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Mohamed",
                 LastName = "El-Aasser",
-                UserName = "mohamed.el-aasser@lehigh.edu",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -202,14 +182,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Male
-            });
+            }, true);
 
-            Seed(usil.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Dora",
                 LastName = "Ballen Uriarte",
-                UserName = "DBallen@usil.edu.pe",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -220,14 +198,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Female
-            });
+            }, true);
 
-            Seed(collegeBoard.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Clay",
                 LastName = "Hensley",
-                UserName = "chensley@collegeboard.org",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -238,14 +214,12 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Male
-            });
+            }, true);
 
-            Seed(terraDotta.RevisionId, new CreatePerson
+            Seed(new CreatePerson
             {
                 FirstName = "Brandon",
                 LastName = "Lee",
-                UserName = "Brandon@terradotta.com",
-                UserIsRegistered = true,
                 EmailAddresses = new[]
                 {
                     new CreatePerson.EmailAddress
@@ -256,20 +230,18 @@ namespace UCosmic.SeedData
                     },
                 },
                 Gender = PersonGender.Male
-            });
+            }, true);
 
             /* USF People */
             {
                 var usf = _queryProcessor.Execute(new EstablishmentByUrl("www.usf.edu"));
                 if (usf == null) throw new Exception("USF Establishment not found.");
 
-                var person = Seed(usf.RevisionId, new CreatePerson
+                var person = Seed(new CreatePerson
                 {
                     FirstName = "Margaret",
                     LastName = "Kusenbach",
-                    UserName = "mkusenba@usf.edu",
                     Gender = PersonGender.Female,
-                    UserIsRegistered = true,
                     EmailAddresses = new[]
                         {
                             new CreatePerson.EmailAddress
@@ -279,7 +251,7 @@ namespace UCosmic.SeedData
                                 IsConfirmed = true,
                             },
                         },
-                });
+                }, true);
                 var fileName = "mkusenba-photo.jpg";
                 var principal = new GenericPrincipal(new GenericIdentity(person.User.Name), null);
                 using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
@@ -296,23 +268,21 @@ namespace UCosmic.SeedData
 
                 /* Affiliations set below. */
 
-                person = Seed(usf.RevisionId, new CreatePerson
+                person = Seed(new CreatePerson
                 {
                     FirstName = "William",
                     LastName = "Hogarth",
-                    UserName = "billhogarth@usfsp.edu",
                     Gender = PersonGender.Male,
-                    UserIsRegistered = true,
                     EmailAddresses = new[]
+                    {
+                        new CreatePerson.EmailAddress
                         {
-                            new CreatePerson.EmailAddress
-                                {
-                                    Value = "billhogarth@usfsp.edu",
-                                    IsDefault = true,
-                                    IsConfirmed = true,
-                                },
+                            Value = "billhogarth@usfsp.edu",
+                            IsDefault = true,
+                            IsConfirmed = true,
                         },
-                });
+                    },
+                }, true);
                 fileName = "billhogarth-photo.jpg";
                 principal = new GenericPrincipal(new GenericIdentity(person.User.Name), null);
                 using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
@@ -337,53 +307,39 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreatePerson> _createPerson;
-        private readonly IHandleCommands<CreateMyAffiliation> _createAffiliation;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IHandleCommands<CreateUser> _createUser;
 
         protected BasePersonEntitySeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateMyAffiliation> createAffiliation
-            , IUnitOfWork unitOfWork
+            , IHandleCommands<CreateUser> createUser
         )
         {
             _queryProcessor = queryProcessor;
             _createPerson = createPerson;
-            _createAffiliation = createAffiliation;
-            _unitOfWork = unitOfWork;
+            _createUser = createUser;
         }
 
         public abstract void Seed();
 
-        protected Person Seed(int? establishmentId, CreatePerson command)
+        protected Person Seed(CreatePerson command, bool? isRegisteredUser = null)
         {
             // make sure entity does not already exist
             var person = _queryProcessor.Execute(new PersonByEmail(command.EmailAddresses.First().Value));
             if (person != null) return person;
 
-            if (string.IsNullOrWhiteSpace(command.DisplayName))
-            {
-                command.DisplayName = string.Format("{0} {1}", command.FirstName, command.LastName);
-            }
-
             _createPerson.Handle(command);
-            _unitOfWork.SaveChanges();
-            person = command.CreatedPerson;
+            person = _queryProcessor.Execute(new PersonById(command.CreatedPersonId));
 
-            if (establishmentId.HasValue)
+            if (isRegisteredUser.HasValue)
             {
-                _createAffiliation.Handle(new CreateMyAffiliation
+                var principal = new GenericPrincipal(new GenericIdentity("ludwigd@uc.edu"), new[] { RoleName.AuthenticationAgent });
+
+                var createUserCommand = new CreateUser(principal, person.Emails.Single(x => x.IsDefault).Value)
                 {
-                    EstablishmentId = establishmentId.Value,
+                    IsRegistered = isRegisteredUser.Value,
                     PersonId = person.RevisionId,
-                    IsPrimary = true,
-                    IsClaimingEmployee = true,
-                    IsClaimingStudent = false,
-                });
-                _unitOfWork.SaveChanges();
-            }
-            else
-            {
-                throw new NotSupportedException("Why is the person not affiliated with an employer?");
+                };
+                _createUser.Handle(createUserCommand);
             }
 
             return person;
@@ -392,24 +348,22 @@ namespace UCosmic.SeedData
 
     public class AffiliationEntitySeeder : BaseAffiliationEntitySeeder
     {
-        //private readonly ICommandEntities _entities;
-        //private readonly IHandleCommands<UpdateMyProfile> _updateProfile;
+        private readonly ICommandEntities _entities;
+        private readonly bool _doNotSeed = true;
 
         public AffiliationEntitySeeder(IProcessQueries queryProcessor
-            //, ICommandEntities entities
+            , ICommandEntities entities
+            , IQueryEntities detachedEntities
             , IHandleCommands<CreateMyAffiliation> createAffiliation
-            //, IHandleCommands<UpdateMyProfile> updateProfile
-            , IUnitOfWork unitOfWork
         )
-            : base(queryProcessor, createAffiliation, unitOfWork)
+            : base(queryProcessor, detachedEntities, createAffiliation)
         {
-            //_entities = entities;
-            //_updateProfile = updateProfile;
+            _entities = entities;
         }
 
         public override void Seed()
         {
-#if false
+            if (_doNotSeed) return;
             /* TBD - When USF departments are imported somehow this seed data is getting duplicated. */
 
             /* USF Affiliations */
@@ -437,75 +391,70 @@ namespace UCosmic.SeedData
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                     CampusId = campus.RevisionId,
                     CollegeId = college.RevisionId,
                     DepartmentId = _entities.Get<Establishment>()
-                        .SingleOrDefault(e => e.OfficialName == "Center for Aging/Neuroscience" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                        .Single(e => e.OfficialName == "Center for Aging/Neuroscience" && e.Parent.RevisionId == college.RevisionId).RevisionId,
                     FacultyRankId = _entities.Get<EmployeeModuleSettings>()
-                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                        .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
                 Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = false,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                     CampusId = campus.RevisionId,
                     CollegeId = college.RevisionId,
                     DepartmentId = _entities.Get<Establishment>()
-                        .SingleOrDefault(e => e.OfficialName == "Department of Neurology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                        .Single(e => e.OfficialName == "Department of Neurology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
                     FacultyRankId = _entities.Get<EmployeeModuleSettings>()
-                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                        .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
                 Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = false,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                     CampusId = campus.RevisionId,
                     CollegeId = college.RevisionId,
                     DepartmentId = _entities.Get<Establishment>()
-                        .SingleOrDefault(e => e.OfficialName == "Department of Psychology & Behavior" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                        .Single(e => e.OfficialName == "Department of Psychology & Behavior" && e.Parent.RevisionId == college.RevisionId).RevisionId,
                     FacultyRankId = _entities.Get<EmployeeModuleSettings>()
-                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                        .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
                 Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = false,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                     CampusId = campus.RevisionId,
                     CollegeId = college.RevisionId,
                     DepartmentId = _entities.Get<Establishment>()
-                        .SingleOrDefault(e => e.OfficialName == "Molecular Pharmacology & Physiology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                        .Single(e => e.OfficialName == "Molecular Pharmacology & Physiology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
                     FacultyRankId = _entities.Get<EmployeeModuleSettings>()
-                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Distinguished University Professor").Id
+                        .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
                 Seed(new CreateMyAffiliation
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = false,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                     CampusId = campus.RevisionId,
                     CollegeId = college.RevisionId,
                     DepartmentId = _entities.Get<Establishment>()
-                        .SingleOrDefault(e => e.OfficialName == "Pathology and Cell Biology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
+                        .Single(e => e.OfficialName == "Pathology and Cell Biology" && e.Parent.RevisionId == college.RevisionId).RevisionId,
                     FacultyRankId = _entities.Get<EmployeeModuleSettings>()
-                        .SingleOrDefault(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.SingleOrDefault(r => r.Rank == "Professor").Id
+                        .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Professor").Id
                 });
 
                 /* ------------------------------------------------------------------------ */
@@ -521,7 +470,6 @@ namespace UCosmic.SeedData
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                 });
@@ -540,28 +488,24 @@ namespace UCosmic.SeedData
                 {
                     PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
-                    IsPrimary = true,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                 });
             }
-#endif
         }
     }
 
     public abstract class BaseAffiliationEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IQueryEntities _entities;
         private readonly IHandleCommands<CreateMyAffiliation> _createAffiliation;
-        private readonly IUnitOfWork _unitOfWork;
 
-        protected BaseAffiliationEntitySeeder(IProcessQueries queryProcessor
-            , IHandleCommands<CreateMyAffiliation> createAffiliation
-            , IUnitOfWork unitOfWork)
+        protected BaseAffiliationEntitySeeder(IProcessQueries queryProcessor, IQueryEntities entities, IHandleCommands<CreateMyAffiliation> createAffiliation)
         {
             _queryProcessor = queryProcessor;
             _createAffiliation = createAffiliation;
-            _unitOfWork = unitOfWork;
+            _entities = entities;
         }
 
         public abstract void Seed();
@@ -570,11 +514,11 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             Affiliation affiliation = _queryProcessor.Execute(
-                new AffiliationByDepartment( command.PersonId,
+                new AffiliationByDepartment(command.PersonId,
                                              command.EstablishmentId,
                                              command.CampusId,
                                              command.CollegeId,
-                                             command.DepartmentId ));
+                                             command.DepartmentId));
 
             /* This needs to be changed to prevent duplicate affiliations. */
             if (affiliation != null)
@@ -583,11 +527,7 @@ namespace UCosmic.SeedData
             }
 
             _createAffiliation.Handle(command);
-
-            _unitOfWork.SaveChanges();
-
-            return command.CreatedAffiliation;
+            return _entities.Query<Affiliation>().Single(x => x.RevisionId == command.CreatedAffiliationId);
         }
-
     }
 }

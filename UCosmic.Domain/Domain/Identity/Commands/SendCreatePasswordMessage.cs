@@ -76,14 +76,17 @@ namespace UCosmic.Domain.Identity
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<SendConfirmEmailMessage> _sendHandler;
+        private readonly IHandleCommands<CreatePerson> _createPersonHandler;
 
         public HandleSendCreatePasswordMessageCommand(ICommandEntities entities
             , IHandleCommands<SendConfirmEmailMessage> sendHandler
+            , IHandleCommands<CreatePerson> createPersonHandler
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _sendHandler = sendHandler;
+            _createPersonHandler = createPersonHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -111,12 +114,12 @@ namespace UCosmic.Domain.Identity
             // create the person if they don't yet exist
             if (person == null)
             {
-                var createPersonHandler = new HandleCreatePersonCommand(_entities);
                 var createPersonCommand = new CreatePerson
                 {
                     DisplayName = command.EmailAddress,
+                    NoCommit = true,
                 };
-                createPersonHandler.Handle(createPersonCommand);
+                _createPersonHandler.Handle(createPersonCommand);
                 person = createPersonCommand.CreatedPerson;
             }
 

@@ -9,8 +9,9 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int PersonId { get; set; }
+        public int? PersonId { get; set; }
         public string PersonDisplayName { get; set; }
+        public bool IsRegistered { get; set; }
         public IEnumerable<RoleApiModel> Roles { get; set; }
     }
 
@@ -37,5 +38,18 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<PagedQueryResult<User>, PageOfUserApiModel>();
             }
         }
+
+        public class ModelToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<UserApiModel, CreateUser>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.CreatedUserId, o => o.Ignore())
+                    .ForMember(d => d.Name, o => o.Ignore())
+                ;
+            }
+        }
+
     }
 }

@@ -1374,17 +1374,21 @@ namespace UCosmic.SeedData
         public override void Seed()
         {
             var university = Seed(new SeedEstablishment
-                {
-                    OfficialName = "University of South Florida",
-                    IsMember = true,
-                    TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
-                        KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
-                    OfficialWebsiteUrl = "www.usf.edu",
-                    EmailDomains = new[] { "@usf.edu", "@iac.usf.edu", "@mail.usf.edu", "@usfsp.edu", "@usfsm.edu" },
-                    FindPlacesByCoordinates = true,
-                    CenterLatitude = 28.061680,
-                    CenterLongitude = -82.414803,
-                });
+            {
+                OfficialName = "University of South Florida",
+                IsMember = true,
+                TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
+                    KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
+                OfficialWebsiteUrl = "www.usf.edu",
+                EmailDomains = new[]
+                               {
+                                   "@usf.edu", "@iac.usf.edu", "@mail.usf.edu",
+                                   //"@usfsp.edu", "@usfsm.edu"
+                               },
+                FindPlacesByCoordinates = true,
+                CenterLatitude = 28.061680,
+                CenterLongitude = -82.414803,
+            });
 
 #if false
             string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,

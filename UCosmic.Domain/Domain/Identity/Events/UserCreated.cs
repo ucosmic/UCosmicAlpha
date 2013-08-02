@@ -8,7 +8,6 @@ namespace UCosmic.Domain.Identity
     {
         public EventWaitHandle Signal { get; set; }
         public int UserId { get; set; }
-        public bool IsSeeding { get; set; }
 
         public UserCreated(IPrincipal principal,int userId)
         {

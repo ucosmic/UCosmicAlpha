@@ -399,7 +399,6 @@ namespace UCosmic.Domain.External
                             EstablishmentId = usf.RevisionId,
                             JobTitles = profile.PositionTitle,
                             IsDefault = false,
-                            IsPrimary = false,
                             IsAcknowledged = true,
                             IsClaimingStudent = false,
                             IsClaimingEmployee = true,
@@ -493,12 +492,6 @@ namespace UCosmic.Domain.External
         {
             Debug.WriteLine("Start UsfFacultyImporter");
 
-            /* Don't import faculty profile information if seeding. */
-            if (@event.IsSeeding)
-            {
-                goto Exit;
-            }
-
             try
             {
                 /* Get the user. */
@@ -573,8 +566,6 @@ namespace UCosmic.Domain.External
                     Debug.WriteLine(DateTime.Now + " USF: Fail " + ex1.Message);
                 }
             }
-
-        Exit:
 
             Debug.WriteLine("End UsfFacultyImporter");
 

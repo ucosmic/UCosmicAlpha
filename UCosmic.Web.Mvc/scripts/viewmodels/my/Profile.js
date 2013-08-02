@@ -8,7 +8,6 @@ var ViewModels;
                 this.establishment = ko.observable();
                 this.jobTitles = ko.observable();
                 this.isDefault = ko.observable(false);
-                this.isPrimary = ko.observable(false);
                 this.isAcknowledged = ko.observable(false);
                 this.isClaimingStudent = ko.observable(false);
                 this.isClaimingEmployee = ko.observable(false);

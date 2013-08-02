@@ -13,7 +13,6 @@ namespace UCosmic.Domain.People
         public int Id { get; private set; }
         public int PersonId { get; private set; }
         public int EstablishmentId { get; private set; }
-        public bool IsPrimary { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
         public int? CampusId { get; set; }
@@ -127,7 +126,6 @@ namespace UCosmic.Domain.People
                 EstablishmentId = command.EstablishmentId,
                 IsClaimingStudent = command.IsClaimingStudent,
                 IsClaimingEmployee = command.IsClaimingEmployee,
-                IsPrimary = command.IsPrimary,
                 CampusId = command.CampusId,
                 CollegeId = command.CollegeId,
                 DepartmentId = command.DepartmentId,
@@ -139,7 +137,6 @@ namespace UCosmic.Domain.People
                 affiliation.EstablishmentId = updatedAffiliation.EstablishmentId;
                 affiliation.IsClaimingStudent = updatedAffiliation.IsClaimingStudent;
                 affiliation.IsClaimingEmployee = updatedAffiliation.IsClaimingEmployee;
-                affiliation.IsPrimary = updatedAffiliation.IsPrimary;
                 affiliation.CampusId = updatedAffiliation.CampusId;
                 affiliation.CollegeId = updatedAffiliation.CollegeId;
                 affiliation.DepartmentId = updatedAffiliation.DepartmentId;

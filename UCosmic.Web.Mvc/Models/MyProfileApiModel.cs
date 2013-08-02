@@ -24,7 +24,6 @@ namespace UCosmic.Web.Mvc.Models
         public string Establishment { get; set; }
         public string JobTitles { get; set; }
         public bool IsDefault { get; set; }
-        public bool IsPrimary { get; set; }
         public bool IsAcknowledged { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
