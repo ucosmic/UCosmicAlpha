@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -42,22 +44,28 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             // find agreement
-            var agreement = _queryProcessor.Execute(
+            var entity = _queryProcessor.Execute(
                 new AgreementById(command.Principal, command.AgreementId));
-            if (agreement == null) return;
+            if (entity == null) return;
 
-            agreement = _entities.Get<Agreement>().ById(command.AgreementId);
+            entity = _entities.Get<Agreement>().ById(command.AgreementId);
 
-            if (agreement.Files != null && agreement.Files.Any())
+            // log audit
+            var audit = new CommandEvent
             {
-                foreach (var file in agreement.Files.Where(x => !string.IsNullOrWhiteSpace(x.Path)))
-                {
-                    _binaryData.Delete(file.Path);
-                }
-            }
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new { command.AgreementId }),
+                PreviousState = entity.ToJsonAudit(),
+            };
+            _entities.Create(audit);
 
-            _entities.Purge(agreement);
+            _entities.Purge(entity);
             _unitOfWork.SaveChanges();
+
+            if (entity.Files == null || !entity.Files.Any()) return;
+            foreach (var file in entity.Files.Where(x => !string.IsNullOrWhiteSpace(x.Path)))
+                _binaryData.Delete(file.Path);
         }
     }
 }

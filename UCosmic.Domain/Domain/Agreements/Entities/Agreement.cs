@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -71,4 +72,30 @@ namespace UCosmic.Domain.Agreements
         }
     }
 
+    internal static class AgreementSerializer
+    {
+        internal static string ToJsonAudit(this Agreement entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                entity.Id,
+                entity.Guid,
+                entity.UmbrellaId,
+                entity.Title,
+                entity.IsTitleDerived,
+                entity.Name,
+                entity.Description,
+                entity.Content,
+                entity.Notes,
+                entity.Type,
+                entity.IsAutoRenew,
+                entity.Status,
+                entity.StartsOn,
+                entity.ExpiresOn,
+                entity.IsExpirationEstimated,
+                entity.Visibility,
+            });
+            return state;
+        }
+    }
 }
