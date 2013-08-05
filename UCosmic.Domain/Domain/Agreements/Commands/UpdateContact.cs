@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -9,15 +10,16 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class CreateContact
+    public class UpdateContact
     {
-        public CreateContact(IPrincipal principal)
+        public UpdateContact(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
         }
 
         public IPrincipal Principal { get; private set; }
+        public int ContactId { get; set; }
         public int AgreementId { get; set; }
         public string Type { get; set; }
         public int? PersonId { get; set; }
@@ -28,13 +30,11 @@ namespace UCosmic.Domain.Agreements
         public string Suffix { get; set; }
         public string EmailAddress { get; set; }
         public string JobTitle { get; set; }
-
-        public int CreatedContactId { get; internal set; }
     }
 
-    public class ValidateCreateContactCommand : AbstractValidator<CreateContact>
+    public class ValidateUpdateContactCommand : AbstractValidator<UpdateContact>
     {
-        public ValidateCreateContactCommand(IQueryEntities entities, IProcessQueries queryProcessor)
+        public ValidateUpdateContactCommand(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -56,15 +56,19 @@ namespace UCosmic.Domain.Agreements
                 // principal must own agreement
                 .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
                     .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.AgreementId, x => x.Principal.Identity.Name)
+
+                // contact id must exist under this agreement
+                .MustOwnContactWithId(entities, x => x.ContactId)
+                    .WithMessage(MustOwnContactWithId<object>.FailMessageFormat, x => x.AgreementId, x => x.ContactId)
             ;
 
-            // type is required
-            RuleFor(x => x.Type)
-                .NotEmpty().WithMessage(MustHaveContactType.FailMessage)
-                .Length(1, AgreementContactConstraints.TypeMaxLength)
-                    .WithMessage(MustNotExceedStringLength.FailMessageFormat,
-                        x => "Contact type", x => AgreementContactConstraints.TypeMaxLength, x => x.Type.Length)
-            ;
+            // type must meet length requirements when provided
+            When(x => !string.IsNullOrWhiteSpace(x.Type), () =>
+                RuleFor(x => x.Type)
+                    .Length(1, AgreementContactConstraints.TypeMaxLength)
+                        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
+                            x => "Contact type", x => AgreementContactConstraints.TypeMaxLength, x => x.Type.Length)
+            );
 
             // when personid is present
             When(x => x.PersonId.HasValue, () =>
@@ -121,66 +125,36 @@ namespace UCosmic.Domain.Agreements
         }
     }
 
-    public class HandleCreateContactCommand : IHandleCommands<CreateContact>
+    public class HandleUpdateContactCommand : IHandleCommands<UpdateContact>
     {
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<CreatePerson> _createPerson;
-        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
+        private readonly IHandleCommands<UpdatePerson> _updatePerson;
+        private readonly IHandleCommands<UpdateEmailAddress> _updateEmail;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateContactCommand(ICommandEntities entities
-            , IHandleCommands<CreatePerson> createPerson
-            , IHandleCommands<CreateEmailAddress> createEmailAddress
+        public HandleUpdateContactCommand(ICommandEntities entities
+            , IHandleCommands<UpdatePerson> updatePerson
+            , IHandleCommands<UpdateEmailAddress> updateEmail
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
-            _createPerson = createPerson;
-            _createEmailAddress = createEmailAddress;
+            _updatePerson = updatePerson;
+            _updateEmail = updateEmail;
             _unitOfWork = unitOfWork;
         }
 
-        public void Handle(CreateContact command)
+        public void Handle(UpdateContact command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // are we attaching to existing person, or creating a new one?
-            var person = command.PersonId.HasValue
-                ? _entities.Get<Person>().Single(x => x.RevisionId == command.PersonId.Value) : null;
-            if (person == null)
-            {
-                // create person entity
-                var createPersonCommand = new CreatePerson
+            var entity = _entities.Get<AgreementContact>()
+                .EagerLoad(_entities, new Expression<Func<AgreementContact, object>>[]
                 {
-                    Salutation = command.Salutation,
-                    FirstName = command.FirstName,
-                    MiddleName = command.MiddleName,
-                    LastName = command.LastName,
-                    Suffix = command.Suffix,
-                    NoCommit = true,
-                };
-                _createPerson.Handle(createPersonCommand);
-                person = createPersonCommand.CreatedPerson;
-
-                // attach email address if provided
-                if (!string.IsNullOrWhiteSpace(command.EmailAddress))
-                {
-                    _createEmailAddress.Handle(new CreateEmailAddress(command.EmailAddress, person)
-                    {
-                        IsDefault = true,
-                        NoCommit = true,
-                    });
-                }
-            }
-
-            var entity = new AgreementContact
-            {
-                AgreementId = command.AgreementId,
-                Person = person,
-                Type = command.Type,
-                Title = command.JobTitle,
-            };
-            _entities.Create(entity);
+                    x => x.Person.Emails,
+                    x => x.Person.User,
+                })
+                .Single(x => x.Id == command.ContactId && x.AgreementId == command.AgreementId);
 
             // log audit
             var audit = new CommandEvent
@@ -190,6 +164,7 @@ namespace UCosmic.Domain.Agreements
                 Value = JsonConvert.SerializeObject(new
                 {
                     command.AgreementId,
+                    command.ContactId,
                     command.Type,
                     command.PersonId,
                     command.Salutation,
@@ -200,12 +175,56 @@ namespace UCosmic.Domain.Agreements
                     command.EmailAddress,
                     command.JobTitle,
                 }),
-                NewState = entity.ToJsonAudit(),
+                PreviousState = entity.ToJsonAudit(),
             };
-            _entities.Create(audit);
 
+            // update fields
+            if (!string.IsNullOrWhiteSpace(command.Type))
+                entity.Type = command.Type;
+            entity.Title = command.JobTitle;
+            entity.UpdatedByPrincipal = command.Principal.Identity.Name;
+            entity.UpdatedOnUtc = DateTime.UtcNow;
+
+            // change to different person
+            if (command.PersonId.HasValue && command.PersonId.Value != entity.PersonId)
+            {
+                entity.PersonId = command.PersonId.Value;
+            }
+
+            // update existing person only if they have no user account
+            else if (entity.Person.User == null)
+            {
+                _updatePerson.Handle(new UpdatePerson(command.Principal, entity.PersonId)
+                {
+                    NoCommit = true,
+                    Salutation = command.Salutation,
+                    FirstName = command.FirstName,
+                    MiddleName = command.MiddleName,
+                    LastName = command.LastName,
+                    Suffix = command.Suffix,
+                    IsDisplayNameDerived = true,
+                });
+
+                // creating contact uses default email, so updating does as well
+                if (!string.IsNullOrWhiteSpace(command.EmailAddress))
+                {
+                    var defaultEmail = entity.Person.Emails.SingleOrDefault(x => x.IsDefault);
+                    if (defaultEmail != null)
+                        _updateEmail.Handle(new UpdateEmailAddress(defaultEmail)
+                        {
+                            NoCommit = true,
+                            Value = command.EmailAddress,
+                            IsConfirmed = defaultEmail.IsConfirmed,
+                            IsDefault = defaultEmail.IsDefault,
+                            IsFromSaml = defaultEmail.IsFromSaml,
+                        });
+                }
+            }
+
+            audit.NewState = entity.ToJsonAudit();
+            _entities.Create(audit);
+            _entities.Update(entity);
             _unitOfWork.SaveChanges();
-            command.CreatedContactId = entity.Id;
         }
     }
 }

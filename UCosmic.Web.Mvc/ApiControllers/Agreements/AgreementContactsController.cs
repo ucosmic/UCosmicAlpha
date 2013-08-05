@@ -18,13 +18,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateContact> _createHandler;
+        private readonly IHandleCommands<UpdateContact> _updateHandler;
 
         public AgreementContactsController(IProcessQueries queryProcessor
             , IHandleCommands<CreateContact> createHandler
+            , IHandleCommands<UpdateContact> updateHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
+            _updateHandler = updateHandler;
         }
 
         [GET("{agreementId:int}/contacts")]
@@ -183,6 +186,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{agreementId:int}/contacts/{contactId:int}")]
         public HttpResponseMessage Put(int agreementId, int contactId, [FromBody] AgreementContactApiModel model)
         {
+            model.Id = contactId;
+            model.AgreementId = agreementId;
+            var command = new UpdateContact(User);
+            Mapper.Map(model, command);
+
+            _updateHandler.Handle(command);
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement contact was successfully updated.");
             return response;

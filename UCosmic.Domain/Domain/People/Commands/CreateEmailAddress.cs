@@ -60,13 +60,16 @@ namespace UCosmic.Domain.People
     public class HandleCreateEmailAddressCommand : IHandleCommands<CreateEmailAddress>
     {
         private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<UpdateEmailAddress> _updateEmail;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateEmailAddressCommand(ICommandEntities entities
+            , IHandleCommands<UpdateEmailAddress> updateEmail
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
+            _updateEmail = updateEmail;
             _unitOfWork = unitOfWork;
         }
 
@@ -87,8 +90,15 @@ namespace UCosmic.Domain.People
 
             // clear previous default email
             if (isDefault)
-                foreach (var email in person.Emails)
-                    email.IsDefault = false;
+                foreach (var email in person.Emails.Where(x => x.IsDefault))
+                    _updateEmail.Handle(new UpdateEmailAddress(email)
+                    {
+                        NoCommit = true,
+                        IsDefault = false,
+                        IsConfirmed = email.IsConfirmed,
+                        IsFromSaml = email.IsFromSaml,
+                        Value = email.Value,
+                    });
 
             // create email address entity
             var entity = new EmailAddress

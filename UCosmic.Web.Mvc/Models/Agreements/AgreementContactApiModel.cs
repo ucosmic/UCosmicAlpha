@@ -54,5 +54,17 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementContactApiModel, UpdateContact>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.ContactId, o => o.MapFrom(s => s.Id))
+                    .ForMember(d => d.JobTitle, o => o.MapFrom(s => s.Title))
+                ;
+            }
+        }
     }
 }

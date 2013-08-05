@@ -56,32 +56,40 @@ namespace UCosmic.Domain.People
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
+            // person id must exist in database
             RuleFor(x => x.Id)
                 .MustFindPersonById(entities)
                     .WithMessage(MustFindPersonById.FailMessageFormat, x => x.Id)
             ;
+
+            // when first and last name are not provided, display name cannot be empty
+            When(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName), () =>
+                RuleFor(x => x.DisplayName)
+                    // display name cannot be empty
+                    .NotEmpty().WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
+            );
         }
     }
 
     public class HandleUpdatePersonCommand : IHandleCommands<UpdatePerson>
     {
         private readonly ICommandEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateMyAffiliation> _createMyAffiliation;
         private readonly IHandleCommands<UpdateMyAffiliation> _updateMyAffiliation;
-        //private readonly IHandleCommands<DeleteMyAffiliation> _deleteMyAffiliation;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleUpdatePersonCommand(ICommandEntities entities
+                , IProcessQueries queryProcessor
                 , IHandleCommands<CreateMyAffiliation> createMyAffiliation
                 , IHandleCommands<UpdateMyAffiliation> updateMyAffiliation
-                //, IHandleCommands<DeleteMyAffiliation> deleteMyAffiliation
                 , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
             _createMyAffiliation = createMyAffiliation;
             _updateMyAffiliation = updateMyAffiliation;
-            //_deleteMyAffiliation = deleteMyAffiliation;
             _unitOfWork = unitOfWork;
         }
 
@@ -174,16 +182,33 @@ namespace UCosmic.Domain.People
 
             // update values
             person.IsActive = command.IsActive;
-            person.IsDisplayNameDerived = command.IsDisplayNameDerived;
-            person.DisplayName = command.DisplayName;
             person.Salutation = command.Salutation;
             person.FirstName = command.FirstName;
             person.MiddleName = command.MiddleName;
             person.LastName = command.LastName;
             person.Suffix = command.Suffix;
             person.Gender = command.Gender;
+            if (string.IsNullOrWhiteSpace(command.DisplayName))
+            {
+                person.DisplayName = _queryProcessor.Execute(new GenerateDisplayName
+                {
+                    Salutation = command.Salutation,
+                    FirstName = command.FirstName,
+                    MiddleName = command.MiddleName,
+                    LastName = command.LastName,
+                    Suffix = command.Suffix,
+                });
+                person.IsDisplayNameDerived = true;
+            }
+            else
+            {
+                person.DisplayName = command.DisplayName;
+                person.IsDisplayNameDerived = command.IsDisplayNameDerived;
+            }
+
 
             // update affiliations
+            if (command.Affiliations != null)
             {
                 foreach (var update in command.Affiliations)
                 {

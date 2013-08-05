@@ -31,8 +31,7 @@ namespace UCosmic.Domain.People
             When(x => string.IsNullOrWhiteSpace(x.FirstName) || string.IsNullOrWhiteSpace(x.LastName), () =>
                 RuleFor(x => x.DisplayName)
                     // display name cannot be empty
-                    .NotEmpty()
-                        .WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
+                    .NotEmpty().WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
             );
         }
     }
