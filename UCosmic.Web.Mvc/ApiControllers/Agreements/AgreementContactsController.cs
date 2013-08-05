@@ -105,7 +105,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{agreementId:int}/contacts/{contactId:int}")]
+        [GET("{agreementId:int}/contacts/{contactId:int}", ControllerPrecedence = 1)]
         public AgreementContactApiModel Get(int agreementId, int contactId, [FromUri] bool useTestData = false)
         {
             var entity = _queryProcessor.Execute(new ContactById(User, agreementId, contactId)
@@ -157,7 +157,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [POST("{agreementId:int}/contacts/{contactId:int}")]
+        [POST("{agreementId:int}/contacts")]
         public HttpResponseMessage Post(int agreementId, [FromBody] AgreementContactApiModel model)
         {
             model.AgreementId = agreementId;

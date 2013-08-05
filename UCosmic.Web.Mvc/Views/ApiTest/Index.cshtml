@@ -32,7 +32,27 @@
                 .done(function(responseText, statusText, xhr) {
                     var location = xhr.getResponseHeader('location');
                     var agreementId = parseInt(location.substring(location.lastIndexOf('/') + 1));
-                    var info = 'post of uploaded file resulted in new agreement id ' + agreementId;
+                    var info = 'post of agreement data resulted in new agreement id ' + agreementId;
+                    console.log(info);
+                    alert(info);
+                });
+        });
+        $('#agreement_contact_post_button').click(function () {
+            $.post(App.Routes.WebApi.Agreements.Contacts.post(3), {
+                personId: 13,
+                type: 'My Contact Type',
+                salutation: 'Professor',
+                firstName: 'William',
+                middleName: 'Stevenson',
+                lastName: 'Preston',
+                suffix: 'Equire',
+                emailAddress: 'bill@x-adventures.at',
+                jobTitle: 'Owner'
+            })
+                .done(function (responseText, statusText, xhr) {
+                    var location = xhr.getResponseHeader('location');
+                    var contactId = parseInt(location.substring(location.lastIndexOf('/') + 1));
+                    var info = 'post of contact data resulted in new agreement contact id ' + contactId;
                     console.log(info);
                     alert(info);
                 });
@@ -300,10 +320,11 @@
     </header>
     <section>
         <header>
-            <h2>Agreement POST</h2>
+            <h2>Agreement POSTs</h2>
         </header>
         <div>
             <input id="agreement_post_button" type="button" value="POST test agreement" />
+            <input id="agreement_contact_post_button" type="button" value="POST test agreement contact" />
         </div>
     </section>
     <section data-bind="visible: tempUpload" style="display: none;">

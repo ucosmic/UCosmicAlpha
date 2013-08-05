@@ -79,6 +79,7 @@ namespace UCosmic.Domain.People
                     LastName = command.LastName,
                     Suffix = command.Suffix,
                 });
+                entity.IsDisplayNameDerived = true;
             }
 
             // log audit
