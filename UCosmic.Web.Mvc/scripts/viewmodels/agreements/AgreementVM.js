@@ -50,6 +50,10 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.dfdPageFadeIn = $.Deferred();
             this.agreementIsEdit = ko.observable();
             this.visibility = ko.observable();
+            this.trail = ko.observableArray([]);
+            this.nextForceDisabled = ko.observable(false);
+            this.prevForceDisabled = ko.observable(false);
+            this.pageNumber = ko.observable();
             this.$typeOptions = ko.observable();
             this.typeOptions = ko.mapping.fromJS([]);
             this.typeOptionSelected = ko.observable();
@@ -134,10 +138,6 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
-            this.trail = ko.observableArray([]);
-            this.nextForceDisabled = ko.observable(false);
-            this.prevForceDisabled = ko.observable(false);
-            this.pageNumber = ko.observable();
             if(window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
                 this.editOrNewUrl = "new/";
                 this.populateParticipants();
@@ -612,14 +612,14 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     })
                 });
             }
-            this.$contactSalutation.kendoComboBox({
+            this.$contactSalutation.kendoDropDownList({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
                     data: ko.mapping.toJS(this.contactSalutation())
                 })
             });
-            this.$contactSuffix.kendoComboBox({
+            this.$contactSuffix.kendoDropDownList({
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
@@ -687,8 +687,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 _this.$contactLastName.prop('disabled', true);
                 _this.$contactFirstName.prop('disabled', true);
                 $("#contactMiddleName").prop('disabled', true);
-                _this.$contactSalutation.data("kendoComboBox").enable(false);
-                _this.$contactSuffix.data("kendoComboBox").enable(false);
+                _this.$contactSalutation.data("kendoDropDownList").enable(false);
+                _this.$contactSuffix.data("kendoDropDownList").enable(false);
                 _this.validateContact.errors.showAllMessages(true);
             }
             this.$contactEmail.kendoAutoComplete({
@@ -1184,18 +1184,22 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.$contactLastName.prop('disabled', true);
             this.$contactFirstName.prop('disabled', true);
             $("#contactMiddleName").prop('disabled', true);
-            this.$contactSalutation.data("kendoComboBox").enable(false);
-            this.$contactSuffix.data("kendoComboBox").enable(false);
+            this.$contactSalutation.data("kendoDropDownList").enable(false);
+            this.$contactSuffix.data("kendoDropDownList").enable(false);
             this.contactTypeOptionSelected(me.type());
-            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            if(this.isCustomContactTypeAllowed) {
+                var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            } else {
+                var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+            }
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.type();
             });
-            dropdownlist = $("#contactSuffix").data("kendoComboBox");
+            dropdownlist = $("#contactSuffix").data("kendoDropDownList");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.suffix();
             });
-            dropdownlist = $("#contactSalutation").data("kendoComboBox");
+            dropdownlist = $("#contactSalutation").data("kendoDropDownList");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.salutation();
             });
@@ -1225,11 +1229,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactLastName('');
             this.contactPhones('');
             this.contactTypeOptionSelected('');
-            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            if(this.isCustomContactTypeAllowed) {
+                var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            } else {
+                var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+            }
             dropdownlist.select(0);
-            var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+            var dropdownlist = $("#contactSalutation").data("kendoDropDownList");
             dropdownlist.select(0);
-            var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+            var dropdownlist = $("#contactSuffix").data("kendoDropDownList");
             dropdownlist.select(0);
         };
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
@@ -1364,8 +1372,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.$contactLastName.prop('disabled', false);
             this.$contactFirstName.prop('disabled', false);
             $("#contactMiddleName").prop('disabled', false);
-            this.$contactSalutation.data("kendoComboBox").enable(true);
-            this.$contactSuffix.data("kendoComboBox").enable(true);
+            this.$contactSalutation.data("kendoDropDownList").enable(true);
+            this.$contactSuffix.data("kendoDropDownList").enable(true);
             this.validateContact.errors.showAllMessages(false);
             this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
             $("#addAContact").fadeOut(500, function () {
@@ -1387,7 +1395,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $contactFirstName.prop('disabled', false);
             $("#contactMiddleName").prop('disabled', false);
             $contactSalutation.data("kendoComboBox").enable(true);
-            $contactSuffix.data("kendoComboBox").enable(true);
+            $contactSuffix.data("kendoDropDownList").enable(true);
             this.validateContact.errors.showAllMessages(false);
         };
         InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
@@ -1445,17 +1453,46 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 },
                 message: 'The field must be greater than start date'
             };
+            ko.validation.rules['nullSafeDate'] = {
+                validator: function (val, otherVal) {
+                    var valid = true;
+                    var format = null;
+                    var YYYYPattern = new RegExp("^\\d{4}$");
+                    var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
+                    var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+                    if((val != null) && (val.length > 0)) {
+                        val = $.trim(val);
+                        if(YYYYPattern.test(val)) {
+                            val = "01/01/" + val;
+                            format = "YYYY";
+                        } else if(MMYYYYPattern.test(val)) {
+                            format = "MM/YYYY";
+                        } else if(MMDDYYYYPattern.test(val)) {
+                            format = "MM/DD/YYYY";
+                        }
+                        valid = (format != null) ? moment(val, format).isValid() : false;
+                    }
+                    return valid;
+                },
+                message: "Date must be valid."
+            };
             ko.validation.registerExtenders();
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
                 startDate: this.startDate.extend({
                     required: {
                         message: "Start date is required."
                     },
+                    nullSafeDate: {
+                        message: "Start date must valid."
+                    },
                     maxLength: 50
                 }),
                 expDate: this.expDate.extend({
                     required: {
                         message: "Expiration date is required."
+                    },
+                    nullSafeDate: {
+                        message: "Expiration date must valid."
                     },
                     maxLength: 50,
                     greaterThan: this.startDate

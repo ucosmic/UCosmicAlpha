@@ -7,6 +7,7 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../oss/moment.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
 
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
@@ -169,6 +170,10 @@ export class InstitutionalAgreementEditModel {
     agreementIsEdit = ko.observable();
     agreementId;// = 1;
     visibility = ko.observable();
+    trail: KnockoutObservableStringArray = ko.observableArray([]);
+    nextForceDisabled: KnockoutObservableBool = ko.observable(false);
+    prevForceDisabled: KnockoutObservableBool = ko.observable(false);
+    pageNumber: KnockoutObservableNumber = ko.observable();
     $typeOptions: KnockoutObservableJQuery = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
     typeOptionSelected: KnockoutObservableString = ko.observable();
@@ -696,14 +701,14 @@ export class InstitutionalAgreementEditModel {
                 })
             });
         }
-        this.$contactSalutation.kendoComboBox({
+        this.$contactSalutation.kendoDropDownList({
             dataTextField: "name",
             dataValueField: "id",
             dataSource: new kendo.data.DataSource({
                 data: ko.mapping.toJS(this.contactSalutation())
             })
         });
-        this.$contactSuffix.kendoComboBox({
+        this.$contactSuffix.kendoDropDownList({
             dataTextField: "name",
             dataValueField: "id",
             dataSource: new kendo.data.DataSource({
@@ -771,8 +776,8 @@ export class InstitutionalAgreementEditModel {
             this.$contactLastName.prop('disabled', true);
             this.$contactFirstName.prop('disabled', true);
             $("#contactMiddleName").prop('disabled', true);
-            this.$contactSalutation.data("kendoComboBox").enable(false);
-            this.$contactSuffix.data("kendoComboBox").enable(false);
+            this.$contactSalutation.data("kendoDropDownList").enable(false);
+            this.$contactSuffix.data("kendoDropDownList").enable(false);
             this.validateContact.errors.showAllMessages(true);
         };
 
@@ -1291,21 +1296,25 @@ export class InstitutionalAgreementEditModel {
         this.$contactLastName.prop('disabled', true);
         this.$contactFirstName.prop('disabled', true);
         $("#contactMiddleName").prop('disabled', true);
-        this.$contactSalutation.data("kendoComboBox").enable(false);
-        this.$contactSuffix.data("kendoComboBox").enable(false);
+        this.$contactSalutation.data("kendoDropDownList").enable(false);
+        this.$contactSuffix.data("kendoDropDownList").enable(false);
         this.contactTypeOptionSelected(me.type());
 
-        var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        if (this.isCustomContactTypeAllowed) {
+            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        } else {
+            var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+        }
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.type();
         });
 
-        dropdownlist = $("#contactSuffix").data("kendoComboBox");
+        dropdownlist = $("#contactSuffix").data("kendoDropDownList");
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.suffix();
         });
 
-        dropdownlist = $("#contactSalutation").data("kendoComboBox");
+        dropdownlist = $("#contactSalutation").data("kendoDropDownList");
         dropdownlist.select(function (dataItem) {
             return dataItem.name === me.salutation();
         });
@@ -1338,11 +1347,16 @@ export class InstitutionalAgreementEditModel {
         this.contactLastName('');
         this.contactPhones('');
         this.contactTypeOptionSelected('');
-        var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+
+        if (this.isCustomContactTypeAllowed) {
+            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        } else {
+            var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+        }
         dropdownlist.select(0);
-        var dropdownlist = $("#contactSalutation").data("kendoComboBox");
+        var dropdownlist = $("#contactSalutation").data("kendoDropDownList");
         dropdownlist.select(0);
-        var dropdownlist = $("#contactSuffix").data("kendoComboBox");
+        var dropdownlist = $("#contactSuffix").data("kendoDropDownList");
         dropdownlist.select(0);
     }
 
@@ -1470,8 +1484,8 @@ export class InstitutionalAgreementEditModel {
         this.$contactLastName.prop('disabled', false);
         this.$contactFirstName.prop('disabled', false);
         $("#contactMiddleName").prop('disabled', false);
-        this.$contactSalutation.data("kendoComboBox").enable(true);
-        this.$contactSuffix.data("kendoComboBox").enable(true);
+        this.$contactSalutation.data("kendoDropDownList").enable(true);
+        this.$contactSuffix.data("kendoDropDownList").enable(true);
         this.validateContact.errors.showAllMessages(false);
         this.$addContactDialog.data("kendoWindow").open().title("Add Contact")
         $("#addAContact").fadeOut(500, function () {
@@ -1495,7 +1509,7 @@ export class InstitutionalAgreementEditModel {
         $contactFirstName.prop('disabled', false);
         $("#contactMiddleName").prop('disabled', false);
         $contactSalutation.data("kendoComboBox").enable(true);
-        $contactSuffix.data("kendoComboBox").enable(true);
+        $contactSuffix.data("kendoDropDownList").enable(true);
         this.validateContact.errors.showAllMessages(false);
     }
 
@@ -1536,17 +1550,14 @@ export class InstitutionalAgreementEditModel {
         this.hasBoundSearch = true;
     };
        
-    trail: KnockoutObservableStringArray = ko.observableArray([]);
     swipeCallback(): void {
     }
 
-    nextForceDisabled: KnockoutObservableBool = ko.observable(false);
-    prevForceDisabled: KnockoutObservableBool = ko.observable(false);
-    pageNumber: KnockoutObservableNumber = ko.observable();
     lockAnimation(): void {
         this.nextForceDisabled(true);
         this.prevForceDisabled(true);
     }
+
     unlockAnimation(): void {
         this.nextForceDisabled(false);
         this.prevForceDisabled(false);
@@ -1564,6 +1575,36 @@ export class InstitutionalAgreementEditModel {
             message: 'The field must be greater than start date'//{0}'
         };
 
+        ko.validation.rules['nullSafeDate'] = {
+            validator: (val: any, otherVal: any): bool => {
+                var valid: bool = true;
+                var format: string = null;
+                var YYYYPattern = new RegExp("^\\d{4}$");
+                var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
+                var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+
+                if ((val != null) && (val.length > 0)) {
+                    val = $.trim(val);
+
+                    if (YYYYPattern.test(val)) {
+                        val = "01/01/" + val;
+                        format = "YYYY";
+                    }
+                    else if (MMYYYYPattern.test(val)) {
+                        format = "MM/YYYY";
+                    }
+                    else if (MMDDYYYYPattern.test(val)) {
+                        format = "MM/DD/YYYY";
+                    }
+
+                    valid = (format != null) ? moment(val, format).isValid() : false;
+                }
+
+                return valid;
+            },
+            message: "Date must be valid."
+        };
+
         ko.validation.registerExtenders();
 
         this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
@@ -1571,12 +1612,14 @@ export class InstitutionalAgreementEditModel {
                 required: {
                     message: "Start date is required."
                 },
+                nullSafeDate: { message: "Start date must valid." },
                 maxLength: 50
             }),
             expDate: this.expDate.extend({
                 required: {
                     message: "Expiration date is required."
                 },
+                nullSafeDate: { message: "Expiration date must valid." },
                 maxLength: 50,
                 greaterThan: this.startDate
             }),
@@ -1691,6 +1734,7 @@ export class InstitutionalAgreementEditModel {
                 }
             });
     }
+
     agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
         var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
 
@@ -1707,6 +1751,7 @@ export class InstitutionalAgreementEditModel {
         });
         this.spinner.stop();
     }
+
     agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
         var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 

@@ -176,7 +176,7 @@
                     <i class="green plus"></i>
                     <span class="text">Save Changes</span>
                 </a>
-                <a href="" data-bind="click: $root.clearContact" class="link" style="float: left; font-size: 26px; margin-right: 10px;">
+                <a href="" data-bind="click: $root.clearContact, visible: !contactsIsEdit()" class="link" style="float: left; font-size: 26px; margin-right: 10px;">
                     <span class="text">Clear</span>
                 </a>
                 <a href="" data-bind="click: $root.cancelContact" class="link" style="float: left; font-size: 26px">

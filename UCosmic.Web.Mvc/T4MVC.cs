@@ -2905,6 +2905,14 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class global {
+                private const string URLPATH = "~/images/icons/global";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string global_24_black_png = Url("global_24_black.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class help {
                 private const string URLPATH = "~/images/icons/help";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
