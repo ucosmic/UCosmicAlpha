@@ -74,19 +74,22 @@ namespace UCosmic.Domain.Identity
     public class HandleSendCreatePasswordMessageCommand : IHandleCommands<SendCreatePasswordMessage>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<SendConfirmEmailMessage> _sendHandler;
         private readonly IHandleCommands<CreatePerson> _createPersonHandler;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmailHandler;
+        private readonly IUnitOfWork _unitOfWork;
 
         public HandleSendCreatePasswordMessageCommand(ICommandEntities entities
             , IHandleCommands<SendConfirmEmailMessage> sendHandler
             , IHandleCommands<CreatePerson> createPersonHandler
+            , IHandleCommands<CreateEmailAddress> createEmailHandler
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _sendHandler = sendHandler;
             _createPersonHandler = createPersonHandler;
+            _createEmailHandler = createEmailHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -127,8 +130,12 @@ namespace UCosmic.Domain.Identity
             person.AffiliateWith(establishment);
 
             // add email address if necessary
-            if (person.GetEmail(command.EmailAddress) == null)
-                person.AddEmail(command.EmailAddress);
+            if (person.Emails.ByValue(command.EmailAddress) == null)
+                _createEmailHandler.Handle(new CreateEmailAddress(command.EmailAddress, person)
+                {
+                    NoCommit = true,
+                });
+                //person.AddEmail(command.EmailAddress);
 
             // save changes so nested command can find the correct data
             _unitOfWork.SaveChanges();

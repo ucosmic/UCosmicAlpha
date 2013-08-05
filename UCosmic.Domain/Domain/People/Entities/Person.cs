@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
@@ -43,33 +42,33 @@ namespace UCosmic.Domain.People
 
         public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
 
-        public EmailAddress GetEmail(string value)
-        {
-            if (Emails == null || !Emails.Any()) return null;
-            return Emails.SingleOrDefault(x => x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
-        }
+        //public EmailAddress GetEmail(string value)
+        //{
+        //    if (Emails == null || !Emails.Any()) return null;
+        //    return Emails.SingleOrDefault(x => x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
+        //}
 
-        public EmailAddress AddEmail(string value)
-        {
-            // email may already exist
-            var email = Emails.SingleOrDefault(x => x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
-            if (email != null) return email;
+        //public EmailAddress AddEmail(string value)
+        //{
+        //    // email may already exist
+        //    var email = Emails.SingleOrDefault(x => x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
+        //    if (email != null) return email;
 
-            // create email
-            email = new EmailAddress
-            {
-                // if person does not already have a default email, this is it
-                IsDefault = (Emails.Count(a => a.IsDefault) == 0),
-                Value = value,
-                Person = this,
-                Number = Emails.NextNumber(),
-            };
+        //    // create email
+        //    email = new EmailAddress
+        //    {
+        //        // if person does not already have a default email, this is it
+        //        IsDefault = (Emails.Count(a => a.IsDefault) == 0),
+        //        Value = value,
+        //        Person = this,
+        //        Number = Emails.NextNumber(),
+        //    };
 
-            // add & return email
-            Emails.Add(email);
+        //    // add & return email
+        //    Emails.Add(email);
 
-            return email;
-        }
+        //    return email;
+        //}
 
         /* Deprecated */
         public Affiliation AffiliateWith(Establishment establishment)

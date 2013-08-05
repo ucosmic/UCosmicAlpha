@@ -22,25 +22,39 @@ namespace UCosmic.Domain.External
         [DataContract]
         private class ProfileRecord
         {
-            [DataMember(Name = "College")] public string College;
-            [DataMember(Name = "Department/Program")] public string Department;
-            [DataMember(Name = "DEPTID")] public string DeptId;
-            [DataMember(Name = "Faculty Rank")] public string FacultyRank;
-            [DataMember(Name = "Institutional Affiliation")] public string InstitutionalAffiliation;
-            [DataMember(Name = "Position Title")] public string PositionTitle;
+            [DataMember(Name = "College")]
+            public string College;
+            [DataMember(Name = "Department/Program")]
+            public string Department;
+            [DataMember(Name = "DEPTID")]
+            public string DeptId;
+            [DataMember(Name = "Faculty Rank")]
+            public string FacultyRank;
+            [DataMember(Name = "Institutional Affiliation")]
+            public string InstitutionalAffiliation;
+            [DataMember(Name = "Position Title")]
+            public string PositionTitle;
         }
 
         [DataContract]
         private class Record
         {
-            [DataMember(Name = "lastUpdate")] public string LastActivityDate; // MM-DD-YYYY
-            [DataMember(Name = "Last Name")] public string LastName;
-            [DataMember(Name = "First Name")] public string FirstName;
-            [DataMember(Name = "Middle Name")] public string MiddleName;
-            [DataMember(Name = "Suffix")] public string Suffix;
-            [DataMember(Name = "Gender")] public string Gender;
-            [DataMember(Name = "USF Email Address")] public string UsfEmailAddress;
-            [DataMember(Name = "profile")] public ProfileRecord[] Profiles;
+            [DataMember(Name = "lastUpdate")]
+            public string LastActivityDate; // MM-DD-YYYY
+            [DataMember(Name = "Last Name")]
+            public string LastName;
+            [DataMember(Name = "First Name")]
+            public string FirstName;
+            [DataMember(Name = "Middle Name")]
+            public string MiddleName;
+            [DataMember(Name = "Suffix")]
+            public string Suffix;
+            [DataMember(Name = "Gender")]
+            public string Gender;
+            [DataMember(Name = "USF Email Address")]
+            public string UsfEmailAddress;
+            [DataMember(Name = "profile")]
+            public ProfileRecord[] Profiles;
         }
 
         private const string ServiceSyncName = "UsfFacultyProfile"; // Also used in SensativeData.sql
@@ -48,7 +62,7 @@ namespace UCosmic.Domain.External
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateServiceSync> _updateServiceSync;
         private readonly IHandleCommands<UpdateMyProfile> _updateMyProfile;
-        //private readonly IHandleCommands<CreateServiceSync> _createServiceSync;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
         private readonly IHandleCommands<UsfCreateEstablishment> _createUsfEstablishment;
         private readonly IHandleCommands<UsfUpdateEstablishment> _updateUsfEstablishment;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
@@ -56,36 +70,29 @@ namespace UCosmic.Domain.External
         private readonly ILogExceptions _exceptionLogger;
         private EstablishmentType _collegeEstablishmentType;
         private EstablishmentType _departmentEstablishmentType;
-        private SmtpTraceListener _smtpTraceListener;
 
-        public UsfFacultyImporter(ICommandEntities entities,
-                                  IProcessQueries queryProcessor,
-                                  IHandleCommands<UpdateServiceSync> updateServiceSync,
-                                  IHandleCommands<UpdateMyProfile> updateMyProfile,
-                                  //IHandleCommands<CreateServiceSync> createServiceSync,
-                                  IHandleCommands<UsfCreateEstablishment> createUsfEstablishment,
-                                  IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment,
-                                  IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy,
-                                  IUnitOfWork unitOfWork,
-                                  ILogExceptions exceptionLogger
-                                  //IHandleCommands<SendEmailMessageCommand> sendEmailMessageHandler
-            )
+        public UsfFacultyImporter(ICommandEntities entities
+            , IProcessQueries queryProcessor
+            , IHandleCommands<UpdateServiceSync> updateServiceSync
+            , IHandleCommands<UpdateMyProfile> updateMyProfile
+            , IHandleCommands<CreateEmailAddress> createEmailAddress
+            , IHandleCommands<UsfCreateEstablishment> createUsfEstablishment
+            , IHandleCommands<UsfUpdateEstablishment> updateUsfEstablishment
+            , IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy
+            , IUnitOfWork unitOfWork
+            , ILogExceptions exceptionLogger
+        )
         {
             _entities = entities;
             _queryProcessor = queryProcessor;
             _updateServiceSync = updateServiceSync;
             _updateMyProfile = updateMyProfile;
-            //_createServiceSync = createServiceSync;
+            _createEmailAddress = createEmailAddress;
             _createUsfEstablishment = createUsfEstablishment;
             _updateUsfEstablishment = updateUsfEstablishment;
             _updateHierarchy = updateHierarchy;
             _unitOfWork = unitOfWork;
             _exceptionLogger = exceptionLogger;
-
-            _smtpTraceListener = null;
-            //_smtpTraceListener = new SmtpTraceListener(sendEmailMessageHandler, "corarito@usf.edu", "USF Service Log");
-            //_smtpTraceListener.Name = "USF_Service_Trace_Listener";
-            //Debug.Listeners.Add(_smtpTraceListener);
         }
 
         public void Import(IPrincipal principal, int userId)
@@ -241,13 +248,8 @@ namespace UCosmic.Domain.External
 
                             Debug.WriteLine(DateTime.Now + " USF: Department imported started.");
 
-                            var departmentImported = new UsfDepartmentImporter( _entities,
-                                                                                _queryProcessor,
-                                                                                _createUsfEstablishment,
-                                                                                _updateUsfEstablishment,
-                                                                                _updateServiceSync,
-                                                                                _updateHierarchy,
-                                                                                _unitOfWork);
+                            var departmentImported = new UsfDepartmentImporter(
+                                _entities, _queryProcessor, _createUsfEstablishment, _updateUsfEstablishment, _updateServiceSync, _updateHierarchy, _unitOfWork);
                             departmentImported.Handle();
 
                             _entities.Reload(serviceSync);
@@ -432,12 +434,12 @@ namespace UCosmic.Domain.External
                     _updateMyProfile.Handle(updateProfile);
                     _unitOfWork.SaveChanges();
 
-                    /* Store email if not the same as userName */
-                    if (record.UsfEmailAddress != user.Name)
-                    {
-                        user.Person.AddEmail(record.UsfEmailAddress);
-                        _unitOfWork.SaveChanges();
-                    }
+                    // always store email when it exists
+                    if (!string.IsNullOrWhiteSpace(record.UsfEmailAddress))
+                        _createEmailAddress.Handle(new CreateEmailAddress(record.UsfEmailAddress, user.Person)
+                        {
+                            IsConfirmed = true,
+                        });
 
                     /* Update fail count */
                     {
@@ -568,13 +570,6 @@ namespace UCosmic.Domain.External
             }
 
             Debug.WriteLine("End UsfFacultyImporter");
-
-            if (_smtpTraceListener != null)
-            {
-                _smtpTraceListener.Flush();
-                Debug.Listeners.Remove("USF_Service_Trace_Listener");
-                _smtpTraceListener = null;
-            }
 
             /* For those callers that need synchronization. */
             @event.Signal.Set();

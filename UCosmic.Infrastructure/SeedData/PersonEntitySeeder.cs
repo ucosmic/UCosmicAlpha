@@ -15,11 +15,13 @@ namespace UCosmic.SeedData
         private readonly IHandleCommands<UpdateMyPhoto> _updatePhoto;
 
         public PersonEntitySeeder(IProcessQueries queryProcessor
+            , IQueryEntities entities
             , IHandleCommands<CreatePerson> createPerson
+            , IHandleCommands<CreateEmailAddress> createEmail
             , IHandleCommands<CreateUser> createUser
             , IHandleCommands<UpdateMyPhoto> updatePhoto
         )
-            : base(queryProcessor, createPerson, createUser)
+            : base(queryProcessor, entities, createPerson, createEmail, createUser)
         {
             _queryProcessor = queryProcessor;
             _updatePhoto = updatePhoto;
@@ -31,206 +33,197 @@ namespace UCosmic.SeedData
             {
                 FirstName = "Mitch",
                 LastName = "Leventhal",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Mitch.Leventhal@suny.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Male
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Mitch.Leventhal@suny.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Sally",
                 LastName = "Crimmins Villela",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Sally.Crimmins@suny.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Female
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Sally.Crimmins@suny.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Ron",
                 LastName = "Cushing",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Ronald.Cushing@uc.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Ronald.Cushing@ucmail.uc.edu",
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "cushinrb@uc.edu",
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "cushinrb@ucmail.uc.edu",
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Male
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Ronald.Cushing@uc.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("Ronald.Cushing@ucmail.uc.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("cushinrb@uc.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("cushinrb@ucmail.uc.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Mary",
                 LastName = "Watkins",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Mary.Watkins@uc.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Mary.Watkins@ucmail.uc.edu",
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "watkinml@uc.edu",
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "watkinml@ucmail.uc.edu",
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Female
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Mary.Watkins@uc.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("Mary.Watkins@ucmail.uc.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("watkinml@uc.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("watkinml@ucmail.uc.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Debra",
                 LastName = "Nyby",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Debra.Nyby@lehigh.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "dhn0@lehigh.edu",
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Female
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Debra.Nyby@lehigh.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("dhn0@lehigh.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Gary",
                 LastName = "Lutz",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Gary.Lutz@lehigh.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "jgl3@lehigh.edu",
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Male
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Gary.Lutz@lehigh.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("jgl3@lehigh.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Mohamed",
                 LastName = "El-Aasser",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "mohamed.el-aasser@lehigh.edu",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "mse0@lehigh.edu",
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Male
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("mohamed.el-aasser@lehigh.edu", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                },
+                new CreateEmailAddress("mse0@lehigh.edu", 0)
+                {
+                    IsConfirmed = true,
+                },
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Dora",
                 LastName = "Ballen Uriarte",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "DBallen@usil.edu.pe",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Female
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("DBallen@usil.edu.pe", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                }
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Clay",
                 LastName = "Hensley",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "chensley@collegeboard.org",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Male
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("chensley@collegeboard.org", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                }
+            },
+            true);
 
             Seed(new CreatePerson
             {
                 FirstName = "Brandon",
                 LastName = "Lee",
-                EmailAddresses = new[]
-                {
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = "Brandon@terradotta.com",
-                        IsDefault = true,
-                        IsConfirmed = true,
-                    },
-                },
                 Gender = PersonGender.Male
-            }, true);
+            },
+            new[]
+            {
+                new CreateEmailAddress("Brandon@terradotta.com", 0)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                }
+            },
+            true);
 
             /* USF People */
             {
@@ -242,16 +235,16 @@ namespace UCosmic.SeedData
                     FirstName = "Margaret",
                     LastName = "Kusenbach",
                     Gender = PersonGender.Female,
-                    EmailAddresses = new[]
-                        {
-                            new CreatePerson.EmailAddress
-                            {
-                                Value = "mkusenba@usf.edu",
-                                IsDefault = true,
-                                IsConfirmed = true,
-                            },
-                        },
-                }, true);
+                },
+                new[]
+                {
+                    new CreateEmailAddress("mkusenba@usf.edu", 0)
+                    {
+                        IsDefault = true,
+                        IsConfirmed = true,
+                    }
+                },
+                true);
                 var fileName = "mkusenba-photo.jpg";
                 var principal = new GenericPrincipal(new GenericIdentity(person.User.Name), null);
                 using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
@@ -273,16 +266,16 @@ namespace UCosmic.SeedData
                     FirstName = "William",
                     LastName = "Hogarth",
                     Gender = PersonGender.Male,
-                    EmailAddresses = new[]
+                },
+                new[]
+                {
+                    new CreateEmailAddress("billhogarth@usfsp.edu", 0)
                     {
-                        new CreatePerson.EmailAddress
-                        {
-                            Value = "billhogarth@usfsp.edu",
-                            IsDefault = true,
-                            IsConfirmed = true,
-                        },
-                    },
-                }, true);
+                        IsDefault = true,
+                        IsConfirmed = true,
+                    }, 
+                },
+                true);
                 fileName = "billhogarth-photo.jpg";
                 principal = new GenericPrincipal(new GenericIdentity(person.User.Name), null);
                 using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
@@ -306,31 +299,50 @@ namespace UCosmic.SeedData
     public abstract class BasePersonEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IQueryEntities _entities;
         private readonly IHandleCommands<CreatePerson> _createPerson;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmail;
         private readonly IHandleCommands<CreateUser> _createUser;
 
         protected BasePersonEntitySeeder(IProcessQueries queryProcessor
+            , IQueryEntities entities
             , IHandleCommands<CreatePerson> createPerson
+            , IHandleCommands<CreateEmailAddress> createEmail
             , IHandleCommands<CreateUser> createUser
         )
         {
             _queryProcessor = queryProcessor;
+            _entities = entities;
             _createPerson = createPerson;
+            _createEmail = createEmail;
             _createUser = createUser;
         }
 
         public abstract void Seed();
 
-        protected Person Seed(CreatePerson command, bool? isRegisteredUser = null)
+        protected Person Seed(CreatePerson createPersonCommand, CreateEmailAddress[] createEmailCommands, bool? isRegisteredUser = null)
         {
             // make sure entity does not already exist
-            var person = _queryProcessor.Execute(new PersonByEmail(command.EmailAddresses.First().Value));
+            //var person = _queryProcessor.Execute(new PersonByEmail(createPersonCommand.EmailAddresses.First().Value));
+            var person = createEmailCommands != null && createEmailCommands.Any()
+                ? _queryProcessor.Execute(new PersonByEmail(createEmailCommands.First().Value))
+                : _entities.Query<Person>().FirstOrDefault(x => x.DisplayName == createPersonCommand.DisplayName 
+                    || (x.FirstName == createPersonCommand.FirstName && x.LastName == createPersonCommand.LastName));
             if (person != null) return person;
 
-            _createPerson.Handle(command);
-            person = _queryProcessor.Execute(new PersonById(command.CreatedPersonId));
+            _createPerson.Handle(createPersonCommand);
+            person = _queryProcessor.Execute(new PersonById(createPersonCommand.CreatedPersonId));
 
-            if (isRegisteredUser.HasValue)
+            if (createEmailCommands != null)
+                foreach (var createEmailCommand in createEmailCommands.Select(x =>
+                    new CreateEmailAddress(x.Value, person.RevisionId)
+                    {
+                        IsDefault = x.IsDefault,
+                        IsConfirmed = x.IsConfirmed,
+                    }))
+                    _createEmail.Handle(createEmailCommand);
+
+            if (isRegisteredUser.HasValue && createEmailCommands != null && createEmailCommands.Any())
             {
                 var principal = new GenericPrincipal(new GenericIdentity("ludwigd@uc.edu"), new[] { RoleName.AuthenticationAgent });
 

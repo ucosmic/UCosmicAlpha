@@ -102,6 +102,9 @@ namespace UCosmic.Domain.Agreements
                 );
                 When(x => !string.IsNullOrWhiteSpace(x.EmailAddress), () =>
                     RuleFor(x => x.EmailAddress)
+                        .EmailAddress()
+                            .WithMessage(MustBeValidEmailAddressFormat.FailMessageFormat,
+                                x => x.EmailAddress)
                         .Length(1, EmailAddressConstraints.ValueMaxLength)
                             .WithMessage(MustNotExceedStringLength.FailMessageFormat,
                                 x => "Email address", x => EmailAddressConstraints.ValueMaxLength, x => x.EmailAddress.Length)
@@ -122,15 +125,18 @@ namespace UCosmic.Domain.Agreements
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreatePerson> _createPerson;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateContactCommand(ICommandEntities entities
             , IHandleCommands<CreatePerson> createPerson
+            , IHandleCommands<CreateEmailAddress> createEmailAddress
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _createPerson = createPerson;
+            _createEmailAddress = createEmailAddress;
             _unitOfWork = unitOfWork;
         }
 
@@ -139,13 +145,11 @@ namespace UCosmic.Domain.Agreements
             if (command == null) throw new ArgumentNullException("command");
 
             // are we attaching to existing person, or creating a new one?
-            Person person;
-            if (command.PersonId.HasValue)
+            var person = command.PersonId.HasValue
+                ? _entities.Get<Person>().Single(x => x.RevisionId == command.PersonId.Value) : null;
+            if (person == null)
             {
-                person = _entities.Get<Person>().Single(x => x.RevisionId == command.PersonId.Value);
-            }
-            else
-            {
+                // create person entity
                 var createPersonCommand = new CreatePerson
                 {
                     Salutation = command.Salutation,
@@ -155,19 +159,18 @@ namespace UCosmic.Domain.Agreements
                     Suffix = command.Suffix,
                     NoCommit = true,
                 };
-                if (!string.IsNullOrWhiteSpace(command.EmailAddress))
-                {
-                    createPersonCommand.EmailAddresses = new[]
-                    {
-                        new CreatePerson.EmailAddress
-                        {
-                            IsDefault = true,
-                            Value = command.EmailAddress,
-                        },
-                    };
-                }
                 _createPerson.Handle(createPersonCommand);
                 person = createPersonCommand.CreatedPerson;
+
+                // attach email address if provided
+                if (!string.IsNullOrWhiteSpace(command.EmailAddress))
+                {
+                    _createEmailAddress.Handle(new CreateEmailAddress(command.EmailAddress, person)
+                    {
+                        IsDefault = true,
+                        NoCommit = true,
+                    });
+                }
             }
 
             var entity = new AgreementContact

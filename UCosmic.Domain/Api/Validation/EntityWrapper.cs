@@ -1,4 +1,5 @@
 ﻿using UCosmic.Domain;
+
 namespace UCosmic
 {
     public class EntityWrapper<T> where T : Entity

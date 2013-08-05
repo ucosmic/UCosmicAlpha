@@ -15,12 +15,14 @@ namespace UCosmic.SeedData
         private readonly IUnitOfWork _unitOfWork;
 
         public UserEntitySeeder(IProcessQueries queryProcessor
+            , IQueryEntities entities
             , IHandleCommands<CreatePerson> createPerson
+            , IHandleCommands<CreateEmailAddress> createEmail
             , IHandleCommands<CreateUser> createUser
             , IHandleCommands<GrantRoleToUser> grantRole
             , IUnitOfWork unitOfWork
         )
-            : base(queryProcessor, createPerson, createUser)
+            : base(queryProcessor, entities, createPerson, createEmail, createUser)
         {
             _queryProcessor = queryProcessor;
             _grantRole = grantRole;
@@ -123,16 +125,22 @@ namespace UCosmic.SeedData
             {
                 FirstName = firstName,
                 LastName = lastName,
-                EmailAddresses = emails.Select(x =>
-                    new CreatePerson.EmailAddress
-                    {
-                        Value = x,
-                        IsConfirmed = (!x.Equals("Daniel.Ludwig@ucmail.uc.edu")),
-                        IsDefault = x == emails.First(),
-                    })
-                    .ToArray(),
+                //EmailAddresses = emails.Select(x =>
+                //    new CreatePerson.EmailAddress
+                //    {
+                //        Value = x,
+                //        IsConfirmed = (!x.Equals("Daniel.Ludwig@ucmail.uc.edu")),
+                //        IsDefault = x == emails.First(),
+                //    })
+                //    .ToArray(),
                 Gender = gender,
-            }, true);
+            },
+            emails.Select(x => new CreateEmailAddress(x, 0)
+            {
+                IsConfirmed = !x.Equals("Daniel.Ludwig@ucmail.uc.edu"),
+                IsDefault = x.Equals(emails.First(), StringComparison.OrdinalIgnoreCase)
+            }).ToArray(),
+            true);
 
             var principal = new GenericPrincipal(new GenericIdentity("ludwigd@uc.edu"), new[] { RoleName.AuthorizationAgent, });
             if (roles != null && roles.Any())

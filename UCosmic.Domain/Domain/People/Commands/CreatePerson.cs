@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -15,19 +14,10 @@ namespace UCosmic.Domain.People
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Suffix { get; set; }
-        public EmailAddress[] EmailAddresses { get; set; }
         public string Gender { get; set; }
 
-        internal Person CreatedPerson { get; set; }
         public int CreatedPersonId { get; internal set; }
-
-        public class EmailAddress
-        {
-            public string Value { get; set; }
-            public bool IsConfirmed { get; set; }
-            public bool IsDefault { get; set; }
-        }
-
+        internal Person CreatedPerson { get; set; }
         internal bool NoCommit { get; set; }
     }
 
@@ -89,20 +79,6 @@ namespace UCosmic.Domain.People
                     LastName = command.LastName,
                     Suffix = command.Suffix,
                 });
-            }
-
-            // attach email addresses
-            if (command.EmailAddresses != null && command.EmailAddresses.Any())
-            {
-                foreach (var emailAddress in command.EmailAddresses
-                    .OrderByDescending(e => e.IsDefault)
-                    .ThenByDescending(e => e.IsConfirmed)
-                    .ThenBy(e => e.Value)
-                )
-                {
-                    var emailEntity = entity.AddEmail(emailAddress.Value);
-                    emailEntity.IsConfirmed = emailAddress.IsConfirmed;
-                }
             }
 
             // log audit

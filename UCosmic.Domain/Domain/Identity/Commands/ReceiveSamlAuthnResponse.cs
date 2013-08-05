@@ -16,17 +16,20 @@ namespace UCosmic.Domain.Identity
         private readonly ICommandEntities _entities;
         private readonly ISignUsers _userSigner;
         private readonly IStorePasswords _passwords;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
         private readonly IUnitOfWork _unitOfWork;
 
         public ReceiveSamlAuthnResponseHandler(ICommandEntities entities
             , ISignUsers userSigner
             , IStorePasswords passwords
+            , IHandleCommands<CreateEmailAddress> createEmailAddress
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _userSigner = userSigner;
             _passwords = passwords;
+            _createEmailAddress = createEmailAddress;
             _unitOfWork = unitOfWork;
         }
 
@@ -106,23 +109,35 @@ namespace UCosmic.Domain.Identity
                 if (!newSamlMails.Contains(oldSamlMail.Value))
                     user.Person.Emails.Remove(oldSamlMail);
             foreach (var newSamlMail in newSamlMails)
-                if (user.Person.GetEmail(newSamlMail) == null)
-                    user.Person.AddEmail(newSamlMail);
-            foreach (var emailAddress in user.Person.Emails)
-                if (newSamlMails.Contains(emailAddress.Value))
-                {
-                    emailAddress.IsFromSaml = true;
-                    emailAddress.IsConfirmed = true;
-                }
+                if (user.Person.Emails.ByValue(newSamlMail) == null)
+                    _createEmailAddress.Handle(new CreateEmailAddress(newSamlMail, user.Person)
+                    {
+                        IsFromSaml = true,
+                        IsConfirmed = true,
+                        NoCommit = true,
+                    });
+            //        user.Person.AddEmail(newSamlMail);
+            //foreach (var emailAddress in user.Person.Emails)
+            //    if (newSamlMails.Contains(emailAddress.Value))
+            //    {
+            //        emailAddress.IsFromSaml = true;
+            //        emailAddress.IsConfirmed = true;
+            //    }
 
             // make sure person has at least 1 confirmed email address
             var defaultEmail = user.Person.DefaultEmail;
             if (defaultEmail == null || !defaultEmail.IsConfirmed)
             {
                 if (defaultEmail != null) defaultEmail.IsDefault = false;
-                defaultEmail = user.Person.AddEmail(samlResponse.EduPersonPrincipalName);
-                defaultEmail.IsDefault = true;
-                defaultEmail.IsConfirmed = true;
+                _createEmailAddress.Handle(new CreateEmailAddress(samlResponse.EduPersonPrincipalName, user.Person)
+                {
+                    IsDefault = true,
+                    IsConfirmed = true,
+                    NoCommit = true,
+                });
+                //defaultEmail = user.Person.AddEmail(samlResponse.EduPersonPrincipalName);
+                //defaultEmail.IsDefault = true;
+                //defaultEmail.IsConfirmed = true;
             }
 
             // update db

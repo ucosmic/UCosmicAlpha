@@ -74,6 +74,7 @@ namespace UCosmic.Domain.People
         {
             if (command == null) throw new ArgumentNullException("command");
 
+            // load person
             var person = command.Person ?? _entities.Get<Person>()
                 .EagerLoad(_entities, new Expression<Func<Person, object>>[]
                 {
@@ -81,14 +82,19 @@ namespace UCosmic.Domain.People
                 })
                 .Single(x => x.RevisionId == command.PersonId);
 
-            if (command.IsDefault)
+            // override IsDefault when person has no default email
+            var isDefault = command.IsDefault || !person.Emails.Any(x => x.IsDefault);
+
+            // clear previous default email
+            if (isDefault)
                 foreach (var email in person.Emails)
                     email.IsDefault = false;
 
+            // create email address entity
             var entity = new EmailAddress
             {
                 IsConfirmed = command.IsConfirmed,
-                IsDefault = command.IsDefault,
+                IsDefault = isDefault,
                 Value = command.Value,
                 Number = person.Emails.NextNumber(),
                 Person = person,
@@ -106,7 +112,7 @@ namespace UCosmic.Domain.People
                     command.PersonId,
                     command.Value,
                     command.IsConfirmed,
-                    command.IsDefault,
+                    IsDefault = isDefault,
                     command.IsFromSaml,
                 }),
                 NewState = entity.ToJsonAudit(),

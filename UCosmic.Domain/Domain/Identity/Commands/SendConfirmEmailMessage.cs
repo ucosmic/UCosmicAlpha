@@ -89,7 +89,7 @@ namespace UCosmic.Domain.Identity
                             x => _person.Entity.User.Name)
 
                     // the email address must be confirmed
-                    .Must(x => _person.Entity.GetEmail(x).IsConfirmed)
+                    .Must(x => _person.Entity.Emails.ByValue(x).IsConfirmed)
                         .WithMessage(MustBeConfirmedEmailAddress.FailMessageFormat,
                             x => x.EmailAddress)
             );
@@ -125,7 +125,7 @@ namespace UCosmic.Domain.Identity
                 .ByEmail(command.EmailAddress);
 
             // get the email
-            var email = person.GetEmail(command.EmailAddress);
+            var email = person.Emails.ByValue(command.EmailAddress);
 
             // create the confirmation
             var secretCode = HandleGenerateRandomSecretQuery.Handle(
