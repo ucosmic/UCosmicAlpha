@@ -82,6 +82,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.$contactFirstName = $("#contactFirstName");
             this.$contactSalutation = $("#contactSalutation");
             this.$contactSuffix = $("#contactSuffix");
+            this.$uAgreements = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable(0);
             this.nickname = ko.observable();
@@ -298,7 +299,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.populateUmbrella = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId)).done(function (response) {
-                ko.mapping.fromJS(response, _this.uAgreements);
+                _this.uAgreements(response);
+                $("#uAgreements").kendoDropDownList({
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    optionLabel: "[None - this is a top-level or standalone agreement]",
+                    dataSource: new kendo.data.DataSource({
+                        data: _this.uAgreements()
+                    })
+                });
             });
         };
         InstitutionalAgreementEditModel.prototype.$bindKendoFile = function () {

@@ -205,6 +205,7 @@ export class InstitutionalAgreementEditModel {
     validateBasicInfo;
     validateEffectiveDatesCurrentStatus;
 
+    $uAgreements: KnockoutObservableJQuery = ko.observable();
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable(0);
     nickname = ko.observable();
@@ -338,7 +339,23 @@ export class InstitutionalAgreementEditModel {
     populateUmbrella(): void {
         $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
             .done((response: any): void => {
-                ko.mapping.fromJS(response, this.uAgreements)
+                //ko.mapping.fromJS(response, this.uAgreements)
+                this.uAgreements(response);
+                //this.uAgreements.unshift({ 'text': '[None - this is a top-level or standalone agreement]', 'value': '-1' });
+                //this.uAgreements.push(new this.selectConstructor("", ""));
+                //for (var i = 0; i < response.length; i++) {
+                //    this.uAgreements.push(new this.selectConstructor(response[i].text, response[i].value));
+                //};
+                $("#uAgreements").kendoDropDownList({
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    optionLabel: "[None - this is a top-level or standalone agreement]",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.uAgreements()
+                    })
+                });
+                //var dropdownlist = $("#uAgreements").data("kendoComboBox");
+                //dropdownlist.select(0);
             });
     }
 

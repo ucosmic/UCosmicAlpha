@@ -410,6 +410,24 @@ section {
   background-color: white !important;
   color: black !important; }
 
+::-webkit-input-placeholder {
+  color: grey; }
+
+::-moz-placeholder {
+  color: grey; }
+
+/* FF 19+ */
+:-moz-placeholder {
+  color: grey; }
+
+/* FF 18- */
+:-ms-input-placeholder {
+  color: grey; }
+
+.placeholder {
+  color: grey; }
+
+/* for the polyfill */
 .field-table {
   margin: 16px 0; }
   .field-table .field-row {
@@ -451,7 +469,10 @@ section {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      float: left; }
+      float: left;
+      width: 100%; }
+      .field-table .field-row .field-input-label-top .k-dropdown .k-dropdown-wrap .k-input {
+        color: grey; }
       .field-table .field-row .field-input-label-top select {
         width: 690px;
         margin-left: 0; }

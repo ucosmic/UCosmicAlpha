@@ -10,10 +10,8 @@
                     <label>Umbrella agreement</label><i>(optional, public visibility)</i>
                 </div>
                 <div class="field-input-label-top">
-                    <select  data-bind="options: uAgreements(), 
-						optionsValue: 'value',
-						optionsText: 'text', value: uAgreementSelected">
-                    </select>
+                    <input id="uAgreements" type="text" placeholder="[None - this is a top-level or standalone agreement]" 
+                           data-bind="value: uAgreementSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$uAgreements'" />
                 </div>
                 <div class="field-label-description">Indicate whether this agreement falls under an umbrella or parent agreement..</div>
             </div>

@@ -415,6 +415,13 @@ section {
     color: black!important;
 }
 
+::-webkit-input-placeholder { color: grey; }
+::-moz-placeholder { color:grey; } /* FF 19+ */
+:-moz-placeholder { color:grey; } /* FF 18- */
+:-ms-input-placeholder { color:grey; }
+.placeholder { color:grey; } /* for the polyfill */
+
+
 .field-table {
     margin: 16px 0;
     .field-row {
@@ -452,6 +459,10 @@ section {
         .field-input-label-top {
             @include border-box;
             float: left;
+            width: 100%;
+            .k-dropdown .k-dropdown-wrap .k-input{
+                color: grey;
+            }
             select {
                 width: 690px;
                 margin-left: 0;
