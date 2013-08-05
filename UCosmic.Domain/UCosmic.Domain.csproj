@@ -154,6 +154,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByCountry.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
+    <Compile Include="Domain\Agreements\Commands\PurgeContact.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateContact.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateContact.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeFile.cs" />

@@ -19,15 +19,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateContact> _createHandler;
         private readonly IHandleCommands<UpdateContact> _updateHandler;
+        private readonly IHandleCommands<PurgeContact> _purgeHandler;
 
         public AgreementContactsController(IProcessQueries queryProcessor
             , IHandleCommands<CreateContact> createHandler
             , IHandleCommands<UpdateContact> updateHandler
+            , IHandleCommands<PurgeContact> purgeHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
             _updateHandler = updateHandler;
+            _purgeHandler = purgeHandler;
         }
 
         [GET("{agreementId:int}/contacts")]
@@ -200,7 +203,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{agreementId:int}/contacts/{contactId:int}")]
         public HttpResponseMessage Delete(int agreementId, int contactId)
         {
-
+            var command = new PurgeContact(User, agreementId, contactId);
+            _purgeHandler.Handle(command);
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement contact was successfully deleted.");
             return response;
         }
