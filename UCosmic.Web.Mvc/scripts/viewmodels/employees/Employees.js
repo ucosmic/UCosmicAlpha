@@ -264,45 +264,22 @@ var ViewModels;
                     draggable: true,
                     scrollwheel: false
                 });
-                var countryData = new Array();
-                countryData.push([
-                    'Country', 
-                    'Activities'
-                ]);
-                $.ajax({
-                    type: "GET",
-                    async: false,
-                    url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                    success: function (data, textStatus, jqXHR) {
-                        for(var i = 0; i < data.length; i += 1) {
-                            countryData.push([
-                                data[i].officialName, 
-                                data[i].count
-                            ]);
+                var dataTable = new this.google.visualization.DataTable();
+                var colNames = new Array();
+                dataTable.addColumn('string', 'Country');
+                dataTable.addColumn('number', 'Total Activities');
+                if(this.summary != null) {
+                    if(((this.summary).countryCounts() != null) && ((this.summary).countryCounts().length > 0)) {
+                        var countryCounts = (this.summary).countryCounts;
+                        for(var i = 0; i < countryCounts().length; i += 1) {
+                            var rowData = new Array();
+                            rowData.push(countryCounts()[i].officialName());
+                            rowData.push(countryCounts()[i].count());
+                            dataTable.addRow(rowData);
                         }
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                    },
-                    dataType: 'json'
-                });
-                $.ajax({
-                    type: "POST",
-                    async: false,
-                    url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                    data: ko.toJSON(this.selectedActivityIds()),
-                    success: function (data, textStatus, jqXHR) {
-                        for(var i = 0; i < data.length; i += 1) {
-                            countryData.push([
-                                data[i].officialName, 
-                                data[i].count
-                            ]);
-                        }
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                    },
-                    dataType: 'json'
-                });
-                this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
+                    }
+                }
+                this.heatmapData = dataTable;
                 this.heatmapOptions = {
                     width: 680,
                     height: 500,
@@ -347,9 +324,7 @@ var ViewModels;
                     for(var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
                     }
-                    debugger;
-
-                    ko.mapping.fromJS(_this.summary, types);
+                    _this.summary = ko.mapping.fromJS(summary);
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);

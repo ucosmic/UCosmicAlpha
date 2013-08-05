@@ -353,7 +353,7 @@
     <Compile Include="Models\Agreements\AgreementContactApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementFileApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementUmbrellaOptionApiProfiler.cs" />
-    <Compile Include="Models\Employees\FacultyStaffFilterModel.cs" />
+    <Compile Include="Models\Employees\FacultyStaffFilterApiModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
     <Compile Include="Models\Graphics\CircleGraphicRequestModel.cs" />

@@ -32,9 +32,9 @@ namespace UCosmic.Domain.Activities
 
             string publicMode = ActivityMode.Public.AsSentenceFragment();
             return _entities.Query<Activity>().Count(
-                a =>
-                a.Values.Any(v => (v.ModeText == publicMode) &&
-                                  (v.Locations.Any(vl => vl.RevisionId == query.CountryId)) &&
+                a => (a.ModeText == publicMode) &&
+                     (a.EditSourceId == null) &&
+                a.Values.Any(v => (v.Locations.Any(vl => vl.PlaceId == query.CountryId)) &&
                                   (v.Types.Any(vt => vt.TypeId == query.TypeId))) &&
                 a.Person.Affiliations.Any(f => f.EstablishmentId == query.EstablishmentId));
         }

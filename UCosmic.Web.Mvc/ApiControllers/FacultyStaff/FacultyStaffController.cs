@@ -65,7 +65,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     }
 
                     var typeCounts = new Collection<FacultyStaffActivityCountModel>();
-                    if (settings.ActivityTypes.Any())
+                    if ((settings != null) && (settings.ActivityTypes.Any()))
                     {
                         foreach (var type in settings.ActivityTypes)
                         {

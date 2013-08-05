@@ -29,10 +29,11 @@ namespace UCosmic.Domain.Activities
             if (query == null) throw new ArgumentNullException("query");
 
             string publicMode = ActivityMode.Public.AsSentenceFragment();
-            return _entities.Query<Activity>().Count(
-                a => a.Values.Any(v => (v.ModeText == publicMode) &&
-                                       (v.Locations.Any(vl => vl.RevisionId == query.CountryId))) &&
-                     a.Person.Affiliations.Any(f => f.EstablishmentId == query.EstablishmentId));
+
+            return _entities.Query<Activity>().Count( a => (a.ModeText == publicMode) &&
+                                                           (a.EditSourceId == null) &&
+                    a.Values.Any(v => (v.Locations.Any(vl => vl.PlaceId == query.CountryId))) &&
+                    a.Person.Affiliations.Any(f => f.EstablishmentId == query.EstablishmentId));
         }
     }
 }

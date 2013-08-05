@@ -444,41 +444,76 @@ module ViewModels.Employees {
 
             /* ----- Setup Heatmap (chart) ----- */
 
-            var countryData = new Array();
-            countryData.push(['Country', 'Activities']);
+            //var countryData = new Array();
+            var dataTable = new this.google.visualization.DataTable();
 
-            $.ajax({
-                type: "GET",
-                async: false,
-                url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                success: function (data, textStatus, jqXHR) {
-                    for (var i = 0; i < data.length; i += 1) {
-                        countryData.push([data[i].officialName, data[i].count]);
+            var colNames = new Array();
+
+            dataTable.addColumn('string', 'Country');
+            dataTable.addColumn('number', 'Total Activities');
+
+            if (this.summary != null) {
+
+                //if (((<any>this.summary).countryCounts() != null) &&
+                //    ((<any>this.summary).countryCounts().length > 0)) {
+                //    var countryCounts: KnockoutObservableAny = (<any>this.summary).countryCounts;
+                //    if ((countryCounts()[0].typeCounts() != null) &&
+                //         (countryCounts()[0].typeCounts().length > 0)) {
+                //        //--for (var i = 0; i < countryCounts()[0].typeCounts().length; i += 1) {
+                //            //--colNames.push(countryCounts()[0].typeCounts()[i].type());
+                //            //--dataTable.addColumn('number', countryCounts()[0].typeCounts()[i].type());
+                //        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+                //        //--}
+                //    }
+                //}
+                //countryData.push(colNames);
+
+                if (((<any>this.summary).countryCounts() != null) &&
+                    ((<any>this.summary).countryCounts().length > 0)) {
+                    var countryCounts: KnockoutObservableAny = (<any>this.summary).countryCounts;
+          
+                    for (var i = 0; i < countryCounts().length; i += 1) {
+
+                        var rowData = new Array();
+
+                        rowData.push(countryCounts()[i].officialName());
+                        rowData.push(countryCounts()[i].count());
+
+                        //if ((countryCounts()[0].typeCounts() != null) &&
+                        //     (countryCounts()[0].typeCounts().length > 0)) {
+                        //    var tooltipText = "";
+                        //    for (var j = 0; j < countryCounts()[i].typeCounts().length; j += 1) {
+                        //        tooltipText += countryCounts()[i].typeCounts()[j].type() + ": " +
+                        //                      countryCounts()[i].typeCounts()[j].count();
+                        //        //--rowData.push(Number(countryCounts()[i].typeCounts()[j].count()));
+                        //        //--rowData.push(tooltipText);
+                        //    }
+                        //    rowData.push(tooltipText);
+                        //}
+
+                        //--countryData.push(rowData);
+                        dataTable.addRow(rowData)
                     }
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    //debugger;
-                },
-                dataType: 'json'
-            });
+                }
+            }
 
-            $.ajax({
-                type: "POST",
-                async: false,
-                url: App.Routes.WebApi.Activities.CountryCounts.post(),
-                data: ko.toJSON(this.selectedActivityIds()),
-                success: function (data, textStatus, jqXHR) {
-                    for (var i = 0; i < data.length; i += 1) {
-                        countryData.push([data[i].officialName, data[i].count]);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    //debugger;
-                },
-                dataType: 'json'
-            });
+            //$.ajax({
+            //    type: "GET",
+            //    async: false,
+            //    url: App.Routes.WebApi.Activities.CountryCounts.post(),
+            //    success: function (data, textStatus, jqXHR) {
+            //        for (var i = 0; i < data.length; i += 1) {
+            //            countryData.push([data[i].officialName, data[i].count]);
+            //        }
+            //    },
+            //    error: function (jqXhr, textStatus, errorThrown) {
+            //        //debugger;
+            //    },
+            //    dataType: 'json'
+            //});
 
-            this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
+            //this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
+            this.heatmapData = dataTable;
 
             this.heatmapOptions = {
                 //is3D: true,
@@ -489,6 +524,7 @@ module ViewModels.Employees {
                 backgroundColor: 'lightBlue',
                 keepAspectRatio: false,
                 colorAxis: { colors: ['#FFFFFF', 'green'] }
+                //tooltip:{trigger: 'none'}
                 //displayMode: 'markers'
             };
 
@@ -575,10 +611,7 @@ module ViewModels.Employees {
                                 //    this.selectedLocationValues.push(this.locations()[i].placeId());
                                 //}
 
-                                debugger;
-
-                                ko.mapping.fromJS(this.summary, types)
-
+                                this.summary = ko.mapping.fromJS(summary);
                                 deferred.resolve();
                             })
                             .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
