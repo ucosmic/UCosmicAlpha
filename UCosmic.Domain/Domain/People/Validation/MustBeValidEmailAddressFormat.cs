@@ -2,6 +2,6 @@
 {
     public static class MustBeValidEmailAddressFormat
     {
-        public const string FailMessageFormat = "The entry '{0}' is not a valid email address.";
+        public const string FailMessageFormat = "The value '{0}' is not a valid email address.";
     }
 }

@@ -123,12 +123,12 @@ namespace UCosmic.SeedData
             {
                 FirstName = firstName,
                 LastName = lastName,
-                EmailAddresses = emails.Select(e =>
+                EmailAddresses = emails.Select(x =>
                     new CreatePerson.EmailAddress
                     {
-                        Value = e,
-                        IsConfirmed = (!e.Equals("Daniel.Ludwig@ucmail.uc.edu")),
-                        IsDefault = e == emails.First(),
+                        Value = x,
+                        IsConfirmed = (!x.Equals("Daniel.Ludwig@ucmail.uc.edu")),
+                        IsDefault = x == emails.First(),
                     })
                     .ToArray(),
                 Gender = gender,

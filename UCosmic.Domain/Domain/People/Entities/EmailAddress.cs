@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace UCosmic.Domain.People
 {
@@ -24,6 +25,23 @@ namespace UCosmic.Domain.People
         public override string ToString()
         {
             return Value ?? base.ToString();
+        }
+    }
+
+    internal static class EmailAddressSerializer
+    {
+        internal static string ToJsonAudit(this EmailAddress entity)
+        {
+            var state = JsonConvert.SerializeObject(new
+            {
+                entity.PersonId,
+                entity.Number,
+                entity.Value,
+                entity.IsDefault,
+                entity.IsConfirmed,
+                entity.IsFromSaml,
+            });
+            return state;
         }
     }
 }

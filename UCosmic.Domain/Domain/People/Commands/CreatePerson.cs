@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 
 namespace UCosmic.Domain.People
 {
@@ -65,7 +68,7 @@ namespace UCosmic.Domain.People
             if (command == null) throw new ArgumentNullException("command");
 
             // construct the person
-            var person = new Person
+            var entity = new Person
             {
                 DisplayName = command.DisplayName,
                 Salutation = command.Salutation,
@@ -76,9 +79,9 @@ namespace UCosmic.Domain.People
                 Gender = command.Gender,
             };
 
-            if (string.IsNullOrWhiteSpace(person.DisplayName))
+            if (string.IsNullOrWhiteSpace(entity.DisplayName))
             {
-                person.DisplayName = _queryProcessor.Execute(new GenerateDisplayName
+                entity.DisplayName = _queryProcessor.Execute(new GenerateDisplayName
                 {
                     Salutation = command.Salutation,
                     FirstName = command.FirstName,
@@ -97,20 +100,39 @@ namespace UCosmic.Domain.People
                     .ThenBy(e => e.Value)
                 )
                 {
-                    var emailEntity = person.AddEmail(emailAddress.Value);
+                    var emailEntity = entity.AddEmail(emailAddress.Value);
                     emailEntity.IsConfirmed = emailAddress.IsConfirmed;
                 }
             }
 
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = Thread.CurrentPrincipal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.DisplayName,
+                    command.Salutation,
+                    command.FirstName,
+                    command.MiddleName,
+                    command.LastName,
+                    command.Suffix,
+                    command.Gender,
+                }),
+                NewState = entity.ToJsonAudit(),
+            };
+            _entities.Create(audit);
+
             // store
-            _entities.Create(person);
+            _entities.Create(entity);
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
             }
 
-            command.CreatedPerson = person;
-            command.CreatedPersonId = person.RevisionId;
+            command.CreatedPerson = entity;
+            command.CreatedPersonId = entity.RevisionId;
         }
     }
 }

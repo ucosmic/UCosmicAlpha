@@ -360,6 +360,7 @@
     <Compile Include="Domain\LanguageExpertise\Queries\LanguageExpertiseByPersonId.cs" />
     <Compile Include="Domain\LanguageExpertise\Validation\MustFindLanguageExpertiseById.cs" />
     <Compile Include="Domain\LanguageExpertise\Validation\MustOwnLanguageExpertise.cs" />
+    <Compile Include="Domain\People\Commands\CreateEmailAddress.cs" />
     <Compile Include="Domain\People\Commands\DeleteMyAffiliation.cs" />
     <Compile Include="Domain\People\Commands\DeletePerson.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
