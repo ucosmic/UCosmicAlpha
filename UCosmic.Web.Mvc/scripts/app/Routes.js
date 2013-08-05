@@ -285,28 +285,16 @@ var App;
                 }
                 Agreements.post = post;
                 (function (Participants) {
-                    function get(agreementId) {
-                        var url = 'agreements/0/participants';
-                        if(agreementId) {
-                            url = url.replace('0', agreementId.toString());
+                    function get(agreementId, establishmentId) {
+                        var url = 'agreements/{0}/participants'.format(agreementId);
+                        if(establishmentId) {
+                            url += '/' + establishmentId;
                         }
                         return makeUrl(url);
                     }
                     Participants.get = get;
                 })(Agreements.Participants || (Agreements.Participants = {}));
                 var Participants = Agreements.Participants;
-                (function (Participant) {
-                    function get(establishmentId, agreementId) {
-                        var url = 'agreements/0/participant/';
-                        if(agreementId) {
-                            url = url.replace('0', agreementId.toString());
-                        }
-                        url += establishmentId;
-                        return makeUrl(url);
-                    }
-                    Participant.get = get;
-                })(Agreements.Participant || (Agreements.Participant = {}));
-                var Participant = Agreements.Participant;
                 (function (Contacts) {
                     function get(agreementId, contactId) {
                         var url = 'agreements/{0}/contacts'.format(agreementId);

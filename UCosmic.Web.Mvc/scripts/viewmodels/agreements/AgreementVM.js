@@ -1113,7 +1113,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                                     }
                                     if(alreadyExist !== true) {
                                         $.ajax({
-                                            url: App.Routes.WebApi.Agreements.Participant.get(myParticipant.establishmentId()),
+                                            url: App.Routes.WebApi.Agreements.Participants.get(0, myParticipant.establishmentId()),
                                             type: 'GET',
                                             async: false
                                         }).done(function (response) {

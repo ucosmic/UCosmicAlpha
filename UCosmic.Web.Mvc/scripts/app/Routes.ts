@@ -281,19 +281,9 @@ module App.Routes {
             }
 
             export module Participants {
-
-                export function get (agreementId?: number): string {
-                    var url = 'agreements/0/participants';
-                    if (agreementId) url = url.replace('0', agreementId.toString())
-                    return makeUrl(url);
-                }
-            }
-
-            export module Participant {
-                export function get (establishmentId: number, agreementId?: number): string {
-                    var url = 'agreements/0/participant/';
-                    if (agreementId) url = url.replace('0', agreementId.toString())
-                    url += establishmentId;
+                export function get (agreementId: number, establishmentId?: number): string {
+                    var url = 'agreements/{0}/participants'.format(agreementId);
+                    if (establishmentId) url += '/' + establishmentId;
                     return makeUrl(url);
                 }
             }

@@ -88,7 +88,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{agreementId:int}/participant/{establishmentId}")]
+        [GET("{agreementId:int}/participants/{establishmentId:int}")]
         public AgreementParticipantApiModel GetParticipant(int agreementId, int establishmentId)
         {
             var entity = _queryProcessor.Execute(new ParticipantByEstablishmentId(User, establishmentId, agreementId)
