@@ -88,7 +88,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.$contactSuffix = $("#contactSuffix");
             this.$uAgreements = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
-            this.uAgreementSelected = ko.observable(0);
+            this.uAgreementSelected = ko.observable("");
             this.nickname = ko.observable();
             this.content = ko.observable();
             this.startDate = ko.observable();
@@ -139,8 +139,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
             if(window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
+                this.dfdPopParticipants.resolve();
                 this.editOrNewUrl = "new/";
-                this.populateParticipants();
                 this.agreementIsEdit(false);
                 this.visibility("Public");
                 $("#LoadingPage").hide();
@@ -153,6 +153,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
                 this.agreementIsEdit(true);
                 this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
+                this.populateParticipants();
                 this.populateFiles();
                 this.populateContacts();
                 this.populateAgreementData();
@@ -1740,7 +1741,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function () {
                             $("#LoadingPage").fadeOut(500, function () {
-                                $("#allParticipants").fadeIn(500);
+                                if(xhr != undefined) {
+                                    window.location.hash = "";
+                                    window.location.pathname = "agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit";
+                                } else {
+                                    alert("success, but no location");
+                                }
                             });
                         }, 5000);
                     }).fail(function (xhr, statusText, errorThrown) {

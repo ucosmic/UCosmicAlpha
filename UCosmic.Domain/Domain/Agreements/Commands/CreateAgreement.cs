@@ -70,14 +70,15 @@ namespace UCosmic.Domain.Agreements
                         x => "Agreement type", x => AgreementConstraints.TypeMaxLength, x => x.Type.Length)
             ;
 
-            // name cannot exceed maximum length
+            // name cannot exceed maximum length when provided
+            When(x => !string.IsNullOrWhiteSpace(x.Name), () =>
             RuleFor(x => x.Name)
-                .NotEmpty()
-                    .WithMessage(MustHaveAgreementType.FailMessage)
-                .Length(1, AgreementConstraints.NameMaxLength)
-                    .WithMessage(MustNotExceedStringLength.FailMessageFormat,
-                        x => "Agreement name, if entered,", x => AgreementConstraints.TypeMaxLength, x => x.Type.Length)
-            ;
+            .Length(1, AgreementConstraints.NameMaxLength)
+            .WithMessage(MustNotExceedStringLength.FailMessageFormat,
+            x => "Agreement name, if entered,", x => AgreementConstraints.NameMaxLength, x => x.Name.Length)
+            );
+
+
 
             // start date is required
             RuleFor(x => x.StartsOn)
