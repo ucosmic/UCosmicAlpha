@@ -371,9 +371,13 @@
     <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
     <Compile Include="Domain\People\Queries\MyPeople.cs" />
     <Compile Include="Domain\People\Queries\PeopleByCriteria.cs" />
+    <Compile Include="Domain\People\Queries\PeopleCountByCountryIdEstablishmentId.cs" />
+    <Compile Include="Domain\People\Queries\PeopleCountByEstablishmentId.cs" />
+    <Compile Include="Domain\People\Queries\PeopleCountByTypeIdCountryIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Validation\MustFindEmailByPersonIdAndNumber.cs" />
     <Compile Include="Domain\People\Validation\MustHaveLastName.cs" />
     <Compile Include="Domain\People\Validation\MustHaveFirstName.cs" />
+    <Compile Include="Domain\People\Validation\MustOwnAffiliation.cs" />
     <Compile Include="Domain\People\Validation\PersonConstraints.cs" />
     <Compile Include="Domain\People\Validation\MustBeTenantPersonId.cs" />
     <Compile Include="Domain\People\Validation\MustNotBePersonAffiliatedWithDepartment.cs" />

@@ -9,7 +9,9 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
+/// <reference path="../Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
+
 
 
 
@@ -31,6 +33,7 @@ module ViewModels.Employees {
         ///dirtyFlag: KnockoutObservableBool = ko.observable(false);
 
         searchType: KnockoutObservableString;
+        selectedCountry: KnockoutObservableString;
 
         /* Element id of institution autocomplete */
         institutionSelectorId: string;
@@ -64,7 +67,18 @@ module ViewModels.Employees {
 
         heatmap: any;
         heatmapOptions: any;
-        heatmapData: any;
+        heatmapActivityData: any;
+        heatmapPeopleData: any;
+        isGlobalView: KnockoutObservableBool;
+
+        barchart: any;
+        barchartActivityOptions: any;
+        barchartPeopleOptions: any;
+        barchartWorldDataTable_cached: any;
+
+        linechart: any;
+        linechartOptions: any;
+        linechartData: any;
 
         pointmap: google.maps.Map;
         pointmapOptions: any;
@@ -74,13 +88,8 @@ module ViewModels.Employees {
         //resultsTableOptions: any;
         //resultsTableData: any;
 
-        //piechart: any;
-        //piechartOptions: any;
-        //piechartData: any;
-
-        selectedCountry: KnockoutObservableString;
-
         summary: KnockoutObservableAny;
+        loadSpinner: ViewModels.Spinner;
 
         // --------------------------------------------------------------------------------
         /*
@@ -102,7 +111,10 @@ module ViewModels.Employees {
             this.isPointmapVisible = ko.observable(false);
             this.isTableVisible = ko.observable(false);
             this.searchType = ko.observable('activities');
-            this.selectedCountry = ko.observable();
+            this.selectedCountry = ko.observable(null); // null for global view
+            this.isGlobalView = ko.observable(true);
+            this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+            this.barchartWorldDataTable_cached = null;
 
             this.selectSearchType('activities');
 
@@ -442,7 +454,7 @@ module ViewModels.Employees {
                 scrollwheel: false // prevent mouse wheel zooming
             });
 
-            /* ----- Setup Heatmap (chart) ----- */
+            /* ----- Setup Heatmap Activity (chart) ----- */
 
             //var countryData = new Array();
             var dataTable = new this.google.visualization.DataTable();
@@ -454,38 +466,38 @@ module ViewModels.Employees {
 
             if (this.summary != null) {
 
-                //if (((<any>this.summary).countryCounts() != null) &&
-                //    ((<any>this.summary).countryCounts().length > 0)) {
-                //    var countryCounts: KnockoutObservableAny = (<any>this.summary).countryCounts;
-                //    if ((countryCounts()[0].typeCounts() != null) &&
-                //         (countryCounts()[0].typeCounts().length > 0)) {
-                //        //--for (var i = 0; i < countryCounts()[0].typeCounts().length; i += 1) {
-                //            //--colNames.push(countryCounts()[0].typeCounts()[i].type());
-                //            //--dataTable.addColumn('number', countryCounts()[0].typeCounts()[i].type());
+                //if (((<any>this.summary).countryActivityCounts() != null) &&
+                //    ((<any>this.summary).countryActivityCounts().length > 0)) {
+                //    var countryActivityCounts: KnockoutObservableAny = (<any>this.summary).countryActivityCounts;
+                //    if ((countryActivityCounts()[0].typeCounts() != null) &&
+                //         (countryActivityCounts()[0].typeCounts().length > 0)) {
+                //        //--for (var i = 0; i < countryActivityCounts()[0].typeCounts().length; i += 1) {
+                //            //--colNames.push(countryActivityCounts()[0].typeCounts()[i].type());
+                //            //--dataTable.addColumn('number', countryActivityCounts()[0].typeCounts()[i].type());
                 //        dataTable.addColumn({ type: 'string', role: 'tooltip' });
                 //        //--}
                 //    }
                 //}
                 //countryData.push(colNames);
 
-                if (((<any>this.summary).countryCounts() != null) &&
-                    ((<any>this.summary).countryCounts().length > 0)) {
-                    var countryCounts: KnockoutObservableAny = (<any>this.summary).countryCounts;
+                if (((<any>this.summary).countryActivityCounts() != null) &&
+                    ((<any>this.summary).countryActivityCounts().length > 0)) {
+                    var countryActivityCounts: KnockoutObservableAny = (<any>this.summary).countryActivityCounts;
           
-                    for (var i = 0; i < countryCounts().length; i += 1) {
+                    for (var i = 0; i < countryActivityCounts().length; i += 1) {
 
                         var rowData = new Array();
 
-                        rowData.push(countryCounts()[i].officialName());
-                        rowData.push(countryCounts()[i].count());
+                        rowData.push(countryActivityCounts()[i].officialName());
+                        rowData.push(countryActivityCounts()[i].count());
 
-                        //if ((countryCounts()[0].typeCounts() != null) &&
-                        //     (countryCounts()[0].typeCounts().length > 0)) {
+                        //if ((countryActivityCounts()[0].typeCounts() != null) &&
+                        //     (countryActivityCounts()[0].typeCounts().length > 0)) {
                         //    var tooltipText = "";
-                        //    for (var j = 0; j < countryCounts()[i].typeCounts().length; j += 1) {
-                        //        tooltipText += countryCounts()[i].typeCounts()[j].type() + ": " +
-                        //                      countryCounts()[i].typeCounts()[j].count();
-                        //        //--rowData.push(Number(countryCounts()[i].typeCounts()[j].count()));
+                        //    for (var j = 0; j < countryActivityCounts()[i].typeCounts().length; j += 1) {
+                        //        tooltipText += countryActivityCounts()[i].typeCounts()[j].type() + ": " +
+                        //                      countryActivityCounts()[i].typeCounts()[j].count();
+                        //        //--rowData.push(Number(countryActivityCounts()[i].typeCounts()[j].count()));
                         //        //--rowData.push(tooltipText);
                         //    }
                         //    rowData.push(tooltipText);
@@ -500,7 +512,7 @@ module ViewModels.Employees {
             //$.ajax({
             //    type: "GET",
             //    async: false,
-            //    url: App.Routes.WebApi.Activities.CountryCounts.post(),
+            //    url: App.Routes.WebApi.Activities.countryActivityCounts.post(),
             //    success: function (data, textStatus, jqXHR) {
             //        for (var i = 0; i < data.length; i += 1) {
             //            countryData.push([data[i].officialName, data[i].count]);
@@ -513,7 +525,36 @@ module ViewModels.Employees {
             //});
 
             //this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
-            this.heatmapData = dataTable;
+            this.heatmapActivityData = dataTable;
+
+
+            /* ----- Setup Heatmap Activity (chart) ----- */
+            dataTable = new this.google.visualization.DataTable();
+
+            colNames = new Array();
+
+            dataTable.addColumn('string', 'Country');
+            dataTable.addColumn('number', 'Total People');
+
+            if (this.summary != null) {
+
+                if (((<any>this.summary).countryPeopleCounts() != null) &&
+                    ((<any>this.summary).countryPeopleCounts().length > 0)) {
+                    var countryPeopleCounts: KnockoutObservableAny = (<any>this.summary).countryPeopleCounts;
+
+                    for (var i = 0; i < countryPeopleCounts().length; i += 1) {
+
+                        var rowData = new Array();
+
+                        rowData.push(countryPeopleCounts()[i].officialName());
+                        rowData.push(countryPeopleCounts()[i].count());
+
+                        dataTable.addRow(rowData)
+                    }
+                }
+            }
+
+            this.heatmapPeopleData = dataTable;
 
             this.heatmapOptions = {
                 //is3D: true,
@@ -532,31 +573,95 @@ module ViewModels.Employees {
             this.google.visualization.events.addListener(this.heatmap, 'select', function () { me.heatmapSelectHandler(); });
 
 
-            /* ----- Setup Piechart ----- */
+            /* ----- Setup Barchart ----- */
 
-            //this.piechartData = this.google.visualization.DataTable();
-            //this.piechartData.addColumn('string', 'Engagement');
-            //this.piechartData.addColumn('number', 'Count');
-            //this.piechartData.addRows([[<any>'Research or Creative Endeavor', <any>11],
-            //    [<any>'Teaching or Mentoring', <any>2],
-            //    [<any>'Award or Honor', <any>2],
-            //    [<any>'Conference Presentation or Proceeding', <any>2],
-            //    [<any>'Professional Development, Service or Consulting ', <any>7]]);
+            this.barchartActivityOptions = {
+                title: 'Activities',
+                vAxis: { title: 'Count', titleTextStyle: { color: 'red' } }
+            };
 
+            this.barchartPeopleOptions = {
+                title: 'People',
+                vAxis: { title: 'Count', titleTextStyle: { color: 'red' } }
+            };
 
-            //this.piechartData = this.google.visualization.arrayToDataTable([
-            //    [<any>'Research or Creative Endeavor', <any>11],
-            //    [<any>'Teaching or Mentoring', <any>2],
-            //    [<any>'Award or Honor', <any>2],
-            //    [<any>'Conference Presentation or Proceeding', <any>2],
-            //    [<any>'Professional Development, Service or Consulting ', <any>7]]);
+            this.barchart = new this.google.visualization.BarChart($('#facultystaff-summary-barchart')[0]);
+        }
 
-            //this.piechartOptions = {
-            //    title: 'Engagements'
-            //};
+        // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------
+        getActivityDataTable(country: string): any {
+            debugger;
 
+            var dt = new this.google.visualization.DataTable();
 
-            //this.piechart = new this.google.visualization.PieChart($('#typeChart')[0]);
+            dt.addColumn('string', 'Activity');
+            dt.addColumn('number', 'Count');
+
+            if (country == null) { /* Add world counts */
+                for (var i = 0; i < (<any>this.summary).worldActivityCounts().length; i += 1) {
+                    var activityType = (<any>this.summary).worldActivityCounts()[i].type();
+                    var count = (<any>this.summary).worldActivityCounts()[i].count();
+                    dt.addRow([activityType, count]);
+                }
+            } else { /* Add country counts */
+                var i = 0;
+                while ( (i < (<any>this.summary).countryActivityCounts().length) &&
+                       ((<any>this.summary).countryActivityCounts()[i].officialName !== country)) {
+                    i += 1;
+                }
+
+                if (i < (<any>this.summary).countryActivityCounts().length) {
+                    var countryActivityCounts = (<any>this.summary).countryActivityCounts()[i];
+                    for (var j = 0; j < countryActivityCounts.typeCounts().length; j += 1) {
+                        var activityType = countryActivityCounts.typeCounts[j].type();
+                        var count = countryActivityCounts.typeCounts[j].count();
+                        dt.addRow([activityType, count]);
+                    }
+                }
+            }
+
+            return dt;
+        }
+
+        // --------------------------------------------------------------------------------
+        /* 
+        */
+        // --------------------------------------------------------------------------------
+        getPeopleDataTable(country: string): any {
+            debugger;
+
+            var dt = new this.google.visualization.DataTable();
+
+            dt.addColumn('string', 'People');
+            dt.addColumn('number', 'Count');
+
+            if (country == null) { /* Add world counts */
+                for (var i = 0; i < (<any>this.summary).worldPeopleCounts().length; i += 1) {
+                    var activityType = (<any>this.summary).worldPeopleCounts()[i].type();
+                    var count = (<any>this.summary).worldPeopleCounts()[i].count();
+                    dt.addRow([activityType, count]);
+                }
+            } else { /* Add country counts */
+                var i = 0;
+                while ((i < (<any>this.summary).countryPeopleCounts().length) &&
+                       ((<any>this.summary).countryPeopleCounts()[i].officialName !== country)) {
+                    i += 1;
+                }
+
+                if (i < (<any>this.summary).countryPeopleCounts().length) {
+                    var countryPeopleCounts = (<any>this.summary).countryPeopleCounts()[i];
+                    for (var j = 0; j < countryPeopleCounts.typeCounts().length; j += 1) {
+                        var activityType = countryPeopleCounts.typeCounts[j].type();
+                        var count = countryPeopleCounts.typeCounts[j].count();
+                        dt.addRow([activityType, count]);
+                    }
+                }
+            }
+
+            return dt;
         }
 
         // --------------------------------------------------------------------------------
@@ -566,6 +671,8 @@ module ViewModels.Employees {
         load(): JQueryPromise {
             var me = this;
             var deferred: JQueryDeferred = $.Deferred();
+
+            this.loadSpinner.start();
 
             var typesPact = $.Deferred();
             $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
@@ -673,9 +780,21 @@ module ViewModels.Employees {
 
             if (type === "heatmap") {
                 $('#heatmapText').css("font-weight", "bold");
+
                 this.isHeatmapVisible(true);
-                this.heatmap.draw(this.heatmapData, this.heatmapOptions);
-                //this.piechart.draw(this.piechartData, this.piechartOptions);
+
+                if (this.searchType() === 'activities') {
+                    this.heatmap.draw(this.heatmapActivityData, this.heatmapOptions);
+
+                    var dataTable = this.getActivityDataTable(this.selectedCountry());
+                    this.barchart.draw(dataTable, this.barchartActivityOptions);
+                } else {
+                    this.heatmap.draw(this.heatmapPeopleData, this.heatmapOptions);
+
+                    var dataTable = this.getPeopleDataTable(this.selectedCountry());
+                    this.barchart.draw(dataTable, this.barchartPeopleOptions);
+                }
+
                 $("#bib-faculty-staff-summary").addClass("current");
             } else if (type === "pointmap") {
                 $('#pointmapText').css("font-weight", "bold");
@@ -700,6 +819,10 @@ module ViewModels.Employees {
             }
             else {
                 this.setPeopleSearch();
+            }
+
+            if (this.heatmap != null) {
+                this.selectMap("heatmap");
             }
         }
 
@@ -812,10 +935,23 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        heatmapSelectHandler() {
+        heatmapSelectHandler():void {
             var selection = this.heatmap.getSelection();
-            var str = this.heatmapData.getFormattedValue(selection[0].row, 0);
+            if (this.searchType() === 'activities') {
+                var str = this.heatmapActivityData.getFormattedValue(selection[0].row, 0);
+            } else {
+                var str = this.heatmapPeopleData.getFormattedValue(selection[0].row, 0);
+            }
             this.selectedCountry(str);
+        }
+
+        // --------------------------------------------------------------------------------
+        /*
+        */
+        // --------------------------------------------------------------------------------
+        globalViewClickHandler(item: any, event: any): void {
+            this.selectedCountry(null);
+            this.selectMap('heatmap');
         }
 
     }

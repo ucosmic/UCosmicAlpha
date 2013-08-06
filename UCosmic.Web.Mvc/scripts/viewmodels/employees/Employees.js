@@ -22,7 +22,10 @@ var ViewModels;
                 this.isPointmapVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
                 this.searchType = ko.observable('activities');
-                this.selectedCountry = ko.observable();
+                this.selectedCountry = ko.observable(null);
+                this.isGlobalView = ko.observable(true);
+                this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.barchartWorldDataTable_cached = null;
                 this.selectSearchType('activities');
                 if(institutionInfo != null) {
                     if(institutionInfo.InstitutionId != null) {
@@ -269,17 +272,33 @@ var ViewModels;
                 dataTable.addColumn('string', 'Country');
                 dataTable.addColumn('number', 'Total Activities');
                 if(this.summary != null) {
-                    if(((this.summary).countryCounts() != null) && ((this.summary).countryCounts().length > 0)) {
-                        var countryCounts = (this.summary).countryCounts;
-                        for(var i = 0; i < countryCounts().length; i += 1) {
+                    if(((this.summary).countryActivityCounts() != null) && ((this.summary).countryActivityCounts().length > 0)) {
+                        var countryActivityCounts = (this.summary).countryActivityCounts;
+                        for(var i = 0; i < countryActivityCounts().length; i += 1) {
                             var rowData = new Array();
-                            rowData.push(countryCounts()[i].officialName());
-                            rowData.push(countryCounts()[i].count());
+                            rowData.push(countryActivityCounts()[i].officialName());
+                            rowData.push(countryActivityCounts()[i].count());
                             dataTable.addRow(rowData);
                         }
                     }
                 }
-                this.heatmapData = dataTable;
+                this.heatmapActivityData = dataTable;
+                dataTable = new this.google.visualization.DataTable();
+                colNames = new Array();
+                dataTable.addColumn('string', 'Country');
+                dataTable.addColumn('number', 'Total People');
+                if(this.summary != null) {
+                    if(((this.summary).countryPeopleCounts() != null) && ((this.summary).countryPeopleCounts().length > 0)) {
+                        var countryPeopleCounts = (this.summary).countryPeopleCounts;
+                        for(var i = 0; i < countryPeopleCounts().length; i += 1) {
+                            var rowData = new Array();
+                            rowData.push(countryPeopleCounts()[i].officialName());
+                            rowData.push(countryPeopleCounts()[i].count());
+                            dataTable.addRow(rowData);
+                        }
+                    }
+                }
+                this.heatmapPeopleData = dataTable;
                 this.heatmapOptions = {
                     width: 680,
                     height: 500,
@@ -297,11 +316,99 @@ var ViewModels;
                 this.google.visualization.events.addListener(this.heatmap, 'select', function () {
                     me.heatmapSelectHandler();
                 });
+                this.barchartActivityOptions = {
+                    title: 'Activities',
+                    vAxis: {
+                        title: 'Count',
+                        titleTextStyle: {
+                            color: 'red'
+                        }
+                    }
+                };
+                this.barchartPeopleOptions = {
+                    title: 'People',
+                    vAxis: {
+                        title: 'Count',
+                        titleTextStyle: {
+                            color: 'red'
+                        }
+                    }
+                };
+                this.barchart = new this.google.visualization.BarChart($('#facultystaff-summary-barchart')[0]);
+            };
+            FacultyAndStaff.prototype.getActivityDataTable = function (country) {
+                debugger;
+
+                var dt = new this.google.visualization.DataTable();
+                dt.addColumn('string', 'Activity');
+                dt.addColumn('number', 'Count');
+                if(country == null) {
+                    for(var i = 0; i < (this.summary).worldActivityCounts().length; i += 1) {
+                        var activityType = (this.summary).worldActivityCounts()[i].type();
+                        var count = (this.summary).worldActivityCounts()[i].count();
+                        dt.addRow([
+                            activityType, 
+                            count
+                        ]);
+                    }
+                } else {
+                    var i = 0;
+                    while((i < (this.summary).countryActivityCounts().length) && ((this.summary).countryActivityCounts()[i].officialName !== country)) {
+                        i += 1;
+                    }
+                    if(i < (this.summary).countryActivityCounts().length) {
+                        var countryActivityCounts = (this.summary).countryActivityCounts()[i];
+                        for(var j = 0; j < countryActivityCounts.typeCounts().length; j += 1) {
+                            var activityType = countryActivityCounts.typeCounts[j].type();
+                            var count = countryActivityCounts.typeCounts[j].count();
+                            dt.addRow([
+                                activityType, 
+                                count
+                            ]);
+                        }
+                    }
+                }
+                return dt;
+            };
+            FacultyAndStaff.prototype.getPeopleDataTable = function (country) {
+                debugger;
+
+                var dt = new this.google.visualization.DataTable();
+                dt.addColumn('string', 'People');
+                dt.addColumn('number', 'Count');
+                if(country == null) {
+                    for(var i = 0; i < (this.summary).worldPeopleCounts().length; i += 1) {
+                        var activityType = (this.summary).worldPeopleCounts()[i].type();
+                        var count = (this.summary).worldPeopleCounts()[i].count();
+                        dt.addRow([
+                            activityType, 
+                            count
+                        ]);
+                    }
+                } else {
+                    var i = 0;
+                    while((i < (this.summary).countryPeopleCounts().length) && ((this.summary).countryPeopleCounts()[i].officialName !== country)) {
+                        i += 1;
+                    }
+                    if(i < (this.summary).countryPeopleCounts().length) {
+                        var countryPeopleCounts = (this.summary).countryPeopleCounts()[i];
+                        for(var j = 0; j < countryPeopleCounts.typeCounts().length; j += 1) {
+                            var activityType = countryPeopleCounts.typeCounts[j].type();
+                            var count = countryPeopleCounts.typeCounts[j].count();
+                            dt.addRow([
+                                activityType, 
+                                count
+                            ]);
+                        }
+                    }
+                }
+                return dt;
             };
             FacultyAndStaff.prototype.load = function () {
                 var _this = this;
                 var me = this;
                 var deferred = $.Deferred();
+                this.loadSpinner.start();
                 var typesPact = $.Deferred();
                 $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
@@ -368,7 +475,15 @@ var ViewModels;
                 if(type === "heatmap") {
                     $('#heatmapText').css("font-weight", "bold");
                     this.isHeatmapVisible(true);
-                    this.heatmap.draw(this.heatmapData, this.heatmapOptions);
+                    if(this.searchType() === 'activities') {
+                        this.heatmap.draw(this.heatmapActivityData, this.heatmapOptions);
+                        var dataTable = this.getActivityDataTable(this.selectedCountry());
+                        this.barchart.draw(dataTable, this.barchartActivityOptions);
+                    } else {
+                        this.heatmap.draw(this.heatmapPeopleData, this.heatmapOptions);
+                        var dataTable = this.getPeopleDataTable(this.selectedCountry());
+                        this.barchart.draw(dataTable, this.barchartPeopleOptions);
+                    }
                     $("#bib-faculty-staff-summary").addClass("current");
                 } else if(type === "pointmap") {
                     $('#pointmapText').css("font-weight", "bold");
@@ -386,6 +501,9 @@ var ViewModels;
                     this.setActivitiesSearch();
                 } else {
                     this.setPeopleSearch();
+                }
+                if(this.heatmap != null) {
+                    this.selectMap("heatmap");
                 }
             };
             FacultyAndStaff.prototype.setActivitiesSearch = function () {
@@ -459,8 +577,16 @@ var ViewModels;
             };
             FacultyAndStaff.prototype.heatmapSelectHandler = function () {
                 var selection = this.heatmap.getSelection();
-                var str = this.heatmapData.getFormattedValue(selection[0].row, 0);
+                if(this.searchType() === 'activities') {
+                    var str = this.heatmapActivityData.getFormattedValue(selection[0].row, 0);
+                } else {
+                    var str = this.heatmapPeopleData.getFormattedValue(selection[0].row, 0);
+                }
                 this.selectedCountry(str);
+            };
+            FacultyAndStaff.prototype.globalViewClickHandler = function (item, event) {
+                this.selectedCountry(null);
+                this.selectMap('heatmap');
             };
             return FacultyAndStaff;
         })();

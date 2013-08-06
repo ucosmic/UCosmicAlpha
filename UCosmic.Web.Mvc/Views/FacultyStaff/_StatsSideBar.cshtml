@@ -4,15 +4,17 @@
         <input type="text" id="keywords" style="width: 85%"/>
         <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
     </div>*@
-    <div class="stats" style="margin-top: 30px" >
-        <br/>
-        <h2>Total Countries:</h2><span data-bind=""></span>
-        <br/>
-        <h2>Total Countries with Activities:</h2><span data-bind=""></span>
-        <br/>
-        <h2>[BAR CHART HERE}:</h2>
-        <br/>
-        <h2>[TREND CHART HERE}:</h2>
+    <div class="stats" style="margin-top: 80px" >
+        <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'activities'">
+            <div style="margin-bottom: 8px"><span>Total Activities:&emsp;</span><span style="font-weight: bold" data-bind="text: summary.totalActivities()"></span></div>
+            <div><span>Total Countries with Activities:&emsp;</span><span style="font-weight: bold" data-bind="text: summary.totalCountriesWithActivities()"></span></div>
+        </div>
+        <div style="display: none; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">
+            <div style="font-size: medium; margin-bottom: 8px"><span>Total Staff & Faculty:&emsp;</span><span style="font-weight: bold" data-bind="text: summary.totalPeople()"></span></div>
+            <div style="font-size: 10pt;"><span>Total Countries with Staff & Faculty:&emsp;</span><span style="font-weight: bold" data-bind="text: summary.totalCountriesWithPeople()"></span></div>
+        </div>
+        <div id="facultystaff-summary-barchart" style="width: 100%; height: 300px"></div>
+        <div id="facultystaff-summary-linechart" style="width: 100%; height: 300px"></div>
     </div>
 @*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
         <div style="font-size: small">

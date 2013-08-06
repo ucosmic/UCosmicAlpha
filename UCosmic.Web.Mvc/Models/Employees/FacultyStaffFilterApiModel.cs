@@ -55,11 +55,21 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int TotalActivities { get; set; }
         public int TotalCountriesWithActivities { get; set; }
-        public ICollection<FacultyStaffActivitiesInCountryModel> CountryCounts { get; set; }
+        public ICollection<FacultyStaffActivitiesInCountryModel> CountryActivityCounts { get; set; }
+        public ICollection<FacultyStaffActivityCountModel> WorldActivityCounts { get; set; }
+
+        public int TotalPeople { get; set; }
+        public int TotalCountriesWithPeople { get; set; }
+        public ICollection<FacultyStaffActivitiesInCountryModel> CountryPeopleCounts { get; set; }
+        public ICollection<FacultyStaffActivityCountModel> WorldPeopleCounts { get; set; }
 
         public FacultyStaffActivitiesSummaryModel()
         {
-            CountryCounts = new Collection<FacultyStaffActivitiesInCountryModel>();
+            CountryActivityCounts = new Collection<FacultyStaffActivitiesInCountryModel>();
+            CountryPeopleCounts = new Collection<FacultyStaffActivitiesInCountryModel>();
+
+            WorldActivityCounts = new Collection<FacultyStaffActivityCountModel>();
+            WorldPeopleCounts = new Collection<FacultyStaffActivityCountModel>();
         }
     }
 }
