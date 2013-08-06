@@ -1,3 +1,4 @@
+/// <reference path="../../jquery.globalize/globalize.d.ts" />
 /// <reference path="../../ko/knockout-2.2.d.ts" />
 /// <reference path="../../ko/knockout.extensions.d.ts" />
 /// <reference path="../../kendo/kendo.all.d.ts" />
@@ -7,8 +8,9 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../oss/moment.ts" />
+/// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../sammy/sammyjs-0.7.d.ts" />
+/// <amd-dependency path="../../jquery.globalize/globalize.require" />
 
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
 import SearchModule = module('../amd-modules/Establishments/Search');
@@ -52,6 +54,7 @@ export class InstitutionalAgreementParticipantModel {
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
+        alert($("meta[name='accept-language']").attr("content"));
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/"
@@ -195,6 +198,7 @@ export class InstitutionalAgreementEditModel {
     $$contactSalutation: KnockoutObservableJQuery = ko.observable();
     contactJobTitle = ko.observable();
     contactPersonId = ko.observable();
+    contactUserId;
     contactDisplayName = ko.observable();
     contactIndex = 0;
     contactEmail = ko.observable();
@@ -771,14 +775,17 @@ export class InstitutionalAgreementEditModel {
             this.contactEmail(dataItem.defaultEmailAddress);
             this.contactMiddleName(dataItem.middleName);
             this.contactPersonId(dataItem.id);
+            this.contactUserId = dataItem.userId;
             this.contactSuffixSelected(dataItem.suffix);
             this.contactSalutationSelected(dataItem.salutation);
-            this.$contactEmail.prop('disabled', true);
-            this.$contactLastName.prop('disabled', true);
-            this.$contactFirstName.prop('disabled', true);
-            $("#contactMiddleName").prop('disabled', true);
-            this.$contactSalutation.data("kendoDropDownList").enable(false);
-            this.$contactSuffix.data("kendoDropDownList").enable(false);
+            if (dataItem.userId != null) {
+                this.$contactEmail.prop('disabled', 'disabled');
+                this.$contactLastName.prop('disabled', 'disabled');
+                this.$contactFirstName.prop('disabled', 'disabled');
+                $("#contactMiddleName").prop('disabled', 'disabled');
+                this.$contactSalutation.data("kendoDropDownList").enable(false);
+                this.$contactSuffix.data("kendoDropDownList").enable(false);
+            }
             this.validateContact.errors.showAllMessages(true);
         };
 
@@ -1287,18 +1294,21 @@ export class InstitutionalAgreementEditModel {
         this.contactEmail(me.emailAddress());
         this.contactDisplayName(me.displayName());
         this.contactPersonId(me.personId());
+        this.contactUserId = me.userId();
         this.contactJobTitle(me.title());
         this.contactFirstName(me.firstName());
         this.contactLastName(me.lastName());
         this.contactPhones(me.phones());
         this.contactMiddleName(me.middleName());
         this.contactIndex = this.contacts.indexOf(me)
-        this.$contactEmail.prop('disabled', true);
-        this.$contactLastName.prop('disabled', true);
-        this.$contactFirstName.prop('disabled', true);
-        $("#contactMiddleName").prop('disabled', true);
-        this.$contactSalutation.data("kendoDropDownList").enable(false);
-        this.$contactSuffix.data("kendoDropDownList").enable(false);
+        if (me.userId() != null) {
+            this.$contactEmail.prop('disabled', true);
+            this.$contactLastName.prop('disabled', true);
+            this.$contactFirstName.prop('disabled', true);
+            $("#contactMiddleName").prop('disabled', true);
+            this.$contactSalutation.data("kendoDropDownList").enable(false);
+            this.$contactSuffix.data("kendoDropDownList").enable(false);
+        }
         this.contactTypeOptionSelected(me.type());
 
         if (this.isCustomContactTypeAllowed) {
@@ -1342,6 +1352,7 @@ export class InstitutionalAgreementEditModel {
         this.contactEmail('');
         this.contactDisplayName('');
         this.contactPersonId('');
+        this.contactUserId = '';
         this.contactJobTitle('');
         this.contactFirstName('');
         this.contactMiddleName('');
@@ -1368,6 +1379,7 @@ export class InstitutionalAgreementEditModel {
             this.contacts()[this.contactIndex].title(this.contactJobTitle());
             this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
             this.contacts()[this.contactIndex].personId(this.contactPersonId());
+            this.contacts()[this.contactIndex].userId(this.contactUserId);
             this.contacts()[this.contactIndex].firstName(this.contactFirstName());
             this.contacts()[this.contactIndex].lastName(this.contactLastName());
             this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
@@ -1429,7 +1441,7 @@ export class InstitutionalAgreementEditModel {
             if (this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
                 this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
             }
-            this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
+            this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), userId: this.contactUserId, phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
             this.$addContactDialog.data("kendoWindow").close();
 
             $("#addAContact").fadeIn(500);
@@ -1576,51 +1588,21 @@ export class InstitutionalAgreementEditModel {
             message: 'The field must be greater than start date'//{0}'
         };
 
-        ko.validation.rules['nullSafeDate'] = {
-            validator: (val: any, otherVal: any): bool => {
-                var valid: bool = true;
-                var format: string = null;
-                var YYYYPattern = new RegExp("^\\d{4}$");
-                var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
-                var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
-
-                if ((val != null) && (val.length > 0)) {
-                    val = $.trim(val);
-
-                    if (YYYYPattern.test(val)) {
-                        val = "01/01/" + val;
-                        format = "YYYY";
-                    }
-                    else if (MMYYYYPattern.test(val)) {
-                        format = "MM/YYYY";
-                    }
-                    else if (MMDDYYYYPattern.test(val)) {
-                        format = "MM/DD/YYYY";
-                    }
-
-                    valid = (format != null) ? moment(val, format).isValid() : false;
-                }
-
-                return valid;
-            },
-            message: "Date must be valid."
-        };
-
         ko.validation.registerExtenders();
-
+        
         this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
             startDate: this.startDate.extend({
                 required: {
                     message: "Start date is required."
                 },
-                nullSafeDate: { message: "Start date must valid." },
+                date: { message: "Start date must valid." },
                 maxLength: 50
             }),
             expDate: this.expDate.extend({
                 required: {
                     message: "Expiration date is required."
                 },
-                nullSafeDate: { message: "Expiration date must valid." },
+                date: { message: "Expiration date must valid." },
                 maxLength: 50,
                 greaterThan: this.startDate
             }),

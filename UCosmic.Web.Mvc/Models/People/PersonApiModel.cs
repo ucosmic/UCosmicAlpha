@@ -9,6 +9,7 @@ namespace UCosmic.Web.Mvc.Models
     public class PersonApiModel
     {
         public int Id { get; set; }
+        public int? UserId { get; set; }
         public bool IsDisplayNameDerived { get; set; }
         public string DisplayName { get; set; }
         public string Salutation { get; set; }
@@ -27,6 +28,7 @@ namespace UCosmic.Web.Mvc.Models
             new Expression<Func<Person, object>>[]
             {
                 x => x.Emails,
+                x => x.User,
             };
 
         public class EntityToModelProfile : Profile
@@ -35,6 +37,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<Person, PersonApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.UserId, o => o.MapFrom(s => s.User == null ? (int?)null : s.User.RevisionId))
                     .ForMember(d => d.DefaultEmailAddress, o => o.MapFrom(s =>
                         (s.DefaultEmail != null) ? s.DefaultEmail.Value : null))
                 ;

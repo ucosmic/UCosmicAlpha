@@ -1,4 +1,4 @@
-define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner'], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
+define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner', "../../jquery.globalize/globalize.require"], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
     var SearchResultModule = __SearchResultModule__;
 
     var SearchModule = __SearchModule__;
@@ -138,6 +138,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
+            alert($("meta[name='accept-language']").attr("content"));
             if(window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
                 this.dfdPopParticipants.resolve();
                 this.editOrNewUrl = "new/";
@@ -682,14 +683,17 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 _this.contactEmail(dataItem.defaultEmailAddress);
                 _this.contactMiddleName(dataItem.middleName);
                 _this.contactPersonId(dataItem.id);
+                _this.contactUserId = dataItem.userId;
                 _this.contactSuffixSelected(dataItem.suffix);
                 _this.contactSalutationSelected(dataItem.salutation);
-                _this.$contactEmail.prop('disabled', true);
-                _this.$contactLastName.prop('disabled', true);
-                _this.$contactFirstName.prop('disabled', true);
-                $("#contactMiddleName").prop('disabled', true);
-                _this.$contactSalutation.data("kendoDropDownList").enable(false);
-                _this.$contactSuffix.data("kendoDropDownList").enable(false);
+                if(dataItem.userId != null) {
+                    _this.$contactEmail.prop('disabled', 'disabled');
+                    _this.$contactLastName.prop('disabled', 'disabled');
+                    _this.$contactFirstName.prop('disabled', 'disabled');
+                    $("#contactMiddleName").prop('disabled', 'disabled');
+                    _this.$contactSalutation.data("kendoDropDownList").enable(false);
+                    _this.$contactSuffix.data("kendoDropDownList").enable(false);
+                }
                 _this.validateContact.errors.showAllMessages(true);
             }
             this.$contactEmail.kendoAutoComplete({
@@ -1175,18 +1179,21 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactEmail(me.emailAddress());
             this.contactDisplayName(me.displayName());
             this.contactPersonId(me.personId());
+            this.contactUserId = me.userId();
             this.contactJobTitle(me.title());
             this.contactFirstName(me.firstName());
             this.contactLastName(me.lastName());
             this.contactPhones(me.phones());
             this.contactMiddleName(me.middleName());
             this.contactIndex = this.contacts.indexOf(me);
-            this.$contactEmail.prop('disabled', true);
-            this.$contactLastName.prop('disabled', true);
-            this.$contactFirstName.prop('disabled', true);
-            $("#contactMiddleName").prop('disabled', true);
-            this.$contactSalutation.data("kendoDropDownList").enable(false);
-            this.$contactSuffix.data("kendoDropDownList").enable(false);
+            if(me.userId() != null) {
+                this.$contactEmail.prop('disabled', true);
+                this.$contactLastName.prop('disabled', true);
+                this.$contactFirstName.prop('disabled', true);
+                $("#contactMiddleName").prop('disabled', true);
+                this.$contactSalutation.data("kendoDropDownList").enable(false);
+                this.$contactSuffix.data("kendoDropDownList").enable(false);
+            }
             this.contactTypeOptionSelected(me.type());
             if(this.isCustomContactTypeAllowed) {
                 var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
@@ -1224,6 +1231,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.contactEmail('');
             this.contactDisplayName('');
             this.contactPersonId('');
+            this.contactUserId = '';
             this.contactJobTitle('');
             this.contactFirstName('');
             this.contactMiddleName('');
@@ -1249,6 +1257,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.contacts()[this.contactIndex].title(this.contactJobTitle());
                 this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
                 this.contacts()[this.contactIndex].personId(this.contactPersonId());
+                this.contacts()[this.contactIndex].userId(this.contactUserId);
                 this.contacts()[this.contactIndex].firstName(this.contactFirstName());
                 this.contacts()[this.contactIndex].lastName(this.contactLastName());
                 this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
@@ -1315,6 +1324,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     lastName: this.contactLastName(),
                     id: 1,
                     personId: this.contactPersonId(),
+                    userId: this.contactUserId,
                     phones: ko.mapping.toJS(this.contactPhones()),
                     emailAddress: this.contactEmail(),
                     type: this.contactTypeOptionSelected(),
@@ -1454,36 +1464,13 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 },
                 message: 'The field must be greater than start date'
             };
-            ko.validation.rules['nullSafeDate'] = {
-                validator: function (val, otherVal) {
-                    var valid = true;
-                    var format = null;
-                    var YYYYPattern = new RegExp("^\\d{4}$");
-                    var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
-                    var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
-                    if((val != null) && (val.length > 0)) {
-                        val = $.trim(val);
-                        if(YYYYPattern.test(val)) {
-                            val = "01/01/" + val;
-                            format = "YYYY";
-                        } else if(MMYYYYPattern.test(val)) {
-                            format = "MM/YYYY";
-                        } else if(MMDDYYYYPattern.test(val)) {
-                            format = "MM/DD/YYYY";
-                        }
-                        valid = (format != null) ? moment(val, format).isValid() : false;
-                    }
-                    return valid;
-                },
-                message: "Date must be valid."
-            };
             ko.validation.registerExtenders();
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
                 startDate: this.startDate.extend({
                     required: {
                         message: "Start date is required."
                     },
-                    nullSafeDate: {
+                    date: {
                         message: "Start date must valid."
                     },
                     maxLength: 50
@@ -1492,7 +1479,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     required: {
                         message: "Expiration date is required."
                     },
-                    nullSafeDate: {
+                    date: {
                         message: "Expiration date must valid."
                     },
                     maxLength: 50,
