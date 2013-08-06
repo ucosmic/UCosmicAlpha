@@ -12,7 +12,7 @@ namespace UCosmic.Domain.Establishments
         private readonly IQueryEntities _entities;
 
         internal MustFindEstablishmentById(IQueryEntities entities)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+            : base(FailMessageFormat.Replace("{0}", "{EstablishmentId}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
@@ -24,7 +24,7 @@ namespace UCosmic.Domain.Establishments
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on integer properties", GetType().Name));
 
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+            context.MessageFormatter.AppendArgument("EstablishmentId", context.PropertyValue);
             var value = (int?)context.PropertyValue;
             if (value == null) return false;
 

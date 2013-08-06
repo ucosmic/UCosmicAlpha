@@ -399,9 +399,8 @@ namespace UCosmic.SeedData
                 var college = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "College of Medicine" && e.Parent.RevisionId == campus.RevisionId);
                 if (college == null) throw new Exception("College is null");
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -413,9 +412,8 @@ namespace UCosmic.SeedData
                         .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -427,9 +425,8 @@ namespace UCosmic.SeedData
                         .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -441,9 +438,8 @@ namespace UCosmic.SeedData
                         .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -455,9 +451,8 @@ namespace UCosmic.SeedData
                         .Single(s => s.Establishment.RevisionId == establishment.RevisionId).FacultyRanks.Single(r => r.Rank == "Distinguished University Professor").Id
                 });
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -478,9 +473,8 @@ namespace UCosmic.SeedData
                                          .FirstOrDefault(x => x.OfficialName == "Department of Criminology");
                 if (establishment == null) throw new Exception("Establishment is null");
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
@@ -496,14 +490,18 @@ namespace UCosmic.SeedData
 
                 if (establishment == null) throw new Exception("Establishment is null");
 
-                Seed(new CreateMyAffiliation
+                Seed(new CreateMyAffiliation(GetMyPrincipal(person))
                 {
-                    PersonId = person.RevisionId,
                     EstablishmentId = establishment.RevisionId,
                     IsClaimingEmployee = true,
                     IsClaimingStudent = false,
                 });
             }
+        }
+
+        private IPrincipal GetMyPrincipal(Person person)
+        {
+            return new GenericPrincipal(new GenericIdentity(person.User.Name), new string[0]);
         }
     }
 
@@ -526,17 +524,16 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             Affiliation affiliation = _queryProcessor.Execute(
-                new AffiliationByDepartment(command.PersonId,
-                                             command.EstablishmentId,
-                                             command.CampusId,
-                                             command.CollegeId,
-                                             command.DepartmentId));
+                new MyAffiliationByDepartment(command.Principal)
+                {
+                    EstablishmentId = command.EstablishmentId,
+                    CampusId = command.CampusId,
+                    CollegeId = command.CollegeId,
+                    DepartmentId = command.DepartmentId,
+                });
 
             /* This needs to be changed to prevent duplicate affiliations. */
-            if (affiliation != null)
-            {
-                return affiliation;
-            }
+            if (affiliation != null) return affiliation;
 
             _createAffiliation.Handle(command);
             return _entities.Query<Affiliation>().Single(x => x.RevisionId == command.CreatedAffiliationId);

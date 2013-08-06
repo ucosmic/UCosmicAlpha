@@ -298,6 +298,10 @@
     <Compile Include="ApiControllers\Establishments\EstablishmentsController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentUrlsController.cs" />
     <Compile Include="ApiControllers\GraphicsController.cs" />
+    <Compile Include="ApiControllers\My\MyPhotoController.cs" />
+    <Compile Include="ApiControllers\My\MyAffiliationsController.cs" />
+    <Compile Include="ApiControllers\My\MyProfileApiController.cs" />
+    <Compile Include="ApiControllers\My\ProfileElementsController.cs" />
     <Compile Include="ApiControllers\UploadsController.cs" />
     <Compile Include="ApiControllers\Identity\GrantsController.cs" />
     <Compile Include="ApiControllers\Identity\IdentityController.cs" />
@@ -312,7 +316,6 @@
     <Compile Include="ApiControllers\People\PersonNamesController.cs" />
     <Compile Include="ApiControllers\Places\CountriesController.cs" />
     <Compile Include="ApiControllers\Places\PlacesController.cs" />
-    <Compile Include="ApiControllers\ProfileElementsController.cs" />
     <Compile Include="ApiTestController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -362,6 +365,8 @@
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
     <Compile Include="Models\DegreeApiModel.cs" />
     <Compile Include="Models\Identity\ActivityModel.cs" />
+    <Compile Include="Models\My\MyAffiliationApiModel.cs" />
+    <Compile Include="Models\My\MyProfileApiModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
@@ -379,7 +384,6 @@
     <Compile Include="Models\_Etc\FileUploadValidationModel.cs" />
     <Compile Include="Models\_Etc\ValidationFailureApiModel.cs" />
     <Compile Include="Models\_Etc\ImageResizeRequestModel.cs" />
-    <Compile Include="ApiControllers\MyProfileController.cs" />
     <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\LanguagesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
@@ -425,7 +429,6 @@
     <Compile Include="IdentityController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\MyProfileApiModel.cs" />
     <Compile Include="Models\EmployeeModuleSettingsModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentLocationApiModel.cs" />
     <Compile Include="Models\FacultyRankApiModel.cs" />

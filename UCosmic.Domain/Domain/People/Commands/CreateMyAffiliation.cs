@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
 {
     public class CreateMyAffiliation
     {
-        public int PersonId { get; set; }
+        public CreateMyAffiliation(IPrincipal principal)
+        {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
+        }
+
+        public IPrincipal Principal { get; private set; }
         public int EstablishmentId { get; set; }
         public bool IsClaimingStudent { get; set; }
         public bool IsClaimingEmployee { get; set; }
@@ -32,26 +40,41 @@ namespace UCosmic.Domain.People
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId)
             ;
 
+            When(x => x.CampusId.HasValue, () =>
+                RuleFor(x => x.CampusId.Value)
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.CampusId)
+            );
+
+            When(x => x.CollegeId.HasValue, () =>
+                RuleFor(x => x.CollegeId.Value)
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.CollegeId)
+            );
+
+            When(x => x.DepartmentId.HasValue, () =>
+                RuleFor(x => x.DepartmentId.Value)
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.DepartmentId)
+            );
+
+            RuleFor(x => x.Principal)
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+                .MustFindUserByPrincipal(entities)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
+
+                // cannot create a duplicate affiliation
+                .MustNotBeAffiliatedWithDepartment(entities,
+                    x => x.EstablishmentId, x => x.CampusId, x => x.CollegeId, x => x.DepartmentId)
+            ;
+
             RuleFor(x => x.IsClaimingStudent)
                 // cannot claim student unless affiliation establishment is an academic institution
                 .MustNotBeClaimingStudentAffiliationForNonInstitutions(entities, x => x.EstablishmentId)
                     .WithMessage(MustNotBeClaimingStudentAffiliationForNonInstitutions<object>.FailMessageFormat, x => x.EstablishmentId)
-            ;
-
-            RuleFor(x => x.PersonId)
-                // person id must exist in database
-                .MustFindPersonById(entities)
-                    .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
-
-                // cannot create a duplicate affiliation
-                //.MustNotBePersonAffiliatedWithEstablishment(entities, x => x.EstablishmentId)
-                //    .WithMessage(MustNotBePersonAffiliatedWithEstablishment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
-                .MustNotBePersonAffiliatedWithDepartment( entities,
-                                                          establishmentId => establishmentId.EstablishmentId,
-                                                          campusId => campusId.CampusId,
-                                                          collegeId => collegeId.CollegeId,
-                                                          departmentId => departmentId.DepartmentId )
-                    .WithMessage(MustNotBePersonAffiliatedWithDepartment<object>.FailMessageFormat, x => x.PersonId, x => x.EstablishmentId)
             ;
         }
     }
@@ -77,9 +100,7 @@ namespace UCosmic.Domain.People
                 {
                     p => p.Affiliations,
                 })
-                .SingleOrDefault(x => x.RevisionId == command.PersonId);
-            if (person == null)
-                throw new InvalidOperationException(string.Format("Person with id '{0}' could not be found.", command.PersonId));
+                .Single(x => x.User != null && x.User.Name.Equals(command.Principal.Identity.Name));
 
             // construct the affiliation
             var affiliation = new Affiliation
@@ -97,7 +118,6 @@ namespace UCosmic.Domain.People
 
             // store
             _entities.Create(affiliation);
-
             _unitOfWork.SaveChanges();
 
             // return

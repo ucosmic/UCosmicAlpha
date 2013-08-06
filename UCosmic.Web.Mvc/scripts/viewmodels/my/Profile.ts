@@ -59,7 +59,7 @@ module ViewModels.My {
         photoUploadError: KnockoutObservableString = ko.observable();
         static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
         photoSrc: KnockoutObservableString = ko.observable(
-            App.Routes.WebApi.My.Profile.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
+            App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
         photoUploadSpinner = new Spinner(new SpinnerOptions(400));
         photoDeleteSpinner = new Spinner(new SpinnerOptions(400));
 
@@ -335,9 +335,7 @@ module ViewModels.My {
                 $.ajax({
                     url: App.Routes.WebApi.My.Profile.put(),
                     type: 'PUT',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: ko.toJSON(apiModel)
+                    data: apiModel
                 })
                 .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
                     App.flasher.flash(responseText);
@@ -388,7 +386,7 @@ module ViewModels.My {
             this.photoDeleteSpinner.start();
             this.photoUploadError(undefined);
             $.ajax({ // submit ajax DELETE request
-                url: App.Routes.WebApi.My.Profile.Photo.del(),
+                url: App.Routes.WebApi.My.Photo.del(),
                 type: 'DELETE'
             })
             .always((): void => {
@@ -397,7 +395,7 @@ module ViewModels.My {
             .done((response: string, statusText: string, xhr: JQueryXHR): void => {
                 if (typeof response === 'string') App.flasher.flash(response);
                 this.hasPhoto(false);
-                this.photoSrc(App.Routes.WebApi.My.Profile.Photo
+                this.photoSrc(App.Routes.WebApi.My.Photo
                     .get({ maxSide: 128, refresh: new Date().toUTCString() }));
             })
             .fail((): void => {
@@ -500,14 +498,14 @@ module ViewModels.My {
                             select: 'Choose a photo to upload...'
                         },
                         async: {
-                            saveUrl: App.Routes.WebApi.My.Profile.Photo.post()
+                            saveUrl: App.Routes.WebApi.My.Photo.post()
                         },
                         select: (e: kendo.ui.UploadSelectEvent): void => {
                             this.photoUploadSpinner.start(); // display async wait message
                             $.ajax({
                                 type: 'POST',
                                 async: false,
-                                url: App.Routes.WebApi.My.Profile.Photo.validate(),
+                                url: App.Routes.WebApi.My.Photo.validate(),
                                 data: {
                                     name: e.files[0].name,
                                     length: e.files[0].size
@@ -533,7 +531,7 @@ module ViewModels.My {
                                     App.flasher.flash(e.response.message);
                                 }
                                 this.hasPhoto(true);
-                                this.photoSrc(App.Routes.WebApi.My.Profile.Photo
+                                this.photoSrc(App.Routes.WebApi.My.Photo
                                     .get({ maxSide: 128, refresh: new Date().toUTCString() }));
                             }
                         },
@@ -654,7 +652,7 @@ module ViewModels.My {
 
             $.ajax( {
                 async: true,
-                url: App.Routes.WebApi.My.Profile.Affiliation.get(),
+                url: App.Routes.WebApi.My.Affiliations.get(),
                 type: 'GET'
             } )
             .done( function ( data, statusText, xhr ) {
@@ -670,7 +668,7 @@ module ViewModels.My {
                 }
             } )
             .fail( function ( xhr, statusText, errorThrown ) {
-                alert( "Saving affiliation failed: " + statusText + "|" + errorThrown );
+                alert( "Loading affiliation failed: " + statusText + "|" + errorThrown );
             } );
         }
 
@@ -933,16 +931,14 @@ module ViewModels.My {
 
             var model = ko.mapping.toJS( affiliation );
 
-            $.ajax( {
+            $.ajax({
                 async: false,
-                dataType: 'json',
-                contentType: 'application/json',
-                url: ( affiliationId == null ) ?
-                        App.Routes.WebApi.My.Profile.Affiliation.post() :
-                        App.Routes.WebApi.My.Profile.Affiliation.put(),
+                url: (affiliationId == null) ?
+                    App.Routes.WebApi.My.Affiliations.post() :
+                    App.Routes.WebApi.My.Affiliations.put(model.id),
                 type: ( affiliationId == null ) ? 'POST' : 'PUT',
-                data: ko.toJSON(model)
-            } )
+                data: model
+            })
             .done( function ( responseText, statusText, xhr ) {
                 if ( statusText === "success" ) {
                     $( "#editAffiliationDialog" ).dialog( "close" );
@@ -977,10 +973,13 @@ module ViewModels.My {
                     } );
                 }
             } )
-            .fail( function ( xhr, statusText, errorThrown ) {
-                alert( "Saving affiliation failed: " + statusText + "|" + errorThrown );
-                $( "#editAffiliationDialog" ).dialog( "close" );
-            } );
+            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                $("#editAffiliationDialog").dialog("close");
+                var info = xhr.responseText && xhr.responseText.length < 1000
+                    ? xhr.responseText
+                    : 'An unexpected error occurred, please try again. If you continue to experience this issue, use the Feedback & Support link on this page to report it.';
+                alert(info);
+            });
         }
 
         private deleteAffiliation(affiliationId: number): void {
@@ -1008,42 +1007,38 @@ module ViewModels.My {
                         var model = ko.mapping.toJS( affiliation );
 
                         $.ajax( {
-                            async: false,
                             type: "DELETE",
-                            url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            data: ko.toJSON(model),
-                            success: ( data: any, statusText: string, jqXHR: JQueryXHR ): void =>
-                            {
-                                if ( statusText !== "success" ) {
-                                    $( "#affiliationErrorDialog" ).dialog( {
-                                        title: jqXHR.statusText,
-                                        width: 400,
-                                        height: 250,
-                                        modal: true,
-                                        resizable: false,
-                                        draggable: false,
-                                        buttons: {
-                                            Ok: function () {
-                                                $( "#affiliationErrorDialog" ).dialog( "close" );
-                                            }
-                                        },
-                                        open: function ( event, ui ) {
-                                            $( "#affiliationErrorDialogMessage" ).text( jqXHR.responseText );
+                            url: App.Routes.WebApi.My.Affiliations.del(model.id)
+                        })
+                        .done((data: any, statusText: string, xhr: JQueryXHR): void =>
+                        {
+                            if (statusText !== "success") {
+                                $("#affiliationErrorDialog").dialog({
+                                    title: xhr.statusText,
+                                    width: 400,
+                                    height: 250,
+                                    modal: true,
+                                    resizable: false,
+                                    draggable: false,
+                                    buttons: {
+                                        Ok: function () {
+                                            $("#affiliationErrorDialog").dialog("close");
                                         }
-                                    } );
-                                }
-
-                                $( "#editAffiliationDialog" ).dialog( "close" );
-                                me.reloadAffiliations();
-                            },
-                            error: ( jqXHR: JQueryXHR, statusText: string, errorThrown: string ): void =>
-                            {
-                                alert( statusText );
-                                $( "#editAffiliationDialog" ).dialog( "close" );
+                                    },
+                                    open: function (event, ui) {
+                                        $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                                    }
+                                });
                             }
-                        } );
+
+                            $("#editAffiliationDialog").dialog("close");
+                            me.reloadAffiliations();
+                        })
+                        .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void =>
+                        {
+                            alert(xhr.responseText);
+                            $("#editAffiliationDialog").dialog("close");
+                        });
                     },
 
                     "Cancel": function () {

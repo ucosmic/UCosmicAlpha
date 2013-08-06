@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using FluentValidation.Validators;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.People
 {
     public class MustOwnAffiliation<T> : PropertyValidator
     {
         public const string FailMessageFormat =
-            "User '{0}' is not authorized to perform this action on affiliation #{1}.";
+            "User '{0}' is not authorized to perform this action on affiliation with id '{1}'.";
 
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _affiliationId;
@@ -32,16 +32,19 @@ namespace UCosmic.Domain.People
 
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var principal = (IPrincipal)context.PropertyValue;
-            var affiliationId = _affiliationId != null ? _affiliationId((T)context.Instance) : (int?)null;
+            var affiliationId = _affiliationId((T)context.Instance);
 
-            Person person = null;
-            var affiliation = _entities.Query<Affiliation>().SingleOrDefault(x => x.RevisionId == affiliationId);
-            if (affiliation != null)
-            {
-                person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == affiliation.PersonId);
-            }
+            var affiliation = _entities.Query<Affiliation>()
+                .EagerLoad(_entities, new Expression<Func<Affiliation, object>>[]
+                        {
+                            x => x.Person.User,
+                        })
+                .SingleOrDefault(x => x.RevisionId == affiliationId);
 
-            return (person != null) && person.User.Name.Equals(principal.Identity.Name, StringComparison.OrdinalIgnoreCase);
+            return affiliation != null
+                && affiliation.Person.User != null
+                && affiliation.Person.User.Name.Equals(principal.Identity.Name,
+                    StringComparison.OrdinalIgnoreCase);
         }
     }
 

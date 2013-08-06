@@ -9,6 +9,7 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
 {
+    // TODO: affst
     public class UpdateMyProfile
     {
         public UpdateMyProfile(IPrincipal principal)

@@ -7,7 +7,7 @@
     <div class="field-table w870-l300-v570">
         <div class="field-row">
             <div class="field-label" style="padding-top: 0;">
-                <img src="@Url.HttpRouteUrl(null, new { controller = "MyProfile", action = "GetPhoto", maxSide = "128", refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
+                <img src="@Url.HttpRouteUrl(null, new { controller = "MyPhoto", action = "Get", maxSide = "128", refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
                     alt="" data-bind="attr: { src: photoSrc }" />
             </div>
             <div class="field-input">

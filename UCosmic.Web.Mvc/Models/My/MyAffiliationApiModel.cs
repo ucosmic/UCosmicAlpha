@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
-using System.Web.Mvc;
-
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class MyProfileNavigationApiModel
-    {
-        public bool StartInEdit { get; set; }
-        public string StartTabName { get; set; }
-    }
-
-    public class MyProfileAffiliationApiModel
+    public class MyAffiliationApiModel
     {
         public int Id { get; set; }
         public int PersonId { get; set; }
@@ -43,33 +34,11 @@ namespace UCosmic.Web.Mvc.Models
         public string FacultyRank { get; set; }
     }
 
-    public class MyProfileApiModel
-    {
-        public int PersonId { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDisplayNameDerived { get; set; }
-        public string DisplayName { get; set; }
-        public string Salutation { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
-        public string LastName { get; set; }
-        public string Suffix { get; set; }
-        public string Gender { get; set; }
-        public bool HasPhoto { get; set; }
-        public string PreferredTitle { get; set; }
-        public ICollection<MyProfileAffiliationApiModel> Affiliations { get; set; }
-
-        public bool StartInEdit { get; set; }
-        public string StartTabName { get; set; }
-
-        public bool DefaultEstablishmentHasCampuses { get; set; }
-    }
-
-    public static class MyProfileApiModelProfiler
+    public static class MyAffiliationApiModelProfiler
     {
         public class EntityToModelProfile : Profile
         {
-            public class EstablishmentNameResolver : ValueResolver<Affiliation, String>
+            private class EstablishmentNameResolver : ValueResolver<Affiliation, string>
             {
                 private readonly IQueryEntities _entities;
 
@@ -78,7 +47,7 @@ namespace UCosmic.Web.Mvc.Models
                     _entities = entities;
                 }
 
-                protected override String ResolveCore(Affiliation source)
+                protected override string ResolveCore(Affiliation source)
                 {
                     string info = null;
 
@@ -93,7 +62,8 @@ namespace UCosmic.Web.Mvc.Models
                     return info;
                 }
             }
-            public class EstablishmentCampusNameResolver : ValueResolver<Affiliation, String>
+
+            private class EstablishmentCampusNameResolver : ValueResolver<Affiliation, string>
             {
                 private readonly IQueryEntities _entities;
 
@@ -102,7 +72,7 @@ namespace UCosmic.Web.Mvc.Models
                     _entities = entities;
                 }
 
-                protected override String ResolveCore(Affiliation source)
+                protected override string ResolveCore(Affiliation source)
                 {
                     string info = null;
 
@@ -120,7 +90,8 @@ namespace UCosmic.Web.Mvc.Models
                     return info;
                 }
             }
-            public class EstablishmentCollegeNameResolver : ValueResolver<Affiliation, String>
+
+            private class EstablishmentCollegeNameResolver : ValueResolver<Affiliation, string>
             {
                 private readonly IQueryEntities _entities;
 
@@ -129,7 +100,7 @@ namespace UCosmic.Web.Mvc.Models
                     _entities = entities;
                 }
 
-                protected override String ResolveCore(Affiliation source)
+                protected override string ResolveCore(Affiliation source)
                 {
                     string info = null;
 
@@ -147,7 +118,8 @@ namespace UCosmic.Web.Mvc.Models
                     return info;
                 }
             }
-            public class EstablishmentDepartmentNameResolver : ValueResolver<Affiliation, String>
+
+            private class EstablishmentDepartmentNameResolver : ValueResolver<Affiliation, string>
             {
                 private readonly IQueryEntities _entities;
 
@@ -156,7 +128,7 @@ namespace UCosmic.Web.Mvc.Models
                     _entities = entities;
                 }
 
-                protected override String ResolveCore(Affiliation source)
+                protected override string ResolveCore(Affiliation source)
                 {
                     string info = null;
 
@@ -174,7 +146,8 @@ namespace UCosmic.Web.Mvc.Models
                     return info;
                 }
             }
-            public class FacultyRankResolver : ValueResolver<Affiliation, String>
+
+            private class FacultyRankResolver : ValueResolver<Affiliation, string>
             {
                 private readonly IQueryEntities _entities;
 
@@ -183,7 +156,7 @@ namespace UCosmic.Web.Mvc.Models
                     _entities = entities;
                 }
 
-                protected override String ResolveCore(Affiliation source)
+                protected override string ResolveCore(Affiliation source)
                 {
                     string info = null;
 
@@ -208,7 +181,7 @@ namespace UCosmic.Web.Mvc.Models
 
             protected override void Configure()
             {
-                CreateMap<Affiliation, MyProfileAffiliationApiModel>()
+                CreateMap<Affiliation, MyAffiliationApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.Campus, o => o.ResolveUsing<EstablishmentCampusNameResolver>()
@@ -219,16 +192,7 @@ namespace UCosmic.Web.Mvc.Models
                         .ConstructedBy(() => new EstablishmentDepartmentNameResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
                     .ForMember(d => d.FacultyRank, o => o.ResolveUsing<FacultyRankResolver>()
                         .ConstructedBy(() => new FacultyRankResolver(DependencyResolver.Current.GetService<IQueryEntities>())))
-                        ;
-
-                CreateMap<Person, MyProfileApiModel>()
-                    .ForMember(d => d.PersonId, o => o.MapFrom(s => s.RevisionId) )
-                    .ForMember(d => d.HasPhoto, o => o.MapFrom(s => s.Photo != null))
-                    .ForMember(d => d.PreferredTitle, o => o.MapFrom(s => (s.Employee != null) ? s.Employee.JobTitles : null))
-                    .ForMember(d => d.StartInEdit, o => o.Ignore())
-                    .ForMember(d => d.StartTabName, o => o.Ignore())
-                    .ForMember(d => d.DefaultEstablishmentHasCampuses, o => o.Ignore())
-                    ;
+                ;
             }
         }
 
@@ -236,23 +200,8 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<MyProfileAffiliationApiModel, UpdatePerson.Affiliation>();
-
-                CreateMap<MyProfileApiModel, UpdateMyProfile>()
-                    .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.JobTitles, o => o.MapFrom(s => s.PreferredTitle))
-                ;
+                CreateMap<MyAffiliationApiModel, UpdatePerson.Affiliation>();
             }
         }
-
-        public class ModelToGenerateDisplayNameProfile : Profile
-        {
-            protected override void Configure()
-            {
-                CreateMap<MyProfileApiModel, GenerateDisplayName>();
-            }
-        }
-
-
     }
 }

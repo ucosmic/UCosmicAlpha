@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
 
+// TODO: affst
 namespace UCosmic.Domain.People
 {
     public class UpdatePerson
@@ -138,10 +140,11 @@ namespace UCosmic.Domain.People
             if (command == null) { throw new ArgumentNullException("command"); }
 
             var person = _entities.Get<Person>()
-                .SingleOrDefault(p => p.RevisionId == command.Id);
-            if (person == null) // person should never be null thanks to validator
-                throw new InvalidOperationException(string.Format(
-                    "Person '{0}' does not exist", command.Id));
+                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+                {
+                    x => x.User
+                })
+                .Single(p => p.RevisionId == command.Id);
 
             // only mutate when state is modified
             if (
@@ -222,9 +225,8 @@ namespace UCosmic.Domain.People
                     if (existing == null)
                     {
                         /* Create */
-                        var createCommand = new CreateMyAffiliation
+                        var createCommand = new CreateMyAffiliation(new GenericPrincipal(new GenericIdentity(person.User.Name), new string[0]))
                         {
-                            PersonId = command.Id,
                             EstablishmentId = update.EstablishmentId,
                             IsClaimingStudent = update.IsClaimingStudent,
                             IsClaimingEmployee = update.IsClaimingEmployee,

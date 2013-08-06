@@ -17,6 +17,7 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.External
 {
+    // TODO: affst
     public class UsfFacultyImporter : IHandleEvents<UserCreated>
     {
         [DataContract]

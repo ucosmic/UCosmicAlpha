@@ -105,7 +105,7 @@
                                 <div class="card">
                                     <div class="group">
                                         <div class="on-left photo">
-                                            <img src="@Url.HttpRouteUrl(null, new { controller = "MyProfile", action = "GetPhoto", maxSide = 128, refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
+                                            <img src="@Url.HttpRouteUrl(null, new { controller = "MyPhoto", action = "Get", maxSide = 128, refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
                                                 alt="" data-bind="attr: { src: photoSrc }" />
                                         </div>
                                         <div class="on-left name-and-title">

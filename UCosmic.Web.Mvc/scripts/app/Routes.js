@@ -395,58 +395,54 @@ var App;
                         return get();
                     }
                     Profile.put = put;
-                    (function (Affiliation) {
-                        function base() {
-                            return makeUrl('my/profile/affiliation');
-                        }
-                        Affiliation.base = base;
-                        function get() {
-                            return base();
-                        }
-                        Affiliation.get = get;
-                        function post() {
-                            return base();
-                        }
-                        Affiliation.post = post;
-                        function put() {
-                            return base();
-                        }
-                        Affiliation.put = put;
-                        function del() {
-                            return base();
-                        }
-                        Affiliation.del = del;
-                    })(Profile.Affiliation || (Profile.Affiliation = {}));
-                    var Affiliation = Profile.Affiliation;
-                    (function (Photo) {
-                        function get(params) {
-                            var url = post();
-                            if(params) {
-                                url += '?' + $.param(params);
-                            }
-                            return url;
-                        }
-                        Photo.get = get;
-                        function post() {
-                            return makeUrl('my/profile/photo');
-                        }
-                        Photo.post = post;
-                        function validate() {
-                            return makeUrl('my/profile/photo/validate');
-                        }
-                        Photo.validate = validate;
-                        function del() {
-                            return post();
-                        }
-                        Photo.del = del;
-                        function kendoRemove() {
-                            return makeUrl('my/profile/photo/kendo-remove');
-                        }
-                        Photo.kendoRemove = kendoRemove;
-                    })(Profile.Photo || (Profile.Photo = {}));
-                    var Photo = Profile.Photo;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
+                (function (Affiliations) {
+                    function get(affiliationId) {
+                        var url = 'my/affiliations';
+                        if(affiliationId) {
+                            url += '/' + affiliationId;
+                        }
+                        return makeUrl(url);
+                    }
+                    Affiliations.get = get;
+                    function post() {
+                        return get();
+                    }
+                    Affiliations.post = post;
+                    function put(affiliationId) {
+                        return get(affiliationId);
+                    }
+                    Affiliations.put = put;
+                    function del(affiliationId) {
+                        return get(affiliationId);
+                    }
+                    Affiliations.del = del;
+                })(My.Affiliations || (My.Affiliations = {}));
+                var Affiliations = My.Affiliations;
+                (function (Photo) {
+                    function get(params) {
+                        var url = post();
+                        if(params) {
+                            url += '?' + $.param(params);
+                        }
+                        return url;
+                    }
+                    Photo.get = get;
+                    function post() {
+                        return makeUrl('my/photo');
+                    }
+                    Photo.post = post;
+                    function validate() {
+                        return makeUrl('my/photo/validate');
+                    }
+                    Photo.validate = validate;
+                    function del() {
+                        return post();
+                    }
+                    Photo.del = del;
+                })(My.Photo || (My.Photo = {}));
+                var Photo = My.Photo;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
             (function (People) {

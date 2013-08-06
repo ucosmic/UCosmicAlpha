@@ -8,8 +8,8 @@ namespace UCosmic.Domain.People
 {
     public class DeleteMyAffiliation
     {
-        public IPrincipal Principal { get; protected internal set; }
-        public int Id { get; protected internal set; }
+        public IPrincipal Principal { get; private set; }
+        public int Id { get; private set; }
 
         public DeleteMyAffiliation(IPrincipal principal, int id)
         {
@@ -32,7 +32,8 @@ namespace UCosmic.Domain.People
                 .MustFindUserByPrincipal(entities)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustOwnAffiliation(entities, x => x.Id)
-                    .WithMessage(MustOwnAffiliation<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
+                    .WithMessage(MustOwnAffiliation<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id)
+            ;
         }
     }
 
@@ -51,8 +52,7 @@ namespace UCosmic.Domain.People
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var affiliation = _entities.Get<Affiliation>().SingleOrDefault(a => a.RevisionId == command.Id);
-            if (affiliation == null) { throw new Exception("Affiliation not found."); }
+            var affiliation = _entities.Get<Affiliation>().Single(a => a.RevisionId == command.Id);
 
             _entities.Purge(affiliation);
             _unitOfWork.SaveChanges();

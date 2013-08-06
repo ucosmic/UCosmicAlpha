@@ -366,41 +366,37 @@ module App.Routes {
                 export function put(): string {
                     return get();
                 }
-                export module Affiliation {
-                    export function base(): string {
-                        return makeUrl('my/profile/affiliation');
-                    }
-                    export function get (): string {
-                        return base();
-                    }
-                    export function post(): string {
-                        return base();
-                    }
-                    export function put(): string {
-                        return base();
-                    }
-                    export function del(): string {
-                        return base();
-                    }
+            }
+            export module Affiliations {
+                export function get (affiliationId?: number): string {
+                    var url = 'my/affiliations';
+                    if (affiliationId) url += '/' + affiliationId;
+                    return makeUrl(url);
                 }
-                export module Photo {
-                    export function get (params?: any): string {
-                        var url = post();
-                        if (params) url += '?' + $.param(params);
-                        return url;
-                    }
-                    export function post() {
-                        return makeUrl('my/profile/photo');
-                    }
-                    export function validate() {
-                        return makeUrl('my/profile/photo/validate');
-                    }
-                    export function del() {
-                        return post();
-                    }
-                    export function kendoRemove() {
-                        return makeUrl('my/profile/photo/kendo-remove');
-                    }
+                export function post(): string {
+                    return get();
+                }
+                export function put(affiliationId: number): string {
+                    return get(affiliationId);
+                }
+                export function del(affiliationId: number): string {
+                    return get(affiliationId);
+                }
+            }
+            export module Photo {
+                export function get (params?: any): string {
+                    var url = post();
+                    if (params) url += '?' + $.param(params);
+                    return url;
+                }
+                export function post() {
+                    return makeUrl('my/photo');
+                }
+                export function validate() {
+                    return makeUrl('my/photo/validate');
+                }
+                export function del() {
+                    return post();
                 }
             }
         }

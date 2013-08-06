@@ -33,7 +33,7 @@ var ViewModels;
                 this._internationalAffiliationsViewModel = null;
                 this.hasPhoto = ko.observable();
                 this.photoUploadError = ko.observable();
-                this.photoSrc = ko.observable(App.Routes.WebApi.My.Profile.Photo.get({
+                this.photoSrc = ko.observable(App.Routes.WebApi.My.Photo.get({
                     maxSide: 128,
                     refresh: new Date().toUTCString()
                 }));
@@ -237,9 +237,7 @@ var ViewModels;
                     $.ajax({
                         url: App.Routes.WebApi.My.Profile.put(),
                         type: 'PUT',
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        data: ko.toJSON(apiModel)
+                        data: apiModel
                     }).done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
                         _this.stopEditing();
@@ -285,7 +283,7 @@ var ViewModels;
                 this.photoDeleteSpinner.start();
                 this.photoUploadError(undefined);
                 $.ajax({
-                    url: App.Routes.WebApi.My.Profile.Photo.del(),
+                    url: App.Routes.WebApi.My.Photo.del(),
                     type: 'DELETE'
                 }).always(function () {
                     _this.photoDeleteSpinner.stop();
@@ -294,7 +292,7 @@ var ViewModels;
                         App.flasher.flash(response);
                     }
                     _this.hasPhoto(false);
-                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get({
+                    _this.photoSrc(App.Routes.WebApi.My.Photo.get({
                         maxSide: 128,
                         refresh: new Date().toUTCString()
                     }));
@@ -398,14 +396,14 @@ var ViewModels;
                                 select: 'Choose a photo to upload...'
                             },
                             async: {
-                                saveUrl: App.Routes.WebApi.My.Profile.Photo.post()
+                                saveUrl: App.Routes.WebApi.My.Photo.post()
                             },
                             select: function (e) {
                                 _this.photoUploadSpinner.start();
                                 $.ajax({
                                     type: 'POST',
                                     async: false,
-                                    url: App.Routes.WebApi.My.Profile.Photo.validate(),
+                                    url: App.Routes.WebApi.My.Photo.validate(),
                                     data: {
                                         name: e.files[0].name,
                                         length: e.files[0].size
@@ -427,7 +425,7 @@ var ViewModels;
                                         App.flasher.flash(e.response.message);
                                     }
                                     _this.hasPhoto(true);
-                                    _this.photoSrc(App.Routes.WebApi.My.Profile.Photo.get({
+                                    _this.photoSrc(App.Routes.WebApi.My.Photo.get({
                                         maxSide: 128,
                                         refresh: new Date().toUTCString()
                                     }));
@@ -525,7 +523,7 @@ var ViewModels;
                 var me = this;
                 $.ajax({
                     async: true,
-                    url: App.Routes.WebApi.My.Profile.Affiliation.get(),
+                    url: App.Routes.WebApi.My.Affiliations.get(),
                     type: 'GET'
                 }).done(function (data, statusText, xhr) {
                     if(statusText === "success") {
@@ -538,7 +536,7 @@ var ViewModels;
                         alert("Error reloading affiliations: " + xhr.responseText);
                     }
                 }).fail(function (xhr, statusText, errorThrown) {
-                    alert("Saving affiliation failed: " + statusText + "|" + errorThrown);
+                    alert("Loading affiliation failed: " + statusText + "|" + errorThrown);
                 });
             };
             Profile.prototype.editAffiliation = function (data, event) {
@@ -784,11 +782,9 @@ var ViewModels;
                 var model = ko.mapping.toJS(affiliation);
                 $.ajax({
                     async: false,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    url: (affiliationId == null) ? App.Routes.WebApi.My.Profile.Affiliation.post() : App.Routes.WebApi.My.Profile.Affiliation.put(),
+                    url: (affiliationId == null) ? App.Routes.WebApi.My.Affiliations.post() : App.Routes.WebApi.My.Affiliations.put(model.id),
                     type: (affiliationId == null) ? 'POST' : 'PUT',
-                    data: ko.toJSON(model)
+                    data: model
                 }).done(function (responseText, statusText, xhr) {
                     if(statusText === "success") {
                         $("#editAffiliationDialog").dialog("close");
@@ -812,8 +808,9 @@ var ViewModels;
                         });
                     }
                 }).fail(function (xhr, statusText, errorThrown) {
-                    alert("Saving affiliation failed: " + statusText + "|" + errorThrown);
                     $("#editAffiliationDialog").dialog("close");
+                    var info = xhr.responseText && xhr.responseText.length < 1000 ? xhr.responseText : 'An unexpected error occurred, please try again. If you continue to experience this issue, use the Feedback & Support link on this page to report it.';
+                    alert(info);
                 });
             };
             Profile.prototype.deleteAffiliation = function (affiliationId) {
@@ -838,38 +835,32 @@ var ViewModels;
                             };
                             var model = ko.mapping.toJS(affiliation);
                             $.ajax({
-                                async: false,
                                 type: "DELETE",
-                                url: App.Routes.WebApi.My.Profile.Affiliation.del(),
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                data: ko.toJSON(model),
-                                success: function (data, statusText, jqXHR) {
-                                    if(statusText !== "success") {
-                                        $("#affiliationErrorDialog").dialog({
-                                            title: jqXHR.statusText,
-                                            width: 400,
-                                            height: 250,
-                                            modal: true,
-                                            resizable: false,
-                                            draggable: false,
-                                            buttons: {
-                                                Ok: function () {
-                                                    $("#affiliationErrorDialog").dialog("close");
-                                                }
-                                            },
-                                            open: function (event, ui) {
-                                                $("#affiliationErrorDialogMessage").text(jqXHR.responseText);
+                                url: App.Routes.WebApi.My.Affiliations.del(model.id)
+                            }).done(function (data, statusText, xhr) {
+                                if(statusText !== "success") {
+                                    $("#affiliationErrorDialog").dialog({
+                                        title: xhr.statusText,
+                                        width: 400,
+                                        height: 250,
+                                        modal: true,
+                                        resizable: false,
+                                        draggable: false,
+                                        buttons: {
+                                            Ok: function () {
+                                                $("#affiliationErrorDialog").dialog("close");
                                             }
-                                        });
-                                    }
-                                    $("#editAffiliationDialog").dialog("close");
-                                    me.reloadAffiliations();
-                                },
-                                error: function (jqXHR, statusText, errorThrown) {
-                                    alert(statusText);
-                                    $("#editAffiliationDialog").dialog("close");
+                                        },
+                                        open: function (event, ui) {
+                                            $("#affiliationErrorDialogMessage").text(xhr.responseText);
+                                        }
+                                    });
                                 }
+                                $("#editAffiliationDialog").dialog("close");
+                                me.reloadAffiliations();
+                            }).fail(function (xhr, statusText, errorThrown) {
+                                alert(xhr.responseText);
+                                $("#editAffiliationDialog").dialog("close");
                             });
                         },
                         "Cancel": function () {
