@@ -31,7 +31,8 @@ namespace UCosmic.Domain.People
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustFindUserByPrincipal(entities)
                     .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
-            ;
+                .MustOwnAffiliation(entities, x => x.Id)
+                    .WithMessage(MustOwnAffiliation<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
         }
     }
 
