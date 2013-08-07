@@ -138,8 +138,17 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
-            alert($("meta[name='accept-language']").attr("content"));
+            require([
+                "../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""
+            ], function (html) {
+                Globalize.culture("fr-FR");
+            });
             if(window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
+                require([
+                    "../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""
+                ], function (html) {
+                    Globalize.culture("fr-FR");
+                });
                 this.dfdPopParticipants.resolve();
                 this.editOrNewUrl = "new/";
                 this.agreementIsEdit(false);
@@ -157,7 +166,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.populateParticipants();
                 this.populateFiles();
                 this.populateContacts();
-                this.populateAgreementData();
+                require([
+                    "../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""
+                ], function (html) {
+                    Globalize.culture("fr-FR");
+                    _this.populateAgreementData();
+                });
                 $("#LoadingPage").hide();
                 $.when(this.dfdPopContacts, this.dfdPopFiles, this.dfdPopParticipants, this.dfdPageFadeIn).done(function () {
                     _this.updateKendoDialog($(window).width());
@@ -251,8 +265,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
                 _this.content(response.content);
-                _this.expDate(response.expiresOn);
-                _this.startDate(response.startsOn);
+                _this.expDate(Globalize.format(new Date(response.expiresOn), 'd'));
+                _this.startDate(Globalize.format(new Date(response.startsOn), 'd'));
                 if(response.isAutoRenew == null) {
                     _this.autoRenew(2);
                 } else {
@@ -631,8 +645,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $(".hasDate").each(function (index, item) {
                 $(item).kendoDatePicker({
                     value: new Date($(item).val()),
-                    open: function (e) {
-                        this.options.format = "MM/dd/yyyy";
+                    close: function (e) {
+                        $(e.sender.element).val(Globalize.format(this.value(), 'd'));
                     }
                 });
             });
@@ -1463,6 +1477,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     }
                 },
                 message: 'The field must be greater than start date'
+            };
+            ko.validation.rules.date.validator = function (value, validate) {
+                return !value.length || (validate && Globalize.parseDate(value) != null);
             };
             ko.validation.registerExtenders();
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({

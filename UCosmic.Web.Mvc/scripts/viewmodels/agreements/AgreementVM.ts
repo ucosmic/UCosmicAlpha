@@ -4,6 +4,7 @@
 /// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../../jquery/jquery.d.ts" />
 /// <reference path="../../ko/knockout.mapping.d.ts" />
+/// <reference path="../../require/require.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -53,8 +54,34 @@ export class InstitutionalAgreementParticipantModel {
 
 export class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute?: bool = true) {
-        alert($("meta[name='accept-language']").attr("content"));
+        //Globalize.culture("en-GB");
+        //require(["../../kendo/2013.2.716/cultures/kendo.culture." + "fr" + ".min"], function (html) {
+        //    kendo.culture("fr")
+        //});
+        require(["../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
+            Globalize.culture("fr-FR")
+        });
+        //Globalize.culture($("meta[name='accept-language']").attr("content"));
+
+        //ko.extenders['date'] = function (target, format) {
+        //    var formatted = ko.computed({
+        //        'read': function () {
+        //            return Globalize.parseDate(target(), format);
+        //        },
+        //        'write': function (date) {
+        //            target(Globalize.format(date, format));
+        //        }
+        //    });
+        //    target.formatted = formatted;
+        //    return target;
+        //};
+
+        //alert($("meta[name='accept-language']").attr("content"));
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
+            require(["../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
+                Globalize.culture("fr-FR")
+            });
+            //Globalize.culture($("meta[name='accept-language']").attr("content"));
             this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/"
             this.agreementIsEdit(false);
@@ -73,7 +100,13 @@ export class InstitutionalAgreementEditModel {
             this.populateParticipants();
             this.populateFiles();
             this.populateContacts();
-            this.populateAgreementData();
+
+            require(["../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], (html) => {
+                Globalize.culture("fr-FR")
+                this.populateAgreementData();
+            });
+            //Globalize.culture($("meta[name='accept-language']").attr("content"));
+            
             $("#LoadingPage").hide();
             $.when(this.dfdPopContacts, this.dfdPopFiles, this.dfdPopParticipants, this.dfdPageFadeIn)
                 .done(function () => {
@@ -221,6 +254,7 @@ export class InstitutionalAgreementEditModel {
     content = ko.observable();
     startDate = ko.observable();
     expDate = ko.observable();
+
     isEstimated = ko.observable();
     autoRenew = ko.observable(2);
     privateNotes = ko.observable();
@@ -297,8 +331,8 @@ export class InstitutionalAgreementEditModel {
         $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
             .done((response: any): void => {
                 this.content(response.content);
-                this.expDate(response.expiresOn);
-                this.startDate(response.startsOn);
+                this.expDate(Globalize.format(new Date(response.expiresOn), 'd'));
+                this.startDate(Globalize.format(new Date(response.startsOn), 'd'));
                 if (response.isAutoRenew == null) {
                     this.autoRenew(2);
                 } else {
@@ -721,8 +755,11 @@ export class InstitutionalAgreementEditModel {
         });
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
+
                 value: new Date($(item).val()),
-                open: function (e) { this.options.format = "MM/dd/yyyy"; }
+                close: function (e) {
+                    $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                }
             });
         });
 
@@ -1586,6 +1623,9 @@ export class InstitutionalAgreementEditModel {
             },
             message: 'The field must be greater than start date'//{0}'
         };
+        ko.validation.rules.date.validator = function (value, validate) {
+            return !value.length || (validate && Globalize.parseDate(value) != null);
+        };
 
         ko.validation.registerExtenders();
         
@@ -1596,7 +1636,7 @@ export class InstitutionalAgreementEditModel {
                 },
                 date: { message: "Start date must valid." },
                 maxLength: 50
-            }),
+            }),//.extend({ 'date': 'd' }),
             expDate: this.expDate.extend({
                 required: {
                     message: "Expiration date is required."
