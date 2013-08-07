@@ -1,5 +1,5 @@
-/// <reference path="knockout-2.2.d.ts" />
-/// <reference path="../jquery/jquery-1.8.d.ts" />
+/// <reference path="knockout.d.ts" />
+/// <reference path="../jquery/jquery.d.ts" />
 /// <reference path="../google/google.maps.d.ts" />
 
 interface KnockoutObservableStringArray extends KnockoutObservableArrayFunctions {

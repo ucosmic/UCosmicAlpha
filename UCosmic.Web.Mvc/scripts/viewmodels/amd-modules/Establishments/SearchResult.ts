@@ -1,6 +1,6 @@
-/// <reference path="../../../jquery/jquery-1.8.d.ts" />
-/// <reference path="../../../ko/knockout-2.2.d.ts" />
-/// <reference path="../../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../../jquery/jquery.d.ts" />
+/// <reference path="../../../ko/knockout.d.ts" />
+/// <reference path="../../../ko/knockout.mapping.d.ts" />
 /// <reference path="Search.ts" />
  
 import Search = module('./Search')

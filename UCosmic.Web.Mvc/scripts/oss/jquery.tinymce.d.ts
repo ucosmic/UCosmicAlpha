@@ -1,4 +1,4 @@
-/// <reference path="../jquery/jquery-1.8.d.ts" />
+/// <reference path="../jquery/jquery.d.ts" />
 
 interface JQuery {
     tinymce(options?: any): JQuery;

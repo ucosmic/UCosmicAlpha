@@ -72,10 +72,10 @@ namespace UCosmic.Domain.Agreements
 
             // name cannot exceed maximum length when provided
             When(x => !string.IsNullOrWhiteSpace(x.Name), () =>
-            RuleFor(x => x.Name)
-            .Length(1, AgreementConstraints.NameMaxLength)
-            .WithMessage(MustNotExceedStringLength.FailMessageFormat,
-            x => "Agreement name, if entered,", x => AgreementConstraints.NameMaxLength, x => x.Name.Length)
+                RuleFor(x => x.Name)
+                    .Length(1, AgreementConstraints.NameMaxLength)
+                        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
+                            x => "Agreement name, if entered,", x => AgreementConstraints.NameMaxLength, x => x.Name.Length)
             );
 
 

@@ -1,6 +1,5 @@
-/// <reference path="../../../ko/knockout-2.2.d.ts" />
-/// <reference path="../../../jquery/jquery-1.8.d.ts" />
-
+/// <reference path="../../../ko/knockout.d.ts" />
+/// <reference path="../../../jquery/jquery.d.ts" />
 
     // private properties
     var ticks: number;

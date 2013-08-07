@@ -1,13 +1,11 @@
-/// <reference path="../../../typings/knockout.postbox/knockout-postbox.d.ts" />
-/// <reference path="../../../jquery/jquery-1.8.d.ts" />
-/// <reference path="../../../ko/knockout-2.2.d.ts" />
-/// <reference path="../../../ko/knockout.mapping-2.0.d.ts" />
+/// <reference path="../../../jquery/jquery.d.ts" />
+/// <reference path="../../../ko/knockout.d.ts" />
+/// <reference path="../../../ko/knockout.mapping.d.ts" />
 /// <reference path="../../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../../sammy/sammyjs-0.7.d.ts" />
+/// <reference path="../../../sammy/sammyjs.d.ts" />
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
- 
 
 import PagedSearch = module('../Widgets/PagedSearch');
 import SearchResult = module('./SearchResult');

@@ -1,8 +1,8 @@
 /// <reference path="google.maps.d.ts" />
-/// <reference path="../ko/knockout-2.2.d.ts" />
+/// <reference path="../ko/knockout.d.ts" />
 /// <reference path="../ko/knockout.extensions.d.ts" />
-/// <reference path="../jquery/jquery-1.8.d.ts" />
-/// <reference path="../jquery/jqueryui-1.9.d.ts" />
+/// <reference path="../jquery/jquery.d.ts" />
+/// <reference path="../jquery/jqueryui.d.ts" />
 
 interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObservableBase {
     (): App.GoogleMaps.ToolsOverlay;

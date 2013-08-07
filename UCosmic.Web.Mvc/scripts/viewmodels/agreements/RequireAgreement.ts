@@ -1,6 +1,6 @@
 /// <reference path="../../require/require.d.ts" />
-/// <reference path="../../jquery/jquery-1.8.d.ts" />
-/// <reference path="../../ko/knockout-2.2.d.ts" />
+/// <reference path="../../jquery/jquery.d.ts" />
+/// <reference path="../../ko/knockout.d.ts" />
 
 require(["../../viewmodels/agreements/AgreementVM"],
 function (Agreement) {

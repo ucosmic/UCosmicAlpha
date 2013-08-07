@@ -58,12 +58,12 @@ ko.bindingHandlers.fadeVisible = {
     }
 };
 ((function ($) {
-    var instancesById = {
-    }, initQueue = $.Deferred(), initQueueNext = initQueue;
-    initQueue.resolve();
+    var instances_by_id = {
+    }, init_queue = $.Deferred(), init_queue_next = init_queue;
+    init_queue.resolve();
     ko.bindingHandlers.tinymce = {
-        init: function (element, valueAccessor, allBindingsAccessor) {
-            var initArguments = arguments;
+        init: function (element, valueAccessor, allBindingsAccessor, context) {
+            var init_arguments = arguments;
             var options = allBindingsAccessor().tinymceOptions || {
             };
             var modelValue = valueAccessor();
@@ -83,7 +83,7 @@ ko.bindingHandlers.fadeVisible = {
                 eventsToCatch = ko.utils.arrayGetDistinctValues(eventsToCatch);
             }
             options.setup = function (ed) {
-                ed.onChange.add(function (editor, l) {
+                ed.onChange.add(function (ed, l) {
                     if(ko.isWriteableObservable(modelValue)) {
                         modelValue(l.content);
                     }
@@ -106,17 +106,17 @@ ko.bindingHandlers.fadeVisible = {
                 $.each(eventsToCatch, function (index) {
                     var eventName = eventsToCatch[index];
                     if(eventName.indexOf('keydown') >= 0) {
-                        ed.onKeyDown.add(function () {
+                        ed.onKeyDown.add(function (ed, e) {
                             valueUpdateHandler(eventName);
                         });
                     }
                     if(eventName.indexOf('keypress') >= 0) {
-                        ed.onKeyPress.add(function () {
+                        ed.onKeyPress.add(function (ed, e) {
                             valueUpdateHandler(eventName);
                         });
                     }
                     if(eventName.indexOf('keyup') >= 0) {
-                        ed.onKeyUp.add(function () {
+                        ed.onKeyUp.add(function (ed, e) {
                             valueUpdateHandler(eventName);
                         });
                     }
@@ -126,21 +126,21 @@ ko.bindingHandlers.fadeVisible = {
                         modelValue(l.content);
                     }
                 });
-                ed.onPaste.add(function (editor) {
-                    //var doc = editor.getDoc();
+                ed.onPaste.add(function (ed, evt) {
+                    var doc = ed.getDoc();
                     if(ko.isWriteableObservable(modelValue)) {
                         setTimeout(function () {
-                            modelValue(editor.getContent({
+                            modelValue(ed.getContent({
                                 format: 'raw'
                             }));
                         }, 10);
                     }
                 });
-                ed.onInit.add(function (editor) {
-                    var doc = editor.getDoc();
-                    tinymce.dom.Event.add(doc, 'blur', function () {
+                ed.onInit.add(function (ed, evt) {
+                    var doc = ed.getDoc();
+                    tinymce.dom.Event.add(doc, 'blur', function (e) {
                         if(ko.isWriteableObservable(modelValue)) {
-                            modelValue(editor.getContent({
+                            modelValue(ed.getContent({
                                 format: 'raw'
                             }));
                         }
@@ -153,8 +153,8 @@ ko.bindingHandlers.fadeVisible = {
                     var ed = tinyMCE.get(tid);
                     if(ed) {
                         ed.remove();
-                        if(instancesById[tid]) {
-                            delete instancesById[tid];
+                        if(instances_by_id[tid]) {
+                            delete instances_by_id[tid];
                         }
                     }
                 });
@@ -162,14 +162,14 @@ ko.bindingHandlers.fadeVisible = {
             if(!element.id) {
                 element.id = tinyMCE.DOM.uniqueId();
             }
-            initQueueNext = initQueueNext.pipe(function () {
+            init_queue_next = init_queue_next.pipe(function () {
                 var defer = $.Deferred();
-                var initOptions = $.extend({
+                var init_options = $.extend({
                 }, options, {
                     mode: 'none',
                     init_instance_callback: function (instance) {
-                        instancesById[element.id] = instance;
-                        ko.bindingHandlers.tinymce.update.apply(undefined, initArguments);
+                        instances_by_id[element.id] = instance;
+                        ko.bindingHandlers.tinymce.update.apply(undefined, init_arguments);
                         defer.resolve(element.id);
                         if(options.hasOwnProperty("init_instance_callback")) {
                             options.init_instance_callback(instance);
@@ -177,7 +177,7 @@ ko.bindingHandlers.fadeVisible = {
                     }
                 });
                 setTimeout(function () {
-                    tinyMCE.init(initOptions);
+                    tinyMCE.init(init_options);
                     setTimeout(function () {
                         tinyMCE.execCommand("mceAddControl", true, element.id);
                     }, 10);
@@ -186,12 +186,12 @@ ko.bindingHandlers.fadeVisible = {
             });
             el.val(value);
         },
-        update: function (element, valueAccessor) {
+        update: function (element, valueAccessor, allBindingsAccessor, context) {
             var el = $(element);
             var value = ko.utils.unwrapObservable(valueAccessor());
             var id = el.attr('id');
-            if(id !== undefined && id !== '' && instancesById.hasOwnProperty(id)) {
-                var content = instancesById[id].getContent({
+            if(id !== undefined && id !== '' && instances_by_id.hasOwnProperty(id)) {
+                var content = instances_by_id[id].getContent({
                     format: 'raw'
                 });
                 if(content !== value || content !== el.val()) {
