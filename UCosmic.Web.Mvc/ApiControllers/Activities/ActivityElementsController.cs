@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
@@ -91,10 +93,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [GET("activity-country-counts")]
-        public IEnumerable<ActivityPlaceCount> GetActivityCountryCounts()
+        public IEnumerable<ActivityPlaceCount> GetActivityCountryCounts(int establishmentId)
         {
             Place[] countries = _queryProcessor.Execute(new Countries()).ToArray();
             var countryCounts = new ActivityPlaceCount[countries.Length];
+            int? reportsDefaultYearRange = _queryProcessor.Execute(new ReportDefaultYearRangeByEstablishmentId(establishmentId));
+            DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year+1,1,1);
+            DateTime fromDateUtc = (reportsDefaultYearRange.HasValue)
+                                       ? toDateUtc.AddYears(-(reportsDefaultYearRange.Value+1))
+                                       : new DateTime(DateTime.MinValue.Year, 1, 1);
 
             for (int i = 0; i < countries.Length; i += 1)
             {
@@ -102,7 +109,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     PlaceId = countries[i].RevisionId,
                     OfficialName = countries[i].OfficialName,
-                    Count = _queryProcessor.Execute(new ActivityCountByCountry(countries[i].RevisionId))
+                    Count = _queryProcessor.Execute(new ActivityCountByPlaceId(countries[i].RevisionId, fromDateUtc, toDateUtc))
                 };
             }
 

@@ -22,7 +22,7 @@ var ViewModels;
                 this.isPointmapVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
                 this.searchType = ko.observable('activities');
-                this.selectedCountry = ko.observable(null);
+                this.selectedPlace = ko.observable(null);
                 this.isGlobalView = ko.observable(true);
                 this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this.barchartWorldDataTable_cached = null;
@@ -272,12 +272,12 @@ var ViewModels;
                 dataTable.addColumn('string', 'Country');
                 dataTable.addColumn('number', 'Total Activities');
                 if(this.summary != null) {
-                    if(((this.summary).countryActivityCounts() != null) && ((this.summary).countryActivityCounts().length > 0)) {
-                        var countryActivityCounts = (this.summary).countryActivityCounts;
-                        for(var i = 0; i < countryActivityCounts().length; i += 1) {
+                    if(((this.summary).placeActivityCounts() != null) && ((this.summary).placeActivityCounts().length > 0)) {
+                        var placeActivityCounts = (this.summary).placeActivityCounts;
+                        for(var i = 0; i < placeActivityCounts().length; i += 1) {
                             var rowData = new Array();
-                            rowData.push(countryActivityCounts()[i].officialName());
-                            rowData.push(countryActivityCounts()[i].count());
+                            rowData.push(placeActivityCounts()[i].officialName());
+                            rowData.push(placeActivityCounts()[i].count());
                             dataTable.addRow(rowData);
                         }
                     }
@@ -285,15 +285,15 @@ var ViewModels;
                 this.heatmapActivityData = dataTable;
                 dataTable = new this.google.visualization.DataTable();
                 colNames = new Array();
-                dataTable.addColumn('string', 'Country');
+                dataTable.addColumn('string', 'Location');
                 dataTable.addColumn('number', 'Total People');
                 if(this.summary != null) {
-                    if(((this.summary).countryPeopleCounts() != null) && ((this.summary).countryPeopleCounts().length > 0)) {
-                        var countryPeopleCounts = (this.summary).countryPeopleCounts;
-                        for(var i = 0; i < countryPeopleCounts().length; i += 1) {
+                    if(((this.summary).placePeopleCounts() != null) && ((this.summary).placePeopleCounts().length > 0)) {
+                        var placePeopleCounts = (this.summary).placePeopleCounts;
+                        for(var i = 0; i < placePeopleCounts().length; i += 1) {
                             var rowData = new Array();
-                            rowData.push(countryPeopleCounts()[i].officialName());
-                            rowData.push(countryPeopleCounts()[i].count());
+                            rowData.push(placePeopleCounts()[i].officialName());
+                            rowData.push(placePeopleCounts()[i].count());
                             dataTable.addRow(rowData);
                         }
                     }
@@ -319,9 +319,24 @@ var ViewModels;
                 this.barchartActivityOptions = {
                     title: 'Activities',
                     vAxis: {
-                        title: 'Count',
-                        titleTextStyle: {
-                            color: 'red'
+                        title: 'Count'
+                    },
+                    chartArea: {
+                        left: 80
+                    },
+                    legend: {
+                        position: 'none'
+                    },
+                    series: {
+                        0: {
+                            type: 'bars'
+                        },
+                        1: {
+                            type: 'line',
+                            color: 'black',
+                            lineWidth: 0,
+                            pointSize: 0,
+                            visibleInLegend: false
                         }
                     }
                 };
@@ -334,70 +349,85 @@ var ViewModels;
                         }
                     }
                 };
-                this.barchart = new this.google.visualization.BarChart($('#facultystaff-summary-barchart')[0]);
+                this.barchart = new this.google.visualization.ColumnChart($('#facultystaff-summary-barchart')[0]);
             };
-            FacultyAndStaff.prototype.getActivityDataTable = function (country) {
-                debugger;
-
+            FacultyAndStaff.prototype.getActivityDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
                 dt.addColumn('string', 'Activity');
                 dt.addColumn('number', 'Count');
-                if(country == null) {
+                dt.addColumn({
+                    type: 'number',
+                    role: 'annotation'
+                });
+                if(place == null) {
                     for(var i = 0; i < (this.summary).worldActivityCounts().length; i += 1) {
                         var activityType = (this.summary).worldActivityCounts()[i].type();
                         var count = (this.summary).worldActivityCounts()[i].count();
                         dt.addRow([
                             activityType, 
+                            count, 
                             count
                         ]);
                     }
                 } else {
                     var i = 0;
-                    while((i < (this.summary).countryActivityCounts().length) && ((this.summary).countryActivityCounts()[i].officialName !== country)) {
+                    while((i < (this.summary).placeActivityCounts().length) && ((this.summary).placeActivityCounts()[i].officialName !== place)) {
                         i += 1;
                     }
-                    if(i < (this.summary).countryActivityCounts().length) {
-                        var countryActivityCounts = (this.summary).countryActivityCounts()[i];
-                        for(var j = 0; j < countryActivityCounts.typeCounts().length; j += 1) {
-                            var activityType = countryActivityCounts.typeCounts[j].type();
-                            var count = countryActivityCounts.typeCounts[j].count();
+                    if(i < (this.summary).placeActivityCounts().length) {
+                        var placeActivityCounts = (this.summary).placeActivityCounts()[i];
+                        for(var j = 0; j < placeActivityCounts.typeCounts().length; j += 1) {
+                            var activityType = placeActivityCounts.typeCounts[j].type();
+                            var count = placeActivityCounts.typeCounts[j].count();
                             dt.addRow([
                                 activityType, 
+                                count, 
                                 count
                             ]);
                         }
                     }
                 }
-                return dt;
+                var view = new this.google.visualization.DataView(dt);
+                view.setColumns([
+                    0, 
+                    1, 
+                    1, 
+                    2
+                ]);
+                return view;
             };
-            FacultyAndStaff.prototype.getPeopleDataTable = function (country) {
-                debugger;
-
+            FacultyAndStaff.prototype.getPeopleDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
                 dt.addColumn('string', 'People');
                 dt.addColumn('number', 'Count');
-                if(country == null) {
+                dt.addColumn({
+                    type: 'string',
+                    role: 'annotation'
+                });
+                if(place == null) {
                     for(var i = 0; i < (this.summary).worldPeopleCounts().length; i += 1) {
                         var activityType = (this.summary).worldPeopleCounts()[i].type();
                         var count = (this.summary).worldPeopleCounts()[i].count();
                         dt.addRow([
                             activityType, 
-                            count
+                            count, 
+                            String(count)
                         ]);
                     }
                 } else {
                     var i = 0;
-                    while((i < (this.summary).countryPeopleCounts().length) && ((this.summary).countryPeopleCounts()[i].officialName !== country)) {
+                    while((i < (this.summary).placePeopleCounts().length) && ((this.summary).placePeopleCounts()[i].officialName !== place)) {
                         i += 1;
                     }
-                    if(i < (this.summary).countryPeopleCounts().length) {
-                        var countryPeopleCounts = (this.summary).countryPeopleCounts()[i];
-                        for(var j = 0; j < countryPeopleCounts.typeCounts().length; j += 1) {
-                            var activityType = countryPeopleCounts.typeCounts[j].type();
-                            var count = countryPeopleCounts.typeCounts[j].count();
+                    if(i < (this.summary).placePeopleCounts().length) {
+                        var placePeopleCounts = (this.summary).placePeopleCounts()[i];
+                        for(var j = 0; j < placePeopleCounts.typeCounts().length; j += 1) {
+                            var activityType = placePeopleCounts.typeCounts[j].type();
+                            var count = placePeopleCounts.typeCounts[j].count();
                             dt.addRow([
                                 activityType, 
-                                count
+                                count, 
+                                String(count)
                             ]);
                         }
                     }
@@ -477,11 +507,11 @@ var ViewModels;
                     this.isHeatmapVisible(true);
                     if(this.searchType() === 'activities') {
                         this.heatmap.draw(this.heatmapActivityData, this.heatmapOptions);
-                        var dataTable = this.getActivityDataTable(this.selectedCountry());
+                        var dataTable = this.getActivityDataTable(this.selectedPlace());
                         this.barchart.draw(dataTable, this.barchartActivityOptions);
                     } else {
                         this.heatmap.draw(this.heatmapPeopleData, this.heatmapOptions);
-                        var dataTable = this.getPeopleDataTable(this.selectedCountry());
+                        var dataTable = this.getPeopleDataTable(this.selectedPlace());
                         this.barchart.draw(dataTable, this.barchartPeopleOptions);
                     }
                     $("#bib-faculty-staff-summary").addClass("current");
@@ -582,10 +612,10 @@ var ViewModels;
                 } else {
                     var str = this.heatmapPeopleData.getFormattedValue(selection[0].row, 0);
                 }
-                this.selectedCountry(str);
+                this.selectedPlace(str);
             };
             FacultyAndStaff.prototype.globalViewClickHandler = function (item, event) {
-                this.selectedCountry(null);
+                this.selectedPlace(null);
                 this.selectMap('heatmap');
             };
             return FacultyAndStaff;

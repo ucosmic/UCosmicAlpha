@@ -38,14 +38,14 @@ namespace UCosmic.Web.Mvc.Models
         public int Count { get; set; }
     }
 
-    public class FacultyStaffActivitiesInCountryModel
+    public class FacultyStaffActivitiesInPlaceModel
     {
         public int PlaceId { get; set; }
         public string OfficialName { get; set; }
         public int Count { get; set; }
         public ICollection<FacultyStaffActivityCountModel> TypeCounts { get; set; }
 
-        public FacultyStaffActivitiesInCountryModel()
+        public FacultyStaffActivitiesInPlaceModel()
         {
             TypeCounts = new Collection<FacultyStaffActivityCountModel>();
         }
@@ -54,19 +54,19 @@ namespace UCosmic.Web.Mvc.Models
     public class FacultyStaffActivitiesSummaryModel
     {
         public int TotalActivities { get; set; }
-        public int TotalCountriesWithActivities { get; set; }
-        public ICollection<FacultyStaffActivitiesInCountryModel> CountryActivityCounts { get; set; }
+        public int TotalPlacesWithActivities { get; set; }
+        public ICollection<FacultyStaffActivitiesInPlaceModel> PlaceActivityCounts { get; set; }
         public ICollection<FacultyStaffActivityCountModel> WorldActivityCounts { get; set; }
 
         public int TotalPeople { get; set; }
-        public int TotalCountriesWithPeople { get; set; }
-        public ICollection<FacultyStaffActivitiesInCountryModel> CountryPeopleCounts { get; set; }
+        public int TotalPlacesWithPeople { get; set; }
+        public ICollection<FacultyStaffActivitiesInPlaceModel> PlacePeopleCounts { get; set; }
         public ICollection<FacultyStaffActivityCountModel> WorldPeopleCounts { get; set; }
 
         public FacultyStaffActivitiesSummaryModel()
         {
-            CountryActivityCounts = new Collection<FacultyStaffActivitiesInCountryModel>();
-            CountryPeopleCounts = new Collection<FacultyStaffActivitiesInCountryModel>();
+            PlaceActivityCounts = new Collection<FacultyStaffActivitiesInPlaceModel>();
+            PlacePeopleCounts = new Collection<FacultyStaffActivitiesInPlaceModel>();
 
             WorldActivityCounts = new Collection<FacultyStaffActivityCountModel>();
             WorldPeopleCounts = new Collection<FacultyStaffActivityCountModel>();

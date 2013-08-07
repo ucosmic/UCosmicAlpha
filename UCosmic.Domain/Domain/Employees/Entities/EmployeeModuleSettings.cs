@@ -31,5 +31,6 @@ namespace UCosmic.Domain.Employees
         public bool OfferActivityType { get; protected internal set; }
         public bool OfferFundingQuestions { get; protected internal set; }
         public string InternationalPedigreeTitle { get; protected internal set; }
+        public int? ReportsDefaultYearRange { get; protected internal set; }
     }
 }

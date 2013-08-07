@@ -1487,6 +1487,7 @@
     <Content Include="scripts\ko\knockout-2.3.0.js" />
     <Content Include="scripts\ko\knockout.mapping-latest.debug.js" />
     <Content Include="scripts\ko\knockout.mapping-latest.js" />
+    <Content Include="scripts\oss\moment.d.ts" />
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
     <None Include="scripts\sammy\sammyjs-0.7.d.ts" />
@@ -2410,7 +2411,6 @@
     <Content Include="Views\FacultyStaff\Index.cshtml" />
     <Content Include="Views\FacultyStaff\_Bib.cshtml" />
     <Content Include="Views\FacultyStaff\_SearchSideBar.cshtml" />
-    <Content Include="Views\FacultyStaff\OldIndex.cshtml" />
     <Content Include="Views\FacultyStaff\_StatsSideBar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

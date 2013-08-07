@@ -25,6 +25,13 @@ namespace UCosmic.Domain.Activities
         public string Title { get; protected internal set; }
         public string Content { get; protected internal set; }
 
+        /* Rules for StartsOn and EndsOn:
+         * 
+         * 1. StartsOn must be equal to or earlier than EndsOn
+         * 2. StartsOn and EndsOn may or may not have a value
+         * 3. Both are stored in UTC
+         */
+
         private DateTime? _startsOn;
         public DateTime? StartsOn
         {

@@ -116,7 +116,8 @@ namespace UCosmic.SeedData
                 OfferCountry = true,
                 OfferActivityType = true,
                 OfferFundingQuestions = true,
-                InternationalPedigreeTitle = "My Formal Education Outside the US"
+                InternationalPedigreeTitle = "My Formal Education Outside the US",
+                ReportsDefaultYearRange = 10
             });
         }
     }

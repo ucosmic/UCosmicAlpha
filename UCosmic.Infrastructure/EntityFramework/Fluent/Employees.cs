@@ -54,6 +54,7 @@ namespace UCosmic.EntityFramework
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
             Property(p => p.InternationalPedigreeTitle).HasMaxLength(64);
+            Property(p => p.ReportsDefaultYearRange).IsOptional();
         }
     }
 
