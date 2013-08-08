@@ -114,42 +114,36 @@ var ViewModels;
                     ]
                 });
             };
-            ActivityList.prototype.editActivity = function (data, event, activityId) {
+            ActivityList.prototype.editActivity = function (activityId) {
+                var returnValue = false;
                 $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.Activities.getEditState(activityId),
-                    success: function (editState, textStatus, jqXHR) {
-                        if(editState.isInEdit) {
-                            $("#activityBeingEditedDialog").dialog({
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    Ok: function () {
-                                        $(this).dialog("close");
-                                        return;
-                                    }
+                    type: 'GET',
+                    async: false,
+                    url: App.Routes.WebApi.Activities.getEditState(activityId)
+                }).done(function (editState, textStatus, jqXHR) {
+                    if(editState.isInEdit) {
+                        var $dialog = $("#activityBeingEditedDialog");
+                        $dialog.dialog({
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                Ok: function () {
+                                    $dialog.dialog("close");
                                 }
-                            });
-                        } else {
-                            var element = event.target;
-                            var url = null;
-                            while((element != null) && (element.nodeName != 'TR')) {
-                                element = element.parentElement;
                             }
-                            if(element != null) {
-                                url = element.attributes["href"].value;
-                            }
-                            if(url != null) {
-                                location.href = url;
-                            }
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus + "|" + errorThrown);
+                        });
+                    } else {
+                        returnValue = true;
                     }
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to edit your activity', true);
                 });
+                return returnValue;
+            };
+            ActivityList.prototype.editActivityUrl = function (id) {
+                return App.Routes.Mvc.My.Profile.activityEdit(id);
             };
             ActivityList.prototype.newActivity = function (data, event) {
                 $.ajax({

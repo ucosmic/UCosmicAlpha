@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -12,7 +14,7 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [Authorize]
-    [RoutePrefix("api/geographic-expertises")]
+    [RoutePrefix("api/geographic-expertise")]
     public class GeographicExpertisesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -57,7 +59,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an expertise
         */
         // --------------------------------------------------------------------------------
-        [GET("{expertiseId}")]
+        [GET("{expertiseId:int}", ControllerPrecedence = 1)]
         public GeographicExpertiseApiModel Get(int expertiseId)
         {
             var expertise = _queryProcessor.Execute(new GeographicExpertiseById(expertiseId));
@@ -76,27 +78,32 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [POST("")]
-        public HttpResponseMessage Post(GeographicExpertiseApiModel newModel)
+        public HttpResponseMessage Post(GeographicExpertiseApiModel model)
         {
-            if ( (newModel == null) ||
-                 (newModel.Locations == null) ||
-                 (newModel.Locations.Count == 0) )
-            {
+            if (model == null || model.Locations == null || !model.Locations.Any())
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
 
             var newLocations = new Collection<int>();
-            foreach (var location in newModel.Locations)
+            foreach (var location in model.Locations)
             {
                 newLocations.Add(location.PlaceId);
             }
             var createDeepGeographicExpertiseCommand = new CreateDeepGeographicExpertise(User, newLocations)
             {
-                Description = newModel.Description
+                Description = model.Description
             };
             _createDeepGeographicExpertise.Handle(createDeepGeographicExpertiseCommand);
-            var id = createDeepGeographicExpertiseCommand.CreatedGeographicExpertise.RevisionId;
-            return Request.CreateResponse(HttpStatusCode.OK, id);
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Geographic expertise was successfully created.");
+            var url = Url.Link(null, new
+            {
+                controller = "GeographicExpertises",
+                action = "Get",
+                expertiseId = createDeepGeographicExpertiseCommand.CreatedGeographicExpertiseId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
         // --------------------------------------------------------------------------------
@@ -104,31 +111,29 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Update an expertise
         */
         // --------------------------------------------------------------------------------
-        [PUT("{expertiseId}")]
+        [PUT("{expertiseId:int}")]
         public HttpResponseMessage Put(int expertiseId, GeographicExpertiseApiModel model)
         {
-            if ((expertiseId == 0) || (model == null))
-            {
+            if (expertiseId == 0 || model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
 
-            try
-            {
-                var updateGeographicExpertiseCommand = Mapper.Map<UpdateGeographicExpertise>(model);
-                updateGeographicExpertiseCommand.UpdatedOn = DateTime.UtcNow;
-                updateGeographicExpertiseCommand.Principal = User;
-                _updateGeographicExpertise.Handle(updateGeographicExpertiseCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "GeographicExpertise update error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+            //try
+            //{
+            var updateGeographicExpertiseCommand = Mapper.Map<UpdateGeographicExpertise>(model);
+            updateGeographicExpertiseCommand.UpdatedOn = DateTime.UtcNow;
+            updateGeographicExpertiseCommand.Principal = User;
+            _updateGeographicExpertise.Handle(updateGeographicExpertiseCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "GeographicExpertise update error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -138,24 +143,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an expertise
         */
         // --------------------------------------------------------------------------------
-        [DELETE("{expertiseId}")]
+        [DELETE("{expertiseId:int}")]
         public HttpResponseMessage Delete(int expertiseId)
         {
-            try
-            {
-                var deleteGeographicExpertiseCommand = new DeleteGeographicExpertise(User, expertiseId);
-                _deleteGeographicExpertise.Handle(deleteGeographicExpertiseCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "GeographicExpertise delete error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+            //try
+            //{
+            var deleteGeographicExpertiseCommand = new DeleteGeographicExpertise(User, expertiseId);
+            _deleteGeographicExpertise.Handle(deleteGeographicExpertiseCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "GeographicExpertise delete error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

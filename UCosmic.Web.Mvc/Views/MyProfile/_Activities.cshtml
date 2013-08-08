@@ -17,32 +17,41 @@
 <div id="confirmActivityDeleteDialog" title="Please confirm your intent" class="dialog">
     <div style="text-align: center; font-weight: bold">Are you sure you want to delete this activity?</div>
 </div>
+<div id="activityBeingEditedDialog" title="Concurrency conflict" class="dialog">
+    <p>This activity cannot be edited right now because it is being edited by someone else.</p>
+    <p>Please try again in a few minutes. If you continue to receive this message, please use the Feedback &amp; Support link on this page to report it.</p>
+</div>
 
 <!-- KNOCKOUT TEMPLATES -->
+
 <script type="text/html" id="activities-documents-template">
-    <div style="width: 150px; font-size: small; text-align: center; float:left">
-        <div><img data-bind="attr: { src: proxyImageSource }"></div>
+    <div style="width: 150px; font-size: small; text-align: center; float: left">
+        <div>
+            <img data-bind="attr: { src: proxyImageSource }" src="@Url.Content("~/images/transparent.png")" alt="">
+        </div>
         <div class="ellipsis"><span data-bind="text: title"></span></div>
     </div>
 </script>
 
 <script type="text/html" id="activities-template">
-    <tr class="hover-hilite"  
-        data-bind="click: function (item, event) { $parent.editActivity(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.activityEdit(id()) }">
+    <tr class="hover-hilite">
         <!-- Description -->
         <td>
-            <div class="ellipsis" style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: values.title()"></span>
-                <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
-            </div>
-            <div data-bind="text: $parent.activityTypesFormatted( values.types() )">
-            </div>
-            <div style="margin-bottom: 4px">
-                <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn(), values.onGoing(), values.dateFormat())"></span>
-                <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
-            </div>
-            <div class="data-items" data-bind="template: { name: 'activities-documents-template', foreach: values.documents }">
-            </div>
+            <a href="#" data-bind="attr: { href: $parent.editActivityUrl(id()) }, click: function () { return $parent.editActivity(id()) }"
+                style="display: inline-block; text-decoration: inherit; color: inherit;">
+                <div class="ellipsis" style="height: 30px">
+                    <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: values.title()"></span>
+                    <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
+                </div>
+                <div data-bind="text: $parent.activityTypesFormatted(values.types())">
+                </div>
+                <div style="margin-bottom: 4px">
+                    <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn(), values.onGoing(), values.dateFormat())"></span>
+                    <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
+                </div>
+                <div class="data-items" data-bind="template: { name: 'activities-documents-template', foreach: values.documents }">
+                </div>
+            </a>
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">

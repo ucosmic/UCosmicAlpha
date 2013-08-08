@@ -696,6 +696,7 @@
       <SubType>Code</SubType>
     </None>
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
+    <Content Include="images\transparent.png" />
     <Content Include="scripts\jquery\jquery-1.9.1.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.min.js" />
     <Content Include="images\icons\files\doc.png" />
@@ -2387,7 +2388,6 @@
     <Content Include="Views\MyProfile\_LanguageExpertises.cshtml" />
     <Content Include="Views\MyProfile\_Degrees.cshtml" />
     <Content Include="Views\MyProfile\DegreeEdit.cshtml" />
-    <Content Include="Views\MyProfile\GeographicExpertiseEdit.cshtml" />
     <Content Include="Views\MyProfile\LanguageExpertiseEdit.cshtml" />
     <Content Include="Views\Agreements\Form.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
@@ -2413,6 +2413,7 @@
     <Content Include="Views\FacultyStaff\_SearchSideBar.cshtml" />
     <Content Include="Views\FacultyStaff\_StatsSideBar.cshtml" />
     <Content Include="Views\FacultyStaff\OldIndex.cshtml" />
+    <Content Include="Views\MyProfile\GeographicExpertiseForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

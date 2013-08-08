@@ -10,11 +10,12 @@ namespace UCosmic.Domain.GeographicExpertise
     public class CreateDeepGeographicExpertise
     {
         public Guid? EntityId { get; set; }
-        public IPrincipal Principal { get; protected set; }
-        public ICollection<int> PlaceIds { get; protected set; }
+        public IPrincipal Principal { get; private set; }
+        public ICollection<int> PlaceIds { get; private set; }
         public string Description { get; set; }
-        public bool NoCommit { get; set; }
-        public GeographicExpertise CreatedGeographicExpertise { get; protected internal set; }
+        public int CreatedGeographicExpertiseId { get; internal set; }
+        internal bool NoCommit { get; set; }
+        internal GeographicExpertise CreatedGeographicExpertise { get; set; }
 
         public CreateDeepGeographicExpertise(IPrincipal principal, ICollection<int> placeIds)
         {
@@ -85,6 +86,7 @@ namespace UCosmic.Domain.GeographicExpertise
             }
 
             command.CreatedGeographicExpertise = createExpertiseCommand.CreatedGeographicExpertise;
+            command.CreatedGeographicExpertiseId = command.CreatedGeographicExpertise.RevisionId;
         }
     }
 }

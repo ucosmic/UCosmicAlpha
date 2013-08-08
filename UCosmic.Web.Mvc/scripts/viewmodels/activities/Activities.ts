@@ -186,48 +186,40 @@ module ViewModels.Activities
         /*  
         */
         // --------------------------------------------------------------------------------
-        editActivity(data: any, event: any, activityId: number): void {
+        editActivity(activityId: number): bool {
+            var returnValue = false;
             $.ajax({
-                type: "GET",
-                url: App.Routes.WebApi.Activities.getEditState(activityId),
-                success: (editState: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    if ( editState.isInEdit ) {
-                        $( "#activityBeingEditedDialog" ).dialog( {
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                Ok: function () {
-                                    $( this ).dialog( "close" );
-                                    return;
-                                }
+                type: 'GET',
+                async: false,
+                url: App.Routes.WebApi.Activities.getEditState(activityId)
+            })
+            .done((editState: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                if (editState.isInEdit) {
+                    var $dialog = $("#activityBeingEditedDialog");
+                    $dialog.dialog({
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            Ok: (): void => {
+                                $dialog.dialog("close");
                             }
-                        } );
-                    }
-                    else {
-                        var element = event.target;
-                        var url = null;
-
-                        while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                            element = element.parentElement;
                         }
-
-                        if ( element != null ) {
-                            url = element.attributes["href"].value;
-                        }
-
-                        if ( url != null ) {
-                            location.href = url;
-                        }
-                    }
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
+                    });
                 }
+                else {
+                    returnValue = true;
+                }
+            })
+            .fail((xhr: JQueryXHR): void => {
+                App.Failures.message(xhr, 'while trying to edit your activity', true)
             });
+            return returnValue;
+        }
+
+        editActivityUrl(id: number): string {
+            return App.Routes.Mvc.My.Profile.activityEdit(id);
         }
 
         // --------------------------------------------------------------------------------

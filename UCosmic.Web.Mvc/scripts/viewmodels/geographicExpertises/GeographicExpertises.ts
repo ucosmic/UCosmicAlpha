@@ -54,7 +54,7 @@ module ViewModels.GeographicExpertises
             expertiseSearchInput.pageNumber = 1;
             expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
-            $.get(App.Routes.WebApi.GeographicExpertises.get(), expertiseSearchInput)
+            $.get(App.Routes.WebApi.GeographicExpertise.get(), expertiseSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     {
                         ko.mapping.fromJS(data, {}, this);
@@ -78,7 +78,7 @@ module ViewModels.GeographicExpertises
             $.ajax({
                 async: false,
                 type: "DELETE",
-                url: App.Routes.WebApi.GeographicExpertises.del(expertiseId),
+                url: App.Routes.WebApi.GeographicExpertise.del(expertiseId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 { },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
@@ -117,25 +117,8 @@ module ViewModels.GeographicExpertises
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        editExpertise(data: any, event: any, expertiseId: number): void {
-            var element = event.target;
-            var url = null;
-
-            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                element = element.parentElement;
-            }
-
-            if ( element != null ) {
-                url = element.attributes["href"].value;
-            }
-
-            if ( url != null ) {
-                location.href = url;
-            }
+        editExpertiseUrl(expertiseId: number): string {
+            return App.Routes.Mvc.My.GeographicExpertise.edit(expertiseId);
         }
 
         // --------------------------------------------------------------------------------
@@ -143,7 +126,7 @@ module ViewModels.GeographicExpertises
         */
         // --------------------------------------------------------------------------------
         newExpertise(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
+            location.href = App.Routes.Mvc.My.GeographicExpertise.create();
         }
 
         // --------------------------------------------------------------------------------

@@ -10,11 +10,7 @@ var ViewModels;
                 this._initialize(expertiseId);
             }
             GeographicExpertise.prototype._initialize = function (expertiseId) {
-                if(expertiseId === "new") {
-                    this.id = ko.observable(0);
-                } else {
-                    this.id = ko.observable(Number(expertiseId));
-                }
+                this.id = ko.observable(expertiseId);
             };
             GeographicExpertise.prototype.setupWidgets = function (locationSelectorId) {
                 var _this = this;
@@ -70,7 +66,7 @@ var ViewModels;
                     var dataPact = $.Deferred();
                     $.ajax({
                         type: "GET",
-                        url: App.Routes.WebApi.GeographicExpertises.get(this.id()),
+                        url: App.Routes.WebApi.GeographicExpertise.get(this.id()),
                         success: function (data, textStatus, jqXhr) {
                             dataPact.resolve(data);
                         },
@@ -121,23 +117,18 @@ var ViewModels;
                     });
                 }
                 var model = ko.mapping.toJS(mapSource);
-                var url = (viewModel.id() == 0) ? App.Routes.WebApi.GeographicExpertises.post() : App.Routes.WebApi.GeographicExpertises.put(viewModel.id());
+                var url = (viewModel.id() == 0) ? App.Routes.WebApi.GeographicExpertise.post() : App.Routes.WebApi.GeographicExpertise.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 $.ajax({
                     type: type,
                     async: false,
                     url: url,
-                    data: ko.toJSON(model),
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: function (data, textStatus, jqXhr) {
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        alert(textStatus + " | " + errorThrown);
-                    },
-                    complete: function (jqXhr, textStatus) {
-                        location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
-                    }
+                    data: model
+                }).done(function (data, status, xhr) {
+                }).fail(function (xhr, status, errorThrown) {
+                    App.Failures.message(xhr, 'while trying to save your geographic expertise', true);
+                }).always(function (xhr, status) {
+                    location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                 });
             };
             GeographicExpertise.prototype.cancel = function (item, event, mode) {

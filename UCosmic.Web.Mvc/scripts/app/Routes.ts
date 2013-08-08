@@ -540,29 +540,27 @@ module App.Routes {
                 }
             }
 
-        } // Activities
+        }
 
-        export module GeographicExpertises {
+        export module GeographicExpertise {
             export function get (expertiseId?: number): string {
-                var url = makeUrl('geographic-expertises');
-                if (expertiseId) {
-                    url += expertiseId;
-                }
-                return url;
+                var url = 'geographic-expertise';
+                if (expertiseId) url += '/' + expertiseId;
+                return makeUrl(url);
             }
 
             export function post(): string {
-                return makeUrl('geographic-expertises');
+                return get();
             }
 
             export function put(expertiseId: number): string {
-                return makeUrl('geographic-expertises/' + expertiseId);
+                return get(expertiseId);
             }
 
             export function del(expertiseId: number): string {
-                return makeUrl('geographic-expertises/' + expertiseId);
+                return get(expertiseId);
             }
-        } // GeographicExpertises
+        }
 
         export module LanguageExpertises {
             export function get (expertiseId?: number): string {
@@ -728,28 +726,25 @@ module App.Routes {
                     return url;
                 }
                 export function activityEdit(activityId: number) {
-                    var url = 'my/activities/' + activityId;
-                    return makeUrl(url);
-                }
-                export function geographicExpertiseEdit(expertiseId: string) {
-                    var url = makeUrl('my/geographic-expertise/');
-                    return url + expertiseId;
+                    return makeUrl('my/activities/{0}'.format(activityId));
                 }
                 export function languageExpertiseEdit(expertiseId: string) {
-                    var url = makeUrl('my/language-expertise/');
-                    return url + expertiseId;
+                    return makeUrl('my/language-expertise/{0}'.format(expertiseId));
                 }
                 export function internationalAffiliationEdit(affiliationId: string) {
-                    var url = makeUrl('my/international-affiliation/');
-                    return url + affiliationId;
+                    return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
                 }
                 export function degreeEdit(degreeId: string) {
-                    var url = makeUrl('my/degree/');
-                    return url + degreeId;
+                    return makeUrl('my/degrees');
                 }
-                export function affiliationEdit(affiliationId: string) {
-                    var url = makeUrl('my/affiliation/');
-                    return url + affiliationId;
+            }
+
+            export module GeographicExpertise {
+                export function create() {
+                    return makeUrl('my/geographic-expertise/new');
+                }
+                export function edit(expertiseId: number) {
+                    return makeUrl('my/geographic-expertise/{0}'.format(expertiseId));
                 }
             }
         }

@@ -19,14 +19,14 @@
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
+
 <script type="text/html" id="geographic-expertises-template">
-    <tr class="hover-hilite"  
-        data-bind="click: function (item, event) { $parent.editExpertise(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.geographicExpertiseEdit(id()) }">
+    <tr class="hover-hilite">
         <!-- Description -->
         <td>
-            <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.formatLocations( locations() )"></span>
-            </div>
+            <a href="#" data-bind="attr: { href: $parent.editExpertiseUrl(id()) }" style="display: block;">
+                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: $parent.formatLocations(locations())"></span>
+            </a>
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">

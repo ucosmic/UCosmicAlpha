@@ -18,7 +18,7 @@ var ViewModels;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = 2147483647;
-                $.get(App.Routes.WebApi.GeographicExpertises.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.GeographicExpertise.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
  {
                         ko.mapping.fromJS(data, {
                         }, _this);
@@ -35,7 +35,7 @@ var ViewModels;
                 $.ajax({
                     async: false,
                     type: "DELETE",
-                    url: App.Routes.WebApi.GeographicExpertises.del(expertiseId),
+                    url: App.Routes.WebApi.GeographicExpertise.del(expertiseId),
                     success: function (data, textStatus, jqXHR) {
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -68,21 +68,11 @@ var ViewModels;
                     ]
                 });
             };
-            GeographicExpertiseList.prototype.editExpertise = function (data, event, expertiseId) {
-                var element = event.target;
-                var url = null;
-                while((element != null) && (element.nodeName != 'TR')) {
-                    element = element.parentElement;
-                }
-                if(element != null) {
-                    url = element.attributes["href"].value;
-                }
-                if(url != null) {
-                    location.href = url;
-                }
+            GeographicExpertiseList.prototype.editExpertiseUrl = function (expertiseId) {
+                return App.Routes.Mvc.My.GeographicExpertise.edit(expertiseId);
             };
             GeographicExpertiseList.prototype.newExpertise = function (data, event) {
-                location.href = App.Routes.Mvc.My.Profile.geographicExpertiseEdit("new");
+                location.href = App.Routes.Mvc.My.GeographicExpertise.create();
             };
             GeographicExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";

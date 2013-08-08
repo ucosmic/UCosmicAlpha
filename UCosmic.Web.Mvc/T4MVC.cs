@@ -168,732 +168,732 @@ namespace Links
                           
             public static readonly string jquery_ui_1_9_2_min_js = Url("jquery-ui-1.9.2.min.js");
             public static readonly string jquery_d_ts = Url("jquery.d.ts");
-            public static readonly string jqueryui_d_ts = Url("jqueryui.d.ts");
-        }
-    
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public static class jquery_globalize {
-            private const string URLPATH = "~/scripts/jquery.globalize";
-            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class cultures {
-                private const string URLPATH = "~/scripts/jquery.globalize/cultures";
+            public static class jquery_globalize {
+                private const string URLPATH = "~/scripts/jquery/jquery.globalize";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string globalize_culture_af_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.af-ZA.min.js") ? Url("globalize.culture.af-ZA.min.js") : Url("globalize.culture.af-ZA.js");
-                              
-                public static readonly string globalize_culture_af_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.af.min.js") ? Url("globalize.culture.af.min.js") : Url("globalize.culture.af.js");
-                              
-                public static readonly string globalize_culture_am_ET_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.am-ET.min.js") ? Url("globalize.culture.am-ET.min.js") : Url("globalize.culture.am-ET.js");
-                              
-                public static readonly string globalize_culture_am_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.am.min.js") ? Url("globalize.culture.am.min.js") : Url("globalize.culture.am.js");
-                              
-                public static readonly string globalize_culture_ar_AE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-AE.min.js") ? Url("globalize.culture.ar-AE.min.js") : Url("globalize.culture.ar-AE.js");
-                              
-                public static readonly string globalize_culture_ar_BH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-BH.min.js") ? Url("globalize.culture.ar-BH.min.js") : Url("globalize.culture.ar-BH.js");
-                              
-                public static readonly string globalize_culture_ar_DZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-DZ.min.js") ? Url("globalize.culture.ar-DZ.min.js") : Url("globalize.culture.ar-DZ.js");
-                              
-                public static readonly string globalize_culture_ar_EG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-EG.min.js") ? Url("globalize.culture.ar-EG.min.js") : Url("globalize.culture.ar-EG.js");
-                              
-                public static readonly string globalize_culture_ar_IQ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-IQ.min.js") ? Url("globalize.culture.ar-IQ.min.js") : Url("globalize.culture.ar-IQ.js");
-                              
-                public static readonly string globalize_culture_ar_JO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-JO.min.js") ? Url("globalize.culture.ar-JO.min.js") : Url("globalize.culture.ar-JO.js");
-                              
-                public static readonly string globalize_culture_ar_KW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-KW.min.js") ? Url("globalize.culture.ar-KW.min.js") : Url("globalize.culture.ar-KW.js");
-                              
-                public static readonly string globalize_culture_ar_LB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-LB.min.js") ? Url("globalize.culture.ar-LB.min.js") : Url("globalize.culture.ar-LB.js");
-                              
-                public static readonly string globalize_culture_ar_LY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-LY.min.js") ? Url("globalize.culture.ar-LY.min.js") : Url("globalize.culture.ar-LY.js");
-                              
-                public static readonly string globalize_culture_ar_MA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-MA.min.js") ? Url("globalize.culture.ar-MA.min.js") : Url("globalize.culture.ar-MA.js");
-                              
-                public static readonly string globalize_culture_ar_OM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-OM.min.js") ? Url("globalize.culture.ar-OM.min.js") : Url("globalize.culture.ar-OM.js");
-                              
-                public static readonly string globalize_culture_ar_QA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-QA.min.js") ? Url("globalize.culture.ar-QA.min.js") : Url("globalize.culture.ar-QA.js");
-                              
-                public static readonly string globalize_culture_ar_SA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-SA.min.js") ? Url("globalize.culture.ar-SA.min.js") : Url("globalize.culture.ar-SA.js");
-                              
-                public static readonly string globalize_culture_ar_SY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-SY.min.js") ? Url("globalize.culture.ar-SY.min.js") : Url("globalize.culture.ar-SY.js");
-                              
-                public static readonly string globalize_culture_ar_TN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-TN.min.js") ? Url("globalize.culture.ar-TN.min.js") : Url("globalize.culture.ar-TN.js");
-                              
-                public static readonly string globalize_culture_ar_YE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-YE.min.js") ? Url("globalize.culture.ar-YE.min.js") : Url("globalize.culture.ar-YE.js");
-                              
-                public static readonly string globalize_culture_ar_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar.min.js") ? Url("globalize.culture.ar.min.js") : Url("globalize.culture.ar.js");
-                              
-                public static readonly string globalize_culture_arn_CL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.arn-CL.min.js") ? Url("globalize.culture.arn-CL.min.js") : Url("globalize.culture.arn-CL.js");
-                              
-                public static readonly string globalize_culture_arn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.arn.min.js") ? Url("globalize.culture.arn.min.js") : Url("globalize.culture.arn.js");
-                              
-                public static readonly string globalize_culture_as_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.as-IN.min.js") ? Url("globalize.culture.as-IN.min.js") : Url("globalize.culture.as-IN.js");
-                              
-                public static readonly string globalize_culture_as_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.as.min.js") ? Url("globalize.culture.as.min.js") : Url("globalize.culture.as.js");
-                              
-                public static readonly string globalize_culture_az_Cyrl_AZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Cyrl-AZ.min.js") ? Url("globalize.culture.az-Cyrl-AZ.min.js") : Url("globalize.culture.az-Cyrl-AZ.js");
-                              
-                public static readonly string globalize_culture_az_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Cyrl.min.js") ? Url("globalize.culture.az-Cyrl.min.js") : Url("globalize.culture.az-Cyrl.js");
-                              
-                public static readonly string globalize_culture_az_Latn_AZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Latn-AZ.min.js") ? Url("globalize.culture.az-Latn-AZ.min.js") : Url("globalize.culture.az-Latn-AZ.js");
-                              
-                public static readonly string globalize_culture_az_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Latn.min.js") ? Url("globalize.culture.az-Latn.min.js") : Url("globalize.culture.az-Latn.js");
-                              
-                public static readonly string globalize_culture_az_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az.min.js") ? Url("globalize.culture.az.min.js") : Url("globalize.culture.az.js");
-                              
-                public static readonly string globalize_culture_ba_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ba-RU.min.js") ? Url("globalize.culture.ba-RU.min.js") : Url("globalize.culture.ba-RU.js");
-                              
-                public static readonly string globalize_culture_ba_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ba.min.js") ? Url("globalize.culture.ba.min.js") : Url("globalize.culture.ba.js");
-                              
-                public static readonly string globalize_culture_be_BY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.be-BY.min.js") ? Url("globalize.culture.be-BY.min.js") : Url("globalize.culture.be-BY.js");
-                              
-                public static readonly string globalize_culture_be_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.be.min.js") ? Url("globalize.culture.be.min.js") : Url("globalize.culture.be.js");
-                              
-                public static readonly string globalize_culture_bg_BG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bg-BG.min.js") ? Url("globalize.culture.bg-BG.min.js") : Url("globalize.culture.bg-BG.js");
-                              
-                public static readonly string globalize_culture_bg_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bg.min.js") ? Url("globalize.culture.bg.min.js") : Url("globalize.culture.bg.js");
-                              
-                public static readonly string globalize_culture_bn_BD_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bn-BD.min.js") ? Url("globalize.culture.bn-BD.min.js") : Url("globalize.culture.bn-BD.js");
-                              
-                public static readonly string globalize_culture_bn_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bn-IN.min.js") ? Url("globalize.culture.bn-IN.min.js") : Url("globalize.culture.bn-IN.js");
-                              
-                public static readonly string globalize_culture_bn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bn.min.js") ? Url("globalize.culture.bn.min.js") : Url("globalize.culture.bn.js");
-                              
-                public static readonly string globalize_culture_bo_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bo-CN.min.js") ? Url("globalize.culture.bo-CN.min.js") : Url("globalize.culture.bo-CN.js");
-                              
-                public static readonly string globalize_culture_bo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bo.min.js") ? Url("globalize.culture.bo.min.js") : Url("globalize.culture.bo.js");
-                              
-                public static readonly string globalize_culture_br_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.br-FR.min.js") ? Url("globalize.culture.br-FR.min.js") : Url("globalize.culture.br-FR.js");
-                              
-                public static readonly string globalize_culture_br_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.br.min.js") ? Url("globalize.culture.br.min.js") : Url("globalize.culture.br.js");
-                              
-                public static readonly string globalize_culture_bs_Cyrl_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Cyrl-BA.min.js") ? Url("globalize.culture.bs-Cyrl-BA.min.js") : Url("globalize.culture.bs-Cyrl-BA.js");
-                              
-                public static readonly string globalize_culture_bs_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Cyrl.min.js") ? Url("globalize.culture.bs-Cyrl.min.js") : Url("globalize.culture.bs-Cyrl.js");
-                              
-                public static readonly string globalize_culture_bs_Latn_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Latn-BA.min.js") ? Url("globalize.culture.bs-Latn-BA.min.js") : Url("globalize.culture.bs-Latn-BA.js");
-                              
-                public static readonly string globalize_culture_bs_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Latn.min.js") ? Url("globalize.culture.bs-Latn.min.js") : Url("globalize.culture.bs-Latn.js");
-                              
-                public static readonly string globalize_culture_bs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs.min.js") ? Url("globalize.culture.bs.min.js") : Url("globalize.culture.bs.js");
-                              
-                public static readonly string globalize_culture_ca_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ca-ES.min.js") ? Url("globalize.culture.ca-ES.min.js") : Url("globalize.culture.ca-ES.js");
-                              
-                public static readonly string globalize_culture_ca_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ca.min.js") ? Url("globalize.culture.ca.min.js") : Url("globalize.culture.ca.js");
-                              
-                public static readonly string globalize_culture_co_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.co-FR.min.js") ? Url("globalize.culture.co-FR.min.js") : Url("globalize.culture.co-FR.js");
-                              
-                public static readonly string globalize_culture_co_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.co.min.js") ? Url("globalize.culture.co.min.js") : Url("globalize.culture.co.js");
-                              
-                public static readonly string globalize_culture_cs_CZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cs-CZ.min.js") ? Url("globalize.culture.cs-CZ.min.js") : Url("globalize.culture.cs-CZ.js");
-                              
-                public static readonly string globalize_culture_cs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cs.min.js") ? Url("globalize.culture.cs.min.js") : Url("globalize.culture.cs.js");
-                              
-                public static readonly string globalize_culture_cy_GB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cy-GB.min.js") ? Url("globalize.culture.cy-GB.min.js") : Url("globalize.culture.cy-GB.js");
-                              
-                public static readonly string globalize_culture_cy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cy.min.js") ? Url("globalize.culture.cy.min.js") : Url("globalize.culture.cy.js");
-                              
-                public static readonly string globalize_culture_da_DK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.da-DK.min.js") ? Url("globalize.culture.da-DK.min.js") : Url("globalize.culture.da-DK.js");
-                              
-                public static readonly string globalize_culture_da_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.da.min.js") ? Url("globalize.culture.da.min.js") : Url("globalize.culture.da.js");
-                              
-                public static readonly string globalize_culture_de_AT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-AT.min.js") ? Url("globalize.culture.de-AT.min.js") : Url("globalize.culture.de-AT.js");
-                              
-                public static readonly string globalize_culture_de_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-CH.min.js") ? Url("globalize.culture.de-CH.min.js") : Url("globalize.culture.de-CH.js");
-                              
-                public static readonly string globalize_culture_de_DE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-DE.min.js") ? Url("globalize.culture.de-DE.min.js") : Url("globalize.culture.de-DE.js");
-                              
-                public static readonly string globalize_culture_de_LI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-LI.min.js") ? Url("globalize.culture.de-LI.min.js") : Url("globalize.culture.de-LI.js");
-                              
-                public static readonly string globalize_culture_de_LU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-LU.min.js") ? Url("globalize.culture.de-LU.min.js") : Url("globalize.culture.de-LU.js");
-                              
-                public static readonly string globalize_culture_de_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de.min.js") ? Url("globalize.culture.de.min.js") : Url("globalize.culture.de.js");
-                              
-                public static readonly string globalize_culture_dsb_DE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dsb-DE.min.js") ? Url("globalize.culture.dsb-DE.min.js") : Url("globalize.culture.dsb-DE.js");
-                              
-                public static readonly string globalize_culture_dsb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dsb.min.js") ? Url("globalize.culture.dsb.min.js") : Url("globalize.culture.dsb.js");
-                              
-                public static readonly string globalize_culture_dv_MV_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dv-MV.min.js") ? Url("globalize.culture.dv-MV.min.js") : Url("globalize.culture.dv-MV.js");
-                              
-                public static readonly string globalize_culture_dv_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dv.min.js") ? Url("globalize.culture.dv.min.js") : Url("globalize.culture.dv.js");
-                              
-                public static readonly string globalize_culture_el_GR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.el-GR.min.js") ? Url("globalize.culture.el-GR.min.js") : Url("globalize.culture.el-GR.js");
-                              
-                public static readonly string globalize_culture_el_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.el.min.js") ? Url("globalize.culture.el.min.js") : Url("globalize.culture.el.js");
-                              
-                public static readonly string globalize_culture_en_029_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-029.min.js") ? Url("globalize.culture.en-029.min.js") : Url("globalize.culture.en-029.js");
-                              
-                public static readonly string globalize_culture_en_AU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-AU.min.js") ? Url("globalize.culture.en-AU.min.js") : Url("globalize.culture.en-AU.js");
-                              
-                public static readonly string globalize_culture_en_BZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-BZ.min.js") ? Url("globalize.culture.en-BZ.min.js") : Url("globalize.culture.en-BZ.js");
-                              
-                public static readonly string globalize_culture_en_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-CA.min.js") ? Url("globalize.culture.en-CA.min.js") : Url("globalize.culture.en-CA.js");
-                              
-                public static readonly string globalize_culture_en_GB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-GB.min.js") ? Url("globalize.culture.en-GB.min.js") : Url("globalize.culture.en-GB.js");
-                              
-                public static readonly string globalize_culture_en_IE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-IE.min.js") ? Url("globalize.culture.en-IE.min.js") : Url("globalize.culture.en-IE.js");
-                              
-                public static readonly string globalize_culture_en_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-IN.min.js") ? Url("globalize.culture.en-IN.min.js") : Url("globalize.culture.en-IN.js");
-                              
-                public static readonly string globalize_culture_en_JM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-JM.min.js") ? Url("globalize.culture.en-JM.min.js") : Url("globalize.culture.en-JM.js");
-                              
-                public static readonly string globalize_culture_en_MY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-MY.min.js") ? Url("globalize.culture.en-MY.min.js") : Url("globalize.culture.en-MY.js");
-                              
-                public static readonly string globalize_culture_en_NZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-NZ.min.js") ? Url("globalize.culture.en-NZ.min.js") : Url("globalize.culture.en-NZ.js");
-                              
-                public static readonly string globalize_culture_en_PH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-PH.min.js") ? Url("globalize.culture.en-PH.min.js") : Url("globalize.culture.en-PH.js");
-                              
-                public static readonly string globalize_culture_en_SG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-SG.min.js") ? Url("globalize.culture.en-SG.min.js") : Url("globalize.culture.en-SG.js");
-                              
-                public static readonly string globalize_culture_en_TT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-TT.min.js") ? Url("globalize.culture.en-TT.min.js") : Url("globalize.culture.en-TT.js");
-                              
-                public static readonly string globalize_culture_en_US_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-US.min.js") ? Url("globalize.culture.en-US.min.js") : Url("globalize.culture.en-US.js");
-                              
-                public static readonly string globalize_culture_en_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-ZA.min.js") ? Url("globalize.culture.en-ZA.min.js") : Url("globalize.culture.en-ZA.js");
-                              
-                public static readonly string globalize_culture_en_ZW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-ZW.min.js") ? Url("globalize.culture.en-ZW.min.js") : Url("globalize.culture.en-ZW.js");
-                              
-                public static readonly string globalize_culture_es_AR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-AR.min.js") ? Url("globalize.culture.es-AR.min.js") : Url("globalize.culture.es-AR.js");
-                              
-                public static readonly string globalize_culture_es_BO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-BO.min.js") ? Url("globalize.culture.es-BO.min.js") : Url("globalize.culture.es-BO.js");
-                              
-                public static readonly string globalize_culture_es_CL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-CL.min.js") ? Url("globalize.culture.es-CL.min.js") : Url("globalize.culture.es-CL.js");
-                              
-                public static readonly string globalize_culture_es_CO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-CO.min.js") ? Url("globalize.culture.es-CO.min.js") : Url("globalize.culture.es-CO.js");
-                              
-                public static readonly string globalize_culture_es_CR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-CR.min.js") ? Url("globalize.culture.es-CR.min.js") : Url("globalize.culture.es-CR.js");
-                              
-                public static readonly string globalize_culture_es_DO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-DO.min.js") ? Url("globalize.culture.es-DO.min.js") : Url("globalize.culture.es-DO.js");
-                              
-                public static readonly string globalize_culture_es_EC_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-EC.min.js") ? Url("globalize.culture.es-EC.min.js") : Url("globalize.culture.es-EC.js");
-                              
-                public static readonly string globalize_culture_es_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-ES.min.js") ? Url("globalize.culture.es-ES.min.js") : Url("globalize.culture.es-ES.js");
-                              
-                public static readonly string globalize_culture_es_GT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-GT.min.js") ? Url("globalize.culture.es-GT.min.js") : Url("globalize.culture.es-GT.js");
-                              
-                public static readonly string globalize_culture_es_HN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-HN.min.js") ? Url("globalize.culture.es-HN.min.js") : Url("globalize.culture.es-HN.js");
-                              
-                public static readonly string globalize_culture_es_MX_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-MX.min.js") ? Url("globalize.culture.es-MX.min.js") : Url("globalize.culture.es-MX.js");
-                              
-                public static readonly string globalize_culture_es_NI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-NI.min.js") ? Url("globalize.culture.es-NI.min.js") : Url("globalize.culture.es-NI.js");
-                              
-                public static readonly string globalize_culture_es_PA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PA.min.js") ? Url("globalize.culture.es-PA.min.js") : Url("globalize.culture.es-PA.js");
-                              
-                public static readonly string globalize_culture_es_PE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PE.min.js") ? Url("globalize.culture.es-PE.min.js") : Url("globalize.culture.es-PE.js");
-                              
-                public static readonly string globalize_culture_es_PR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PR.min.js") ? Url("globalize.culture.es-PR.min.js") : Url("globalize.culture.es-PR.js");
-                              
-                public static readonly string globalize_culture_es_PY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PY.min.js") ? Url("globalize.culture.es-PY.min.js") : Url("globalize.culture.es-PY.js");
-                              
-                public static readonly string globalize_culture_es_SV_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-SV.min.js") ? Url("globalize.culture.es-SV.min.js") : Url("globalize.culture.es-SV.js");
-                              
-                public static readonly string globalize_culture_es_US_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-US.min.js") ? Url("globalize.culture.es-US.min.js") : Url("globalize.culture.es-US.js");
-                              
-                public static readonly string globalize_culture_es_UY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-UY.min.js") ? Url("globalize.culture.es-UY.min.js") : Url("globalize.culture.es-UY.js");
-                              
-                public static readonly string globalize_culture_es_VE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-VE.min.js") ? Url("globalize.culture.es-VE.min.js") : Url("globalize.culture.es-VE.js");
-                              
-                public static readonly string globalize_culture_es_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es.min.js") ? Url("globalize.culture.es.min.js") : Url("globalize.culture.es.js");
-                              
-                public static readonly string globalize_culture_et_EE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.et-EE.min.js") ? Url("globalize.culture.et-EE.min.js") : Url("globalize.culture.et-EE.js");
-                              
-                public static readonly string globalize_culture_et_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.et.min.js") ? Url("globalize.culture.et.min.js") : Url("globalize.culture.et.js");
-                              
-                public static readonly string globalize_culture_eu_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.eu-ES.min.js") ? Url("globalize.culture.eu-ES.min.js") : Url("globalize.culture.eu-ES.js");
-                              
-                public static readonly string globalize_culture_eu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.eu.min.js") ? Url("globalize.culture.eu.min.js") : Url("globalize.culture.eu.js");
-                              
-                public static readonly string globalize_culture_fa_IR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fa-IR.min.js") ? Url("globalize.culture.fa-IR.min.js") : Url("globalize.culture.fa-IR.js");
-                              
-                public static readonly string globalize_culture_fa_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fa.min.js") ? Url("globalize.culture.fa.min.js") : Url("globalize.culture.fa.js");
-                              
-                public static readonly string globalize_culture_fi_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fi-FI.min.js") ? Url("globalize.culture.fi-FI.min.js") : Url("globalize.culture.fi-FI.js");
-                              
-                public static readonly string globalize_culture_fi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fi.min.js") ? Url("globalize.culture.fi.min.js") : Url("globalize.culture.fi.js");
-                              
-                public static readonly string globalize_culture_fil_PH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fil-PH.min.js") ? Url("globalize.culture.fil-PH.min.js") : Url("globalize.culture.fil-PH.js");
-                              
-                public static readonly string globalize_culture_fil_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fil.min.js") ? Url("globalize.culture.fil.min.js") : Url("globalize.culture.fil.js");
-                              
-                public static readonly string globalize_culture_fo_FO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fo-FO.min.js") ? Url("globalize.culture.fo-FO.min.js") : Url("globalize.culture.fo-FO.js");
-                              
-                public static readonly string globalize_culture_fo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fo.min.js") ? Url("globalize.culture.fo.min.js") : Url("globalize.culture.fo.js");
-                              
-                public static readonly string globalize_culture_fr_BE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-BE.min.js") ? Url("globalize.culture.fr-BE.min.js") : Url("globalize.culture.fr-BE.js");
-                              
-                public static readonly string globalize_culture_fr_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-CA.min.js") ? Url("globalize.culture.fr-CA.min.js") : Url("globalize.culture.fr-CA.js");
-                              
-                public static readonly string globalize_culture_fr_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-CH.min.js") ? Url("globalize.culture.fr-CH.min.js") : Url("globalize.culture.fr-CH.js");
-                              
-                public static readonly string globalize_culture_fr_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-FR.min.js") ? Url("globalize.culture.fr-FR.min.js") : Url("globalize.culture.fr-FR.js");
-                              
-                public static readonly string globalize_culture_fr_LU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-LU.min.js") ? Url("globalize.culture.fr-LU.min.js") : Url("globalize.culture.fr-LU.js");
-                              
-                public static readonly string globalize_culture_fr_MC_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-MC.min.js") ? Url("globalize.culture.fr-MC.min.js") : Url("globalize.culture.fr-MC.js");
-                              
-                public static readonly string globalize_culture_fr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr.min.js") ? Url("globalize.culture.fr.min.js") : Url("globalize.culture.fr.js");
-                              
-                public static readonly string globalize_culture_fy_NL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fy-NL.min.js") ? Url("globalize.culture.fy-NL.min.js") : Url("globalize.culture.fy-NL.js");
-                              
-                public static readonly string globalize_culture_fy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fy.min.js") ? Url("globalize.culture.fy.min.js") : Url("globalize.culture.fy.js");
-                              
-                public static readonly string globalize_culture_ga_IE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ga-IE.min.js") ? Url("globalize.culture.ga-IE.min.js") : Url("globalize.culture.ga-IE.js");
-                              
-                public static readonly string globalize_culture_ga_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ga.min.js") ? Url("globalize.culture.ga.min.js") : Url("globalize.culture.ga.js");
-                              
-                public static readonly string globalize_culture_gd_GB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gd-GB.min.js") ? Url("globalize.culture.gd-GB.min.js") : Url("globalize.culture.gd-GB.js");
-                              
-                public static readonly string globalize_culture_gd_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gd.min.js") ? Url("globalize.culture.gd.min.js") : Url("globalize.culture.gd.js");
-                              
-                public static readonly string globalize_culture_gl_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gl-ES.min.js") ? Url("globalize.culture.gl-ES.min.js") : Url("globalize.culture.gl-ES.js");
-                              
-                public static readonly string globalize_culture_gl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gl.min.js") ? Url("globalize.culture.gl.min.js") : Url("globalize.culture.gl.js");
-                              
-                public static readonly string globalize_culture_gsw_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gsw-FR.min.js") ? Url("globalize.culture.gsw-FR.min.js") : Url("globalize.culture.gsw-FR.js");
-                              
-                public static readonly string globalize_culture_gsw_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gsw.min.js") ? Url("globalize.culture.gsw.min.js") : Url("globalize.culture.gsw.js");
-                              
-                public static readonly string globalize_culture_gu_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gu-IN.min.js") ? Url("globalize.culture.gu-IN.min.js") : Url("globalize.culture.gu-IN.js");
-                              
-                public static readonly string globalize_culture_gu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gu.min.js") ? Url("globalize.culture.gu.min.js") : Url("globalize.culture.gu.js");
-                              
-                public static readonly string globalize_culture_ha_Latn_NG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ha-Latn-NG.min.js") ? Url("globalize.culture.ha-Latn-NG.min.js") : Url("globalize.culture.ha-Latn-NG.js");
-                              
-                public static readonly string globalize_culture_ha_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ha-Latn.min.js") ? Url("globalize.culture.ha-Latn.min.js") : Url("globalize.culture.ha-Latn.js");
-                              
-                public static readonly string globalize_culture_ha_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ha.min.js") ? Url("globalize.culture.ha.min.js") : Url("globalize.culture.ha.js");
-                              
-                public static readonly string globalize_culture_he_IL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.he-IL.min.js") ? Url("globalize.culture.he-IL.min.js") : Url("globalize.culture.he-IL.js");
-                              
-                public static readonly string globalize_culture_he_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.he.min.js") ? Url("globalize.culture.he.min.js") : Url("globalize.culture.he.js");
-                              
-                public static readonly string globalize_culture_hi_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hi-IN.min.js") ? Url("globalize.culture.hi-IN.min.js") : Url("globalize.culture.hi-IN.js");
-                              
-                public static readonly string globalize_culture_hi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hi.min.js") ? Url("globalize.culture.hi.min.js") : Url("globalize.culture.hi.js");
-                              
-                public static readonly string globalize_culture_hr_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hr-BA.min.js") ? Url("globalize.culture.hr-BA.min.js") : Url("globalize.culture.hr-BA.js");
-                              
-                public static readonly string globalize_culture_hr_HR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hr-HR.min.js") ? Url("globalize.culture.hr-HR.min.js") : Url("globalize.culture.hr-HR.js");
-                              
-                public static readonly string globalize_culture_hr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hr.min.js") ? Url("globalize.culture.hr.min.js") : Url("globalize.culture.hr.js");
-                              
-                public static readonly string globalize_culture_hsb_DE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hsb-DE.min.js") ? Url("globalize.culture.hsb-DE.min.js") : Url("globalize.culture.hsb-DE.js");
-                              
-                public static readonly string globalize_culture_hsb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hsb.min.js") ? Url("globalize.culture.hsb.min.js") : Url("globalize.culture.hsb.js");
-                              
-                public static readonly string globalize_culture_hu_HU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hu-HU.min.js") ? Url("globalize.culture.hu-HU.min.js") : Url("globalize.culture.hu-HU.js");
-                              
-                public static readonly string globalize_culture_hu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hu.min.js") ? Url("globalize.culture.hu.min.js") : Url("globalize.culture.hu.js");
-                              
-                public static readonly string globalize_culture_hy_AM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hy-AM.min.js") ? Url("globalize.culture.hy-AM.min.js") : Url("globalize.culture.hy-AM.js");
-                              
-                public static readonly string globalize_culture_hy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hy.min.js") ? Url("globalize.culture.hy.min.js") : Url("globalize.culture.hy.js");
-                              
-                public static readonly string globalize_culture_id_ID_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.id-ID.min.js") ? Url("globalize.culture.id-ID.min.js") : Url("globalize.culture.id-ID.js");
-                              
-                public static readonly string globalize_culture_id_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.id.min.js") ? Url("globalize.culture.id.min.js") : Url("globalize.culture.id.js");
-                              
-                public static readonly string globalize_culture_ig_NG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ig-NG.min.js") ? Url("globalize.culture.ig-NG.min.js") : Url("globalize.culture.ig-NG.js");
-                              
-                public static readonly string globalize_culture_ig_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ig.min.js") ? Url("globalize.culture.ig.min.js") : Url("globalize.culture.ig.js");
-                              
-                public static readonly string globalize_culture_ii_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ii-CN.min.js") ? Url("globalize.culture.ii-CN.min.js") : Url("globalize.culture.ii-CN.js");
-                              
-                public static readonly string globalize_culture_ii_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ii.min.js") ? Url("globalize.culture.ii.min.js") : Url("globalize.culture.ii.js");
-                              
-                public static readonly string globalize_culture_is_IS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.is-IS.min.js") ? Url("globalize.culture.is-IS.min.js") : Url("globalize.culture.is-IS.js");
-                              
-                public static readonly string globalize_culture_is_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.is.min.js") ? Url("globalize.culture.is.min.js") : Url("globalize.culture.is.js");
-                              
-                public static readonly string globalize_culture_it_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.it-CH.min.js") ? Url("globalize.culture.it-CH.min.js") : Url("globalize.culture.it-CH.js");
-                              
-                public static readonly string globalize_culture_it_IT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.it-IT.min.js") ? Url("globalize.culture.it-IT.min.js") : Url("globalize.culture.it-IT.js");
-                              
-                public static readonly string globalize_culture_it_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.it.min.js") ? Url("globalize.culture.it.min.js") : Url("globalize.culture.it.js");
-                              
-                public static readonly string globalize_culture_iu_Cans_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Cans-CA.min.js") ? Url("globalize.culture.iu-Cans-CA.min.js") : Url("globalize.culture.iu-Cans-CA.js");
-                              
-                public static readonly string globalize_culture_iu_Cans_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Cans.min.js") ? Url("globalize.culture.iu-Cans.min.js") : Url("globalize.culture.iu-Cans.js");
-                              
-                public static readonly string globalize_culture_iu_Latn_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Latn-CA.min.js") ? Url("globalize.culture.iu-Latn-CA.min.js") : Url("globalize.culture.iu-Latn-CA.js");
-                              
-                public static readonly string globalize_culture_iu_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Latn.min.js") ? Url("globalize.culture.iu-Latn.min.js") : Url("globalize.culture.iu-Latn.js");
-                              
-                public static readonly string globalize_culture_iu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu.min.js") ? Url("globalize.culture.iu.min.js") : Url("globalize.culture.iu.js");
-                              
-                public static readonly string globalize_culture_ja_JP_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ja-JP.min.js") ? Url("globalize.culture.ja-JP.min.js") : Url("globalize.culture.ja-JP.js");
-                              
-                public static readonly string globalize_culture_ja_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ja.min.js") ? Url("globalize.culture.ja.min.js") : Url("globalize.culture.ja.js");
-                              
-                public static readonly string globalize_culture_ka_GE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ka-GE.min.js") ? Url("globalize.culture.ka-GE.min.js") : Url("globalize.culture.ka-GE.js");
-                              
-                public static readonly string globalize_culture_ka_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ka.min.js") ? Url("globalize.culture.ka.min.js") : Url("globalize.culture.ka.js");
-                              
-                public static readonly string globalize_culture_kk_KZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kk-KZ.min.js") ? Url("globalize.culture.kk-KZ.min.js") : Url("globalize.culture.kk-KZ.js");
-                              
-                public static readonly string globalize_culture_kk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kk.min.js") ? Url("globalize.culture.kk.min.js") : Url("globalize.culture.kk.js");
-                              
-                public static readonly string globalize_culture_kl_GL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kl-GL.min.js") ? Url("globalize.culture.kl-GL.min.js") : Url("globalize.culture.kl-GL.js");
-                              
-                public static readonly string globalize_culture_kl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kl.min.js") ? Url("globalize.culture.kl.min.js") : Url("globalize.culture.kl.js");
-                              
-                public static readonly string globalize_culture_km_KH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.km-KH.min.js") ? Url("globalize.culture.km-KH.min.js") : Url("globalize.culture.km-KH.js");
-                              
-                public static readonly string globalize_culture_km_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.km.min.js") ? Url("globalize.culture.km.min.js") : Url("globalize.culture.km.js");
-                              
-                public static readonly string globalize_culture_kn_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kn-IN.min.js") ? Url("globalize.culture.kn-IN.min.js") : Url("globalize.culture.kn-IN.js");
-                              
-                public static readonly string globalize_culture_kn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kn.min.js") ? Url("globalize.culture.kn.min.js") : Url("globalize.culture.kn.js");
-                              
-                public static readonly string globalize_culture_ko_KR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ko-KR.min.js") ? Url("globalize.culture.ko-KR.min.js") : Url("globalize.culture.ko-KR.js");
-                              
-                public static readonly string globalize_culture_ko_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ko.min.js") ? Url("globalize.culture.ko.min.js") : Url("globalize.culture.ko.js");
-                              
-                public static readonly string globalize_culture_kok_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kok-IN.min.js") ? Url("globalize.culture.kok-IN.min.js") : Url("globalize.culture.kok-IN.js");
-                              
-                public static readonly string globalize_culture_kok_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kok.min.js") ? Url("globalize.culture.kok.min.js") : Url("globalize.culture.kok.js");
-                              
-                public static readonly string globalize_culture_ky_KG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ky-KG.min.js") ? Url("globalize.culture.ky-KG.min.js") : Url("globalize.culture.ky-KG.js");
-                              
-                public static readonly string globalize_culture_ky_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ky.min.js") ? Url("globalize.culture.ky.min.js") : Url("globalize.culture.ky.js");
-                              
-                public static readonly string globalize_culture_lb_LU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lb-LU.min.js") ? Url("globalize.culture.lb-LU.min.js") : Url("globalize.culture.lb-LU.js");
-                              
-                public static readonly string globalize_culture_lb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lb.min.js") ? Url("globalize.culture.lb.min.js") : Url("globalize.culture.lb.js");
-                              
-                public static readonly string globalize_culture_lo_LA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lo-LA.min.js") ? Url("globalize.culture.lo-LA.min.js") : Url("globalize.culture.lo-LA.js");
-                              
-                public static readonly string globalize_culture_lo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lo.min.js") ? Url("globalize.culture.lo.min.js") : Url("globalize.culture.lo.js");
-                              
-                public static readonly string globalize_culture_lt_LT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lt-LT.min.js") ? Url("globalize.culture.lt-LT.min.js") : Url("globalize.culture.lt-LT.js");
-                              
-                public static readonly string globalize_culture_lt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lt.min.js") ? Url("globalize.culture.lt.min.js") : Url("globalize.culture.lt.js");
-                              
-                public static readonly string globalize_culture_lv_LV_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lv-LV.min.js") ? Url("globalize.culture.lv-LV.min.js") : Url("globalize.culture.lv-LV.js");
-                              
-                public static readonly string globalize_culture_lv_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lv.min.js") ? Url("globalize.culture.lv.min.js") : Url("globalize.culture.lv.js");
-                              
-                public static readonly string globalize_culture_mi_NZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mi-NZ.min.js") ? Url("globalize.culture.mi-NZ.min.js") : Url("globalize.culture.mi-NZ.js");
-                              
-                public static readonly string globalize_culture_mi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mi.min.js") ? Url("globalize.culture.mi.min.js") : Url("globalize.culture.mi.js");
-                              
-                public static readonly string globalize_culture_mk_MK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mk-MK.min.js") ? Url("globalize.culture.mk-MK.min.js") : Url("globalize.culture.mk-MK.js");
-                              
-                public static readonly string globalize_culture_mk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mk.min.js") ? Url("globalize.culture.mk.min.js") : Url("globalize.culture.mk.js");
-                              
-                public static readonly string globalize_culture_ml_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ml-IN.min.js") ? Url("globalize.culture.ml-IN.min.js") : Url("globalize.culture.ml-IN.js");
-                              
-                public static readonly string globalize_culture_ml_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ml.min.js") ? Url("globalize.culture.ml.min.js") : Url("globalize.culture.ml.js");
-                              
-                public static readonly string globalize_culture_mn_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-Cyrl.min.js") ? Url("globalize.culture.mn-Cyrl.min.js") : Url("globalize.culture.mn-Cyrl.js");
-                              
-                public static readonly string globalize_culture_mn_MN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-MN.min.js") ? Url("globalize.culture.mn-MN.min.js") : Url("globalize.culture.mn-MN.js");
-                              
-                public static readonly string globalize_culture_mn_Mong_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-Mong-CN.min.js") ? Url("globalize.culture.mn-Mong-CN.min.js") : Url("globalize.culture.mn-Mong-CN.js");
-                              
-                public static readonly string globalize_culture_mn_Mong_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-Mong.min.js") ? Url("globalize.culture.mn-Mong.min.js") : Url("globalize.culture.mn-Mong.js");
-                              
-                public static readonly string globalize_culture_mn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn.min.js") ? Url("globalize.culture.mn.min.js") : Url("globalize.culture.mn.js");
-                              
-                public static readonly string globalize_culture_moh_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.moh-CA.min.js") ? Url("globalize.culture.moh-CA.min.js") : Url("globalize.culture.moh-CA.js");
-                              
-                public static readonly string globalize_culture_moh_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.moh.min.js") ? Url("globalize.culture.moh.min.js") : Url("globalize.culture.moh.js");
-                              
-                public static readonly string globalize_culture_mr_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mr-IN.min.js") ? Url("globalize.culture.mr-IN.min.js") : Url("globalize.culture.mr-IN.js");
-                              
-                public static readonly string globalize_culture_mr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mr.min.js") ? Url("globalize.culture.mr.min.js") : Url("globalize.culture.mr.js");
-                              
-                public static readonly string globalize_culture_ms_BN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ms-BN.min.js") ? Url("globalize.culture.ms-BN.min.js") : Url("globalize.culture.ms-BN.js");
-                              
-                public static readonly string globalize_culture_ms_MY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ms-MY.min.js") ? Url("globalize.culture.ms-MY.min.js") : Url("globalize.culture.ms-MY.js");
-                              
-                public static readonly string globalize_culture_ms_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ms.min.js") ? Url("globalize.culture.ms.min.js") : Url("globalize.culture.ms.js");
-                              
-                public static readonly string globalize_culture_mt_MT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mt-MT.min.js") ? Url("globalize.culture.mt-MT.min.js") : Url("globalize.culture.mt-MT.js");
-                              
-                public static readonly string globalize_culture_mt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mt.min.js") ? Url("globalize.culture.mt.min.js") : Url("globalize.culture.mt.js");
-                              
-                public static readonly string globalize_culture_nb_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nb-NO.min.js") ? Url("globalize.culture.nb-NO.min.js") : Url("globalize.culture.nb-NO.js");
-                              
-                public static readonly string globalize_culture_nb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nb.min.js") ? Url("globalize.culture.nb.min.js") : Url("globalize.culture.nb.js");
-                              
-                public static readonly string globalize_culture_ne_NP_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ne-NP.min.js") ? Url("globalize.culture.ne-NP.min.js") : Url("globalize.culture.ne-NP.js");
-                              
-                public static readonly string globalize_culture_ne_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ne.min.js") ? Url("globalize.culture.ne.min.js") : Url("globalize.culture.ne.js");
-                              
-                public static readonly string globalize_culture_nl_BE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nl-BE.min.js") ? Url("globalize.culture.nl-BE.min.js") : Url("globalize.culture.nl-BE.js");
-                              
-                public static readonly string globalize_culture_nl_NL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nl-NL.min.js") ? Url("globalize.culture.nl-NL.min.js") : Url("globalize.culture.nl-NL.js");
-                              
-                public static readonly string globalize_culture_nl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nl.min.js") ? Url("globalize.culture.nl.min.js") : Url("globalize.culture.nl.js");
-                              
-                public static readonly string globalize_culture_nn_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nn-NO.min.js") ? Url("globalize.culture.nn-NO.min.js") : Url("globalize.culture.nn-NO.js");
-                              
-                public static readonly string globalize_culture_nn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nn.min.js") ? Url("globalize.culture.nn.min.js") : Url("globalize.culture.nn.js");
-                              
-                public static readonly string globalize_culture_no_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.no.min.js") ? Url("globalize.culture.no.min.js") : Url("globalize.culture.no.js");
-                              
-                public static readonly string globalize_culture_nso_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nso-ZA.min.js") ? Url("globalize.culture.nso-ZA.min.js") : Url("globalize.culture.nso-ZA.js");
-                              
-                public static readonly string globalize_culture_nso_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nso.min.js") ? Url("globalize.culture.nso.min.js") : Url("globalize.culture.nso.js");
-                              
-                public static readonly string globalize_culture_oc_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.oc-FR.min.js") ? Url("globalize.culture.oc-FR.min.js") : Url("globalize.culture.oc-FR.js");
-                              
-                public static readonly string globalize_culture_oc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.oc.min.js") ? Url("globalize.culture.oc.min.js") : Url("globalize.culture.oc.js");
-                              
-                public static readonly string globalize_culture_or_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.or-IN.min.js") ? Url("globalize.culture.or-IN.min.js") : Url("globalize.culture.or-IN.js");
-                              
-                public static readonly string globalize_culture_or_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.or.min.js") ? Url("globalize.culture.or.min.js") : Url("globalize.culture.or.js");
-                              
-                public static readonly string globalize_culture_pa_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pa-IN.min.js") ? Url("globalize.culture.pa-IN.min.js") : Url("globalize.culture.pa-IN.js");
-                              
-                public static readonly string globalize_culture_pa_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pa.min.js") ? Url("globalize.culture.pa.min.js") : Url("globalize.culture.pa.js");
-                              
-                public static readonly string globalize_culture_pl_PL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pl-PL.min.js") ? Url("globalize.culture.pl-PL.min.js") : Url("globalize.culture.pl-PL.js");
-                              
-                public static readonly string globalize_culture_pl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pl.min.js") ? Url("globalize.culture.pl.min.js") : Url("globalize.culture.pl.js");
-                              
-                public static readonly string globalize_culture_prs_AF_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.prs-AF.min.js") ? Url("globalize.culture.prs-AF.min.js") : Url("globalize.culture.prs-AF.js");
-                              
-                public static readonly string globalize_culture_prs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.prs.min.js") ? Url("globalize.culture.prs.min.js") : Url("globalize.culture.prs.js");
-                              
-                public static readonly string globalize_culture_ps_AF_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ps-AF.min.js") ? Url("globalize.culture.ps-AF.min.js") : Url("globalize.culture.ps-AF.js");
-                              
-                public static readonly string globalize_culture_ps_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ps.min.js") ? Url("globalize.culture.ps.min.js") : Url("globalize.culture.ps.js");
-                              
-                public static readonly string globalize_culture_pt_BR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pt-BR.min.js") ? Url("globalize.culture.pt-BR.min.js") : Url("globalize.culture.pt-BR.js");
-                              
-                public static readonly string globalize_culture_pt_PT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pt-PT.min.js") ? Url("globalize.culture.pt-PT.min.js") : Url("globalize.culture.pt-PT.js");
-                              
-                public static readonly string globalize_culture_pt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pt.min.js") ? Url("globalize.culture.pt.min.js") : Url("globalize.culture.pt.js");
-                              
-                public static readonly string globalize_culture_qut_GT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.qut-GT.min.js") ? Url("globalize.culture.qut-GT.min.js") : Url("globalize.culture.qut-GT.js");
-                              
-                public static readonly string globalize_culture_qut_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.qut.min.js") ? Url("globalize.culture.qut.min.js") : Url("globalize.culture.qut.js");
-                              
-                public static readonly string globalize_culture_quz_BO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz-BO.min.js") ? Url("globalize.culture.quz-BO.min.js") : Url("globalize.culture.quz-BO.js");
-                              
-                public static readonly string globalize_culture_quz_EC_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz-EC.min.js") ? Url("globalize.culture.quz-EC.min.js") : Url("globalize.culture.quz-EC.js");
-                              
-                public static readonly string globalize_culture_quz_PE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz-PE.min.js") ? Url("globalize.culture.quz-PE.min.js") : Url("globalize.culture.quz-PE.js");
-                              
-                public static readonly string globalize_culture_quz_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz.min.js") ? Url("globalize.culture.quz.min.js") : Url("globalize.culture.quz.js");
-                              
-                public static readonly string globalize_culture_rm_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rm-CH.min.js") ? Url("globalize.culture.rm-CH.min.js") : Url("globalize.culture.rm-CH.js");
-                              
-                public static readonly string globalize_culture_rm_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rm.min.js") ? Url("globalize.culture.rm.min.js") : Url("globalize.culture.rm.js");
-                              
-                public static readonly string globalize_culture_ro_RO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ro-RO.min.js") ? Url("globalize.culture.ro-RO.min.js") : Url("globalize.culture.ro-RO.js");
-                              
-                public static readonly string globalize_culture_ro_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ro.min.js") ? Url("globalize.culture.ro.min.js") : Url("globalize.culture.ro.js");
-                              
-                public static readonly string globalize_culture_ru_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ru-RU.min.js") ? Url("globalize.culture.ru-RU.min.js") : Url("globalize.culture.ru-RU.js");
-                              
-                public static readonly string globalize_culture_ru_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ru.min.js") ? Url("globalize.culture.ru.min.js") : Url("globalize.culture.ru.js");
-                              
-                public static readonly string globalize_culture_rw_RW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rw-RW.min.js") ? Url("globalize.culture.rw-RW.min.js") : Url("globalize.culture.rw-RW.js");
-                              
-                public static readonly string globalize_culture_rw_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rw.min.js") ? Url("globalize.culture.rw.min.js") : Url("globalize.culture.rw.js");
-                              
-                public static readonly string globalize_culture_sa_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sa-IN.min.js") ? Url("globalize.culture.sa-IN.min.js") : Url("globalize.culture.sa-IN.js");
-                              
-                public static readonly string globalize_culture_sa_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sa.min.js") ? Url("globalize.culture.sa.min.js") : Url("globalize.culture.sa.js");
-                              
-                public static readonly string globalize_culture_sah_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sah-RU.min.js") ? Url("globalize.culture.sah-RU.min.js") : Url("globalize.culture.sah-RU.js");
-                              
-                public static readonly string globalize_culture_sah_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sah.min.js") ? Url("globalize.culture.sah.min.js") : Url("globalize.culture.sah.js");
-                              
-                public static readonly string globalize_culture_se_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se-FI.min.js") ? Url("globalize.culture.se-FI.min.js") : Url("globalize.culture.se-FI.js");
-                              
-                public static readonly string globalize_culture_se_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se-NO.min.js") ? Url("globalize.culture.se-NO.min.js") : Url("globalize.culture.se-NO.js");
-                              
-                public static readonly string globalize_culture_se_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se-SE.min.js") ? Url("globalize.culture.se-SE.min.js") : Url("globalize.culture.se-SE.js");
-                              
-                public static readonly string globalize_culture_se_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se.min.js") ? Url("globalize.culture.se.min.js") : Url("globalize.culture.se.js");
-                              
-                public static readonly string globalize_culture_si_LK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.si-LK.min.js") ? Url("globalize.culture.si-LK.min.js") : Url("globalize.culture.si-LK.js");
-                              
-                public static readonly string globalize_culture_si_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.si.min.js") ? Url("globalize.culture.si.min.js") : Url("globalize.culture.si.js");
-                              
-                public static readonly string globalize_culture_sk_SK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sk-SK.min.js") ? Url("globalize.culture.sk-SK.min.js") : Url("globalize.culture.sk-SK.js");
-                              
-                public static readonly string globalize_culture_sk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sk.min.js") ? Url("globalize.culture.sk.min.js") : Url("globalize.culture.sk.js");
-                              
-                public static readonly string globalize_culture_sl_SI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sl-SI.min.js") ? Url("globalize.culture.sl-SI.min.js") : Url("globalize.culture.sl-SI.js");
-                              
-                public static readonly string globalize_culture_sl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sl.min.js") ? Url("globalize.culture.sl.min.js") : Url("globalize.culture.sl.js");
-                              
-                public static readonly string globalize_culture_sma_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sma-NO.min.js") ? Url("globalize.culture.sma-NO.min.js") : Url("globalize.culture.sma-NO.js");
-                              
-                public static readonly string globalize_culture_sma_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sma-SE.min.js") ? Url("globalize.culture.sma-SE.min.js") : Url("globalize.culture.sma-SE.js");
-                              
-                public static readonly string globalize_culture_sma_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sma.min.js") ? Url("globalize.culture.sma.min.js") : Url("globalize.culture.sma.js");
-                              
-                public static readonly string globalize_culture_smj_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smj-NO.min.js") ? Url("globalize.culture.smj-NO.min.js") : Url("globalize.culture.smj-NO.js");
-                              
-                public static readonly string globalize_culture_smj_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smj-SE.min.js") ? Url("globalize.culture.smj-SE.min.js") : Url("globalize.culture.smj-SE.js");
-                              
-                public static readonly string globalize_culture_smj_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smj.min.js") ? Url("globalize.culture.smj.min.js") : Url("globalize.culture.smj.js");
-                              
-                public static readonly string globalize_culture_smn_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smn-FI.min.js") ? Url("globalize.culture.smn-FI.min.js") : Url("globalize.culture.smn-FI.js");
-                              
-                public static readonly string globalize_culture_smn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smn.min.js") ? Url("globalize.culture.smn.min.js") : Url("globalize.culture.smn.js");
-                              
-                public static readonly string globalize_culture_sms_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sms-FI.min.js") ? Url("globalize.culture.sms-FI.min.js") : Url("globalize.culture.sms-FI.js");
-                              
-                public static readonly string globalize_culture_sms_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sms.min.js") ? Url("globalize.culture.sms.min.js") : Url("globalize.culture.sms.js");
-                              
-                public static readonly string globalize_culture_sq_AL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sq-AL.min.js") ? Url("globalize.culture.sq-AL.min.js") : Url("globalize.culture.sq-AL.js");
-                              
-                public static readonly string globalize_culture_sq_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sq.min.js") ? Url("globalize.culture.sq.min.js") : Url("globalize.culture.sq.js");
-                              
-                public static readonly string globalize_culture_sr_Cyrl_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-BA.min.js") ? Url("globalize.culture.sr-Cyrl-BA.min.js") : Url("globalize.culture.sr-Cyrl-BA.js");
-                              
-                public static readonly string globalize_culture_sr_Cyrl_CS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-CS.min.js") ? Url("globalize.culture.sr-Cyrl-CS.min.js") : Url("globalize.culture.sr-Cyrl-CS.js");
-                              
-                public static readonly string globalize_culture_sr_Cyrl_ME_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-ME.min.js") ? Url("globalize.culture.sr-Cyrl-ME.min.js") : Url("globalize.culture.sr-Cyrl-ME.js");
-                              
-                public static readonly string globalize_culture_sr_Cyrl_RS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-RS.min.js") ? Url("globalize.culture.sr-Cyrl-RS.min.js") : Url("globalize.culture.sr-Cyrl-RS.js");
-                              
-                public static readonly string globalize_culture_sr_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl.min.js") ? Url("globalize.culture.sr-Cyrl.min.js") : Url("globalize.culture.sr-Cyrl.js");
-                              
-                public static readonly string globalize_culture_sr_Latn_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-BA.min.js") ? Url("globalize.culture.sr-Latn-BA.min.js") : Url("globalize.culture.sr-Latn-BA.js");
-                              
-                public static readonly string globalize_culture_sr_Latn_CS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-CS.min.js") ? Url("globalize.culture.sr-Latn-CS.min.js") : Url("globalize.culture.sr-Latn-CS.js");
-                              
-                public static readonly string globalize_culture_sr_Latn_ME_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-ME.min.js") ? Url("globalize.culture.sr-Latn-ME.min.js") : Url("globalize.culture.sr-Latn-ME.js");
-                              
-                public static readonly string globalize_culture_sr_Latn_RS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-RS.min.js") ? Url("globalize.culture.sr-Latn-RS.min.js") : Url("globalize.culture.sr-Latn-RS.js");
-                              
-                public static readonly string globalize_culture_sr_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn.min.js") ? Url("globalize.culture.sr-Latn.min.js") : Url("globalize.culture.sr-Latn.js");
-                              
-                public static readonly string globalize_culture_sr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr.min.js") ? Url("globalize.culture.sr.min.js") : Url("globalize.culture.sr.js");
-                              
-                public static readonly string globalize_culture_sv_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sv-FI.min.js") ? Url("globalize.culture.sv-FI.min.js") : Url("globalize.culture.sv-FI.js");
-                              
-                public static readonly string globalize_culture_sv_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sv-SE.min.js") ? Url("globalize.culture.sv-SE.min.js") : Url("globalize.culture.sv-SE.js");
-                              
-                public static readonly string globalize_culture_sv_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sv.min.js") ? Url("globalize.culture.sv.min.js") : Url("globalize.culture.sv.js");
-                              
-                public static readonly string globalize_culture_sw_KE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sw-KE.min.js") ? Url("globalize.culture.sw-KE.min.js") : Url("globalize.culture.sw-KE.js");
-                              
-                public static readonly string globalize_culture_sw_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sw.min.js") ? Url("globalize.culture.sw.min.js") : Url("globalize.culture.sw.js");
-                              
-                public static readonly string globalize_culture_syr_SY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.syr-SY.min.js") ? Url("globalize.culture.syr-SY.min.js") : Url("globalize.culture.syr-SY.js");
-                              
-                public static readonly string globalize_culture_syr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.syr.min.js") ? Url("globalize.culture.syr.min.js") : Url("globalize.culture.syr.js");
-                              
-                public static readonly string globalize_culture_ta_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ta-IN.min.js") ? Url("globalize.culture.ta-IN.min.js") : Url("globalize.culture.ta-IN.js");
-                              
-                public static readonly string globalize_culture_ta_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ta.min.js") ? Url("globalize.culture.ta.min.js") : Url("globalize.culture.ta.js");
-                              
-                public static readonly string globalize_culture_te_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.te-IN.min.js") ? Url("globalize.culture.te-IN.min.js") : Url("globalize.culture.te-IN.js");
-                              
-                public static readonly string globalize_culture_te_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.te.min.js") ? Url("globalize.culture.te.min.js") : Url("globalize.culture.te.js");
-                              
-                public static readonly string globalize_culture_tg_Cyrl_TJ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tg-Cyrl-TJ.min.js") ? Url("globalize.culture.tg-Cyrl-TJ.min.js") : Url("globalize.culture.tg-Cyrl-TJ.js");
-                              
-                public static readonly string globalize_culture_tg_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tg-Cyrl.min.js") ? Url("globalize.culture.tg-Cyrl.min.js") : Url("globalize.culture.tg-Cyrl.js");
-                              
-                public static readonly string globalize_culture_tg_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tg.min.js") ? Url("globalize.culture.tg.min.js") : Url("globalize.culture.tg.js");
-                              
-                public static readonly string globalize_culture_th_TH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.th-TH.min.js") ? Url("globalize.culture.th-TH.min.js") : Url("globalize.culture.th-TH.js");
-                              
-                public static readonly string globalize_culture_th_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.th.min.js") ? Url("globalize.culture.th.min.js") : Url("globalize.culture.th.js");
-                              
-                public static readonly string globalize_culture_tk_TM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tk-TM.min.js") ? Url("globalize.culture.tk-TM.min.js") : Url("globalize.culture.tk-TM.js");
-                              
-                public static readonly string globalize_culture_tk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tk.min.js") ? Url("globalize.culture.tk.min.js") : Url("globalize.culture.tk.js");
-                              
-                public static readonly string globalize_culture_tn_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tn-ZA.min.js") ? Url("globalize.culture.tn-ZA.min.js") : Url("globalize.culture.tn-ZA.js");
-                              
-                public static readonly string globalize_culture_tn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tn.min.js") ? Url("globalize.culture.tn.min.js") : Url("globalize.culture.tn.js");
-                              
-                public static readonly string globalize_culture_tr_TR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tr-TR.min.js") ? Url("globalize.culture.tr-TR.min.js") : Url("globalize.culture.tr-TR.js");
-                              
-                public static readonly string globalize_culture_tr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tr.min.js") ? Url("globalize.culture.tr.min.js") : Url("globalize.culture.tr.js");
-                              
-                public static readonly string globalize_culture_tt_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tt-RU.min.js") ? Url("globalize.culture.tt-RU.min.js") : Url("globalize.culture.tt-RU.js");
-                              
-                public static readonly string globalize_culture_tt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tt.min.js") ? Url("globalize.culture.tt.min.js") : Url("globalize.culture.tt.js");
-                              
-                public static readonly string globalize_culture_tzm_Latn_DZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tzm-Latn-DZ.min.js") ? Url("globalize.culture.tzm-Latn-DZ.min.js") : Url("globalize.culture.tzm-Latn-DZ.js");
-                              
-                public static readonly string globalize_culture_tzm_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tzm-Latn.min.js") ? Url("globalize.culture.tzm-Latn.min.js") : Url("globalize.culture.tzm-Latn.js");
-                              
-                public static readonly string globalize_culture_tzm_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tzm.min.js") ? Url("globalize.culture.tzm.min.js") : Url("globalize.culture.tzm.js");
-                              
-                public static readonly string globalize_culture_ug_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ug-CN.min.js") ? Url("globalize.culture.ug-CN.min.js") : Url("globalize.culture.ug-CN.js");
-                              
-                public static readonly string globalize_culture_ug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ug.min.js") ? Url("globalize.culture.ug.min.js") : Url("globalize.culture.ug.js");
-                              
-                public static readonly string globalize_culture_uk_UA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uk-UA.min.js") ? Url("globalize.culture.uk-UA.min.js") : Url("globalize.culture.uk-UA.js");
-                              
-                public static readonly string globalize_culture_uk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uk.min.js") ? Url("globalize.culture.uk.min.js") : Url("globalize.culture.uk.js");
-                              
-                public static readonly string globalize_culture_ur_PK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ur-PK.min.js") ? Url("globalize.culture.ur-PK.min.js") : Url("globalize.culture.ur-PK.js");
-                              
-                public static readonly string globalize_culture_ur_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ur.min.js") ? Url("globalize.culture.ur.min.js") : Url("globalize.culture.ur.js");
-                              
-                public static readonly string globalize_culture_uz_Cyrl_UZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Cyrl-UZ.min.js") ? Url("globalize.culture.uz-Cyrl-UZ.min.js") : Url("globalize.culture.uz-Cyrl-UZ.js");
-                              
-                public static readonly string globalize_culture_uz_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Cyrl.min.js") ? Url("globalize.culture.uz-Cyrl.min.js") : Url("globalize.culture.uz-Cyrl.js");
-                              
-                public static readonly string globalize_culture_uz_Latn_UZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Latn-UZ.min.js") ? Url("globalize.culture.uz-Latn-UZ.min.js") : Url("globalize.culture.uz-Latn-UZ.js");
-                              
-                public static readonly string globalize_culture_uz_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Latn.min.js") ? Url("globalize.culture.uz-Latn.min.js") : Url("globalize.culture.uz-Latn.js");
-                              
-                public static readonly string globalize_culture_uz_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz.min.js") ? Url("globalize.culture.uz.min.js") : Url("globalize.culture.uz.js");
-                              
-                public static readonly string globalize_culture_vi_VN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.vi-VN.min.js") ? Url("globalize.culture.vi-VN.min.js") : Url("globalize.culture.vi-VN.js");
-                              
-                public static readonly string globalize_culture_vi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.vi.min.js") ? Url("globalize.culture.vi.min.js") : Url("globalize.culture.vi.js");
-                              
-                public static readonly string globalize_culture_wo_SN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.wo-SN.min.js") ? Url("globalize.culture.wo-SN.min.js") : Url("globalize.culture.wo-SN.js");
-                              
-                public static readonly string globalize_culture_wo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.wo.min.js") ? Url("globalize.culture.wo.min.js") : Url("globalize.culture.wo.js");
-                              
-                public static readonly string globalize_culture_xh_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.xh-ZA.min.js") ? Url("globalize.culture.xh-ZA.min.js") : Url("globalize.culture.xh-ZA.js");
-                              
-                public static readonly string globalize_culture_xh_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.xh.min.js") ? Url("globalize.culture.xh.min.js") : Url("globalize.culture.xh.js");
-                              
-                public static readonly string globalize_culture_yo_NG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.yo-NG.min.js") ? Url("globalize.culture.yo-NG.min.js") : Url("globalize.culture.yo-NG.js");
-                              
-                public static readonly string globalize_culture_yo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.yo.min.js") ? Url("globalize.culture.yo.min.js") : Url("globalize.culture.yo.js");
-                              
-                public static readonly string globalize_culture_zh_CHS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-CHS.min.js") ? Url("globalize.culture.zh-CHS.min.js") : Url("globalize.culture.zh-CHS.js");
-                              
-                public static readonly string globalize_culture_zh_CHT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-CHT.min.js") ? Url("globalize.culture.zh-CHT.min.js") : Url("globalize.culture.zh-CHT.js");
-                              
-                public static readonly string globalize_culture_zh_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-CN.min.js") ? Url("globalize.culture.zh-CN.min.js") : Url("globalize.culture.zh-CN.js");
-                              
-                public static readonly string globalize_culture_zh_Hans_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-Hans.min.js") ? Url("globalize.culture.zh-Hans.min.js") : Url("globalize.culture.zh-Hans.js");
-                              
-                public static readonly string globalize_culture_zh_Hant_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-Hant.min.js") ? Url("globalize.culture.zh-Hant.min.js") : Url("globalize.culture.zh-Hant.js");
-                              
-                public static readonly string globalize_culture_zh_HK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-HK.min.js") ? Url("globalize.culture.zh-HK.min.js") : Url("globalize.culture.zh-HK.js");
-                              
-                public static readonly string globalize_culture_zh_MO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-MO.min.js") ? Url("globalize.culture.zh-MO.min.js") : Url("globalize.culture.zh-MO.js");
-                              
-                public static readonly string globalize_culture_zh_SG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-SG.min.js") ? Url("globalize.culture.zh-SG.min.js") : Url("globalize.culture.zh-SG.js");
-                              
-                public static readonly string globalize_culture_zh_TW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-TW.min.js") ? Url("globalize.culture.zh-TW.min.js") : Url("globalize.culture.zh-TW.js");
-                              
-                public static readonly string globalize_culture_zh_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh.min.js") ? Url("globalize.culture.zh.min.js") : Url("globalize.culture.zh.js");
-                              
-                public static readonly string globalize_culture_zu_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zu-ZA.min.js") ? Url("globalize.culture.zu-ZA.min.js") : Url("globalize.culture.zu-ZA.js");
-                              
-                public static readonly string globalize_culture_zu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zu.min.js") ? Url("globalize.culture.zu.min.js") : Url("globalize.culture.zu.js");
-                              
-                public static readonly string globalize_cultures_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.cultures.min.js") ? Url("globalize.cultures.min.js") : Url("globalize.cultures.js");
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class cultures {
+                    private const string URLPATH = "~/scripts/jquery/jquery.globalize/cultures";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string globalize_culture_af_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.af-ZA.min.js") ? Url("globalize.culture.af-ZA.min.js") : Url("globalize.culture.af-ZA.js");
+                                  
+                    public static readonly string globalize_culture_af_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.af.min.js") ? Url("globalize.culture.af.min.js") : Url("globalize.culture.af.js");
+                                  
+                    public static readonly string globalize_culture_am_ET_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.am-ET.min.js") ? Url("globalize.culture.am-ET.min.js") : Url("globalize.culture.am-ET.js");
+                                  
+                    public static readonly string globalize_culture_am_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.am.min.js") ? Url("globalize.culture.am.min.js") : Url("globalize.culture.am.js");
+                                  
+                    public static readonly string globalize_culture_ar_AE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-AE.min.js") ? Url("globalize.culture.ar-AE.min.js") : Url("globalize.culture.ar-AE.js");
+                                  
+                    public static readonly string globalize_culture_ar_BH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-BH.min.js") ? Url("globalize.culture.ar-BH.min.js") : Url("globalize.culture.ar-BH.js");
+                                  
+                    public static readonly string globalize_culture_ar_DZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-DZ.min.js") ? Url("globalize.culture.ar-DZ.min.js") : Url("globalize.culture.ar-DZ.js");
+                                  
+                    public static readonly string globalize_culture_ar_EG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-EG.min.js") ? Url("globalize.culture.ar-EG.min.js") : Url("globalize.culture.ar-EG.js");
+                                  
+                    public static readonly string globalize_culture_ar_IQ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-IQ.min.js") ? Url("globalize.culture.ar-IQ.min.js") : Url("globalize.culture.ar-IQ.js");
+                                  
+                    public static readonly string globalize_culture_ar_JO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-JO.min.js") ? Url("globalize.culture.ar-JO.min.js") : Url("globalize.culture.ar-JO.js");
+                                  
+                    public static readonly string globalize_culture_ar_KW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-KW.min.js") ? Url("globalize.culture.ar-KW.min.js") : Url("globalize.culture.ar-KW.js");
+                                  
+                    public static readonly string globalize_culture_ar_LB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-LB.min.js") ? Url("globalize.culture.ar-LB.min.js") : Url("globalize.culture.ar-LB.js");
+                                  
+                    public static readonly string globalize_culture_ar_LY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-LY.min.js") ? Url("globalize.culture.ar-LY.min.js") : Url("globalize.culture.ar-LY.js");
+                                  
+                    public static readonly string globalize_culture_ar_MA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-MA.min.js") ? Url("globalize.culture.ar-MA.min.js") : Url("globalize.culture.ar-MA.js");
+                                  
+                    public static readonly string globalize_culture_ar_OM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-OM.min.js") ? Url("globalize.culture.ar-OM.min.js") : Url("globalize.culture.ar-OM.js");
+                                  
+                    public static readonly string globalize_culture_ar_QA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-QA.min.js") ? Url("globalize.culture.ar-QA.min.js") : Url("globalize.culture.ar-QA.js");
+                                  
+                    public static readonly string globalize_culture_ar_SA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-SA.min.js") ? Url("globalize.culture.ar-SA.min.js") : Url("globalize.culture.ar-SA.js");
+                                  
+                    public static readonly string globalize_culture_ar_SY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-SY.min.js") ? Url("globalize.culture.ar-SY.min.js") : Url("globalize.culture.ar-SY.js");
+                                  
+                    public static readonly string globalize_culture_ar_TN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-TN.min.js") ? Url("globalize.culture.ar-TN.min.js") : Url("globalize.culture.ar-TN.js");
+                                  
+                    public static readonly string globalize_culture_ar_YE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar-YE.min.js") ? Url("globalize.culture.ar-YE.min.js") : Url("globalize.culture.ar-YE.js");
+                                  
+                    public static readonly string globalize_culture_ar_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ar.min.js") ? Url("globalize.culture.ar.min.js") : Url("globalize.culture.ar.js");
+                                  
+                    public static readonly string globalize_culture_arn_CL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.arn-CL.min.js") ? Url("globalize.culture.arn-CL.min.js") : Url("globalize.culture.arn-CL.js");
+                                  
+                    public static readonly string globalize_culture_arn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.arn.min.js") ? Url("globalize.culture.arn.min.js") : Url("globalize.culture.arn.js");
+                                  
+                    public static readonly string globalize_culture_as_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.as-IN.min.js") ? Url("globalize.culture.as-IN.min.js") : Url("globalize.culture.as-IN.js");
+                                  
+                    public static readonly string globalize_culture_as_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.as.min.js") ? Url("globalize.culture.as.min.js") : Url("globalize.culture.as.js");
+                                  
+                    public static readonly string globalize_culture_az_Cyrl_AZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Cyrl-AZ.min.js") ? Url("globalize.culture.az-Cyrl-AZ.min.js") : Url("globalize.culture.az-Cyrl-AZ.js");
+                                  
+                    public static readonly string globalize_culture_az_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Cyrl.min.js") ? Url("globalize.culture.az-Cyrl.min.js") : Url("globalize.culture.az-Cyrl.js");
+                                  
+                    public static readonly string globalize_culture_az_Latn_AZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Latn-AZ.min.js") ? Url("globalize.culture.az-Latn-AZ.min.js") : Url("globalize.culture.az-Latn-AZ.js");
+                                  
+                    public static readonly string globalize_culture_az_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az-Latn.min.js") ? Url("globalize.culture.az-Latn.min.js") : Url("globalize.culture.az-Latn.js");
+                                  
+                    public static readonly string globalize_culture_az_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.az.min.js") ? Url("globalize.culture.az.min.js") : Url("globalize.culture.az.js");
+                                  
+                    public static readonly string globalize_culture_ba_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ba-RU.min.js") ? Url("globalize.culture.ba-RU.min.js") : Url("globalize.culture.ba-RU.js");
+                                  
+                    public static readonly string globalize_culture_ba_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ba.min.js") ? Url("globalize.culture.ba.min.js") : Url("globalize.culture.ba.js");
+                                  
+                    public static readonly string globalize_culture_be_BY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.be-BY.min.js") ? Url("globalize.culture.be-BY.min.js") : Url("globalize.culture.be-BY.js");
+                                  
+                    public static readonly string globalize_culture_be_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.be.min.js") ? Url("globalize.culture.be.min.js") : Url("globalize.culture.be.js");
+                                  
+                    public static readonly string globalize_culture_bg_BG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bg-BG.min.js") ? Url("globalize.culture.bg-BG.min.js") : Url("globalize.culture.bg-BG.js");
+                                  
+                    public static readonly string globalize_culture_bg_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bg.min.js") ? Url("globalize.culture.bg.min.js") : Url("globalize.culture.bg.js");
+                                  
+                    public static readonly string globalize_culture_bn_BD_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bn-BD.min.js") ? Url("globalize.culture.bn-BD.min.js") : Url("globalize.culture.bn-BD.js");
+                                  
+                    public static readonly string globalize_culture_bn_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bn-IN.min.js") ? Url("globalize.culture.bn-IN.min.js") : Url("globalize.culture.bn-IN.js");
+                                  
+                    public static readonly string globalize_culture_bn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bn.min.js") ? Url("globalize.culture.bn.min.js") : Url("globalize.culture.bn.js");
+                                  
+                    public static readonly string globalize_culture_bo_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bo-CN.min.js") ? Url("globalize.culture.bo-CN.min.js") : Url("globalize.culture.bo-CN.js");
+                                  
+                    public static readonly string globalize_culture_bo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bo.min.js") ? Url("globalize.culture.bo.min.js") : Url("globalize.culture.bo.js");
+                                  
+                    public static readonly string globalize_culture_br_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.br-FR.min.js") ? Url("globalize.culture.br-FR.min.js") : Url("globalize.culture.br-FR.js");
+                                  
+                    public static readonly string globalize_culture_br_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.br.min.js") ? Url("globalize.culture.br.min.js") : Url("globalize.culture.br.js");
+                                  
+                    public static readonly string globalize_culture_bs_Cyrl_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Cyrl-BA.min.js") ? Url("globalize.culture.bs-Cyrl-BA.min.js") : Url("globalize.culture.bs-Cyrl-BA.js");
+                                  
+                    public static readonly string globalize_culture_bs_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Cyrl.min.js") ? Url("globalize.culture.bs-Cyrl.min.js") : Url("globalize.culture.bs-Cyrl.js");
+                                  
+                    public static readonly string globalize_culture_bs_Latn_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Latn-BA.min.js") ? Url("globalize.culture.bs-Latn-BA.min.js") : Url("globalize.culture.bs-Latn-BA.js");
+                                  
+                    public static readonly string globalize_culture_bs_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs-Latn.min.js") ? Url("globalize.culture.bs-Latn.min.js") : Url("globalize.culture.bs-Latn.js");
+                                  
+                    public static readonly string globalize_culture_bs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.bs.min.js") ? Url("globalize.culture.bs.min.js") : Url("globalize.culture.bs.js");
+                                  
+                    public static readonly string globalize_culture_ca_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ca-ES.min.js") ? Url("globalize.culture.ca-ES.min.js") : Url("globalize.culture.ca-ES.js");
+                                  
+                    public static readonly string globalize_culture_ca_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ca.min.js") ? Url("globalize.culture.ca.min.js") : Url("globalize.culture.ca.js");
+                                  
+                    public static readonly string globalize_culture_co_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.co-FR.min.js") ? Url("globalize.culture.co-FR.min.js") : Url("globalize.culture.co-FR.js");
+                                  
+                    public static readonly string globalize_culture_co_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.co.min.js") ? Url("globalize.culture.co.min.js") : Url("globalize.culture.co.js");
+                                  
+                    public static readonly string globalize_culture_cs_CZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cs-CZ.min.js") ? Url("globalize.culture.cs-CZ.min.js") : Url("globalize.culture.cs-CZ.js");
+                                  
+                    public static readonly string globalize_culture_cs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cs.min.js") ? Url("globalize.culture.cs.min.js") : Url("globalize.culture.cs.js");
+                                  
+                    public static readonly string globalize_culture_cy_GB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cy-GB.min.js") ? Url("globalize.culture.cy-GB.min.js") : Url("globalize.culture.cy-GB.js");
+                                  
+                    public static readonly string globalize_culture_cy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.cy.min.js") ? Url("globalize.culture.cy.min.js") : Url("globalize.culture.cy.js");
+                                  
+                    public static readonly string globalize_culture_da_DK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.da-DK.min.js") ? Url("globalize.culture.da-DK.min.js") : Url("globalize.culture.da-DK.js");
+                                  
+                    public static readonly string globalize_culture_da_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.da.min.js") ? Url("globalize.culture.da.min.js") : Url("globalize.culture.da.js");
+                                  
+                    public static readonly string globalize_culture_de_AT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-AT.min.js") ? Url("globalize.culture.de-AT.min.js") : Url("globalize.culture.de-AT.js");
+                                  
+                    public static readonly string globalize_culture_de_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-CH.min.js") ? Url("globalize.culture.de-CH.min.js") : Url("globalize.culture.de-CH.js");
+                                  
+                    public static readonly string globalize_culture_de_DE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-DE.min.js") ? Url("globalize.culture.de-DE.min.js") : Url("globalize.culture.de-DE.js");
+                                  
+                    public static readonly string globalize_culture_de_LI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-LI.min.js") ? Url("globalize.culture.de-LI.min.js") : Url("globalize.culture.de-LI.js");
+                                  
+                    public static readonly string globalize_culture_de_LU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de-LU.min.js") ? Url("globalize.culture.de-LU.min.js") : Url("globalize.culture.de-LU.js");
+                                  
+                    public static readonly string globalize_culture_de_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.de.min.js") ? Url("globalize.culture.de.min.js") : Url("globalize.culture.de.js");
+                                  
+                    public static readonly string globalize_culture_dsb_DE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dsb-DE.min.js") ? Url("globalize.culture.dsb-DE.min.js") : Url("globalize.culture.dsb-DE.js");
+                                  
+                    public static readonly string globalize_culture_dsb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dsb.min.js") ? Url("globalize.culture.dsb.min.js") : Url("globalize.culture.dsb.js");
+                                  
+                    public static readonly string globalize_culture_dv_MV_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dv-MV.min.js") ? Url("globalize.culture.dv-MV.min.js") : Url("globalize.culture.dv-MV.js");
+                                  
+                    public static readonly string globalize_culture_dv_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.dv.min.js") ? Url("globalize.culture.dv.min.js") : Url("globalize.culture.dv.js");
+                                  
+                    public static readonly string globalize_culture_el_GR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.el-GR.min.js") ? Url("globalize.culture.el-GR.min.js") : Url("globalize.culture.el-GR.js");
+                                  
+                    public static readonly string globalize_culture_el_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.el.min.js") ? Url("globalize.culture.el.min.js") : Url("globalize.culture.el.js");
+                                  
+                    public static readonly string globalize_culture_en_029_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-029.min.js") ? Url("globalize.culture.en-029.min.js") : Url("globalize.culture.en-029.js");
+                                  
+                    public static readonly string globalize_culture_en_AU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-AU.min.js") ? Url("globalize.culture.en-AU.min.js") : Url("globalize.culture.en-AU.js");
+                                  
+                    public static readonly string globalize_culture_en_BZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-BZ.min.js") ? Url("globalize.culture.en-BZ.min.js") : Url("globalize.culture.en-BZ.js");
+                                  
+                    public static readonly string globalize_culture_en_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-CA.min.js") ? Url("globalize.culture.en-CA.min.js") : Url("globalize.culture.en-CA.js");
+                                  
+                    public static readonly string globalize_culture_en_GB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-GB.min.js") ? Url("globalize.culture.en-GB.min.js") : Url("globalize.culture.en-GB.js");
+                                  
+                    public static readonly string globalize_culture_en_IE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-IE.min.js") ? Url("globalize.culture.en-IE.min.js") : Url("globalize.culture.en-IE.js");
+                                  
+                    public static readonly string globalize_culture_en_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-IN.min.js") ? Url("globalize.culture.en-IN.min.js") : Url("globalize.culture.en-IN.js");
+                                  
+                    public static readonly string globalize_culture_en_JM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-JM.min.js") ? Url("globalize.culture.en-JM.min.js") : Url("globalize.culture.en-JM.js");
+                                  
+                    public static readonly string globalize_culture_en_MY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-MY.min.js") ? Url("globalize.culture.en-MY.min.js") : Url("globalize.culture.en-MY.js");
+                                  
+                    public static readonly string globalize_culture_en_NZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-NZ.min.js") ? Url("globalize.culture.en-NZ.min.js") : Url("globalize.culture.en-NZ.js");
+                                  
+                    public static readonly string globalize_culture_en_PH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-PH.min.js") ? Url("globalize.culture.en-PH.min.js") : Url("globalize.culture.en-PH.js");
+                                  
+                    public static readonly string globalize_culture_en_SG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-SG.min.js") ? Url("globalize.culture.en-SG.min.js") : Url("globalize.culture.en-SG.js");
+                                  
+                    public static readonly string globalize_culture_en_TT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-TT.min.js") ? Url("globalize.culture.en-TT.min.js") : Url("globalize.culture.en-TT.js");
+                                  
+                    public static readonly string globalize_culture_en_US_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-US.min.js") ? Url("globalize.culture.en-US.min.js") : Url("globalize.culture.en-US.js");
+                                  
+                    public static readonly string globalize_culture_en_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-ZA.min.js") ? Url("globalize.culture.en-ZA.min.js") : Url("globalize.culture.en-ZA.js");
+                                  
+                    public static readonly string globalize_culture_en_ZW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.en-ZW.min.js") ? Url("globalize.culture.en-ZW.min.js") : Url("globalize.culture.en-ZW.js");
+                                  
+                    public static readonly string globalize_culture_es_AR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-AR.min.js") ? Url("globalize.culture.es-AR.min.js") : Url("globalize.culture.es-AR.js");
+                                  
+                    public static readonly string globalize_culture_es_BO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-BO.min.js") ? Url("globalize.culture.es-BO.min.js") : Url("globalize.culture.es-BO.js");
+                                  
+                    public static readonly string globalize_culture_es_CL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-CL.min.js") ? Url("globalize.culture.es-CL.min.js") : Url("globalize.culture.es-CL.js");
+                                  
+                    public static readonly string globalize_culture_es_CO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-CO.min.js") ? Url("globalize.culture.es-CO.min.js") : Url("globalize.culture.es-CO.js");
+                                  
+                    public static readonly string globalize_culture_es_CR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-CR.min.js") ? Url("globalize.culture.es-CR.min.js") : Url("globalize.culture.es-CR.js");
+                                  
+                    public static readonly string globalize_culture_es_DO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-DO.min.js") ? Url("globalize.culture.es-DO.min.js") : Url("globalize.culture.es-DO.js");
+                                  
+                    public static readonly string globalize_culture_es_EC_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-EC.min.js") ? Url("globalize.culture.es-EC.min.js") : Url("globalize.culture.es-EC.js");
+                                  
+                    public static readonly string globalize_culture_es_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-ES.min.js") ? Url("globalize.culture.es-ES.min.js") : Url("globalize.culture.es-ES.js");
+                                  
+                    public static readonly string globalize_culture_es_GT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-GT.min.js") ? Url("globalize.culture.es-GT.min.js") : Url("globalize.culture.es-GT.js");
+                                  
+                    public static readonly string globalize_culture_es_HN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-HN.min.js") ? Url("globalize.culture.es-HN.min.js") : Url("globalize.culture.es-HN.js");
+                                  
+                    public static readonly string globalize_culture_es_MX_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-MX.min.js") ? Url("globalize.culture.es-MX.min.js") : Url("globalize.culture.es-MX.js");
+                                  
+                    public static readonly string globalize_culture_es_NI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-NI.min.js") ? Url("globalize.culture.es-NI.min.js") : Url("globalize.culture.es-NI.js");
+                                  
+                    public static readonly string globalize_culture_es_PA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PA.min.js") ? Url("globalize.culture.es-PA.min.js") : Url("globalize.culture.es-PA.js");
+                                  
+                    public static readonly string globalize_culture_es_PE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PE.min.js") ? Url("globalize.culture.es-PE.min.js") : Url("globalize.culture.es-PE.js");
+                                  
+                    public static readonly string globalize_culture_es_PR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PR.min.js") ? Url("globalize.culture.es-PR.min.js") : Url("globalize.culture.es-PR.js");
+                                  
+                    public static readonly string globalize_culture_es_PY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-PY.min.js") ? Url("globalize.culture.es-PY.min.js") : Url("globalize.culture.es-PY.js");
+                                  
+                    public static readonly string globalize_culture_es_SV_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-SV.min.js") ? Url("globalize.culture.es-SV.min.js") : Url("globalize.culture.es-SV.js");
+                                  
+                    public static readonly string globalize_culture_es_US_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-US.min.js") ? Url("globalize.culture.es-US.min.js") : Url("globalize.culture.es-US.js");
+                                  
+                    public static readonly string globalize_culture_es_UY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-UY.min.js") ? Url("globalize.culture.es-UY.min.js") : Url("globalize.culture.es-UY.js");
+                                  
+                    public static readonly string globalize_culture_es_VE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es-VE.min.js") ? Url("globalize.culture.es-VE.min.js") : Url("globalize.culture.es-VE.js");
+                                  
+                    public static readonly string globalize_culture_es_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.es.min.js") ? Url("globalize.culture.es.min.js") : Url("globalize.culture.es.js");
+                                  
+                    public static readonly string globalize_culture_et_EE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.et-EE.min.js") ? Url("globalize.culture.et-EE.min.js") : Url("globalize.culture.et-EE.js");
+                                  
+                    public static readonly string globalize_culture_et_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.et.min.js") ? Url("globalize.culture.et.min.js") : Url("globalize.culture.et.js");
+                                  
+                    public static readonly string globalize_culture_eu_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.eu-ES.min.js") ? Url("globalize.culture.eu-ES.min.js") : Url("globalize.culture.eu-ES.js");
+                                  
+                    public static readonly string globalize_culture_eu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.eu.min.js") ? Url("globalize.culture.eu.min.js") : Url("globalize.culture.eu.js");
+                                  
+                    public static readonly string globalize_culture_fa_IR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fa-IR.min.js") ? Url("globalize.culture.fa-IR.min.js") : Url("globalize.culture.fa-IR.js");
+                                  
+                    public static readonly string globalize_culture_fa_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fa.min.js") ? Url("globalize.culture.fa.min.js") : Url("globalize.culture.fa.js");
+                                  
+                    public static readonly string globalize_culture_fi_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fi-FI.min.js") ? Url("globalize.culture.fi-FI.min.js") : Url("globalize.culture.fi-FI.js");
+                                  
+                    public static readonly string globalize_culture_fi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fi.min.js") ? Url("globalize.culture.fi.min.js") : Url("globalize.culture.fi.js");
+                                  
+                    public static readonly string globalize_culture_fil_PH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fil-PH.min.js") ? Url("globalize.culture.fil-PH.min.js") : Url("globalize.culture.fil-PH.js");
+                                  
+                    public static readonly string globalize_culture_fil_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fil.min.js") ? Url("globalize.culture.fil.min.js") : Url("globalize.culture.fil.js");
+                                  
+                    public static readonly string globalize_culture_fo_FO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fo-FO.min.js") ? Url("globalize.culture.fo-FO.min.js") : Url("globalize.culture.fo-FO.js");
+                                  
+                    public static readonly string globalize_culture_fo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fo.min.js") ? Url("globalize.culture.fo.min.js") : Url("globalize.culture.fo.js");
+                                  
+                    public static readonly string globalize_culture_fr_BE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-BE.min.js") ? Url("globalize.culture.fr-BE.min.js") : Url("globalize.culture.fr-BE.js");
+                                  
+                    public static readonly string globalize_culture_fr_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-CA.min.js") ? Url("globalize.culture.fr-CA.min.js") : Url("globalize.culture.fr-CA.js");
+                                  
+                    public static readonly string globalize_culture_fr_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-CH.min.js") ? Url("globalize.culture.fr-CH.min.js") : Url("globalize.culture.fr-CH.js");
+                                  
+                    public static readonly string globalize_culture_fr_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-FR.min.js") ? Url("globalize.culture.fr-FR.min.js") : Url("globalize.culture.fr-FR.js");
+                                  
+                    public static readonly string globalize_culture_fr_LU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-LU.min.js") ? Url("globalize.culture.fr-LU.min.js") : Url("globalize.culture.fr-LU.js");
+                                  
+                    public static readonly string globalize_culture_fr_MC_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr-MC.min.js") ? Url("globalize.culture.fr-MC.min.js") : Url("globalize.culture.fr-MC.js");
+                                  
+                    public static readonly string globalize_culture_fr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fr.min.js") ? Url("globalize.culture.fr.min.js") : Url("globalize.culture.fr.js");
+                                  
+                    public static readonly string globalize_culture_fy_NL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fy-NL.min.js") ? Url("globalize.culture.fy-NL.min.js") : Url("globalize.culture.fy-NL.js");
+                                  
+                    public static readonly string globalize_culture_fy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.fy.min.js") ? Url("globalize.culture.fy.min.js") : Url("globalize.culture.fy.js");
+                                  
+                    public static readonly string globalize_culture_ga_IE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ga-IE.min.js") ? Url("globalize.culture.ga-IE.min.js") : Url("globalize.culture.ga-IE.js");
+                                  
+                    public static readonly string globalize_culture_ga_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ga.min.js") ? Url("globalize.culture.ga.min.js") : Url("globalize.culture.ga.js");
+                                  
+                    public static readonly string globalize_culture_gd_GB_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gd-GB.min.js") ? Url("globalize.culture.gd-GB.min.js") : Url("globalize.culture.gd-GB.js");
+                                  
+                    public static readonly string globalize_culture_gd_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gd.min.js") ? Url("globalize.culture.gd.min.js") : Url("globalize.culture.gd.js");
+                                  
+                    public static readonly string globalize_culture_gl_ES_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gl-ES.min.js") ? Url("globalize.culture.gl-ES.min.js") : Url("globalize.culture.gl-ES.js");
+                                  
+                    public static readonly string globalize_culture_gl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gl.min.js") ? Url("globalize.culture.gl.min.js") : Url("globalize.culture.gl.js");
+                                  
+                    public static readonly string globalize_culture_gsw_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gsw-FR.min.js") ? Url("globalize.culture.gsw-FR.min.js") : Url("globalize.culture.gsw-FR.js");
+                                  
+                    public static readonly string globalize_culture_gsw_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gsw.min.js") ? Url("globalize.culture.gsw.min.js") : Url("globalize.culture.gsw.js");
+                                  
+                    public static readonly string globalize_culture_gu_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gu-IN.min.js") ? Url("globalize.culture.gu-IN.min.js") : Url("globalize.culture.gu-IN.js");
+                                  
+                    public static readonly string globalize_culture_gu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.gu.min.js") ? Url("globalize.culture.gu.min.js") : Url("globalize.culture.gu.js");
+                                  
+                    public static readonly string globalize_culture_ha_Latn_NG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ha-Latn-NG.min.js") ? Url("globalize.culture.ha-Latn-NG.min.js") : Url("globalize.culture.ha-Latn-NG.js");
+                                  
+                    public static readonly string globalize_culture_ha_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ha-Latn.min.js") ? Url("globalize.culture.ha-Latn.min.js") : Url("globalize.culture.ha-Latn.js");
+                                  
+                    public static readonly string globalize_culture_ha_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ha.min.js") ? Url("globalize.culture.ha.min.js") : Url("globalize.culture.ha.js");
+                                  
+                    public static readonly string globalize_culture_he_IL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.he-IL.min.js") ? Url("globalize.culture.he-IL.min.js") : Url("globalize.culture.he-IL.js");
+                                  
+                    public static readonly string globalize_culture_he_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.he.min.js") ? Url("globalize.culture.he.min.js") : Url("globalize.culture.he.js");
+                                  
+                    public static readonly string globalize_culture_hi_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hi-IN.min.js") ? Url("globalize.culture.hi-IN.min.js") : Url("globalize.culture.hi-IN.js");
+                                  
+                    public static readonly string globalize_culture_hi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hi.min.js") ? Url("globalize.culture.hi.min.js") : Url("globalize.culture.hi.js");
+                                  
+                    public static readonly string globalize_culture_hr_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hr-BA.min.js") ? Url("globalize.culture.hr-BA.min.js") : Url("globalize.culture.hr-BA.js");
+                                  
+                    public static readonly string globalize_culture_hr_HR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hr-HR.min.js") ? Url("globalize.culture.hr-HR.min.js") : Url("globalize.culture.hr-HR.js");
+                                  
+                    public static readonly string globalize_culture_hr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hr.min.js") ? Url("globalize.culture.hr.min.js") : Url("globalize.culture.hr.js");
+                                  
+                    public static readonly string globalize_culture_hsb_DE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hsb-DE.min.js") ? Url("globalize.culture.hsb-DE.min.js") : Url("globalize.culture.hsb-DE.js");
+                                  
+                    public static readonly string globalize_culture_hsb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hsb.min.js") ? Url("globalize.culture.hsb.min.js") : Url("globalize.culture.hsb.js");
+                                  
+                    public static readonly string globalize_culture_hu_HU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hu-HU.min.js") ? Url("globalize.culture.hu-HU.min.js") : Url("globalize.culture.hu-HU.js");
+                                  
+                    public static readonly string globalize_culture_hu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hu.min.js") ? Url("globalize.culture.hu.min.js") : Url("globalize.culture.hu.js");
+                                  
+                    public static readonly string globalize_culture_hy_AM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hy-AM.min.js") ? Url("globalize.culture.hy-AM.min.js") : Url("globalize.culture.hy-AM.js");
+                                  
+                    public static readonly string globalize_culture_hy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.hy.min.js") ? Url("globalize.culture.hy.min.js") : Url("globalize.culture.hy.js");
+                                  
+                    public static readonly string globalize_culture_id_ID_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.id-ID.min.js") ? Url("globalize.culture.id-ID.min.js") : Url("globalize.culture.id-ID.js");
+                                  
+                    public static readonly string globalize_culture_id_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.id.min.js") ? Url("globalize.culture.id.min.js") : Url("globalize.culture.id.js");
+                                  
+                    public static readonly string globalize_culture_ig_NG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ig-NG.min.js") ? Url("globalize.culture.ig-NG.min.js") : Url("globalize.culture.ig-NG.js");
+                                  
+                    public static readonly string globalize_culture_ig_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ig.min.js") ? Url("globalize.culture.ig.min.js") : Url("globalize.culture.ig.js");
+                                  
+                    public static readonly string globalize_culture_ii_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ii-CN.min.js") ? Url("globalize.culture.ii-CN.min.js") : Url("globalize.culture.ii-CN.js");
+                                  
+                    public static readonly string globalize_culture_ii_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ii.min.js") ? Url("globalize.culture.ii.min.js") : Url("globalize.culture.ii.js");
+                                  
+                    public static readonly string globalize_culture_is_IS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.is-IS.min.js") ? Url("globalize.culture.is-IS.min.js") : Url("globalize.culture.is-IS.js");
+                                  
+                    public static readonly string globalize_culture_is_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.is.min.js") ? Url("globalize.culture.is.min.js") : Url("globalize.culture.is.js");
+                                  
+                    public static readonly string globalize_culture_it_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.it-CH.min.js") ? Url("globalize.culture.it-CH.min.js") : Url("globalize.culture.it-CH.js");
+                                  
+                    public static readonly string globalize_culture_it_IT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.it-IT.min.js") ? Url("globalize.culture.it-IT.min.js") : Url("globalize.culture.it-IT.js");
+                                  
+                    public static readonly string globalize_culture_it_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.it.min.js") ? Url("globalize.culture.it.min.js") : Url("globalize.culture.it.js");
+                                  
+                    public static readonly string globalize_culture_iu_Cans_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Cans-CA.min.js") ? Url("globalize.culture.iu-Cans-CA.min.js") : Url("globalize.culture.iu-Cans-CA.js");
+                                  
+                    public static readonly string globalize_culture_iu_Cans_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Cans.min.js") ? Url("globalize.culture.iu-Cans.min.js") : Url("globalize.culture.iu-Cans.js");
+                                  
+                    public static readonly string globalize_culture_iu_Latn_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Latn-CA.min.js") ? Url("globalize.culture.iu-Latn-CA.min.js") : Url("globalize.culture.iu-Latn-CA.js");
+                                  
+                    public static readonly string globalize_culture_iu_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu-Latn.min.js") ? Url("globalize.culture.iu-Latn.min.js") : Url("globalize.culture.iu-Latn.js");
+                                  
+                    public static readonly string globalize_culture_iu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.iu.min.js") ? Url("globalize.culture.iu.min.js") : Url("globalize.culture.iu.js");
+                                  
+                    public static readonly string globalize_culture_ja_JP_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ja-JP.min.js") ? Url("globalize.culture.ja-JP.min.js") : Url("globalize.culture.ja-JP.js");
+                                  
+                    public static readonly string globalize_culture_ja_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ja.min.js") ? Url("globalize.culture.ja.min.js") : Url("globalize.culture.ja.js");
+                                  
+                    public static readonly string globalize_culture_ka_GE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ka-GE.min.js") ? Url("globalize.culture.ka-GE.min.js") : Url("globalize.culture.ka-GE.js");
+                                  
+                    public static readonly string globalize_culture_ka_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ka.min.js") ? Url("globalize.culture.ka.min.js") : Url("globalize.culture.ka.js");
+                                  
+                    public static readonly string globalize_culture_kk_KZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kk-KZ.min.js") ? Url("globalize.culture.kk-KZ.min.js") : Url("globalize.culture.kk-KZ.js");
+                                  
+                    public static readonly string globalize_culture_kk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kk.min.js") ? Url("globalize.culture.kk.min.js") : Url("globalize.culture.kk.js");
+                                  
+                    public static readonly string globalize_culture_kl_GL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kl-GL.min.js") ? Url("globalize.culture.kl-GL.min.js") : Url("globalize.culture.kl-GL.js");
+                                  
+                    public static readonly string globalize_culture_kl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kl.min.js") ? Url("globalize.culture.kl.min.js") : Url("globalize.culture.kl.js");
+                                  
+                    public static readonly string globalize_culture_km_KH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.km-KH.min.js") ? Url("globalize.culture.km-KH.min.js") : Url("globalize.culture.km-KH.js");
+                                  
+                    public static readonly string globalize_culture_km_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.km.min.js") ? Url("globalize.culture.km.min.js") : Url("globalize.culture.km.js");
+                                  
+                    public static readonly string globalize_culture_kn_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kn-IN.min.js") ? Url("globalize.culture.kn-IN.min.js") : Url("globalize.culture.kn-IN.js");
+                                  
+                    public static readonly string globalize_culture_kn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kn.min.js") ? Url("globalize.culture.kn.min.js") : Url("globalize.culture.kn.js");
+                                  
+                    public static readonly string globalize_culture_ko_KR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ko-KR.min.js") ? Url("globalize.culture.ko-KR.min.js") : Url("globalize.culture.ko-KR.js");
+                                  
+                    public static readonly string globalize_culture_ko_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ko.min.js") ? Url("globalize.culture.ko.min.js") : Url("globalize.culture.ko.js");
+                                  
+                    public static readonly string globalize_culture_kok_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kok-IN.min.js") ? Url("globalize.culture.kok-IN.min.js") : Url("globalize.culture.kok-IN.js");
+                                  
+                    public static readonly string globalize_culture_kok_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.kok.min.js") ? Url("globalize.culture.kok.min.js") : Url("globalize.culture.kok.js");
+                                  
+                    public static readonly string globalize_culture_ky_KG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ky-KG.min.js") ? Url("globalize.culture.ky-KG.min.js") : Url("globalize.culture.ky-KG.js");
+                                  
+                    public static readonly string globalize_culture_ky_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ky.min.js") ? Url("globalize.culture.ky.min.js") : Url("globalize.culture.ky.js");
+                                  
+                    public static readonly string globalize_culture_lb_LU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lb-LU.min.js") ? Url("globalize.culture.lb-LU.min.js") : Url("globalize.culture.lb-LU.js");
+                                  
+                    public static readonly string globalize_culture_lb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lb.min.js") ? Url("globalize.culture.lb.min.js") : Url("globalize.culture.lb.js");
+                                  
+                    public static readonly string globalize_culture_lo_LA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lo-LA.min.js") ? Url("globalize.culture.lo-LA.min.js") : Url("globalize.culture.lo-LA.js");
+                                  
+                    public static readonly string globalize_culture_lo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lo.min.js") ? Url("globalize.culture.lo.min.js") : Url("globalize.culture.lo.js");
+                                  
+                    public static readonly string globalize_culture_lt_LT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lt-LT.min.js") ? Url("globalize.culture.lt-LT.min.js") : Url("globalize.culture.lt-LT.js");
+                                  
+                    public static readonly string globalize_culture_lt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lt.min.js") ? Url("globalize.culture.lt.min.js") : Url("globalize.culture.lt.js");
+                                  
+                    public static readonly string globalize_culture_lv_LV_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lv-LV.min.js") ? Url("globalize.culture.lv-LV.min.js") : Url("globalize.culture.lv-LV.js");
+                                  
+                    public static readonly string globalize_culture_lv_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.lv.min.js") ? Url("globalize.culture.lv.min.js") : Url("globalize.culture.lv.js");
+                                  
+                    public static readonly string globalize_culture_mi_NZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mi-NZ.min.js") ? Url("globalize.culture.mi-NZ.min.js") : Url("globalize.culture.mi-NZ.js");
+                                  
+                    public static readonly string globalize_culture_mi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mi.min.js") ? Url("globalize.culture.mi.min.js") : Url("globalize.culture.mi.js");
+                                  
+                    public static readonly string globalize_culture_mk_MK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mk-MK.min.js") ? Url("globalize.culture.mk-MK.min.js") : Url("globalize.culture.mk-MK.js");
+                                  
+                    public static readonly string globalize_culture_mk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mk.min.js") ? Url("globalize.culture.mk.min.js") : Url("globalize.culture.mk.js");
+                                  
+                    public static readonly string globalize_culture_ml_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ml-IN.min.js") ? Url("globalize.culture.ml-IN.min.js") : Url("globalize.culture.ml-IN.js");
+                                  
+                    public static readonly string globalize_culture_ml_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ml.min.js") ? Url("globalize.culture.ml.min.js") : Url("globalize.culture.ml.js");
+                                  
+                    public static readonly string globalize_culture_mn_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-Cyrl.min.js") ? Url("globalize.culture.mn-Cyrl.min.js") : Url("globalize.culture.mn-Cyrl.js");
+                                  
+                    public static readonly string globalize_culture_mn_MN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-MN.min.js") ? Url("globalize.culture.mn-MN.min.js") : Url("globalize.culture.mn-MN.js");
+                                  
+                    public static readonly string globalize_culture_mn_Mong_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-Mong-CN.min.js") ? Url("globalize.culture.mn-Mong-CN.min.js") : Url("globalize.culture.mn-Mong-CN.js");
+                                  
+                    public static readonly string globalize_culture_mn_Mong_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn-Mong.min.js") ? Url("globalize.culture.mn-Mong.min.js") : Url("globalize.culture.mn-Mong.js");
+                                  
+                    public static readonly string globalize_culture_mn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mn.min.js") ? Url("globalize.culture.mn.min.js") : Url("globalize.culture.mn.js");
+                                  
+                    public static readonly string globalize_culture_moh_CA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.moh-CA.min.js") ? Url("globalize.culture.moh-CA.min.js") : Url("globalize.culture.moh-CA.js");
+                                  
+                    public static readonly string globalize_culture_moh_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.moh.min.js") ? Url("globalize.culture.moh.min.js") : Url("globalize.culture.moh.js");
+                                  
+                    public static readonly string globalize_culture_mr_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mr-IN.min.js") ? Url("globalize.culture.mr-IN.min.js") : Url("globalize.culture.mr-IN.js");
+                                  
+                    public static readonly string globalize_culture_mr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mr.min.js") ? Url("globalize.culture.mr.min.js") : Url("globalize.culture.mr.js");
+                                  
+                    public static readonly string globalize_culture_ms_BN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ms-BN.min.js") ? Url("globalize.culture.ms-BN.min.js") : Url("globalize.culture.ms-BN.js");
+                                  
+                    public static readonly string globalize_culture_ms_MY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ms-MY.min.js") ? Url("globalize.culture.ms-MY.min.js") : Url("globalize.culture.ms-MY.js");
+                                  
+                    public static readonly string globalize_culture_ms_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ms.min.js") ? Url("globalize.culture.ms.min.js") : Url("globalize.culture.ms.js");
+                                  
+                    public static readonly string globalize_culture_mt_MT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mt-MT.min.js") ? Url("globalize.culture.mt-MT.min.js") : Url("globalize.culture.mt-MT.js");
+                                  
+                    public static readonly string globalize_culture_mt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.mt.min.js") ? Url("globalize.culture.mt.min.js") : Url("globalize.culture.mt.js");
+                                  
+                    public static readonly string globalize_culture_nb_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nb-NO.min.js") ? Url("globalize.culture.nb-NO.min.js") : Url("globalize.culture.nb-NO.js");
+                                  
+                    public static readonly string globalize_culture_nb_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nb.min.js") ? Url("globalize.culture.nb.min.js") : Url("globalize.culture.nb.js");
+                                  
+                    public static readonly string globalize_culture_ne_NP_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ne-NP.min.js") ? Url("globalize.culture.ne-NP.min.js") : Url("globalize.culture.ne-NP.js");
+                                  
+                    public static readonly string globalize_culture_ne_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ne.min.js") ? Url("globalize.culture.ne.min.js") : Url("globalize.culture.ne.js");
+                                  
+                    public static readonly string globalize_culture_nl_BE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nl-BE.min.js") ? Url("globalize.culture.nl-BE.min.js") : Url("globalize.culture.nl-BE.js");
+                                  
+                    public static readonly string globalize_culture_nl_NL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nl-NL.min.js") ? Url("globalize.culture.nl-NL.min.js") : Url("globalize.culture.nl-NL.js");
+                                  
+                    public static readonly string globalize_culture_nl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nl.min.js") ? Url("globalize.culture.nl.min.js") : Url("globalize.culture.nl.js");
+                                  
+                    public static readonly string globalize_culture_nn_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nn-NO.min.js") ? Url("globalize.culture.nn-NO.min.js") : Url("globalize.culture.nn-NO.js");
+                                  
+                    public static readonly string globalize_culture_nn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nn.min.js") ? Url("globalize.culture.nn.min.js") : Url("globalize.culture.nn.js");
+                                  
+                    public static readonly string globalize_culture_no_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.no.min.js") ? Url("globalize.culture.no.min.js") : Url("globalize.culture.no.js");
+                                  
+                    public static readonly string globalize_culture_nso_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nso-ZA.min.js") ? Url("globalize.culture.nso-ZA.min.js") : Url("globalize.culture.nso-ZA.js");
+                                  
+                    public static readonly string globalize_culture_nso_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.nso.min.js") ? Url("globalize.culture.nso.min.js") : Url("globalize.culture.nso.js");
+                                  
+                    public static readonly string globalize_culture_oc_FR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.oc-FR.min.js") ? Url("globalize.culture.oc-FR.min.js") : Url("globalize.culture.oc-FR.js");
+                                  
+                    public static readonly string globalize_culture_oc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.oc.min.js") ? Url("globalize.culture.oc.min.js") : Url("globalize.culture.oc.js");
+                                  
+                    public static readonly string globalize_culture_or_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.or-IN.min.js") ? Url("globalize.culture.or-IN.min.js") : Url("globalize.culture.or-IN.js");
+                                  
+                    public static readonly string globalize_culture_or_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.or.min.js") ? Url("globalize.culture.or.min.js") : Url("globalize.culture.or.js");
+                                  
+                    public static readonly string globalize_culture_pa_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pa-IN.min.js") ? Url("globalize.culture.pa-IN.min.js") : Url("globalize.culture.pa-IN.js");
+                                  
+                    public static readonly string globalize_culture_pa_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pa.min.js") ? Url("globalize.culture.pa.min.js") : Url("globalize.culture.pa.js");
+                                  
+                    public static readonly string globalize_culture_pl_PL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pl-PL.min.js") ? Url("globalize.culture.pl-PL.min.js") : Url("globalize.culture.pl-PL.js");
+                                  
+                    public static readonly string globalize_culture_pl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pl.min.js") ? Url("globalize.culture.pl.min.js") : Url("globalize.culture.pl.js");
+                                  
+                    public static readonly string globalize_culture_prs_AF_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.prs-AF.min.js") ? Url("globalize.culture.prs-AF.min.js") : Url("globalize.culture.prs-AF.js");
+                                  
+                    public static readonly string globalize_culture_prs_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.prs.min.js") ? Url("globalize.culture.prs.min.js") : Url("globalize.culture.prs.js");
+                                  
+                    public static readonly string globalize_culture_ps_AF_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ps-AF.min.js") ? Url("globalize.culture.ps-AF.min.js") : Url("globalize.culture.ps-AF.js");
+                                  
+                    public static readonly string globalize_culture_ps_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ps.min.js") ? Url("globalize.culture.ps.min.js") : Url("globalize.culture.ps.js");
+                                  
+                    public static readonly string globalize_culture_pt_BR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pt-BR.min.js") ? Url("globalize.culture.pt-BR.min.js") : Url("globalize.culture.pt-BR.js");
+                                  
+                    public static readonly string globalize_culture_pt_PT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pt-PT.min.js") ? Url("globalize.culture.pt-PT.min.js") : Url("globalize.culture.pt-PT.js");
+                                  
+                    public static readonly string globalize_culture_pt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.pt.min.js") ? Url("globalize.culture.pt.min.js") : Url("globalize.culture.pt.js");
+                                  
+                    public static readonly string globalize_culture_qut_GT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.qut-GT.min.js") ? Url("globalize.culture.qut-GT.min.js") : Url("globalize.culture.qut-GT.js");
+                                  
+                    public static readonly string globalize_culture_qut_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.qut.min.js") ? Url("globalize.culture.qut.min.js") : Url("globalize.culture.qut.js");
+                                  
+                    public static readonly string globalize_culture_quz_BO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz-BO.min.js") ? Url("globalize.culture.quz-BO.min.js") : Url("globalize.culture.quz-BO.js");
+                                  
+                    public static readonly string globalize_culture_quz_EC_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz-EC.min.js") ? Url("globalize.culture.quz-EC.min.js") : Url("globalize.culture.quz-EC.js");
+                                  
+                    public static readonly string globalize_culture_quz_PE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz-PE.min.js") ? Url("globalize.culture.quz-PE.min.js") : Url("globalize.culture.quz-PE.js");
+                                  
+                    public static readonly string globalize_culture_quz_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.quz.min.js") ? Url("globalize.culture.quz.min.js") : Url("globalize.culture.quz.js");
+                                  
+                    public static readonly string globalize_culture_rm_CH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rm-CH.min.js") ? Url("globalize.culture.rm-CH.min.js") : Url("globalize.culture.rm-CH.js");
+                                  
+                    public static readonly string globalize_culture_rm_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rm.min.js") ? Url("globalize.culture.rm.min.js") : Url("globalize.culture.rm.js");
+                                  
+                    public static readonly string globalize_culture_ro_RO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ro-RO.min.js") ? Url("globalize.culture.ro-RO.min.js") : Url("globalize.culture.ro-RO.js");
+                                  
+                    public static readonly string globalize_culture_ro_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ro.min.js") ? Url("globalize.culture.ro.min.js") : Url("globalize.culture.ro.js");
+                                  
+                    public static readonly string globalize_culture_ru_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ru-RU.min.js") ? Url("globalize.culture.ru-RU.min.js") : Url("globalize.culture.ru-RU.js");
+                                  
+                    public static readonly string globalize_culture_ru_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ru.min.js") ? Url("globalize.culture.ru.min.js") : Url("globalize.culture.ru.js");
+                                  
+                    public static readonly string globalize_culture_rw_RW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rw-RW.min.js") ? Url("globalize.culture.rw-RW.min.js") : Url("globalize.culture.rw-RW.js");
+                                  
+                    public static readonly string globalize_culture_rw_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.rw.min.js") ? Url("globalize.culture.rw.min.js") : Url("globalize.culture.rw.js");
+                                  
+                    public static readonly string globalize_culture_sa_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sa-IN.min.js") ? Url("globalize.culture.sa-IN.min.js") : Url("globalize.culture.sa-IN.js");
+                                  
+                    public static readonly string globalize_culture_sa_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sa.min.js") ? Url("globalize.culture.sa.min.js") : Url("globalize.culture.sa.js");
+                                  
+                    public static readonly string globalize_culture_sah_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sah-RU.min.js") ? Url("globalize.culture.sah-RU.min.js") : Url("globalize.culture.sah-RU.js");
+                                  
+                    public static readonly string globalize_culture_sah_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sah.min.js") ? Url("globalize.culture.sah.min.js") : Url("globalize.culture.sah.js");
+                                  
+                    public static readonly string globalize_culture_se_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se-FI.min.js") ? Url("globalize.culture.se-FI.min.js") : Url("globalize.culture.se-FI.js");
+                                  
+                    public static readonly string globalize_culture_se_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se-NO.min.js") ? Url("globalize.culture.se-NO.min.js") : Url("globalize.culture.se-NO.js");
+                                  
+                    public static readonly string globalize_culture_se_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se-SE.min.js") ? Url("globalize.culture.se-SE.min.js") : Url("globalize.culture.se-SE.js");
+                                  
+                    public static readonly string globalize_culture_se_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.se.min.js") ? Url("globalize.culture.se.min.js") : Url("globalize.culture.se.js");
+                                  
+                    public static readonly string globalize_culture_si_LK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.si-LK.min.js") ? Url("globalize.culture.si-LK.min.js") : Url("globalize.culture.si-LK.js");
+                                  
+                    public static readonly string globalize_culture_si_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.si.min.js") ? Url("globalize.culture.si.min.js") : Url("globalize.culture.si.js");
+                                  
+                    public static readonly string globalize_culture_sk_SK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sk-SK.min.js") ? Url("globalize.culture.sk-SK.min.js") : Url("globalize.culture.sk-SK.js");
+                                  
+                    public static readonly string globalize_culture_sk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sk.min.js") ? Url("globalize.culture.sk.min.js") : Url("globalize.culture.sk.js");
+                                  
+                    public static readonly string globalize_culture_sl_SI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sl-SI.min.js") ? Url("globalize.culture.sl-SI.min.js") : Url("globalize.culture.sl-SI.js");
+                                  
+                    public static readonly string globalize_culture_sl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sl.min.js") ? Url("globalize.culture.sl.min.js") : Url("globalize.culture.sl.js");
+                                  
+                    public static readonly string globalize_culture_sma_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sma-NO.min.js") ? Url("globalize.culture.sma-NO.min.js") : Url("globalize.culture.sma-NO.js");
+                                  
+                    public static readonly string globalize_culture_sma_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sma-SE.min.js") ? Url("globalize.culture.sma-SE.min.js") : Url("globalize.culture.sma-SE.js");
+                                  
+                    public static readonly string globalize_culture_sma_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sma.min.js") ? Url("globalize.culture.sma.min.js") : Url("globalize.culture.sma.js");
+                                  
+                    public static readonly string globalize_culture_smj_NO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smj-NO.min.js") ? Url("globalize.culture.smj-NO.min.js") : Url("globalize.culture.smj-NO.js");
+                                  
+                    public static readonly string globalize_culture_smj_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smj-SE.min.js") ? Url("globalize.culture.smj-SE.min.js") : Url("globalize.culture.smj-SE.js");
+                                  
+                    public static readonly string globalize_culture_smj_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smj.min.js") ? Url("globalize.culture.smj.min.js") : Url("globalize.culture.smj.js");
+                                  
+                    public static readonly string globalize_culture_smn_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smn-FI.min.js") ? Url("globalize.culture.smn-FI.min.js") : Url("globalize.culture.smn-FI.js");
+                                  
+                    public static readonly string globalize_culture_smn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.smn.min.js") ? Url("globalize.culture.smn.min.js") : Url("globalize.culture.smn.js");
+                                  
+                    public static readonly string globalize_culture_sms_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sms-FI.min.js") ? Url("globalize.culture.sms-FI.min.js") : Url("globalize.culture.sms-FI.js");
+                                  
+                    public static readonly string globalize_culture_sms_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sms.min.js") ? Url("globalize.culture.sms.min.js") : Url("globalize.culture.sms.js");
+                                  
+                    public static readonly string globalize_culture_sq_AL_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sq-AL.min.js") ? Url("globalize.culture.sq-AL.min.js") : Url("globalize.culture.sq-AL.js");
+                                  
+                    public static readonly string globalize_culture_sq_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sq.min.js") ? Url("globalize.culture.sq.min.js") : Url("globalize.culture.sq.js");
+                                  
+                    public static readonly string globalize_culture_sr_Cyrl_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-BA.min.js") ? Url("globalize.culture.sr-Cyrl-BA.min.js") : Url("globalize.culture.sr-Cyrl-BA.js");
+                                  
+                    public static readonly string globalize_culture_sr_Cyrl_CS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-CS.min.js") ? Url("globalize.culture.sr-Cyrl-CS.min.js") : Url("globalize.culture.sr-Cyrl-CS.js");
+                                  
+                    public static readonly string globalize_culture_sr_Cyrl_ME_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-ME.min.js") ? Url("globalize.culture.sr-Cyrl-ME.min.js") : Url("globalize.culture.sr-Cyrl-ME.js");
+                                  
+                    public static readonly string globalize_culture_sr_Cyrl_RS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl-RS.min.js") ? Url("globalize.culture.sr-Cyrl-RS.min.js") : Url("globalize.culture.sr-Cyrl-RS.js");
+                                  
+                    public static readonly string globalize_culture_sr_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Cyrl.min.js") ? Url("globalize.culture.sr-Cyrl.min.js") : Url("globalize.culture.sr-Cyrl.js");
+                                  
+                    public static readonly string globalize_culture_sr_Latn_BA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-BA.min.js") ? Url("globalize.culture.sr-Latn-BA.min.js") : Url("globalize.culture.sr-Latn-BA.js");
+                                  
+                    public static readonly string globalize_culture_sr_Latn_CS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-CS.min.js") ? Url("globalize.culture.sr-Latn-CS.min.js") : Url("globalize.culture.sr-Latn-CS.js");
+                                  
+                    public static readonly string globalize_culture_sr_Latn_ME_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-ME.min.js") ? Url("globalize.culture.sr-Latn-ME.min.js") : Url("globalize.culture.sr-Latn-ME.js");
+                                  
+                    public static readonly string globalize_culture_sr_Latn_RS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn-RS.min.js") ? Url("globalize.culture.sr-Latn-RS.min.js") : Url("globalize.culture.sr-Latn-RS.js");
+                                  
+                    public static readonly string globalize_culture_sr_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr-Latn.min.js") ? Url("globalize.culture.sr-Latn.min.js") : Url("globalize.culture.sr-Latn.js");
+                                  
+                    public static readonly string globalize_culture_sr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sr.min.js") ? Url("globalize.culture.sr.min.js") : Url("globalize.culture.sr.js");
+                                  
+                    public static readonly string globalize_culture_sv_FI_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sv-FI.min.js") ? Url("globalize.culture.sv-FI.min.js") : Url("globalize.culture.sv-FI.js");
+                                  
+                    public static readonly string globalize_culture_sv_SE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sv-SE.min.js") ? Url("globalize.culture.sv-SE.min.js") : Url("globalize.culture.sv-SE.js");
+                                  
+                    public static readonly string globalize_culture_sv_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sv.min.js") ? Url("globalize.culture.sv.min.js") : Url("globalize.culture.sv.js");
+                                  
+                    public static readonly string globalize_culture_sw_KE_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sw-KE.min.js") ? Url("globalize.culture.sw-KE.min.js") : Url("globalize.culture.sw-KE.js");
+                                  
+                    public static readonly string globalize_culture_sw_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.sw.min.js") ? Url("globalize.culture.sw.min.js") : Url("globalize.culture.sw.js");
+                                  
+                    public static readonly string globalize_culture_syr_SY_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.syr-SY.min.js") ? Url("globalize.culture.syr-SY.min.js") : Url("globalize.culture.syr-SY.js");
+                                  
+                    public static readonly string globalize_culture_syr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.syr.min.js") ? Url("globalize.culture.syr.min.js") : Url("globalize.culture.syr.js");
+                                  
+                    public static readonly string globalize_culture_ta_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ta-IN.min.js") ? Url("globalize.culture.ta-IN.min.js") : Url("globalize.culture.ta-IN.js");
+                                  
+                    public static readonly string globalize_culture_ta_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ta.min.js") ? Url("globalize.culture.ta.min.js") : Url("globalize.culture.ta.js");
+                                  
+                    public static readonly string globalize_culture_te_IN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.te-IN.min.js") ? Url("globalize.culture.te-IN.min.js") : Url("globalize.culture.te-IN.js");
+                                  
+                    public static readonly string globalize_culture_te_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.te.min.js") ? Url("globalize.culture.te.min.js") : Url("globalize.culture.te.js");
+                                  
+                    public static readonly string globalize_culture_tg_Cyrl_TJ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tg-Cyrl-TJ.min.js") ? Url("globalize.culture.tg-Cyrl-TJ.min.js") : Url("globalize.culture.tg-Cyrl-TJ.js");
+                                  
+                    public static readonly string globalize_culture_tg_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tg-Cyrl.min.js") ? Url("globalize.culture.tg-Cyrl.min.js") : Url("globalize.culture.tg-Cyrl.js");
+                                  
+                    public static readonly string globalize_culture_tg_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tg.min.js") ? Url("globalize.culture.tg.min.js") : Url("globalize.culture.tg.js");
+                                  
+                    public static readonly string globalize_culture_th_TH_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.th-TH.min.js") ? Url("globalize.culture.th-TH.min.js") : Url("globalize.culture.th-TH.js");
+                                  
+                    public static readonly string globalize_culture_th_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.th.min.js") ? Url("globalize.culture.th.min.js") : Url("globalize.culture.th.js");
+                                  
+                    public static readonly string globalize_culture_tk_TM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tk-TM.min.js") ? Url("globalize.culture.tk-TM.min.js") : Url("globalize.culture.tk-TM.js");
+                                  
+                    public static readonly string globalize_culture_tk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tk.min.js") ? Url("globalize.culture.tk.min.js") : Url("globalize.culture.tk.js");
+                                  
+                    public static readonly string globalize_culture_tn_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tn-ZA.min.js") ? Url("globalize.culture.tn-ZA.min.js") : Url("globalize.culture.tn-ZA.js");
+                                  
+                    public static readonly string globalize_culture_tn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tn.min.js") ? Url("globalize.culture.tn.min.js") : Url("globalize.culture.tn.js");
+                                  
+                    public static readonly string globalize_culture_tr_TR_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tr-TR.min.js") ? Url("globalize.culture.tr-TR.min.js") : Url("globalize.culture.tr-TR.js");
+                                  
+                    public static readonly string globalize_culture_tr_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tr.min.js") ? Url("globalize.culture.tr.min.js") : Url("globalize.culture.tr.js");
+                                  
+                    public static readonly string globalize_culture_tt_RU_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tt-RU.min.js") ? Url("globalize.culture.tt-RU.min.js") : Url("globalize.culture.tt-RU.js");
+                                  
+                    public static readonly string globalize_culture_tt_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tt.min.js") ? Url("globalize.culture.tt.min.js") : Url("globalize.culture.tt.js");
+                                  
+                    public static readonly string globalize_culture_tzm_Latn_DZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tzm-Latn-DZ.min.js") ? Url("globalize.culture.tzm-Latn-DZ.min.js") : Url("globalize.culture.tzm-Latn-DZ.js");
+                                  
+                    public static readonly string globalize_culture_tzm_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tzm-Latn.min.js") ? Url("globalize.culture.tzm-Latn.min.js") : Url("globalize.culture.tzm-Latn.js");
+                                  
+                    public static readonly string globalize_culture_tzm_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.tzm.min.js") ? Url("globalize.culture.tzm.min.js") : Url("globalize.culture.tzm.js");
+                                  
+                    public static readonly string globalize_culture_ug_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ug-CN.min.js") ? Url("globalize.culture.ug-CN.min.js") : Url("globalize.culture.ug-CN.js");
+                                  
+                    public static readonly string globalize_culture_ug_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ug.min.js") ? Url("globalize.culture.ug.min.js") : Url("globalize.culture.ug.js");
+                                  
+                    public static readonly string globalize_culture_uk_UA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uk-UA.min.js") ? Url("globalize.culture.uk-UA.min.js") : Url("globalize.culture.uk-UA.js");
+                                  
+                    public static readonly string globalize_culture_uk_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uk.min.js") ? Url("globalize.culture.uk.min.js") : Url("globalize.culture.uk.js");
+                                  
+                    public static readonly string globalize_culture_ur_PK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ur-PK.min.js") ? Url("globalize.culture.ur-PK.min.js") : Url("globalize.culture.ur-PK.js");
+                                  
+                    public static readonly string globalize_culture_ur_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.ur.min.js") ? Url("globalize.culture.ur.min.js") : Url("globalize.culture.ur.js");
+                                  
+                    public static readonly string globalize_culture_uz_Cyrl_UZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Cyrl-UZ.min.js") ? Url("globalize.culture.uz-Cyrl-UZ.min.js") : Url("globalize.culture.uz-Cyrl-UZ.js");
+                                  
+                    public static readonly string globalize_culture_uz_Cyrl_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Cyrl.min.js") ? Url("globalize.culture.uz-Cyrl.min.js") : Url("globalize.culture.uz-Cyrl.js");
+                                  
+                    public static readonly string globalize_culture_uz_Latn_UZ_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Latn-UZ.min.js") ? Url("globalize.culture.uz-Latn-UZ.min.js") : Url("globalize.culture.uz-Latn-UZ.js");
+                                  
+                    public static readonly string globalize_culture_uz_Latn_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz-Latn.min.js") ? Url("globalize.culture.uz-Latn.min.js") : Url("globalize.culture.uz-Latn.js");
+                                  
+                    public static readonly string globalize_culture_uz_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.uz.min.js") ? Url("globalize.culture.uz.min.js") : Url("globalize.culture.uz.js");
+                                  
+                    public static readonly string globalize_culture_vi_VN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.vi-VN.min.js") ? Url("globalize.culture.vi-VN.min.js") : Url("globalize.culture.vi-VN.js");
+                                  
+                    public static readonly string globalize_culture_vi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.vi.min.js") ? Url("globalize.culture.vi.min.js") : Url("globalize.culture.vi.js");
+                                  
+                    public static readonly string globalize_culture_wo_SN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.wo-SN.min.js") ? Url("globalize.culture.wo-SN.min.js") : Url("globalize.culture.wo-SN.js");
+                                  
+                    public static readonly string globalize_culture_wo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.wo.min.js") ? Url("globalize.culture.wo.min.js") : Url("globalize.culture.wo.js");
+                                  
+                    public static readonly string globalize_culture_xh_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.xh-ZA.min.js") ? Url("globalize.culture.xh-ZA.min.js") : Url("globalize.culture.xh-ZA.js");
+                                  
+                    public static readonly string globalize_culture_xh_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.xh.min.js") ? Url("globalize.culture.xh.min.js") : Url("globalize.culture.xh.js");
+                                  
+                    public static readonly string globalize_culture_yo_NG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.yo-NG.min.js") ? Url("globalize.culture.yo-NG.min.js") : Url("globalize.culture.yo-NG.js");
+                                  
+                    public static readonly string globalize_culture_yo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.yo.min.js") ? Url("globalize.culture.yo.min.js") : Url("globalize.culture.yo.js");
+                                  
+                    public static readonly string globalize_culture_zh_CHS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-CHS.min.js") ? Url("globalize.culture.zh-CHS.min.js") : Url("globalize.culture.zh-CHS.js");
+                                  
+                    public static readonly string globalize_culture_zh_CHT_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-CHT.min.js") ? Url("globalize.culture.zh-CHT.min.js") : Url("globalize.culture.zh-CHT.js");
+                                  
+                    public static readonly string globalize_culture_zh_CN_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-CN.min.js") ? Url("globalize.culture.zh-CN.min.js") : Url("globalize.culture.zh-CN.js");
+                                  
+                    public static readonly string globalize_culture_zh_Hans_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-Hans.min.js") ? Url("globalize.culture.zh-Hans.min.js") : Url("globalize.culture.zh-Hans.js");
+                                  
+                    public static readonly string globalize_culture_zh_Hant_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-Hant.min.js") ? Url("globalize.culture.zh-Hant.min.js") : Url("globalize.culture.zh-Hant.js");
+                                  
+                    public static readonly string globalize_culture_zh_HK_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-HK.min.js") ? Url("globalize.culture.zh-HK.min.js") : Url("globalize.culture.zh-HK.js");
+                                  
+                    public static readonly string globalize_culture_zh_MO_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-MO.min.js") ? Url("globalize.culture.zh-MO.min.js") : Url("globalize.culture.zh-MO.js");
+                                  
+                    public static readonly string globalize_culture_zh_SG_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-SG.min.js") ? Url("globalize.culture.zh-SG.min.js") : Url("globalize.culture.zh-SG.js");
+                                  
+                    public static readonly string globalize_culture_zh_TW_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh-TW.min.js") ? Url("globalize.culture.zh-TW.min.js") : Url("globalize.culture.zh-TW.js");
+                                  
+                    public static readonly string globalize_culture_zh_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zh.min.js") ? Url("globalize.culture.zh.min.js") : Url("globalize.culture.zh.js");
+                                  
+                    public static readonly string globalize_culture_zu_ZA_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zu-ZA.min.js") ? Url("globalize.culture.zu-ZA.min.js") : Url("globalize.culture.zu-ZA.js");
+                                  
+                    public static readonly string globalize_culture_zu_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.culture.zu.min.js") ? Url("globalize.culture.zu.min.js") : Url("globalize.culture.zu.js");
+                                  
+                    public static readonly string globalize_cultures_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.cultures.min.js") ? Url("globalize.cultures.min.js") : Url("globalize.cultures.js");
+                                  
+                }
+            
+                public static readonly string globalize_d_ts = Url("globalize.d.ts");
+                public static readonly string globalize_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.min.js") ? Url("globalize.min.js") : Url("globalize.js");
+                              
+                public static readonly string globalize_require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.require.min.js") ? Url("globalize.require.min.js") : Url("globalize.require.js");
                               
             }
         
-            public static readonly string globalize_d_ts = Url("globalize.d.ts");
-            public static readonly string globalize_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.min.js") ? Url("globalize.min.js") : Url("globalize.js");
-                          
-            public static readonly string globalize_require_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/globalize.require.min.js") ? Url("globalize.require.min.js") : Url("globalize.require.js");
-                          
+            public static readonly string jqueryui_d_ts = Url("jqueryui.d.ts");
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3727,6 +3727,7 @@ namespace Links
             public static readonly string sample_photo_128_jpg = Url("sample-photo-128.jpg");
         }
     
+        public static readonly string transparent_png = Url("transparent.png");
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

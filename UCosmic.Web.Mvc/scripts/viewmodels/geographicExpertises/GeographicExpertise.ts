@@ -45,12 +45,8 @@ module ViewModels.GeographicExpertises {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize( expertiseId: string ): void {
-            if (expertiseId === "new") {
-                this.id = ko.observable( 0 );
-            } else {
-                this.id = ko.observable( Number(expertiseId) );
-            }
+        _initialize( expertiseId: number ): void {
+            this.id = ko.observable(expertiseId);
         }
 
         // --------------------------------------------------------------------------------
@@ -123,7 +119,7 @@ module ViewModels.GeographicExpertises {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( expertiseId: string ) {
+        constructor( expertiseId: number ) {
             this._initialize( expertiseId );
         }
 
@@ -149,7 +145,7 @@ module ViewModels.GeographicExpertises {
 
                 $.ajax( {
                     type: "GET",
-                    url: App.Routes.WebApi.GeographicExpertises.get( this.id() ),
+                    url: App.Routes.WebApi.GeographicExpertise.get(this.id()),
                     success: function ( data: any, textStatus: string, jqXhr: JQueryXHR ): void
                         { dataPact.resolve( data ); },
                     error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
@@ -220,26 +216,24 @@ module ViewModels.GeographicExpertises {
             var model = ko.mapping.toJS(mapSource);
 
             var url = (viewModel.id() == 0) ?
-                        App.Routes.WebApi.GeographicExpertises.post() :
-                        App.Routes.WebApi.GeographicExpertises.put( viewModel.id() );
+                        App.Routes.WebApi.GeographicExpertise.post() :
+                        App.Routes.WebApi.GeographicExpertise.put(viewModel.id());
             var type = (viewModel.id() == 0) ?  "POST" : "PUT";
 
-            $.ajax( {
+            $.ajax({
                 type: type,
                 async: false,
                 url: url,
-                data: ko.toJSON(model),
-                dataType: 'json',
-                contentType: 'application/json',
-                success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    alert( textStatus + " | " + errorThrown );
-                },
-                complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
-                    location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
-                }
-            } );
+                data: model,
+            })
+            .done((data: any, status: string, xhr: JQueryXHR): void => {
+            })
+            .fail((xhr: JQueryXHR, status: string, errorThrown: string): void => {
+                App.Failures.message(xhr, 'while trying to save your geographic expertise', true);
+            })
+            .always((xhr: JQueryXHR, status: string): void => {
+                location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+            });
         }
 
         // --------------------------------------------------------------------------------

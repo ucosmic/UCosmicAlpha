@@ -617,29 +617,29 @@ var App;
                 var CountryCounts = Activities.CountryCounts;
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
-            (function (GeographicExpertises) {
+            (function (GeographicExpertise) {
                 function get(expertiseId) {
-                    var url = makeUrl('geographic-expertises');
+                    var url = 'geographic-expertise';
                     if(expertiseId) {
-                        url += expertiseId;
+                        url += '/' + expertiseId;
                     }
-                    return url;
+                    return makeUrl(url);
                 }
-                GeographicExpertises.get = get;
+                GeographicExpertise.get = get;
                 function post() {
-                    return makeUrl('geographic-expertises');
+                    return get();
                 }
-                GeographicExpertises.post = post;
+                GeographicExpertise.post = post;
                 function put(expertiseId) {
-                    return makeUrl('geographic-expertises/' + expertiseId);
+                    return get(expertiseId);
                 }
-                GeographicExpertises.put = put;
+                GeographicExpertise.put = put;
                 function del(expertiseId) {
-                    return makeUrl('geographic-expertises/' + expertiseId);
+                    return get(expertiseId);
                 }
-                GeographicExpertises.del = del;
-            })(WebApi.GeographicExpertises || (WebApi.GeographicExpertises = {}));
-            var GeographicExpertises = WebApi.GeographicExpertises;
+                GeographicExpertise.del = del;
+            })(WebApi.GeographicExpertise || (WebApi.GeographicExpertise = {}));
+            var GeographicExpertise = WebApi.GeographicExpertise;
             (function (LanguageExpertises) {
                 function get(expertiseId) {
                     var url = makeUrl('language-expertises');
@@ -822,37 +822,34 @@ var App;
                     }
                     Profile.post = post;
                     function activityEdit(activityId) {
-                        var url = 'my/activities/' + activityId;
-                        return makeUrl(url);
+                        return makeUrl('my/activities/{0}'.format(activityId));
                     }
                     Profile.activityEdit = activityEdit;
-                    function geographicExpertiseEdit(expertiseId) {
-                        var url = makeUrl('my/geographic-expertise/');
-                        return url + expertiseId;
-                    }
-                    Profile.geographicExpertiseEdit = geographicExpertiseEdit;
                     function languageExpertiseEdit(expertiseId) {
-                        var url = makeUrl('my/language-expertise/');
-                        return url + expertiseId;
+                        return makeUrl('my/language-expertise/{0}'.format(expertiseId));
                     }
                     Profile.languageExpertiseEdit = languageExpertiseEdit;
                     function internationalAffiliationEdit(affiliationId) {
-                        var url = makeUrl('my/international-affiliation/');
-                        return url + affiliationId;
+                        return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
                     }
                     Profile.internationalAffiliationEdit = internationalAffiliationEdit;
                     function degreeEdit(degreeId) {
-                        var url = makeUrl('my/degree/');
-                        return url + degreeId;
+                        return makeUrl('my/degrees');
                     }
                     Profile.degreeEdit = degreeEdit;
-                    function affiliationEdit(affiliationId) {
-                        var url = makeUrl('my/affiliation/');
-                        return url + affiliationId;
-                    }
-                    Profile.affiliationEdit = affiliationEdit;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
+                (function (GeographicExpertise) {
+                    function create() {
+                        return makeUrl('my/geographic-expertise/new');
+                    }
+                    GeographicExpertise.create = create;
+                    function edit(expertiseId) {
+                        return makeUrl('my/geographic-expertise/{0}'.format(expertiseId));
+                    }
+                    GeographicExpertise.edit = edit;
+                })(My.GeographicExpertise || (My.GeographicExpertise = {}));
+                var GeographicExpertise = My.GeographicExpertise;
             })(Mvc.My || (Mvc.My = {}));
             var My = Mvc.My;
         })(Routes.Mvc || (Routes.Mvc = {}));

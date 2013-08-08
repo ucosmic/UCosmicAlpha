@@ -34,8 +34,7 @@
 
     <script type="text/javascript">
         $(function() {
-            var expertiseId = '@ViewBag.ExpertiseId';
-            var expertiseViewModel = new ViewModels.GeographicExpertises.GeographicExpertise(expertiseId);
+            var expertiseViewModel = new ViewModels.GeographicExpertises.GeographicExpertise(@ViewBag.ExpertiseId);
             expertiseViewModel.load()
                 .done(function() {
 
