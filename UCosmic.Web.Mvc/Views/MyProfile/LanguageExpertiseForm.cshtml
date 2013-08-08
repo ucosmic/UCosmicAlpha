@@ -11,7 +11,7 @@
         display:inline-block;
         text-align: right;
         vertical-align: inherit;
-    }        
+    }
     .required-field
     {
         width: 100px;
@@ -44,11 +44,10 @@
 
     <script type="text/javascript">
         $(function() {
-            var expertiseId = '@ViewBag.ExpertiseId';
-            var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(expertiseId);
+            var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(@ViewBag.ExpertiseId);
             expertiseViewModel.load()
                 .done(function() {
-                    expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");                
+                    expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");
                     ko.applyBindings( expertiseViewModel, $( "#language-expertise-edit" )[0] );
                     expertiseViewModel.setupValidation();
                     expertiseViewModel.setupSubscriptions();
@@ -74,11 +73,9 @@
             <div data-side-swiper="on">
                 <div class="group">
                     <div id="language-expertise-edit" class="on-left from-top" style="width: 100%;">
-				        
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
-
                         <div style="margin-bottom: 38px">
 
                             <!-- LANGUAGE -->
@@ -87,7 +84,7 @@
                                 <input id="language" style="width: 400px" />
                                 <span data-bind="validationMessage: languageId" class="validationMessage"></span>
                             </div>
-                            
+
                             <!-- MAIN LANGUAGE DIALECT -->
                             <div data-bind="visible: languageId() != null">
                                 <label for="main-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
@@ -104,11 +101,11 @@
                                 <label for="other-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
                                 <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect"/>
                             </div>
-                            
+
                             <div style="margin-top: 20px; margin-bottom: 20px; font-weight: bold">
                                 <span>Please assess your level of proficiency:</span>
                             </div>
-                                                   
+
                             <!-- PROFICIENCIES -->
                             <div style="margin-bottom: 8px">
                                 <label for="speaking" class="non-required-field">Speaking</label>
@@ -128,7 +125,7 @@
                             </div>
 
                         </div>
-                            
+
                         <!-- BUTTONS -->
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
@@ -141,7 +138,7 @@
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
                         </div>
-                    </div>                      
+                    </div>
                 </div>
             </div>
         </div>

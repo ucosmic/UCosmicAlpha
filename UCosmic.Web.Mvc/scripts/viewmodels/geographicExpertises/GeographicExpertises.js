@@ -71,9 +71,6 @@ var ViewModels;
             GeographicExpertiseList.prototype.editExpertiseUrl = function (expertiseId) {
                 return App.Routes.Mvc.My.GeographicExpertise.edit(expertiseId);
             };
-            GeographicExpertiseList.prototype.newExpertise = function (data, event) {
-                location.href = App.Routes.Mvc.My.GeographicExpertise.create();
-            };
             GeographicExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";
                 for(var i = 0; i < locations.length; i += 1) {

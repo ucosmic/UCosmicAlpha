@@ -242,9 +242,7 @@ module ViewModels.Degrees {
                 type: type,
                 async: false,
                 url: url,
-                data: ko.toJSON(model),
-                dataType: 'json',
-                contentType: 'application/json',
+                data: model,
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {

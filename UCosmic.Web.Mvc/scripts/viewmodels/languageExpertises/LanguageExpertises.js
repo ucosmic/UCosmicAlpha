@@ -18,7 +18,7 @@ var ViewModels;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = 2147483647;
-                $.get(App.Routes.WebApi.LanguageExpertises.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.LanguageExpertise.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
  {
                         ko.mapping.fromJS(data, {
                         }, _this);
@@ -35,7 +35,7 @@ var ViewModels;
                 $.ajax({
                     async: false,
                     type: "DELETE",
-                    url: App.Routes.WebApi.LanguageExpertises.del(expertiseId),
+                    url: App.Routes.WebApi.LanguageExpertise.del(expertiseId),
                     success: function (data, textStatus, jqXHR) {
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -68,21 +68,8 @@ var ViewModels;
                     ]
                 });
             };
-            LanguageExpertiseList.prototype.editExpertise = function (data, event, expertiseId) {
-                var element = event.target;
-                var url = null;
-                while((element != null) && (element.nodeName != 'TR')) {
-                    element = element.parentElement;
-                }
-                if(element != null) {
-                    url = element.attributes["href"].value;
-                }
-                if(url != null) {
-                    location.href = url;
-                }
-            };
-            LanguageExpertiseList.prototype.newExpertise = function (data, event) {
-                location.href = App.Routes.Mvc.My.Profile.languageExpertiseEdit("new");
+            LanguageExpertiseList.prototype.editUrl = function (expertiseId) {
+                return App.Routes.Mvc.My.LanguageExpertise.edit(expertiseId);
             };
             LanguageExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";

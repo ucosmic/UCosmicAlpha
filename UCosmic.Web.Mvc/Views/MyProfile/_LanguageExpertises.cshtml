@@ -2,7 +2,7 @@
     <header>
         <h2>
             <span>Language Expertise</span>
-            <a href="#" title="Add a new expertise" data-bind="click: function (data, event) { newExpertise(data, event); }">
+            <a href="@Url.Action(MVC.MyProfile.NewLanguageExpertise())" title="Add a new expertise">
                 <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new expertise" />
             </a>
         </h2>
@@ -19,13 +19,15 @@
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
+
 <script type="text/html" id="language-expertises-template">
-    <tr class="hover-hilite"  
-        data-bind="click: function (item, event) { $parent.editExpertise(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.languageExpertiseEdit(id()) }">
+    <tr class="hover-hilite">
         <!-- Description -->
         <td>
             <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: languageName()"></span>
+                <a href="#" data-bind="attr: { href: $parent.editUrl(id()) }" style="display: block; color: inherit; text-decoration: inherit;">
+                    <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: languageName()"></span>
+                </a>
             </div>
         </td>
         <!-- Remove Button -->

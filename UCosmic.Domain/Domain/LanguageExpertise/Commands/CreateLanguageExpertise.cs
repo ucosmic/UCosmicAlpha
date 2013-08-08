@@ -9,16 +9,17 @@ namespace UCosmic.Domain.LanguageExpertise
     public class CreateLanguageExpertise
     {
         public Guid? EntityId { get; set; }
-        public IPrincipal Principal { get; protected set; }
+        public IPrincipal Principal { get; private set; }
         public int? LanguageId { get; set; }
         public string Other { get; set; }
         public string Dialect { get; set; }
-        public int SpeakingProficiency { get; protected set; }
-        public int ListeningProficiency { get; protected set; }
-        public int ReadingProficiency { get; protected set; }
-        public int WritingProficiency { get; protected set; }
-        public bool NoCommit { get; set; }
-        public LanguageExpertise CreatedLanguageExpertise { get; protected internal set; }
+        public int SpeakingProficiency { get; private set; }
+        public int ListeningProficiency { get; private set; }
+        public int ReadingProficiency { get; private set; }
+        public int WritingProficiency { get; private set; }
+        public int CreatedLanguageExpertiseId { get; internal set; }
+        internal LanguageExpertise CreatedLanguageExpertise { get; set; }
+        internal bool NoCommit { get; set; }
 
         public CreateLanguageExpertise( IPrincipal principal,
                                         int speakingProficiency,
@@ -93,6 +94,7 @@ namespace UCosmic.Domain.LanguageExpertise
             }
 
             command.CreatedLanguageExpertise = expertise;
+            command.CreatedLanguageExpertiseId = command.CreatedLanguageExpertise.RevisionId;
         }
     }
 }

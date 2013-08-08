@@ -9,11 +9,7 @@ var ViewModels;
                 this._initialize(expertiseId);
             }
             LanguageExpertise.prototype._initialize = function (expertiseId) {
-                if(expertiseId === "new") {
-                    this.id = ko.observable(0);
-                } else {
-                    this.id = ko.observable(Number(expertiseId));
-                }
+                this.id = ko.observable(expertiseId);
             };
             LanguageExpertise.prototype.setupWidgets = function (languageInputId, speakingInputId, listeningInputId, readingInputId, writingInputId) {
                 var _this = this;
@@ -144,7 +140,7 @@ var ViewModels;
                     var dataPact = $.Deferred();
                     $.ajax({
                         type: "GET",
-                        url: App.Routes.WebApi.LanguageExpertises.get(this.id()),
+                        url: App.Routes.WebApi.LanguageExpertise.get(this.id()),
                         success: function (data, textStatus, jqXhr) {
                             dataPact.resolve(data);
                         },
@@ -197,15 +193,13 @@ var ViewModels;
                     writingProficiency: this.writingProficiency
                 };
                 var model = ko.mapping.toJS(mapSource);
-                var url = (viewModel.id() == 0) ? App.Routes.WebApi.LanguageExpertises.post() : App.Routes.WebApi.LanguageExpertises.put(viewModel.id());
+                var url = (viewModel.id() == 0) ? App.Routes.WebApi.LanguageExpertise.post() : App.Routes.WebApi.LanguageExpertise.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 $.ajax({
                     type: type,
                     async: false,
                     url: url,
-                    data: ko.toJSON(model),
-                    dataType: 'json',
-                    contentType: 'application/json',
+                    data: model,
                     success: function (data, textStatus, jqXhr) {
                     },
                     error: function (jqXhr, textStatus, errorThrown) {

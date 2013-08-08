@@ -65,7 +65,7 @@ namespace UCosmic.Web.Mvc.Models
 
                 protected override String ResolveCore(LanguageExpertise source)
                 {
-                    String name = null;
+                    string name;
 
                     if (source.LanguageId.HasValue)
                     {
@@ -119,8 +119,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<LanguageExpertiseApiModel, CreateLanguageExpertise>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
-                    .ForMember(d => d.CreatedLanguageExpertise, o => o.Ignore())
+                    .ForMember(d => d.CreatedLanguageExpertiseId, o => o.Ignore())
                     .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.LanguageId))
                     .ForMember(d => d.Dialect, o => o.MapFrom(s => s.Dialect))
                     .ForMember(d => d.Other, o => o.MapFrom(s => s.Other))

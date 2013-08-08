@@ -55,12 +55,8 @@ module ViewModels.LanguageExpertises {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize( expertiseId: string ): void {
-            if (expertiseId === "new") {
-                this.id = ko.observable( 0 );
-            } else {
-                this.id = ko.observable( Number(expertiseId) );
-            }
+        _initialize( expertiseId: number ): void {
+            this.id = ko.observable(expertiseId);
         }
 
         // --------------------------------------------------------------------------------
@@ -181,7 +177,7 @@ module ViewModels.LanguageExpertises {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( expertiseId: string ) {
+        constructor( expertiseId: number ) {
             this._initialize( expertiseId );
         }
 
@@ -241,7 +237,7 @@ module ViewModels.LanguageExpertises {
                 var dataPact = $.Deferred();
                 $.ajax( {
                     type: "GET",
-                    url: App.Routes.WebApi.LanguageExpertises.get( this.id() ),
+                    url: App.Routes.WebApi.LanguageExpertise.get( this.id() ),
                     success: function ( data: any, textStatus: string, jqXhr: JQueryXHR ): void
                         { dataPact.resolve( data ); },
                     error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
@@ -308,17 +304,15 @@ module ViewModels.LanguageExpertises {
             var model = ko.mapping.toJS(mapSource);
 
             var url = (viewModel.id() == 0) ?
-                        App.Routes.WebApi.LanguageExpertises.post() :
-                        App.Routes.WebApi.LanguageExpertises.put( viewModel.id() );
+                        App.Routes.WebApi.LanguageExpertise.post() :
+                        App.Routes.WebApi.LanguageExpertise.put( viewModel.id() );
             var type = (viewModel.id() == 0) ?  "POST" : "PUT";
 
             $.ajax( {
                 type: type,
                 async: false,
                 url: url,
-                data: ko.toJSON(model),
-                dataType: 'json',
-                contentType: 'application/json',
+                data: model,
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {

@@ -548,45 +548,36 @@ module App.Routes {
                 if (expertiseId) url += '/' + expertiseId;
                 return makeUrl(url);
             }
-
             export function post(): string {
                 return get();
             }
-
             export function put(expertiseId: number): string {
                 return get(expertiseId);
             }
-
             export function del(expertiseId: number): string {
                 return get(expertiseId);
             }
         }
 
-        export module LanguageExpertises {
+        export module LanguageExpertise {
             export function get (expertiseId?: number): string {
-                var url = makeUrl('language-expertises');
-                if (expertiseId) {
-                    url += expertiseId;
-                }
-                return url;
+                var url = 'language-expertise';
+                if (expertiseId) url += '/' + expertiseId;
+                return makeUrl(url);
             }
-
             export function getProficiencies(): string {
-                return makeUrl('language-expertises/proficiencies');
+                return makeUrl('language-expertise/proficiencies');
             }
-
             export function post(): string {
-                return makeUrl('language-expertises');
+                return get();
             }
-
             export function put(expertiseId: number): string {
-                return makeUrl('language-expertises/' + expertiseId);
+                return get(expertiseId);
             }
-
             export function del(expertiseId: number): string {
-                return makeUrl('language-expertises/' + expertiseId);
+                return get(expertiseId);
             }
-        } // LanguageExpertises
+        }
 
         export module InternationalAffiliations {
             export function get (affiliationId?: number): string {
@@ -616,15 +607,12 @@ module App.Routes {
                 if (degreeId) url += '/' + degreeId;
                 return makeUrl(url);
             }
-
             export function post(): string {
                 return get();
             }
-
             export function put(degreeId: number): string {
                 return get(degreeId);
             }
-
             export function del(degreeId: number): string {
                 return get(degreeId);
             }
@@ -726,9 +714,6 @@ module App.Routes {
                 export function activityEdit(activityId: number) {
                     return makeUrl('my/activities/{0}'.format(activityId));
                 }
-                export function languageExpertiseEdit(expertiseId: string) {
-                    return makeUrl('my/language-expertise/{0}'.format(expertiseId));
-                }
                 export function internationalAffiliationEdit(affiliationId: string) {
                     return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
                 }
@@ -749,6 +734,18 @@ module App.Routes {
             export module GeographicExpertise {
                 function formatUrl(resource: any): string {
                     return 'my/geographic-expertise/{0}'.format(resource);
+                }
+                export function create() {
+                    return makeUrl(formatUrl('new'));
+                }
+                export function edit(expertiseId: number) {
+                    return makeUrl(formatUrl(expertiseId));
+                }
+            }
+
+            export module LanguageExpertise {
+                function formatUrl(resource: any): string {
+                    return 'my/language-expertise/{0}'.format(resource);
                 }
                 export function create() {
                     return makeUrl(formatUrl('new'));

@@ -2387,7 +2387,6 @@
     <Content Include="Views\MyProfile\_GeographicExpertises.cshtml" />
     <Content Include="Views\MyProfile\_LanguageExpertises.cshtml" />
     <Content Include="Views\MyProfile\_Degrees.cshtml" />
-    <Content Include="Views\MyProfile\LanguageExpertiseEdit.cshtml" />
     <Content Include="Views\Agreements\Form.cshtml" />
     <Content Include="Views\Agreements\Index.cshtml" />
     <Content Include="Views\Agreements\_Bib.cshtml" />
@@ -2414,6 +2413,7 @@
     <Content Include="Views\FacultyStaff\OldIndex.cshtml" />
     <Content Include="Views\MyProfile\GeographicExpertiseForm.cshtml" />
     <Content Include="Views\MyProfile\DegreeForm.cshtml" />
+    <Content Include="Views\MyProfile\LanguageExpertiseForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

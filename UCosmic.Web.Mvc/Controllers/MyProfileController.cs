@@ -79,12 +79,20 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [GET("my/language-expertise/new", ControllerPrecedence = 1)]
+        public virtual ActionResult NewLanguageExpertise()
+        {
+            ViewBag.ExpertiseId = 0;
+            return View(MVC.MyProfile.Views.LanguageExpertiseForm);
+        }
+
+        [Authorize]
         [GET("my/language-expertise/{expertiseId:int}")]
         [GET("my/language-expertise/{expertiseId:int}/edit", ActionPrecedence = 1)]
-        public virtual ActionResult LanguageExpertiseEdit(int expertiseId)
+        public virtual ActionResult EditLanguageExpertise(int expertiseId)
         {
             ViewBag.ExpertiseId = expertiseId;
-            return View();
+            return View(MVC.MyProfile.Views.LanguageExpertiseForm);
         }
 
         [Authorize]

@@ -640,33 +640,33 @@ var App;
                 GeographicExpertise.del = del;
             })(WebApi.GeographicExpertise || (WebApi.GeographicExpertise = {}));
             var GeographicExpertise = WebApi.GeographicExpertise;
-            (function (LanguageExpertises) {
+            (function (LanguageExpertise) {
                 function get(expertiseId) {
-                    var url = makeUrl('language-expertises');
+                    var url = 'language-expertise';
                     if(expertiseId) {
-                        url += expertiseId;
+                        url += '/' + expertiseId;
                     }
-                    return url;
+                    return makeUrl(url);
                 }
-                LanguageExpertises.get = get;
+                LanguageExpertise.get = get;
                 function getProficiencies() {
-                    return makeUrl('language-expertises/proficiencies');
+                    return makeUrl('language-expertise/proficiencies');
                 }
-                LanguageExpertises.getProficiencies = getProficiencies;
+                LanguageExpertise.getProficiencies = getProficiencies;
                 function post() {
-                    return makeUrl('language-expertises');
+                    return get();
                 }
-                LanguageExpertises.post = post;
+                LanguageExpertise.post = post;
                 function put(expertiseId) {
-                    return makeUrl('language-expertises/' + expertiseId);
+                    return get(expertiseId);
                 }
-                LanguageExpertises.put = put;
+                LanguageExpertise.put = put;
                 function del(expertiseId) {
-                    return makeUrl('language-expertises/' + expertiseId);
+                    return get(expertiseId);
                 }
-                LanguageExpertises.del = del;
-            })(WebApi.LanguageExpertises || (WebApi.LanguageExpertises = {}));
-            var LanguageExpertises = WebApi.LanguageExpertises;
+                LanguageExpertise.del = del;
+            })(WebApi.LanguageExpertise || (WebApi.LanguageExpertise = {}));
+            var LanguageExpertise = WebApi.LanguageExpertise;
             (function (InternationalAffiliations) {
                 function get(affiliationId) {
                     var url = makeUrl('international-affiliations');
@@ -825,10 +825,6 @@ var App;
                         return makeUrl('my/activities/{0}'.format(activityId));
                     }
                     Profile.activityEdit = activityEdit;
-                    function languageExpertiseEdit(expertiseId) {
-                        return makeUrl('my/language-expertise/{0}'.format(expertiseId));
-                    }
-                    Profile.languageExpertiseEdit = languageExpertiseEdit;
                     function internationalAffiliationEdit(affiliationId) {
                         return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
                     }
@@ -863,6 +859,20 @@ var App;
                     GeographicExpertise.edit = edit;
                 })(My.GeographicExpertise || (My.GeographicExpertise = {}));
                 var GeographicExpertise = My.GeographicExpertise;
+                (function (LanguageExpertise) {
+                    function formatUrl(resource) {
+                        return 'my/language-expertise/{0}'.format(resource);
+                    }
+                    function create() {
+                        return makeUrl(formatUrl('new'));
+                    }
+                    LanguageExpertise.create = create;
+                    function edit(expertiseId) {
+                        return makeUrl(formatUrl(expertiseId));
+                    }
+                    LanguageExpertise.edit = edit;
+                })(My.LanguageExpertise || (My.LanguageExpertise = {}));
+                var LanguageExpertise = My.LanguageExpertise;
             })(Mvc.My || (Mvc.My = {}));
             var My = Mvc.My;
         })(Routes.Mvc || (Routes.Mvc = {}));

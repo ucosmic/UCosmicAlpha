@@ -71,9 +71,6 @@ var ViewModels;
             DegreeList.prototype.editUrl = function (id) {
                 return App.Routes.Mvc.My.Degrees.edit(id);
             };
-            DegreeList.prototype.newEducation = function (data, event) {
-                location.href = App.Routes.Mvc.My.Degrees.create();
-            };
             return DegreeList;
         })();
         Degrees.DegreeList = DegreeList;        

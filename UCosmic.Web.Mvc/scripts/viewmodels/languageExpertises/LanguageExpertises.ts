@@ -54,7 +54,7 @@ module ViewModels.LanguageExpertises
             expertiseSearchInput.pageNumber = 1;
             expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
-            $.get(App.Routes.WebApi.LanguageExpertises.get(), expertiseSearchInput)
+            $.get(App.Routes.WebApi.LanguageExpertise.get(), expertiseSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     {
                         ko.mapping.fromJS(data, {}, this);
@@ -78,7 +78,7 @@ module ViewModels.LanguageExpertises
             $.ajax({
                 async: false,
                 type: "DELETE",
-                url: App.Routes.WebApi.LanguageExpertises.del(expertiseId),
+                url: App.Routes.WebApi.LanguageExpertise.del(expertiseId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 { },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
@@ -117,33 +117,8 @@ module ViewModels.LanguageExpertises
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        editExpertise(data: any, event: any, expertiseId: number): void {
-            var element = event.target;
-            var url = null;
-
-            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                element = element.parentElement;
-            }
-
-            if ( element != null ) {
-                url = element.attributes["href"].value;
-            }
-
-            if ( url != null ) {
-                location.href = url;
-            }
-        }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        newExpertise(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.Profile.languageExpertiseEdit("new");
+        editUrl(expertiseId: number): string {
+            return App.Routes.Mvc.My.LanguageExpertise.edit(expertiseId);
         }
 
         // --------------------------------------------------------------------------------

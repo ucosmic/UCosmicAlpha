@@ -67,9 +67,9 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult LanguageExpertiseEdit()
+        public System.Web.Mvc.ActionResult EditLanguageExpertise()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguageExpertiseEdit);
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditLanguageExpertise);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -99,7 +99,8 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string EditDegree = "EditDegree";
             public readonly string NewGeographicExpertise = "NewGeographicExpertise";
             public readonly string EditGeographicExpertise = "EditGeographicExpertise";
-            public readonly string LanguageExpertiseEdit = "LanguageExpertiseEdit";
+            public readonly string NewLanguageExpertise = "NewLanguageExpertise";
+            public readonly string EditLanguageExpertise = "EditLanguageExpertise";
             public readonly string InternationalAffiliationEdit = "InternationalAffiliationEdit";
         }
 
@@ -112,7 +113,8 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string EditDegree = "EditDegree";
             public const string NewGeographicExpertise = "NewGeographicExpertise";
             public const string EditGeographicExpertise = "EditGeographicExpertise";
-            public const string LanguageExpertiseEdit = "LanguageExpertiseEdit";
+            public const string NewLanguageExpertise = "NewLanguageExpertise";
+            public const string EditLanguageExpertise = "EditLanguageExpertise";
             public const string InternationalAffiliationEdit = "InternationalAffiliationEdit";
         }
 
@@ -149,11 +151,11 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string expertiseId = "expertiseId";
         }
-        static readonly ActionParamsClass_LanguageExpertiseEdit s_params_LanguageExpertiseEdit = new ActionParamsClass_LanguageExpertiseEdit();
+        static readonly ActionParamsClass_EditLanguageExpertise s_params_EditLanguageExpertise = new ActionParamsClass_EditLanguageExpertise();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_LanguageExpertiseEdit LanguageExpertiseEditParams { get { return s_params_LanguageExpertiseEdit; } }
+        public ActionParamsClass_EditLanguageExpertise EditLanguageExpertiseParams { get { return s_params_EditLanguageExpertise; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_LanguageExpertiseEdit
+        public class ActionParamsClass_EditLanguageExpertise
         {
             public readonly string expertiseId = "expertiseId";
         }
@@ -187,7 +189,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string GeographicExpertiseForm = "GeographicExpertiseForm";
                 public readonly string Index = "Index";
                 public readonly string InternationalAffiliationEdit = "InternationalAffiliationEdit";
-                public readonly string LanguageExpertiseEdit = "LanguageExpertiseEdit";
+                public readonly string LanguageExpertiseForm = "LanguageExpertiseForm";
             }
             public readonly string _Activities = "~/Views/MyProfile/_Activities.cshtml";
             public readonly string _Degrees = "~/Views/MyProfile/_Degrees.cshtml";
@@ -201,7 +203,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string GeographicExpertiseForm = "~/Views/MyProfile/GeographicExpertiseForm.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
             public readonly string InternationalAffiliationEdit = "~/Views/MyProfile/InternationalAffiliationEdit.cshtml";
-            public readonly string LanguageExpertiseEdit = "~/Views/MyProfile/LanguageExpertiseEdit.cshtml";
+            public readonly string LanguageExpertiseForm = "~/Views/MyProfile/LanguageExpertiseForm.cshtml";
         }
     }
 
@@ -250,9 +252,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult LanguageExpertiseEdit(int expertiseId)
+        public override System.Web.Mvc.ActionResult NewLanguageExpertise()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguageExpertiseEdit);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.NewLanguageExpertise);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult EditLanguageExpertise(int expertiseId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditLanguageExpertise);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "expertiseId", expertiseId);
             return callInfo;
         }

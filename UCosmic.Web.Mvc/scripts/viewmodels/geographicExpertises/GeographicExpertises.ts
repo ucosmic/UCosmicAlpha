@@ -125,14 +125,6 @@ module ViewModels.GeographicExpertises
         /*  
         */
         // --------------------------------------------------------------------------------
-        newExpertise(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.GeographicExpertise.create();
-        }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         formatLocations(locations: any): string
         {
             var formattedLocations: string = "";

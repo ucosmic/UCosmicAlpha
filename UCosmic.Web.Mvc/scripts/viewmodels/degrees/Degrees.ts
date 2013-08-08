@@ -120,13 +120,5 @@ module ViewModels.Degrees
         editUrl(id: number): string {
             return App.Routes.Mvc.My.Degrees.edit(id);
         }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        newEducation(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.Degrees.create();
-        }
     }
 }

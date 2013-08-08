@@ -159,9 +159,7 @@ var ViewModels;
                     type: type,
                     async: false,
                     url: url,
-                    data: ko.toJSON(model),
-                    dataType: 'json',
-                    contentType: 'application/json',
+                    data: model,
                     success: function (data, textStatus, jqXhr) {
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
