@@ -189,7 +189,7 @@ module ViewModels.LanguageExpertises {
             var deferred: JQueryDeferred = $.Deferred();
 
             var proficienciesPact = $.Deferred();
-            $.get( App.Routes.WebApi.LanguageProficiency.get() )
+            $.get( App.Routes.WebApi.LanguageExpertise.Proficiencies.get() )
                             .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
                                 proficienciesPact.resolve( data );
                             } )

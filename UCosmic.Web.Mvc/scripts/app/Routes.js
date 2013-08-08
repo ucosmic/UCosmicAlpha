@@ -114,13 +114,6 @@ var App;
                 Languages.get = get;
             })(WebApi.Languages || (WebApi.Languages = {}));
             var Languages = WebApi.Languages;
-            (function (LanguageProficiency) {
-                function get() {
-                    return makeUrl('language-proficiency');
-                }
-                LanguageProficiency.get = get;
-            })(WebApi.LanguageProficiency || (WebApi.LanguageProficiency = {}));
-            var LanguageProficiency = WebApi.LanguageProficiency;
             (function (Countries) {
                 function get() {
                     return makeUrl('countries');
@@ -649,10 +642,6 @@ var App;
                     return makeUrl(url);
                 }
                 LanguageExpertise.get = get;
-                function getProficiencies() {
-                    return makeUrl('language-expertise/proficiencies');
-                }
-                LanguageExpertise.getProficiencies = getProficiencies;
                 function post() {
                     return get();
                 }
@@ -665,6 +654,13 @@ var App;
                     return get(expertiseId);
                 }
                 LanguageExpertise.del = del;
+                (function (Proficiencies) {
+                    function get() {
+                        return makeUrl('language-expertise/proficiencies');
+                    }
+                    Proficiencies.get = get;
+                })(LanguageExpertise.Proficiencies || (LanguageExpertise.Proficiencies = {}));
+                var Proficiencies = LanguageExpertise.Proficiencies;
             })(WebApi.LanguageExpertise || (WebApi.LanguageExpertise = {}));
             var LanguageExpertise = WebApi.LanguageExpertise;
             (function (InternationalAffiliations) {

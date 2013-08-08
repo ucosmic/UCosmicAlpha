@@ -101,7 +101,7 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 var proficienciesPact = $.Deferred();
-                $.get(App.Routes.WebApi.LanguageProficiency.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.LanguageExpertise.Proficiencies.get()).done(function (data, textStatus, jqXHR) {
                     proficienciesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     proficienciesPact.reject(jqXHR, textStatus, errorThrown);

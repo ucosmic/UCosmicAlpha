@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -21,9 +24,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<UpdateLanguageExpertise> _updateLanguageExpertise;
 
         public LanguageExpertisesController(IProcessQueries queryProcessor
-                                  , IHandleCommands<CreateLanguageExpertise> createLanguageExpertise
-                                  , IHandleCommands<DeleteLanguageExpertise> deleteLanguageExpertise
-                                  , IHandleCommands<UpdateLanguageExpertise> updateLanguageExpertise)
+            , IHandleCommands<CreateLanguageExpertise> createLanguageExpertise
+            , IHandleCommands<DeleteLanguageExpertise> deleteLanguageExpertise
+            , IHandleCommands<UpdateLanguageExpertise> updateLanguageExpertise)
         {
             _queryProcessor = queryProcessor;
             _createLanguageExpertise = createLanguageExpertise;
@@ -31,11 +34,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _updateLanguageExpertise = updateLanguageExpertise;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Get a page of expertises
-        */
-        // --------------------------------------------------------------------------------
         [GET("")]
         public PageOfLanguageExpertiseApiModel Get([FromUri] LanguageExpertiseSearchInputModel input)
         {
@@ -52,12 +50,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Get an expertise
-        */
-        // --------------------------------------------------------------------------------
-        [GET("{expertiseId:int}", ControllerPrecedence = 1)]
+        [GET("{expertiseId:int}", ControllerPrecedence = 2)]
         public LanguageExpertiseApiModel Get(int expertiseId)
         {
             var expertise = _queryProcessor.Execute(new LanguageExpertiseById(expertiseId));
@@ -70,11 +63,60 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Create an expertise
-        */
-        // --------------------------------------------------------------------------------
+        [CacheHttpGet(Duration = 86400)]
+        [GET("proficiencies", ControllerPrecedence = 1)]
+        public LanguageProficiencyApiModel GetProficiencies()
+        {
+            var model = new LanguageProficiencyApiModel
+            {
+                SpeakingMeanings = new Collection<LanguageProficiencyMeaningApiModel>(),
+                ListeningMeanings = new Collection<LanguageProficiencyMeaningApiModel>(),
+                ReadingMeanings = new Collection<LanguageProficiencyMeaningApiModel>(),
+                WritingMeanings = new Collection<LanguageProficiencyMeaningApiModel>()
+            };
+
+            foreach (var scale in LanguageProficiency.Scales)
+            {
+                var meaning = LanguageProficiency.SpeakingMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                var meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
+                    Description = meaning.Description
+                };
+                model.SpeakingMeanings.Add(meaningApi);
+
+                meaning = LanguageProficiency.ListeningMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
+                    Description = meaning.Description
+                };
+                model.ListeningMeanings.Add(meaningApi);
+
+                meaning = LanguageProficiency.ReadingMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
+                    Description = meaning.Description
+                };
+                model.ReadingMeanings.Add(meaningApi);
+
+                meaning = LanguageProficiency.WritingMeanings.SingleOrDefault(m => m.Proficiency == scale.Proficiency);
+                meaningApi = new LanguageProficiencyMeaningApiModel
+                {
+                    Weight = scale.Weight,
+                    Title = string.Format("{0}. {1}", scale.Weight.ToString(CultureInfo.InvariantCulture), scale.Description),
+                    Description = meaning.Description
+                };
+                model.WritingMeanings.Add(meaningApi);
+            }
+
+            return model;
+        }
+
         [POST("")]
         public HttpResponseMessage Post(LanguageExpertiseApiModel model)
         {
@@ -107,62 +149,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Update an expertise
-        */
-        // --------------------------------------------------------------------------------
         [PUT("{expertiseId:int}")]
         public HttpResponseMessage Put(int expertiseId, LanguageExpertiseApiModel model)
         {
             if (expertiseId == 0 || model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
-            //try
-            //{
             var updateLanguageExpertiseCommand = Mapper.Map<UpdateLanguageExpertise>(model);
             updateLanguageExpertiseCommand.UpdatedOn = DateTime.UtcNow;
             updateLanguageExpertiseCommand.Principal = User;
             _updateLanguageExpertise.Handle(updateLanguageExpertiseCommand);
-            //}
-            //catch (Exception ex)
-            //{
-            //    var responseMessage = new HttpResponseMessage
-            //    {
-            //        StatusCode = HttpStatusCode.NotModified,
-            //        Content = new StringContent(ex.Message),
-            //        ReasonPhrase = "LanguageExpertise update error"
-            //    };
-            //    throw new HttpResponseException(responseMessage);
-            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Delete an expertise
-        */
-        // --------------------------------------------------------------------------------
         [DELETE("{expertiseId:int}")]
         public HttpResponseMessage Delete(int expertiseId)
         {
-            //try
-            //{
             var deleteLanguageExpertiseCommand = new DeleteLanguageExpertise(User, expertiseId);
             _deleteLanguageExpertise.Handle(deleteLanguageExpertiseCommand);
-            //}
-            //catch (Exception ex)
-            //{
-            //    var responseMessage = new HttpResponseMessage
-            //    {
-            //        StatusCode = HttpStatusCode.NotModified,
-            //        Content = new StringContent(ex.Message),
-            //        ReasonPhrase = "LanguageExpertise delete error"
-            //    };
-            //    throw new HttpResponseException(responseMessage);
-            //}
-
             return Request.CreateResponse(HttpStatusCode.OK);
         }
     }

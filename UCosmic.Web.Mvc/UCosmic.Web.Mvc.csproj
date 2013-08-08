@@ -300,7 +300,7 @@
     <Compile Include="ApiControllers\GraphicsController.cs" />
     <Compile Include="ApiControllers\My\MyPhotoController.cs" />
     <Compile Include="ApiControllers\My\MyAffiliationsController.cs" />
-    <Compile Include="ApiControllers\My\MyProfileApiController.cs" />
+    <Compile Include="ApiControllers\My\MyProfileController.cs" />
     <Compile Include="ApiControllers\My\ProfileElementsController.cs" />
     <Compile Include="ApiControllers\UploadsController.cs" />
     <Compile Include="ApiControllers\Identity\GrantsController.cs" />
@@ -308,7 +308,6 @@
     <Compile Include="ApiControllers\Identity\RolesController.cs" />
     <Compile Include="ApiControllers\Identity\UsersController.cs" />
     <Compile Include="ApiControllers\InternationalAffiliationController.cs" />
-    <Compile Include="ApiControllers\LanguageProficiencyController.cs" />
     <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
     <Compile Include="ApiControllers\DegreesController.cs" />
     <Compile Include="ApiControllers\GeographicExpertisesController.cs" />
