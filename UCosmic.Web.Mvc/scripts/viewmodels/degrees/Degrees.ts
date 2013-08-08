@@ -117,25 +117,8 @@ module ViewModels.Degrees
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        editEducation(data: any, event: any, expertiseId: number): void {
-            var element = event.target;
-            var url = null;
-
-            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                element = element.parentElement;
-            }
-
-            if ( element != null ) {
-                url = element.attributes["href"].value;
-            }
-
-            if ( url != null ) {
-                location.href = url;
-            }
+        editUrl(id: number): string {
+            return App.Routes.Mvc.My.Degrees.edit(id);
         }
 
         // --------------------------------------------------------------------------------
@@ -143,7 +126,7 @@ module ViewModels.Degrees
         */
         // --------------------------------------------------------------------------------
         newEducation(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.Profile.degreeEdit("new");
+            location.href = App.Routes.Mvc.My.Degrees.create();
         }
     }
 }

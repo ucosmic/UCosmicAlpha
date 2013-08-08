@@ -68,21 +68,11 @@ var ViewModels;
                     ]
                 });
             };
-            DegreeList.prototype.editEducation = function (data, event, expertiseId) {
-                var element = event.target;
-                var url = null;
-                while((element != null) && (element.nodeName != 'TR')) {
-                    element = element.parentElement;
-                }
-                if(element != null) {
-                    url = element.attributes["href"].value;
-                }
-                if(url != null) {
-                    location.href = url;
-                }
+            DegreeList.prototype.editUrl = function (id) {
+                return App.Routes.Mvc.My.Degrees.edit(id);
             };
             DegreeList.prototype.newEducation = function (data, event) {
-                location.href = App.Routes.Mvc.My.Profile.degreeEdit("new");
+                location.href = App.Routes.Mvc.My.Degrees.create();
             };
             return DegreeList;
         })();

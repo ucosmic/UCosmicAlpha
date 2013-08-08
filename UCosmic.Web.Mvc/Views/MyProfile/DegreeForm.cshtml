@@ -10,7 +10,7 @@
         width: 120px;
         display:inline-block;
         text-align: right;
-    }        
+    }
     .required-field
     {
         width: 120px;
@@ -32,13 +32,12 @@
 
     <script type="text/javascript">
         $(function() {
-            var degreeId = '@ViewBag.DegreeId';
-            var degreeViewModel = new ViewModels.Degrees.Degree(degreeId);
+            var degreeViewModel = new ViewModels.Degrees.Degree(@ViewBag.DegreeId);
             degreeViewModel.load()
                 .done(function() {
                     degreeViewModel.setupWidgets( "institution" );
                     degreeViewModel.setupValidation();
-                    ko.applyBindings( degreeViewModel, $( "#degree-edit" )[0] );                   
+                    ko.applyBindings( degreeViewModel, $( "#degree-edit" )[0] );
                     degreeViewModel.setupSubscriptions();
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
@@ -62,11 +61,9 @@
             <div data-side-swiper="on">
                 <div class="group">
                     <div id="degree-edit" class="on-left from-top" style="width: 100%;">
-				        
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
-
                         <div style="margin-bottom: 38px">
                             <!-- TITLE -->
                             <div style="margin-bottom: 8px">
@@ -105,7 +102,7 @@
                                 <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
                             </div>
                         </div>
-                            
+
                         <!-- BUTTONS -->
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
@@ -118,14 +115,13 @@
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
                         </div>
-                    </div>                      
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-                  
 <!-- JQUERY DIALOGS -->
 <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
     <div>By cancelling, you will lose all changes.</div>

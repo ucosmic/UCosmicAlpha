@@ -692,23 +692,23 @@ var App;
             var InternationalAffiliations = WebApi.InternationalAffiliations;
             (function (Degrees) {
                 function get(degreeId) {
-                    var url = makeUrl('degrees');
+                    var url = 'degrees';
                     if(degreeId) {
                         url += '/' + degreeId;
                     }
-                    return url;
+                    return makeUrl(url);
                 }
                 Degrees.get = get;
                 function post() {
-                    return makeUrl('degrees');
+                    return get();
                 }
                 Degrees.post = post;
                 function put(degreeId) {
-                    return makeUrl('degrees/' + degreeId);
+                    return get(degreeId);
                 }
                 Degrees.put = put;
                 function del(degreeId) {
-                    return makeUrl('degrees/' + degreeId);
+                    return get(degreeId);
                 }
                 Degrees.del = del;
             })(WebApi.Degrees || (WebApi.Degrees = {}));
@@ -833,19 +833,32 @@ var App;
                         return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
                     }
                     Profile.internationalAffiliationEdit = internationalAffiliationEdit;
-                    function degreeEdit(degreeId) {
-                        return makeUrl('my/degrees');
-                    }
-                    Profile.degreeEdit = degreeEdit;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
-                (function (GeographicExpertise) {
+                (function (Degrees) {
+                    function formatUrl(resource) {
+                        return 'my/degrees/{0}'.format(resource);
+                    }
                     function create() {
-                        return makeUrl('my/geographic-expertise/new');
+                        return makeUrl(formatUrl('new'));
+                    }
+                    Degrees.create = create;
+                    function edit(degreeId) {
+                        return makeUrl(formatUrl(degreeId));
+                    }
+                    Degrees.edit = edit;
+                })(My.Degrees || (My.Degrees = {}));
+                var Degrees = My.Degrees;
+                (function (GeographicExpertise) {
+                    function formatUrl(resource) {
+                        return 'my/geographic-expertise/{0}'.format(resource);
+                    }
+                    function create() {
+                        return makeUrl(formatUrl('new'));
                     }
                     GeographicExpertise.create = create;
                     function edit(expertiseId) {
-                        return makeUrl('my/geographic-expertise/{0}'.format(expertiseId));
+                        return makeUrl(formatUrl(expertiseId));
                     }
                     GeographicExpertise.edit = edit;
                 })(My.GeographicExpertise || (My.GeographicExpertise = {}));

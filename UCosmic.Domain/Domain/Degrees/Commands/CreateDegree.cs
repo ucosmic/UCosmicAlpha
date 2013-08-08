@@ -9,13 +9,15 @@ namespace UCosmic.Domain.Degrees
     public class CreateDegree
     {
         public Guid? EntityId { get; set; }
-        public IPrincipal Principal { get; protected set; }
-        public string Title { get; protected set; }
+        public IPrincipal Principal { get; private set; }
+        public string Title { get; private set; }
         public string FieldOfStudy { get; set; }
         public int? YearAwarded { get; set; }
         public int? InstitutionId { get; set; }
-        public bool NoCommit { get; set; }
-        public Degree CreatedDegree { get; protected internal set; }
+
+        public int CreatedDegreeId { get; internal set; }
+        internal Degree CreatedDegree { get; set; }
+        internal bool NoCommit { get; set; }
 
         public CreateDegree(IPrincipal principal, string title)
         {
@@ -81,6 +83,7 @@ namespace UCosmic.Domain.Degrees
             }
 
             command.CreatedDegree = degree;
+            command.CreatedDegreeId = command.CreatedDegree.RevisionId;
         }
     }
 }

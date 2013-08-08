@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -56,7 +57,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an degree
         */
         // --------------------------------------------------------------------------------
-        [GET("{degreeId}")]
+        [GET("{degreeId:int}", ControllerPrecedence = 1)]
         public DegreeApiModel Get(int degreeId)
         {
             var degree = _queryProcessor.Execute(new DegreeById(degreeId));
@@ -75,23 +76,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [POST("")]
-        public HttpResponseMessage Post(DegreeApiModel newModel)
+        public HttpResponseMessage Post(DegreeApiModel model)
         {
-            if ( (newModel == null) ||
-                 (newModel.Title == null) )
-            {
+            if (model == null || model.Title == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
 
-            var createDeepDegreeCommand = new CreateDegree(User, newModel.Title)
+            var createDeepDegreeCommand = new CreateDegree(User, model.Title)
             {
-                YearAwarded = newModel.YearAwarded,
-                InstitutionId = newModel.InstitutionId
+                YearAwarded = model.YearAwarded,
+                InstitutionId = model.InstitutionId
             };
             _createDegree.Handle(createDeepDegreeCommand);
 
-            var id = createDeepDegreeCommand.CreatedDegree.RevisionId;
-            return Request.CreateResponse(HttpStatusCode.OK, id);
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Degree was successfully created.");
+            var url = Url.Link(null, new
+            {
+                controller = "Degrees",
+                action = "Get",
+                degreeId = createDeepDegreeCommand.CreatedDegreeId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
         // --------------------------------------------------------------------------------
@@ -99,7 +105,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Update an degree
         */
         // --------------------------------------------------------------------------------
-        [PUT("{degreeId}")]
+        [PUT("{degreeId:int}")]
         public HttpResponseMessage Put(int degreeId, DegreeApiModel model)
         {
             if ((degreeId == 0) || (model == null))
@@ -107,23 +113,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            try
-            {
-                var updateDegreeCommand = Mapper.Map<UpdateDegree>(model);
-                updateDegreeCommand.UpdatedOn = DateTime.UtcNow;
-                updateDegreeCommand.Principal = User;
-                _updateDegree.Handle(updateDegreeCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "Degree update error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+            //try
+            //{
+            var updateDegreeCommand = Mapper.Map<UpdateDegree>(model);
+            updateDegreeCommand.UpdatedOn = DateTime.UtcNow;
+            updateDegreeCommand.Principal = User;
+            _updateDegree.Handle(updateDegreeCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "Degree update error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -133,24 +139,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an degree
         */
         // --------------------------------------------------------------------------------
-        [DELETE("{degreeId}")]
+        [DELETE("{degreeId:int}")]
         public HttpResponseMessage Delete(int degreeId)
         {
-            try
-            {
-                var deleteDegreeCommand = new DeleteDegree(User, degreeId);
-                _deleteDegree.Handle(deleteDegreeCommand);
-            }
-            catch (Exception ex)
-            {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "Degree delete error"
-                };
-                throw new HttpResponseException(responseMessage);
-            }
+            //try
+            //{
+            var deleteDegreeCommand = new DeleteDegree(User, degreeId);
+            _deleteDegree.Handle(deleteDegreeCommand);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var responseMessage = new HttpResponseMessage
+            //    {
+            //        StatusCode = HttpStatusCode.NotModified,
+            //        Content = new StringContent(ex.Message),
+            //        ReasonPhrase = "Degree delete error"
+            //    };
+            //    throw new HttpResponseException(responseMessage);
+            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

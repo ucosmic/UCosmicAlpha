@@ -22,19 +22,21 @@
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
+
 <script type="text/html" id="degrees-template">
-    <tr class="hover-hilite"  
-        data-bind="click: function (item, event) { $parent.editEducation(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.degreeEdit(id()) }">
+    <tr class="hover-hilite">
         <!-- Description -->
         <td>
-            <div style="height: 30px; font-size: large; ">
-                <span style="font-weight: bold" data-bind="text: title()"></span>
-                <span data-bind="visible: fieldOfStudy() != null">,&nbsp;</span>
-                <span data-bind="text: fieldOfStudy(), visible: fieldOfStudy() != null"></span>
-            </div>
-            <div style="height: 30px">
-                <span style="vertical-align: middle" data-bind="text: formattedInfo()"></span>
-            </div>
+            <a href="#" data-bind="attr: { href: $parent.editUrl(id()) }" style="text-decoration: inherit; color: inherit; display: block;">
+                <div style="height: 30px; font-size: large;">
+                    <span style="font-weight: bold" data-bind="text: title()"></span>
+                    <span data-bind="visible: fieldOfStudy() != null">,&nbsp;</span>
+                    <span data-bind="text: fieldOfStudy(), visible: fieldOfStudy() != null"></span>
+                </div>
+                <div style="height: 30px">
+                    <span style="vertical-align: middle" data-bind="text: formattedInfo()"></span>
+                </div>
+            </a>
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">

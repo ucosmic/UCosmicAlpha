@@ -46,12 +46,8 @@ module ViewModels.Degrees {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize( degreeId: string ): void {
-            if (degreeId === "new") {
-                this.id = ko.observable( 0 );
-            } else {
-                this.id = ko.observable( Number(degreeId) );
-            }
+        _initialize( degreeId: number ): void {
+            this.id = ko.observable(degreeId);
         }
 
         // --------------------------------------------------------------------------------
@@ -147,7 +143,7 @@ module ViewModels.Degrees {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( educationId: string ) {
+        constructor( educationId: number ) {
             this._initialize( educationId );
         }
 
@@ -255,7 +251,7 @@ module ViewModels.Degrees {
                     alert( textStatus + " | " + errorThrown );
                 },
                 complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
-                    location.href = App.Routes.Mvc.My.Profile.get( "formal-education" );
+                    location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
                 }
             } );
         }
@@ -281,7 +277,8 @@ module ViewModels.Degrees {
                     }
                 } );
             } else {
-                location.href = App.Routes.Mvc.My.Profile.get("formal-education");
+                //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
+                history.back();
             }
         }
     }

@@ -612,25 +612,23 @@ module App.Routes {
 
         export module Degrees {
             export function get (degreeId?: number): string {
-                var url = makeUrl('degrees');
-                if (degreeId) {
-                    url += '/' + degreeId;
-                }
-                return url;
+                var url = 'degrees';
+                if (degreeId) url += '/' + degreeId;
+                return makeUrl(url);
             }
 
             export function post(): string {
-                return makeUrl('degrees');
+                return get();
             }
 
             export function put(degreeId: number): string {
-                return makeUrl('degrees/' + degreeId);
+                return get(degreeId);
             }
 
             export function del(degreeId: number): string {
-                return makeUrl('degrees/' + degreeId);
+                return get(degreeId);
             }
-        } // Degrees
+        }
 
         export module Affiliations {
             export function get (affiliationId?: number): string {
@@ -734,27 +732,32 @@ module App.Routes {
                 export function internationalAffiliationEdit(affiliationId: string) {
                     return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
                 }
-                export function degreeEdit(degreeId: string) {
-                    return makeUrl('my/degrees');
+            }
+
+            export module Degrees {
+                function formatUrl(resource: any): string {
+                    return 'my/degrees/{0}'.format(resource);
+                }
+                export function create() {
+                    return makeUrl(formatUrl('new'));
+                }
+                export function edit(degreeId: number) {
+                    return makeUrl(formatUrl(degreeId));
                 }
             }
 
             export module GeographicExpertise {
+                function formatUrl(resource: any): string {
+                    return 'my/geographic-expertise/{0}'.format(resource);
+                }
                 export function create() {
-                    return makeUrl('my/geographic-expertise/new');
+                    return makeUrl(formatUrl('new'));
                 }
                 export function edit(expertiseId: number) {
-                    return makeUrl('my/geographic-expertise/{0}'.format(expertiseId));
+                    return makeUrl(formatUrl(expertiseId));
                 }
             }
         }
-
-        //export module Params {
-        //    export class ImageResizeQuality {
-        //        static THUMBNAIL: string = 'thumbnail';
-        //        static HIGH: string = 'high';
-        //    }
-        //}
     }
 
     export module Content {

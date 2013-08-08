@@ -8,11 +8,7 @@ var ViewModels;
                 this._initialize(educationId);
             }
             Degree.prototype._initialize = function (degreeId) {
-                if(degreeId === "new") {
-                    this.id = ko.observable(0);
-                } else {
-                    this.id = ko.observable(Number(degreeId));
-                }
+                this.id = ko.observable(degreeId);
             };
             Degree.prototype.setupWidgets = function (institutionSelectorId) {
                 var _this = this;
@@ -172,7 +168,7 @@ var ViewModels;
                         alert(textStatus + " | " + errorThrown);
                     },
                     complete: function (jqXhr, textStatus) {
-                        location.href = App.Routes.Mvc.My.Profile.get("formal-education");
+                        location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
                     }
                 });
             };
@@ -193,7 +189,7 @@ var ViewModels;
                         }
                     });
                 } else {
-                    location.href = App.Routes.Mvc.My.Profile.get("formal-education");
+                    history.back();
                 }
             };
             return Degree;

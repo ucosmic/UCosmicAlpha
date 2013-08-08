@@ -45,12 +45,20 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [GET("my/degrees/new", ControllerPrecedence = 1)]
+        public virtual ActionResult NewDegree()
+        {
+            ViewBag.DegreeId = 0;
+            return View(MVC.MyProfile.Views.DegreeForm);
+        }
+
+        [Authorize]
         [GET("my/degrees/{degreeId:int}")]
         [GET("my/degrees/{degreeId:int}/edit", ActionPrecedence = 1)]
-        public virtual ActionResult DegreeEdit(int degreeId)
+        public virtual ActionResult EditDegree(int degreeId)
         {
             ViewBag.DegreeId = degreeId;
-            return View();
+            return View(MVC.MyProfile.Views.DegreeForm);
         }
 
         [Authorize]

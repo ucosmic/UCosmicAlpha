@@ -55,9 +55,9 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult DegreeEdit()
+        public System.Web.Mvc.ActionResult EditDegree()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditDegree);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -95,7 +95,8 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string ActivityEdit = "ActivityEdit";
-            public readonly string DegreeEdit = "DegreeEdit";
+            public readonly string NewDegree = "NewDegree";
+            public readonly string EditDegree = "EditDegree";
             public readonly string NewGeographicExpertise = "NewGeographicExpertise";
             public readonly string EditGeographicExpertise = "EditGeographicExpertise";
             public readonly string LanguageExpertiseEdit = "LanguageExpertiseEdit";
@@ -107,7 +108,8 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string ActivityEdit = "ActivityEdit";
-            public const string DegreeEdit = "DegreeEdit";
+            public const string NewDegree = "NewDegree";
+            public const string EditDegree = "EditDegree";
             public const string NewGeographicExpertise = "NewGeographicExpertise";
             public const string EditGeographicExpertise = "EditGeographicExpertise";
             public const string LanguageExpertiseEdit = "LanguageExpertiseEdit";
@@ -131,11 +133,11 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string activityId = "activityId";
         }
-        static readonly ActionParamsClass_DegreeEdit s_params_DegreeEdit = new ActionParamsClass_DegreeEdit();
+        static readonly ActionParamsClass_EditDegree s_params_EditDegree = new ActionParamsClass_EditDegree();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_DegreeEdit DegreeEditParams { get { return s_params_DegreeEdit; } }
+        public ActionParamsClass_EditDegree EditDegreeParams { get { return s_params_EditDegree; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_DegreeEdit
+        public class ActionParamsClass_EditDegree
         {
             public readonly string degreeId = "degreeId";
         }
@@ -181,7 +183,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _LanguageExpertises = "_LanguageExpertises";
                 public readonly string _PersonalInfo = "_PersonalInfo";
                 public readonly string ActivityEdit = "ActivityEdit";
-                public readonly string DegreeEdit = "DegreeEdit";
+                public readonly string DegreeForm = "DegreeForm";
                 public readonly string GeographicExpertiseForm = "GeographicExpertiseForm";
                 public readonly string Index = "Index";
                 public readonly string InternationalAffiliationEdit = "InternationalAffiliationEdit";
@@ -195,7 +197,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _LanguageExpertises = "~/Views/MyProfile/_LanguageExpertises.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
             public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
-            public readonly string DegreeEdit = "~/Views/MyProfile/DegreeEdit.cshtml";
+            public readonly string DegreeForm = "~/Views/MyProfile/DegreeForm.cshtml";
             public readonly string GeographicExpertiseForm = "~/Views/MyProfile/GeographicExpertiseForm.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
             public readonly string InternationalAffiliationEdit = "~/Views/MyProfile/InternationalAffiliationEdit.cshtml";
@@ -222,9 +224,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult DegreeEdit(int degreeId)
+        public override System.Web.Mvc.ActionResult NewDegree()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreeEdit);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.NewDegree);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult EditDegree(int degreeId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditDegree);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "degreeId", degreeId);
             return callInfo;
         }

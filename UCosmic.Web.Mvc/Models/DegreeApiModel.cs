@@ -178,14 +178,13 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<DegreeApiModel, CreateDegree>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
-                    .ForMember(d => d.CreatedDegree, o => o.Ignore())
+                    .ForMember(d => d.CreatedDegreeId, o => o.Ignore())
                     .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
                     .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
                     .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
                     .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
                     .ForMember(d => d.EntityId, o => o.Ignore())
-                    ;
+                ;
 
                 CreateMap<DegreeApiModel, UpdateDegree>()
                     .ForMember(d => d.Principal, o => o.Ignore())
@@ -196,7 +195,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
                     .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
                     .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
-                    ;
+                ;
             }
         }
 
