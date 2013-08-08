@@ -392,6 +392,7 @@
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
     <Compile Include="Domain\Places\Queries\CountryCountWithActivitiesByEstablishmentId.cs" />
     <Compile Include="Domain\Places\_Etc\PlaceGroup.cs" />
+    <Compile Include="Domain\Representatives\Commands\CreateApplicationRecipientEmailTemplate.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlaceGeoNamesReference.cs" />

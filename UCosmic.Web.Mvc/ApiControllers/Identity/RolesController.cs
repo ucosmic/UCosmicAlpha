@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Web.Http;
 using AttributeRouting;
+using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
@@ -17,8 +18,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
+        [GET("")]
         [Authorize(Roles = RoleName.RoleGrantors)]
-        public PageOfRoleApiModel GetAll([FromUri] RoleSearchInputModel input)
+        public PageOfRoleApiModel Get([FromUri] RoleSearchInputModel input)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 

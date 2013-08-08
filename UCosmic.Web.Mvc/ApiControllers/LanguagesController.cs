@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web.Http;
 using AttributeRouting;
+using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Languages;
 using UCosmic.Web.Mvc.Models;
@@ -19,8 +20,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
+        [GET("")]
         [CacheHttpGet(Duration = 3600)]
-        public IEnumerable<LanguageApiModel> GetAll()
+        public IEnumerable<LanguageApiModel> Get()
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 

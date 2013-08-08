@@ -1,6 +1,4 @@
-﻿@model UCosmic.Web.Mvc.Models.ActivityModel
-
-@{
+﻿@{
     ViewBag.Title = "My International Activity";
 }
 
@@ -211,8 +209,8 @@
     @Scripts.Render("~/bundles/activity")
 
     <script type="text/javascript">
-        (function($, window, undefined) {
-            var activityId = @Model.ActivityId;
+        (function($, window) {
+            var activityId = @ViewBag.ActivityId;
             var activityViewModel = new ViewModels.Activities.Activity(activityId);
             activityViewModel.load()
                 .done(function() {

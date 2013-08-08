@@ -1,6 +1,4 @@
-﻿ @model UCosmic.Web.Mvc.Models.DegreeModel
-
-@{
+﻿@{
     ViewBag.Title = "My International Degree";
 }
 
@@ -34,7 +32,7 @@
 
     <script type="text/javascript">
         $(function() {
-            var degreeId = "@Model.DegreeId";
+            var degreeId = '@ViewBag.DegreeId';
             var degreeViewModel = new ViewModels.Degrees.Degree(degreeId);
             degreeViewModel.load()
                 .done(function() {

@@ -366,7 +366,6 @@
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
     <Compile Include="Models\DegreeApiModel.cs" />
-    <Compile Include="Models\Identity\ActivityModel.cs" />
     <Compile Include="Models\My\MyAffiliationApiModel.cs" />
     <Compile Include="Models\My\MyProfileApiModel.cs" />
     <Compile Include="Models\My\MyAffiliationsSearchInputModel.cs" />

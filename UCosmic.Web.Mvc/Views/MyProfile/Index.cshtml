@@ -1,5 +1,4 @@
 ﻿@using System.Globalization
-@model UCosmic.Web.Mvc.Models.ProfileModel
 
 @{
     var customProfileTitle = "My UCosmic Profile";
@@ -51,7 +50,7 @@
             //debugger;
             var profileViewModel = new ViewModels.My.Profile();
             //$( profileViewModel ).on( 'ready', function () {
-            profileViewModel.load( "@Model.Tab" )
+            profileViewModel.load('@ViewBag.Tab')
                 .done( function () {
                     
                     //$( '#tabstrip' ).kendoTabStrip( {
@@ -65,13 +64,13 @@
                     //debugger;
                 
                     /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
-                    //if ( "@Model.Tab" === "" ) {
+                    //if ( '@ViewBag.Tab' === '' ) {
                     //    //profileViewModel.startTab("activities");
                     //    location.href = "#/activities";
                     //} else {
-                    //    //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @Model.Tab);
+                    //    //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @ViewBag.Tab);
                     //    debugger;
-                    //    var url = App.Routes.Mvc.My.Profile.get() + "#/" + "@Model.Tab";
+                    //    var url = App.Routes.Mvc.My.Profile.get() + "#/" + '@ViewBag.Tab';
                     //    location.href = url;
                     //}
                 })

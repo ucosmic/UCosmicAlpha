@@ -25,7 +25,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         //[CacheHttpGet(Duration = 3600)]
-        public IEnumerable<PlaceApiModel> GetFiltered([FromUri] PlaceFilterInputModel input)
+        [GET("")]
+        public IEnumerable<PlaceApiModel> Get([FromUri] PlaceFilterInputModel input)
         {
             IEnumerable<PlaceApiModel> models = new Collection<PlaceApiModel>();
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -46,9 +47,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{placeId}")]
         //[CacheHttpGet(Duration = 3600)]
-        public PlaceApiModel GetById(int placeId)
+        [GET("{placeId}")]
+        public PlaceApiModel Get(int placeId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
@@ -58,9 +59,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("by-coordinates/{latitude}/{longitude}")]
         //[CacheHttpGet(Duration = 3600)]
-        public IEnumerable<PlaceApiModel> GetByCoordinates(double latitude, double longitude)
+        [GET("by-coordinates/{latitude}/{longitude}")]
+        public IEnumerable<PlaceApiModel> Get(double latitude, double longitude)
         {
             //System.Threading.Thread.Sleep(5000); // test api latency
 
@@ -81,8 +82,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Enumerable.Empty<PlaceApiModel>();
         }
 
-        [GET("{placeId}/children")]
         //[CacheHttpGet(Duration = 3600)]
+        [GET("{placeId}/children")]
         public IEnumerable<PlaceApiModel> GetChildren(int placeId)
         {
             //System.Threading.Thread.Sleep(5000); // test api latency

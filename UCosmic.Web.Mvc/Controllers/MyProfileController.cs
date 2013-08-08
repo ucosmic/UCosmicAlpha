@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.Activities;
-using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -20,8 +19,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/profile")]
         public virtual ActionResult Index(string tab)
         {
-            var model = new ProfileModel { Tab = tab };
-            return View(model);
+            ViewBag.Tab = tab;
+            return View();
         }
 
         [Authorize]
@@ -39,40 +38,40 @@ namespace UCosmic.Web.Mvc.Controllers
                 !User.Identity.Name.Equals(activity.Person.User.Name, StringComparison.OrdinalIgnoreCase))
                 return HttpNotFound();
 
-            var model = new ActivityModel { ActivityId = activityId };
-            return View(model);
+            ViewBag.ActivityId = activityId;
+            return View();
         }
 
         [Authorize]
-        [GET("my/degree/{degreeId}")]
+        [GET("my/degree/{degreeId:int}")]
         public virtual ActionResult DegreeEdit(string degreeId)
         {
-            var model = new DegreeModel { DegreeId = degreeId };
-            return View(model);
+            ViewBag.DegreeId = degreeId;
+            return View();
         }
 
         [Authorize]
-        [GET("my/geographic-expertise/{expertiseId}")]
+        [GET("my/geographic-expertise/{expertiseId:int}")]
         public virtual ActionResult GeographicExpertiseEdit(string expertiseId)
         {
-            var model = new GeographicExpertiseModel {ExpertiseId = expertiseId};
-            return View(model);
+            ViewBag.ExpertiseId = expertiseId;
+            return View();
         }
 
         [Authorize]
-        [GET("my/language-expertise/{expertiseId}")]
+        [GET("my/language-expertise/{expertiseId:int}")]
         public virtual ActionResult LanguageExpertiseEdit(string expertiseId)
         {
-            var model = new LanguageExpertiseModel { ExpertiseId = expertiseId };
-            return View(model);
+            ViewBag.ExpertiseId = expertiseId;
+            return View();
         }
 
         [Authorize]
-        [GET("my/international-affiliation/{affiliationId}")]
+        [GET("my/international-affiliation/{affiliationId:int}")]
         public virtual ActionResult InternationalAffiliationEdit(string affiliationId)
         {
-            var model = new InternationalAffiliationModel { AffiliationId = affiliationId };
-            return View(model);
+            ViewBag.AffiliationId = affiliationId;
+            return View();
         }
     }
 }

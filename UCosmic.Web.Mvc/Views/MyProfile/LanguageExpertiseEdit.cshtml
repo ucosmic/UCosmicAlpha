@@ -1,6 +1,4 @@
-﻿ @model UCosmic.Web.Mvc.Models.LanguageExpertiseModel
-
-@{
+﻿@{
     ViewBag.Title = "My Language Expertise";
 }
 
@@ -46,7 +44,7 @@
 
     <script type="text/javascript">
         $(function() {
-            var expertiseId = "@Model.ExpertiseId";
+            var expertiseId = '@ViewBag.ExpertiseId';
             var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(expertiseId);
             expertiseViewModel.load()
                 .done(function() {

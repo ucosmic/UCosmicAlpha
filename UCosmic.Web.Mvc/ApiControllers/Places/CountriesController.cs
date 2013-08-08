@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using AttributeRouting;
+using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
@@ -20,8 +21,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
+        [GET("")]
         [CacheHttpGet(Duration = 3600)]
-        public IEnumerable<CountryApiModel> GetAll()
+        public IEnumerable<CountryApiModel> Get()
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
