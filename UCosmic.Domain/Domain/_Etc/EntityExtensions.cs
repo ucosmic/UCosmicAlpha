@@ -48,97 +48,101 @@ namespace UCosmic.Domain
                     var memberOrMethodExpression = memberExpression ?? methodExpression as Expression;
 
                     if (unaryExpression != null && memberOrMethodExpression != null)
-                    {
-                        var parameters = expression.Key.Parameters;
+
                         if (memberOrMethodExpression.Type == typeof(DateTime))
-                        {
-                            #region DateTime
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, DateTime>>(memberOrMethodExpression, expression.Key.Parameters));
 
-                            var dateTimeExpression = Expression.Lambda<Func<TEntity, DateTime>>(memberOrMethodExpression, parameters);
-                            if (counter < 1)
-                            {
-                                queryable = expression.Value == OrderByDirection.Ascending
-                                    ? queryable.OrderBy(dateTimeExpression)
-                                    : queryable.OrderByDescending(dateTimeExpression);
-                            }
-                            else
-                            {
-                                queryable = expression.Value == OrderByDirection.Ascending
-                                    ? ((IOrderedQueryable<TEntity>)queryable).ThenBy(dateTimeExpression)
-                                    : ((IOrderedQueryable<TEntity>)queryable).ThenByDescending(dateTimeExpression);
-                            }
+                        else if (memberOrMethodExpression.Type == typeof(DateTime?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, DateTime?>>(memberOrMethodExpression, expression.Key.Parameters));
 
-                            #endregion
-                        }
-                        else if (memberOrMethodExpression.Type == typeof(int))
-                        {
-                            #region int
-
-                            var intExpression = Expression.Lambda<Func<TEntity, int>>(memberOrMethodExpression, parameters);
-                            if (counter < 1)
-                            {
-                                queryable = expression.Value == OrderByDirection.Ascending
-                                    ? queryable.OrderBy(intExpression)
-                                    : queryable.OrderByDescending(intExpression);
-                            }
-                            else
-                            {
-                                queryable = expression.Value == OrderByDirection.Ascending
-                                    ? ((IOrderedQueryable<TEntity>)queryable).ThenBy(intExpression)
-                                    : ((IOrderedQueryable<TEntity>)queryable).ThenByDescending(intExpression);
-                            }
-
-                            #endregion
-                        }
                         else if (memberOrMethodExpression.Type == typeof(bool))
-                        {
-                            #region bool
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, bool>>(memberOrMethodExpression, expression.Key.Parameters));
 
-                            var boolExpression = Expression.Lambda<Func<TEntity, bool>>(memberOrMethodExpression, parameters);
-                            if (counter < 1)
-                            {
-                                queryable = expression.Value == OrderByDirection.Ascending
-                                    ? queryable.OrderBy(boolExpression)
-                                    : queryable.OrderByDescending(boolExpression);
-                            }
-                            else
-                            {
-                                queryable = expression.Value == OrderByDirection.Ascending
-                                    ? ((IOrderedQueryable<TEntity>)queryable).ThenBy(boolExpression)
-                                    : ((IOrderedQueryable<TEntity>)queryable).ThenByDescending(boolExpression);
-                            }
+                        else if (memberOrMethodExpression.Type == typeof(bool?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, bool?>>(memberOrMethodExpression, expression.Key.Parameters));
 
-                            #endregion
-                        }
+                        else if (memberOrMethodExpression.Type == typeof(int))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, int>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(int?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, int?>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(long))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, long>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(long?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, long?>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(short))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, short>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(short?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, short?>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(double))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, double>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(double?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, double?>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(float))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, float>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(float?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, float?>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(decimal))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, decimal>>(memberOrMethodExpression, expression.Key.Parameters));
+
+                        else if (memberOrMethodExpression.Type == typeof(decimal?))
+                            queryable = queryable.ApplyOrderBy(counter, expression.Value,
+                                Expression.Lambda<Func<TEntity, decimal?>>(memberOrMethodExpression, expression.Key.Parameters));
+
                         else
-                        {
-                            throw new NotSupportedException("Object type resolution not implemented for this type");
-                        }
-                    }
+                            throw new NotImplementedException(string.Format(
+                                "OrderBy object type resolution is not yet implemented for '{0}'.", memberOrMethodExpression.Type.Name));
+
                     else
-                    {
-                        #region object
+                        queryable = queryable.ApplyOrderBy(counter, expression.Value, expression.Key);
 
-                        if (counter < 1)
-                        {
-                            queryable = expression.Value == OrderByDirection.Ascending
-                                ? queryable.OrderBy(expression.Key)
-                                : queryable.OrderByDescending(expression.Key);
-                        }
-                        else
-                        {
-                            queryable = expression.Value == OrderByDirection.Ascending
-                                ? ((IOrderedQueryable<TEntity>)queryable).ThenBy(expression.Key)
-                                : ((IOrderedQueryable<TEntity>)queryable).ThenByDescending(expression.Key);
-                        }
-
-                        #endregion
-                    }
                     ++counter;
                 }
             }
             return queryable;
         }
+
+        private static IQueryable<TEntity> ApplyOrderBy<TEntity, TKey>(this IQueryable<TEntity> queryable, int counter, OrderByDirection direction, Expression<Func<TEntity, TKey>> keySelector)
+        {
+            if (counter == 0)
+            {
+                queryable = direction == OrderByDirection.Ascending
+                    ? queryable.OrderBy(keySelector)
+                    : queryable.OrderByDescending(keySelector);
+            }
+            else
+            {
+                queryable = direction == OrderByDirection.Ascending
+                    ? ((IOrderedQueryable<TEntity>)queryable).ThenBy(keySelector)
+                    : ((IOrderedQueryable<TEntity>)queryable).ThenByDescending(keySelector);
+            }
+            return queryable;
+        }
+
 
         //internal static TRevisableEntity By<TRevisableEntity>(this IEnumerable<TRevisableEntity> enumerable, Guid entityId)
         //    where TRevisableEntity : RevisableEntity

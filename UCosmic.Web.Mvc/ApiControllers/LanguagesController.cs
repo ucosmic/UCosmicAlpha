@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web.Http;
+using AttributeRouting;
 using AutoMapper;
 using UCosmic.Domain.Languages;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/languages")]
     public class LanguagesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;

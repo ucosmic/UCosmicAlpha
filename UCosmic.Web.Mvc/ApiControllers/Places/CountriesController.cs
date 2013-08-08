@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
+using AttributeRouting;
 using AutoMapper;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/countries")]
     public class CountriesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;

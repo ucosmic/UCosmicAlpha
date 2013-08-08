@@ -106,7 +106,7 @@
             </div>
         </div>
         <!-- Only show if we have affiliations (other than default) -->
-        <div data-bind="visible: affiliations().length > 1">
+        <div data-bind="visible: affiliations().length">
             <div class="field-row">
                 <div class="field-label">
                     <label>Affiliations</label>
@@ -117,7 +117,7 @@
             </div>
         </div>
         <!-- Only show if we have affiliations (other than default) -->
-        <div data-bind="visible: affiliations().length > 1">
+        <div data-bind="visible: affiliations().length">
             <div class="field-row">
                 <div class="field-label">
                 </div>
@@ -127,7 +127,7 @@
             </div>
         </div>
         <!-- Only show if there are no affiliations (other than default) -->
-        <div data-bind="visible: affiliations().length == 1">
+        <div data-bind="visible: !affiliations().length">
             <div class="field-row">
                 <div class="field-label">
                     <label>Affiliations</label>
@@ -267,7 +267,7 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="affiliations-template">
-    <li data-bind="visible: !isDefault(), click: function ( data, event ) { $root.editAffiliation( data, event ); }">
+    <li data-bind="click: function ( data, event ) { $root.editAffiliation( data, event ); }">
         <div style="display: inline-block" data-bind="visible: campusId() != null">
             <div style="width: 200px; display: inherit; font-weight: bold">
                 <span>Institutional Affiliation:</span>

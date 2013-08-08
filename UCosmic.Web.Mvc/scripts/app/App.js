@@ -1,5 +1,35 @@
+if(!String.prototype.format) {
+    String.prototype.format = function () {
+        var formatted = this;
+        for(var i = 0; i < arguments.length; i++) {
+            var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+            formatted = formatted.replace(regexp, arguments[i]);
+        }
+        return formatted;
+    };
+}
 var App;
 (function (App) {
+    (function (Failures) {
+        function message(xhr, reason, autoAlert) {
+            if (typeof reason === "undefined") { reason = ''; }
+            if (typeof autoAlert === "undefined") { autoAlert = false; }
+            if(xhr.readyState === 0 || xhr.status === 0) {
+                return null;
+            }
+            if(reason !== '') {
+                reason = ' ' + reason;
+            }
+            var format = 'UCosmic experienced an unexpected error{0}. If this continues to happen, ' + 'please use the Feedback & Support link on this page to report it.';
+            var message = format.format(reason);
+            if(autoAlert) {
+                alert(message);
+            }
+            return message;
+        }
+        Failures.message = message;
+    })(App.Failures || (App.Failures = {}));
+    var Failures = App.Failures;
     var WindowScroller = (function () {
         function WindowScroller() { }
         WindowScroller.scrollTopTrackerId = '#scroll_top_tracker';

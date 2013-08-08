@@ -1,21 +1,8 @@
 /// <reference path="../jquery/jquery.d.ts" />
-
-interface String {
-    format(...args: any[]): string;
-}
+/// <reference path="App.ts" />
 
 module App.Routes {
 
-    if (!String.prototype.format) {
-        String.prototype.format = function () {
-            var formatted = this;
-            for (var i = 0; i < arguments.length; i++) {
-                var regexp = new RegExp('\\{' + i + '\\}', 'gi');
-                formatted = formatted.replace(regexp, arguments[i]);
-            }
-            return formatted;
-        };
-    }
     export var applicationPath: string = '/';
 
     function hasTrailingSlash(value: string): bool {
@@ -159,14 +146,8 @@ module App.Routes {
                 return makeUrl(url);
             }
 
-            export function getUniversities(): string {
-                var url = 'establishments/universities';
-                return makeUrl(url);
-            }
-
-            export function getChildren(establishmentId: number, sort: bool): string {
-                var url = 'establishments/' + establishmentId + '/children';
-                return makeUrlWithParams(url) + "sort=" + sort;
+            export function getChildren(establishmentId: number): string {
+                return makeUrl('establishments/{0}/children'.format(establishmentId));
             }
 
             export function post(): string {
@@ -373,6 +354,9 @@ module App.Routes {
                     var url = 'my/affiliations';
                     if (affiliationId) url += '/' + affiliationId;
                     return makeUrl(url);
+                }
+                export function getDefault (): string {
+                    return makeUrl('my/affiliations/default');
                 }
                 export function post(): string {
                     return get();

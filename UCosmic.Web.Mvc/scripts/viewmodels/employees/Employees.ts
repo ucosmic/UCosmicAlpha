@@ -216,8 +216,10 @@ module ViewModels.Employees {
                     transport: {
                         read: (options: any): void => {
                             $.ajax({
-                                url: App.Routes.WebApi.Establishments.getUniversities(),
-                                dataType: 'json',
+                                url: App.Routes.WebApi.Establishments.get(),
+                                data: {
+                                    typeEnglishNames: ['University', 'University System']
+                                },
                                 success: (results: any): void => {
                                     options.success(results.items);
                                 }
@@ -272,7 +274,8 @@ module ViewModels.Employees {
                 collegeDropListDataSource = new kendo.data.DataSource({
                     transport: {
                         read: {
-                            url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
+                            url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                            data: { orderBy: ['rank-asc', 'name-asc'] }
                         }
                     }
                 });
@@ -291,7 +294,8 @@ module ViewModels.Employees {
                             var dataSource = new kendo.data.DataSource({
                                 transport: {
                                     read: {
-                                        url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                                        data: { orderBy: ['rank-asc', 'name-asc'] }
                                     }
                                 }
                             });
@@ -309,7 +313,8 @@ module ViewModels.Employees {
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(collegeId, true)
+                                            url: App.Routes.WebApi.Establishments.getChildren(collegeId),
+                                            data: { orderBy: ['rank-asc', 'name-asc'] }
                                         }
                                     }
                                 });
@@ -329,7 +334,8 @@ module ViewModels.Employees {
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
+                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                                data: { orderBy: ['rank-asc', 'name-asc'] }
                             }
                         }
                     }),
@@ -341,7 +347,8 @@ module ViewModels.Employees {
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                                            data: { orderBy: ['rank-asc', 'name-asc'] }
                                         }
                                     }
                                 });
@@ -359,7 +366,8 @@ module ViewModels.Employees {
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(campusId, true)
+                                                url: App.Routes.WebApi.Establishments.getChildren(campusId),
+                                                data: { orderBy: ['rank-asc', 'name-asc'] }
                                             }
                                         }
                                     });

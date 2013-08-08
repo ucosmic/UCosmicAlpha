@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using ImageResizer;
@@ -14,7 +15,7 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [LocalApiEndpoint]
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/people")]
     public class PeopleController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -32,7 +33,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("")]
-        public virtual PageOfPersonApiModel Get([FromUri] PeopleSearchInputModel model)
+        public PageOfPersonApiModel Get([FromUri] PeopleSearchInputModel model)
         {
             var query = Mapper.Map<PeopleByCriteria>(model);
             query.EagerLoad = PersonApiModelProfiler.EagerLoads;
@@ -42,7 +43,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{personId}")]
-        public virtual PersonApiModel Get(int personId)
+        public PersonApiModel Get(int personId)
         {
             var entity = _queryProcessor.Execute(new PersonById(personId)
             {
@@ -55,7 +56,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [GET("{id}/photo")]
         [CacheHttpGet(Duration = 3600)]
-        public virtual HttpResponseMessage GetPhoto(int id, [FromUri] ImageResizeRequestModel model)
+        public HttpResponseMessage GetPhoto(int id, [FromUri] ImageResizeRequestModel model)
         {
             var person = _queryProcessor.Execute(new PersonById(id)
             {

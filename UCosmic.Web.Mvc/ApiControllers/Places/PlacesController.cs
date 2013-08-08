@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
+using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using UCosmic.Domain.Places;
@@ -13,7 +14,7 @@ using PlaceByWoeId = UCosmic.Domain.Places.PlaceByWoeId;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [Authorize]
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/places")]
     public class PlacesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;

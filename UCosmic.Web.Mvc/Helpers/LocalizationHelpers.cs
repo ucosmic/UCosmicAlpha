@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
-namespace System.Web.Mvc
+namespace UCosmic.Web.Mvc
 {
     public static class LocalizationHelpers
     {
-        public static IHtmlString MetaAcceptLanguage<t>(this HtmlHelper<t> html)
+        public static IHtmlString MetaAcceptLanguage<T>(this HtmlHelper<T> html)
         {
-            var acceptLanguage = HttpUtility.HtmlAttributeEncode(Threading.Thread.CurrentThread.CurrentUICulture.ToString());
-
-
-            return new HtmlString(String.Format("<meta name='accept-language' content='{0}'>",acceptLanguage));
+            var acceptLanguage = HttpUtility.HtmlAttributeEncode(Thread.CurrentThread.CurrentUICulture.ToString());
+            return new HtmlString(string.Format("<meta name='accept-language' content='{0}'>", acceptLanguage));
         }
     }
 }

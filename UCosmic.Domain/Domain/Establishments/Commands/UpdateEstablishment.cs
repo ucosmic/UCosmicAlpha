@@ -13,7 +13,7 @@ namespace UCosmic.Domain.Establishments
         private string _ceebCode;
         private string _uCosmicCode;
 
-        public UpdateEstablishment(int id, IPrincipal principal)
+        public UpdateEstablishment(IPrincipal principal, int id)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -152,7 +152,7 @@ namespace UCosmic.Domain.Establishments
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
-                    ExternalId = command.ExternalId
+                    command.ExternalId
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };

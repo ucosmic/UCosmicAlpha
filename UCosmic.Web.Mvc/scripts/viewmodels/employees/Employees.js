@@ -83,8 +83,13 @@ var ViewModels;
                         transport: {
                             read: function (options) {
                                 $.ajax({
-                                    url: App.Routes.WebApi.Establishments.getUniversities(),
-                                    dataType: 'json',
+                                    url: App.Routes.WebApi.Establishments.get(),
+                                    data: {
+                                        typeEnglishNames: [
+                                            'University', 
+                                            'University System'
+                                        ]
+                                    },
                                     success: function (results) {
                                         options.success(results.items);
                                     }
@@ -135,7 +140,13 @@ var ViewModels;
                     collegeDropListDataSource = new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
+                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                                data: {
+                                    orderBy: [
+                                        'rank-asc', 
+                                        'name-asc'
+                                    ]
+                                }
                             }
                         }
                     });
@@ -156,7 +167,13 @@ var ViewModels;
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                                            data: {
+                                                orderBy: [
+                                                    'rank-asc', 
+                                                    'name-asc'
+                                                ]
+                                            }
                                         }
                                     }
                                 });
@@ -173,7 +190,13 @@ var ViewModels;
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId, true)
+                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId),
+                                                data: {
+                                                    orderBy: [
+                                                        'rank-asc', 
+                                                        'name-asc'
+                                                    ]
+                                                }
                                             }
                                         }
                                     });
@@ -194,7 +217,13 @@ var ViewModels;
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.Establishments.getChildren(this.institutionId(), true)
+                                    url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                                    data: {
+                                        orderBy: [
+                                            'rank-asc', 
+                                            'name-asc'
+                                        ]
+                                    }
                                 }
                             }
                         }),
@@ -206,7 +235,13 @@ var ViewModels;
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                                url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                                                data: {
+                                                    orderBy: [
+                                                        'rank-asc', 
+                                                        'name-asc'
+                                                    ]
+                                                }
                                             }
                                         }
                                     });
@@ -223,7 +258,13 @@ var ViewModels;
                                         var dataSource = new kendo.data.DataSource({
                                             transport: {
                                                 read: {
-                                                    url: App.Routes.WebApi.Establishments.getChildren(campusId, true)
+                                                    url: App.Routes.WebApi.Establishments.getChildren(campusId),
+                                                    data: {
+                                                        orderBy: [
+                                                            'rank-asc', 
+                                                            'name-asc'
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         });

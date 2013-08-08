@@ -2,7 +2,37 @@
 /// <reference path="../oss/jquery.autosize.d.ts" />
 /// <reference path="../oss/jquery.placeholder.d.ts" />
 
+interface String {
+    format(...args: any[]): string;
+}
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var formatted = this;
+        for (var i = 0; i < arguments.length; i++) {
+            var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+            formatted = formatted.replace(regexp, arguments[i]);
+        }
+        return formatted;
+    };
+}
+
 module App {
+
+    // react to unexpected situations
+    export module Failures {
+        export function message(xhr: JQueryXHR, reason: string = '', autoAlert: bool = false): string {
+
+            // do not report error if user clicked on link or browser control
+            if (xhr.readyState === 0 || xhr.status === 0) return null;
+
+            if (reason !== '') reason = ' ' + reason;
+            var format = 'UCosmic experienced an unexpected error{0}. If this continues to happen, ' +
+                'please use the Feedback & Support link on this page to report it.';
+            var message = format.format(reason);
+            if (autoAlert) alert(message);
+            return message;
+        }
+    }
 
     // track & get/set window scroll position
     export class WindowScroller {

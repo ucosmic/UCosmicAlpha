@@ -358,6 +358,7 @@
     <Compile Include="Models\Agreements\AgreementFileApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementUmbrellaOptionApiProfiler.cs" />
     <Compile Include="Models\Employees\FacultyStaffFilterApiModel.cs" />
+    <Compile Include="Models\Establishments\EstablishmentChildrenSearchInputModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
     <Compile Include="Models\Graphics\CircleGraphicRequestModel.cs" />
@@ -368,6 +369,7 @@
     <Compile Include="Models\Identity\ActivityModel.cs" />
     <Compile Include="Models\My\MyAffiliationApiModel.cs" />
     <Compile Include="Models\My\MyProfileApiModel.cs" />
+    <Compile Include="Models\My\MyAffiliationsSearchInputModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />

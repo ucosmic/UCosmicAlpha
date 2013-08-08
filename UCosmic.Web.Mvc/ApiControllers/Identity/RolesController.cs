@@ -1,12 +1,13 @@
 ﻿using System.Net;
 using System.Web.Http;
+using AttributeRouting;
 using AutoMapper;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/roles")]
     public class RolesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;

@@ -41,6 +41,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 EagerLoad = new Expression<Func<Person, object>>[]
                 {
+                    x => x.Affiliations,
                     x => x.Employee,
                     x => x.Photo,
                 }
@@ -55,12 +56,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             /* Does the default establishment have campuses? */
             var defaultEstablishmentId = person.DefaultAffiliation.EstablishmentId;
-            var campusEstablishmentType = _entities.Query<EstablishmentType>().Single(t => t.EnglishName == "University Campus");
+            var universityCampus = KnownEstablishmentType.UniversityCampus.AsSentenceFragment();
             model.DefaultEstablishmentHasCampuses = _entities.Query<Establishment>()
-                                                             .Count(
-                                                                 e =>
-                                                                 (e.Parent.RevisionId == defaultEstablishmentId) &&
-                                                                 (e.Type.RevisionId == campusEstablishmentType.RevisionId)) > 0;
+                .Any(x => x.Parent != null && x.Parent.RevisionId == defaultEstablishmentId &&
+                    x.Type.EnglishName == universityCampus);
 
             return model;
         }

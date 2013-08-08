@@ -1,16 +1,6 @@
 var App;
 (function (App) {
     (function (Routes) {
-        if(!String.prototype.format) {
-            String.prototype.format = function () {
-                var formatted = this;
-                for(var i = 0; i < arguments.length; i++) {
-                    var regexp = new RegExp('\\{' + i + '\\}', 'gi');
-                    formatted = formatted.replace(regexp, arguments[i]);
-                }
-                return formatted;
-            };
-        }
         Routes.applicationPath = '/';
         function hasTrailingSlash(value) {
             return value.lastIndexOf('/') == value.length - 1;
@@ -166,14 +156,8 @@ var App;
                     return makeUrl(url);
                 }
                 Establishments.get = get;
-                function getUniversities() {
-                    var url = 'establishments/universities';
-                    return makeUrl(url);
-                }
-                Establishments.getUniversities = getUniversities;
-                function getChildren(establishmentId, sort) {
-                    var url = 'establishments/' + establishmentId + '/children';
-                    return makeUrlWithParams(url) + "sort=" + sort;
+                function getChildren(establishmentId) {
+                    return makeUrl('establishments/{0}/children'.format(establishmentId));
                 }
                 Establishments.getChildren = getChildren;
                 function post() {
@@ -406,6 +390,10 @@ var App;
                         return makeUrl(url);
                     }
                     Affiliations.get = get;
+                    function getDefault() {
+                        return makeUrl('my/affiliations/default');
+                    }
+                    Affiliations.getDefault = getDefault;
                     function post() {
                         return get();
                     }

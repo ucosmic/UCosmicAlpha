@@ -172,7 +172,8 @@
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\Queries\ReportDefaultYearRangeByEstablishmentId.cs" />
-    <Compile Include="Domain\Establishments\Queries\EstablishmentsByEnglishNameType.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentChildren.cs" />
+    <Compile Include="Domain\Establishments\Views\EstablishmentTypeView.cs" />
     <Compile Include="Domain\Files\Commands\PurgeUpload.cs" />
     <Compile Include="Domain\Files\Commands\CreateUpload.cs" />
     <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
@@ -370,12 +371,16 @@
     <Compile Include="Domain\People\Commands\DeletePerson.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
+    <Compile Include="Domain\People\Queries\MyDefaultAffiliation.cs" />
+    <Compile Include="Domain\People\Queries\MyAffiliations.cs" />
     <Compile Include="Domain\People\Queries\MyAffiliationByDepartment.cs" />
     <Compile Include="Domain\People\Queries\MyPeople.cs" />
     <Compile Include="Domain\People\Queries\PeopleByCriteria.cs" />
     <Compile Include="Domain\People\Queries\PeopleCountByPlaceIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleCountByEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleCountByTypeIdPlaceIdEstablishmentId.cs" />
+    <Compile Include="Domain\People\Validation\MustNotBeDefaultAffiliation.cs" />
+    <Compile Include="Domain\People\Validation\MustFindAffiliationById.cs" />
     <Compile Include="Domain\People\Validation\MustFindEmailByPersonIdAndNumber.cs" />
     <Compile Include="Domain\People\Validation\MustHaveLastName.cs" />
     <Compile Include="Domain\People\Validation\MustHaveFirstName.cs" />

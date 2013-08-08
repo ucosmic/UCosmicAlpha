@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -36,21 +34,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("")]
-        public IEnumerable<MyAffiliationApiModel> Get()
+        public IEnumerable<MyAffiliationApiModel> Get([FromUri] MyAffiliationsSearchInputModel model)
         {
-            var person = _queryProcessor.Execute(new MyPerson(User)
-            {
-                EagerLoad = new Expression<Func<Person, object>>[]
-                {
-                    x => x.Affiliations
-                }
-            });
+            var query = new MyAffiliations(User);
+            Mapper.Map(model, query);
+            var entities = _queryProcessor.Execute(query);
+            var models = Mapper.Map<MyAffiliationApiModel[]>(entities);
+            return models;
+        }
 
-            // throw 404 if route does not match existing record
-            if (person == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var model = Mapper.Map<MyAffiliationApiModel[]>(person.Affiliations);
-
+        [GET("default")]
+        public MyAffiliationApiModel GetDefault()
+        {
+            var entity = _queryProcessor.Execute(new MyDefaultAffiliation(User));
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<MyAffiliationApiModel>(entity);
             return model;
         }
 

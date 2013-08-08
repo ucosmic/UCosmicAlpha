@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
@@ -16,7 +16,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [DefaultApiHttpRouteConvention]
+    [RoutePrefix("api/establishments")]
     public class EstablishmentsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -39,7 +39,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _updateValidator = updateValidator;
         }
 
-        public PageOfEstablishmentApiFlatModel GetAll([FromUri] EstablishmentSearchInputModel input)
+        [GET("")]
+        public PageOfEstablishmentApiFlatModel Get([FromUri] EstablishmentSearchInputModel input)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
@@ -52,24 +53,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("universities")]
-        public IEnumerable<EstablishmentApiScalarModel> GetUniversities()
-        {
-            string[] englishNameTypes = {"University", "University System"};
-
-            ICollection<Establishment> establishments = new Collection<Establishment>();
-            foreach (var englishNameType in englishNameTypes)
-            {
-                var sublist = _queryProcessor.Execute(new EstablishmentsByEnglishNameType(englishNameType));
-                establishments.Concat(sublist);
-            }
-
-            var model = Mapper.Map<IEnumerable<EstablishmentApiScalarModel>>(establishments);
-            return model;
-        }
-
-        [GET("{establishmentId}")]
-        public EstablishmentApiScalarModel GetOne(int establishmentId)
+        [GET("{establishmentId:int}", ControllerPrecedence = 1)]
+        public EstablishmentApiScalarModel Get(int establishmentId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
@@ -85,52 +70,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("{establishmentId}/children/")]
-        public IEnumerable<EstablishmentApiScalarModel> GetChildren(int establishmentId, string sort)
+        [GET("{establishmentId:int}/children")]
+        public IEnumerable<EstablishmentApiScalarModel> GetChildren(int establishmentId, [FromUri] EstablishmentChildrenSearchInputModel input)
         {
-            var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId)
-            {
-                EagerLoad = new Expression<Func<Establishment, object>>[]
-                {
-                    x => x.Type,
-                }
-            });
-            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            IEnumerable<Establishment> children = null;
-
-            if (!String.IsNullOrEmpty(sort) && (String.Compare(sort, "true", true) == 0))
-            {
-                if (entity.Children.Count(c => c.VerticalRank.HasValue) > 0)
-                {
-                    var ordered = entity.Children.Select(c => c)
-                                        .Where(c => c.VerticalRank.HasValue)
-                                        .OrderBy(c => c.VerticalRank.Value);
-
-                    var noOrder = entity.Children.Select(c => c)
-                                        .Where(c => !c.VerticalRank.HasValue);
-
-                    children = ordered.ToArray().Concat(noOrder.ToArray());
-                }
-                else
-                {
-                    children = entity.Children.OrderBy(x => x.OfficialName).ToArray();
-                }
-            }
-            else
-            {
-                children = entity.Children.ToArray();
-            }
-
-            var model = Mapper.Map<ICollection<EstablishmentApiScalarModel>>(children);
-
-            return model;
-        }
-
-        [GET("{establishmentId}/children/")]
-        public IEnumerable<EstablishmentApiScalarModel> GetChildren(int establishmentId)
-        {
-            return GetChildren(establishmentId, null);
+            var query = new EstablishmentChildren(establishmentId);
+            Mapper.Map(input, query);
+            var entities = _queryProcessor.Execute(query);
+            var models = Mapper.Map<EstablishmentApiScalarModel[]>(entities);
+            return models;
         }
 
         [POST("")]
@@ -160,7 +107,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var url = Url.Link(null, new
             {
                 controller = "Establishments",
-                action = "GetOne",
+                action = "Get",
                 establishmentId = command.CreatedEstablishmentId,
             });
             Debug.Assert(url != null);
@@ -169,16 +116,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("{id}")]
-        public HttpResponseMessage Put(int id, EstablishmentApiScalarModel model)
+        [PUT("{establishmentId:int}")]
+        public HttpResponseMessage Put(int establishmentId, EstablishmentApiScalarModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
-            var entity = _queryProcessor.Execute(new EstablishmentById(id));
+            var entity = _queryProcessor.Execute(new EstablishmentById(establishmentId));
             if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            model.Id = id;
-            var command = new UpdateEstablishment(id, User);
+            model.Id = establishmentId;
+            var command = new UpdateEstablishment(User, establishmentId);
             Mapper.Map(model, command);
 
             try
@@ -195,7 +142,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [POST("{establishmentId}/validate-ceeb-code")]
+        [POST("{establishmentId:int}/validate-ceeb-code")]
         public HttpResponseMessage ValidateCeebCode(int establishmentId, EstablishmentApiScalarModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -213,7 +160,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             else
             {
-                var command = new UpdateEstablishment(model.Id, User);
+                var command = new UpdateEstablishment(User, model.Id);
                 Mapper.Map(model, command);
                 validationResult = _updateValidator.Validate(command);
                 propertyName = command.PropertyName(y => y.CeebCode);
@@ -227,7 +174,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [POST("{establishmentId}/validate-ucosmic-code")]
+        [POST("{establishmentId:int}/validate-ucosmic-code")]
         public HttpResponseMessage ValidateUCosmicCode(int establishmentId, EstablishmentApiScalarModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -245,7 +192,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             else
             {
-                var command = new UpdateEstablishment(model.Id, User);
+                var command = new UpdateEstablishment(User, model.Id);
                 Mapper.Map(model, command);
                 validationResult = _updateValidator.Validate(command);
                 propertyName = command.PropertyName(y => y.UCosmicCode);
@@ -259,14 +206,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [POST("{establishmentId}/validate-parent-id")]
+        [POST("{establishmentId:int}/validate-parent-id")]
         public HttpResponseMessage ValidateParentId(int establishmentId, EstablishmentApiScalarModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
             model.Id = establishmentId;
 
-            var command = new UpdateEstablishment(model.Id, User);
+            var command = new UpdateEstablishment(User, model.Id);
             Mapper.Map(model, command);
             var validationResult = _updateValidator.Validate(command);
             var propertyName = command.PropertyName(y => y.ParentId);

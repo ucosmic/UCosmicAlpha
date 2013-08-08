@@ -34,6 +34,13 @@ namespace UCosmic.Domain.People
                 .MustOwnAffiliation(entities, x => x.Id)
                     .WithMessage(MustOwnAffiliation<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id)
             ;
+
+            // cannot delete default affiliation
+            RuleFor(x => x.Id)
+                .MustFindAffiliationById(entities)
+                    .WithMessage(MustFindAffiliationById.FailMessageFormat, x => x.Id)
+                .MustNotBeDefaultAffiliation(entities)
+                    .WithMessage("Your affiliation with id '{0}' cannot be deleted because it is your default affiliation.", x => x.Id);
         }
     }
 

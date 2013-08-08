@@ -519,36 +519,35 @@ var ViewModels;
                     return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
                 });
             };
-            Profile.prototype.reloadAffiliations = function () {
-                var me = this;
+            Profile.prototype._reloadAffiliations = function () {
+                var _this = this;
                 $.ajax({
                     async: true,
                     url: App.Routes.WebApi.My.Affiliations.get(),
+                    data: {
+                        isDefault: false
+                    },
                     type: 'GET'
                 }).done(function (data, statusText, xhr) {
-                    if(statusText === "success") {
-                        var affiliations = ko.mapping.fromJS(data);
-                        me.affiliations.removeAll();
-                        for(var i = 0; i < affiliations().length; i += 1) {
-                            me.affiliations.push(affiliations()[i]);
-                        }
-                    } else {
-                        alert("Error reloading affiliations: " + xhr.responseText);
-                    }
+                    ko.mapping.fromJS(data, {
+                    }, _this.affiliations);
                 }).fail(function (xhr, statusText, errorThrown) {
-                    alert("Loading affiliation failed: " + statusText + "|" + errorThrown);
+                    App.Failures.message(xhr, 'while trying to load your affiliations', true);
                 });
             };
             Profile.prototype.editAffiliation = function (data, event) {
                 var me = this;
                 var defaultAffiliation = null;
-                var i = 0;
-                while((i < this.affiliations().length) && !this.affiliations()[i].isDefault) {
-                    i += 1;
-                }
-                if(i < this.affiliations().length) {
-                    defaultAffiliation = this.affiliations()[i];
-                } else {
+                $.ajax({
+                    type: 'GET',
+                    url: App.Routes.WebApi.My.Affiliations.getDefault(),
+                    async: false
+                }).done(function (response) {
+                    defaultAffiliation = response;
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to determine your default affiliation', true);
+                });
+                if(!defaultAffiliation) {
                     return;
                 }
                 $("#editAffiliationDepartmentDropList").kendoDropDownList({
@@ -575,7 +574,13 @@ var ViewModels;
                     collegeDropListDataSource = new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), true)
+                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId),
+                                data: {
+                                    orderBy: [
+                                        'rank-asc', 
+                                        'name-asc'
+                                    ]
+                                }
                             }
                         }
                     });
@@ -592,7 +597,13 @@ var ViewModels;
                                 var dataSource = new kendo.data.DataSource({
                                     transport: {
                                         read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                            url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                                            data: {
+                                                orderBy: [
+                                                    'rank-asc', 
+                                                    'name-asc'
+                                                ]
+                                            }
                                         }
                                     }
                                 });
@@ -609,7 +620,13 @@ var ViewModels;
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId, true)
+                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId),
+                                                data: {
+                                                    orderBy: [
+                                                        'rank-asc', 
+                                                        'name-asc'
+                                                    ]
+                                                }
                                             }
                                         }
                                     });
@@ -626,7 +643,13 @@ var ViewModels;
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId(), true)
+                                    url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId),
+                                    data: {
+                                        orderBy: [
+                                            'rank-asc', 
+                                            'name-asc'
+                                        ]
+                                    }
                                 }
                             }
                         }),
@@ -638,7 +661,13 @@ var ViewModels;
                                     var dataSource = new kendo.data.DataSource({
                                         transport: {
                                             read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(item.id, true)
+                                                url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                                                data: {
+                                                    orderBy: [
+                                                        'rank-asc', 
+                                                        'name-asc'
+                                                    ]
+                                                }
                                             }
                                         }
                                     });
@@ -655,7 +684,13 @@ var ViewModels;
                                         var dataSource = new kendo.data.DataSource({
                                             transport: {
                                                 read: {
-                                                    url: App.Routes.WebApi.Establishments.getChildren(campusId, true)
+                                                    url: App.Routes.WebApi.Establishments.getChildren(campusId),
+                                                    data: {
+                                                        orderBy: [
+                                                            'rank-asc', 
+                                                            'name-asc'
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         });
@@ -696,7 +731,7 @@ var ViewModels;
                         {
                             text: "Save",
                             click: function (item, event) {
-                                me.saveAffiliation((data == null) ? null : data.id(), defaultAffiliation.establishmentId());
+                                me.saveAffiliation((data == null) ? null : data.id(), defaultAffiliation.establishmentId);
                             }
                         }, 
                         {
@@ -788,7 +823,7 @@ var ViewModels;
                 }).done(function (responseText, statusText, xhr) {
                     if(statusText === "success") {
                         $("#editAffiliationDialog").dialog("close");
-                        me.reloadAffiliations();
+                        me._reloadAffiliations();
                     } else {
                         $("#affiliationErrorDialog").dialog({
                             title: xhr.statusText,
@@ -857,7 +892,7 @@ var ViewModels;
                                     });
                                 }
                                 $("#editAffiliationDialog").dialog("close");
-                                me.reloadAffiliations();
+                                me._reloadAffiliations();
                             }).fail(function (xhr, statusText, errorThrown) {
                                 alert(xhr.responseText);
                                 $("#editAffiliationDialog").dialog("close");

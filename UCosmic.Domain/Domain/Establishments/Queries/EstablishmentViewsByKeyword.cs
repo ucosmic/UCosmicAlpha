@@ -10,6 +10,7 @@ namespace UCosmic.Domain.Establishments
         public string CountryCode { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public string[] TypeEnglishNames { get; set; }
     }
 
     public class HandleEstablishmentViewsByKeywordQuery : IHandleQueries<EstablishmentViewsByKeyword, PagedQueryResult<EstablishmentView>>
@@ -60,6 +61,9 @@ namespace UCosmic.Domain.Establishments
                     || x.UCosmicCode.Contains(query.Keyword, ordinalIgnoreCase)
                 );
             }
+
+            if (query.TypeEnglishNames != null && query.TypeEnglishNames.Any())
+                view = view.Where(x => query.TypeEnglishNames.Contains(x.Type.EnglishName));
 
             if (query.Id.HasValue)
                 view = view.Where(x => x.Id == query.Id.Value);

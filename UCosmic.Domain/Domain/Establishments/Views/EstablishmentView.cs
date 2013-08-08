@@ -8,12 +8,14 @@ namespace UCosmic.Domain.Establishments
     public class EstablishmentView
     {
         public int Id { get; set; }
+        public int? ParentId { get; set; }
         public string OfficialName { get; set; }
         public string WebsiteUrl { get; set; }
         public string CountryCode { get; set; }
         public string CountryName { get; set; }
         public string CeebCode { get; set; }
         public string UCosmicCode { get; set; }
+        public EstablishmentTypeView Type { get; set; }
         public IEnumerable<EstablishmentNameView> Names { get; set; }
         public IEnumerable<EstablishmentUrlView> Urls { get; set; }
 
@@ -33,6 +35,7 @@ namespace UCosmic.Domain.Establishments
         public EstablishmentView(Establishment entity)
         {
             Id = entity.RevisionId;
+            ParentId = entity.Parent == null ? (int?)null : entity.Parent.RevisionId;
 
             OfficialName = entity.Names.Single(e => e.IsOfficialName).Text;
 
@@ -45,6 +48,8 @@ namespace UCosmic.Domain.Establishments
 
             CeebCode = entity.CollegeBoardDesignatedIndicator ?? "";
             UCosmicCode = entity.UCosmicCode ?? "";
+
+            Type = new EstablishmentTypeView(entity.Type);
 
             var names = new List<EstablishmentNameView>();
             foreach (var name in entity.Names)

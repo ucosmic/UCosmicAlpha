@@ -34,6 +34,7 @@ namespace UCosmic.Domain.Establishments
                             x => x.Urls,
                             x => x.Location.Places.Select(y => y.GeoPlanetPlace),
                             x => x.Parent,
+                            x => x.Type,
                         })
                     .OrderBy(x => x.RevisionId)
                 ;

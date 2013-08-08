@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.People;
 
@@ -39,6 +40,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.StartInEdit, o => o.Ignore())
                     .ForMember(d => d.StartTabName, o => o.Ignore())
                     .ForMember(d => d.DefaultEstablishmentHasCampuses, o => o.Ignore())
+                    .ForMember(d => d.Affiliations, o => o.MapFrom(s => s.Affiliations.Where(x => !x.IsDefault)))
                 ;
             }
         }
