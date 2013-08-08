@@ -15,14 +15,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
 {
     [Authorize]
     [RoutePrefix("api/geographic-expertise")]
-    public class GeographicExpertisesController : ApiController
+    public class GeographicExpertiseController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateDeepGeographicExpertise> _createDeepGeographicExpertise;
         private readonly IHandleCommands<DeleteGeographicExpertise> _deleteGeographicExpertise;
         private readonly IHandleCommands<UpdateGeographicExpertise> _updateGeographicExpertise;
 
-        public GeographicExpertisesController(IProcessQueries queryProcessor
+        public GeographicExpertiseController(IProcessQueries queryProcessor
                                   , IHandleCommands<CreateDeepGeographicExpertise> createDeepGeographicExpertise
                                   , IHandleCommands<DeleteGeographicExpertise> deleteGeographicExpertise
                                   , IHandleCommands<UpdateGeographicExpertise> updateGeographicExpertise)
@@ -97,7 +97,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var response = Request.CreateResponse(HttpStatusCode.Created, "Geographic expertise was successfully created.");
             var url = Url.Link(null, new
             {
-                controller = "GeographicExpertises",
+                controller = "GeographicExpertise",
                 action = "Get",
                 expertiseId = createDeepGeographicExpertiseCommand.CreatedGeographicExpertiseId,
             });

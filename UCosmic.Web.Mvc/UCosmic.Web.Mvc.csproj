@@ -291,31 +291,33 @@
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementFilesController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementParticipantsController.cs" />
-    <Compile Include="ApiControllers\MyDegreesController.cs" />
+    <Compile Include="ApiControllers\Degrees\DegreesController.cs" />
+    <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
+    <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
+    <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
+    <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\FacultyStaffController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentLocationsController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentNamesController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentsController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentUrlsController.cs" />
-    <Compile Include="ApiControllers\GraphicsController.cs" />
+    <Compile Include="ApiControllers\FacultyStaff\InternationalAffiliationController.cs" />
+    <Compile Include="ApiControllers\Languages\LanguagesController.cs" />
     <Compile Include="ApiControllers\My\MyPhotoController.cs" />
     <Compile Include="ApiControllers\My\MyAffiliationsController.cs" />
     <Compile Include="ApiControllers\My\MyProfileController.cs" />
     <Compile Include="ApiControllers\My\ProfileElementsController.cs" />
-    <Compile Include="ApiControllers\UploadsController.cs" />
     <Compile Include="ApiControllers\Identity\GrantsController.cs" />
     <Compile Include="ApiControllers\Identity\IdentityController.cs" />
     <Compile Include="ApiControllers\Identity\RolesController.cs" />
     <Compile Include="ApiControllers\Identity\UsersController.cs" />
-    <Compile Include="ApiControllers\InternationalAffiliationController.cs" />
-    <Compile Include="ApiControllers\LanguageExpertisesController.cs" />
-    <Compile Include="ApiControllers\DegreesController.cs" />
-    <Compile Include="ApiControllers\GeographicExpertisesController.cs" />
     <Compile Include="ApiControllers\People\PeopleController.cs" />
     <Compile Include="ApiControllers\People\PersonNamesController.cs" />
     <Compile Include="ApiControllers\Places\CountriesController.cs" />
     <Compile Include="ApiControllers\Places\PlacesController.cs" />
+    <Compile Include="ApiControllers\_Etc\GraphicsController.cs" />
+    <Compile Include="ApiControllers\_Etc\UploadsController.cs" />
     <Compile Include="ApiTestController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -386,8 +388,6 @@
     <Compile Include="Models\_Etc\FileUploadValidationModel.cs" />
     <Compile Include="Models\_Etc\ValidationFailureApiModel.cs" />
     <Compile Include="Models\_Etc\ImageResizeRequestModel.cs" />
-    <Compile Include="ApiControllers\EmployeeModuleSettingsController.cs" />
-    <Compile Include="ApiControllers\LanguagesController.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
@@ -2577,9 +2577,6 @@
       <Project>{d2f07b41-3aa3-46b0-a23d-2fce1f402b09}</Project>
       <Name>UCosmic.Infrastructure</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

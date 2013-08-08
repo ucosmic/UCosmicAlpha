@@ -16,14 +16,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
 {
     [Authorize]
     [RoutePrefix("api/language-expertise")]
-    public class LanguageExpertisesController : ApiController
+    public class LanguageExpertiseController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateLanguageExpertise> _createLanguageExpertise;
         private readonly IHandleCommands<DeleteLanguageExpertise> _deleteLanguageExpertise;
         private readonly IHandleCommands<UpdateLanguageExpertise> _updateLanguageExpertise;
 
-        public LanguageExpertisesController(IProcessQueries queryProcessor
+        public LanguageExpertiseController(IProcessQueries queryProcessor
             , IHandleCommands<CreateLanguageExpertise> createLanguageExpertise
             , IHandleCommands<DeleteLanguageExpertise> deleteLanguageExpertise
             , IHandleCommands<UpdateLanguageExpertise> updateLanguageExpertise)
@@ -140,7 +140,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var response = Request.CreateResponse(HttpStatusCode.Created, "Language expertise was successfully created.");
             var url = Url.Link(null, new
             {
-                controller = "LanguageExpertises",
+                controller = "LanguageExpertise",
                 action = "Get",
                 expertiseId = createLanguageExpertiseCommand.CreatedLanguageExpertiseId,
             });
