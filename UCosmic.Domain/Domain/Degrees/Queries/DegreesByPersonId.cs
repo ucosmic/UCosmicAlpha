@@ -5,7 +5,12 @@ namespace UCosmic.Domain.Degrees
 {
     public class DegreesByPersonId : BaseEntitiesQuery<Degree>, IDefineQuery<PagedQueryResult<Degree>>
     {
-        public int PersonId { get; set; }
+        public DegreesByPersonId(int personId)
+        {
+            PersonId = personId;
+        }
+
+        public int PersonId { get; private set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
     }
@@ -23,9 +28,9 @@ namespace UCosmic.Domain.Degrees
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            IQueryable<Degree> results = _entities.Query<Degree>()
-                                                  .Where(a => a.PersonId == query.PersonId)
-                                                  .OrderBy(a => a.RevisionId);
+            var results = _entities.Query<Degree>()
+                .Where(a => a.PersonId == query.PersonId)
+                .OrderBy(query.OrderBy);
 
             var pagedResults = new PagedQueryResult<Degree>(results, query.PageSize, query.PageNumber);
 

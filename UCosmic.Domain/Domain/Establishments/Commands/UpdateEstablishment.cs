@@ -61,16 +61,15 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage("User '{0}' is not authorized to execute this command.")
             ;
 
-            RuleFor(x => x.ParentId)
-                // parent id must exist when passed
-                .MustFindEstablishmentById(entities)
-                .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
-                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
+            When(x => x.ParentId.HasValue, () =>
+                RuleFor(x => x.ParentId.Value)
+                    // parent id must exist when passed
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
 
-                // cannot have cyclic establishment hierarchies
-                .MustNotHaveCyclicHierarchy(entities, x => x.Id)
-                .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
-            ;
+                    // cannot have cyclic establishment hierarchies
+                    .MustNotHaveCyclicHierarchy(entities, x => x.Id)
+            );
 
             // type id must exist
             RuleFor(x => x.TypeId)

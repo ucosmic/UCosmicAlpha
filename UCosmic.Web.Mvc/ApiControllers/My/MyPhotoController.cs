@@ -15,7 +15,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [TryAuthorize]
+    [System.Web.Http.Authorize]
     [RoutePrefix("api/my/photo")]
     public class MyPhotoController : ApiController
     {

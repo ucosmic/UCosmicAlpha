@@ -424,6 +424,29 @@ var App;
                     Photo.del = del;
                 })(My.Photo || (My.Photo = {}));
                 var Photo = My.Photo;
+                (function (Degrees) {
+                    function get(degreeId) {
+                        var url = 'my/degrees';
+                        if(degreeId) {
+                            url += '/' + degreeId;
+                        }
+                        return makeUrl(url);
+                    }
+                    Degrees.get = get;
+                    function post() {
+                        return get();
+                    }
+                    Degrees.post = post;
+                    function put(degreeId) {
+                        return get(degreeId);
+                    }
+                    Degrees.put = put;
+                    function del(degreeId) {
+                        return get(degreeId);
+                    }
+                    Degrees.del = del;
+                })(My.Degrees || (My.Degrees = {}));
+                var Degrees = My.Degrees;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
             (function (People) {
@@ -686,29 +709,6 @@ var App;
                 InternationalAffiliations.del = del;
             })(WebApi.InternationalAffiliations || (WebApi.InternationalAffiliations = {}));
             var InternationalAffiliations = WebApi.InternationalAffiliations;
-            (function (Degrees) {
-                function get(degreeId) {
-                    var url = 'degrees';
-                    if(degreeId) {
-                        url += '/' + degreeId;
-                    }
-                    return makeUrl(url);
-                }
-                Degrees.get = get;
-                function post() {
-                    return get();
-                }
-                Degrees.post = post;
-                function put(degreeId) {
-                    return get(degreeId);
-                }
-                Degrees.put = put;
-                function del(degreeId) {
-                    return get(degreeId);
-                }
-                Degrees.del = del;
-            })(WebApi.Degrees || (WebApi.Degrees = {}));
-            var Degrees = WebApi.Degrees;
             (function (Affiliations) {
                 function get(affiliationId) {
                     var url = makeUrl('affiliations');

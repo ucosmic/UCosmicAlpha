@@ -80,7 +80,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create activity document
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [POST("{activityId:int}/documents")]
         public HttpResponseMessage Post(int activityId, string activityMode, FileMedium fileMedium)
         {
@@ -123,7 +123,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * (Might need to use POST here)
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [PUT("{activityId:int}/documents/{documentId:int}")]
         public HttpResponseMessage PutDocument(int activityId, int documentId)
         {
@@ -135,7 +135,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete activity document
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [DELETE("{activityId:int}/documents/{documentId:int}")]
         public HttpResponseMessage DeleteDocument(int activityId, int documentId)
         {
@@ -161,7 +161,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Rename activity document
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [PUT("{activityId:int}/documents/{documentId:int}/title")]
         public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
         {
@@ -185,7 +185,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Validate activity document type
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [POST("documents/validate-upload")]
         public HttpResponseMessage PostDocumentsValidateUploadFiletype([FromBody] FileUploadValidationModel model)
         {

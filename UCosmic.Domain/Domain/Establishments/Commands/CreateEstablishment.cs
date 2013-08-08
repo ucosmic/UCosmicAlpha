@@ -61,11 +61,11 @@ namespace UCosmic.Domain.Establishments
             ;
 
             // parent id must exist when passed
-            RuleFor(x => x.ParentId)
-                .MustFindEstablishmentById(entities)
-                .When(x => x.ParentId.HasValue, ApplyConditionTo.CurrentValidator)
-                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
-            ;
+            When(x => x.ParentId.HasValue, () =>
+                RuleFor(x => x.ParentId.Value)
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.ParentId)
+            );
 
             // typeid is required
             RuleFor(x => x.TypeId)

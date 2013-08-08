@@ -9,7 +9,7 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [RoutePrefix("api/agreements/settings")]
-    [TryAuthorize(Roles = RoleName.AgreementManagers)]
+    [Authorize(Roles = RoleName.AgreementManagers)]
     public class AgreementSettingsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;

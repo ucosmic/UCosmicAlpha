@@ -171,6 +171,12 @@
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
+    <Compile Include="Domain\Degrees\Queries\MyDegreeById.cs" />
+    <Compile Include="Domain\Degrees\Queries\MyDegrees.cs" />
+    <Compile Include="Domain\Degrees\Validation\MustControlDegree.cs" />
+    <Compile Include="Domain\Degrees\Validation\MustHaveYearAwardedInRange.cs" />
+    <Compile Include="Domain\Degrees\Validation\MustHaveTitle.cs" />
+    <Compile Include="Domain\Degrees\Validation\DegreeConstraints.cs" />
     <Compile Include="Domain\Employees\Queries\ReportDefaultYearRangeByEstablishmentId.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentChildren.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentTypeView.cs" />

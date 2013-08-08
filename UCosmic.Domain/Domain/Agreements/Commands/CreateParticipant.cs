@@ -35,7 +35,7 @@ namespace UCosmic.Domain.Agreements
 
     public class ValidateCreateParticipantCommand : AbstractValidator<CreateParticipant>
     {
-        public ValidateCreateParticipantCommand(IQueryEntities entities, IProcessQueries queryProcessor)
+        public ValidateCreateParticipantCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -53,8 +53,8 @@ namespace UCosmic.Domain.Agreements
             When(x => x.Agreement == null, () =>
                 RuleFor(x => x.AgreementId)
                     // agreement id must exist in the database
-                    .MustFindAgreementById(entities)
-                        .WithMessage(MustFindAgreementById.FailMessageFormat, x => x.AgreementId)
+                    .MustFindAgreementById(queryProcessor, x => x.Principal)
+                        .WithMessage(MustFindAgreementById<object>.FailMessageFormat, x => x.AgreementId)
 
                     // it must be owned by principal
                     .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
@@ -63,7 +63,7 @@ namespace UCosmic.Domain.Agreements
 
             // establishment id must exist in database
             RuleFor(x => x.EstablishmentId)
-                .MustFindEstablishmentById(entities)
+                .MustFindEstablishmentById(queryProcessor)
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId);
 
             // when is owner
@@ -80,16 +80,13 @@ namespace UCosmic.Domain.Agreements
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHandleCommands<UpdateAgreementHierarchy> _hierarchyHandler;
 
         public HandleCreateParticipantCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
-            , IHandleCommands<UpdateAgreementHierarchy> hierarchyHandler
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _hierarchyHandler = hierarchyHandler;
         }
 
         public void Handle(CreateParticipant command)

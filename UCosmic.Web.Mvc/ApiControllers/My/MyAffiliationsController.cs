@@ -12,7 +12,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [TryAuthorize]
+    [Authorize]
     [RoutePrefix("api/my/affiliations")]
     public class MyAffiliationsController : ApiController
     {

@@ -8,13 +8,13 @@ namespace UCosmic.Domain.People
 {
     public class MustBeTenantPersonId<T> : PropertyValidator
     {
-        public const string FailMessageFormat = "Person '{0}' is not authorized to perform the '{1}' action for person #{2}.";
+        public const string FailMessageFormat = "User '{0}' is not authorized to perform the '{1}' action for person  with id '{2}'.";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, IPrincipal> _principal;
 
         internal MustBeTenantPersonId(IProcessQueries queryProcessor, Func<T, IPrincipal> principal)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+            : base(FailMessageFormat.Replace("{0}", "{UserName}".Replace("{1}", "{CommandName}").Replace("{2}", "{PersonId}")))
         {
             if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
             if (principal == null) throw new ArgumentNullException("principal");
@@ -28,13 +28,14 @@ namespace UCosmic.Domain.People
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on int properties", GetType().Name));
 
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var value = (int)context.PropertyValue;
+            var personId = (int)context.PropertyValue;
             var principal = _principal((T)context.Instance);
+            context.MessageFormatter.AppendArgument("UserName", principal.Identity.Name);
+            context.MessageFormatter.AppendArgument("CommandName", context.Instance.GetType().Name);
+            context.MessageFormatter.AppendArgument("PersonId", personId);
 
             var tenantPeopleIds = _queryProcessor.Execute(new MyPeople(principal)).Select(x => x.RevisionId);
-            var person = _queryProcessor.Execute(new PersonById(value));
-            return tenantPeopleIds.Contains(person.RevisionId);
+            return tenantPeopleIds.Contains(personId);
         }
     }
 

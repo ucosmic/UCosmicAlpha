@@ -49,12 +49,11 @@ module ViewModels.Degrees
             var deferred: JQueryDeferred = $.Deferred();
             var expertiseSearchInput: DegreeSearchInput = new DegreeSearchInput();
 
-            expertiseSearchInput.personId = this.personId;
             expertiseSearchInput.orderBy = "";
             expertiseSearchInput.pageNumber = 1;
             expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
 
-            $.get(App.Routes.WebApi.Degrees.get(), expertiseSearchInput)
+            $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     {
                         ko.mapping.fromJS(data, {}, this);
@@ -78,7 +77,7 @@ module ViewModels.Degrees
             $.ajax({
                 async: false,
                 type: "DELETE",
-                url: App.Routes.WebApi.Degrees.del(expertiseId),
+                url: App.Routes.WebApi.My.Degrees.del(expertiseId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 { },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>

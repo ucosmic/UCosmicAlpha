@@ -2,38 +2,77 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Degrees
 {
     public class DeleteDegree
     {
-        public IPrincipal Principal { get; private set; }
-        public int Id { get; private set; }
-        public bool NoCommit { get; set; }
-
-        public DeleteDegree(IPrincipal principal, int id)
+        public DeleteDegree(IPrincipal principal, int degreeId, int? personId = null)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
-            Id = id;
+            DegreeId = degreeId;
+            PersonId = personId;
         }
+
+        public IPrincipal Principal { get; private set; }
+        public int DegreeId { get; private set; }
+        public int? PersonId { get; private set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateDeleteDegreeCommand : AbstractValidator<DeleteDegree>
     {
-        public ValidateDeleteDegreeCommand(IQueryEntities entities)
+        public ValidateDeleteDegreeCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnDegree(entities, x => x.Id)
-                    .WithMessage(MustOwnDegree<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
-
-            RuleFor(x => x.Id)
-                // id must be within valid range
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Degree id", x => x.Id)
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+                .MustFindUserByPrincipal(queryProcessor)
+                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
+
+            RuleFor(x => x.DegreeId)
+                // id must exist in the database
+                .MustFindDegreeById(queryProcessor)
+                    .WithMessage(MustFindDegreeById.FailMessageFormat, x => x.DegreeId)
+            ;
+
+            // only admins can delete degrees for other people (PersonId.HasValue)
+            When(x => x.PersonId.HasValue, () =>
+            {
+                RuleFor(x => x.PersonId.Value)
+                    .MustFindPersonById(queryProcessor)
+                        .WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
+
+                    .MustBeTenantPersonId(queryProcessor, x => x.Principal)
+                        .WithMessage(MustBeTenantPersonId<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.PersonId)
+                ;
+
+                RuleFor(x => x.Principal)
+                    .MustBeInAnyRole(RoleName.EmployeeProfileManager)
+                        .WithMessage(MustBeInAnyRole.FailMessageFormat,
+                                x => x.Principal.Identity.Name, x => x.GetType().Name)
+
+                    .MustControlDegree(queryProcessor, x => x.DegreeId)
+                        .WithMessage(MustControlDegree<object>.FailMessageFormat,
+                                x => x.Principal.Identity.Name, x => x.DegreeId)
+                    ;
+            });
+
+            // normal users can only delete degrees for themselves (!PersonId.HasValue)
+            When(x => !x.PersonId.HasValue, () =>
+                RuleFor(x => x.Principal)
+                    .MustOwnDegree(queryProcessor, x => x.DegreeId)
+                        .WithMessage(MustOwnDegree<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.DegreeId)
+            );
+
         }
     }
 
@@ -41,26 +80,22 @@ namespace UCosmic.Domain.Degrees
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IProcessEvents _eventProcessor;
 
         public HandleDeleteDegreeCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
-            //, IProcessEvents eventProcessor
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            //_eventProcessor = eventProcessor;
         }
 
         public void Handle(DeleteDegree command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var activity = _entities.Get<Degree>().SingleOrDefault(x => x.RevisionId == command.Id);
-            if (activity == null) return;
+            var entity = _entities.Get<Degree>().Single(x => x.RevisionId == command.DegreeId);
 
-            _entities.Purge(activity);
+            _entities.Purge(entity);
 
             if (!command.NoCommit)
             {

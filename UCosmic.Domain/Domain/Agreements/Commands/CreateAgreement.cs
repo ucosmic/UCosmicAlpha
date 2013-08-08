@@ -53,7 +53,7 @@ namespace UCosmic.Domain.Agreements
 
                     // it must exist in the database
                     .MustFindAgreementById(entities)
-                        .WithMessage(MustFindAgreementById.FailMessageFormat, x => x.UmbrellaId)
+                        .WithMessage(MustFindAgreementById<object>.FailMessageFormat, x => x.UmbrellaId)
 
                     // it must be owned by the commanding principal
                     .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)

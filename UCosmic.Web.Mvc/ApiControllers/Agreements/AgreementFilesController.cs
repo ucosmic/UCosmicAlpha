@@ -116,7 +116,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("{agreementId:int}/files")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Post(int agreementId, [FromBody] AgreementFileApiModel model)
         {
             model.AgreementId = agreementId;
@@ -167,7 +167,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("files/validate")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage ValidatePost([FromBody] FileUploadValidationModel model)
         {
             var command = new CreateFile(User)
@@ -195,7 +195,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("{agreementId:int}/files/{fileId:int}")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, int fileId, [FromBody] AgreementFileApiModel model)
         {
             // PUT will only update the file's custom name and visibility properties
@@ -211,7 +211,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("{agreementId:int}/files/{fileId:int}")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Delete(int agreementId, int fileId)
         {
             var command = new PurgeFile(User, agreementId, fileId);

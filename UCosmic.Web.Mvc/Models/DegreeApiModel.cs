@@ -24,12 +24,15 @@ namespace UCosmic.Web.Mvc.Models
         public string FormattedInfo { get; set; }   // used in Degree List, for display only
     }
 
-    public class DegreeSearchInputModel
+    public class DegreeSearchInputModel : BaseSearchInputModel
     {
-        public int PersonId { get; set; }
+        //public int PersonId { get; set; }
         public string OrderBy { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+    }
+
+    public class MyDegreeSearchInputModel : BaseSearchInputModel
+    {
+        public string OrderBy { get; set; }
     }
 
     public class PageOfDegreeApiModel : PageOf<DegreeApiModel> { }
@@ -168,37 +171,41 @@ namespace UCosmic.Web.Mvc.Models
                     ;
 
                 CreateMap<DegreeSearchInputModel, DegreesByPersonId>()
-                    .ForMember(d => d.EagerLoad, o => o.Ignore());
+                    .ForMember(d => d.PersonId, o => o.Ignore())
+                    .ForMember(d => d.EagerLoad, o => o.Ignore())
+                ;
+
+                CreateMap<MyDegreeSearchInputModel, MyDegrees>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.EagerLoad, o => o.Ignore())
+                ;
             }
         }
 
-        public class ModelToCommandProfile : Profile
+        public class ModelToCreateCommandProfile : Profile
         {
             protected override void Configure()
             {
                 CreateMap<DegreeApiModel, CreateDegree>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.CreatedDegreeId, o => o.Ignore())
-                    .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
-                    .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
-                    .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
-                    .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
+                    .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.EntityId, o => o.Ignore())
-                ;
-
-                CreateMap<DegreeApiModel, UpdateDegree>()
-                    .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.UpdatedOn, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
-                    .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
-                    .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
-                    .ForMember(d => d.FieldOfStudy, o => o.MapFrom(s => s.FieldOfStudy))
-                    .ForMember(d => d.YearAwarded, o => o.MapFrom(s => s.YearAwarded))
-                    .ForMember(d => d.InstitutionId, o => o.MapFrom(s => s.InstitutionId))
+                    .ForMember(d => d.CreatedDegreeId, o => o.Ignore())
                 ;
             }
         }
 
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<DegreeApiModel, UpdateDegree>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.PersonId, o => o.Ignore())
+                    .ForMember(d => d.DegreeId, o => o.Ignore())
+                ;
+            }
+        }
 
         public class PagedQueryResultToPageOfItemsProfiler : Profile
         {

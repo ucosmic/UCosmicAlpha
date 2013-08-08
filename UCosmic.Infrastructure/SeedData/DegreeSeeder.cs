@@ -66,8 +66,9 @@ namespace UCosmic.SeedData
                         throw new Exception(message);
                     }
 
-                    createDegreeCommand = new CreateDegree(principal, "Master of Science")
+                    createDegreeCommand = new CreateDegree(principal)
                     {
+                        Title = "Master of Science",
                         EntityId = entityId,
                         FieldOfStudy = "Molecular Biology",
                         YearAwarded = 2005,
@@ -92,8 +93,9 @@ namespace UCosmic.SeedData
                         throw new Exception(message);
                     }
 
-                    createDegreeCommand = new CreateDegree(principal, "Bachelor of Arts")
+                    createDegreeCommand = new CreateDegree(principal)
                     {
+                        Title = "Bachelor of Arts",
                         EntityId = entityId,
                         YearAwarded = 1994,
                         InstitutionId = institution.RevisionId

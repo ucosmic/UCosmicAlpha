@@ -12,7 +12,7 @@ using UCosmic.Web.Mvc.Models;
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [RoutePrefix("api/uploads")]
-    [TryAuthorize(Roles = RoleName.AgreementManagers)]
+    [Authorize(Roles = RoleName.AgreementManagers)]
     public class UploadsController : ApiController
     {
         private readonly IHandleCommands<CreateUpload> _createUpload;

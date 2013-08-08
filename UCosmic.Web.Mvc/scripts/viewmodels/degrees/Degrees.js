@@ -14,11 +14,10 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 var expertiseSearchInput = new DegreeSearchInput();
-                expertiseSearchInput.personId = this.personId;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = 2147483647;
-                $.get(App.Routes.WebApi.Degrees.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
  {
                         ko.mapping.fromJS(data, {
                         }, _this);
@@ -35,7 +34,7 @@ var ViewModels;
                 $.ajax({
                     async: false,
                     type: "DELETE",
-                    url: App.Routes.WebApi.Degrees.del(expertiseId),
+                    url: App.Routes.WebApi.My.Degrees.del(expertiseId),
                     success: function (data, textStatus, jqXHR) {
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

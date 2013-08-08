@@ -65,7 +65,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{agreementId:int}/umbrellas")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public IEnumerable<TextValuePair> GetUmbrellaOptions(int agreementId)
         {
             var entities = _queryProcessor.Execute(new UmbrellaOptions(User, agreementId)
@@ -81,7 +81,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Post(AgreementApiModel model)
         {
             var command = new CreateAgreement(User);
@@ -108,7 +108,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("validate")]
-        [TryAuthorize(Roles = RoleName.AgreementManagers)]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Validate(AgreementApiModel model)
         {
             var command = new CreateAgreement(User);

@@ -14,7 +14,7 @@ namespace UCosmic.Domain.Establishments
         private readonly Func<T, int> _ownId;
 
         internal MustNotHaveCyclicHierarchy(IQueryEntities entities, Func<T, int> ownId)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}")
+            : base(FailMessageFormat.Replace("{0}", "{ParentId}")
                 .Replace("{1}", "{EstablishmentName}")
                 .Replace("{2}", "{ParentName}")
                 .Replace("{3}", "{FailJustification}"))
@@ -30,8 +30,7 @@ namespace UCosmic.Domain.Establishments
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on integer properties", GetType().Name));
 
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var parentId = (int?)context.PropertyValue;
+            var parentId = (int)context.PropertyValue;
             var ownId = _ownId != null ? _ownId((T)context.Instance) : (int?)null;
             var entity = _entities.Query<Establishment>()
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
@@ -46,12 +45,13 @@ namespace UCosmic.Domain.Establishments
             if (ownId == parentId)
             {
                 isValid = false;
+                context.MessageFormatter.AppendArgument("ParentId", parentId);
                 context.MessageFormatter.AppendArgument("EstablishmentName", entity.TranslatedName);
                 context.MessageFormatter.AppendArgument("ParentName", entity.TranslatedName);
                 context.MessageFormatter.AppendArgument("FailJustification", "they are the same establishment");
             }
 
-            if (entity.Offspring.Select(x => x.OffspringId).Contains(parentId.Value))
+            if (entity.Offspring.Select(x => x.OffspringId).Contains(parentId))
             {
                 context.MessageFormatter.AppendArgument("FailJustification", "'{ParentName}' is already a child of '{EstablishmentName}'");
                 context.MessageFormatter.AppendArgument("EstablishmentName", entity.TranslatedName);
@@ -66,8 +66,8 @@ namespace UCosmic.Domain.Establishments
 
     public static class MustNotHaveCyclicHierarchyExtensions
     {
-        public static IRuleBuilderOptions<T, int?> MustNotHaveCyclicHierarchy<T>
-            (this IRuleBuilder<T, int?> ruleBuilder, IQueryEntities entities, Func<T, int> ownId = null)
+        public static IRuleBuilderOptions<T, int> MustNotHaveCyclicHierarchy<T>
+            (this IRuleBuilder<T, int> ruleBuilder, IQueryEntities entities, Func<T, int> ownId = null)
         {
             return ruleBuilder.SetValidator(new MustNotHaveCyclicHierarchy<T>(entities, ownId));
         }

@@ -51,7 +51,7 @@ namespace UCosmic.Domain.Agreements
             RuleFor(x => x.AgreementId)
                 // agreement id must exist
                 .MustFindAgreementById(entities)
-                    .WithMessage(MustFindAgreementById.FailMessageFormat, x => x.AgreementId)
+                    .WithMessage(MustFindAgreementById<object>.FailMessageFormat, x => x.AgreementId)
 
                 // principal must own agreement
                 .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)

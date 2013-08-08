@@ -78,7 +78,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an activity copy for editing (or recover edit copy)
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [GET("{activityId}/edit")]
         public ActivityApiModel GetEdit(int activityId)
         {
@@ -128,7 +128,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an activity's edit state.
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [GET("{activityId}/edit-state")]
         public ActivityEditState GetEditState(int activityId)
         {
@@ -157,7 +157,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create an activity
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [POST("")]
         public HttpResponseMessage Post()
         {
@@ -174,7 +174,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [PUT("{activityId}")]
-        [TryAuthorize]
+        [Authorize]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
             if ((activityId == 0) || (model == null))
@@ -212,7 +212,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * mode Activity.  The activityId must be of that of an Activity in "edit mode".
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
         {
@@ -253,7 +253,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an activity
         */
         // --------------------------------------------------------------------------------
-        [TryAuthorize]
+        [Authorize]
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {

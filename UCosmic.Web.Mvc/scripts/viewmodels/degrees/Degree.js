@@ -110,7 +110,7 @@ var ViewModels;
                     var dataPact = $.Deferred();
                     $.ajax({
                         type: "GET",
-                        url: App.Routes.WebApi.Degrees.get(this.id()),
+                        url: App.Routes.WebApi.My.Degrees.get(this.id()),
                         success: function (data, textStatus, jqXhr) {
                             dataPact.resolve(data);
                         },
@@ -153,7 +153,7 @@ var ViewModels;
                     institutionId: this.institutionId
                 };
                 var model = ko.mapping.toJS(mapSource);
-                var url = (viewModel.id() == 0) ? App.Routes.WebApi.Degrees.post() : App.Routes.WebApi.Degrees.put(viewModel.id());
+                var url = (viewModel.id() == 0) ? App.Routes.WebApi.My.Degrees.post() : App.Routes.WebApi.My.Degrees.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 $.ajax({
                     type: type,
@@ -162,8 +162,8 @@ var ViewModels;
                     data: model,
                     success: function (data, textStatus, jqXhr) {
                     },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        alert(textStatus + " | " + errorThrown);
+                    error: function (xhr) {
+                        App.Failures.message(xhr, 'while trying to save your degree', true);
                     },
                     complete: function (jqXhr, textStatus) {
                         location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';

@@ -13,15 +13,16 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("api")]
-    public class DegreesController : ApiController
+    [Authorize]
+    [RoutePrefix("api/my/degrees")]
+    public class MyDegreesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateDegree> _createHandler;
         private readonly IHandleCommands<UpdateDegree> _updateHandler;
         private readonly IHandleCommands<DeleteDegree> _deleteHandler;
 
-        public DegreesController(IProcessQueries queryProcessor
+        public MyDegreesController(IProcessQueries queryProcessor
             , IHandleCommands<CreateDegree> createHandler
             , IHandleCommands<UpdateDegree> updateHandler
             , IHandleCommands<DeleteDegree> deleteHandler
@@ -33,12 +34,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _updateHandler = updateHandler;
         }
 
-        [GET("people/{personId:int}/degrees")]
-        public PageOfDegreeApiModel Get(int personId, [FromUri] DegreeSearchInputModel input)
+        [GET("")]
+        public PageOfDegreeApiModel Get([FromUri] MyDegreeSearchInputModel input)
         {
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
 
-            var query = new DegreesByPersonId(personId);
+            var query = new MyDegrees(User);
             Mapper.Map(input, query);
             query.OrderBy = new Dictionary<Expression<Func<Degree, object>>, OrderByDirection>
             {
@@ -49,31 +50,29 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("people/{personId:int}/degrees/{degreeId:int}", ControllerPrecedence = 1)]
-        public DegreeApiModel Get(int personId, int degreeId)
+        [GET("{degreeId:int}", ControllerPrecedence = 1)]
+        public DegreeApiModel Get(int degreeId)
         {
-            var degree = _queryProcessor.Execute(new DegreeById(degreeId, personId));
-            if (degree == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            var model = Mapper.Map<DegreeApiModel>(degree);
+            var entity = _queryProcessor.Execute(new MyDegreeById(User, degreeId));
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<DegreeApiModel>(entity);
             return model;
         }
 
-        [POST("people/{personId:int}/degrees")]
-        [Authorize(Roles = RoleName.EmployeeProfileManager)]
-        public HttpResponseMessage Post(int personId, DegreeApiModel model)
+        [POST("")]
+        public HttpResponseMessage Post(DegreeApiModel model)
         {
-            if (model == null || personId == 0)
+            if (model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
-            model.PersonId = personId;
-            var command = new CreateDegree(User, personId);
+            var command = new CreateDegree(User);
             Mapper.Map(model, command);
             _createHandler.Handle(command);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, "Degree was successfully created.");
             var url = Url.Link(null, new
             {
-                controller = "Degrees",
+                controller = "MyDegrees",
                 action = "Get",
                 degreeId = command.CreatedDegreeId,
             });
@@ -82,27 +81,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("people/{personId:int}/degrees/{degreeId:int}")]
+        [PUT("{degreeId:int}")]
         [Authorize(Roles = RoleName.EmployeeProfileManager)]
-        public HttpResponseMessage Put(int personId, int degreeId, DegreeApiModel model)
+        public HttpResponseMessage Put(int degreeId, DegreeApiModel model)
         {
             if (degreeId == 0 || model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
-            model.PersonId = personId;
             model.Id = degreeId;
-            var command = new UpdateDegree(User, degreeId, personId);
+            var command = new UpdateDegree(User, degreeId);
             Mapper.Map(model, command);
             _updateHandler.Handle(command);
 
             return Request.CreateResponse(HttpStatusCode.OK, "Degree was successfully saved.");
         }
 
-        [DELETE("people/{personId:int}/degrees/{degreeId:int}")]
+        [DELETE("{degreeId:int}")]
         [Authorize(Roles = RoleName.EmployeeProfileManager)]
-        public HttpResponseMessage Delete(int personId, int degreeId)
+        public HttpResponseMessage Delete(int degreeId)
         {
-            var command = new DeleteDegree(User, degreeId, personId);
+            var command = new DeleteDegree(User, degreeId);
             _deleteHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK, "Degree was successfully deleted.");
         }

@@ -172,7 +172,7 @@ module ViewModels.Degrees {
 
                 $.ajax( {
                     type: "GET",
-                    url: App.Routes.WebApi.Degrees.get( this.id() ),
+                    url: App.Routes.WebApi.My.Degrees.get( this.id() ),
                     success: function ( data: Service.ApiModels.Degree.IDegreePage, textStatus: string, jqXhr: JQueryXHR ): void
                         { dataPact.resolve( data ); },
                     error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
@@ -233,8 +233,8 @@ module ViewModels.Degrees {
             var model = ko.mapping.toJS( mapSource );
 
             var url = (viewModel.id() == 0) ?
-                        App.Routes.WebApi.Degrees.post() :
-                        App.Routes.WebApi.Degrees.put( viewModel.id() );
+                        App.Routes.WebApi.My.Degrees.post() :
+                        App.Routes.WebApi.My.Degrees.put( viewModel.id() );
 
             var type = (viewModel.id() == 0) ?  "POST" : "PUT";
 
@@ -245,8 +245,8 @@ module ViewModels.Degrees {
                 data: model,
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                 },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    alert( textStatus + " | " + errorThrown );
+                error: (xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to save your degree', true);
                 },
                 complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
                     location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';

@@ -14,7 +14,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [TryAuthorize]
+    [Authorize]
     [RoutePrefix("api/my/profile")]
     public class MyProfileController : ApiController
     {

@@ -92,6 +92,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
+        [Authorize(Roles = RoleName.EmployeeProfileManager)]
         [DELETE("{id}")]
         public HttpResponseMessage Delete(int id)
         {

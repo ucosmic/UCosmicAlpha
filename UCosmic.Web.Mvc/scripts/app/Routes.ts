@@ -334,6 +334,7 @@ module App.Routes {
         }
 
         export module My {
+
             export module Profile {
                 export function get (): string {
                     return makeUrl('my/profile');
@@ -342,6 +343,7 @@ module App.Routes {
                     return get();
                 }
             }
+
             export module Affiliations {
                 export function get (affiliationId?: number): string {
                     var url = 'my/affiliations';
@@ -361,6 +363,7 @@ module App.Routes {
                     return get(affiliationId);
                 }
             }
+
             export module Photo {
                 export function get (params?: any): string {
                     var url = post();
@@ -375,6 +378,23 @@ module App.Routes {
                 }
                 export function del() {
                     return post();
+                }
+            }
+
+            export module Degrees {
+                export function get (degreeId?: number): string {
+                    var url = 'my/degrees';
+                    if (degreeId) url += '/' + degreeId;
+                    return makeUrl(url);
+                }
+                export function post(): string {
+                    return get();
+                }
+                export function put(degreeId: number): string {
+                    return get(degreeId);
+                }
+                export function del(degreeId: number): string {
+                    return get(degreeId);
                 }
             }
         }
@@ -591,22 +611,22 @@ module App.Routes {
             }
         }
 
-        export module Degrees {
-            export function get (degreeId?: number): string {
-                var url = 'degrees';
-                if (degreeId) url += '/' + degreeId;
-                return makeUrl(url);
-            }
-            export function post(): string {
-                return get();
-            }
-            export function put(degreeId: number): string {
-                return get(degreeId);
-            }
-            export function del(degreeId: number): string {
-                return get(degreeId);
-            }
-        }
+        //export module Degrees {
+        //    export function get (degreeId?: number): string {
+        //        var url = 'degrees';
+        //        if (degreeId) url += '/' + degreeId;
+        //        return makeUrl(url);
+        //    }
+        //    export function post(): string {
+        //        return get();
+        //    }
+        //    export function put(degreeId: number): string {
+        //        return get(degreeId);
+        //    }
+        //    export function del(degreeId: number): string {
+        //        return get(degreeId);
+        //    }
+        //}
 
         export module Affiliations {
             export function get (affiliationId?: number): string {
