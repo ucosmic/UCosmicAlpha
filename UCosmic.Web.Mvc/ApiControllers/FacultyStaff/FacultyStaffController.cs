@@ -39,24 +39,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
             {
-                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)); 
+                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
             }
 
             if (establishment != null)
             {
-                var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
-                DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year+1, 1, 1);
+                var settings =
+                    _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+                DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
                 DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
-                                           ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value+1))
+                                           ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                            : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-                /* ----- Activity Counts ----- */                
+                /* ----- Activity Counts ----- */
                 {
                     if ((settings != null) && (settings.ActivityTypes.Any()))
                     {
                         foreach (var type in settings.ActivityTypes)
                         {
-                            var typeCount = new FacultyStaffActivityCountModel
+                            var typeCount = new FacultyStaffCountModel
                             {
                                 TypeId = type.Id,
                                 Type = type.Type,
@@ -69,10 +70,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     int totalPlacesWithActivities = 0;
 
-                    var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
+                    var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater || p.IsRegion);
                     foreach (var place in places)
                     {
-                        var activityPlaceCount = new FacultyStaffActivitiesInPlaceModel();
+                        var activityPlaceCount = new FacultyStaffPlaceCountModel();
 
                         activityPlaceCount.PlaceId = place.RevisionId;
                         activityPlaceCount.OfficialName = place.OfficialName;
@@ -86,24 +87,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             totalPlacesWithActivities += 1;
                         }
 
-                        var typeCounts = new Collection<FacultyStaffActivityCountModel>();
+                        var typeCounts = new Collection<FacultyStaffCountModel>();
                         if ((settings != null) && (settings.ActivityTypes.Any()))
                         {
                             foreach (var type in settings.ActivityTypes)
                             {
-                                var typeCount = new FacultyStaffActivityCountModel();
+                                var typeCount = new FacultyStaffCountModel();
 
                                 typeCount.TypeId = type.Id;
                                 typeCount.Type = type.Type;
                                 typeCount.Count =
                                     _queryProcessor.Execute(new ActivityCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                                                              place.RevisionId,
-                                                                                                              establishment.RevisionId,
-                                                                                                              fromDateUtc, toDateUtc));
+                                                                                                            place
+                                                                                                                .RevisionId,
+                                                                                                            establishment
+                                                                                                                .RevisionId,
+                                                                                                            fromDateUtc,
+                                                                                                            toDateUtc));
 
                                 typeCounts.Add(typeCount);
 
-                                model.WorldActivityCounts.Single(a => a.TypeId == typeCount.TypeId).Count += typeCount.Count;
+                                model.WorldActivityCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
+                                    typeCount.Count;
                             }
                         }
                         activityPlaceCount.TypeCounts = typeCounts;
@@ -111,8 +116,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         model.PlaceActivityCounts.Add(activityPlaceCount);
                     }
 
-                    model.TotalActivities = _queryProcessor.Execute(new ActivityCountByEstablishmentId(establishment.RevisionId,
-                                                                                                       fromDateUtc, toDateUtc));
+                    model.TotalActivities =
+                        _queryProcessor.Execute(new ActivityCountByEstablishmentId(establishment.RevisionId,
+                                                                                   fromDateUtc, toDateUtc));
                     model.TotalPlacesWithActivities = totalPlacesWithActivities;
                 }
 
@@ -122,7 +128,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     {
                         foreach (var type in settings.ActivityTypes)
                         {
-                            var typeCount = new FacultyStaffActivityCountModel
+                            var typeCount = new FacultyStaffCountModel
                             {
                                 TypeId = type.Id,
                                 Type = type.Type,
@@ -138,38 +144,42 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
                     foreach (var place in places)
                     {
-                        var peoplePlaceCount = new FacultyStaffActivitiesInPlaceModel();
+                        var peoplePlaceCount = new FacultyStaffPlaceCountModel();
 
                         peoplePlaceCount.PlaceId = place.RevisionId;
                         peoplePlaceCount.OfficialName = place.OfficialName;
                         peoplePlaceCount.Count =
                             _queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
-                                                                                              establishment.RevisionId,
-                                                                                              fromDateUtc, toDateUtc));
+                                                                                            establishment.RevisionId,
+                                                                                            fromDateUtc, toDateUtc));
 
                         if (peoplePlaceCount.Count > 0)
                         {
                             totalPlacesWithPeople += 1;
                         }
 
-                        var typeCounts = new Collection<FacultyStaffActivityCountModel>();
+                        var typeCounts = new Collection<FacultyStaffCountModel>();
                         if ((settings != null) && (settings.ActivityTypes.Any()))
                         {
                             foreach (var type in settings.ActivityTypes)
                             {
-                                var typeCount = new FacultyStaffActivityCountModel();
+                                var typeCount = new FacultyStaffCountModel();
 
                                 typeCount.TypeId = type.Id;
                                 typeCount.Type = type.Type;
                                 typeCount.Count =
                                     _queryProcessor.Execute(new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                                                          place.RevisionId,
-                                                                                                          establishment.RevisionId,
-                                                                                                          fromDateUtc, toDateUtc));
+                                                                                                          place
+                                                                                                              .RevisionId,
+                                                                                                          establishment
+                                                                                                              .RevisionId,
+                                                                                                          fromDateUtc,
+                                                                                                          toDateUtc));
 
                                 typeCounts.Add(typeCount);
 
-                                model.WorldPeopleCounts.Single(a => a.TypeId == typeCount.TypeId).Count += typeCount.Count;
+                                model.WorldPeopleCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
+                                    typeCount.Count;
                             }
                         }
                         peoplePlaceCount.TypeCounts = typeCounts;
@@ -177,8 +187,22 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         model.PlacePeopleCounts.Add(peoplePlaceCount);
                     }
 
-                    model.TotalPeople = _queryProcessor.Execute(new PeopleCountByEstablishmentId(establishment.RevisionId));
+                    model.TotalPeople =
+                        _queryProcessor.Execute(new PeopleCountByEstablishmentId(establishment.RevisionId));
                     model.TotalPlacesWithPeople = totalPlacesWithPeople;
+                }
+
+
+                /* ----- Activity Trend ----- */
+                {
+                    //var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
+                    //foreach (var place in places)
+                    //{
+                    //    var placeActivitiesCount = _queryProcessor.Execute(
+                    //        new ActivityCountPerYearByPlaceIdEstablishmentId(place.RevisionId,
+                    //                                                         establishment.RevisionId,
+                    //                                                         fromDateUtc, toDateUtc));
+                    //}
                 }
             }
 

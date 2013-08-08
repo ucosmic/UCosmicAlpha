@@ -384,13 +384,35 @@ var ViewModels;
                 this.barchartPeopleOptions = {
                     title: 'People',
                     vAxis: {
-                        title: 'Count',
-                        titleTextStyle: {
-                            color: 'red'
+                        title: 'Count'
+                    },
+                    chartArea: {
+                        left: 80
+                    },
+                    legend: {
+                        position: 'none'
+                    },
+                    series: {
+                        0: {
+                            type: 'bars'
+                        },
+                        1: {
+                            type: 'line',
+                            color: 'black',
+                            lineWidth: 0,
+                            pointSize: 0,
+                            visibleInLegend: false
                         }
                     }
                 };
                 this.barchart = new this.google.visualization.ColumnChart($('#facultystaff-summary-barchart')[0]);
+                this.linechartActivityOptions = {
+                    title: 'Activities'
+                };
+                this.linechartActivityOptions = {
+                    title: 'People'
+                };
+                this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
             };
             FacultyAndStaff.prototype.getActivityDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
@@ -465,6 +487,89 @@ var ViewModels;
                         for(var j = 0; j < placePeopleCounts.typeCounts().length; j += 1) {
                             var activityType = placePeopleCounts.typeCounts[j].type();
                             var count = placePeopleCounts.typeCounts[j].count();
+                            dt.addRow([
+                                activityType, 
+                                count, 
+                                String(count)
+                            ]);
+                        }
+                    }
+                }
+                return dt;
+            };
+            FacultyAndStaff.prototype.getActivityTrendDataTable = function (place) {
+                var dt = new this.google.visualization.DataTable();
+                dt.addColumn('string', 'Year');
+                dt.addColumn('number', 'Count');
+                dt.addColumn({
+                    type: 'number',
+                    role: 'annotation'
+                });
+                if(place == null) {
+                    for(var i = 0; i < (this.summary).worldTrendActivityCounts().length; i += 1) {
+                        var activityType = (this.summary).worldTrendActivityCounts()[i].type();
+                        var count = (this.summary).worldTrendActivityCounts()[i].count();
+                        dt.addRow([
+                            activityType, 
+                            count, 
+                            count
+                        ]);
+                    }
+                } else {
+                    var i = 0;
+                    while((i < (this.summary).placeTrendActivityCounts().length) && ((this.summary).placeTrendActivityCounts()[i].officialName !== place)) {
+                        i += 1;
+                    }
+                    if(i < (this.summary).placeTrendActivityCounts().length) {
+                        var placeTrendActivityCounts = (this.summary).placeTrendActivityCounts()[i];
+                        for(var j = 0; j < placeTrendActivityCounts.typeCounts().length; j += 1) {
+                            var activityType = placeTrendActivityCounts.typeCounts[j].type();
+                            var count = placeTrendActivityCounts.typeCounts[j].count();
+                            dt.addRow([
+                                activityType, 
+                                count, 
+                                count
+                            ]);
+                        }
+                    }
+                }
+                var view = new this.google.visualization.DataView(dt);
+                view.setColumns([
+                    0, 
+                    1, 
+                    1, 
+                    2
+                ]);
+                return view;
+            };
+            FacultyAndStaff.prototype.getPeopleTrendDataTable = function (place) {
+                var dt = new this.google.visualization.DataTable();
+                dt.addColumn('string', 'Year');
+                dt.addColumn('number', 'Count');
+                dt.addColumn({
+                    type: 'string',
+                    role: 'annotation'
+                });
+                if(place == null) {
+                    for(var i = 0; i < (this.summary).worldTrendPeopleCounts().length; i += 1) {
+                        var activityType = (this.summary).worldTrendPeopleCounts()[i].type();
+                        var count = (this.summary).worldTrendPeopleCounts()[i].count();
+                        dt.addRow([
+                            activityType, 
+                            count, 
+                            String(count)
+                        ]);
+                    }
+                } else {
+                    var i = 0;
+                    while((i < (this.summary).placeTrendPeopleCounts().length) && ((this.summary).placeTrendPeopleCounts()[i].officialName !== place)) {
+                        i += 1;
+                    }
+                    if(i < (this.summary).placeTrendPeopleCounts().length) {
+                        var placeTrendPeopleCounts = (this.summary).placePeopleCounts()[i];
+                        for(var j = 0; j < placeTrendPeopleCounts.typeCounts().length; j += 1) {
+                            var activityType = placeTrendPeopleCounts.typeCounts[j].type();
+                            var count = placeTrendPeopleCounts.typeCounts[j].count();
                             dt.addRow([
                                 activityType, 
                                 count, 
@@ -550,10 +655,14 @@ var ViewModels;
                         this.heatmap.draw(this.heatmapActivityData, this.heatmapOptions);
                         var dataTable = this.getActivityDataTable(this.selectedPlace());
                         this.barchart.draw(dataTable, this.barchartActivityOptions);
+                        dataTable = this.getActivityTrendDataTable(this.selectedPlace());
+                        this.linechart.draw(dataTable, this.linechartActivityOptions);
                     } else {
                         this.heatmap.draw(this.heatmapPeopleData, this.heatmapOptions);
                         var dataTable = this.getPeopleDataTable(this.selectedPlace());
                         this.barchart.draw(dataTable, this.barchartPeopleOptions);
+                        dataTable = this.getPeopleTrendDataTable(this.selectedPlace());
+                        this.linechart.draw(dataTable, this.linechartPeopleOptions);
                     }
                     $("#bib-faculty-staff-summary").addClass("current");
                 } else if(type === "pointmap") {
